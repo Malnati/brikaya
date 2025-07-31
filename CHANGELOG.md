@@ -3,3 +3,11 @@
 - Implementação completa do jogo Breakout com suporte offline
 
 - Resolvido conflitos para integrar mudancas da main
+
+## [1.1.0] - 2024-07-31
+### Melhorado
+- **Física da bolinha**: Implementada física realista de colisão com a raquete
+  - A bolinha agora rebate com ângulos diferentes baseados na posição onde bate na raquete
+  - Ângulo máximo de rebatida de 60 graus (π/3 radianos)
+  - Variação de velocidade baseada na posição do hit (0.8x a 1.2x da velocidade base)
+  - Prevenção de travamento da bolinha na raquete
