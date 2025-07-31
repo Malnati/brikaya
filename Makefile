@@ -16,28 +16,17 @@ install:
 	@npm install
 	@echo "Dependências instaladas com sucesso!"
 
+# Gerar build da PWA
 build-pwa:
 	@echo "Gerando build da PWA..."
 	@npm run build
 	@echo "Build gerado em $(DIST_DIR)"
 
+# Copiar build para Capacitor
 prepare-capacitor:
 	@echo "Copiando build para Capacitor..."
 	@npx cap copy
 	@echo "Build copiado para as plataformas nativas"
-	@echo "Instalando dependências do projeto..."
-	@npm install
-	@echo "Dependências instaladas com sucesso!"
-
-build-pwa:
-		@echo "Gerando build da PWA..."
-		@npm run build
-		@echo "Build gerado em $(DIST_DIR)"
-
-prepare-capacitor:
-		@echo "Copiando build para Capacitor..."
-		@npx cap copy
-		@echo "Build copiado para as plataformas nativas"
 
 # Compilar o projeto para produção
 build:
@@ -77,18 +66,18 @@ run: setup
 	pkill -f "vite" || true
 	@npx vite --host
 
+# Abrir projeto iOS no Xcode
 ios:
 	@npx cap open ios
 
+# Abrir projeto Android no Android Studio
 android:
 	@npx cap open android
-  @npx cap open ios
 
-android:
-		@npx cap open android
-
+# Build completo (PWA + Capacitor)
 build-all: build-pwa prepare-capacitor
 
+# Mostrar ajuda
 help:
 	@echo "Available targets:"
 	@echo "  install		- Instalar dependências do projeto"
