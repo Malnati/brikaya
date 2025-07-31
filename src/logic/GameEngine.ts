@@ -2,6 +2,10 @@
 import { Paddle } from '../objects/Paddle';
 import { Ball } from '../objects/Ball';
 import { Bricks } from '../objects/Bricks';
+import { BRICK_ROWS, BRICK_COLS } from '../constants/game';
+import { POINTS_PER_BRICK } from '../constants/gameState';
+
+const ERROR_NO_2D_CONTEXT = 'No 2D context';
 import { AssetLoader } from '../utils/assetLoader';
 
 export class GameEngine {
@@ -10,15 +14,16 @@ export class GameEngine {
   private paddle: Paddle;
   private ball: Ball;
   private bricks: Bricks;
+  private score = 0;
   private assetsLoaded = false;
 
-  constructor(private canvas: HTMLCanvasElement) {
+  constructor(private canvas: HTMLCanvasElement, private onScoreUpdate: (score: number) => void) {
     const ctx = canvas.getContext('2d');
-    if (!ctx) throw new Error('No 2D context');
+    if (!ctx) throw new Error(ERROR_NO_2D_CONTEXT);
     this.ctx = ctx;
     this.paddle = new Paddle(canvas.width, canvas.height);
     this.ball = new Ball(canvas.width, canvas.height);
-    this.bricks = new Bricks(3, 5);
+    this.bricks = new Bricks(BRICK_ROWS, BRICK_COLS, this.onBrickDestroyed.bind(this));
     this.setupListeners();
     this.preloadAssets();
   }
@@ -31,6 +36,11 @@ export class GameEngine {
       console.warn('Some assets failed to load, using fallback rendering:', error);
       this.assetsLoaded = true; // Continue with fallback rendering
     }
+  }
+
+  private onBrickDestroyed() {
+    this.score += POINTS_PER_BRICK;
+    this.onScoreUpdate(this.score);
   }
 
   private setupListeners() {
