@@ -40,6 +40,18 @@ export class Bricks {
     });
   }
 
+  // Método para verificar se todos os blocos foram destruídos
+  isAllDestroyed(): boolean {
+    for (let c = 0; c < this.cols; c++) {
+      for (let r = 0; r < this.rows; r++) {
+        if (this.bricks[c][r].status === BRICK_ACTIVE) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   draw(ctx: CanvasRenderingContext2D) {
     for (let c = 0; c < this.cols; c++) {
       for (let r = 0; r < this.rows; r++) {
