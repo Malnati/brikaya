@@ -8,7 +8,7 @@ TEMP_DIR=tmp
 NODE_MODULES=node_modules
 DIST_DIR=dist
 
-.PHONY: install-assets clean-assets install build dev preview clean help build-pwa prepare-capacitor ios android build-all
+.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all
 
 # Instalar dependências do projeto
 install:
@@ -61,6 +61,7 @@ setup: install build
 
 # Executar tudo (instalar, compilar e iniciar preview)
 run: setup
+	pkill -f "vite" || true
 	@npx vite --host
 
 ios:
@@ -70,23 +71,6 @@ android:
 	@npx cap open android
 
 build-all: build-pwa prepare-capacitor
-
-install-assets:
-	@echo "Installing game assets from Kenney puzzle pack..."
-	@mkdir -p $(ASSET_DIR)
-	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/ballGrey.png $(ASSET_DIR)/
-	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/paddleBlu.png $(ASSET_DIR)/paddle.png
-	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/element_red_square.png $(ASSET_DIR)/brick_red.png
-	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/element_blue_square.png $(ASSET_DIR)/brick_blue.png
-	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/element_green_square.png $(ASSET_DIR)/brick_green.png
-	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/element_yellow_square.png $(ASSET_DIR)/brick_yellow.png
-	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/element_purple_square.png $(ASSET_DIR)/brick_purple.png
-	@echo "Kenney puzzle pack assets installed successfully!"
-
-clean-assets:
-	@echo "Removing assets..."
-	@rm -rf $(ASSET_DIR)/*.png
-	@echo "Assets removed!"
 
 help:
 	@echo "Available targets:"
@@ -98,8 +82,6 @@ help:
 	@echo "  clean-deps     - Remover apenas node_modules"
 	@echo "  setup          - Instalar dependências e compilar"
 	@echo "  run            - Setup completo e executar preview"
-	@echo "  install-assets - Install Kenney puzzle pack assets"
-	@echo "  clean-assets   - Remove installed assets"
 	@echo "  build-pwa      - Gerar build da PWA"
 	@echo "  prepare-capacitor - Copiar build para Capacitor"
 	@echo "  ios            - Abrir projeto iOS no Xcode"
