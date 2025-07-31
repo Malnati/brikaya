@@ -115,6 +115,11 @@ test-manual: kill-processes
 	@echo "🎮 Executando teste manual completo..."
 	@timeout 60s bash -c 'npm run dev & sleep 5 && node scripts/test-game-manual.js && pkill -f "vite"' || (pkill -f "vite" && exit 1)
 
+# Teste manual de cores (com servidor HTTP simples)
+test-colors-manual:
+	@echo "🎨 Executando teste manual de cores..."
+	@node scripts/test-colors-manual.js
+
 # Parar todos os processos do jogo
 stop:
 	@echo "🛑 Parando todos os processos do jogo..."
@@ -145,6 +150,7 @@ help:
 	@echo "  build-all      - Build PWA e copiar para Capacitor"
 	@echo "  test-colors    - Testar cores do jogo"
 	@echo "  test-colors-dev - Testar cores em modo desenvolvimento"
+	@echo "  test-colors-manual - Teste manual de cores (com servidor HTTP)"
 	@echo "  check-colors   - Verificar integridade das cores (CI/CD)"
 	@echo "  test-manual    - Teste manual completo"
 	@echo "  help           - Show this help message"
