@@ -7,6 +7,9 @@ const KEY_RIGHT = 'ArrowRight';
 import { ASSET_PATHS, PADDLE_IMAGE_SIZE } from '../constants/assets';
 import { AssetLoader } from '../utils/assetLoader';
 
+import { ASSET_PATHS, PADDLE_IMAGE_SIZE } from '../constants/assets';
+import { AssetLoader } from '../utils/assetLoader';
+
 const PADDLE_WIDTH = 75;
 const PADDLE_HEIGHT = 10;
 const PADDLE_SPEED = 7;
@@ -37,8 +40,22 @@ export class Paddle {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    ctx.fillStyle = GAME_COLOR;
-    ctx.fillRect(this.x, this.canvasHeight - this.height, this.width, this.height);
+    const paddleImage = AssetLoader.getImage(ASSET_PATHS.PADDLE);
+    
+    if (paddleImage) {
+      // Draw image at paddle position
+      ctx.drawImage(
+        paddleImage,
+        this.x,
+        this.canvasHeight - this.height,
+        this.width,
+        this.height
+      );
+    } else {
+      // Fallback to original rectangle rendering
+      ctx.fillStyle = GAME_COLOR;
+      ctx.fillRect(this.x, this.canvasHeight - this.height, this.width, this.height);
+    }
 
     const paddleImage = AssetLoader.getImage(ASSET_PATHS.PADDLE);
     
