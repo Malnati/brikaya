@@ -1,6 +1,7 @@
 // src/components/Game.tsx
 import { useRef, useEffect, useState } from 'react';
 import { useGameLoop } from '../hooks/useGameLoop';
+import { useColorDebug } from '../hooks/useColorDebug';
 import { CANVAS_WIDTH, CANVAS_HEIGHT, MIN_CANVAS_WIDTH, MIN_CANVAS_HEIGHT, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT } from '../constants/game';
 
 interface GameProps {
@@ -52,6 +53,9 @@ export default function Game({ onScoreUpdate, onGameWon, onGameOver }: GameProps
   }, []);
   
   useGameLoop(canvasRef, onScoreUpdate, onGameWon, onGameOver, canvasSize);
+  
+  // Debug de cores (apenas em desenvolvimento)
+  const { manualCheck } = useColorDebug(canvasRef);
 
   return (
     <div className="game-container">

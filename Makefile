@@ -77,6 +77,26 @@ android:
 # Build completo (PWA + Capacitor)
 build-all: build-pwa prepare-capacitor
 
+# Testar cores do jogo
+test-colors:
+	@echo "🧪 Testando cores do jogo..."
+	@npm run test:colors
+
+# Testar cores em modo desenvolvimento
+test-colors-dev:
+	@echo "🧪 Testando cores do jogo em modo desenvolvimento..."
+	@npm run test:colors:dev
+
+# Verificar integridade das cores (para CI/CD)
+check-colors:
+	@echo "🔍 Verificando integridade das cores..."
+	@npm run dev & sleep 8 && npm run test:colors && pkill -f "vite" || (pkill -f "vite" && exit 1)
+
+# Teste manual completo
+test-manual:
+	@echo "🎮 Executando teste manual completo..."
+	@node scripts/test-game-manual.js
+
 # Mostrar ajuda
 help:
 	@echo "Available targets:"
@@ -93,5 +113,9 @@ help:
 	@echo "  ios            - Abrir projeto iOS no Xcode"
 	@echo "  android        - Abrir projeto Android no Android Studio"
 	@echo "  build-all      - Build PWA e copiar para Capacitor"
+	@echo "  test-colors    - Testar cores do jogo"
+	@echo "  test-colors-dev - Testar cores em modo desenvolvimento"
+	@echo "  check-colors   - Verificar integridade das cores (CI/CD)"
+	@echo "  test-manual    - Teste manual completo"
 	@echo "  help           - Show this help message"
 

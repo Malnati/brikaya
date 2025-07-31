@@ -71,12 +71,12 @@ export class GameEngine {
 
   private async preloadAssets() {
     try {
-      console.log('Iniciando carregamento de assets...');
+      console.log('🎮 Iniciando carregamento de assets...');
       await AssetLoader.preloadAllAssets();
       this.assetsLoaded = true;
-      console.log('Assets carregados com sucesso!');
+      console.log('✅ Assets carregados com sucesso!');
     } catch (error) {
-      console.warn('Some assets failed to load, using fallback rendering:', error);
+      console.warn('⚠️  Alguns assets falharam ao carregar, usando fallback:', error);
       this.assetsLoaded = true; // Continue with fallback rendering
     }
   }
