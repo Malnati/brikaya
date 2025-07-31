@@ -227,4 +227,11 @@ description: |
               description: |
                 `// caminho/do/arquivo.mdc`
                 Blablabla...
+
+  # Regras do arquivo: changelog.mdc
+
+  Todas as alterações realizadas no projeto **devem** ser registradas no arquivo
+  `CHANGELOG.md` antes de efetuar um commit. Manter o changelog atualizado
+  garante rastreabilidade das modificações e facilita o acompanhamento da
+  evolução do código.
 ---
