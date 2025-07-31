@@ -40,6 +40,15 @@ export class Bricks {
         };
       }
     }
+    // Atualizar as posições dos blocos imediatamente após a criação
+    for (let c = 0; c < dimensions.brickCols; c++) {
+      for (let r = 0; r < this.rows; r++) {
+        const brickX = c * (dimensions.brickWidth + dimensions.brickPadding) + dimensions.brickOffsetLeft;
+        const brickY = r * (dimensions.brickHeight + dimensions.brickPadding) + dimensions.brickOffsetTop;
+        this.bricks[c][r].x = brickX;
+        this.bricks[c][r].y = brickY;
+      }
+    }
   }
 
   // Método para verificar se todos os blocos foram destruídos
@@ -110,11 +119,22 @@ export class Bricks {
       for (let r = 0; r < this.rows; r++) {
         const b = this.bricks[c][r];
         if (b.status === BRICK_ACTIVE) {
+          // Verificar colisão considerando o raio da bola
+          const ballLeft = ball.position.x - ball.position.radius;
+          const ballRight = ball.position.x + ball.position.radius;
+          const ballTop = ball.position.y - ball.position.radius;
+          const ballBottom = ball.position.y + ball.position.radius;
+          
+          const brickLeft = b.x;
+          const brickRight = b.x + this.dimensions.brickWidth;
+          const brickTop = b.y;
+          const brickBottom = b.y + this.dimensions.brickHeight;
+          
           if (
-            ball.position.x > b.x &&
-            ball.position.x < b.x + this.dimensions.brickWidth &&
-            ball.position.y > b.y &&
-            ball.position.y < b.y + this.dimensions.brickHeight
+            ballRight > brickLeft &&
+            ballLeft < brickRight &&
+            ballBottom > brickTop &&
+            ballTop < brickBottom
           ) {
             ball.bounceY();
             ball.registerBrickHit();
@@ -123,9 +143,11 @@ export class Bricks {
               this.onBrickDestroyed();
             }
             collided = true;
+            break; // Sair do loop após a primeira colisão
           }
         }
       }
+      if (collided) break; // Sair do loop externo também
     }
     return collided;
   }

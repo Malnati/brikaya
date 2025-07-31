@@ -38,9 +38,13 @@ export class Ball {
     // Colisão com o teto
     if (this.y + this.dy < this.radius) {
       this.dy = -this.dy;
-    } 
-    // Colisão com a raquete ou verificação de fim de jogo
-    else if (this.y + this.radius > maxHeight) {
+    }
+
+    // PRIMEIRO: Colisão com blocos
+    bricks.collide(this);
+
+    // DEPOIS: Colisão com a raquete ou verificação de fim de jogo
+    if (this.y + this.radius > maxHeight) {
       const paddlePos = paddle.position;
       if (this.x > paddlePos.x && this.x < paddlePos.x + paddlePos.width) {
         this.handlePaddleCollision(paddlePos);
@@ -51,8 +55,6 @@ export class Ball {
         return false;
       }
     }
-
-    bricks.collide(this);
     return true;
   }
 
