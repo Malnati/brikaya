@@ -184,10 +184,7 @@ export class GameEngine {
           this.ballHitBrick = true;
         }
         if (hitPaddle) {
-          if (!this.ballHitBrick) {
-            this.bricks.addRow();
-          }
-          this.ballHitBrick = false;
+          this.handlePenalty();
         }
         this.ball.draw(this.ctx);
       } catch (error) {
