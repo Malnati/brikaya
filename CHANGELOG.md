@@ -11,3 +11,8 @@
   - Ângulo máximo de rebatida de 60 graus (π/3 radianos)
   - Variação de velocidade baseada na posição do hit (0.8x a 1.2x da velocidade base)
   - Prevenção de travamento da bolinha na raquete
+
+## [1.2.0] - 2024-08-01
+### Adicionado
+- Multiplicação de bolinhas ao quebrar múltiplos blocos em uma mesma trajetória
+- Jogo termina apenas quando todas as bolinhas são perdidas ou todos os blocos são destruídos
