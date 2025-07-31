@@ -228,3 +228,12 @@ description: |
                 `// caminho/do/arquivo.mdc`
                 Blablabla...
 ---
+
+  # Regras do arquivo: pending.mdc
+
+  Toda e qualquer pendência de desenvolvimento, correções ou melhorias deve ser registrada
+  no arquivo `PENDING.md` no momento do commit.
+
+    - O arquivo deve estar localizado na raiz do projeto.
+    - Cada item deve conter uma breve descrição do trabalho pendente ou concluído.
+    - Mantenha o histórico atualizado sempre que houver novas pendências ou resolução das existentes.
