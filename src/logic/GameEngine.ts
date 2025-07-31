@@ -6,8 +6,6 @@ import { GAME_COLOR, calculateDynamicDimensions, DynamicGameDimensions } from '.
 import { POINTS_PER_BRICK } from '../constants/gameState';
 import { AssetLoader } from '../utils/assetLoader';
 
-const BALL_SPAWN_ANGLE_RANGE = Math.PI / 3;
-
 const ERROR_NO_2D_CONTEXT = 'No 2D context';
 
 interface CanvasSize {
@@ -148,17 +146,6 @@ export class GameEngine {
     cancelAnimationFrame(this.animationFrame);
   }
 
-  private spawnBall(x: number, y: number, angle: number) {
-    const ball = new Ball(this.canvasSize.width, this.canvasSize.height, this.dimensions);
-    ball.setPosition(x, y);
-    ball.setDirection(angle);
-    this.balls.push(ball);
-  }
-
-  private generateRandomAngle() {
-    return -BALL_SPAWN_ANGLE_RANGE + Math.random() * (BALL_SPAWN_ANGLE_RANGE * 2);
-  }
-
   private loop = () => {
     this.ctx.clearRect(0, 0, this.canvasSize.width, this.canvasSize.height);
     
@@ -200,10 +187,7 @@ export class GameEngine {
             continue;
           }
           if (ball.consumePaddleCollision()) {
-            const hits = ball.getBrickHitsThisRun();
-            for (let j = 1; j < hits; j++) {
-              this.spawnBall(ball.position.x, ball.position.y, this.generateRandomAngle());
-            }
+            // Apenas resetar o contador de hits, sem criar novas bolinhas
             ball.resetBrickHits();
           }
           ball.draw(this.ctx);
