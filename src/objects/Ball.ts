@@ -1,7 +1,5 @@
 // src/objects/Ball.ts
-import { BALL_RADIUS, BALL_SPEED, GAME_COLOR } from '../constants/game';
-import { ASSET_PATHS, BALL_IMAGE_SIZE } from '../constants/assets';
-import { AssetLoader } from '../utils/assetLoader';
+import { BALL_RADIUS, BALL_SPEED } from '../constants/game';
 
 const BALL_INITIAL_Y_OFFSET = 30;
 const MAX_BOUNCE_ANGLE = Math.PI / 3; // 60 graus
@@ -65,27 +63,12 @@ export class Ball {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    const ballImage = AssetLoader.getImage(ASSET_PATHS.BALL);
-    
-    if (ballImage) {
-      // Draw image centered on ball position
-      const imageWidth = BALL_IMAGE_SIZE.WIDTH;
-      const imageHeight = BALL_IMAGE_SIZE.HEIGHT;
-      ctx.drawImage(
-        ballImage, 
-        this.x - imageWidth / 2, 
-        this.y - imageHeight / 2, 
-        imageWidth, 
-        imageHeight
-      );
-    } else {
-      // Fallback to original circle rendering
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fillStyle = GAME_COLOR;
-      ctx.fill();
-      ctx.closePath();
-    }
+    // Sempre desenha a bolinha como um círculo branco
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff'; // Cor branca
+    ctx.fill();
+    ctx.closePath();
   }
 
   get position() {
