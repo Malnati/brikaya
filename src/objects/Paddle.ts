@@ -13,11 +13,13 @@ export class Paddle {
   private dx = 0;
   private readonly width: number;
   private readonly height: number;
+  private previousPosition: { x: number; y: number } | null = null;
 
   constructor(private canvasWidth: number, private canvasHeight: number, dimensions: DynamicGameDimensions) {
     this.width = dimensions.paddleWidth;
     this.height = dimensions.paddleHeight;
     this.x = (canvasWidth - this.width) / 2;
+    this.previousPosition = this.position;
   }
 
   onKeyDown(event: KeyboardEvent) {
@@ -37,6 +39,7 @@ export class Paddle {
 
   setPosition(x: number) {
     // Centralizar a raquete na posição do touch
+    this.previousPosition = this.position;
     this.x = x - this.width / 2;
     
     // Manter dentro dos limites do canvas
@@ -48,6 +51,7 @@ export class Paddle {
   }
 
   update() {
+    this.previousPosition = this.position;
     this.x += this.dx;
     if (this.x < 0) this.x = 0;
     if (this.x + this.width > this.canvasWidth) this.x = this.canvasWidth - this.width;
@@ -84,10 +88,20 @@ export class Paddle {
       bricksRemaining: 0,
       gameWon: false,
       gameOver: false,
-      level: 1
+      level: 1,
+      canvasSize: { width: this.canvasWidth, height: this.canvasHeight },
+      gameDimensions: {
+        brickWidth: 75,
+        brickHeight: 20,
+        brickCols: 5,
+        brickRows: 3,
+        paddleWidth: this.width,
+        paddleHeight: this.height,
+        ballRadius: 10
+      }
     };
     
-    const ballPositions = [{ x: 0, y: 0, velocity: { dx: 0, dy: 0 } }];
+    const ballPositions = [{ x: 0, y: 0, velocity: { dx: 0, dy: 0 }, radius: 10 }];
     const paddlePosition = this.position;
     
     // Log assíncrono para não bloquear o movimento
@@ -96,7 +110,8 @@ export class Paddle {
         gameState,
         ballPositions,
         paddlePosition,
-        direction as 'left' | 'right'
+        direction as 'left' | 'right',
+        this.previousPosition
       ).catch(error => console.error('❌ Erro ao registrar movimento da raquete:', error));
     }, 0);
   }

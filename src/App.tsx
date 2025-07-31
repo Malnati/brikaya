@@ -1,6 +1,7 @@
 // src/App.tsx
 import { useState, useCallback, useEffect } from 'react';
 import Game from './components/Game';
+import GameLogViewer from './components/GameLogViewer';
 import { saveScore, getTotalScore, resetScores } from './storage/score';
 
 export default function App() {
@@ -9,6 +10,7 @@ export default function App() {
   const [gameKey, setGameKey] = useState(0);
   const [gameWon, setGameWon] = useState(false);
   const [gameOver, setGameOver] = useState(false);
+  const [showLogs, setShowLogs] = useState(false);
 
   const handleScoreUpdate = useCallback((newScore: number) => {
     setScore(newScore);
@@ -44,6 +46,24 @@ export default function App() {
     setTotalScore(0);
   }, []);
 
+  const toggleLogs = useCallback(() => {
+    setShowLogs(prev => !prev);
+  }, []);
+
+  if (showLogs) {
+    return (
+      <div className="app-container">
+        <div className="game-info">
+          <h1>📊 Logs do BrickBreaker</h1>
+          <button onClick={toggleLogs} className="restart-button">
+            ← Voltar ao Jogo
+          </button>
+        </div>
+        <GameLogViewer />
+      </div>
+    );
+  }
+
   return (
     <div className="app-container">
       <h1>Breakout</h1>
@@ -62,14 +82,21 @@ export default function App() {
             <p>Pontuação final: {score}</p>
           </div>
         )}
+      </div>
+      <div className="game-container">
+        <Game key={gameKey} onScoreUpdate={handleScoreUpdate} onGameWon={handleGameWon} onGameOver={handleGameOver} />
+      </div>
+      <div className="game-info">
         <button onClick={handleRestart} className="restart-button">
           {gameWon || gameOver ? 'Jogar Novamente' : 'Restart Game'}
         </button>
         <button onClick={handleResetScores} className="restart-button">
           Resetar Pontuação
         </button>
+        <button onClick={toggleLogs} className="restart-button">
+          📊 Ver Logs
+        </button>
       </div>
-      <Game key={gameKey} onScoreUpdate={handleScoreUpdate} onGameWon={handleGameWon} onGameOver={handleGameOver} />
     </div>
   );
 }

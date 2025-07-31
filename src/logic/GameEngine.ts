@@ -121,6 +121,14 @@ export class GameEngine {
       console.log(`🏆 GAME WON! Todos os blocos destruídos!`);
       this.gameWon = true;
       
+      // Log da mudança de estado do jogo
+      await gameLogger.logGameStateChange(
+        gameState,
+        ballPositions,
+        paddlePosition,
+        'game_won'
+      ).catch(error => console.error('❌ Erro ao registrar mudança de estado:', error));
+      
       // Log do fim do jogo (vitória)
       await gameLogger.logGameEnd(
         gameState,
@@ -154,7 +162,17 @@ export class GameEngine {
       bricksRemaining: this.getRemainingBricksCount(),
       gameWon: this.gameWon,
       gameOver: this.gameOver,
-      level: 1 // Por enquanto sempre nível 1, pode ser expandido no futuro
+      level: 1, // Por enquanto sempre nível 1, pode ser expandido no futuro
+      canvasSize: this.canvasSize,
+      gameDimensions: {
+        brickWidth: this.dimensions.brickWidth,
+        brickHeight: this.dimensions.brickHeight,
+        brickCols: this.dimensions.brickCols,
+        brickRows: this.dimensions.brickRows,
+        paddleWidth: this.dimensions.paddleWidth,
+        paddleHeight: this.dimensions.paddleHeight,
+        ballRadius: this.dimensions.ballRadius
+      }
     };
   }
 
@@ -162,7 +180,8 @@ export class GameEngine {
     return this.balls.map(ball => ({
       x: ball.position.x,
       y: ball.position.y,
-      velocity: ball.getVelocity()
+      velocity: ball.getVelocity(),
+      radius: ball.position.radius
     }));
   }
 
@@ -216,6 +235,15 @@ export class GameEngine {
     const ballPositions = this.getBallPositions();
     const paddlePosition = this.paddle.position;
     
+    // Se já existe um gameId, é um restart
+    if (this.currentGameId) {
+      await gameLogger.logRestartGame(
+        gameState,
+        ballPositions,
+        paddlePosition
+      ).catch(error => console.error('❌ Erro ao registrar restart do jogo:', error));
+    }
+    
     await gameLogger.logGameStart(
       gameState,
       ballPositions,
@@ -265,11 +293,7 @@ export class GameEngine {
           const ball = this.balls[i];
           
           // Preparar estado do jogo para rastreamento de colisões
-          const gameState = {
-            score: this.score,
-            ballsCount: this.balls.length,
-            bricksRemaining: this.getRemainingBricksCount()
-          };
+          const gameState = this.getCurrentGameState();
           
           // Atualizar posição da raquete antes de chamar ball.update
           this.paddle.update();
@@ -289,11 +313,19 @@ export class GameEngine {
           // Game over - no balls left
           this.gameOver = true;
           
-          // Log do fim do jogo (derrota)
+          // Log da mudança de estado do jogo
           const gameState = this.getCurrentGameState();
           const ballPositions = this.getBallPositions();
           const paddlePosition = this.paddle.position;
           
+          await gameLogger.logGameStateChange(
+            gameState,
+            ballPositions,
+            paddlePosition,
+            'game_over'
+          ).catch(error => console.error('❌ Erro ao registrar mudança de estado:', error));
+          
+          // Log do fim do jogo (derrota)
           await gameLogger.logGameEnd(
             gameState,
             ballPositions,

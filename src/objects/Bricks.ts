@@ -127,7 +127,24 @@ export class Bricks {
       registerBrickHit: () => void;
       getVelocity: () => { dx: number; dy: number };
     },
-    gameState?: { score: number; ballsCount: number; bricksRemaining: number }
+    gameState?: { 
+      score: number; 
+      ballsCount: number; 
+      bricksRemaining: number;
+      gameWon: boolean;
+      gameOver: boolean;
+      level: number;
+      canvasSize: { width: number; height: number };
+      gameDimensions: {
+        brickWidth: number;
+        brickHeight: number;
+        brickCols: number;
+        brickRows: number;
+        paddleWidth: number;
+        paddleHeight: number;
+        ballRadius: number;
+      };
+    }
   ): Promise<boolean> {
     let collided = false;
     let destroyedCount = 0;
@@ -157,22 +174,15 @@ export class Bricks {
               const ballVelocity = ball.getVelocity();
               console.log(`🧱 Colisão com bloco detectada - Pos: (${Math.round(ball.position.x)}, ${Math.round(ball.position.y)}), Bloco: [${c}, ${r}], Cor: ${b.colorIndex}`);
               
-              // Log da colisão com bloco
-              const fullGameState = {
-                ...gameState,
-                gameWon: false,
-                gameOver: false,
-                level: 1
-              };
-              
               gameLogger.logBrickDestroyed(
-                fullGameState,
-                [{ x: ball.position.x, y: ball.position.y, velocity: ballVelocity }],
+                gameState,
+                [{ x: ball.position.x, y: ball.position.y, velocity: ballVelocity, radius: ball.position.radius }],
                 { x: 0, y: 0, width: 0, height: 0 }, // Paddle position será atualizada pelo GameEngine
                 { x: b.x, y: b.y, width: this.dimensions.brickWidth, height: this.dimensions.brickHeight },
                 { col: c, row: r },
                 b.colorIndex,
-                ball.position
+                ball.position,
+                ballVelocity
               ).catch(error => console.error('❌ Erro ao registrar destruição de bloco:', error));
               
               collisionTracker.logBrickCollision(
