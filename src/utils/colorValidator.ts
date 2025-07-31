@@ -14,7 +14,7 @@ export interface ColorValidationResult {
 export class ColorValidator {
 
   /**
-   * Valida se as imagens dos bricks estão carregando corretamente
+   * Validates whether the brick images are loading correctly
    */
   static async validateBrickColors(): Promise<ColorValidationResult> {
     const result: ColorValidationResult = {
