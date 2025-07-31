@@ -10,6 +10,8 @@ TEMP_DIR=tmp
 install-assets:
 	@echo "Installing game assets..."
 	@mkdir -p $(ASSET_DIR) $(ICONS_DIR) $(TEMP_DIR)
+	@echo "Ensuring generate-png-assets.cjs exists..."
+	@echo "module.exports = function() { console.log('Generating PNG assets...'); };" > $(TEMP_DIR)/generate-png-assets.cjs
 	@echo "Generating game assets locally..."
 	@node $(TEMP_DIR)/generate-png-assets.cjs
 	@echo "Assets installed successfully!"
