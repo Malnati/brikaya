@@ -1,5 +1,5 @@
 // src/objects/Bricks.ts
-import { BRICK_WIDTH, BRICK_HEIGHT, BRICK_PADDING, BRICK_OFFSET_TOP, BRICK_OFFSET_LEFT } from '../constants/game';
+import { BRICK_WIDTH, BRICK_HEIGHT, BRICK_PADDING, BRICK_OFFSET_TOP, BRICK_OFFSET_LEFT, GAME_COLOR } from '../constants/game';
 import { BRICK_COLORS } from '../constants/assets';
 
 const BRICK_ACTIVE = 1;
@@ -62,7 +62,7 @@ export class Bricks {
             );
           } else {
             // Fallback para retângulo colorido se a imagem não carregou
-            ctx.fillStyle = '#0095DD';
+            ctx.fillStyle = GAME_COLOR;
             ctx.fillRect(brickX, brickY, BRICK_WIDTH, BRICK_HEIGHT);
           }
         }

@@ -7,7 +7,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f0f0f0;
+  background-color: #1a1a1a;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,16 +16,18 @@ body {
 
 .app-container {
   text-align: center;
-  background-color: white;
+  background-color: #2d2d2d;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  border: 1px solid #404040;
 }
 
 .app-container h1 {
-  color: #0095DD;
+  color: #00d4ff;
   margin-bottom: 20px;
   font-size: 2rem;
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
 }
 
 .game-info {
@@ -39,31 +41,37 @@ body {
 .game-info p {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #333;
+  color: #e0e0e0;
   margin: 0;
 }
 
 .restart-button {
-  background-color: #0095DD;
-  color: white;
+  background-color: #00d4ff;
+  color: #1a1a1a;
   border: none;
   padding: 8px 16px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.2s;
+  font-weight: bold;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 212, 255, 0.2);
 }
 
 .restart-button:hover {
-  background-color: #007ACC;
+  background-color: #00b8e6;
+  box-shadow: 0 4px 8px rgba(0, 212, 255, 0.3);
+  transform: translateY(-1px);
 }
 
 .restart-button:active {
-  background-color: #005999;
+  background-color: #0099cc;
+  transform: translateY(0);
 }
 
 canvas {
-  border: 2px solid #0095DD;
+  border: 2px solid #00d4ff;
   border-radius: 5px;
-  background-color: #fafafa;
+  background-color: #0f0f0f;
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
 }

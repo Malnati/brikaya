@@ -2,7 +2,7 @@
 import { Paddle } from '../objects/Paddle';
 import { Ball } from '../objects/Ball';
 import { Bricks } from '../objects/Bricks';
-import { BRICK_ROWS, BRICK_COLS } from '../constants/game';
+import { BRICK_ROWS, BRICK_COLS, GAME_COLOR } from '../constants/game';
 import { POINTS_PER_BRICK } from '../constants/gameState';
 import { AssetLoader } from '../utils/assetLoader';
 
@@ -61,7 +61,7 @@ export class GameEngine {
     
     if (!this.assetsLoaded) {
       // Show loading indicator
-      this.ctx.fillStyle = '#0095DD';
+      this.ctx.fillStyle = GAME_COLOR;
       this.ctx.font = '16px Arial';
       this.ctx.textAlign = 'center';
       this.ctx.fillText('Loading...', this.canvas.width / 2, this.canvas.height / 2);

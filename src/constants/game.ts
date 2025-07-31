@@ -18,5 +18,5 @@ export const BRICK_OFFSET_LEFT = 30;
 export const BRICK_ROWS = 3;
 export const BRICK_COLS = 5;
 
-export const GAME_COLOR = '#0095DD';
+export const GAME_COLOR = '#00d4ff';
 export const ROOT_ELEMENT_ID = 'root';
