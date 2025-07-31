@@ -11,7 +11,7 @@ export function useGameLoop(
   useEffect(() => {
     if (!canvasRef.current) return;
     const engine = new GameEngine(canvasRef.current, onScoreUpdate, onGameWon, onGameOver);
-    engine.start();
+    engine.start(); // agora é async, mas não precisa await
     return () => engine.stop();
   }, [canvasRef, onScoreUpdate, onGameWon, onGameOver]);
 }

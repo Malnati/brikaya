@@ -17,11 +17,13 @@ export class GameEngine {
   private score = 0;
   private assetsLoaded = false;
   private gameWon = false;
+  private gameOver = false;
 
   constructor(
     private canvas: HTMLCanvasElement, 
     private onScoreUpdate: (score: number) => void,
-    private onGameWon?: () => void
+    private onGameWon?: () => void,
+    private onGameOver?: () => void
   ) {
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error(ERROR_NO_2D_CONTEXT);
@@ -30,13 +32,15 @@ export class GameEngine {
     this.ball = new Ball(canvas.width, canvas.height);
     this.bricks = new Bricks(BRICK_ROWS, BRICK_COLS, this.onBrickDestroyed.bind(this));
     this.setupListeners();
-    this.preloadAssets();
+    // Removido: this.preloadAssets();
   }
 
   private async preloadAssets() {
     try {
+      console.log('Iniciando carregamento de assets...');
       await AssetLoader.preloadAllAssets();
       this.assetsLoaded = true;
+      console.log('Assets carregados com sucesso!');
     } catch (error) {
       console.warn('Some assets failed to load, using fallback rendering:', error);
       this.assetsLoaded = true; // Continue with fallback rendering
@@ -61,7 +65,8 @@ export class GameEngine {
     document.addEventListener('keyup', e => this.paddle.onKeyUp(e));
   }
 
-  public start() {
+  public async start() {
+    await this.preloadAssets();
     this.loop();
   }
 
@@ -87,13 +92,34 @@ export class GameEngine {
       this.ctx.font = '16px Arial';
       this.ctx.fillText(`Pontuação: ${this.score}`, this.canvas.width / 2, this.canvas.height / 2 + 10);
       this.ctx.fillText('Pressione "Restart Game" para jogar novamente', this.canvas.width / 2, this.canvas.height / 2 + 40);
+    } else if (this.gameOver) {
+      // Mostrar tela de fim de jogo
+      this.ctx.fillStyle = '#ff4444';
+      this.ctx.font = '24px Arial';
+      this.ctx.textAlign = 'center';
+      this.ctx.fillText('FIM DE JOGO!', this.canvas.width / 2, this.canvas.height / 2 - 20);
+      this.ctx.font = '16px Arial';
+      this.ctx.fillText(`Pontuação: ${this.score}`, this.canvas.width / 2, this.canvas.height / 2 + 10);
+      this.ctx.fillText('Pressione "Restart Game" para jogar novamente', this.canvas.width / 2, this.canvas.height / 2 + 40);
     } else {
       // Normal game rendering
-      this.bricks.draw(this.ctx);
-      this.paddle.update();
-      this.paddle.draw(this.ctx);
-      this.ball.update(this.paddle, this.bricks, this.canvas.height);
-      this.ball.draw(this.ctx);
+      try {
+        this.bricks.draw(this.ctx);
+        this.paddle.update();
+        this.paddle.draw(this.ctx);
+        this.ball.update(this.paddle, this.bricks, this.canvas.height);
+        this.ball.draw(this.ctx);
+      } catch (error) {
+        if (error instanceof Error && error.message === 'GAME_OVER') {
+          this.gameOver = true;
+          if (this.onGameOver) {
+            this.onGameOver();
+          }
+        } else {
+          console.error('Erro durante o rendering:', error);
+          throw error; // Re-throw other errors
+        }
+      }
     }
     
     this.animationFrame = requestAnimationFrame(this.loop);

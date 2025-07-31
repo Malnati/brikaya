@@ -1,5 +1,7 @@
 // src/objects/Ball.ts
 import { BALL_RADIUS, BALL_SPEED } from '../constants/game';
+import { ASSET_PATHS } from '../constants/assets';
+import { AssetLoader } from '../utils/assetLoader';
 
 const BALL_INITIAL_Y_OFFSET = 30;
 const MAX_BOUNCE_ANGLE = Math.PI / 3; // 60 graus
@@ -66,12 +68,25 @@ export class Ball {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    // Sempre desenha a bolinha como um círculo branco
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    ctx.fillStyle = '#ffffff'; // Cor branca
-    ctx.fill();
-    ctx.closePath();
+    const ballImage = AssetLoader.getImage(ASSET_PATHS.BALL);
+    
+    if (ballImage) {
+      // Desenha a imagem da bolinha
+      ctx.drawImage(
+        ballImage,
+        this.x - this.radius,
+        this.y - this.radius,
+        this.radius * 2,
+        this.radius * 2
+      );
+    } else {
+      // Fallback para círculo branco se a imagem não carregou
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+      ctx.closePath();
+    }
   }
 
   get position() {
