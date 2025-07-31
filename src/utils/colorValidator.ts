@@ -118,7 +118,7 @@ export class ColorValidator {
     const hasBluePixels = this.checkCanvasForColor(canvas, '#00d4ff', 20);
     
     if (hasBluePixels) {
-      result.warnings.push('Detectados pixels azuis (fallback) - possivel problema com carregamento de imagens');
+      result.warnings.push('Detectados pixels azuis (fallback) - possível problema com carregamento de imagens');
     }
 
     // Verificar se há pixels coloridos (bricks normais)
