@@ -1,5 +1,6 @@
 // src/objects/Paddle.ts
-import { PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_SPEED, GAME_COLOR } from '../constants/game';
+import { PADDLE_SPEED, GAME_COLOR } from '../constants/game';
+import { DynamicGameDimensions } from '../constants/game';
 import { ASSET_PATHS } from '../constants/assets';
 import { AssetLoader } from '../utils/assetLoader';
 
@@ -9,10 +10,12 @@ const KEY_RIGHT = 'ArrowRight';
 export class Paddle {
   private x: number;
   private dx = 0;
-  private readonly width = PADDLE_WIDTH;
-  private readonly height = PADDLE_HEIGHT;
+  private readonly width: number;
+  private readonly height: number;
 
-  constructor(private canvasWidth: number, private canvasHeight: number) {
+  constructor(private canvasWidth: number, private canvasHeight: number, dimensions: DynamicGameDimensions) {
+    this.width = dimensions.paddleWidth;
+    this.height = dimensions.paddleHeight;
     this.x = (canvasWidth - this.width) / 2;
   }
 

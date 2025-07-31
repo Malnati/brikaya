@@ -2,7 +2,7 @@
 import { Paddle } from '../objects/Paddle';
 import { Ball } from '../objects/Ball';
 import { Bricks } from '../objects/Bricks';
-import { BRICK_ROWS, BRICK_COLS, GAME_COLOR } from '../constants/game';
+import { GAME_COLOR, calculateDynamicDimensions, DynamicGameDimensions } from '../constants/game';
 import { POINTS_PER_BRICK } from '../constants/gameState';
 import { AssetLoader } from '../utils/assetLoader';
 
@@ -24,6 +24,7 @@ export class GameEngine {
   private gameWon = false;
   private gameOver = false;
   private canvasSize: CanvasSize;
+  private dimensions: DynamicGameDimensions;
   private scaleX = 1;
   private scaleY = 1;
 
@@ -41,13 +42,16 @@ export class GameEngine {
     // Usar tamanho do canvas atual se não fornecido
     this.canvasSize = canvasSize || { width: canvas.width, height: canvas.height };
     
+    // Calcular dimensões dinâmicas baseadas no tamanho do canvas
+    this.dimensions = calculateDynamicDimensions(this.canvasSize.width, this.canvasSize.height);
+    
     // Calcular escala para manter proporções
     this.scaleX = this.canvasSize.width / 480; // CANVAS_WIDTH original
     this.scaleY = this.canvasSize.height / 320; // CANVAS_HEIGHT original
     
-    this.paddle = new Paddle(this.canvasSize.width, this.canvasSize.height);
-    this.ball = new Ball(this.canvasSize.width, this.canvasSize.height);
-    this.bricks = new Bricks(BRICK_ROWS, BRICK_COLS, this.onBrickDestroyed.bind(this));
+    this.paddle = new Paddle(this.canvasSize.width, this.canvasSize.height, this.dimensions);
+    this.ball = new Ball(this.canvasSize.width, this.canvasSize.height, this.dimensions);
+    this.bricks = new Bricks(this.dimensions, this.onBrickDestroyed.bind(this));
     this.setupListeners();
   }
 
