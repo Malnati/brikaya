@@ -1,0 +1,56 @@
+<ator>Engenheiro de Software Senior com foco em produtividade, qualidade de código e automação</ator>
+
+<objetivo>Criar apenas a estrutura de arquivos vazios, com comentários de caminho no topo, para o jogo Breakout. Não gerar nenhuma lógica interna ou implementação funcional.</objetivo>
+
+<tarefas>
+- Gerar todos os arquivos mencionados no projeto Breakout, com estrutura correta e comentários de caminho no topo.
+- Não implementar lógica de renderização, loop de jogo, componentes React ou lógica de canvas.
+- Cada arquivo deve conter apenas o comentário de caminho (seguindo a linguagem) e uma breve anotação dizendo “// TODO: implementar”.
+</tarefas>
+
+<sugestao>
+Exemplo:
+
+```tsx
+// src/main.tsx
+// TODO: implementar
+```
+
+```html
+<!-- public/index.html -->
+<!-- TODO: implementar -->
+```
+
+```ts
+// src/hooks/useGameLoop.ts
+// TODO: implementar
+```
+
+```json
+"// public/manifest.webmanifest"
+// TODO: implementar
+```
+
+Crie todos os arquivos mencionados no prompt original (main.tsx, App.tsx, Game.tsx, GameEngine.ts, Paddle.ts, Ball.ts, Bricks.ts, registerServiceWorker.ts, sw.js, index.html, manifest.webmanifest), apenas com essas duas linhas.
+</sugestao>
+
+<antes>Não há estrutura de diretórios ou arquivos criada.</antes>
+
+<depois>Todos os arquivos existem com caminho e comentário “TODO: implementar”, prontos para desenvolvimento incremental.</depois>
+
+<workflow>
+- Criar arquivos vazios com cabeçalhos corretos de caminho e linguagem.
+- Garantir que todos os arquivos estejam localizados corretamente em src/, public/, hooks/, logic/, etc.
+</workflow>
+
+<regras>
+- Não implementar nenhuma lógica.
+- Incluir apenas comentário de caminho e `TODO`.
+- O comentário de caminho deve respeitar a sintaxe da linguagem:
+  - .ts, .tsx, .js, .jsx → `// caminho/arquivo`
+  - .sh (com shebang) → `#!/bin/bash` seguido de `# caminho/arquivo` na segunda linha
+  - .html → `<!-- caminho/arquivo -->`
+  - .json → `"// caminho/arquivo"` fora da estrutura real
+  - .css → `/* caminho/arquivo */`
+  - .yaml → `# caminho/arquivo`
+</regras>
