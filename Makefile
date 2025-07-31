@@ -8,23 +8,38 @@ TEMP_DIR=tmp
 NODE_MODULES=node_modules
 DIST_DIR=dist
 
-.PHONY: install-assets clean-assets install build dev preview clean help build-pwa prepare-capacitor ios android build-all
+# Process management
+KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
+	pkill -f "vite" 2>/dev/null || true && \
+	pkill -f "node.*vite" 2>/dev/null || true && \
+	pkill -f "npm.*dev" 2>/dev/null || true && \
+	pkill -f "npm.*preview" 2>/dev/null || true && \
+	sleep 2 && \
+	echo "✅ Processos anteriores encerrados!"
+
+.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes
+
+# Função para matar processos anteriores
+kill-processes:
+	$(KILL_PROCESSES)
 
 # Instalar dependências do projeto
 install:
-		@echo "Instalando dependências do projeto..."
-		@npm install
-		@echo "Dependências instaladas com sucesso!"
+	@echo "Instalando dependências do projeto..."
+	@npm install
+	@echo "Dependências instaladas com sucesso!"
 
+# Gerar build da PWA
 build-pwa:
-		@echo "Gerando build da PWA..."
-		@npm run build
-		@echo "Build gerado em $(DIST_DIR)"
+	@echo "Gerando build da PWA..."
+	@npm run build
+	@echo "Build gerado em $(DIST_DIR)"
 
+# Copiar build para Capacitor
 prepare-capacitor:
-		@echo "Copiando build para Capacitor..."
-		@npx cap copy
-		@echo "Build copiado para as plataformas nativas"
+	@echo "Copiando build para Capacitor..."
+	@npx cap copy
+	@echo "Build copiado para as plataformas nativas"
 
 # Compilar o projeto para produção
 build:
@@ -33,13 +48,13 @@ build:
 	@echo "Projeto compilado com sucesso!"
 
 # Executar o jogo em modo de desenvolvimento
-dev:
-	@echo "Iniciando servidor de desenvolvimento..."
+dev: kill-processes
+	@echo "🚀 Iniciando servidor de desenvolvimento..."
 	@npm run dev
 
 # Executar o jogo compilado (preview)
-preview:
-	@echo "Iniciando preview do jogo compilado..."
+preview: kill-processes
+	@echo "🎮 Iniciando preview do jogo compilado..."
 	@npm run preview
 
 # Limpar arquivos gerados
@@ -60,49 +75,83 @@ setup: install build
 	@echo "Setup completo! O projeto está pronto para execução."
 
 # Executar tudo (instalar, compilar e iniciar preview)
-run: setup 
-	npx vite --host
+run: kill-processes setup
+	@echo "🎯 Iniciando aplicativo..."
+	@npx vite --host
 
+# Executar apenas o preview (assumindo que já foi compilado)
+start: kill-processes
+	@echo "🎯 Iniciando aplicativo..."
+	@npx vite --host
+
+# Abrir projeto iOS no Xcode
 ios:
-		@npx cap open ios
+	@npx cap open ios
 
+# Abrir projeto Android no Android Studio
 android:
-		@npx cap open android
+	@npx cap open android
 
+# Build completo (PWA + Capacitor)
 build-all: build-pwa prepare-capacitor
 
-install-assets:
-	@echo "Installing game assets from Kenney puzzle pack..."
-	@mkdir -p $(ASSET_DIR)
-	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/ballGrey.png $(ASSET_DIR)/
-	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/paddleBlu.png $(ASSET_DIR)/paddle.png
-	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/element_red_square.png $(ASSET_DIR)/brick_red.png
-	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/element_blue_square.png $(ASSET_DIR)/brick_blue.png
-	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/element_green_square.png $(ASSET_DIR)/brick_green.png
-	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/element_yellow_square.png $(ASSET_DIR)/brick_yellow.png
-	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/element_purple_square.png $(ASSET_DIR)/brick_purple.png
-	@echo "Kenney puzzle pack assets installed successfully!"
+# Testar cores do jogo
+test-colors:
+	@echo "🧪 Testando cores do jogo..."
+	@npm run test:colors
 
-clean-assets:
-	@echo "Removing assets..."
-	@rm -rf $(ASSET_DIR)/*.png
-	@echo "Assets removed!"
+# Testar cores em modo desenvolvimento
+test-colors-dev: kill-processes
+	@echo "🧪 Testando cores do jogo em modo desenvolvimento..."
+	@npm run test:colors:dev
 
+# Verificar integridade das cores (para CI/CD)
+check-colors: kill-processes
+	@echo "🔍 Verificando integridade das cores..."
+	@timeout 30s bash -c 'npm run dev & sleep 8 && npm run test:colors && pkill -f "vite"' || (pkill -f "vite" && exit 1)
+
+# Teste manual completo
+test-manual: kill-processes
+	@echo "🎮 Executando teste manual completo..."
+	@timeout 60s bash -c 'npm run dev & sleep 5 && node scripts/test-game-manual.js && pkill -f "vite"' || (pkill -f "vite" && exit 1)
+
+# Teste manual de cores (com servidor HTTP simples)
+test-colors-manual:
+	@echo "🎨 Executando teste manual de cores..."
+	@node scripts/test-colors-manual.js
+
+# Parar todos os processos do jogo
+stop:
+	@echo "🛑 Parando todos os processos do jogo..."
+	$(KILL_PROCESSES)
+
+# Reiniciar o jogo (parar e iniciar novamente)
+restart: stop dev
+
+# Mostrar ajuda
 help:
 	@echo "Available targets:"
+	@echo "  kill-processes  - Encerrar processos anteriores do jogo"
 	@echo "  install		- Instalar dependências do projeto"
 	@echo "  build		  - Compilar o projeto para produção"
 	@echo "  dev		    - Executar servidor de desenvolvimento"
 	@echo "  preview		- Executar preview do jogo compilado"
+	@echo "  start          - Iniciar aplicativo (assumindo build existente)"
+	@echo "  run            - Setup completo e executar preview"
+	@echo "  restart        - Parar e reiniciar o jogo"
+	@echo "  stop           - Parar todos os processos do jogo"
 	@echo "  clean		  - Limpar todos os arquivos gerados"
 	@echo "  clean-deps     - Remover apenas node_modules"
-	@echo "  setup		  - Instalar dependências e compilar"
-	@echo "  run		    - Setup completo e executar preview"
-	@echo "  install-assets - Install Kenney puzzle pack assets"
-	@echo "  clean-assets   - Remove installed assets"
+	@echo "  setup          - Instalar dependências e compilar"
 	@echo "  build-pwa      - Gerar build da PWA"
 	@echo "  prepare-capacitor - Copiar build para Capacitor"
-	@echo "  ios		    - Abrir projeto iOS no Xcode"
-	@echo "  android		- Abrir projeto Android no Android Studio"
+	@echo "  ios            - Abrir projeto iOS no Xcode"
+	@echo "  android        - Abrir projeto Android no Android Studio"
 	@echo "  build-all      - Build PWA e copiar para Capacitor"
-	@echo "  help		   - Show this help message"
+	@echo "  test-colors    - Testar cores do jogo"
+	@echo "  test-colors-dev - Testar cores em modo desenvolvimento"
+	@echo "  test-colors-manual - Teste manual de cores (com servidor HTTP)"
+	@echo "  check-colors   - Verificar integridade das cores (CI/CD)"
+	@echo "  test-manual    - Teste manual completo"
+	@echo "  help           - Show this help message"
+

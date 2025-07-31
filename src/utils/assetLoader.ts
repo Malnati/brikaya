@@ -17,17 +17,30 @@ export class AssetLoader {
 
     const promise = new Promise<HTMLImageElement>((resolve, reject) => {
       const img = new Image();
+      
+      // Adicionar timeout para evitar travamento
+      const timeout = setTimeout(() => {
+        console.error(`Timeout ao carregar imagem: ${path}`);
+        this.loadPromises.delete(path);
+        reject(new Error(`Timeout loading image: ${path}`));
+      }, 10000); // 10 segundos de timeout
+      
       img.onload = () => {
-        console.log(`Imagem carregada com sucesso: ${path}`);
+        clearTimeout(timeout);
+        console.log(`✅ Imagem carregada com sucesso: ${path}`);
         this.imageCache.set(path, img);
         this.loadPromises.delete(path);
         resolve(img);
       };
-      img.onerror = () => {
-        console.error(`Erro ao carregar imagem: ${path}`);
+      
+      img.onerror = (error) => {
+        clearTimeout(timeout);
+        console.error(`❌ Erro ao carregar imagem: ${path}`, error);
         this.loadPromises.delete(path);
         reject(new Error(`Failed to load image: ${path}`));
       };
+      
+      // Definir src após configurar os event listeners
       img.src = path;
     });
 
@@ -37,13 +50,26 @@ export class AssetLoader {
 
   static async preloadAllAssets(): Promise<void> {
     const assetPaths = Object.values(ASSET_PATHS);
-    console.log('Carregando assets:', assetPaths);
-    try {
-      await Promise.all(assetPaths.map(path => this.preloadImage(path)));
-      console.log('Todos os assets carregados com sucesso!');
-    } catch (error) {
-      console.error('Erro ao carregar assets:', error);
-      throw error;
+    console.log('🔄 Carregando assets:', assetPaths);
+    
+    const results = await Promise.allSettled(
+      assetPaths.map(path => this.preloadImage(path))
+    );
+    
+    const successful = results.filter(result => result.status === 'fulfilled').length;
+    const failed = results.filter(result => result.status === 'rejected').length;
+    
+    console.log(`📊 Resultado do carregamento: ${successful} sucessos, ${failed} falhas`);
+    
+    if (failed > 0) {
+      console.warn('⚠️  Algumas imagens falharam ao carregar, mas o jogo continuará com fallback');
+      results.forEach((result, index) => {
+        if (result.status === 'rejected') {
+          console.error(`  ❌ Falha: ${assetPaths[index]} - ${result.reason}`);
+        }
+      });
+    } else {
+      console.log('✅ Todos os assets carregados com sucesso!');
     }
   }
 

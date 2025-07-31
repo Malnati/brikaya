@@ -20,7 +20,10 @@ export class Ball {
     this.y = canvasHeight - BALL_INITIAL_Y_OFFSET;
   }
 
-  update(paddle: { position: { x: number; y: number; width: number; height: number } }, bricks: { collide: (ball: Ball) => void }, maxHeight: number) {
+  update(
+    paddle: { position: { x: number; y: number; width: number; height: number } },
+    maxHeight: number
+  ): boolean {
     this.x += this.dx;
     this.y += this.dy;
 
@@ -38,13 +41,14 @@ export class Ball {
       const paddlePos = paddle.position;
       if (this.x > paddlePos.x && this.x < paddlePos.x + paddlePos.width) {
         this.handlePaddleCollision(paddlePos);
+        return true;
       } else {
         // A bolinha passou pela raquete - fim de jogo
         throw new Error('GAME_OVER');
       }
     }
 
-    bricks.collide(this);
+    return false;
   }
 
   private handlePaddleCollision(paddlePos: { x: number; y: number; width: number; height: number }) {
