@@ -16,16 +16,24 @@ interface Brick {
 export class Bricks {
   private bricks: Brick[][] = [];
   private dimensions: DynamicGameDimensions;
+  private rows: number;
+  private maxRows: number;
 
-  constructor(dimensions: DynamicGameDimensions, private onBrickDestroyed?: () => void) {
+  constructor(
+    dimensions: DynamicGameDimensions,
+    private onBrickDestroyed?: () => void,
+    maxRows?: number
+  ) {
     this.dimensions = dimensions;
-    
+    this.rows = dimensions.brickRows;
+    this.maxRows = maxRows ?? this.rows;
+
     for (let c = 0; c < dimensions.brickCols; c++) {
       this.bricks[c] = [];
-      for (let r = 0; r < dimensions.brickRows; r++) {
-        this.bricks[c][r] = { 
-          x: 0, 
-          y: 0, 
+      for (let r = 0; r < this.rows; r++) {
+        this.bricks[c][r] = {
+          x: 0,
+          y: 0,
           status: BRICK_ACTIVE,
           colorIndex: Math.floor(Math.random() * BRICK_COLORS.length)
         };
@@ -36,7 +44,7 @@ export class Bricks {
   // Método para verificar se todos os blocos foram destruídos
   isAllDestroyed(): boolean {
     for (let c = 0; c < this.dimensions.brickCols; c++) {
-      for (let r = 0; r < this.dimensions.brickRows; r++) {
+      for (let r = 0; r < this.rows; r++) {
         if (this.bricks[c][r].status === BRICK_ACTIVE) {
           return false;
         }
@@ -47,7 +55,7 @@ export class Bricks {
 
   draw(ctx: CanvasRenderingContext2D) {
     for (let c = 0; c < this.dimensions.brickCols; c++) {
-      for (let r = 0; r < this.dimensions.brickRows; r++) {
+      for (let r = 0; r < this.rows; r++) {
         const b = this.bricks[c][r];
         if (b.status === BRICK_ACTIVE) {
           const brickX = c * (this.dimensions.brickWidth + this.dimensions.brickPadding) + this.dimensions.brickOffsetLeft;
@@ -75,9 +83,31 @@ export class Bricks {
     }
   }
 
+
   collide(ball: { position: { x: number; y: number; radius: number }; bounceY: () => void; registerBrickHit: () => void }) {
+  addRow() {
+    if (this.rows >= this.maxRows) {
+      console.warn(`Maximum rows limit (${this.maxRows}) reached. Cannot add more rows.`);
+      if (this.onMaxRowsReached) {
+        this.onMaxRowsReached();
+      }
+      return;
+    }
     for (let c = 0; c < this.dimensions.brickCols; c++) {
-      for (let r = 0; r < this.dimensions.brickRows; r++) {
+      this.bricks[c].unshift({
+        x: 0,
+        y: 0,
+        status: BRICK_ACTIVE,
+        colorIndex: Math.floor(Math.random() * BRICK_COLORS.length)
+      });
+    }
+    this.rows += 1;
+  }
+
+  collide(ball: { position: { x: number; y: number; radius: number }; bounceY: () => void }): boolean {
+    let collided = false;
+    for (let c = 0; c < this.dimensions.brickCols; c++) {
+      for (let r = 0; r < this.rows; r++) {
         const b = this.bricks[c][r];
         if (b.status === BRICK_ACTIVE) {
           if (
@@ -92,9 +122,11 @@ export class Bricks {
             if (this.onBrickDestroyed) {
               this.onBrickDestroyed();
             }
+            collided = true;
           }
         }
       }
     }
+    return collided;
   }
 }

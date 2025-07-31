@@ -29,6 +29,8 @@ export class GameEngine {
   private dimensions: DynamicGameDimensions;
   private scaleX = 1;
   private scaleY = 1;
+  private ballHitBrick = false;
+  private maxBrickRows = 0;
 
   constructor(
     private canvas: HTMLCanvasElement, 
@@ -54,17 +56,32 @@ export class GameEngine {
     this.paddle = new Paddle(this.canvasSize.width, this.canvasSize.height, this.dimensions);
     this.balls.push(new Ball(this.canvasSize.width, this.canvasSize.height, this.dimensions));
     this.bricks = new Bricks(this.dimensions, this.onBrickDestroyed.bind(this));
+
+    this.ball = new Ball(this.canvasSize.width, this.canvasSize.height, this.dimensions);
+    const availableHeight =
+      this.canvasSize.height -
+      this.dimensions.paddleHeight -
+      this.dimensions.brickOffsetTop;
+    const computedRows = Math.floor(
+      availableHeight / (this.dimensions.brickHeight + this.dimensions.brickPadding)
+    );
+    this.maxBrickRows = Math.max(this.dimensions.brickRows, computedRows);
+    this.bricks = new Bricks(
+      this.dimensions,
+      this.onBrickDestroyed.bind(this),
+      this.maxBrickRows
+    );
     this.setupListeners();
   }
 
   private async preloadAssets() {
     try {
-      console.log('Iniciando carregamento de assets...');
+      console.log('🎮 Iniciando carregamento de assets...');
       await AssetLoader.preloadAllAssets();
       this.assetsLoaded = true;
-      console.log('Assets carregados com sucesso!');
+      console.log('✅ Assets carregados com sucesso!');
     } catch (error) {
-      console.warn('Some assets failed to load, using fallback rendering:', error);
+      console.warn('⚠️  Alguns assets falharam ao carregar, usando fallback:', error);
       this.assetsLoaded = true; // Continue with fallback rendering
     }
   }
@@ -194,6 +211,17 @@ export class GameEngine {
           ball.draw(this.ctx);
         }
         if (this.balls.length === 0) {
+        const hitPaddle = this.ball.update(this.paddle, this.canvasSize.height);
+        const hitBrick = this.bricks.collide(this.ball);
+        if (hitBrick) {
+          this.ballHitBrick = true;
+        }
+        if (hitPaddle) {
+          this.handlePenalty();
+        }
+        this.ball.draw(this.ctx);
+      } catch (error) {
+        if (error instanceof Error && error.message === 'GAME_OVER') {
           this.gameOver = true;
           if (this.onGameOver) {
             this.onGameOver();

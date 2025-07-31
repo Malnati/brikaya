@@ -45,6 +45,7 @@ export class Ball {
       if (this.x > paddlePos.x && this.x < paddlePos.x + paddlePos.width) {
         this.handlePaddleCollision(paddlePos);
         this.paddleCollision = true;
+        return true;
       } else {
         // A bolinha passou pela raquete
         return false;

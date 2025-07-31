@@ -1,7 +1,6 @@
 <!-- CHANGELOG.md -->
 - Estrutura inicial do projeto criada com arquivos vazios e TODOs
 - Implementação completa do jogo Breakout com suporte offline
-
 - Resolvido conflitos para integrar mudancas da main
 
 ## [1.1.0] - 2024-07-31
@@ -14,5 +13,18 @@
 
 ## [1.2.0] - 2024-08-01
 ### Adicionado
+
 - Multiplicação de bolinhas ao quebrar múltiplos blocos em uma mesma trajetória
 - Jogo termina apenas quando todas as bolinhas são perdidas ou todos os blocos são destruídos
+- Penalidade ao não quebrar blocos: uma nova linha é inserida no topo quando a
+  bola retorna à raquete sem destruir blocos.
+
+## [1.2.0] - 2024-08-31
+### Adicionado
+- Pontuação acumulada persistida em IndexedDB
+
+## [1.2.0] - 2024-08-01
+### Adicionado
+- Integração com Capacitor para build nativo iOS e Android
+- Novos targets no Makefile para gerar e preparar o build
+
