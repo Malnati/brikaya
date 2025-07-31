@@ -25,6 +25,19 @@ prepare-capacitor:
 	@echo "Copiando build para Capacitor..."
 	@npx cap copy
 	@echo "Build copiado para as plataformas nativas"
+	@echo "Instalando dependências do projeto..."
+	@npm install
+	@echo "Dependências instaladas com sucesso!"
+
+build-pwa:
+		@echo "Gerando build da PWA..."
+		@npm run build
+		@echo "Build gerado em $(DIST_DIR)"
+
+prepare-capacitor:
+		@echo "Copiando build para Capacitor..."
+		@npx cap copy
+		@echo "Build copiado para as plataformas nativas"
 
 # Compilar o projeto para produção
 build:
@@ -69,16 +82,20 @@ ios:
 
 android:
 	@npx cap open android
+  @npx cap open ios
+
+android:
+		@npx cap open android
 
 build-all: build-pwa prepare-capacitor
 
 help:
 	@echo "Available targets:"
-	@echo "  install        - Instalar dependências do projeto"
-	@echo "  build          - Compilar o projeto para produção"
-	@echo "  dev            - Executar servidor de desenvolvimento"
-	@echo "  preview        - Executar preview do jogo compilado"
-	@echo "  clean          - Limpar todos os arquivos gerados"
+	@echo "  install		- Instalar dependências do projeto"
+	@echo "  build		  - Compilar o projeto para produção"
+	@echo "  dev		    - Executar servidor de desenvolvimento"
+	@echo "  preview		- Executar preview do jogo compilado"
+	@echo "  clean		  - Limpar todos os arquivos gerados"
 	@echo "  clean-deps     - Remover apenas node_modules"
 	@echo "  setup          - Instalar dependências e compilar"
 	@echo "  run            - Setup completo e executar preview"
@@ -88,3 +105,4 @@ help:
 	@echo "  android        - Abrir projeto Android no Android Studio"
 	@echo "  build-all      - Build PWA e copiar para Capacitor"
 	@echo "  help           - Show this help message"
+
