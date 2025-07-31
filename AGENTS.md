@@ -1,3 +1,8 @@
+<!-- AGENTS.md -->
+
+Este repo utiliza um conjunto de regras adicionais localizado em `.cursor/rules/all.mdc`.
+Siga todas as orientações presentes naquele arquivo ao realizar modificações neste projeto.
+
 Regras Gerais de Engenharia
 • Aplicar princípios DRY, SRP, coesão alta e acoplamento baixo.
 • Componentes React com funções nomeadas.

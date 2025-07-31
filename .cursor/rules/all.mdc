@@ -1,0 +1,230 @@
+---
+description: |
+  // .cursor/rules/all.mdc
+
+  # Regras do arquivo: constants.mdc
+
+  Nenhum valor fixo (hardcoded) deve ser utilizado diretamente no corpo de funções, métodos ou blocos de código.
+  
+    Todos os valores literais como:
+      - URLs de APIs e endpoints (ex: "http://localhost:3333");
+      - Chaves de configuração (ex: "VITE_API_URL");
+      - URLs, nomes de arquivos, extensões, tokens e parâmetros estáticos;
+      - Nomes de campos, propriedades ou estruturas fixas;
+      - Mensagens de erro ou sucesso;
+  
+    Devem obrigatoriamente ser extraídos para constantes no **topo do arquivo TypeScript/JavaScript**, em letras maiúsculas com underscores (ex: `const API_ENDPOINT = "http://localhost:3333"`), conforme boas práticas de Clean Code.
+  
+    Para este projeto React/TypeScript:
+    - Constantes devem estar em `src/constants/`
+    - Constantes específicas de componentes devem estar no topo do arquivo do componente
+    - Constantes de teste devem estar em `tests/constants/`
+    - Constantes de configuração devem estar em `src/config.ts`
+  
+    Essa abordagem:
+      - Centraliza os valores para facilitar ajustes futuros;
+      - Evita duplicações e inconsistências;
+      - Torna o código mais legível e autossuficiente;
+      - Suporta refatorações automatizadas com maior segurança.
+  
+    Exceções:
+      - Strings que aparecem uma única vez e são claramente autoexplicativas (ex: `console.log("Debug info")`) podem ser toleradas, desde que não representem configuração ou dados relevantes.
+
+  # Regras do arquivo: dependencies.mdc
+
+  Regras para gerenciamento de dependências neste projeto.
+  
+    Dependências obrigatórias (não remover):
+    - `react`, `react-dom` - Core do React
+    - `react-admin`, `ra-data-simple-rest` - Framework de admin
+    - `react-router-dom` - Roteamento
+    - `@mui/material`, `@mui/icons-material` - UI components
+    - `@emotion/react`, `@emotion/styled` - Styling
+    - `vite`, `@vitejs/plugin-react` - Build tool
+    - `typescript`, `tsx` - TypeScript support
+    - `puppeteer` - Testes E2E
+    - `better-sqlite3`, `sqlite3` - Database
+    - `express`, `cors` - Mock server
+  
+    Dependências de desenvolvimento (não remover):
+    - `@types/*` - Type definitions
+    - `eslint`, `prettier` - Code quality
+    - `tailwindcss`, `postcss` - Styling
+    - `ts-node` - TypeScript execution
+  
+    Regras de instalação:
+    - NUNCA instalar dependências duplicadas
+    - Verificar se dependência já existe antes de adicionar
+    - Usar versões compatíveis entre dependências
+    - Manter `package-lock.json` atualizado
+    - Não remover dependências sem verificar impacto
+  
+    Problemas comuns a evitar:
+    - Não adicionar `node-fetch` (já incluído no Node.js 18+)
+    - Não duplicar `puppeteer` em dependencies e devDependencies
+    - Não adicionar dependências desnecessárias para o projeto
+    - Verificar compatibilidade com Node.js 20+
+  
+    Comandos de instalação:
+    - Usar `make install-all` para instalar todas as dependências
+    - Usar `make vite-install` para dependências do frontend
+    - Usar `make mock-install` para dependências do mock server
+
+  # Regras do arquivo: env.mdc
+
+  Toda e qualquer declaração ou obtenção de variáveis de configuração deve ser feita exclusivamente no arquivo `src/config.ts`.
+    
+    No `src/config.ts`, as variáveis devem ser definidas como constantes, seguindo o formato:
+  
+        export const API_ENDPOINT = "http://localhost:3333";
+        export const DEFAULT_TIMEOUT = 30000;
+        export const SUPPORTED_FORMATS = ['.txt', '.pdf', '.csv', '.json'];
+  
+    Além disso, **é obrigatório** que os mesmos valores padrão estejam definidos também no topo do `Makefile` para permitir execução sem dependências externas, por exemplo:
+  
+        # Makefile
+        API_ENDPOINT=http://localhost:3333
+        DEFAULT_TIMEOUT=30000
+  
+    Para aplicações React com Vite:
+    - Variáveis de ambiente devem ser prefixadas com `VITE_` para serem acessíveis no frontend
+    - Configurações sensíveis devem ser armazenadas em variáveis de ambiente do sistema
+    - Para desenvolvimento local, usar arquivo `.env.local` (não versionado)
+    - Para produção, usar variáveis de ambiente do servidor
+  
+    Configurações específicas deste projeto:
+    - `VITE_API_URL` - URL da API mock (padrão: http://localhost:3333)
+    - `PORT` - Porta do servidor Vite (padrão: 3000)
+    - `MOCK_PORT` - Porta do servidor mock (padrão: 3333)
+    - `DATABASE_PATH` - Caminho do banco SQLite (padrão: data/projects.db)
+
+  # Regras do arquivo: imports.mdc
+
+  Todas as importações de módulos em arquivos TypeScript/JavaScript devem estar localizadas no **topo do arquivo**, seguindo as diretrizes do ES6. É proibido o uso de `import` ou `require` em blocos `try/catch`, funções, métodos ou trechos condicionais.
+  
+    Regras:
+    - Todas as instruções `import` devem estar no cabeçalho, antes de qualquer execução de código.
+    - É proibido o uso de blocos `try/catch` para contornar erros de importação.
+    - É proibido realizar importações dinâmicas no meio da execução (ex: dentro de funções ou sob condições).
+    - Para aplicações React/TypeScript, use importações ES6 sempre que possível.
+    - Caso um módulo externo seja necessário, ele deve estar presente no `package.json` e ser instalado previamente.
+  
+    Organização de imports:
+    - Imports de bibliotecas externas primeiro
+    - Imports de módulos internos depois
+    - Imports de tipos TypeScript por último
+    - Separar imports por categoria com linha em branco
+  
+    Exceções:
+    - Importações dinâmicas com `import()` são permitidas apenas quando realmente necessárias para carregamento sob demanda (lazy loading).
+
+  # Regras do arquivo: sh.mdc
+
+  É proibida a criação ou o uso de arquivos de shell script (`.sh`, `.bash`, etc.) para execução de tarefas no projeto.
+  
+    Toda automação deve ser feita exclusivamente via `Makefile`, que é o único ponto de orquestração permitido.
+  
+    Regras obrigatórias:
+    - Não criar ou usar arquivos com extensão `.sh`, `.bash` ou similares.
+    - Não criar blocos de shell embutidos (`#!/bin/bash`, `#!/usr/bin/env sh`) em arquivos.
+    - Não adicionar novos alvos (`targets`) ao `Makefile` automaticamente. Somente criar comandos no `Makefile` mediante solicitação explícita.
+    - Scripts de teste Puppeteer devem ser criados em JavaScript/TypeScript (`.js`, `.ts`) e executados via `npm run test:e2e` ou targets do `Makefile`.
+    - Para testes E2E, usar exclusivamente Puppeteer com scripts Node.js.
+  
+    Esta política visa garantir rastreabilidade, consistência e futura integração com Docker e entrypoints controlados por variáveis de ambiente.
+
+  # Regras do arquivo: test.mdc
+
+  Todos os testes devem morar em arquivos JavaScript/TypeScript dentro do diretório `tests/`. Mesmo aqueles testes criados temporariamente para apoio de desenvolvimentos, mesmo estes devem morar em `tests/`.
+    
+    Para aplicações React/TypeScript:
+    - Testes unitários devem ficar em `tests/unit/`
+    - Testes de integração devem ficar em `tests/integration/`
+    - Testes E2E com Puppeteer devem ficar em `tests/e2e/`
+    - Testes de funcionalidades da aplicação devem ficar em `tests/`
+    - Qualquer código de teste temporário deve ficar em `tests/`
+    - O arquivo principal de execução de testes E2E é `tests/run-tests-e2e.js`
+  
+    Regras específicas para Puppeteer:
+    - Todos os testes E2E devem usar Puppeteer
+    - Testes devem ser executados via `npm run test:e2e` ou targets do `Makefile`
+    - Configurações do Puppeteer devem estar centralizadas em `tests/config/`
+  
+    Estrutura de testes específica deste projeto:
+    - Arquivo principal: `tests/run-tests-e2e.js`
+    - Testes devem iniciar servidores mock e Vite automaticamente
+    - Testes devem limpar banco de dados antes da execução
+    - Testes devem verificar workflow completo do wizard
+    - Testes devem capturar screenshots em caso de falha
+    - Testes devem usar timeouts adequados para carregamento
+  
+    Testes E2E obrigatórios (Bacalhau):
+    - Criação de banco de exemplo
+    - Chamada de processamento via CLI e API
+    - Validação de arquivos de saída
+    - Geração de relatório de sucesso/falha
+    - Execução automatizada via Puppeteer
+  
+    Comandos de teste disponíveis:
+    - `make test-e2e` - Teste completo com setup automático
+    - `make test-puppeteer` - Teste com verificação de servidores
+    - `make test-puppeteer-only` - Teste sem verificação de servidores
+    - `make test-puppeteer-mock` - Teste apenas com mock server
+    - `make test-puppeteer-complete` - Teste de workflow completo
+    - `make test-puppeteer-advanced` - Teste com validação e erros
+
+  # Regras do arquivo: tmp.mdc
+
+  Todos os arquivos criados automaticamente sem o consentimento explícito, devem ser salvos em `tmp/`.
+    
+    Para este projeto React/TypeScript:
+    - Arquivos temporários de build devem ir para `tmp/build/`
+    - Logs temporários devem ir para `tmp/logs/`
+    - Arquivos de teste temporários devem ir para `tmp/test/`
+    - Screenshots do Puppeteer devem ir para `tmp/screenshots/`
+    - Arquivos de dados temporários devem ir para `tmp/data/`
+
+  # Regras do arquivo: unused.mdc
+
+  Após qualquer alteração no código (refatoração, substituição de lógica ou migração de funcionalidades), é obrigatório:
+  
+    - Remover funções, métodos, classes e componentes (incluindo React) que não são mais utilizados em nenhum ponto do sistema.
+    - Eliminar variáveis locais, constantes e atributos não referenciados.
+    - Verificar e excluir variáveis de ambiente definidas em `vite.config.ts` ou no `Makefile` que não estejam mais sendo utilizadas.
+    - Aplicar essas mesmas verificações também a arquivos TypeScript/JavaScript, incluindo componentes obsoletos, hooks não usados e variáveis sem referência.
+    - Remover imports não utilizados em todos os arquivos TypeScript/JavaScript.
+    - Verificar e remover dependências não utilizadas no `package.json`.
+  
+    Especificamente para React/TypeScript:
+    - Remover componentes React não utilizados
+    - Eliminar hooks customizados não referenciados
+    - Verificar e remover tipos TypeScript não utilizados
+    - Limpar interfaces e tipos obsoletos
+    - Remover constantes e utilitários não utilizados
+  
+    Essa regra se baseia nos princípios de código limpo (Clean Code) e manutenção sustentável. A presença de código morto compromete:
+      - Legibilidade e clareza;
+      - Facilidade de manutenção;
+      - Precisão de testes e cobertura;
+      - Segurança em deploys automatizados.
+  
+    A verificação deve ser feita recursivamente em todo o projeto, garantindo que nenhuma referência seja esquecida antes da exclusão.
+
+  # Regras do arquivo: path.mdc
+
+  Todos os arquivos do projeto devem conter, no topo, um comentário com o **caminho relativo real** do arquivo dentro do projeto.
+  
+    O comentário deve ter o formato exato conforme a linguagem do arquivo:
+      - TypeScript: `// caminho/do/arquivo.ts`
+      - TypeScript React: `// caminho/do/arquivo.tsx`
+      - JavaScript: `// caminho/do/arquivo.js`
+      - JavaScript React: `// caminho/do/arquivo.jsx`
+      - JSON: `// caminho/do/arquivo.json`
+      - YAML: `# caminho/do/arquivo.yaml`
+      - Markdown: `<!-- caminho/do/arquivo.md -->`
+      - Makefile: `# Makefile`
+      - MCD: `---
+              description: |
+                `// caminho/do/arquivo.mdc`
+                Blablabla...
+---
