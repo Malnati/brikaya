@@ -1,8 +1,8 @@
 // src/objects/Paddle.ts
+import { PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_SPEED, GAME_COLOR } from '../constants/game';
 
-const PADDLE_WIDTH = 75;
-const PADDLE_HEIGHT = 10;
-const PADDLE_SPEED = 7;
+const KEY_LEFT = 'ArrowLeft';
+const KEY_RIGHT = 'ArrowRight';
 
 export class Paddle {
   private x: number;
@@ -15,12 +15,12 @@ export class Paddle {
   }
 
   onKeyDown(event: KeyboardEvent) {
-    if (event.key === 'ArrowLeft') this.dx = -PADDLE_SPEED;
-    if (event.key === 'ArrowRight') this.dx = PADDLE_SPEED;
+    if (event.key === KEY_LEFT) this.dx = -PADDLE_SPEED;
+    if (event.key === KEY_RIGHT) this.dx = PADDLE_SPEED;
   }
 
   onKeyUp(event: KeyboardEvent) {
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') this.dx = 0;
+    if (event.key === KEY_LEFT || event.key === KEY_RIGHT) this.dx = 0;
   }
 
   update() {
@@ -30,7 +30,7 @@ export class Paddle {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    ctx.fillStyle = '#0095DD';
+    ctx.fillStyle = GAME_COLOR;
     ctx.fillRect(this.x, this.canvasHeight - this.height, this.width, this.height);
   }
 

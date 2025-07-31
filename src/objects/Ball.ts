@@ -1,7 +1,7 @@
 // src/objects/Ball.ts
+import { BALL_RADIUS, BALL_SPEED, GAME_COLOR } from '../constants/game';
 
-const BALL_RADIUS = 10;
-const BALL_SPEED = 2;
+const BALL_INITIAL_Y_OFFSET = 30;
 
 export class Ball {
   private x: number;
@@ -10,9 +10,9 @@ export class Ball {
   private dy = -BALL_SPEED;
   private readonly radius = BALL_RADIUS;
 
-  constructor(private canvasWidth: number, private canvasHeight: number) {
+  constructor(private canvasWidth: number, canvasHeight: number) {
     this.x = canvasWidth / 2;
-    this.y = canvasHeight - 30;
+    this.y = canvasHeight - BALL_INITIAL_Y_OFFSET;
   }
 
   update(paddle: { position: { x: number; y: number; width: number; height: number } }, bricks: { collide: (ball: Ball) => void }, maxHeight: number) {
@@ -37,7 +37,7 @@ export class Ball {
   draw(ctx: CanvasRenderingContext2D) {
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    ctx.fillStyle = '#0095DD';
+    ctx.fillStyle = GAME_COLOR;
     ctx.fill();
     ctx.closePath();
   }
