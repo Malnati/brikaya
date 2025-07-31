@@ -12,13 +12,6 @@ export interface ColorValidationResult {
 }
 
 export class ColorValidator {
-  private static readonly EXPECTED_COLORS = {
-    '/assets/brick_red.png': '#ff0000',
-    '/assets/brick_blue.png': '#0000ff', 
-    '/assets/brick_green.png': '#00ff00',
-    '/assets/brick_yellow.png': '#ffff00',
-    '/assets/brick_purple.png': '#800080'
-  };
 
   /**
    * Valida se as imagens dos bricks estão carregando corretamente

@@ -8,6 +8,10 @@ export default defineConfig({
   plugins: [react()],
   base: BASE_URL,
   publicDir: 'public',
+  server: {
+    port: 7979,
+    strictPort: true,
+  },
   build: {
     outDir: 'dist',
     rollupOptions: {

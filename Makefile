@@ -8,7 +8,20 @@ TEMP_DIR=tmp
 NODE_MODULES=node_modules
 DIST_DIR=dist
 
-.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all
+# Process management
+KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
+	pkill -f "vite" 2>/dev/null || true && \
+	pkill -f "node.*vite" 2>/dev/null || true && \
+	pkill -f "npm.*dev" 2>/dev/null || true && \
+	pkill -f "npm.*preview" 2>/dev/null || true && \
+	sleep 2 && \
+	echo "✅ Processos anteriores encerrados!"
+
+.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes
+
+# Função para matar processos anteriores
+kill-processes:
+	$(KILL_PROCESSES)
 
 # Instalar dependências do projeto
 install:
@@ -35,13 +48,13 @@ build:
 	@echo "Projeto compilado com sucesso!"
 
 # Executar o jogo em modo de desenvolvimento
-dev:
-	@echo "Iniciando servidor de desenvolvimento..."
+dev: kill-processes
+	@echo "🚀 Iniciando servidor de desenvolvimento..."
 	@npm run dev
 
 # Executar o jogo compilado (preview)
-preview:
-	@echo "Iniciando preview do jogo compilado..."
+preview: kill-processes
+	@echo "🎮 Iniciando preview do jogo compilado..."
 	@npm run preview
 
 # Limpar arquivos gerados
@@ -62,8 +75,13 @@ setup: install build
 	@echo "Setup completo! O projeto está pronto para execução."
 
 # Executar tudo (instalar, compilar e iniciar preview)
-run: setup
-	pkill -f "vite" || true
+run: kill-processes setup
+	@echo "🎯 Iniciando aplicativo..."
+	@npx vite --host
+
+# Executar apenas o preview (assumindo que já foi compilado)
+start: kill-processes
+	@echo "🎯 Iniciando aplicativo..."
 	@npx vite --host
 
 # Abrir projeto iOS no Xcode
@@ -83,31 +101,43 @@ test-colors:
 	@npm run test:colors
 
 # Testar cores em modo desenvolvimento
-test-colors-dev:
+test-colors-dev: kill-processes
 	@echo "🧪 Testando cores do jogo em modo desenvolvimento..."
 	@npm run test:colors:dev
 
 # Verificar integridade das cores (para CI/CD)
-check-colors:
+check-colors: kill-processes
 	@echo "🔍 Verificando integridade das cores..."
-	@npm run dev & sleep 8 && npm run test:colors && pkill -f "vite" || (pkill -f "vite" && exit 1)
+	@timeout 30s bash -c 'npm run dev & sleep 8 && npm run test:colors && pkill -f "vite"' || (pkill -f "vite" && exit 1)
 
 # Teste manual completo
-test-manual:
+test-manual: kill-processes
 	@echo "🎮 Executando teste manual completo..."
-	@node scripts/test-game-manual.js
+	@timeout 60s bash -c 'npm run dev & sleep 5 && node scripts/test-game-manual.js && pkill -f "vite"' || (pkill -f "vite" && exit 1)
+
+# Parar todos os processos do jogo
+stop:
+	@echo "🛑 Parando todos os processos do jogo..."
+	$(KILL_PROCESSES)
+
+# Reiniciar o jogo (parar e iniciar novamente)
+restart: stop dev
 
 # Mostrar ajuda
 help:
 	@echo "Available targets:"
+	@echo "  kill-processes  - Encerrar processos anteriores do jogo"
 	@echo "  install		- Instalar dependências do projeto"
 	@echo "  build		  - Compilar o projeto para produção"
 	@echo "  dev		    - Executar servidor de desenvolvimento"
 	@echo "  preview		- Executar preview do jogo compilado"
+	@echo "  start          - Iniciar aplicativo (assumindo build existente)"
+	@echo "  run            - Setup completo e executar preview"
+	@echo "  restart        - Parar e reiniciar o jogo"
+	@echo "  stop           - Parar todos os processos do jogo"
 	@echo "  clean		  - Limpar todos os arquivos gerados"
 	@echo "  clean-deps     - Remover apenas node_modules"
 	@echo "  setup          - Instalar dependências e compilar"
-	@echo "  run            - Setup completo e executar preview"
 	@echo "  build-pwa      - Gerar build da PWA"
 	@echo "  prepare-capacitor - Copiar build para Capacitor"
 	@echo "  ios            - Abrir projeto iOS no Xcode"

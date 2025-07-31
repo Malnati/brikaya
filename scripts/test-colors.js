@@ -41,7 +41,7 @@ class ColorTester {
   async testColors() {
     try {
       // Navegar para o jogo
-      const gameUrl = 'http://localhost:5173'; // URL padrão do Vite
+      const gameUrl = 'http://localhost:8080'; // URL do servidor HTTP simples
       console.log(`📱 Navegando para: ${gameUrl}`);
       
       await this.page.goto(gameUrl, { waitUntil: 'networkidle0', timeout: 10000 });

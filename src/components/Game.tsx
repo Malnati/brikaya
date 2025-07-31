@@ -55,7 +55,7 @@ export default function Game({ onScoreUpdate, onGameWon, onGameOver }: GameProps
   useGameLoop(canvasRef, onScoreUpdate, onGameWon, onGameOver, canvasSize);
   
   // Debug de cores (apenas em desenvolvimento)
-  const { manualCheck } = useColorDebug(canvasRef);
+  useColorDebug(canvasRef);
 
   return (
     <div className="game-container">
