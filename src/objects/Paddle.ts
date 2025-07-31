@@ -3,6 +3,7 @@ import { PADDLE_SPEED, GAME_COLOR } from '../constants/game';
 import { DynamicGameDimensions } from '../constants/game';
 import { ASSET_PATHS } from '../constants/assets';
 import { AssetLoader } from '../utils/assetLoader';
+import { gameLogger } from '../storage/gameLogger';
 
 const KEY_LEFT = 'ArrowLeft';
 const KEY_RIGHT = 'ArrowRight';
@@ -20,8 +21,14 @@ export class Paddle {
   }
 
   onKeyDown(event: KeyboardEvent) {
-    if (event.key === KEY_LEFT) this.dx = -PADDLE_SPEED;
-    if (event.key === KEY_RIGHT) this.dx = PADDLE_SPEED;
+    if (event.key === KEY_LEFT) {
+      this.dx = -PADDLE_SPEED;
+      this.logPaddleMove('left');
+    }
+    if (event.key === KEY_RIGHT) {
+      this.dx = PADDLE_SPEED;
+      this.logPaddleMove('right');
+    }
   }
 
   onKeyUp(event: KeyboardEvent) {
@@ -35,6 +42,9 @@ export class Paddle {
     // Manter dentro dos limites do canvas
     if (this.x < 0) this.x = 0;
     if (this.x + this.width > this.canvasWidth) this.x = this.canvasWidth - this.width;
+    
+    // Log do movimento da raquete por touch
+    this.logPaddleMove('touch');
   }
 
   update() {
@@ -64,5 +74,30 @@ export class Paddle {
 
   get position() {
     return { x: this.x, y: this.canvasHeight - this.height, width: this.width, height: this.height };
+  }
+
+  private logPaddleMove(direction: 'left' | 'right' | 'touch') {
+    // Log do movimento da raquete - dados básicos, serão complementados pelo GameEngine
+    const gameState = {
+      score: 0,
+      ballsCount: 1,
+      bricksRemaining: 0,
+      gameWon: false,
+      gameOver: false,
+      level: 1
+    };
+    
+    const ballPositions = [{ x: 0, y: 0, velocity: { dx: 0, dy: 0 } }];
+    const paddlePosition = this.position;
+    
+    // Log assíncrono para não bloquear o movimento
+    setTimeout(() => {
+      gameLogger.logPaddleMove(
+        gameState,
+        ballPositions,
+        paddlePosition,
+        direction as 'left' | 'right'
+      ).catch(error => console.error('❌ Erro ao registrar movimento da raquete:', error));
+    }, 0);
   }
 }

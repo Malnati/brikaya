@@ -1,5 +1,5 @@
 // src/hooks/useGameLoop.ts
-import { useEffect, RefObject } from 'react';
+import { useEffect, RefObject, useCallback } from 'react';
 import { GameEngine } from '../logic/GameEngine';
 
 interface CanvasSize {
@@ -14,10 +14,21 @@ export function useGameLoop(
   onGameOver?: () => void,
   canvasSize?: CanvasSize
 ) {
+  // Memoizar as funções para evitar recriações desnecessárias
+  const memoizedOnScoreUpdate = useCallback(onScoreUpdate, []);
+  const memoizedOnGameWon = useCallback(onGameWon || (() => {}), [onGameWon]);
+  const memoizedOnGameOver = useCallback(onGameOver || (() => {}), [onGameOver]);
+
   useEffect(() => {
     if (!canvasRef.current) return;
-    const engine = new GameEngine(canvasRef.current, onScoreUpdate, onGameWon, onGameOver, canvasSize);
-    engine.start(); // agora é async, mas não precisa await
-    return () => engine.stop();
-  }, [canvasRef, onScoreUpdate, onGameWon, onGameOver, canvasSize]);
+    
+    console.log(`🎮 Iniciando GameEngine...`);
+    const engine = new GameEngine(canvasRef.current, memoizedOnScoreUpdate, memoizedOnGameWon, memoizedOnGameOver, canvasSize);
+    engine.start();
+    
+    return () => {
+      console.log(`🛑 Parando GameEngine...`);
+      engine.stop();
+    };
+  }, [canvasRef, memoizedOnScoreUpdate, memoizedOnGameWon, memoizedOnGameOver]); // Removido canvasSize das dependências
 }

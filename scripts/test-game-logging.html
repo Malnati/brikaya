@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste do Sistema de Logging do Jogo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .test-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .test-button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .test-button:hover {
+            background: #1976D2;
+        }
+        
+        .test-button.danger {
+            background: #f44336;
+        }
+        
+        .test-button.danger:hover {
+            background: #D32F2F;
+        }
+        
+        .test-button.success {
+            background: #4CAF50;
+        }
+        
+        .test-button.success:hover {
+            background: #388E3C;
+        }
+        
+        .results {
+            background: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .results h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+        
+        .log-output {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .stat-card {
+            background: #333;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        .stat-label {
+            color: #ccc;
+            margin-top: 5px;
+        }
+        
+        .events-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        
+        .event-item {
+            background: #333;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 3px;
+            border-left: 4px solid #2196F3;
+        }
+        
+        .event-type {
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .event-time {
+            color: #888;
+            font-size: 11px;
+            margin-left: 10px;
+        }
+        
+        .event-details {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧪 Teste do Sistema de Logging do Jogo</h1>
+        <p>Teste o sistema robusto de logging implementado no IndexedDB</p>
+    </div>
+    
+    <div class="test-controls">
+        <button class="test-button success" onclick="testGameLogging()">
+            🔍 Testar Sistema
+        </button>
+        <button class="test-button" onclick="createTestEvents()">
+            ➕ Criar Eventos de Teste
+        </button>
+        <button class="test-button danger" onclick="clearTestLogs()">
+            🗑️ Limpar Logs
+        </button>
+        <button class="test-button" onclick="loadRecentEvents()">
+            📋 Carregar Eventos Recentes
+        </button>
+        <button class="test-button" onclick="loadGameStats()">
+            📊 Carregar Estatísticas
+        </button>
+    </div>
+    
+    <div class="results">
+        <h3>📊 Resultados dos Testes</h3>
+        <div id="logOutput" class="log-output">Aguardando testes...</div>
+        
+        <div id="statsContainer" style="display: none;">
+            <h3>📈 Estatísticas do Jogo</h3>
+            <div id="statsGrid" class="stats-grid"></div>
+        </div>
+        
+        <div id="eventsContainer" style="display: none;">
+            <h3>📋 Eventos Recentes</h3>
+            <div id="eventsList" class="events-list"></div>
+        </div>
+    </div>
+    
+    <script type="module">
+        // Importar o sistema de logging
+        import { gameLogger } from '../src/storage/gameLogger.js';
+        
+        // Expor para uso global
+        window.gameLogger = gameLogger;
+        
+        // Função para adicionar log
+        function addLog(message) {
+            const logOutput = document.getElementById('logOutput');
+            const timestamp = new Date().toLocaleTimeString();
+            logOutput.textContent += `[${timestamp}] ${message}\n`;
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
+        
+        // Função para testar o sistema
+        window.testGameLogging = async function() {
+            addLog('🧪 Iniciando teste do sistema de logging...');
+            
+            try {
+                // Aguardar inicialização
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                addLog('📊 Verificando GameLogger...');
+                
+                if (window.gameLogger) {
+                    addLog('✅ GameLogger encontrado');
+                    
+                    // Testar recuperação de eventos
+                    const events = await window.gameLogger.getRecentEvents(5);
+                    addLog(`📋 Eventos recentes encontrados: ${events.length}`);
+                    
+                    // Testar estatísticas
+                    const stats = await window.gameLogger.getGameStats();
+                    addLog(`📈 Total de eventos: ${stats.totalEvents}`);
+                    addLog(`🎮 Total de jogos: ${stats.totalGames}`);
+                    
+                    addLog('✅ Teste concluído com sucesso!');
+                } else {
+                    addLog('❌ GameLogger não encontrado');
+                }
+                
+            } catch (error) {
+                addLog(`❌ Erro durante o teste: ${error.message}`);
+            }
+        };
+        
+        // Função para criar eventos de teste
+        window.createTestEvents = async function() {
+            addLog('➕ Criando eventos de teste...');
+            
+            try {
+                const testGameState = {
+                    score: 150,
+                    ballsCount: 1,
+                    bricksRemaining: 3,
+                    gameWon: false,
+                    gameOver: false,
+                    level: 1
+                };
+                
+                const testBallPositions = [
+                    { x: 240, y: 160, velocity: { dx: 3, dy: -3 } }
+                ];
+                
+                const testPaddlePosition = {
+                    x: 200,
+                    y: 300,
+                    width: 80,
+                    height: 10
+                };
+                
+                // Criar eventos de teste
+                await window.gameLogger.logGameStart(testGameState, testBallPositions, testPaddlePosition);
+                addLog('✅ Evento de início do jogo criado');
+                
+                await window.gameLogger.logScoreUpdate(testGameState, testBallPositions, testPaddlePosition, 10, 'test_brick_destroyed');
+                addLog('✅ Evento de pontuação criado');
+                
+                await window.gameLogger.logBrickDestroyed(
+                    testGameState,
+                    testBallPositions,
+                    testPaddlePosition,
+                    { x: 100, y: 50, width: 40, height: 20 },
+                    { col: 2, row: 1 },
+                    0,
+                    { x: 240, y: 160 }
+                );
+                addLog('✅ Evento de bloco destruído criado');
+                
+                await window.gameLogger.logCollision(
+                    testGameState,
+                    testBallPositions,
+                    testPaddlePosition,
+                    {
+                        type: 'wall',
+                        ballPosition: { x: 240, y: 160 },
+                        wallType: 'right'
+                    }
+                );
+                addLog('✅ Evento de colisão criado');
+                
+                await window.gameLogger.logGameEnd(testGameState, testBallPositions, testPaddlePosition, 'win');
+                addLog('✅ Evento de fim do jogo criado');
+                
+                addLog('🎉 Todos os eventos de teste criados com sucesso!');
+                
+            } catch (error) {
+                addLog(`❌ Erro ao criar eventos: ${error.message}`);
+            }
+        };
+        
+        // Função para limpar logs
+        window.clearTestLogs = async function() {
+            if (confirm('Tem certeza que deseja limpar todos os logs?')) {
+                addLog('🗑️ Limpando logs...');
+                
+                try {
+                    await window.gameLogger.clearAllEvents();
+                    addLog('✅ Logs limpos com sucesso');
+                    
+                    // Limpar displays
+                    document.getElementById('statsContainer').style.display = 'none';
+                    document.getElementById('eventsContainer').style.display = 'none';
+                    
+                } catch (error) {
+                    addLog(`❌ Erro ao limpar logs: ${error.message}`);
+                }
+            }
+        };
+        
+        // Função para carregar eventos recentes
+        window.loadRecentEvents = async function() {
+            addLog('📋 Carregando eventos recentes...');
+            
+            try {
+                const events = await window.gameLogger.getRecentEvents(10);
+                addLog(`📋 ${events.length} eventos carregados`);
+                
+                const eventsContainer = document.getElementById('eventsContainer');
+                const eventsList = document.getElementById('eventsList');
+                
+                eventsList.innerHTML = '';
+                
+                events.forEach(event => {
+                    const eventItem = document.createElement('div');
+                    eventItem.className = 'event-item';
+                    
+                    const timestamp = new Date(event.timestamp).toLocaleString('pt-BR');
+                    
+                    eventItem.innerHTML = `
+                        <div>
+                            <span class="event-type">${event.type}</span>
+                            <span class="event-time">${timestamp}</span>
+                        </div>
+                        <div class="event-details">
+                            Pontuação: ${event.gameState.score} | 
+                            Bolas: ${event.gameState.ballsCount} | 
+                            Blocos: ${event.gameState.bricksRemaining}
+                        </div>
+                    `;
+                    
+                    eventsList.appendChild(eventItem);
+                });
+                
+                eventsContainer.style.display = 'block';
+                
+            } catch (error) {
+                addLog(`❌ Erro ao carregar eventos: ${error.message}`);
+            }
+        };
+        
+        // Função para carregar estatísticas
+        window.loadGameStats = async function() {
+            addLog('📊 Carregando estatísticas...');
+            
+            try {
+                const stats = await window.gameLogger.getGameStats();
+                addLog('📊 Estatísticas carregadas');
+                
+                const statsContainer = document.getElementById('statsContainer');
+                const statsGrid = document.getElementById('statsGrid');
+                
+                statsGrid.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.totalGames}</div>
+                        <div class="stat-label">Total de Jogos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.totalEvents}</div>
+                        <div class="stat-label">Total de Eventos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.gamesWon}</div>
+                        <div class="stat-label">Vitórias</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.gamesLost}</div>
+                        <div class="stat-label">Derrotas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${Math.round(stats.averageScore)}</div>
+                        <div class="stat-label">Pontuação Média</div>
+                    </div>
+                `;
+                
+                statsContainer.style.display = 'block';
+                
+            } catch (error) {
+                addLog(`❌ Erro ao carregar estatísticas: ${error.message}`);
+            }
+        };
+        
+        // Inicializar
+        addLog('🚀 Sistema de logging inicializado');
+        addLog('💡 Use os botões acima para testar o sistema');
+        
+    </script>
+</body>
+</html> 

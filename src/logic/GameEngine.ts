@@ -5,6 +5,8 @@ import { Bricks } from '../objects/Bricks';
 import { GAME_COLOR, calculateDynamicDimensions, DynamicGameDimensions } from '../constants/game';
 import { POINTS_PER_BRICK } from '../constants/gameState';
 import { AssetLoader } from '../utils/assetLoader';
+import { gameLogger } from '../storage/gameLogger';
+
 
 const ERROR_NO_2D_CONTEXT = 'No 2D context';
 
@@ -37,23 +39,34 @@ export class GameEngine {
     private onGameOver?: () => void,
     canvasSize?: CanvasSize
   ) {
+    console.log(`🚀 GameEngine constructor iniciado`);
+    
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error(ERROR_NO_2D_CONTEXT);
     this.ctx = ctx;
     
+    console.log(`🎯 Canvas context obtido`);
+    
     // Usar tamanho do canvas atual se não fornecido
     this.canvasSize = canvasSize || { width: canvas.width, height: canvas.height };
     
+    console.log(`📏 Canvas size: ${this.canvasSize.width}x${this.canvasSize.height}`);
+    
     // Calcular dimensões dinâmicas baseadas no tamanho do canvas
     this.dimensions = calculateDynamicDimensions(this.canvasSize.width, this.canvasSize.height);
+    
+    console.log(`📐 Dimensões calculadas: ${this.dimensions.brickCols} colunas x ${this.dimensions.brickRows} linhas`);
+    console.log(`📐 Tamanho dos blocos: ${this.dimensions.brickWidth}x${this.dimensions.brickHeight}`);
     
     // Calcular escala para manter proporções
     this.scaleX = this.canvasSize.width / 480; // CANVAS_WIDTH original
     this.scaleY = this.canvasSize.height / 320; // CANVAS_HEIGHT original
     
+    console.log(`⚽ Criando Ball...`);
     this.paddle = new Paddle(this.canvasSize.width, this.canvasSize.height, this.dimensions);
     this.balls.push(new Ball(this.canvasSize.width, this.canvasSize.height, this.dimensions));
     
+    console.log(`🏗️  Criando Bricks...`);
     const availableHeight =
       this.canvasSize.height -
       this.dimensions.paddleHeight -
@@ -67,6 +80,8 @@ export class GameEngine {
       this.onBrickDestroyed.bind(this),
       this.maxBrickRows
     );
+    
+    console.log(`🎮 GameEngine constructor finalizado`);
     this.setupListeners();
   }
 
@@ -82,17 +97,73 @@ export class GameEngine {
     }
   }
 
-  private onBrickDestroyed() {
+  private async onBrickDestroyed() {
     this.score += POINTS_PER_BRICK;
     this.onScoreUpdate(this.score);
     
+    console.log(`🎯 onBrickDestroyed: Score = ${this.score}, Verificando se todos os blocos foram destruídos...`);
+    
+    // Log do evento de pontuação
+    const gameState = this.getCurrentGameState();
+    const ballPositions = this.getBallPositions();
+    const paddlePosition = this.paddle.position;
+    
+    await gameLogger.logScoreUpdate(
+      gameState,
+      ballPositions,
+      paddlePosition,
+      POINTS_PER_BRICK,
+      'brick_destroyed'
+    ).catch(error => console.error('❌ Erro ao registrar pontuação:', error));
+    
     // Verificar se todos os blocos foram destruídos
     if (this.bricks.isAllDestroyed() && !this.gameWon) {
+      console.log(`🏆 GAME WON! Todos os blocos destruídos!`);
       this.gameWon = true;
+      
+      // Log do fim do jogo (vitória)
+      await gameLogger.logGameEnd(
+        gameState,
+        ballPositions,
+        paddlePosition,
+        'win'
+      ).catch(error => console.error('❌ Erro ao registrar vitória:', error));
+      
       if (this.onGameWon) {
         this.onGameWon();
       }
     }
+  }
+
+  private getRemainingBricksCount(): number {
+    let count = 0;
+    for (let c = 0; c < this.dimensions.brickCols; c++) {
+      for (let r = 0; r < this.bricks.getRows(); r++) {
+        if (this.bricks.isBrickActive(c, r)) {
+          count++;
+        }
+      }
+    }
+    return count;
+  }
+
+  private getCurrentGameState() {
+    return {
+      score: this.score,
+      ballsCount: this.balls.length,
+      bricksRemaining: this.getRemainingBricksCount(),
+      gameWon: this.gameWon,
+      gameOver: this.gameOver,
+      level: 1 // Por enquanto sempre nível 1, pode ser expandido no futuro
+    };
+  }
+
+  private getBallPositions() {
+    return this.balls.map(ball => ({
+      x: ball.position.x,
+      y: ball.position.y,
+      velocity: ball.getVelocity()
+    }));
   }
 
   private setupListeners() {
@@ -139,6 +210,18 @@ export class GameEngine {
 
   public async start() {
     await this.preloadAssets();
+    
+    // Log do início do jogo
+    const gameState = this.getCurrentGameState();
+    const ballPositions = this.getBallPositions();
+    const paddlePosition = this.paddle.position;
+    
+    await gameLogger.logGameStart(
+      gameState,
+      ballPositions,
+      paddlePosition
+    ).catch(error => console.error('❌ Erro ao registrar início do jogo:', error));
+    
     this.loop();
   }
 
@@ -146,7 +229,7 @@ export class GameEngine {
     cancelAnimationFrame(this.animationFrame);
   }
 
-  private loop = () => {
+  private loop = async () => {
     this.ctx.clearRect(0, 0, this.canvasSize.width, this.canvasSize.height);
     
     if (!this.assetsLoaded) {
@@ -174,14 +257,24 @@ export class GameEngine {
       this.ctx.fillText(`Pontuação: ${this.score}`, this.canvasSize.width / 2, this.canvasSize.height / 2 + 10);
       this.ctx.fillText('Toque em "Restart Game" para jogar novamente', this.canvasSize.width / 2, this.canvasSize.height / 2 + 40);
     } else {
-      // Normal game rendering
-      try {
-        this.bricks.draw(this.ctx);
-        this.paddle.update();
-        this.paddle.draw(this.ctx);
+              // Normal game rendering
+        try {
+          this.bricks.draw(this.ctx);
+          this.paddle.draw(this.ctx);
         for (let i = this.balls.length - 1; i >= 0; i--) {
           const ball = this.balls[i];
-          const inPlay = ball.update(this.paddle, this.bricks, this.canvasSize.height);
+          
+          // Preparar estado do jogo para rastreamento de colisões
+          const gameState = {
+            score: this.score,
+            ballsCount: this.balls.length,
+            bricksRemaining: this.getRemainingBricksCount()
+          };
+          
+          // Atualizar posição da raquete antes de chamar ball.update
+          this.paddle.update();
+          
+          const inPlay = await ball.update(this.paddle, this.bricks, this.canvasSize.height, gameState);
           if (!inPlay) {
             this.balls.splice(i, 1);
             continue;
@@ -195,6 +288,19 @@ export class GameEngine {
         if (this.balls.length === 0) {
           // Game over - no balls left
           this.gameOver = true;
+          
+          // Log do fim do jogo (derrota)
+          const gameState = this.getCurrentGameState();
+          const ballPositions = this.getBallPositions();
+          const paddlePosition = this.paddle.position;
+          
+          await gameLogger.logGameEnd(
+            gameState,
+            ballPositions,
+            paddlePosition,
+            'lose'
+          ).catch(error => console.error('❌ Erro ao registrar derrota:', error));
+          
           if (this.onGameOver) {
             this.onGameOver();
           }
