@@ -53,11 +53,16 @@ setup: install build
 run: setup preview
 
 install-assets:
-	@echo "Installing game assets..."
-	@mkdir -p $(ASSET_DIR) $(TEMP_DIR)
-	@echo "Generating game assets locally..."
-	@node $(TEMP_DIR)/generate-png-assets.js
-	@echo "Assets installed successfully!"
+	@echo "Installing game assets from Kenney puzzle pack..."
+	@mkdir -p $(ASSET_DIR)
+	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/ballGrey.png $(ASSET_DIR)/
+	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/paddleBlu.png $(ASSET_DIR)/paddle.png
+	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/element_red_square.png $(ASSET_DIR)/brick_red.png
+	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/element_blue_square.png $(ASSET_DIR)/brick_blue.png
+	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/element_green_square.png $(ASSET_DIR)/brick_green.png
+	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/element_yellow_square.png $(ASSET_DIR)/brick_yellow.png
+	@cp $(TEMP_DIR)/kenney_puzzle-pack/png/element_purple_square.png $(ASSET_DIR)/brick_purple.png
+	@echo "Kenney puzzle pack assets installed successfully!"
 
 clean-assets:
 	@echo "Removing assets..."
@@ -74,6 +79,6 @@ help:
 	@echo "  clean-deps     - Remover apenas node_modules"
 	@echo "  setup          - Instalar dependências e compilar"
 	@echo "  run            - Setup completo e executar preview"
-	@echo "  install-assets - Download and install game assets"
+	@echo "  install-assets - Install Kenney puzzle pack assets"
 	@echo "  clean-assets   - Remove installed assets"
 	@echo "  help           - Show this help message"
