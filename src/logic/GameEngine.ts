@@ -6,6 +6,7 @@ import { BRICK_ROWS, BRICK_COLS } from '../constants/game';
 import { POINTS_PER_BRICK } from '../constants/gameState';
 
 const ERROR_NO_2D_CONTEXT = 'No 2D context';
+import { AssetLoader } from '../utils/assetLoader';
 
 export class GameEngine {
   private ctx: CanvasRenderingContext2D;
@@ -14,6 +15,7 @@ export class GameEngine {
   private ball: Ball;
   private bricks: Bricks;
   private score = 0;
+  private assetsLoaded = false;
 
   constructor(private canvas: HTMLCanvasElement, private onScoreUpdate: (score: number) => void) {
     const ctx = canvas.getContext('2d');
@@ -23,6 +25,17 @@ export class GameEngine {
     this.ball = new Ball(canvas.width, canvas.height);
     this.bricks = new Bricks(BRICK_ROWS, BRICK_COLS, this.onBrickDestroyed.bind(this));
     this.setupListeners();
+    this.preloadAssets();
+  }
+
+  private async preloadAssets() {
+    try {
+      await AssetLoader.preloadAllAssets();
+      this.assetsLoaded = true;
+    } catch (error) {
+      console.warn('Some assets failed to load, using fallback rendering:', error);
+      this.assetsLoaded = true; // Continue with fallback rendering
+    }
   }
 
   private onBrickDestroyed() {
@@ -45,11 +58,22 @@ export class GameEngine {
 
   private loop = () => {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.bricks.draw(this.ctx);
-    this.paddle.update();
-    this.paddle.draw(this.ctx);
-    this.ball.update(this.paddle, this.bricks, this.canvas.height);
-    this.ball.draw(this.ctx);
+    
+    if (!this.assetsLoaded) {
+      // Show loading indicator
+      this.ctx.fillStyle = '#0095DD';
+      this.ctx.font = '16px Arial';
+      this.ctx.textAlign = 'center';
+      this.ctx.fillText('Loading...', this.canvas.width / 2, this.canvas.height / 2);
+    } else {
+      // Normal game rendering
+      this.bricks.draw(this.ctx);
+      this.paddle.update();
+      this.paddle.draw(this.ctx);
+      this.ball.update(this.paddle, this.bricks, this.canvas.height);
+      this.ball.draw(this.ctx);
+    }
+    
     this.animationFrame = requestAnimationFrame(this.loop);
   };
 }

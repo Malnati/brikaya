@@ -7,7 +7,18 @@ const ASSETS_TO_CACHE = [
   '/favicon.ico',
   '/sw.js',
   '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  '/icons/icon-512.png',
+  '/src/main.tsx',
+  '/src/App.tsx',
+  '/src/components/Game.tsx',
+  '/src/hooks/useGameLoop.ts',
+  '/src/logic/GameEngine.ts',
+  '/src/objects/Ball.ts',
+  '/src/objects/Paddle.ts',
+  '/src/objects/Bricks.ts',
+  '/src/registerServiceWorker.ts',
+  '/assets/ballGrey.png',
+  '/assets/paddle.png'
 ];
 
 self.addEventListener('install', event => {
