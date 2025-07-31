@@ -6,14 +6,6 @@ const BASE_URL = './';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  publicDir: 'public',
-  build: {
-    outDir: 'dist'
-  }
-})
-
-export default defineConfig({
-  plugins: [react()],
   base: BASE_URL,
   publicDir: 'public',
   build: {

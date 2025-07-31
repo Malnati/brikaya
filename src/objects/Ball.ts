@@ -1,15 +1,9 @@
 // src/objects/Ball.ts
 import { BALL_RADIUS, BALL_SPEED, GAME_COLOR } from '../constants/game';
+import { ASSET_PATHS, BALL_IMAGE_SIZE } from '../constants/assets';
+import { AssetLoader } from '../utils/assetLoader';
 
 const BALL_INITIAL_Y_OFFSET = 30;
-import { ASSET_PATHS, BALL_IMAGE_SIZE } from '../constants/assets';
-import { AssetLoader } from '../utils/assetLoader';
-
-import { ASSET_PATHS, BALL_IMAGE_SIZE } from '../constants/assets';
-import { AssetLoader } from '../utils/assetLoader';
-
-const BALL_RADIUS = 10;
-const BALL_SPEED = 2;
 
 export class Ball {
   private x: number;
@@ -61,27 +55,6 @@ export class Ball {
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
       ctx.fillStyle = GAME_COLOR;
-      ctx.fill();
-      ctx.closePath();
-    }
-
-    const ballImage = AssetLoader.getImage(ASSET_PATHS.BALL);
-    
-    if (ballImage) {
-      // Draw image centered on ball position
-      const imageSize = BALL_IMAGE_SIZE.WIDTH;
-      ctx.drawImage(
-        ballImage, 
-        this.x - imageSize / 2, 
-        this.y - imageSize / 2, 
-        imageSize, 
-        imageSize
-      );
-    } else {
-      // Fallback to original circle rendering
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fillStyle = '#0095DD';
       ctx.fill();
       ctx.closePath();
     }
