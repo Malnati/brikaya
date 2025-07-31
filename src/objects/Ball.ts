@@ -29,11 +29,14 @@ export class Ball {
     if (this.y + this.dy < this.radius) {
       this.dy = -this.dy;
     } 
-    // Colisão com a raquete
+    // Colisão com a raquete ou verificação de fim de jogo
     else if (this.y + this.radius > maxHeight) {
       const paddlePos = paddle.position;
       if (this.x > paddlePos.x && this.x < paddlePos.x + paddlePos.width) {
         this.handlePaddleCollision(paddlePos);
+      } else {
+        // A bolinha passou pela raquete - fim de jogo
+        throw new Error('GAME_OVER');
       }
     }
 

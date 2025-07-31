@@ -5,12 +5,13 @@ import { GameEngine } from '../logic/GameEngine';
 export function useGameLoop(
   canvasRef: RefObject<HTMLCanvasElement>, 
   onScoreUpdate: (score: number) => void,
-  onGameWon?: () => void
+  onGameWon?: () => void,
+  onGameOver?: () => void
 ) {
   useEffect(() => {
     if (!canvasRef.current) return;
-    const engine = new GameEngine(canvasRef.current, onScoreUpdate, onGameWon);
+    const engine = new GameEngine(canvasRef.current, onScoreUpdate, onGameWon, onGameOver);
     engine.start();
     return () => engine.stop();
-  }, [canvasRef, onScoreUpdate, onGameWon]);
+  }, [canvasRef, onScoreUpdate, onGameWon, onGameOver]);
 }
