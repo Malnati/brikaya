@@ -2,6 +2,16 @@
 export const CANVAS_WIDTH = 480;
 export const CANVAS_HEIGHT = 320;
 
+// Responsividade
+export const MIN_CANVAS_WIDTH = 320;
+export const MIN_CANVAS_HEIGHT = 240;
+export const MAX_CANVAS_WIDTH = 800;
+export const MAX_CANVAS_HEIGHT = 600;
+
+// Controles touch
+export const TOUCH_SENSITIVITY = 2;
+export const TOUCH_DEAD_ZONE = 10;
+
 export const BALL_RADIUS = 10;
 export const BALL_SPEED = 2;
 

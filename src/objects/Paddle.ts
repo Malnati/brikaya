@@ -25,6 +25,15 @@ export class Paddle {
     if (event.key === KEY_LEFT || event.key === KEY_RIGHT) this.dx = 0;
   }
 
+  setPosition(x: number) {
+    // Centralizar a raquete na posição do touch
+    this.x = x - this.width / 2;
+    
+    // Manter dentro dos limites do canvas
+    if (this.x < 0) this.x = 0;
+    if (this.x + this.width > this.canvasWidth) this.x = this.canvasWidth - this.width;
+  }
+
   update() {
     this.x += this.dx;
     if (this.x < 0) this.x = 0;

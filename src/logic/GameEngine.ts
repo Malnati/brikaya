@@ -8,6 +8,11 @@ import { AssetLoader } from '../utils/assetLoader';
 
 const ERROR_NO_2D_CONTEXT = 'No 2D context';
 
+interface CanvasSize {
+  width: number;
+  height: number;
+}
+
 export class GameEngine {
   private ctx: CanvasRenderingContext2D;
   private animationFrame = 0;
@@ -18,21 +23,32 @@ export class GameEngine {
   private assetsLoaded = false;
   private gameWon = false;
   private gameOver = false;
+  private canvasSize: CanvasSize;
+  private scaleX = 1;
+  private scaleY = 1;
 
   constructor(
     private canvas: HTMLCanvasElement, 
     private onScoreUpdate: (score: number) => void,
     private onGameWon?: () => void,
-    private onGameOver?: () => void
+    private onGameOver?: () => void,
+    canvasSize?: CanvasSize
   ) {
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error(ERROR_NO_2D_CONTEXT);
     this.ctx = ctx;
-    this.paddle = new Paddle(canvas.width, canvas.height);
-    this.ball = new Ball(canvas.width, canvas.height);
+    
+    // Usar tamanho do canvas atual se não fornecido
+    this.canvasSize = canvasSize || { width: canvas.width, height: canvas.height };
+    
+    // Calcular escala para manter proporções
+    this.scaleX = this.canvasSize.width / 480; // CANVAS_WIDTH original
+    this.scaleY = this.canvasSize.height / 320; // CANVAS_HEIGHT original
+    
+    this.paddle = new Paddle(this.canvasSize.width, this.canvasSize.height);
+    this.ball = new Ball(this.canvasSize.width, this.canvasSize.height);
     this.bricks = new Bricks(BRICK_ROWS, BRICK_COLS, this.onBrickDestroyed.bind(this));
     this.setupListeners();
-    // Removido: this.preloadAssets();
   }
 
   private async preloadAssets() {
@@ -61,8 +77,45 @@ export class GameEngine {
   }
 
   private setupListeners() {
+    // Controles de teclado
     document.addEventListener('keydown', e => this.paddle.onKeyDown(e));
     document.addEventListener('keyup', e => this.paddle.onKeyUp(e));
+    
+    // Controles touch
+    this.setupTouchControls();
+  }
+
+  private setupTouchControls() {
+    let isTouching = false;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      e.preventDefault();
+      isTouching = true;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      if (!isTouching) return;
+      
+      const touch = e.touches[0];
+      const rect = this.canvas.getBoundingClientRect();
+      const touchX = touch.clientX - rect.left;
+      
+      // Converter coordenadas da tela para coordenadas do canvas
+      const canvasX = (touchX / rect.width) * this.canvasSize.width;
+      
+      // Mover paddle para a posição do touch
+      this.paddle.setPosition(canvasX);
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      e.preventDefault();
+      isTouching = false;
+    };
+
+    this.canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+    this.canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+    this.canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
   }
 
   public async start() {
@@ -75,39 +128,39 @@ export class GameEngine {
   }
 
   private loop = () => {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.clearRect(0, 0, this.canvasSize.width, this.canvasSize.height);
     
     if (!this.assetsLoaded) {
       // Show loading indicator
       this.ctx.fillStyle = GAME_COLOR;
-      this.ctx.font = '16px Arial';
+      this.ctx.font = `${16 * Math.min(this.scaleX, this.scaleY)}px Arial`;
       this.ctx.textAlign = 'center';
-      this.ctx.fillText('Loading...', this.canvas.width / 2, this.canvas.height / 2);
+      this.ctx.fillText('Loading...', this.canvasSize.width / 2, this.canvasSize.height / 2);
     } else if (this.gameWon) {
       // Mostrar tela de vitória
       this.ctx.fillStyle = GAME_COLOR;
-      this.ctx.font = '24px Arial';
+      this.ctx.font = `${24 * Math.min(this.scaleX, this.scaleY)}px Arial`;
       this.ctx.textAlign = 'center';
-      this.ctx.fillText('VITÓRIA!', this.canvas.width / 2, this.canvas.height / 2 - 20);
-      this.ctx.font = '16px Arial';
-      this.ctx.fillText(`Pontuação: ${this.score}`, this.canvas.width / 2, this.canvas.height / 2 + 10);
-      this.ctx.fillText('Pressione "Restart Game" para jogar novamente', this.canvas.width / 2, this.canvas.height / 2 + 40);
+      this.ctx.fillText('VITÓRIA!', this.canvasSize.width / 2, this.canvasSize.height / 2 - 20);
+      this.ctx.font = `${16 * Math.min(this.scaleX, this.scaleY)}px Arial`;
+      this.ctx.fillText(`Pontuação: ${this.score}`, this.canvasSize.width / 2, this.canvasSize.height / 2 + 10);
+      this.ctx.fillText('Toque em "Restart Game" para jogar novamente', this.canvasSize.width / 2, this.canvasSize.height / 2 + 40);
     } else if (this.gameOver) {
       // Mostrar tela de fim de jogo
       this.ctx.fillStyle = '#ff4444';
-      this.ctx.font = '24px Arial';
+      this.ctx.font = `${24 * Math.min(this.scaleX, this.scaleY)}px Arial`;
       this.ctx.textAlign = 'center';
-      this.ctx.fillText('FIM DE JOGO!', this.canvas.width / 2, this.canvas.height / 2 - 20);
-      this.ctx.font = '16px Arial';
-      this.ctx.fillText(`Pontuação: ${this.score}`, this.canvas.width / 2, this.canvas.height / 2 + 10);
-      this.ctx.fillText('Pressione "Restart Game" para jogar novamente', this.canvas.width / 2, this.canvas.height / 2 + 40);
+      this.ctx.fillText('FIM DE JOGO!', this.canvasSize.width / 2, this.canvasSize.height / 2 - 20);
+      this.ctx.font = `${16 * Math.min(this.scaleX, this.scaleY)}px Arial`;
+      this.ctx.fillText(`Pontuação: ${this.score}`, this.canvasSize.width / 2, this.canvasSize.height / 2 + 10);
+      this.ctx.fillText('Toque em "Restart Game" para jogar novamente', this.canvasSize.width / 2, this.canvasSize.height / 2 + 40);
     } else {
       // Normal game rendering
       try {
         this.bricks.draw(this.ctx);
         this.paddle.update();
         this.paddle.draw(this.ctx);
-        this.ball.update(this.paddle, this.bricks, this.canvas.height);
+        this.ball.update(this.paddle, this.bricks, this.canvasSize.height);
         this.ball.draw(this.ctx);
       } catch (error) {
         if (error instanceof Error && error.message === 'GAME_OVER') {
