@@ -17,7 +17,9 @@ const ASSETS_TO_CACHE = [
   '/src/objects/Ball.ts',
   '/src/objects/Paddle.ts',
   '/src/objects/Bricks.ts',
-  '/src/registerServiceWorker.ts'
+  '/src/registerServiceWorker.ts',
+  '/assets/ballGrey.png',
+  '/assets/paddle.png'
 ];
 
 self.addEventListener('install', event => {
