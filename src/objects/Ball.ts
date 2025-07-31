@@ -42,13 +42,14 @@ export class Ball {
     
     if (ballImage) {
       // Draw image centered on ball position
-      const imageSize = BALL_IMAGE_SIZE.WIDTH;
+      const imageWidth = BALL_IMAGE_SIZE.WIDTH;
+      const imageHeight = BALL_IMAGE_SIZE.HEIGHT;
       ctx.drawImage(
         ballImage, 
-        this.x - imageSize / 2, 
-        this.y - imageSize / 2, 
-        imageSize, 
-        imageSize
+        this.x - imageWidth / 2, 
+        this.y - imageHeight / 2, 
+        imageWidth, 
+        imageHeight
       );
     } else {
       // Fallback to original circle rendering
