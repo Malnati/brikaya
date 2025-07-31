@@ -1,6 +1,7 @@
 // src/objects/Bricks.ts
 import { BRICK_WIDTH, BRICK_HEIGHT, BRICK_PADDING, BRICK_OFFSET_TOP, BRICK_OFFSET_LEFT, GAME_COLOR } from '../constants/game';
 import { BRICK_COLORS } from '../constants/assets';
+import { AssetLoader } from '../utils/assetLoader';
 
 const BRICK_ACTIVE = 1;
 const BRICK_DESTROYED = 0;
@@ -14,10 +15,8 @@ interface Brick {
 
 export class Bricks {
   private bricks: Brick[][] = [];
-  private brickImages: HTMLImageElement[] = [];
 
   constructor(private rows: number, private cols: number, private onBrickDestroyed?: () => void) {
-    this.loadBrickImages();
     
     for (let c = 0; c < cols; c++) {
       this.bricks[c] = [];
@@ -32,12 +31,18 @@ export class Bricks {
     }
   }
 
-  private loadBrickImages() {
-    BRICK_COLORS.forEach((colorPath) => {
-      const img = new Image();
-      img.src = colorPath;
-      this.brickImages.push(img);
-    });
+
+
+  // Método para verificar se todos os blocos foram destruídos
+  isAllDestroyed(): boolean {
+    for (let c = 0; c < this.cols; c++) {
+      for (let r = 0; r < this.rows; r++) {
+        if (this.bricks[c][r].status === BRICK_ACTIVE) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -51,8 +56,8 @@ export class Bricks {
           b.y = brickY;
           
           // Desenhar a imagem do brick
-          const brickImage = this.brickImages[b.colorIndex];
-          if (brickImage && brickImage.complete) {
+          const brickImage = AssetLoader.getImage(BRICK_COLORS[b.colorIndex]);
+          if (brickImage) {
             ctx.drawImage(
               brickImage,
               brickX,

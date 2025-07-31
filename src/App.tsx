@@ -5,13 +5,25 @@ import Game from './components/Game';
 export default function App() {
   const [score, setScore] = useState(0);
   const [gameKey, setGameKey] = useState(0);
+  const [gameWon, setGameWon] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
 
   const handleScoreUpdate = useCallback((newScore: number) => {
     setScore(newScore);
   }, []);
 
+  const handleGameWon = useCallback(() => {
+    setGameWon(true);
+  }, []);
+
+  const handleGameOver = useCallback(() => {
+    setGameOver(true);
+  }, []);
+
   const handleRestart = useCallback(() => {
     setScore(0);
+    setGameWon(false);
+    setGameOver(false);
     setGameKey(prev => prev + 1);
   }, []);
 
@@ -20,11 +32,23 @@ export default function App() {
       <h1>Breakout</h1>
       <div className="game-info">
         <p>Score: {score}</p>
+        {gameWon && (
+          <div className="victory-message">
+            <h2>🎉 Parabéns! Você venceu! 🎉</h2>
+            <p>Pontuação final: {score}</p>
+          </div>
+        )}
+        {gameOver && (
+          <div className="game-over-message">
+            <h2>💥 Fim de Jogo! 💥</h2>
+            <p>Pontuação final: {score}</p>
+          </div>
+        )}
         <button onClick={handleRestart} className="restart-button">
-          Restart Game
+          {gameWon || gameOver ? 'Jogar Novamente' : 'Restart Game'}
         </button>
       </div>
-      <Game key={gameKey} onScoreUpdate={handleScoreUpdate} />
+      <Game key={gameKey} onScoreUpdate={handleScoreUpdate} onGameWon={handleGameWon} onGameOver={handleGameOver} />
     </div>
   );
 }
