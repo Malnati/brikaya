@@ -34,22 +34,10 @@ export class AssetLoader {
   }
 
   static async preloadAllAssets(): Promise<void> {
-    const assetPaths = this.extractStringPaths(ASSET_PATHS);
+    const assetPaths = Object.values(ASSET_PATHS);
     await Promise.all(assetPaths.map(path => this.preloadImage(path)));
   }
 
-  private static extractStringPaths(obj: any): string[] {
-    const paths: string[] = [];
-    const traverse = (value: any) => {
-      if (typeof value === 'string') {
-        paths.push(value);
-      } else if (typeof value === 'object' && value !== null) {
-        Object.values(value).forEach(traverse);
-      }
-    };
-    traverse(obj);
-    return paths;
-  }
   static getImage(path: string): HTMLImageElement | null {
     return this.imageCache.get(path) || null;
   }

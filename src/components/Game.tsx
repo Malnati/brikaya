@@ -1,13 +1,15 @@
 // src/components/Game.tsx
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useGameLoop } from '../hooks/useGameLoop';
+import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../constants/game';
 
-const CANVAS_WIDTH = 480;
-const CANVAS_HEIGHT = 320;
+interface GameProps {
+  onScoreUpdate: (score: number) => void;
+}
 
-export default function Game() {
+export default function Game({ onScoreUpdate }: GameProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  useGameLoop(canvasRef);
+  useGameLoop(canvasRef, onScoreUpdate);
 
   return <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} />;
 }
