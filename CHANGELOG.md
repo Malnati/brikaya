@@ -11,3 +11,8 @@
   - Ângulo máximo de rebatida de 60 graus (π/3 radianos)
   - Variação de velocidade baseada na posição do hit (0.8x a 1.2x da velocidade base)
   - Prevenção de travamento da bolinha na raquete
+
+## [1.2.0] - 2024-08-01
+### Adicionado
+- Penalidade ao não quebrar blocos: uma nova linha é inserida no topo quando a
+  bola retorna à raquete sem destruir blocos.
