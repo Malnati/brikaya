@@ -84,7 +84,13 @@ export class Bricks {
   }
 
   addRow() {
-    if (this.rows >= this.maxRows) return;
+    if (this.rows >= this.maxRows) {
+      console.warn(`Maximum rows limit (${this.maxRows}) reached. Cannot add more rows.`);
+      if (this.onMaxRowsReached) {
+        this.onMaxRowsReached();
+      }
+      return;
+    }
     for (let c = 0; c < this.dimensions.brickCols; c++) {
       this.bricks[c].unshift({
         x: 0,
