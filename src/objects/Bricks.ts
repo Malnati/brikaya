@@ -22,7 +22,8 @@ export class Bricks {
   constructor(
     dimensions: DynamicGameDimensions,
     private onBrickDestroyed?: () => void,
-    maxRows?: number
+    maxRows?: number,
+    private onMaxRowsReached?: () => void
   ) {
     this.dimensions = dimensions;
     this.rows = dimensions.brickRows;
@@ -84,7 +85,6 @@ export class Bricks {
   }
 
 
-  collide(ball: { position: { x: number; y: number; radius: number }; bounceY: () => void; registerBrickHit: () => void }) {
   addRow() {
     if (this.rows >= this.maxRows) {
       console.warn(`Maximum rows limit (${this.maxRows}) reached. Cannot add more rows.`);
@@ -104,7 +104,7 @@ export class Bricks {
     this.rows += 1;
   }
 
-  collide(ball: { position: { x: number; y: number; radius: number }; bounceY: () => void }): boolean {
+  collide(ball: { position: { x: number; y: number; radius: number }; bounceY: () => void; registerBrickHit: () => void }): boolean {
     let collided = false;
     for (let c = 0; c < this.dimensions.brickCols; c++) {
       for (let r = 0; r < this.rows; r++) {

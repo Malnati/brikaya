@@ -29,7 +29,7 @@ export class GameEngine {
   private dimensions: DynamicGameDimensions;
   private scaleX = 1;
   private scaleY = 1;
-  private ballHitBrick = false;
+
   private maxBrickRows = 0;
 
   constructor(
@@ -55,9 +55,7 @@ export class GameEngine {
     
     this.paddle = new Paddle(this.canvasSize.width, this.canvasSize.height, this.dimensions);
     this.balls.push(new Ball(this.canvasSize.width, this.canvasSize.height, this.dimensions));
-    this.bricks = new Bricks(this.dimensions, this.onBrickDestroyed.bind(this));
-
-    this.ball = new Ball(this.canvasSize.width, this.canvasSize.height, this.dimensions);
+    
     const availableHeight =
       this.canvasSize.height -
       this.dimensions.paddleHeight -
@@ -211,25 +209,22 @@ export class GameEngine {
           ball.draw(this.ctx);
         }
         if (this.balls.length === 0) {
-        const hitPaddle = this.ball.update(this.paddle, this.canvasSize.height);
-        const hitBrick = this.bricks.collide(this.ball);
-        if (hitBrick) {
-          this.ballHitBrick = true;
-        }
-        if (hitPaddle) {
-          this.handlePenalty();
-        }
-        this.ball.draw(this.ctx);
-      } catch (error) {
-        if (error instanceof Error && error.message === 'GAME_OVER') {
+          // Game over - no balls left
           this.gameOver = true;
           if (this.onGameOver) {
             this.onGameOver();
           }
         }
       } catch (error) {
-        console.error('Erro durante o rendering:', error);
-        throw error;
+        if (error instanceof Error && error.message === 'GAME_OVER') {
+          this.gameOver = true;
+          if (this.onGameOver) {
+            this.onGameOver();
+          }
+        } else {
+          console.error('Erro durante o rendering:', error);
+          throw error;
+        }
       }
     }
     
