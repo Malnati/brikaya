@@ -60,7 +60,8 @@ setup: install build
 	@echo "Setup completo! O projeto está pronto para execução."
 
 # Executar tudo (instalar, compilar e iniciar preview)
-run: setup preview
+run: setup 
+	npx vite --host
 
 ios:
         @npx cap open ios
