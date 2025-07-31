@@ -1,5 +1,6 @@
 // src/objects/Paddle.ts
-import { PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_SPEED, GAME_COLOR } from '../constants/game';
+import { PADDLE_SPEED, GAME_COLOR } from '../constants/game';
+import { DynamicGameDimensions } from '../constants/game';
 import { ASSET_PATHS } from '../constants/assets';
 import { AssetLoader } from '../utils/assetLoader';
 
@@ -9,10 +10,12 @@ const KEY_RIGHT = 'ArrowRight';
 export class Paddle {
   private x: number;
   private dx = 0;
-  private readonly width = PADDLE_WIDTH;
-  private readonly height = PADDLE_HEIGHT;
+  private readonly width: number;
+  private readonly height: number;
 
-  constructor(private canvasWidth: number, private canvasHeight: number) {
+  constructor(private canvasWidth: number, private canvasHeight: number, dimensions: DynamicGameDimensions) {
+    this.width = dimensions.paddleWidth;
+    this.height = dimensions.paddleHeight;
     this.x = (canvasWidth - this.width) / 2;
   }
 
@@ -23,6 +26,15 @@ export class Paddle {
 
   onKeyUp(event: KeyboardEvent) {
     if (event.key === KEY_LEFT || event.key === KEY_RIGHT) this.dx = 0;
+  }
+
+  setPosition(x: number) {
+    // Centralizar a raquete na posição do touch
+    this.x = x - this.width / 2;
+    
+    // Manter dentro dos limites do canvas
+    if (this.x < 0) this.x = 0;
+    if (this.x + this.width > this.canvasWidth) this.x = this.canvasWidth - this.width;
   }
 
   update() {

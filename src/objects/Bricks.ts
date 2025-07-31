@@ -1,6 +1,6 @@
 // src/objects/Bricks.ts
-import { BRICK_WIDTH, BRICK_HEIGHT, BRICK_PADDING, BRICK_OFFSET_TOP, BRICK_OFFSET_LEFT, GAME_COLOR } from '../constants/game';
 import { BRICK_COLORS } from '../constants/assets';
+import { DynamicGameDimensions } from '../constants/game';
 import { AssetLoader } from '../utils/assetLoader';
 
 const BRICK_ACTIVE = 1;
@@ -15,12 +15,14 @@ interface Brick {
 
 export class Bricks {
   private bricks: Brick[][] = [];
+  private dimensions: DynamicGameDimensions;
 
-  constructor(private rows: number, private cols: number, private onBrickDestroyed?: () => void) {
+  constructor(dimensions: DynamicGameDimensions, private onBrickDestroyed?: () => void) {
+    this.dimensions = dimensions;
     
-    for (let c = 0; c < cols; c++) {
+    for (let c = 0; c < dimensions.brickCols; c++) {
       this.bricks[c] = [];
-      for (let r = 0; r < rows; r++) {
+      for (let r = 0; r < dimensions.brickRows; r++) {
         this.bricks[c][r] = { 
           x: 0, 
           y: 0, 
@@ -31,12 +33,10 @@ export class Bricks {
     }
   }
 
-
-
   // Método para verificar se todos os blocos foram destruídos
   isAllDestroyed(): boolean {
-    for (let c = 0; c < this.cols; c++) {
-      for (let r = 0; r < this.rows; r++) {
+    for (let c = 0; c < this.dimensions.brickCols; c++) {
+      for (let r = 0; r < this.dimensions.brickRows; r++) {
         if (this.bricks[c][r].status === BRICK_ACTIVE) {
           return false;
         }
@@ -46,12 +46,12 @@ export class Bricks {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    for (let c = 0; c < this.cols; c++) {
-      for (let r = 0; r < this.rows; r++) {
+    for (let c = 0; c < this.dimensions.brickCols; c++) {
+      for (let r = 0; r < this.dimensions.brickRows; r++) {
         const b = this.bricks[c][r];
         if (b.status === BRICK_ACTIVE) {
-          const brickX = c * (BRICK_WIDTH + BRICK_PADDING) + BRICK_OFFSET_LEFT;
-          const brickY = r * (BRICK_HEIGHT + BRICK_PADDING) + BRICK_OFFSET_TOP;
+          const brickX = c * (this.dimensions.brickWidth + this.dimensions.brickPadding) + this.dimensions.brickOffsetLeft;
+          const brickY = r * (this.dimensions.brickHeight + this.dimensions.brickPadding) + this.dimensions.brickOffsetTop;
           b.x = brickX;
           b.y = brickY;
           
@@ -62,13 +62,13 @@ export class Bricks {
               brickImage,
               brickX,
               brickY,
-              BRICK_WIDTH,
-              BRICK_HEIGHT
+              this.dimensions.brickWidth,
+              this.dimensions.brickHeight
             );
           } else {
             // Fallback para retângulo colorido se a imagem não carregou
-            ctx.fillStyle = GAME_COLOR;
-            ctx.fillRect(brickX, brickY, BRICK_WIDTH, BRICK_HEIGHT);
+            ctx.fillStyle = '#00d4ff';
+            ctx.fillRect(brickX, brickY, this.dimensions.brickWidth, this.dimensions.brickHeight);
           }
         }
       }
@@ -76,15 +76,15 @@ export class Bricks {
   }
 
   collide(ball: { position: { x: number; y: number; radius: number }; bounceY: () => void }) {
-    for (let c = 0; c < this.cols; c++) {
-      for (let r = 0; r < this.rows; r++) {
+    for (let c = 0; c < this.dimensions.brickCols; c++) {
+      for (let r = 0; r < this.dimensions.brickRows; r++) {
         const b = this.bricks[c][r];
         if (b.status === BRICK_ACTIVE) {
           if (
             ball.position.x > b.x &&
-            ball.position.x < b.x + BRICK_WIDTH &&
+            ball.position.x < b.x + this.dimensions.brickWidth &&
             ball.position.y > b.y &&
-            ball.position.y < b.y + BRICK_HEIGHT
+            ball.position.y < b.y + this.dimensions.brickHeight
           ) {
             ball.bounceY();
             b.status = BRICK_DESTROYED;

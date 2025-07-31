@@ -1,5 +1,6 @@
 // src/objects/Ball.ts
-import { BALL_RADIUS, BALL_SPEED } from '../constants/game';
+import { BALL_SPEED } from '../constants/game';
+import { DynamicGameDimensions } from '../constants/game';
 import { ASSET_PATHS } from '../constants/assets';
 import { AssetLoader } from '../utils/assetLoader';
 
@@ -11,9 +12,10 @@ export class Ball {
   private y: number;
   private dx = BALL_SPEED;
   private dy = -BALL_SPEED;
-  private readonly radius = BALL_RADIUS;
+  private readonly radius: number;
 
-  constructor(private canvasWidth: number, canvasHeight: number) {
+  constructor(private canvasWidth: number, canvasHeight: number, dimensions: DynamicGameDimensions) {
+    this.radius = dimensions.ballRadius;
     this.x = canvasWidth / 2;
     this.y = canvasHeight - BALL_INITIAL_Y_OFFSET;
   }
