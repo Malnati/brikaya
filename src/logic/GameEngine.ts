@@ -28,8 +28,8 @@ export class GameEngine {
       await AssetLoader.preloadAllAssets();
       this.assetsLoaded = true;
     } catch (error) {
-      console.warn('Some assets failed to load:', error);
-      this.assetsFailed = true; // Indicate asset loading failure
+      console.warn('Some assets failed to load, using fallback rendering:', error);
+      this.assetsLoaded = true; // Continue with fallback rendering
     }
   }
 
