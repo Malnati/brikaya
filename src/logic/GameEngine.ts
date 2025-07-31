@@ -27,6 +27,8 @@ export class GameEngine {
   private dimensions: DynamicGameDimensions;
   private scaleX = 1;
   private scaleY = 1;
+  private ballHitBrick = false;
+  private maxBrickRows = 0;
 
   constructor(
     private canvas: HTMLCanvasElement, 
@@ -51,7 +53,19 @@ export class GameEngine {
     
     this.paddle = new Paddle(this.canvasSize.width, this.canvasSize.height, this.dimensions);
     this.ball = new Ball(this.canvasSize.width, this.canvasSize.height, this.dimensions);
-    this.bricks = new Bricks(this.dimensions, this.onBrickDestroyed.bind(this));
+    const availableHeight =
+      this.canvasSize.height -
+      this.dimensions.paddleHeight -
+      this.dimensions.brickOffsetTop;
+    const computedRows = Math.floor(
+      availableHeight / (this.dimensions.brickHeight + this.dimensions.brickPadding)
+    );
+    this.maxBrickRows = Math.max(this.dimensions.brickRows, computedRows);
+    this.bricks = new Bricks(
+      this.dimensions,
+      this.onBrickDestroyed.bind(this),
+      this.maxBrickRows
+    );
     this.setupListeners();
   }
 
@@ -164,7 +178,17 @@ export class GameEngine {
         this.bricks.draw(this.ctx);
         this.paddle.update();
         this.paddle.draw(this.ctx);
-        this.ball.update(this.paddle, this.bricks, this.canvasSize.height);
+        const hitPaddle = this.ball.update(this.paddle, this.canvasSize.height);
+        const hitBrick = this.bricks.collide(this.ball);
+        if (hitBrick) {
+          this.ballHitBrick = true;
+        }
+        if (hitPaddle) {
+          if (!this.ballHitBrick) {
+            this.bricks.addRow();
+          }
+          this.ballHitBrick = false;
+        }
         this.ball.draw(this.ctx);
       } catch (error) {
         if (error instanceof Error && error.message === 'GAME_OVER') {
