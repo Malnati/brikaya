@@ -75,7 +75,7 @@ export class Bricks {
     }
   }
 
-  collide(ball: { position: { x: number; y: number; radius: number }; bounceY: () => void }) {
+  collide(ball: { position: { x: number; y: number; radius: number }; bounceY: () => void; registerBrickHit: () => void }) {
     for (let c = 0; c < this.dimensions.brickCols; c++) {
       for (let r = 0; r < this.dimensions.brickRows; r++) {
         const b = this.bricks[c][r];
@@ -87,6 +87,7 @@ export class Bricks {
             ball.position.y < b.y + this.dimensions.brickHeight
           ) {
             ball.bounceY();
+            ball.registerBrickHit();
             b.status = BRICK_DESTROYED;
             if (this.onBrickDestroyed) {
               this.onBrickDestroyed();

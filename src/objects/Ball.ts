@@ -13,6 +13,8 @@ export class Ball {
   private dx = BALL_SPEED;
   private dy = -BALL_SPEED;
   private readonly radius: number;
+  private blockHitsThisRun = 0;
+  private paddleCollision = false;
 
   constructor(private canvasWidth: number, canvasHeight: number, dimensions: DynamicGameDimensions) {
     this.radius = dimensions.ballRadius;
@@ -20,7 +22,11 @@ export class Ball {
     this.y = canvasHeight - BALL_INITIAL_Y_OFFSET;
   }
 
-  update(paddle: { position: { x: number; y: number; width: number; height: number } }, bricks: { collide: (ball: Ball) => void }, maxHeight: number) {
+  update(
+    paddle: { position: { x: number; y: number; width: number; height: number } },
+    bricks: { collide: (ball: Ball) => void },
+    maxHeight: number
+  ): boolean {
     this.x += this.dx;
     this.y += this.dy;
 
@@ -38,13 +44,15 @@ export class Ball {
       const paddlePos = paddle.position;
       if (this.x > paddlePos.x && this.x < paddlePos.x + paddlePos.width) {
         this.handlePaddleCollision(paddlePos);
+        this.paddleCollision = true;
       } else {
-        // A bolinha passou pela raquete - fim de jogo
-        throw new Error('GAME_OVER');
+        // A bolinha passou pela raquete
+        return false;
       }
     }
 
     bricks.collide(this);
+    return true;
   }
 
   private handlePaddleCollision(paddlePos: { x: number; y: number; width: number; height: number }) {
@@ -97,5 +105,34 @@ export class Ball {
 
   bounceY() {
     this.dy = -this.dy;
+  }
+
+  registerBrickHit() {
+    this.blockHitsThisRun += 1;
+  }
+
+  getBrickHitsThisRun() {
+    return this.blockHitsThisRun;
+  }
+
+  resetBrickHits() {
+    this.blockHitsThisRun = 0;
+  }
+
+  consumePaddleCollision() {
+    const collided = this.paddleCollision;
+    this.paddleCollision = false;
+    return collided;
+  }
+
+  setPosition(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+
+  setDirection(angle: number) {
+    const speed = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
+    this.dx = speed * Math.sin(angle);
+    this.dy = -speed * Math.cos(angle);
   }
 }

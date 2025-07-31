@@ -6,6 +6,8 @@ import { GAME_COLOR, calculateDynamicDimensions, DynamicGameDimensions } from '.
 import { POINTS_PER_BRICK } from '../constants/gameState';
 import { AssetLoader } from '../utils/assetLoader';
 
+const BALL_SPAWN_ANGLE_RANGE = Math.PI / 3;
+
 const ERROR_NO_2D_CONTEXT = 'No 2D context';
 
 interface CanvasSize {
@@ -17,7 +19,7 @@ export class GameEngine {
   private ctx: CanvasRenderingContext2D;
   private animationFrame = 0;
   private paddle: Paddle;
-  private ball: Ball;
+  private balls: Ball[] = [];
   private bricks: Bricks;
   private score = 0;
   private assetsLoaded = false;
@@ -50,7 +52,7 @@ export class GameEngine {
     this.scaleY = this.canvasSize.height / 320; // CANVAS_HEIGHT original
     
     this.paddle = new Paddle(this.canvasSize.width, this.canvasSize.height, this.dimensions);
-    this.ball = new Ball(this.canvasSize.width, this.canvasSize.height, this.dimensions);
+    this.balls.push(new Ball(this.canvasSize.width, this.canvasSize.height, this.dimensions));
     this.bricks = new Bricks(this.dimensions, this.onBrickDestroyed.bind(this));
     this.setupListeners();
   }
@@ -131,6 +133,17 @@ export class GameEngine {
     cancelAnimationFrame(this.animationFrame);
   }
 
+  private spawnBall(x: number, y: number, angle: number) {
+    const ball = new Ball(this.canvasSize.width, this.canvasSize.height, this.dimensions);
+    ball.setPosition(x, y);
+    ball.setDirection(angle);
+    this.balls.push(ball);
+  }
+
+  private generateRandomAngle() {
+    return -BALL_SPAWN_ANGLE_RANGE + Math.random() * (BALL_SPAWN_ANGLE_RANGE * 2);
+  }
+
   private loop = () => {
     this.ctx.clearRect(0, 0, this.canvasSize.width, this.canvasSize.height);
     
@@ -164,18 +177,31 @@ export class GameEngine {
         this.bricks.draw(this.ctx);
         this.paddle.update();
         this.paddle.draw(this.ctx);
-        this.ball.update(this.paddle, this.bricks, this.canvasSize.height);
-        this.ball.draw(this.ctx);
-      } catch (error) {
-        if (error instanceof Error && error.message === 'GAME_OVER') {
+        for (let i = this.balls.length - 1; i >= 0; i--) {
+          const ball = this.balls[i];
+          const inPlay = ball.update(this.paddle, this.bricks, this.canvasSize.height);
+          if (!inPlay) {
+            this.balls.splice(i, 1);
+            continue;
+          }
+          if (ball.consumePaddleCollision()) {
+            const hits = ball.getBrickHitsThisRun();
+            for (let j = 1; j < hits; j++) {
+              this.spawnBall(ball.position.x, ball.position.y, this.generateRandomAngle());
+            }
+            ball.resetBrickHits();
+          }
+          ball.draw(this.ctx);
+        }
+        if (this.balls.length === 0) {
           this.gameOver = true;
           if (this.onGameOver) {
             this.onGameOver();
           }
-        } else {
-          console.error('Erro durante o rendering:', error);
-          throw error; // Re-throw other errors
         }
+      } catch (error) {
+        console.error('Erro durante o rendering:', error);
+        throw error;
       }
     }
     
