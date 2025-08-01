@@ -1,5 +1,5 @@
 // src/App.tsx
-import React, { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Game from './components/Game';
 import GameLogViewer from './components/GameLogViewer';
 import { saveScore, getTotalScore, resetScores } from './storage/score';
