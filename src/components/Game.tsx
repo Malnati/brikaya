@@ -3,7 +3,7 @@ import { useRef, useEffect, useState } from 'react';
 import { useGameLoop } from '../hooks/useGameLoop';
 import { useColorDebug } from '../hooks/useColorDebug';
 import { CollisionStats } from './CollisionStats';
-import { GameLogViewer } from './GameLogViewer';
+import GameLogViewer from './GameLogViewer';
 import { CANVAS_WIDTH, CANVAS_HEIGHT, MIN_CANVAS_WIDTH, MIN_CANVAS_HEIGHT, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT } from '../constants/game';
 
 interface GameProps {
