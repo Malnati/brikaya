@@ -12,55 +12,6 @@ interface LogEntry {
   metadata?: Record<string, any>;
 }
 
-interface DebugEvent {
-  id: string;
-  timestamp: number;
-  type: 'game_start' | 'game_end' | 'score_update' | 'ball_lost' | 'ball_added' | 'brick_destroyed' | 'brick_added' | 'paddle_move' | 'collision' | 'power_up' | 'level_complete' | 'game_state_change' | 'restart_game';
-  gameState: {
-    score: number;
-    ballsCount: number;
-    bricksRemaining: number;
-    gameWon: boolean;
-    gameOver: boolean;
-    level: number;
-    canvasSize: { width: number; height: number };
-    gameDimensions: {
-      brickWidth: number;
-      brickHeight: number;
-      brickCols: number;
-      brickRows: number;
-      paddleWidth: number;
-      paddleHeight: number;
-      ballRadius: number;
-    };
-  };
-  ballPositions: Array<{
-    x: number;
-    y: number;
-    velocity: { dx: number; dy: number };
-    radius: number;
-  }>;
-  paddlePosition: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  };
-  collisionInfo?: {
-    type: 'wall' | 'paddle' | 'brick' | 'ceiling';
-    ballPosition: { x: number; y: number };
-    targetPosition?: { x: number; y: number; width?: number; height?: number };
-    brickIndex?: { col: number; row: number };
-    brickColorIndex?: number;
-    wallType?: 'left' | 'right';
-    hitPosition?: number; // Para colisão com paddle (0-1)
-    collisionAngle?: number; // Ângulo da colisão
-    velocityBefore?: { dx: number; dy: number };
-    velocityAfter?: { dx: number; dy: number };
-  };
-  metadata?: Record<string, any>;
-}
-
 class DebugLogger {
   private db: IDBDatabase | null = null;
   private readonly DB_NAME = 'BrickBreakerDebugLog';
@@ -194,7 +145,7 @@ class DebugLogger {
   }
 
   // Métodos para recuperar dados
-  async getAllEvents(): Promise<DebugEvent[]> {
+  async getAllEvents(): Promise<LogEntry[]> {
     if (!this.db) {
       console.warn('⚠️ IndexedDB não inicializado');
       return [];
@@ -218,7 +169,7 @@ class DebugLogger {
     });
   }
 
-  async getEventsByDebugId(gameId: string): Promise<DebugEvent[]> {
+  async getEventsByDebugId(gameId: string): Promise<LogEntry[]> {
     if (!this.db) {
       console.warn('⚠️ IndexedDB não inicializado');
       return [];
@@ -243,7 +194,7 @@ class DebugLogger {
     });
   }
 
-  async getEventsByType(type: DebugEvent['type']): Promise<DebugEvent[]> {
+  async getEventsByType(type: LogEntry['level']): Promise<LogEntry[]> {
     if (!this.db) {
       console.warn('⚠️ IndexedDB não inicializado');
       return [];
@@ -268,7 +219,7 @@ class DebugLogger {
     });
   }
 
-  async getRecentEvents(limit: number = 100): Promise<DebugEvent[]> {
+  async getRecentEvents(limit: number = 100): Promise<LogEntry[]> {
     if (!this.db) {
       console.warn('⚠️ IndexedDB não inicializado');
       return [];
@@ -280,7 +231,7 @@ class DebugLogger {
       const index = store.index('timestamp');
       const request = index.openCursor(null, 'prev');
 
-      const events: DebugEvent[] = [];
+      const events: LogEntry[] = [];
       let count = 0;
 
       request.onsuccess = () => {
@@ -300,136 +251,6 @@ class DebugLogger {
         reject(request.error);
       };
     });
-  }
-
-  async clearAllEvents(): Promise<void> {
-    if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
-      return;
-    }
-
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([this.STORE_NAME], 'readwrite');
-      const store = transaction.objectStore(this.STORE_NAME);
-      const request = store.clear();
-
-      request.onsuccess = () => {
-        console.log('🗑️ Todos os eventos foram removidos do IndexedDB');
-        resolve();
-      };
-
-      request.onerror = () => {
-        console.error('❌ Erro ao limpar eventos:', request.error);
-        reject(request.error);
-      };
-    });
-  }
-
-  async getDebugStats(): Promise<{
-    totalDebugs: number;
-    totalEvents: number;
-    byType: Record<string, number>;
-    averageScore: number;
-    gamesWon: number;
-    gamesLost: number;
-    averageDebugDuration: number;
-    totalBricksDestroyed: number;
-    totalCollisions: number;
-    averageBallsPerDebug: number;
-    logStats: {
-      totalLogs: number;
-      byLevel: Record<string, number>;
-      errorRate: number;
-      averageLogsPerMinute: number;
-    };
-  }> {
-    const allEvents = await this.getAllEvents();
-    const gameEndEvents = allEvents.filter(e => e.type === 'game_end');
-    const gameStartEvents = allEvents.filter(e => e.type === 'game_start');
-    const collisionEvents = allEvents.filter(e => e.type === 'collision');
-    // const brickDestroyedEvents = allEvents.filter(e => e.type === 'brick_destroyed');
-    
-    const byType: Record<string, number> = {};
-    let totalScore = 0;
-    let gamesWon = 0;
-    let gamesLost = 0;
-    let totalDebugDuration = 0;
-    let totalBricksDestroyed = 0;
-
-    allEvents.forEach(event => {
-      byType[event.type] = (byType[event.type] || 0) + 1;
-    });
-
-    gameEndEvents.forEach(event => {
-      totalScore += event.gameState.score;
-      if (event.metadata?.reason === 'win') {
-        gamesWon++;
-      } else if (event.metadata?.reason === 'lose') {
-        gamesLost++;
-      }
-      if (event.metadata?.gameDuration) {
-        totalDebugDuration += event.metadata.gameDuration;
-      }
-      if (event.metadata?.totalBricksDestroyed) {
-        totalBricksDestroyed += event.metadata.totalBricksDestroyed;
-      }
-    });
-
-    // Obter estatísticas dos logs
-    const logStats = await this.getLogStats();
-
-    return {
-      totalDebugs: gameEndEvents.length,
-      totalEvents: allEvents.length,
-      byType,
-      averageScore: gameEndEvents.length > 0 ? totalScore / gameEndEvents.length : 0,
-      gamesWon,
-      gamesLost,
-      averageDebugDuration: gameEndEvents.length > 0 ? totalDebugDuration / gameEndEvents.length : 0,
-      totalBricksDestroyed,
-      totalCollisions: collisionEvents.length,
-      averageBallsPerDebug: gameStartEvents.length > 0 ? allEvents.filter(e => e.type === 'ball_lost').length / gameStartEvents.length : 0,
-      logStats: {
-        totalLogs: logStats.totalLogs,
-        byLevel: logStats.byLevel,
-        errorRate: logStats.errorRate,
-        averageLogsPerMinute: logStats.averageLogsPerMinute
-      }
-    };
-  }
-
-  // Método para exportar dados em JSON
-  async exportDebugData(): Promise<string> {
-    const allEvents = await this.getAllEvents();
-    const allLogs = await this.getAllLogs();
-    const stats = await this.getDebugStats();
-    
-    const exportData = {
-      exportTimestamp: Date.now(),
-      exportVersion: '3.0',
-      stats,
-      events: allEvents,
-      logs: allLogs
-    };
-    
-    return JSON.stringify(exportData, null, 2);
-  }
-
-  // Método para importar dados em JSON
-  async importDebugData(jsonData: string): Promise<void> {
-    try {
-      const importData = JSON.parse(jsonData);
-      
-      if (importData.logs && Array.isArray(importData.logs)) {
-        for (const log of importData.logs) {
-          await this.storeLog(log.level, log.message, log.args);
-        }
-        console.log(`📊 Importados ${importData.logs.length} logs`);
-      }
-    } catch (error) {
-      console.error('❌ Erro ao importar dados:', error);
-      throw error;
-    }
   }
 
   // Métodos para gerenciar logs gerais da aplicação
