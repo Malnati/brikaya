@@ -1,6 +1,6 @@
 // src/registerServiceWorker.ts
 import { LOG } from './utils/logger';
-const SERVICE_WORKER_PATH = '/sw.js';
+// const SERVICE_WORKER_PATH = '/sw.js';
 
 // Temporariamente desabilitado para debug
 LOG('🚦 registerServiceWorker.ts carregado');
