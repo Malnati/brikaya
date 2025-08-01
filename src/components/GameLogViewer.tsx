@@ -51,7 +51,12 @@ interface GameEvent {
   metadata?: Record<string, any>;
 }
 
-const GameLogViewer: React.FC = () => {
+interface GameLogViewerProps {
+  isVisible?: boolean;
+  onClose?: () => void;
+}
+
+const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = false, onClose }) => {
   const [events, setEvents] = useState<GameEvent[]>([]);
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState<string>('all');
@@ -161,8 +166,17 @@ const GameLogViewer: React.FC = () => {
     loadEvents();
   }, []);
 
+  if (!isVisible) {
+    return null;
+  }
+
   return (
     <div className="game-log-viewer">
+      {onClose && (
+        <button onClick={onClose} className="close-button">
+          ✕ Fechar
+        </button>
+      )}
       <div className="header">
         <h2>📊 Visualizador de Logs do Jogo</h2>
         <div className="controls">
@@ -352,7 +366,7 @@ const GameLogViewer: React.FC = () => {
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .game-log-viewer {
           max-width: 1200px;
           margin: 0 auto;
