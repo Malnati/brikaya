@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste IndexDB - BrickBreaker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .results {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste IndexDB - BrickBreaker</h1>
+    
+    <div class="test-container">
+        <h2>📊 Status do IndexDB</h2>
+        <div id="status">Verificando...</div>
+        
+        <div class="test-button" onclick="testIndexDB()">Testar IndexDB</div>
+        <div class="test-button" onclick="testGameLogger()">Testar GameLogger</div>
+        <div class="test-button" onclick="clearAll()">Limpar Tudo</div>
+        
+        <div id="results" class="results">Aguardando testes...</div>
+    </div>
+
+    <script type="module">
+        import { gameLogger } from '../src/storage/gameLogger.js';
+        
+        let testResults = [];
+        
+        function logTest(message) {
+            const timestamp = new Date().toLocaleString('pt-BR');
+            const logEntry = `[${timestamp}] ${message}`;
+            testResults.push(logEntry);
+            
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = testResults.join('\n');
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+            
+            console.log(logEntry);
+        }
+        
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = type;
+        }
+        
+        // Teste básico do IndexDB
+        window.testIndexDB = async function() {
+            try {
+                logTest('🧪 Testando IndexDB básico...');
+                
+                // Verificar se IndexedDB está disponível
+                if (!window.indexedDB) {
+                    logTest('❌ IndexedDB não está disponível');
+                    updateStatus('IndexedDB não disponível', 'error');
+                    return;
+                }
+                
+                logTest('✅ IndexedDB está disponível');
+                
+                // Testar abertura de um banco de teste
+                const testDBName = 'TestDB';
+                const testDBVersion = 1;
+                
+                logTest(`🗄️ Abrindo banco de teste: ${testDBName}`);
+                
+                const request = indexedDB.open(testDBName, testDBVersion);
+                
+                request.onerror = () => {
+                    logTest(`❌ Erro ao abrir banco de teste: ${request.error}`);
+                };
+                
+                request.onsuccess = () => {
+                    const db = request.result;
+                    logTest(`✅ Banco de teste aberto com sucesso`);
+                    logTest(`🗄️ Nome: ${db.name}`);
+                    logTest(`🗄️ Versão: ${db.version}`);
+                    logTest(`🗄️ Object stores: ${db.objectStoreNames.length}`);
+                    
+                    db.close();
+                    logTest('✅ Banco de teste fechado');
+                    
+                    // Deletar o banco de teste
+                    const deleteRequest = indexedDB.deleteDatabase(testDBName);
+                    deleteRequest.onsuccess = () => {
+                        logTest('✅ Banco de teste deletado');
+                        updateStatus('IndexDB funcionando corretamente', 'success');
+                    };
+                };
+                
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    logTest('🔄 Criando object store de teste...');
+                    
+                    const store = db.createObjectStore('testStore', { keyPath: 'id' });
+                    logTest('✅ Object store de teste criado');
+                };
+                
+            } catch (error) {
+                logTest(`❌ Erro no teste do IndexDB: ${error.message}`);
+                updateStatus('Erro no teste do IndexDB', 'error');
+            }
+        };
+        
+        // Teste do GameLogger
+        window.testGameLogger = async function() {
+            try {
+                logTest('🧪 Testando GameLogger...');
+                
+                // Aguardar inicialização
+                logTest('⏳ Aguardando inicialização do GameLogger...');
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Verificar se está inicializado
+                if (!gameLogger['db']) {
+                    logTest('❌ GameLogger não está inicializado');
+                    updateStatus('GameLogger não inicializado', 'error');
+                    return;
+                }
+                
+                logTest('✅ GameLogger está inicializado');
+                
+                // Testar criação de evento
+                const testEvent = {
+                    type: 'test_event',
+                    gameState: {
+                        score: 0,
+                        ballsCount: 1,
+                        bricksRemaining: 15,
+                        gameWon: false,
+                        gameOver: false,
+                        level: 1,
+                        canvasSize: { width: 480, height: 320 },
+                        gameDimensions: {
+                            brickWidth: 75,
+                            brickHeight: 20,
+                            brickCols: 5,
+                            brickRows: 3,
+                            paddleWidth: 75,
+                            paddleHeight: 10,
+                            ballRadius: 10
+                        }
+                    },
+                    ballPositions: [{ x: 240, y: 290, velocity: { dx: 2, dy: -2 }, radius: 10 }],
+                    paddlePosition: { x: 202.5, y: 310, width: 75, height: 10 }
+                };
+                
+                logTest('📝 Criando evento de teste...');
+                await gameLogger.logEvent(testEvent);
+                logTest('✅ Evento de teste criado com sucesso');
+                
+                // Verificar se o evento foi salvo
+                const events = await gameLogger.getAllEvents();
+                logTest(`📊 Total de eventos: ${events.length}`);
+                
+                if (events.length > 0) {
+                    const lastEvent = events[events.length - 1];
+                    logTest(`📋 Último evento: ${lastEvent.type} (ID: ${lastEvent.id})`);
+                }
+                
+                updateStatus('GameLogger funcionando corretamente', 'success');
+                
+            } catch (error) {
+                logTest(`❌ Erro no teste do GameLogger: ${error.message}`);
+                updateStatus('Erro no teste do GameLogger', 'error');
+            }
+        };
+        
+        // Limpar tudo
+        window.clearAll = async function() {
+            try {
+                logTest('🗑️ Limpando todos os dados...');
+                
+                if (gameLogger['db']) {
+                    await gameLogger.clearAllEvents();
+                    logTest('✅ Todos os eventos foram limpos');
+                }
+                
+                // Limpar bancos de teste
+                const databases = await indexedDB.databases();
+                for (const db of databases) {
+                    if (db.name.includes('Test')) {
+                        await indexedDB.deleteDatabase(db.name);
+                        logTest(`🗑️ Banco de teste deletado: ${db.name}`);
+                    }
+                }
+                
+                updateStatus('Dados limpos com sucesso', 'success');
+                
+            } catch (error) {
+                logTest(`❌ Erro ao limpar dados: ${error.message}`);
+                updateStatus('Erro ao limpar dados', 'error');
+            }
+        };
+        
+        // Inicialização
+        logTest('🚀 Iniciando testes do IndexDB...');
+        updateStatus('Pronto para testes', 'info');
+    </script>
+</body>
+</html> 

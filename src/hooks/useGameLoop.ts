@@ -20,15 +20,27 @@ export function useGameLoop(
   const memoizedOnGameOver = useCallback(onGameOver || (() => {}), [onGameOver]);
 
   useEffect(() => {
-    if (!canvasRef.current) return;
+    if (!canvasRef.current) {
+      console.log('❌ canvasRef.current não está disponível');
+      return;
+    }
     
     console.log(`🎮 Iniciando GameEngine...`);
-    const engine = new GameEngine(canvasRef.current, memoizedOnScoreUpdate, memoizedOnGameWon, memoizedOnGameOver, canvasSize);
-    engine.start();
+    console.log(`🎮 Canvas ref:`, canvasRef.current);
+    console.log(`🎮 Canvas size:`, canvasRef.current.width, 'x', canvasRef.current.height);
+    
+    try {
+      const engine = new GameEngine(canvasRef.current, memoizedOnScoreUpdate, memoizedOnGameWon, memoizedOnGameOver, canvasSize);
+      console.log(`🎮 GameEngine criado com sucesso, chamando start()...`);
+      engine.start();
+      console.log(`🎮 engine.start() chamado`);
+    } catch (error) {
+      console.error('❌ Erro ao criar/iniciar GameEngine:', error);
+    }
     
     return () => {
       console.log(`🛑 Parando GameEngine...`);
-      engine.stop();
+      // engine.stop();
     };
   }, [canvasRef, memoizedOnScoreUpdate, memoizedOnGameWon, memoizedOnGameOver]); // Removido canvasSize das dependências
 }

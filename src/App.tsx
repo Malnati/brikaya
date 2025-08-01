@@ -1,8 +1,10 @@
 // src/App.tsx
-import { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Game from './components/Game';
 import GameLogViewer from './components/GameLogViewer';
 import { saveScore, getTotalScore, resetScores } from './storage/score';
+
+console.log('🚦 App.tsx carregado');
 
 export default function App() {
   const [score, setScore] = useState(0);

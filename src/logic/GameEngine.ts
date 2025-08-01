@@ -7,6 +7,7 @@ import { POINTS_PER_BRICK } from '../constants/gameState';
 import { AssetLoader } from '../utils/assetLoader';
 import { gameLogger } from '../storage/gameLogger';
 
+console.log('📦 GameEngine.ts carregado, gameLogger:', gameLogger);
 
 const ERROR_NO_2D_CONTEXT = 'No 2D context';
 
@@ -228,15 +229,39 @@ export class GameEngine {
   }
 
   public async start() {
+    console.log('🎮 GameEngine.start() chamado - INÍCIO');
+    console.log('🎮 this:', this);
+    console.log('🎮 gameLogger:', gameLogger);
+    
     await this.preloadAssets();
+    
+    // Aguardar GameLogger estar pronto
+    console.log('⏳ Aguardando GameLogger estar pronto...');
+    let attempts = 0;
+    while (!gameLogger['db'] && attempts < 50) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      attempts++;
+    }
+    
+    if (!gameLogger['db']) {
+      console.error('❌ GameLogger não inicializou após 5 segundos');
+    } else {
+      console.log('✅ GameLogger está pronto');
+    }
     
     // Log do início do jogo
     const gameState = this.getCurrentGameState();
     const ballPositions = this.getBallPositions();
     const paddlePosition = this.paddle.position;
     
+    console.log('📊 Preparando para registrar início do jogo...');
+    console.log('📊 GameState:', gameState);
+    console.log('📊 BallPositions:', ballPositions);
+    console.log('📊 PaddlePosition:', paddlePosition);
+    
     // Se já existe um gameId, é um restart
     if (this.currentGameId) {
+      console.log('🔄 Detectado restart do jogo');
       await gameLogger.logRestartGame(
         gameState,
         ballPositions,
@@ -244,11 +269,23 @@ export class GameEngine {
       ).catch(error => console.error('❌ Erro ao registrar restart do jogo:', error));
     }
     
+    console.log('🎮 Registrando início do jogo...');
+    
+    // Verificar se o GameLogger está pronto
+    if (!gameLogger['db']) {
+      console.warn('⚠️ GameLogger ainda não inicializado, aguardando...');
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+    
     await gameLogger.logGameStart(
       gameState,
       ballPositions,
       paddlePosition
-    ).catch(error => console.error('❌ Erro ao registrar início do jogo:', error));
+    ).then(() => {
+      console.log('✅ Início do jogo registrado com sucesso!');
+    }).catch(error => {
+      console.error('❌ Erro ao registrar início do jogo:', error);
+    });
     
     this.loop();
   }
