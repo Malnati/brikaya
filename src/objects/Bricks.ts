@@ -3,8 +3,7 @@ import { BRICK_COLORS } from '../constants/assets';
 import { DynamicGameDimensions } from '../constants/game';
 import { AssetLoader } from '../utils/assetLoader';
 import { collisionTracker } from '../utils/collisionTracker';
-import { gameLogger } from '../storage/gameLogger';
-import { LOG, ERROR, WARN } from '../utils/logger';
+import { LOG, WARN } from '../utils/logger';
 
 const BRICK_ACTIVE = 1;
 const BRICK_DESTROYED = 0;

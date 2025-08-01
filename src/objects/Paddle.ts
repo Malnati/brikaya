@@ -3,8 +3,6 @@ import { PADDLE_SPEED, GAME_COLOR } from '../constants/game';
 import { DynamicGameDimensions } from '../constants/game';
 import { ASSET_PATHS } from '../constants/assets';
 import { AssetLoader } from '../utils/assetLoader';
-import { gameLogger } from '../storage/gameLogger';
-import { ERROR } from '../utils/logger';
 
 const KEY_LEFT = 'ArrowLeft';
 const KEY_RIGHT = 'ArrowRight';

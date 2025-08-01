@@ -110,13 +110,13 @@ export class GameEngine {
     const ballPositions = this.getBallPositions();
     const paddlePosition = this.paddle.position;
     
-    await gameLogger.logScoreUpdate(
-      gameState,
-      ballPositions,
-      paddlePosition,
-      POINTS_PER_BRICK,
-      'brick_destroyed'
-    ).catch(error => ERROR('❌ Erro ao registrar pontuação:', error));
+    // await gameLogger.logScoreUpdate(
+    //   gameState,
+    //   ballPositions,
+    //   paddlePosition,
+    //   POINTS_PER_BRICK,
+    //   'brick_destroyed'
+    // ).catch(error => ERROR('❌ Erro ao registrar pontuação:', error));
     
     // Verificar se todos os blocos foram destruídos
     if (this.bricks.isAllDestroyed() && !this.gameWon) {
@@ -124,20 +124,20 @@ export class GameEngine {
       this.gameWon = true;
       
       // Log da mudança de estado do jogo
-      await gameLogger.logGameStateChange(
-        gameState,
-        ballPositions,
-        paddlePosition,
-        'game_won'
-      ).catch(error => ERROR('❌ Erro ao registrar mudança de estado:', error));
+      // // await gameLogger.logGameStateChange(
+      //   gameState,
+      //   ballPositions,
+      //   paddlePosition,
+      //   'game_won'
+      // ).catch(error => ERROR('❌ Erro ao registrar mudança de estado:', error));
       
       // Log do fim do jogo (vitória)
-      await gameLogger.logGameEnd(
-        gameState,
-        ballPositions,
-        paddlePosition,
-        'win'
-      ).catch(error => ERROR('❌ Erro ao registrar vitória:', error));
+      // // await gameLogger.logGameEnd(
+      //   gameState,
+      //   ballPositions,
+      //   paddlePosition,
+      //   'win'
+      // ).catch(error => ERROR('❌ Erro ao registrar vitória:', error));
       
       if (this.onGameWon) {
         this.onGameWon();
@@ -261,14 +261,14 @@ export class GameEngine {
     LOG('📊 PaddlePosition:', paddlePosition);
     
     // Se já existe um gameId, é um restart
-    if (this.currentGameId) {
-      LOG('🔄 Detectado restart do jogo');
-      await gameLogger.logRestartGame(
-        gameState,
-        ballPositions,
-        paddlePosition
-      ).catch(error => ERROR('❌ Erro ao registrar restart do jogo:', error));
-    }
+    // if (this.currentGameId) {
+    //   LOG('🔄 Detectado restart do jogo');
+    //   await gameLogger.logRestartGame(
+    //     gameState,
+    //     ballPositions,
+    //     paddlePosition
+    //   ).catch(error => ERROR('❌ Erro ao registrar restart do jogo:', error));
+    // }
     
     LOG('🎮 Registrando início do jogo...');
     
@@ -278,15 +278,15 @@ export class GameEngine {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
     
-    await gameLogger.logGameStart(
-      gameState,
-      ballPositions,
-      paddlePosition
-    ).then(() => {
-      LOG('✅ Início do jogo registrado com sucesso!');
-    }).catch(error => {
-      ERROR('❌ Erro ao registrar início do jogo:', error);
-    });
+    // await gameLogger.logGameStart(
+    //   gameState,
+    //   ballPositions,
+    //   paddlePosition
+    // ).then(() => {
+    //   LOG('✅ Início do jogo registrado com sucesso!');
+    // }).catch(error => {
+    //   ERROR('❌ Erro ao registrar início do jogo:', error);
+    // });
     
     this.loop();
   }
@@ -336,7 +336,7 @@ export class GameEngine {
           // Atualizar posição da raquete antes de chamar ball.update
           this.paddle.update();
           
-          const inPlay = await ball.update(this.paddle, this.bricks, this.canvasSize.height, gameState);
+          const inPlay = await ball.update(this.paddle, this.bricks, this.canvasSize.height, this.getCurrentGameState());
           if (!inPlay) {
             this.balls.splice(i, 1);
             continue;
@@ -356,20 +356,20 @@ export class GameEngine {
           const ballPositions = this.getBallPositions();
           const paddlePosition = this.paddle.position;
           
-          await gameLogger.logGameStateChange(
-            gameState,
-            ballPositions,
-            paddlePosition,
-            'game_over'
-          ).catch(error => ERROR('❌ Erro ao registrar mudança de estado:', error));
+          // await gameLogger.logGameStateChange(
+          //   gameState,
+          //   ballPositions,
+          //   paddlePosition,
+          //   'game_over'
+          // ).catch(error => ERROR('❌ Erro ao registrar mudança de estado:', error));
           
           // Log do fim do jogo (derrota)
-          await gameLogger.logGameEnd(
-            gameState,
-            ballPositions,
-            paddlePosition,
-            'lose'
-          ).catch(error => ERROR('❌ Erro ao registrar derrota:', error));
+          // await gameLogger.logGameEnd(
+          //   gameState,
+          //   ballPositions,
+          //   paddlePosition,
+          //   'lose'
+          // ).catch(error => ERROR('❌ Erro ao registrar derrota:', error));
           
           if (this.onGameOver) {
             this.onGameOver();

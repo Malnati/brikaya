@@ -4,8 +4,7 @@ import { DynamicGameDimensions } from '../constants/game';
 import { ASSET_PATHS } from '../constants/assets';
 import { AssetLoader } from '../utils/assetLoader';
 import { collisionTracker } from '../utils/collisionTracker';
-import { gameLogger } from '../storage/gameLogger';
-import { LOG, ERROR } from '../utils/logger';
+import { LOG } from '../utils/logger';
 
 const BALL_INITIAL_Y_OFFSET = 30;
 const MAX_BOUNCE_ANGLE = Math.PI / 3; // 60 graus
