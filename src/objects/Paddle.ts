@@ -4,6 +4,7 @@ import { DynamicGameDimensions } from '../constants/game';
 import { ASSET_PATHS } from '../constants/assets';
 import { AssetLoader } from '../utils/assetLoader';
 import { gameLogger } from '../storage/gameLogger';
+import { ERROR } from '../utils/logger';
 
 const KEY_LEFT = 'ArrowLeft';
 const KEY_RIGHT = 'ArrowRight';
@@ -111,8 +112,8 @@ export class Paddle {
         ballPositions,
         paddlePosition,
         direction as 'left' | 'right',
-        this.previousPosition
-      ).catch(error => console.error('❌ Erro ao registrar movimento da raquete:', error));
+        this.previousPosition || undefined
+      ).catch(error => ERROR('❌ Erro ao registrar movimento da raquete:', error));
     }, 0);
   }
 }

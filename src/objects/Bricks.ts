@@ -4,6 +4,7 @@ import { DynamicGameDimensions } from '../constants/game';
 import { AssetLoader } from '../utils/assetLoader';
 import { collisionTracker } from '../utils/collisionTracker';
 import { gameLogger } from '../storage/gameLogger';
+import { LOG, ERROR, WARN } from '../utils/logger';
 
 const BRICK_ACTIVE = 1;
 const BRICK_DESTROYED = 0;
@@ -31,7 +32,7 @@ export class Bricks {
     this.rows = dimensions.brickRows;
     this.maxRows = maxRows ?? this.rows;
 
-    console.log(`🏗️  Bricks: ${dimensions.brickCols}x${this.rows} = ${dimensions.brickCols * this.rows} blocos`);
+    LOG(`🏗️  Bricks: ${dimensions.brickCols}x${this.rows} = ${dimensions.brickCols * this.rows} blocos`);
 
     for (let c = 0; c < dimensions.brickCols; c++) {
       this.bricks[c] = [];
@@ -53,7 +54,7 @@ export class Bricks {
         this.bricks[c][r].y = brickY;
       }
     }
-    console.log(`✅ Bricks criados com sucesso`);
+    LOG(`✅ Bricks criados com sucesso`);
   }
 
   // Método para verificar se todos os blocos foram destruídos
@@ -66,7 +67,7 @@ export class Bricks {
         }
       }
     }
-    console.log(`🔍 isAllDestroyed: ${activeBricks} blocos ativos de ${this.dimensions.brickCols * this.rows} total`);
+    LOG(`🔍 isAllDestroyed: ${activeBricks} blocos ativos de ${this.dimensions.brickCols * this.rows} total`);
     return activeBricks === 0;
   }
 
@@ -103,7 +104,7 @@ export class Bricks {
 
   addRow() {
     if (this.rows >= this.maxRows) {
-      console.warn(`Maximum rows limit (${this.maxRows}) reached. Cannot add more rows.`);
+      WARN(`Maximum rows limit (${this.maxRows}) reached. Cannot add more rows.`);
       if (this.onMaxRowsReached) {
         this.onMaxRowsReached();
       }
@@ -172,7 +173,7 @@ export class Bricks {
             // Registrar colisão com bloco
             if (gameState) {
               const ballVelocity = ball.getVelocity();
-              console.log(`🧱 Colisão com bloco detectada - Pos: (${Math.round(ball.position.x)}, ${Math.round(ball.position.y)}), Bloco: [${c}, ${r}], Cor: ${b.colorIndex}`);
+              LOG(`🧱 Colisão com bloco detectada - Pos: (${Math.round(ball.position.x)}, ${Math.round(ball.position.y)}), Bloco: [${c}, ${r}], Cor: ${b.colorIndex}`);
               
               gameLogger.logBrickDestroyed(
                 gameState,
@@ -183,7 +184,7 @@ export class Bricks {
                 b.colorIndex,
                 ball.position,
                 ballVelocity
-              ).catch(error => console.error('❌ Erro ao registrar destruição de bloco:', error));
+              ).catch(error => ERROR('❌ Erro ao registrar destruição de bloco:', error));
               
               collisionTracker.logBrickCollision(
                 ball.position,
@@ -192,7 +193,7 @@ export class Bricks {
                 { x: b.x, y: b.y, width: this.dimensions.brickWidth, height: this.dimensions.brickHeight },
                 { col: c, row: r },
                 b.colorIndex
-              ).catch(error => console.error('❌ Erro ao registrar colisão com bloco:', error));
+              ).catch(error => ERROR('❌ Erro ao registrar colisão com bloco:', error));
             }
             
             ball.bounceY();
@@ -210,7 +211,7 @@ export class Bricks {
       if (collided) break; // Sair do loop externo também
     }
     if (destroyedCount > 0) {
-      console.log(`💥 collide: ${destroyedCount} bloco(s) destruído(s)`);
+      LOG(`💥 collide: ${destroyedCount} bloco(s) destruído(s)`);
     }
     return Promise.resolve(collided);
   }

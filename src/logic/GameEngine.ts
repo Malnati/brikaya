@@ -6,8 +6,9 @@ import { GAME_COLOR, calculateDynamicDimensions, DynamicGameDimensions } from '.
 import { POINTS_PER_BRICK } from '../constants/gameState';
 import { AssetLoader } from '../utils/assetLoader';
 import { gameLogger } from '../storage/gameLogger';
+import { LOG, ERROR, WARN } from '../utils/logger';
 
-console.log('📦 GameEngine.ts carregado, gameLogger:', gameLogger);
+LOG('📦 GameEngine.ts carregado, gameLogger:', gameLogger);
 
 const ERROR_NO_2D_CONTEXT = 'No 2D context';
 
@@ -40,34 +41,34 @@ export class GameEngine {
     private onGameOver?: () => void,
     canvasSize?: CanvasSize
   ) {
-    console.log(`🚀 GameEngine constructor iniciado`);
+    LOG(`🚀 GameEngine constructor iniciado`);
     
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error(ERROR_NO_2D_CONTEXT);
     this.ctx = ctx;
     
-    console.log(`🎯 Canvas context obtido`);
+    LOG(`🎯 Canvas context obtido`);
     
     // Usar tamanho do canvas atual se não fornecido
     this.canvasSize = canvasSize || { width: canvas.width, height: canvas.height };
     
-    console.log(`📏 Canvas size: ${this.canvasSize.width}x${this.canvasSize.height}`);
+    LOG(`📏 Canvas size: ${this.canvasSize.width}x${this.canvasSize.height}`);
     
     // Calcular dimensões dinâmicas baseadas no tamanho do canvas
     this.dimensions = calculateDynamicDimensions(this.canvasSize.width, this.canvasSize.height);
     
-    console.log(`📐 Dimensões calculadas: ${this.dimensions.brickCols} colunas x ${this.dimensions.brickRows} linhas`);
-    console.log(`📐 Tamanho dos blocos: ${this.dimensions.brickWidth}x${this.dimensions.brickHeight}`);
+    LOG(`📐 Dimensões calculadas: ${this.dimensions.brickCols} colunas x ${this.dimensions.brickRows} linhas`);
+    LOG(`📐 Tamanho dos blocos: ${this.dimensions.brickWidth}x${this.dimensions.brickHeight}`);
     
     // Calcular escala para manter proporções
     this.scaleX = this.canvasSize.width / 480; // CANVAS_WIDTH original
     this.scaleY = this.canvasSize.height / 320; // CANVAS_HEIGHT original
     
-    console.log(`⚽ Criando Ball...`);
+    LOG(`⚽ Criando Ball...`);
     this.paddle = new Paddle(this.canvasSize.width, this.canvasSize.height, this.dimensions);
     this.balls.push(new Ball(this.canvasSize.width, this.canvasSize.height, this.dimensions));
     
-    console.log(`🏗️  Criando Bricks...`);
+    LOG(`🏗️  Criando Bricks...`);
     const availableHeight =
       this.canvasSize.height -
       this.dimensions.paddleHeight -
@@ -82,18 +83,18 @@ export class GameEngine {
       this.maxBrickRows
     );
     
-    console.log(`🎮 GameEngine constructor finalizado`);
+    LOG(`🎮 GameEngine constructor finalizado`);
     this.setupListeners();
   }
 
   private async preloadAssets() {
     try {
-      console.log('🎮 Iniciando carregamento de assets...');
+      LOG('🎮 Iniciando carregamento de assets...');
       await AssetLoader.preloadAllAssets();
       this.assetsLoaded = true;
-      console.log('✅ Assets carregados com sucesso!');
+      LOG('✅ Assets carregados com sucesso!');
     } catch (error) {
-      console.warn('⚠️  Alguns assets falharam ao carregar, usando fallback:', error);
+      WARN('⚠️  Alguns assets falharam ao carregar, usando fallback:', error);
       this.assetsLoaded = true; // Continue with fallback rendering
     }
   }
@@ -102,7 +103,7 @@ export class GameEngine {
     this.score += POINTS_PER_BRICK;
     this.onScoreUpdate(this.score);
     
-    console.log(`🎯 onBrickDestroyed: Score = ${this.score}, Verificando se todos os blocos foram destruídos...`);
+    LOG(`🎯 onBrickDestroyed: Score = ${this.score}, Verificando se todos os blocos foram destruídos...`);
     
     // Log do evento de pontuação
     const gameState = this.getCurrentGameState();
@@ -115,11 +116,11 @@ export class GameEngine {
       paddlePosition,
       POINTS_PER_BRICK,
       'brick_destroyed'
-    ).catch(error => console.error('❌ Erro ao registrar pontuação:', error));
+    ).catch(error => ERROR('❌ Erro ao registrar pontuação:', error));
     
     // Verificar se todos os blocos foram destruídos
     if (this.bricks.isAllDestroyed() && !this.gameWon) {
-      console.log(`🏆 GAME WON! Todos os blocos destruídos!`);
+      LOG(`🏆 GAME WON! Todos os blocos destruídos!`);
       this.gameWon = true;
       
       // Log da mudança de estado do jogo
@@ -128,7 +129,7 @@ export class GameEngine {
         ballPositions,
         paddlePosition,
         'game_won'
-      ).catch(error => console.error('❌ Erro ao registrar mudança de estado:', error));
+      ).catch(error => ERROR('❌ Erro ao registrar mudança de estado:', error));
       
       // Log do fim do jogo (vitória)
       await gameLogger.logGameEnd(
@@ -136,7 +137,7 @@ export class GameEngine {
         ballPositions,
         paddlePosition,
         'win'
-      ).catch(error => console.error('❌ Erro ao registrar vitória:', error));
+      ).catch(error => ERROR('❌ Erro ao registrar vitória:', error));
       
       if (this.onGameWon) {
         this.onGameWon();
@@ -229,14 +230,14 @@ export class GameEngine {
   }
 
   public async start() {
-    console.log('🎮 GameEngine.start() chamado - INÍCIO');
-    console.log('🎮 this:', this);
-    console.log('🎮 gameLogger:', gameLogger);
+    LOG('🎮 GameEngine.start() chamado - INÍCIO');
+    LOG('🎮 this:', this);
+    LOG('🎮 gameLogger:', gameLogger);
     
     await this.preloadAssets();
     
     // Aguardar GameLogger estar pronto
-    console.log('⏳ Aguardando GameLogger estar pronto...');
+    LOG('⏳ Aguardando GameLogger estar pronto...');
     let attempts = 0;
     while (!gameLogger['db'] && attempts < 50) {
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -244,9 +245,9 @@ export class GameEngine {
     }
     
     if (!gameLogger['db']) {
-      console.error('❌ GameLogger não inicializou após 5 segundos');
+      ERROR('❌ GameLogger não inicializou após 5 segundos');
     } else {
-      console.log('✅ GameLogger está pronto');
+      LOG('✅ GameLogger está pronto');
     }
     
     // Log do início do jogo
@@ -254,26 +255,26 @@ export class GameEngine {
     const ballPositions = this.getBallPositions();
     const paddlePosition = this.paddle.position;
     
-    console.log('📊 Preparando para registrar início do jogo...');
-    console.log('📊 GameState:', gameState);
-    console.log('📊 BallPositions:', ballPositions);
-    console.log('📊 PaddlePosition:', paddlePosition);
+    LOG('📊 Preparando para registrar início do jogo...');
+    LOG('📊 GameState:', gameState);
+    LOG('📊 BallPositions:', ballPositions);
+    LOG('📊 PaddlePosition:', paddlePosition);
     
     // Se já existe um gameId, é um restart
     if (this.currentGameId) {
-      console.log('🔄 Detectado restart do jogo');
+      LOG('🔄 Detectado restart do jogo');
       await gameLogger.logRestartGame(
         gameState,
         ballPositions,
         paddlePosition
-      ).catch(error => console.error('❌ Erro ao registrar restart do jogo:', error));
+      ).catch(error => ERROR('❌ Erro ao registrar restart do jogo:', error));
     }
     
-    console.log('🎮 Registrando início do jogo...');
+    LOG('🎮 Registrando início do jogo...');
     
     // Verificar se o GameLogger está pronto
     if (!gameLogger['db']) {
-      console.warn('⚠️ GameLogger ainda não inicializado, aguardando...');
+      WARN('⚠️ GameLogger ainda não inicializado, aguardando...');
       await new Promise(resolve => setTimeout(resolve, 500));
     }
     
@@ -282,9 +283,9 @@ export class GameEngine {
       ballPositions,
       paddlePosition
     ).then(() => {
-      console.log('✅ Início do jogo registrado com sucesso!');
+      LOG('✅ Início do jogo registrado com sucesso!');
     }).catch(error => {
-      console.error('❌ Erro ao registrar início do jogo:', error);
+      ERROR('❌ Erro ao registrar início do jogo:', error);
     });
     
     this.loop();
@@ -360,7 +361,7 @@ export class GameEngine {
             ballPositions,
             paddlePosition,
             'game_over'
-          ).catch(error => console.error('❌ Erro ao registrar mudança de estado:', error));
+          ).catch(error => ERROR('❌ Erro ao registrar mudança de estado:', error));
           
           // Log do fim do jogo (derrota)
           await gameLogger.logGameEnd(
@@ -368,7 +369,7 @@ export class GameEngine {
             ballPositions,
             paddlePosition,
             'lose'
-          ).catch(error => console.error('❌ Erro ao registrar derrota:', error));
+          ).catch(error => ERROR('❌ Erro ao registrar derrota:', error));
           
           if (this.onGameOver) {
             this.onGameOver();
@@ -381,7 +382,7 @@ export class GameEngine {
             this.onGameOver();
           }
         } else {
-          console.error('Erro durante o rendering:', error);
+          ERROR('Erro durante o rendering:', error);
           throw error;
         }
       }

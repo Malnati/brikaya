@@ -1,6 +1,7 @@
 // src/hooks/useCollisionStats.ts
 import { useState, useEffect, useCallback } from 'react';
 import { collisionTracker } from '../utils/collisionTracker';
+import { ERROR } from '../utils/logger';
 
 interface CollisionStats {
   total: number;
@@ -29,7 +30,7 @@ export function useCollisionStats(refreshInterval: number = 1000) {
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
-      console.error('❌ Erro ao carregar estatísticas de colisões:', err);
+      ERROR('❌ Erro ao carregar estatísticas de colisões:', err);
     } finally {
       setLoading(false);
     }
@@ -41,7 +42,7 @@ export function useCollisionStats(refreshInterval: number = 1000) {
       await refreshStats();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao limpar colisões');
-      console.error('❌ Erro ao limpar colisões:', err);
+      ERROR('❌ Erro ao limpar colisões:', err);
     }
   }, [refreshStats]);
 
@@ -49,7 +50,7 @@ export function useCollisionStats(refreshInterval: number = 1000) {
     try {
       return await collisionTracker.getRecentCollisions(limit);
     } catch (err) {
-      console.error('❌ Erro ao obter colisões recentes:', err);
+      ERROR('❌ Erro ao obter colisões recentes:', err);
       return [];
     }
   }, []);
@@ -58,7 +59,7 @@ export function useCollisionStats(refreshInterval: number = 1000) {
     try {
       return await collisionTracker.getCollisionsByType(type as any);
     } catch (err) {
-      console.error('❌ Erro ao obter colisões por tipo:', err);
+      ERROR('❌ Erro ao obter colisões por tipo:', err);
       return [];
     }
   }, []);

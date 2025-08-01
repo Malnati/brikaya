@@ -1,6 +1,7 @@
 // src/hooks/useGameLoop.ts
 import { useEffect, RefObject, useCallback } from 'react';
 import { GameEngine } from '../logic/GameEngine';
+import { LOG, ERROR } from '../utils/logger';
 
 interface CanvasSize {
   width: number;
@@ -21,25 +22,25 @@ export function useGameLoop(
 
   useEffect(() => {
     if (!canvasRef.current) {
-      console.log('❌ canvasRef.current não está disponível');
+      LOG('❌ canvasRef.current não está disponível');
       return;
     }
     
-    console.log(`🎮 Iniciando GameEngine...`);
-    console.log(`🎮 Canvas ref:`, canvasRef.current);
-    console.log(`🎮 Canvas size:`, canvasRef.current.width, 'x', canvasRef.current.height);
+    LOG(`🎮 Iniciando GameEngine...`);
+    LOG(`🎮 Canvas ref:`, canvasRef.current);
+    LOG(`🎮 Canvas size:`, canvasRef.current.width, 'x', canvasRef.current.height);
     
     try {
       const engine = new GameEngine(canvasRef.current, memoizedOnScoreUpdate, memoizedOnGameWon, memoizedOnGameOver, canvasSize);
-      console.log(`🎮 GameEngine criado com sucesso, chamando start()...`);
+      LOG(`🎮 GameEngine criado com sucesso, chamando start()...`);
       engine.start();
-      console.log(`🎮 engine.start() chamado`);
+      LOG(`🎮 engine.start() chamado`);
     } catch (error) {
-      console.error('❌ Erro ao criar/iniciar GameEngine:', error);
+      ERROR('❌ Erro ao criar/iniciar GameEngine:', error);
     }
     
     return () => {
-      console.log(`🛑 Parando GameEngine...`);
+      LOG(`🛑 Parando GameEngine...`);
       // engine.stop();
     };
   }, [canvasRef, memoizedOnScoreUpdate, memoizedOnGameWon, memoizedOnGameOver]); // Removido canvasSize das dependências

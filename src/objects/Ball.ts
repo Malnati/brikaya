@@ -5,6 +5,7 @@ import { ASSET_PATHS } from '../constants/assets';
 import { AssetLoader } from '../utils/assetLoader';
 import { collisionTracker } from '../utils/collisionTracker';
 import { gameLogger } from '../storage/gameLogger';
+import { LOG, ERROR } from '../utils/logger';
 
 const BALL_INITIAL_Y_OFFSET = 30;
 const MAX_BOUNCE_ANGLE = Math.PI / 3; // 60 graus
@@ -22,7 +23,7 @@ export class Ball {
     this.radius = dimensions.ballRadius;
     this.x = canvasWidth / 2;
     this.y = canvasHeight - BALL_INITIAL_Y_OFFSET;
-    console.log(`⚽ Ball inicializada: pos=(${this.x}, ${this.y}), raio=${this.radius}`);
+    LOG(`⚽ Ball inicializada: pos=(${this.x}, ${this.y}), raio=${this.radius}`);
   }
 
   async update(
@@ -76,7 +77,7 @@ export class Ball {
     // Colisão com as paredes laterais
     if (this.x + this.dx > this.canvasWidth - this.radius || this.x + this.dx < this.radius) {
       const wallType = this.x + this.dx > this.canvasWidth - this.radius ? 'right' : 'left';
-      console.log(`🧱 Colisão com parede ${wallType} detectada em (${Math.round(this.x)}, ${Math.round(this.y)})`);
+      LOG(`🧱 Colisão com parede ${wallType} detectada em (${Math.round(this.x)}, ${Math.round(this.y)})`);
       
       const velocityBefore = { dx: this.dx, dy: this.dy };
       this.dx = -this.dx;
@@ -93,19 +94,19 @@ export class Ball {
           velocityBefore,
           velocityAfter
         }
-      ).catch(error => console.error('❌ Erro ao registrar colisão com parede:', error));
+      ).catch(error => ERROR('❌ Erro ao registrar colisão com parede:', error));
       
       collisionTracker.logWallCollision(
         { x: this.x, y: this.y },
         velocityAfter,
         gameState,
         wallType
-      ).catch(error => console.error('❌ Erro ao registrar colisão com parede:', error));
+      ).catch(error => ERROR('❌ Erro ao registrar colisão com parede:', error));
     }
     
     // Colisão com o teto
     if (this.y + this.dy < this.radius) {
-      console.log(`🏠 Colisão com teto detectada em (${Math.round(this.x)}, ${Math.round(this.y)})`);
+      LOG(`🏠 Colisão com teto detectada em (${Math.round(this.x)}, ${Math.round(this.y)})`);
       
       const velocityBefore = { dx: this.dx, dy: this.dy };
       this.dy = -this.dy;
@@ -121,13 +122,13 @@ export class Ball {
           velocityBefore,
           velocityAfter
         }
-      ).catch(error => console.error('❌ Erro ao registrar colisão com teto:', error));
+      ).catch(error => ERROR('❌ Erro ao registrar colisão com teto:', error));
       
       collisionTracker.logCeilingCollision(
         { x: this.x, y: this.y },
         velocityAfter,
         gameState
-      ).catch(error => console.error('❌ Erro ao registrar colisão com teto:', error));
+      ).catch(error => ERROR('❌ Erro ao registrar colisão com teto:', error));
     }
 
     // PRIMEIRO: Colisão com blocos
@@ -137,10 +138,10 @@ export class Ball {
     if (this.y + this.radius > maxHeight) {
       const paddlePos = paddle.position;
       if (this.x > paddlePos.x && this.x < paddlePos.x + paddlePos.width) {
-        console.log(`🏓 Bola bateu na raquete em x=${this.x}, raquete=${paddlePos.x}-${paddlePos.x + paddlePos.width}`);
+        LOG(`🏓 Bola bateu na raquete em x=${this.x}, raquete=${paddlePos.x}-${paddlePos.x + paddlePos.width}`);
         
         const hitPosition = (this.x - paddlePos.x) / paddlePos.width;
-        console.log(`🏓 Registrando colisão com raquete - Hit position: ${hitPosition.toFixed(2)}`);
+        LOG(`🏓 Registrando colisão com raquete - Hit position: ${hitPosition.toFixed(2)}`);
         
         const velocityBefore = { dx: this.dx, dy: this.dy };
         
@@ -154,7 +155,7 @@ export class Ball {
             targetPosition: paddlePos,
             hitPosition
           }
-        ).catch(error => console.error('❌ Erro ao registrar colisão com raquete:', error));
+        ).catch(error => ERROR('❌ Erro ao registrar colisão com raquete:', error));
         
         collisionTracker.logPaddleCollision(
           { x: this.x, y: this.y },
@@ -162,16 +163,16 @@ export class Ball {
           gameState,
           paddlePos,
           hitPosition
-        ).catch(error => console.error('❌ Erro ao registrar colisão com raquete:', error));
+        ).catch(error => ERROR('❌ Erro ao registrar colisão com raquete:', error));
         
         this.handlePaddleCollision(paddlePos);
         this.paddleCollision = true;
         return Promise.resolve(true);
       } else {
         // A bolinha passou pela raquete
-        console.log(`💀 BOLA PERDIDA! x=${this.x}, y=${this.y}, raquete=${paddlePos.x}-${paddlePos.x + paddlePos.width}`);
+        LOG(`💀 BOLA PERDIDA! x=${this.x}, y=${this.y}, raquete=${paddlePos.x}-${paddlePos.x + paddlePos.width}`);
         
-        console.log(`💀 Registrando bola perdida - Posição: (${Math.round(this.x)}, ${Math.round(this.y)})`);
+        LOG(`💀 Registrando bola perdida - Posição: (${Math.round(this.x)}, ${Math.round(this.y)})`);
         
         const lostBallVelocity = { dx: this.dx, dy: this.dy };
         
@@ -181,14 +182,14 @@ export class Ball {
           paddlePos,
           { x: this.x, y: this.y },
           lostBallVelocity
-        ).catch(error => console.error('❌ Erro ao registrar bola perdida:', error));
+        ).catch(error => ERROR('❌ Erro ao registrar bola perdida:', error));
         
         collisionTracker.logBallLost(
           { x: this.x, y: this.y },
           lostBallVelocity,
           gameState,
           paddlePos
-        ).catch(error => console.error('❌ Erro ao registrar bola perdida:', error));
+        ).catch(error => ERROR('❌ Erro ao registrar bola perdida:', error));
         
         return Promise.resolve(false);
       }

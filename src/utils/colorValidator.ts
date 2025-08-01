@@ -2,6 +2,7 @@
 
 import { BRICK_COLORS } from '../constants/assets';
 import { AssetLoader } from './assetLoader';
+import { LOG, ERROR } from './logger';
 
 export interface ColorValidationResult {
   isValid: boolean;
@@ -25,7 +26,7 @@ export class ColorValidator {
       failedImages: []
     };
 
-    console.log('🔍 Iniciando validação de cores dos bricks...');
+    LOG('🔍 Iniciando validação de cores dos bricks...');
 
     try {
       // Tentar carregar todas as imagens
@@ -37,12 +38,12 @@ export class ColorValidator {
         
         if (image) {
           result.loadedImages.push(colorPath);
-          console.log(`✅ Imagem carregada: ${colorPath}`);
+          LOG(`✅ Imagem carregada: ${colorPath}`);
         } else {
           result.failedImages.push(colorPath);
           result.errors.push(`Falha ao carregar imagem: ${colorPath}`);
           result.isValid = false;
-          console.error(`❌ Falha ao carregar: ${colorPath}`);
+          ERROR(`❌ Falha ao carregar: ${colorPath}`);
         }
       }
 
@@ -67,7 +68,7 @@ export class ColorValidator {
       result.isValid = false;
     }
 
-    console.log('📊 Resultado da validação:', result);
+    LOG('📊 Resultado da validação:', result);
     return result;
   }
 

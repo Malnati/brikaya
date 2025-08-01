@@ -1,5 +1,7 @@
 // src/utils/collisionTracker.ts
 
+import { LOG, ERROR, WARN } from './logger';
+
 interface CollisionEvent {
   id: string;
   timestamp: number;
@@ -30,13 +32,13 @@ class CollisionTracker {
       const request = indexedDB.open(this.DB_NAME, this.DB_VERSION);
 
       request.onerror = () => {
-        console.error('❌ Erro ao abrir IndexedDB:', request.error);
+        ERROR('❌ Erro ao abrir IndexedDB:', request.error);
         reject(request.error);
       };
 
       request.onsuccess = () => {
         this.db = request.result;
-        console.log('✅ IndexedDB inicializado para rastreamento de colisões');
+        LOG('✅ IndexedDB inicializado para rastreamento de colisões');
         resolve();
       };
 
@@ -46,7 +48,7 @@ class CollisionTracker {
           const store = db.createObjectStore(this.STORE_NAME, { keyPath: 'id' });
           store.createIndex('timestamp', 'timestamp', { unique: false });
           store.createIndex('type', 'type', { unique: false });
-          console.log('🏗️ Store de colisões criada no IndexedDB');
+          LOG('🏗️ Store de colisões criada no IndexedDB');
         }
       };
     });
@@ -54,7 +56,7 @@ class CollisionTracker {
 
   async logCollision(event: Omit<CollisionEvent, 'id' | 'timestamp'>): Promise<void> {
     if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado, pulando registro de colisão');
+      WARN('⚠️ IndexedDB não inicializado, pulando registro de colisão');
       return;
     }
 
@@ -70,12 +72,12 @@ class CollisionTracker {
       const request = store.add(collisionEvent);
 
       request.onsuccess = () => {
-        console.log(`📊 Colisão registrada: ${collisionEvent.type} (ID: ${collisionEvent.id}) - Pos: (${Math.round(collisionEvent.ballPosition.x)}, ${Math.round(collisionEvent.ballPosition.y)})`);
+        LOG(`📊 Colisão registrada: ${collisionEvent.type} (ID: ${collisionEvent.id}) - Pos: (${Math.round(collisionEvent.ballPosition.x)}, ${Math.round(collisionEvent.ballPosition.y)})`);
         resolve();
       };
 
       request.onerror = () => {
-        console.error('❌ Erro ao registrar colisão:', request.error);
+        ERROR('❌ Erro ao registrar colisão:', request.error);
         reject(request.error);
       };
     });
@@ -83,7 +85,7 @@ class CollisionTracker {
 
   async getAllCollisions(): Promise<CollisionEvent[]> {
     if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
+      WARN('⚠️ IndexedDB não inicializado');
       return [];
     }
 
@@ -94,12 +96,12 @@ class CollisionTracker {
 
       request.onsuccess = () => {
         const collisions = request.result.sort((a, b) => a.timestamp - b.timestamp);
-        console.log(`📊 Total de colisões recuperadas: ${collisions.length}`);
+        LOG(`📊 Total de colisões recuperadas: ${collisions.length}`);
         resolve(collisions);
       };
 
       request.onerror = () => {
-        console.error('❌ Erro ao recuperar colisões:', request.error);
+        ERROR('❌ Erro ao recuperar colisões:', request.error);
         reject(request.error);
       };
     });
@@ -107,7 +109,7 @@ class CollisionTracker {
 
   async getCollisionsByType(type: CollisionEvent['type']): Promise<CollisionEvent[]> {
     if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
+      WARN('⚠️ IndexedDB não inicializado');
       return [];
     }
 
@@ -119,12 +121,12 @@ class CollisionTracker {
 
       request.onsuccess = () => {
         const collisions = request.result.sort((a, b) => a.timestamp - b.timestamp);
-        console.log(`📊 Colisões do tipo ${type}: ${collisions.length}`);
+        LOG(`📊 Colisões do tipo ${type}: ${collisions.length}`);
         resolve(collisions);
       };
 
       request.onerror = () => {
-        console.error('❌ Erro ao recuperar colisões por tipo:', request.error);
+        ERROR('❌ Erro ao recuperar colisões por tipo:', request.error);
         reject(request.error);
       };
     });
@@ -132,7 +134,7 @@ class CollisionTracker {
 
   async getRecentCollisions(limit: number = 50): Promise<CollisionEvent[]> {
     if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
+      WARN('⚠️ IndexedDB não inicializado');
       return [];
     }
 
@@ -152,13 +154,13 @@ class CollisionTracker {
           count++;
           cursor.continue();
         } else {
-          console.log(`📊 Últimas ${collisions.length} colisões recuperadas`);
+          LOG(`📊 Últimas ${collisions.length} colisões recuperadas`);
           resolve(collisions.reverse());
         }
       };
 
       request.onerror = () => {
-        console.error('❌ Erro ao recuperar colisões recentes:', request.error);
+        ERROR('❌ Erro ao recuperar colisões recentes:', request.error);
         reject(request.error);
       };
     });
@@ -166,7 +168,7 @@ class CollisionTracker {
 
   async clearAllCollisions(): Promise<void> {
     if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
+      WARN('⚠️ IndexedDB não inicializado');
       return;
     }
 
@@ -176,12 +178,12 @@ class CollisionTracker {
       const request = store.clear();
 
       request.onsuccess = () => {
-        console.log('🗑️ Todas as colisões foram removidas do IndexedDB');
+        LOG('🗑️ Todas as colisões foram removidas do IndexedDB');
         resolve();
       };
 
       request.onerror = () => {
-        console.error('❌ Erro ao limpar colisões:', request.error);
+        ERROR('❌ Erro ao limpar colisões:', request.error);
         reject(request.error);
       };
     });
@@ -323,5 +325,5 @@ export const collisionTracker = new CollisionTracker();
 
 // Inicializar automaticamente
 collisionTracker.initialize().catch(error => {
-  console.error('❌ Falha ao inicializar CollisionTracker:', error);
+  ERROR('❌ Falha ao inicializar CollisionTracker:', error);
 }); 

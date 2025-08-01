@@ -1,6 +1,8 @@
 // src/storage/gameLogger.ts
 
-console.log('📦 GameLogger.ts carregado');
+import { LOG, ERROR, WARN } from '../utils/logger';
+
+LOG('📦 GameLogger.ts carregado');
 
 interface GameEvent {
   id: string;
@@ -60,59 +62,59 @@ class GameLogger {
   private gameStartTime: number | null = null;
 
   constructor() {
-    console.log('🏗️ GameLogger constructor chamado');
+    LOG('🏗️ GameLogger constructor chamado');
   }
 
   async initialize(): Promise<void> {
-    console.log('🏗️ GameLogger.initialize() chamado - INÍCIO');
-    console.log('🏗️ this:', this);
-    console.log('🏗️ DB_NAME:', this.DB_NAME);
-    console.log('🏗️ DB_VERSION:', this.DB_VERSION);
+    LOG('🏗️ GameLogger.initialize() chamado - INÍCIO');
+    LOG('🏗️ this:', this);
+    LOG('🏗️ DB_NAME:', this.DB_NAME);
+    LOG('🏗️ DB_VERSION:', this.DB_VERSION);
     
     // Verificar se IndexedDB está disponível
     if (!window.indexedDB) {
-      console.error('❌ IndexedDB não está disponível neste navegador');
+      ERROR('❌ IndexedDB não está disponível neste navegador');
       throw new Error('IndexedDB não está disponível');
     }
     
-    console.log('✅ IndexedDB está disponível');
+    LOG('✅ IndexedDB está disponível');
     
     return new Promise((resolve, reject) => {
-      console.log('🗄️ Abrindo IndexedDB:', this.DB_NAME, 'versão:', this.DB_VERSION);
+      LOG('🗄️ Abrindo IndexedDB:', this.DB_NAME, 'versão:', this.DB_VERSION);
       const request = indexedDB.open(this.DB_NAME, this.DB_VERSION);
 
       request.onerror = () => {
-        console.error('❌ Erro ao abrir IndexedDB para GameLogger:', request.error);
-        console.error('❌ Código do erro:', request.error?.code);
-        console.error('❌ Nome do erro:', request.error?.name);
+        ERROR('❌ Erro ao abrir IndexedDB para GameLogger:', request.error);
+        ERROR('❌ Código do erro:', request.error?.code);
+        ERROR('❌ Nome do erro:', request.error?.name);
         reject(request.error);
       };
 
       request.onsuccess = () => {
         this.db = request.result;
-        console.log('✅ GameLogger IndexedDB inicializado com sucesso');
-        console.log('🗄️ Database:', this.db);
-        console.log('🗄️ Object stores:', this.db.objectStoreNames);
-        console.log('🗄️ Version:', this.db.version);
+        LOG('✅ GameLogger IndexedDB inicializado com sucesso');
+        LOG('🗄️ Database:', this.db);
+        LOG('🗄️ Object stores:', this.db.objectStoreNames);
+        LOG('🗄️ Version:', this.db.version);
         resolve();
       };
 
       request.onupgradeneeded = (event) => {
-        console.log('🔄 Upgrade necessário do IndexedDB...');
+        LOG('🔄 Upgrade necessário do IndexedDB...');
         const db = (event.target as IDBOpenDBRequest).result;
-        console.log('🗄️ Versão antiga:', event.oldVersion);
-        console.log('🗄️ Versão nova:', event.newVersion);
+        LOG('🗄️ Versão antiga:', event.oldVersion);
+        LOG('🗄️ Versão nova:', event.newVersion);
         
         if (!db.objectStoreNames.contains(this.STORE_NAME)) {
-          console.log('🏗️ Criando object store:', this.STORE_NAME);
+          LOG('🏗️ Criando object store:', this.STORE_NAME);
           const store = db.createObjectStore(this.STORE_NAME, { keyPath: 'id' });
           store.createIndex('timestamp', 'timestamp', { unique: false });
           store.createIndex('type', 'type', { unique: false });
           store.createIndex('gameId', 'gameId', { unique: false });
           store.createIndex('gameStartTime', 'gameStartTime', { unique: false });
-          console.log('✅ Store de eventos do jogo criada no IndexedDB');
+          LOG('✅ Store de eventos do jogo criada no IndexedDB');
         } else {
-          console.log('✅ Object store já existe:', this.STORE_NAME);
+          LOG('✅ Object store já existe:', this.STORE_NAME);
         }
       };
     });
@@ -127,13 +129,13 @@ class GameLogger {
   }
 
   async logEvent(event: Omit<GameEvent, 'id' | 'timestamp'>): Promise<void> {
-    console.log('📝 logEvent chamado - INÍCIO');
-    console.log('📝 event.type:', event.type);
-    console.log('📝 this.db:', this.db);
-    console.log('📝 this:', this);
+    LOG('📝 logEvent chamado - INÍCIO');
+    LOG('📝 event.type:', event.type);
+    LOG('📝 this.db:', this.db);
+    LOG('📝 this:', this);
     
     if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado, pulando registro de evento');
+      WARN('⚠️ IndexedDB não inicializado, pulando registro de evento');
       return;
     }
 
@@ -143,10 +145,10 @@ class GameLogger {
       timestamp: Date.now()
     };
 
-    console.log('📝 Evento preparado:', gameEvent.id, gameEvent.type);
+    LOG('📝 Evento preparado:', gameEvent.id, gameEvent.type);
 
     return new Promise((resolve, reject) => {
-      console.log('🗄️ Iniciando transação no IndexedDB...');
+      LOG('🗄️ Iniciando transação no IndexedDB...');
       const transaction = this.db!.transaction([this.STORE_NAME], 'readwrite');
       const store = transaction.objectStore(this.STORE_NAME);
       
@@ -156,19 +158,19 @@ class GameLogger {
         gameStartTime: this.gameStartTime
       };
       
-      console.log('📝 Adicionando evento ao store:', eventToStore.id);
+      LOG('📝 Adicionando evento ao store:', eventToStore.id);
       const request = store.add(eventToStore);
 
       request.onsuccess = () => {
-        console.log(`📊 Evento registrado com sucesso: ${gameEvent.type} (ID: ${gameEvent.id})`);
+        LOG(`📊 Evento registrado com sucesso: ${gameEvent.type} (ID: ${gameEvent.id})`);
         // Log detalhado do conteúdo registrado
-        console.log('📦 Conteúdo registrado no IndexDB:', JSON.stringify(eventToStore, null, 2));
+        LOG('📦 Conteúdo registrado no IndexDB:', JSON.stringify(eventToStore, null, 2));
         resolve();
       };
 
       request.onerror = () => {
-        console.error('❌ Erro ao registrar evento:', request.error);
-        console.error('❌ Detalhes do erro:', request.error?.message);
+        ERROR('❌ Erro ao registrar evento:', request.error);
+        ERROR('❌ Detalhes do erro:', request.error?.message);
         reject(request.error);
       };
     });
@@ -180,10 +182,10 @@ class GameLogger {
     ballPositions: GameEvent['ballPositions'], 
     paddlePosition: GameEvent['paddlePosition']
   ): Promise<void> {
-    console.log('🎮 logGameStart chamado');
-    console.log('🎮 gameState:', gameState);
-    console.log('🎮 ballPositions:', ballPositions);
-    console.log('🎮 paddlePosition:', paddlePosition);
+    LOG('🎮 logGameStart chamado');
+    LOG('🎮 gameState:', gameState);
+    LOG('🎮 ballPositions:', ballPositions);
+    LOG('🎮 paddlePosition:', paddlePosition);
     
     this.currentGameId = this.generateGameId();
     this.gameStartTime = Date.now();
@@ -440,7 +442,7 @@ class GameLogger {
   // Métodos para recuperar dados
   async getAllEvents(): Promise<GameEvent[]> {
     if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
+      WARN('⚠️ IndexedDB não inicializado');
       return [];
     }
 
@@ -451,12 +453,12 @@ class GameLogger {
 
       request.onsuccess = () => {
         const events = request.result.sort((a, b) => a.timestamp - b.timestamp);
-        console.log(`📊 Total de eventos recuperados: ${events.length}`);
+        LOG(`📊 Total de eventos recuperados: ${events.length}`);
         resolve(events);
       };
 
       request.onerror = () => {
-        console.error('❌ Erro ao recuperar eventos:', request.error);
+        ERROR('❌ Erro ao recuperar eventos:', request.error);
         reject(request.error);
       };
     });
@@ -464,7 +466,7 @@ class GameLogger {
 
   async getEventsByGameId(gameId: string): Promise<GameEvent[]> {
     if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
+      WARN('⚠️ IndexedDB não inicializado');
       return [];
     }
 
@@ -476,12 +478,12 @@ class GameLogger {
 
       request.onsuccess = () => {
         const events = request.result.sort((a, b) => a.timestamp - b.timestamp);
-        console.log(`📊 Eventos do jogo ${gameId}: ${events.length}`);
+        LOG(`📊 Eventos do jogo ${gameId}: ${events.length}`);
         resolve(events);
       };
 
       request.onerror = () => {
-        console.error('❌ Erro ao recuperar eventos por gameId:', request.error);
+        ERROR('❌ Erro ao recuperar eventos por gameId:', request.error);
         reject(request.error);
       };
     });
@@ -489,7 +491,7 @@ class GameLogger {
 
   async getEventsByType(type: GameEvent['type']): Promise<GameEvent[]> {
     if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
+      WARN('⚠️ IndexedDB não inicializado');
       return [];
     }
 
@@ -501,12 +503,12 @@ class GameLogger {
 
       request.onsuccess = () => {
         const events = request.result.sort((a, b) => a.timestamp - b.timestamp);
-        console.log(`📊 Eventos do tipo ${type}: ${events.length}`);
+        LOG(`📊 Eventos do tipo ${type}: ${events.length}`);
         resolve(events);
       };
 
       request.onerror = () => {
-        console.error('❌ Erro ao recuperar eventos por tipo:', request.error);
+        ERROR('❌ Erro ao recuperar eventos por tipo:', request.error);
         reject(request.error);
       };
     });
@@ -514,7 +516,7 @@ class GameLogger {
 
   async getRecentEvents(limit: number = 100): Promise<GameEvent[]> {
     if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
+      WARN('⚠️ IndexedDB não inicializado');
       return [];
     }
 
@@ -534,13 +536,13 @@ class GameLogger {
           count++;
           cursor.continue();
         } else {
-          console.log(`📊 Últimos ${events.length} eventos recuperados`);
+          LOG(`📊 Últimos ${events.length} eventos recuperados`);
           resolve(events.reverse());
         }
       };
 
       request.onerror = () => {
-        console.error('❌ Erro ao recuperar eventos recentes:', request.error);
+        ERROR('❌ Erro ao recuperar eventos recentes:', request.error);
         reject(request.error);
       };
     });
@@ -548,7 +550,7 @@ class GameLogger {
 
   async clearAllEvents(): Promise<void> {
     if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
+      WARN('⚠️ IndexedDB não inicializado');
       return;
     }
 
@@ -558,12 +560,12 @@ class GameLogger {
       const request = store.clear();
 
       request.onsuccess = () => {
-        console.log('🗑️ Todos os eventos foram removidos do IndexedDB');
+        LOG('🗑️ Todos os eventos foram removidos do IndexedDB');
         resolve();
       };
 
       request.onerror = () => {
-        console.error('❌ Erro ao limpar eventos:', request.error);
+        ERROR('❌ Erro ao limpar eventos:', request.error);
         reject(request.error);
       };
     });
@@ -651,10 +653,10 @@ class GameLogger {
         for (const event of importData.events) {
           await this.logEvent(event);
         }
-        console.log(`📊 Importados ${importData.events.length} eventos`);
+        LOG(`📊 Importados ${importData.events.length} eventos`);
       }
     } catch (error) {
-      console.error('❌ Erro ao importar dados:', error);
+      ERROR('❌ Erro ao importar dados:', error);
       throw error;
     }
   }
@@ -663,25 +665,25 @@ class GameLogger {
 // Instância singleton
 export const gameLogger = new GameLogger();
 
-console.log('📦 Instância do GameLogger criada');
+LOG('📦 Instância do GameLogger criada');
 
 // Inicializar automaticamente quando o DOM estiver pronto
 if (document.readyState === 'loading') {
-  console.log('📦 DOM ainda carregando, aguardando DOMContentLoaded...');
+  LOG('📦 DOM ainda carregando, aguardando DOMContentLoaded...');
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Inicializando GameLogger (DOMContentLoaded)...');
+    LOG('🚀 Inicializando GameLogger (DOMContentLoaded)...');
     gameLogger.initialize().then(() => {
-      console.log('✅ GameLogger inicializado com sucesso!');
+      LOG('✅ GameLogger inicializado com sucesso!');
     }).catch(error => {
-      console.error('❌ Falha ao inicializar GameLogger:', error);
+      ERROR('❌ Falha ao inicializar GameLogger:', error);
     });
   });
 } else {
   // DOM já está pronto
-  console.log('🚀 Inicializando GameLogger (DOM já pronto)...');
+  LOG('🚀 Inicializando GameLogger (DOM já pronto)...');
   gameLogger.initialize().then(() => {
-    console.log('✅ GameLogger inicializado com sucesso!');
+    LOG('✅ GameLogger inicializado com sucesso!');
   }).catch(error => {
-    console.error('❌ Falha ao inicializar GameLogger:', error);
+    ERROR('❌ Falha ao inicializar GameLogger:', error);
   });
 } 

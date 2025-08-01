@@ -1,16 +1,16 @@
 // src/registerServiceWorker.ts
-
+import { LOG } from './utils/logger';
 const SERVICE_WORKER_PATH = '/sw.js';
 
 // Temporariamente desabilitado para debug
-console.log('🚦 registerServiceWorker.ts carregado');
+LOG('🚦 registerServiceWorker.ts carregado');
 
 // Desregistrar service worker existente
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.getRegistrations().then(function(registrations) {
     for(let registration of registrations) {
       registration.unregister();
-      console.log('🗑️ Service Worker desregistrado:', registration);
+      LOG('🗑️ Service Worker desregistrado:', registration);
     }
   });
 }
