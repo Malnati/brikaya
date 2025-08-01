@@ -960,6 +960,20 @@ class DebugLogger {
       throw error;
     }
   }
+
+}
+
+// Funções estáticas para serem chamadas diretamente pelo logger.ts
+export async function log(message: string, ...args: any[]): Promise<void> {
+  return gameLogger.log(message, ...args);
+}
+
+export async function warn(message: string, ...args: any[]): Promise<void> {
+  return gameLogger.warn(message, ...args);
+}
+
+export async function error(message: string, ...args: any[]): Promise<void> {
+  return gameLogger.error(message, ...args);
 }
 
 // Instância singleton
