@@ -1,9 +1,10 @@
 // src/objects/Bricks.ts
 import { BRICK_COLORS } from '../constants/assets';
 import { DynamicGameDimensions } from '../constants/game';
+import { gameLogger } from '../storage/gameLogger';
 import { AssetLoader } from '../utils/assetLoader';
 import { collisionTracker } from '../utils/collisionTracker';
-import { LOG, WARN } from '../utils/logger';
+import { ERROR, LOG, WARN } from '../utils/logger';
 
 const BRICK_ACTIVE = 1;
 const BRICK_DESTROYED = 0;
@@ -183,7 +184,7 @@ export class Bricks {
                 b.colorIndex,
                 ball.position,
                 ballVelocity
-              ).catch(error => ERROR('❌ Erro ao registrar destruição de bloco:', error));
+              ).catch((error) => ERROR('❌ Erro ao registrar destruição de bloco:', error));
               
               collisionTracker.logBrickCollision(
                 ball.position,

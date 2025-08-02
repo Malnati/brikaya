@@ -14,12 +14,9 @@ interface LogEntry {
 
 class DebugLogger {
   private db: IDBDatabase | null = null;
-  private readonly DB_NAME = 'BrickBreakerDebugLog';
-  private readonly STORE_NAME = 'gameEvents';
-  private readonly LOGS_STORE_NAME = 'appLogs';
-  private readonly DB_VERSION = 3; // Incrementado para nova versão com logs
-  private currentDebugId: string | null = null;
-  private gameStartTime: number | null = null;
+  private readonly DB_NAME = 'SystemDebugLog';
+  private readonly LOGS_STORE_NAME = 'systemLogs';
+  private readonly DB_VERSION = 1;
 
   constructor() {
     console.log('🏗️ DebugLogger constructor chamado');
@@ -65,26 +62,14 @@ class DebugLogger {
         console.log('🗄️ Versão antiga:', event.oldVersion);
         console.log('🗄️ Versão nova:', event.newVersion);
         
-        if (!db.objectStoreNames.contains(this.STORE_NAME)) {
-          console.log('🏗️ Criando object store:', this.STORE_NAME);
-          const store = db.createObjectStore(this.STORE_NAME, { keyPath: 'id' });
-          store.createIndex('timestamp', 'timestamp', { unique: false });
-          store.createIndex('type', 'type', { unique: false });
-          store.createIndex('gameId', 'gameId', { unique: false });
-          store.createIndex('gameStartTime', 'gameStartTime', { unique: false });
-          console.log('✅ Store de eventos do jogo criada no IndexedDB');
-        } else {
-          console.log('✅ Object store já existe:', this.STORE_NAME);
-        }
-
-        // Criar store para logs gerais da aplicação
+        // Criar store para logs do sistema
         if (!db.objectStoreNames.contains(this.LOGS_STORE_NAME)) {
-          console.log('🏗️ Criando object store para logs:', this.LOGS_STORE_NAME);
+          console.log('🏗️ Criando object store para logs do sistema:', this.LOGS_STORE_NAME);
           const logsStore = db.createObjectStore(this.LOGS_STORE_NAME, { keyPath: 'id' });
           logsStore.createIndex('timestamp', 'timestamp', { unique: false });
           logsStore.createIndex('level', 'level', { unique: false });
           logsStore.createIndex('message', 'message', { unique: false });
-          console.log('✅ Store de logs criada no IndexedDB');
+          console.log('✅ Store de logs do sistema criada no IndexedDB');
         } else {
           console.log('✅ Object store de logs já existe:', this.LOGS_STORE_NAME);
         }
@@ -96,7 +81,7 @@ class DebugLogger {
     return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
 
-  // Funções para logs gerais da aplicação
+  // Funções para logs do sistema
   async log(message: string, ...args: any[]): Promise<void> {
     await this.storeLog('log', message, args);
   }
@@ -123,8 +108,6 @@ class DebugLogger {
       args,
       stack: new Error().stack,
       metadata: {
-        gameId: this.currentDebugId,
-        gameStartTime: this.gameStartTime,
         url: window.location.href,
         userAgent: navigator.userAgent
       }
@@ -144,116 +127,7 @@ class DebugLogger {
     }
   }
 
-  // Métodos para recuperar dados
-  async getAllEvents(): Promise<LogEntry[]> {
-    if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
-      return [];
-    }
-
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([this.STORE_NAME], 'readonly');
-      const store = transaction.objectStore(this.STORE_NAME);
-      const request = store.getAll();
-
-      request.onsuccess = () => {
-        const events = request.result.sort((a, b) => a.timestamp - b.timestamp);
-        console.log(`📊 Total de eventos recuperados: ${events.length}`);
-        resolve(events);
-      };
-
-      request.onerror = () => {
-        console.error('❌ Erro ao recuperar eventos:', request.error);
-        reject(request.error);
-      };
-    });
-  }
-
-  async getEventsByDebugId(gameId: string): Promise<LogEntry[]> {
-    if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
-      return [];
-    }
-
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([this.STORE_NAME], 'readonly');
-      const store = transaction.objectStore(this.STORE_NAME);
-      const index = store.index('gameId');
-      const request = index.getAll(gameId);
-
-      request.onsuccess = () => {
-        const events = request.result.sort((a, b) => a.timestamp - b.timestamp);
-        console.log(`📊 Eventos do jogo ${gameId}: ${events.length}`);
-        resolve(events);
-      };
-
-      request.onerror = () => {
-        console.error('❌ Erro ao recuperar eventos por gameId:', request.error);
-        reject(request.error);
-      };
-    });
-  }
-
-  async getEventsByType(type: LogEntry['level']): Promise<LogEntry[]> {
-    if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
-      return [];
-    }
-
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([this.STORE_NAME], 'readonly');
-      const store = transaction.objectStore(this.STORE_NAME);
-      const index = store.index('type');
-      const request = index.getAll(type);
-
-      request.onsuccess = () => {
-        const events = request.result.sort((a, b) => a.timestamp - b.timestamp);
-        console.log(`📊 Eventos do tipo ${type}: ${events.length}`);
-        resolve(events);
-      };
-
-      request.onerror = () => {
-        console.error('❌ Erro ao recuperar eventos por tipo:', request.error);
-        reject(request.error);
-      };
-    });
-  }
-
-  async getRecentEvents(limit: number = 100): Promise<LogEntry[]> {
-    if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
-      return [];
-    }
-
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([this.STORE_NAME], 'readonly');
-      const store = transaction.objectStore(this.STORE_NAME);
-      const index = store.index('timestamp');
-      const request = index.openCursor(null, 'prev');
-
-      const events: LogEntry[] = [];
-      let count = 0;
-
-      request.onsuccess = () => {
-        const cursor = request.result;
-        if (cursor && count < limit) {
-          events.push(cursor.value);
-          count++;
-          cursor.continue();
-        } else {
-          console.log(`📊 Últimos ${events.length} eventos recuperados`);
-          resolve(events.reverse());
-        }
-      };
-
-      request.onerror = () => {
-        console.error('❌ Erro ao recuperar eventos recentes:', request.error);
-        reject(request.error);
-      };
-    });
-  }
-
-  // Métodos para gerenciar logs gerais da aplicação
+  // Métodos para gerenciar logs do sistema
   async getAllLogs(): Promise<LogEntry[]> {
     if (!this.db) {
       console.warn('⚠️ IndexedDB não inicializado');
@@ -464,19 +338,19 @@ class DebugLogger {
 
 // Funções estáticas para serem chamadas diretamente pelo logger.ts
 export async function log(message: string, ...args: any[]): Promise<void> {
-  return gameLogger.log(message, ...args);
+  return debugLogger.log(message, ...args);
 }
 
 export async function warn(message: string, ...args: any[]): Promise<void> {
-  return gameLogger.warn(message, ...args);
+  return debugLogger.warn(message, ...args);
 }
 
 export async function error(message: string, ...args: any[]): Promise<void> {
-  return gameLogger.error(message, ...args);
+  return debugLogger.error(message, ...args);
 }
 
 // Instância singleton
-export const gameLogger = new DebugLogger();
+export const debugLogger = new DebugLogger();
 
 console.log('📦 Instância do DebugLogger criada');
 
@@ -485,7 +359,7 @@ if (document.readyState === 'loading') {
   console.log('📦 DOM ainda carregando, aguardando DOMContentLoaded...');
   document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 Inicializando DebugLogger (DOMContentLoaded)...');
-    gameLogger.initialize().then(() => {
+    debugLogger.initialize().then(() => {
       console.log('✅ DebugLogger inicializado com sucesso!');
     }).catch(error => {
       console.error('❌ Falha ao inicializar DebugLogger:', error);
@@ -494,7 +368,7 @@ if (document.readyState === 'loading') {
 } else {
   // DOM já está pronto
   console.log('🚀 Inicializando DebugLogger (DOM já pronto)...');
-  gameLogger.initialize().then(() => {
+  debugLogger.initialize().then(() => {
     console.log('✅ DebugLogger inicializado com sucesso!');
   }).catch(error => {
     console.error('❌ Falha ao inicializar DebugLogger:', error);

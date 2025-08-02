@@ -128,6 +128,10 @@ class GameLogger {
     return `game-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
   }
 
+  getCurrentGameId(): string | null {
+    return this.currentGameId;
+  }
+
   async logEvent(event: Omit<GameEvent, 'id' | 'timestamp'>): Promise<void> {
     LOG('📝 logEvent chamado - INÍCIO');
     LOG('📝 event.type:', event.type);
@@ -587,7 +591,7 @@ class GameLogger {
     const gameEndEvents = allEvents.filter(e => e.type === 'game_end');
     const gameStartEvents = allEvents.filter(e => e.type === 'game_start');
     const collisionEvents = allEvents.filter(e => e.type === 'collision');
-    const brickDestroyedEvents = allEvents.filter(e => e.type === 'brick_destroyed');
+    // const brickDestroyedEvents = allEvents.filter(e => e.type === 'brick_destroyed');
     
     const byType: Record<string, number> = {};
     let totalScore = 0;

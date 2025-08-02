@@ -4,7 +4,8 @@ import { DynamicGameDimensions } from '../constants/game';
 import { ASSET_PATHS } from '../constants/assets';
 import { AssetLoader } from '../utils/assetLoader';
 import { collisionTracker } from '../utils/collisionTracker';
-import { LOG } from '../utils/logger';
+import { ERROR, LOG } from '../utils/logger';
+import { gameLogger } from '../storage/gameLogger';
 
 const BALL_INITIAL_Y_OFFSET = 30;
 const MAX_BOUNCE_ANGLE = Math.PI / 3; // 60 graus
@@ -93,7 +94,7 @@ export class Ball {
           velocityBefore,
           velocityAfter
         }
-      ).catch(error => ERROR('❌ Erro ao registrar colisão com parede:', error));
+      ).catch((error) => ERROR('❌ Erro ao registrar colisão com parede:', error)); 
       
       collisionTracker.logWallCollision(
         { x: this.x, y: this.y },
