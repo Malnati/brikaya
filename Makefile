@@ -11,11 +11,9 @@ DIST_DIR=dist
 
 # Process management
 KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
-	pkill -f "vite" 2>/dev/null || true && \
-	pkill -f "node.*vite" 2>/dev/null || true && \
-	pkill -f "npm.*dev" 2>/dev/null || true && \
-	pkill -f "npm.*preview" 2>/dev/null || true && \
-	sleep 2 && \
+	(pgrep -f "^node.*vite" >/dev/null 2>&1 && pkill -f "^node.*vite" 2>/dev/null || true) && \
+	(pgrep -f "^npm.*dev" >/dev/null 2>&1 && pkill -f "^npm.*dev" 2>/dev/null || true) && \
+	(pgrep -f "^npm.*preview" >/dev/null 2>&1 && pkill -f "^npm.*preview" 2>/dev/null || true) && \
 	echo "✅ Processos anteriores encerrados!"
 
 # Target padrão: mostrar help quando make é executado sem argumentos
@@ -130,36 +128,38 @@ stop:
 	$(KILL_PROCESSES)
 
 # Reiniciar o jogo (parar e iniciar novamente)
-restart: stop dev
+restart: stop
+	@sleep 1
+	@$(MAKE) dev
 
 # Docker: Build da imagem
 docker-build:
 	@echo "🐳 Construindo imagem Docker..."
-	@docker-compose build
+	@docker compose build
 
 # Docker: Iniciar containers
 docker-up:
 	@echo "🚀 Iniciando containers Docker..."
-	@docker-compose up -d
+	@docker compose up -d
 	@echo "✅ Aplicação disponível em http://localhost:7979"
 
 # Docker: Parar containers
 docker-down:
 	@echo "🛑 Parando containers Docker..."
-	@docker-compose down
+	@docker compose down
 
 # Docker: Ver logs
 docker-logs:
-	@docker-compose logs -f brickbreaker
+	@docker compose logs -f brickbreaker
 
 # Docker: Acessar shell do container
 docker-shell:
-	@docker-compose exec brickbreaker /bin/bash
+	@docker compose exec brickbreaker /bin/bash
 
 # Docker: Build de produção
 docker-build-prod:
 	@echo "🏗️ Construindo build de produção..."
-	@docker-compose --profile build up brickbreaker-build
+	@docker compose --profile build up brickbreaker-build
 	@echo "✅ Build gerado em dist/"
 
 # Mostrar ajuda
