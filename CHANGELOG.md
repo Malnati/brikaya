@@ -3,6 +3,22 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.5.0] - 2025-11-20
+### Adicionado
+- **Plano de desenvolvimento**: Criado plano detalhado para próximos passos em `docs/rup/99-anexos/plano-desenvolvimento-proximos-passos.md`
+  - Definidas 3 fases de desenvolvimento (Estabilização, Enhancements, Release)
+  - Mapeadas 12 issues do GitHub prioritárias (#001-#012)
+  - Planejada atualização completa da documentação RUP específica
+  - Integrado plano com diretrizes do AGENTS.md
+  - Estabelecido cronograma de 4 sprints (8 semanas)
+  - Definidas métricas de sucesso e critérios de qualidade
+
+### Planejado
+- **Testes automatizados**: Suíte completa de testes unitários, integração e E2E
+- **Documentação específica**: RUP adaptado para contexto de jogo BrickBreaker
+- **Builds nativos**: Configuração iOS/Android via Capacitor com testes
+- **Métricas de qualidade**: Cobertura >80%, performance <100ms, zero bugs críticos
+
 ## [1.4.0] - 2025-11-20
 ### Removido
 - **Documentação legada**: Removida toda documentação específica do projeto anterior (CLImate INvestment)
