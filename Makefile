@@ -18,6 +18,9 @@ KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
 	sleep 2 && \
 	echo "✅ Processos anteriores encerrados!"
 
+# Target padrão: mostrar help quando make é executado sem argumentos
+.DEFAULT_GOAL := help
+
 .PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes docker-build docker-up docker-down docker-logs docker-shell
 
 # Função para matar processos anteriores
