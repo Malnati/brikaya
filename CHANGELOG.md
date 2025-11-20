@@ -3,6 +3,20 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.4.0] - 2025-11-20
+### Removido
+- **Documentação legada**: Removida toda documentação específica do projeto anterior (CLImate INvestment)
+  - Diretórios removidos: `00-visao/`, `01-arquitetura/`, `02-design/`, `02-planejamento/`, `03-agentes-ia/`, `04-testes-e-validacao/`, `05-entrega-e-implantacao/`, `05-operacao-release/`, `06-governanca-tecnica-e-controle-de-qualidade/`, `06-ux-brand/`, `99-anexos/MVP/`
+  - Arquivos removidos: `validation-issue-log.json`, `validation-report.md`, `validation-report-spec.md`, `mapeamento-white-label.md`
+  - Referências removidas: `manus/`, `modules/` (específicos de backend/banco de dados)
+
+### Melhorado
+- **Estrutura RUP**: Adaptada documentação RUP genérica para contexto do BrickBreaker
+  - README principal atualizado para refletir jogo PWA offline
+  - Checklists mantidos e adaptados para desenvolvimento de jogos
+  - Referências técnicas reutilizáveis preservadas (Heroicons, Swagger)
+  - Documentação agora focada em desenvolvimento de jogos e não em fintech
+
 ## [1.3.0] - 2025-11-20
 ### Adicionado
 - **Infraestrutura Docker**: Adicionada estrutura completa para execução via Docker

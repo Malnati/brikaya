@@ -1,8 +1,8 @@
 <!-- docs/rup/README.md -->
-# Template de Projeto Multiplataforma
+# BrickBreaker - Jogo Offline PWA
 
 ## Propósito
-Use este documento como modelo para registrar o requisito "Template de Projeto Multiplataforma" em novos projetos. Ele explica o objetivo do artefato, indica como interpretá-lo e orienta o time sobre quando consultar o material evolutivo.
+Use este documento como modelo para registrar o requisito "BrickBreaker - Jogo Offline PWA" em novos projetos. Ele explica o objetivo do artefato, indica como interpretá-lo e orienta o time sobre quando consultar o material evolutivo.
 
 ## Como usar
 1. Leia o documento evolutivo correspondente para acompanhar as decisões vigentes (`README-spec.md`).
@@ -15,4 +15,4 @@ Use este documento como modelo para registrar o requisito "Template de Projeto M
 - Mantenha este arquivo apenas com instruções reutilizáveis; evite inserir conteúdo específico do projeto.
 
 ## Documento evolutivo
-[Template de Projeto Multiplataforma — Especificação Evolutiva](./README-spec.md)
+[BrickBreaker - Jogo Offline PWA — Especificação Evolutiva](./README-spec.md)
