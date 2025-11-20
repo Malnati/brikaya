@@ -1,0 +1,53 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  brickbreaker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: brickbreaker-dev
+    ports:
+      - "7979:7979"
+    volumes:
+      # Montar código fonte para hot-reload (sem :ro para permitir escrita)
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./index.html:/app/index.html
+      - ./vite.config.ts:/app/vite.config.ts
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./package.json:/app/package.json
+      # Excluir node_modules do volume para usar o do container
+      - /app/node_modules
+      # Cache do Vite (opcional, melhora performance)
+      - /app/node_modules/.vite
+    environment:
+      - NODE_ENV=development
+      - PORT=7979
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    networks:
+      - brickbreaker-network
+
+  # Serviço para build de produção (opcional)
+  brickbreaker-build:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: brickbreaker-build
+    command: npm run build
+    volumes:
+      - ./:/app
+      - build-output:/app/dist
+    networks:
+      - brickbreaker-network
+    profiles:
+      - build
+
+volumes:
+  build-output:
+
+networks:
+  brickbreaker-network:
+    driver: bridge

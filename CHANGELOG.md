@@ -3,6 +3,26 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.3.0] - 2025-11-20
+### Adicionado
+- **Infraestrutura Docker**: Adicionada estrutura completa para execução via Docker
+  - `Dockerfile` para containerização do projeto
+  - `docker-compose.yml` para orquestração de containers
+  - `.dockerignore` para otimização de builds
+  - Novos targets no Makefile: `docker-build`, `docker-up`, `docker-down`, `docker-logs`, `docker-shell`, `docker-build-prod`
+
+### Ajustado
+- **Branding**: Adaptados arquivos de branding para o contexto do jogo BrickBreaker
+  - `branding/tokens.json`: Atualizado com paleta de cores do jogo (#1a1a1a, #2d2d2d, #00d4ff)
+  - `branding/assets/README.md`: Documentação adaptada para o contexto do jogo
+  - Removidas referências ao projeto anterior (APP, marketplace)
+  
+### Melhorado
+- **Makefile**: Reorganizado e melhorado com seções claras
+  - Adicionado cabeçalho descritivo
+  - Help reorganizado por categorias (Desenvolvimento Local, Builds Nativos, Docker, Testes)
+  - Mantidos todos os targets relevantes para o projeto de jogo
+
 ## [1.1.0] - 2024-07-31
 ### Melhorado
 - **Física da bolinha**: Implementada física realista de colisão com a raquete
