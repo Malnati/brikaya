@@ -1,9 +1,4 @@
 # docker-compose.yml
-networks:
-  caddy_mesh:
-    external: true
-    name: vmi2889919_caddy_mesh
-
 services:
   brickbreaker:
     build:
