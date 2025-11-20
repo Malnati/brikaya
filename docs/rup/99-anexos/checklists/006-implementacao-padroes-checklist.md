@@ -1,27 +1,27 @@
-<!-- docs/checklists/006-implementacao-padroes-checklist.md -->
-# Checklist de Implementação e Padrões de Código
+<!-- docs/rup/99-anexos/checklists/006-implementacao-padroes-checklist.md -->
+# Checklist de Implementação e Padrões de Código — BrickBreaker
 
 ## Estrutura de Projeto
-- [ ] Confirmar que a divisão entre `app/api/`, `app/ui/`, `extension/`, `prototype/`, `docs/` e `docs/rup/` segue a estrutura descrita, sem arquivos fora dos limites previstos.
-- [ ] Garantir que módulos compartilhados residem em diretórios documentados (`shared/`, `helpers/`) evitando duplicação.
-- [ ] Verificar que extensões Chrome seguem Manifest V3 e utilizam diretórios `background/`, `sidepanel/`, `components/`, `storage/` conforme especificado.
+- [ ] Confirmar que a divisão `src/components/`, `src/logic/`, `src/objects/`, `src/storage/`, `src/utils/`, `src/constants/` e `docs/` segue a estrutura documentada.
+- [ ] Garantir que assets e fontes estão versionados localmente e referenciados no manifest/service worker.
+- [ ] Verificar que módulos compartilhados evitam duplicação de lógica (ex.: colisões, cálculo de pontuação).
 
 ## Padrões de Código
-- [ ] Assegurar adesão aos linters e formatadores configurados (ESLint, Prettier, TypeScript) e ausência de `any` não justificado.
-- [ ] Validar uso de testes unitários com Jest (API) e Vitest/Testing Library (UI) conforme convenções da pasta `test/`.
-- [ ] Checar que convenções de commit e nomes de branches respeitam padrões documentados na fase de contribuição.
+- [ ] Aplicar ESLint/Prettier sem `any` não justificado.
+- [ ] Declarar constantes configuráveis no topo dos arquivos ou em `src/constants`.
+- [ ] Manter imports organizados no topo e remover código morto após refatorações.
 
 ## Build e Automação
-- [ ] Garantir que pipelines de build utilizam `npm` com scripts versionados, sem dependência de ferramentas externas não aprovadas.
-- [ ] Confirmar que `update.sh` e `docker-compose.yml` permanecem alinhados às instruções de build e não introduzem scripts shell proibidos.
-- [ ] Verificar que tasks de build/test estão centralizadas no `Makefile` ou nos scripts `npm` oficiais.
+- [ ] Scripts de build/test são executados via `npm`/`Makefile` sem ferramentas externas não aprovadas.
+- [ ] `sw.js` atualizado quando assets ou rotas mudarem; precache validado.
+- [ ] Targets de Capacitor (`make build-all`, `make ios`, `make android`) sincronizados com o build do Vite.
 
-## Testes e Qualidade de Código
-- [ ] Validar que suites unitárias, integração e E2E cobrem serviços críticos (diagnósticos, onboarding, notificações, extensão).
-- [ ] Checar cobertura mínima exigida e documentação de resultados em relatórios de QA.
-- [ ] Garantir remoção de código morto após refatorações e atualização dos testes associados.
+## Testes e Qualidade
+- [ ] Suites unitárias/integração/E2E cobrem engine, logging e fluxo offline (#001–#004).
+- [ ] Cobertura mínima atingida e relatórios anexados em QA.
+- [ ] Evidências de testes E2E armazenadas em `tmp/screenshots/` quando aplicável.
 
 ## Dependências e Configuração
-- [ ] Revisar `package.json` e `package-lock.json` para dependências sem uso e atualização dos scripts padronizados.
-- [ ] Confirmar que variáveis de ambiente documentadas (`.env.example`, README) estão sincronizadas com implementação.
-- [ ] Validar que configurações de IndexedDB, ElevenLabs e notificações correspondem às constantes definidas nos helpers.
+- [ ] `package.json`/`package-lock.json` revisados para dependências sem uso.
+- [ ] Variáveis de ambiente e constantes documentadas em `src/constants` e `README.md` (quando aplicável).
+- [ ] Configurações de IndexedDB e service worker alinhadas ao comportamento offline-first.

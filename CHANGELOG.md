@@ -3,6 +3,12 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.6.0] - 2025-11-20
+### Adicionado
+- **Documentação RUP específica do BrickBreaker**: novas seções de visão, arquitetura e design de gameplay para alinhar desenvolvimento offline-first.
+- **Guia de testes e critérios de aceite**: estratégia focada em engine, persistência e PWA offline com rastreabilidade para issues #001–#012.
+- **Checklist atualizado**: validação de estrutura, service worker, build Capacitor e cobertura de testes.
+
 ## [1.5.0] - 2025-11-20
 ### Adicionado
 - **Plano de desenvolvimento**: Criado plano detalhado para próximos passos em `docs/rup/99-anexos/plano-desenvolvimento-proximos-passos.md`
