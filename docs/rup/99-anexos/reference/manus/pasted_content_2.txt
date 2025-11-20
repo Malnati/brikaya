@@ -1,0 +1,2590 @@
+-- postgis/init-app/db00-bootstrap.psql
+\set ON_ERROR_STOP 1
+
+-- =========================================================================
+-- Variáveis esperadas via -v no psql (injetadas pelo 00-bootstrap.sh)
+-- =========================================================================
+-- Necessárias
+\if :{?POSTGREST_JWT_SECRET} \else \echo 'FATAL: POSTGREST_JWT_SECRET ausente' >&2 \quit 1 \endif
+\if :{?PGRST_DB_PASS}        \else \echo 'FATAL: PGRST_DB_PASS ausente'        >&2 \quit 1 \endif
+
+-- Opcionais (com defaults)
+\if :{?BASIC_AUTH_ADMIN_EMAIL} \else \set BASIC_AUTH_ADMIN_EMAIL 'admin@sacir.local'    \endif
+\if :{?BASIC_AUTH_ADMIN_PIN}   \else \set BASIC_AUTH_ADMIN_PIN   '123456'               \endif
+\if :{?BASIC_AUTH_USER_EMAIL}  \else \set BASIC_AUTH_USER_EMAIL  'usuario@sacir.local'  \endif
+\if :{?BASIC_AUTH_USER_PIN}    \else \set BASIC_AUTH_USER_PIN    '654321'               \endif
+\if :{?POSTGREST_JWT_TTL_SECONDS} \else \set POSTGREST_JWT_TTL_SECONDS '3600'          \endif
+
+SELECT set_config('bootstrap.jwt_ttl_seconds', :'POSTGREST_JWT_TTL_SECONDS', false);
+
+DO $$
+DECLARE
+  v_ttl integer := NULLIF(btrim(current_setting('bootstrap.jwt_ttl_seconds', true)), '')::integer;
+BEGIN
+  IF v_ttl IS NULL OR v_ttl <= 0 THEN
+    RAISE EXCEPTION 'POSTGREST_JWT_TTL_SECONDS deve ser um inteiro positivo';
+  END IF;
+END$$;
+
+-- =========================================================================
+-- Extensões necessárias
+-- =========================================================================
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Útil se for usar migrações via dblink (seguro manter)
+CREATE EXTENSION IF NOT EXISTS dblink;
+-- NÃO usar pgjwt nesta imagem
+
+CREATE SCHEMA IF NOT EXISTS sacir;
+
+-- =========================================================================
+-- Segredos/GUCs
+-- =========================================================================
+-- 1) Disponível na sessão atual (para este bootstrap)
+SELECT set_config('app.jwt_secret',          :'POSTGREST_JWT_SECRET',       false);
+SELECT set_config('app.jwt_ttl_seconds',     :'POSTGREST_JWT_TTL_SECONDS', false);
+SELECT set_config('bootstrap.pgrst_db_pass', :'PGRST_DB_PASS',              false);
+
+-- 2) Persistência para PRÓXIMAS conexões (PostgREST incluso)
+DO $$
+BEGIN
+  EXECUTE 'ALTER DATABASE ' || quote_ident(current_database()) ||
+          ' SET app.jwt_secret = ' || quote_literal(current_setting('app.jwt_secret', true));
+  EXECUTE 'ALTER DATABASE ' || quote_ident(current_database()) ||
+          ' SET app.jwt_ttl_seconds = ' || quote_literal(current_setting('app.jwt_ttl_seconds', true));
+
+  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticator') THEN
+    EXECUTE 'ALTER ROLE authenticator SET app.jwt_secret = ' ||
+            quote_literal(current_setting('app.jwt_secret', true));
+    EXECUTE 'ALTER ROLE authenticator SET app.jwt_ttl_seconds = ' ||
+            quote_literal(current_setting('app.jwt_ttl_seconds', true));
+  END IF;
+END$$;
+
+-- =========================================================================
+-- Roles/grants p/ PostgREST
+-- =========================================================================
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'anon') THEN
+    CREATE ROLE anon NOLOGIN;
+  END IF;
+
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticator') THEN
+    EXECUTE 'CREATE ROLE authenticator NOINHERIT LOGIN PASSWORD '
+            || quote_literal(current_setting('bootstrap.pgrst_db_pass', true));
+  ELSE
+    EXECUTE 'ALTER ROLE authenticator WITH NOINHERIT LOGIN PASSWORD '
+            || quote_literal(current_setting('bootstrap.pgrst_db_pass', true));
+  END IF;
+
+  GRANT anon TO authenticator;
+END$$;
+
+GRANT USAGE ON SCHEMA public TO anon;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO anon;
+
+-- =========================================================================
+-- Helpers de JWT (HS256) sem pgjwt
+-- =========================================================================
+CREATE OR REPLACE FUNCTION public.base64url_encode(data bytea)
+RETURNS text
+LANGUAGE sql
+IMMUTABLE
+AS $$
+  SELECT rtrim(replace(replace(encode($1, 'base64'), '+', '-'), '/', '_'), '=');
+$$;
+
+CREATE OR REPLACE FUNCTION sacir._b64url_to_bytea(t text)
+RETURNS bytea
+LANGUAGE plpgsql
+IMMUTABLE
+AS $$
+DECLARE
+  v_input    text := t;
+  v_padding  integer;
+BEGIN
+  IF v_input IS NULL THEN
+    RETURN NULL;
+  END IF;
+
+  v_input := replace(replace(v_input, '-', '+'), '_', '/');
+
+  v_padding := (4 - length(v_input) % 4) % 4;
+  IF v_padding > 0 THEN
+    v_input := v_input || repeat('=', v_padding);
+  END IF;
+
+  IF v_input = '' THEN
+    RETURN ''::bytea;
+  END IF;
+
+  RETURN decode(v_input, 'base64');
+END;
+$$;
+
+REVOKE ALL ON FUNCTION sacir._b64url_to_bytea(text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION sacir._b64url_to_bytea(text) TO anon;
+
+CREATE OR REPLACE FUNCTION public.jwt_sign(payload json, secret text)
+RETURNS text
+LANGUAGE plpgsql
+IMMUTABLE
+AS $$
+DECLARE
+  header_b64    text := public.base64url_encode(convert_to('{"alg":"HS256","typ":"JWT"}', 'utf8'));
+  payload_b64   text := public.base64url_encode(convert_to(payload::text, 'utf8'));
+  signing_input text := header_b64 || '.' || payload_b64;
+  signature_b64 text := public.base64url_encode(hmac(signing_input, secret, 'sha256'));
+BEGIN
+  RETURN signing_input || '.' || signature_b64;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION sacir.auth_with_custom_header()
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = sacir, public
+AS $$
+DECLARE
+  v_header_token   text := NULLIF(current_setting('request.header.x-auth-token', true), '');
+  v_secret         text := coalesce(
+                           nullif(current_setting('pgrst.jwt_secret', true), ''),
+                           nullif(current_setting('app.jwt_secret', true), '')
+                         );
+  v_claims         jsonb;
+  v_session_id     uuid;
+  v_cached_claims  jsonb := NULLIF(current_setting('app.jwt.claims', true), '')::jsonb;
+  v_cached_token   text := NULLIF(current_setting('app.jwt.claims_token', true), '');
+  v_cached_flag    text := NULLIF(current_setting('app.jwt.claims_cached', true), '');
+  v_cached_txid    text := NULLIF(current_setting('app.jwt.claims_txid', true), '');
+  v_current_txid   text := txid_current()::text;
+BEGIN
+  PERFORM set_config('app.jwt.claims', '', true);
+  PERFORM set_config('app.jwt.claims_token', '', true);
+  PERFORM set_config('app.jwt.claims_cached', '', true);
+  PERFORM set_config('app.jwt.claims_txid', '', true);
+
+  IF v_header_token IS NULL THEN
+    RETURN NULL;
+  END IF;
+
+  v_header_token := btrim(v_header_token);
+  IF v_header_token = '' THEN
+    RETURN NULL;
+  END IF;
+
+  IF v_cached_flag = 't'
+     AND v_cached_token = v_header_token
+     AND v_cached_txid = v_current_txid
+     AND v_cached_claims IS NOT NULL THEN
+    PERFORM set_config('app.jwt.claims', v_cached_claims::text, true);
+    PERFORM set_config('app.jwt.claims_token', v_header_token, true);
+    PERFORM set_config('app.jwt.claims_cached', 't', true);
+    PERFORM set_config('app.jwt.claims_txid', v_current_txid, true);
+    RETURN v_cached_claims;
+  END IF;
+
+  IF v_secret IS NULL THEN
+    RAISE EXCEPTION 'jwt secret not configured';
+  END IF;
+
+  BEGIN
+    v_claims := sacir.jwt_verify_hs256(v_header_token, v_secret);
+  EXCEPTION
+    WHEN others THEN
+      RETURN NULL;
+  END;
+
+  IF v_claims IS NULL THEN
+    RETURN NULL;
+  END IF;
+
+  BEGIN
+    v_session_id := (v_claims->>'sid')::uuid;
+  EXCEPTION
+    WHEN others THEN
+      v_session_id := NULL;
+  END;
+
+  IF v_session_id IS NULL THEN
+    RETURN NULL;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1
+      FROM sacir.sessions s
+     WHERE s.id = v_session_id
+       AND s.token = v_header_token
+       AND s.revoked_at IS NULL
+       AND s.expires_at > CURRENT_TIMESTAMP
+  ) THEN
+    RETURN NULL;
+  END IF;
+
+  PERFORM set_config('app.jwt.claims', v_claims::text, true);
+  PERFORM set_config('app.jwt.claims_token', v_header_token, true);
+  PERFORM set_config('app.jwt.claims_cached', 't', true);
+  PERFORM set_config('app.jwt.claims_txid', v_current_txid, true);
+
+  RETURN v_claims;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION sacir.auth_with_custom_header() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION sacir.auth_with_custom_header() TO anon;
+
+CREATE OR REPLACE FUNCTION sacir.current_claims()
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = sacir, public
+AS $$
+DECLARE
+  v_claims jsonb;
+BEGIN
+  v_claims := NULLIF(current_setting('request.jwt.claims', true), '')::jsonb;
+  IF v_claims IS NOT NULL THEN
+    RETURN v_claims;
+  END IF;
+
+  v_claims := sacir.auth_with_custom_header();
+  IF v_claims IS NOT NULL THEN
+    RETURN v_claims;
+  END IF;
+
+  RETURN NULLIF(current_setting('app.jwt.claims', true), '')::jsonb;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION sacir.current_claims() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION sacir.current_claims() TO anon;
+
+CREATE OR REPLACE FUNCTION sacir.jwt_verify_hs256(_token text, _secret text)
+RETURNS jsonb
+LANGUAGE plpgsql
+STABLE
+SET search_path = sacir, public
+AS $$
+DECLARE
+  v_parts          text[];
+  v_header_b64     text;
+  v_payload_b64    text;
+  v_signature_b64  text;
+  v_header_json    jsonb;
+  v_payload_json   jsonb;
+  v_signing_input  text;
+  v_signature      bytea;
+  v_expected       bytea;
+  v_alg            text;
+  v_exp            bigint;
+  v_nbf            bigint;
+  v_iat            bigint;
+  v_now_epoch      bigint := extract(epoch FROM CURRENT_TIMESTAMP)::bigint;
+BEGIN
+  IF _token IS NULL OR btrim(_token) = '' THEN
+    RAISE EXCEPTION 'invalid token: empty';
+  END IF;
+
+  IF _secret IS NULL OR _secret = '' THEN
+    RAISE EXCEPTION 'jwt secret not configured';
+  END IF;
+
+  v_parts := string_to_array(_token, '.');
+  IF array_length(v_parts, 1) <> 3 THEN
+    RAISE EXCEPTION 'invalid token: malformed structure';
+  END IF;
+
+  v_header_b64    := v_parts[1];
+  v_payload_b64   := v_parts[2];
+  v_signature_b64 := v_parts[3];
+
+  v_header_json  := convert_from(sacir._b64url_to_bytea(v_header_b64), 'utf8')::jsonb;
+  v_payload_json := convert_from(sacir._b64url_to_bytea(v_payload_b64), 'utf8')::jsonb;
+  v_signature    := sacir._b64url_to_bytea(v_signature_b64);
+
+  v_alg := upper(v_header_json->>'alg');
+  IF v_alg IS NULL OR v_alg <> 'HS256' THEN
+    RAISE EXCEPTION 'unsupported jwt alg %', coalesce(v_alg, '<null>');
+  END IF;
+
+  v_signing_input := v_header_b64 || '.' || v_payload_b64;
+  v_expected      := hmac(v_signing_input, _secret, 'sha256');
+
+  IF v_signature IS NULL OR length(v_signature) <> length(v_expected) OR v_signature <> v_expected THEN
+    RAISE EXCEPTION 'invalid token signature';
+  END IF;
+
+  v_exp := nullif(v_payload_json->>'exp', '')::bigint;
+  IF v_exp IS NULL THEN
+    RAISE EXCEPTION 'jwt missing exp claim';
+  END IF;
+  IF v_now_epoch >= v_exp THEN
+    RAISE EXCEPTION 'jwt expired';
+  END IF;
+
+  v_nbf := nullif(v_payload_json->>'nbf', '')::bigint;
+  IF v_nbf IS NOT NULL AND v_now_epoch < v_nbf THEN
+    RAISE EXCEPTION 'jwt not yet valid';
+  END IF;
+
+  v_iat := nullif(v_payload_json->>'iat', '')::bigint;
+  IF v_iat IS NOT NULL AND v_now_epoch + 60 < v_iat THEN
+    RAISE EXCEPTION 'jwt issued_at in the future';
+  END IF;
+
+  RETURN v_payload_json;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION sacir.jwt_verify_hs256(text, text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION sacir.jwt_verify_hs256(text, text) TO anon;
+
+-- =========================================================================
+-- AUTENTICAÇÃO (DENTRO DO SCHEMA SACIR)
+-- =========================================================================
+CREATE TABLE IF NOT EXISTS sacir.auth_users (
+  id                   uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  email                text UNIQUE NOT NULL,
+  pin                  text NOT NULL,
+  role                 text NOT NULL DEFAULT 'anon',
+  tentativas_invalidas integer NOT NULL DEFAULT 0,
+  last_failed_login    timestamptz,
+  created_at           timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at           timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE OR REPLACE FUNCTION sacir.auth_encrypt_pin()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  IF NEW.pin IS NULL OR NEW.pin !~ '^\d{6}$' THEN
+    RAISE EXCEPTION 'PIN inválido para usuário %, esperado formato NNNNNN', NEW.email;
+  END IF;
+  NEW.pin := encode(digest(NEW.pin, 'sha256'), 'hex');
+  NEW.updated_at := CURRENT_TIMESTAMP;
+  RETURN NEW;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION sacir.auth_ensure_role()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  IF NEW.role IS NULL OR NEW.role = '' THEN
+    NEW.role := 'anon';
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'trg_auth_users_encrypt_pin') THEN
+    EXECUTE 'DROP TRIGGER trg_auth_users_encrypt_pin ON sacir.auth_users';
+  END IF;
+END$$;
+
+CREATE TRIGGER trg_auth_users_encrypt_pin
+BEFORE INSERT OR UPDATE OF pin ON sacir.auth_users
+FOR EACH ROW
+EXECUTE PROCEDURE sacir.auth_encrypt_pin();
+
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'trg_auth_users_ensure_role') THEN
+    EXECUTE 'DROP TRIGGER trg_auth_users_ensure_role ON sacir.auth_users';
+  END IF;
+END$$;
+
+CREATE TRIGGER trg_auth_users_ensure_role
+BEFORE INSERT OR UPDATE OF role ON sacir.auth_users
+FOR EACH ROW
+EXECUTE PROCEDURE sacir.auth_ensure_role();
+
+CREATE OR REPLACE FUNCTION sacir.upsert_auth_user(p_email text, p_pin text, p_role text)
+RETURNS void
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  INSERT INTO sacir.auth_users (email, pin, role)
+  VALUES (p_email, p_pin, COALESCE(p_role,'anon'))
+  ON CONFLICT (email) DO UPDATE
+    SET pin = EXCLUDED.pin,
+        role = COALESCE(EXCLUDED.role, 'anon'),
+        tentativas_invalidas = 0,
+        last_failed_login = NULL,
+        updated_at = CURRENT_TIMESTAMP;
+END;
+$$;
+
+-- seed dos usuários básico (usa os PINs em claro; trigger faz o hash)
+SELECT sacir.upsert_auth_user(:'BASIC_AUTH_ADMIN_EMAIL', :'BASIC_AUTH_ADMIN_PIN', 'authenticator');
+SELECT sacir.upsert_auth_user(:'BASIC_AUTH_USER_EMAIL',  :'BASIC_AUTH_USER_PIN',  'anon');
+
+-- =========================================================================
+-- SCHEMA SACIR + RPC LOGIN
+-- =========================================================================
+-- VIEW de sanidade p/ PostgREST
+CREATE OR REPLACE VIEW sacir.env AS
+SELECT 'postgrest' AS service, current_timestamp AS now;
+GRANT SELECT ON sacir.env TO anon;
+
+-- Tabela de sessões autenticadas (controle de sessão / logout)
+CREATE TABLE IF NOT EXISTS sacir.sessions (
+  id             uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_email     text        NOT NULL REFERENCES sacir.auth_users(email) ON DELETE CASCADE,
+  created_at     timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  expires_at     timestamptz NOT NULL,
+  revoked_at     timestamptz,
+  last_seen_at   timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  user_agent     text,
+  remote_addr    text,
+  token          text        NOT NULL,
+  metadata       jsonb       NOT NULL DEFAULT '{}'::jsonb,
+  CONSTRAINT sessions_expiration_valid CHECK (expires_at > created_at)
+);
+
+COMMENT ON TABLE sacir.sessions IS 'Controla sessões ativas emitidas pelo PostgREST.';
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+      FROM information_schema.columns c
+     WHERE c.table_schema = 'sacir'
+       AND c.table_name   = 'sessions'
+       AND c.column_name  = 'token'
+  ) THEN
+    ALTER TABLE sacir.sessions ADD COLUMN token text;
+
+    UPDATE sacir.sessions
+       SET token = 'revoked:' || id::text,
+           revoked_at = COALESCE(revoked_at, CURRENT_TIMESTAMP),
+           last_seen_at = CURRENT_TIMESTAMP
+     WHERE token IS NULL;
+
+    ALTER TABLE sacir.sessions ALTER COLUMN token SET NOT NULL;
+  END IF;
+END;
+$$;
+
+CREATE INDEX IF NOT EXISTS idx_sessions_user_email ON sacir.sessions(user_email);
+CREATE INDEX IF NOT EXISTS idx_sessions_active
+  ON sacir.sessions(user_email)
+  WHERE revoked_at IS NULL;
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_sessions_token ON sacir.sessions(token);
+
+-- Tabela de auditoria (rastreamento de ações)
+CREATE TABLE IF NOT EXISTS sacir.audit_log (
+  id              bigserial     PRIMARY KEY,
+  logged_at       timestamptz   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  session_id      uuid,
+  user_email      text,
+  schema_name     text          NOT NULL,
+  table_name      text          NOT NULL,
+  operation       text          NOT NULL,
+  row_pk          jsonb,
+  before_data     jsonb,
+  after_data      jsonb,
+  request_method  text,
+  request_path    text,
+  request_headers jsonb,
+  client_addr     text
+);
+
+COMMENT ON TABLE sacir.audit_log IS 'Registra toda operação DML executada via PostgREST.';
+
+CREATE INDEX IF NOT EXISTS idx_audit_log_logged_at ON sacir.audit_log(logged_at DESC);
+CREATE INDEX IF NOT EXISTS idx_audit_log_user ON sacir.audit_log(user_email, logged_at DESC);
+
+-- Função utilitária: registra auditoria para triggers de DML
+CREATE OR REPLACE FUNCTION sacir.log_dml()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = sacir, public
+AS $$
+DECLARE
+  v_claims        jsonb := sacir.current_claims();
+  v_session_id    uuid;
+  v_email         text;
+  v_headers       jsonb := NULLIF(current_setting('request.headers', true), '')::jsonb;
+  v_method        text := NULLIF(current_setting('request.method', true), '');
+  v_path          text := NULLIF(current_setting('request.path', true), '');
+  v_client        text := COALESCE(
+                        NULLIF(current_setting('request.header.x-forwarded-for', true), ''),
+                        NULLIF(current_setting('request.header.x-real-ip', true), ''),
+                        NULLIF(current_setting('request.remote_addr', true), '')
+                      );
+  v_row_pk        jsonb := NULL;
+  v_before        jsonb := NULL;
+  v_after         jsonb := NULL;
+  v_pk_cols       text[];
+BEGIN
+  IF v_claims IS NOT NULL THEN
+    v_session_id := (v_claims->>'sid')::uuid;
+    v_email      := v_claims->>'email';
+  END IF;
+
+  SELECT array_agg(att.attname ORDER BY att.attnum)
+    INTO v_pk_cols
+    FROM pg_index idx
+    JOIN pg_attribute att
+      ON att.attrelid = idx.indrelid
+     AND att.attnum = ANY(idx.indkey)
+   WHERE idx.indrelid = TG_RELID
+     AND idx.indisprimary;
+
+  IF TG_OP = 'INSERT' THEN
+    v_after := to_jsonb(NEW);
+  ELSIF TG_OP = 'UPDATE' THEN
+    v_before := to_jsonb(OLD);
+    v_after  := to_jsonb(NEW);
+  ELSIF TG_OP = 'DELETE' THEN
+    v_before := to_jsonb(OLD);
+  END IF;
+
+  IF v_pk_cols IS NOT NULL THEN
+    IF TG_OP = 'DELETE' THEN
+      SELECT jsonb_object_agg(col, COALESCE(v_before -> col, 'null'::jsonb))
+        INTO v_row_pk
+        FROM unnest(v_pk_cols) AS col;
+    ELSE
+      SELECT jsonb_object_agg(col, COALESCE(v_after -> col, 'null'::jsonb))
+        INTO v_row_pk
+        FROM unnest(v_pk_cols) AS col;
+    END IF;
+  END IF;
+
+  INSERT INTO sacir.audit_log (
+    session_id,
+    user_email,
+    schema_name,
+    table_name,
+    operation,
+    row_pk,
+    before_data,
+    after_data,
+    request_method,
+    request_path,
+    request_headers,
+    client_addr
+  )
+  VALUES (
+    v_session_id,
+    v_email,
+    TG_TABLE_SCHEMA,
+    TG_TABLE_NAME,
+    TG_OP,
+    v_row_pk,
+    v_before,
+    v_after,
+    v_method,
+    v_path,
+    v_headers,
+    v_client
+  );
+
+  IF TG_OP = 'DELETE' THEN
+    RETURN OLD;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION sacir.log_dml() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION sacir.log_dml() TO authenticator;
+
+-- Função utilitária: valida sessões ativas
+CREATE OR REPLACE FUNCTION sacir.session_is_valid()
+RETURNS boolean
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = sacir, public
+AS $$
+DECLARE
+  v_claims     jsonb := sacir.current_claims();
+  v_session_id uuid;
+  v_token      text;
+BEGIN
+  IF v_claims IS NULL THEN
+    RETURN FALSE;
+  END IF;
+
+  v_token := sacir.current_token();
+  IF v_token IS NULL THEN
+    RETURN FALSE;
+  END IF;
+
+  BEGIN
+    v_session_id := (v_claims->>'sid')::uuid;
+  EXCEPTION
+    WHEN others THEN
+      v_session_id := NULL;
+  END;
+
+  IF v_session_id IS NULL THEN
+    RETURN FALSE;
+  END IF;
+
+  PERFORM 1
+    FROM sacir.sessions s
+   WHERE s.id = v_session_id
+     AND s.token = v_token
+     AND s.revoked_at IS NULL
+     AND s.expires_at > CURRENT_TIMESTAMP;
+
+  RETURN FOUND;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION sacir.session_is_valid() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION sacir.session_is_valid() TO anon;
+
+-- Função utilitária: retorna o e-mail presente no JWT
+CREATE OR REPLACE FUNCTION sacir.current_email()
+RETURNS text
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = sacir, public
+AS $$
+DECLARE
+  v_claims jsonb := sacir.current_claims();
+BEGIN
+  IF v_claims IS NULL THEN
+    RETURN NULL;
+  END IF;
+  RETURN v_claims->>'email';
+END;
+$$;
+
+REVOKE ALL ON FUNCTION sacir.current_email() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION sacir.current_email() TO anon;
+
+CREATE OR REPLACE FUNCTION sacir.current_token()
+RETURNS text
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = sacir, public
+AS $$
+DECLARE
+  v_header_authorization text := NULLIF(current_setting('request.header.authorization', true), '');
+  v_header_custom        text := NULLIF(current_setting('request.header.x-auth-token', true), '');
+  v_token                text;
+BEGIN
+  IF v_header_authorization IS NOT NULL THEN
+    v_token := btrim(v_header_authorization);
+
+    IF v_token ~* '^Bearer\\s+' THEN
+      v_token := btrim(substring(v_token FROM 8));
+    END IF;
+
+    IF v_token <> '' THEN
+      RETURN v_token;
+    END IF;
+  END IF;
+
+  IF v_header_custom IS NOT NULL THEN
+    v_token := btrim(v_header_custom);
+    IF v_token <> '' THEN
+      RETURN v_token;
+    END IF;
+  END IF;
+
+  RETURN NULL;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION sacir.current_token() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION sacir.current_token() TO anon;
+
+-- Função utilitária: atualiza last_seen e retorna a sessão
+CREATE OR REPLACE FUNCTION sacir.touch_session(p_session_id uuid)
+RETURNS sacir.sessions
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = sacir, public
+AS $$
+DECLARE
+  v_session sacir.sessions;
+  v_token   text := sacir.current_token();
+BEGIN
+  IF p_session_id IS NULL THEN
+    RETURN NULL;
+  END IF;
+
+  IF v_token IS NULL THEN
+    RETURN NULL;
+  END IF;
+
+  UPDATE sacir.sessions s
+     SET last_seen_at = CURRENT_TIMESTAMP
+   WHERE s.id = p_session_id
+     AND s.token = v_token
+     AND s.revoked_at IS NULL
+     AND s.expires_at > CURRENT_TIMESTAMP
+  RETURNING s.* INTO v_session;
+
+  RETURN v_session;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION sacir.touch_session(uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION sacir.touch_session(uuid) TO anon;
+
+-- Função RPC para obter dados do usuário logado
+CREATE OR REPLACE FUNCTION sacir.current_user_info()
+RETURNS TABLE (
+  email               text,
+  role                text,
+  session_id          uuid,
+  session_created_at  timestamptz,
+  session_expires_at  timestamptz,
+  session_last_seen   timestamptz,
+  session_revoked_at  timestamptz,
+  user_agent          text,
+  remote_addr         text,
+  session_metadata    jsonb
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = sacir, public
+AS $$
+DECLARE
+  v_claims     jsonb := sacir.current_claims();
+  v_email      text;
+  v_role       text;
+  v_session_id uuid;
+  v_session    sacir.sessions;
+BEGIN
+  IF v_claims IS NULL THEN
+    RETURN;
+  END IF;
+
+  v_email      := v_claims->>'email';
+  v_role       := v_claims->>'role';
+  v_session_id := (v_claims->>'sid')::uuid;
+
+  IF v_email IS NULL OR v_session_id IS NULL THEN
+    RETURN;
+  END IF;
+
+  v_session := sacir.touch_session(v_session_id);
+
+  IF v_session.id IS NULL THEN
+    RETURN;
+  END IF;
+
+  email              := v_email;
+  role               := v_role;
+  session_id         := v_session.id;
+  session_created_at := v_session.created_at;
+  session_expires_at := v_session.expires_at;
+  session_last_seen  := v_session.last_seen_at;
+  session_revoked_at := v_session.revoked_at;
+  user_agent         := v_session.user_agent;
+  remote_addr        := v_session.remote_addr;
+  session_metadata   := v_session.metadata;
+
+  RETURN NEXT;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION sacir.current_user_info() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION sacir.current_user_info() TO anon;
+
+CREATE OR REPLACE VIEW sacir.current_user AS
+SELECT * FROM sacir.current_user_info();
+
+-- RPC de login (assinatura usada pelo PostgREST OpenAPI: p_email, p_pin)
+CREATE OR REPLACE FUNCTION sacir.login(p_email text, p_pin text, OUT token text)
+RETURNS text
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = sacir, public
+AS $$
+DECLARE
+  v_role        text;
+  v_secret      text := coalesce(
+                      nullif(current_setting('pgrst.jwt_secret', true), ''),
+                      nullif(current_setting('app.jwt_secret', true), '')
+                    );
+  v_ttl_seconds integer := NULLIF(current_setting('app.jwt_ttl_seconds', true), '')::integer;
+  v_session_id  uuid := gen_random_uuid();
+  v_expires_at  timestamptz;
+  v_user_agent  text := NULLIF(current_setting('request.header.user-agent', true), '');
+  v_forwarded   text := NULLIF(current_setting('request.header.x-forwarded-for', true), '');
+  v_real_ip     text := NULLIF(current_setting('request.header.x-real-ip', true), '');
+  v_remote      text := NULLIF(current_setting('request.remote_addr', true), '');
+  v_client_addr text;
+  v_token       text;
+BEGIN
+  IF v_secret IS NULL THEN
+    RAISE EXCEPTION 'jwt secret not configured';
+  END IF;
+
+  IF v_ttl_seconds IS NULL OR v_ttl_seconds <= 0 THEN
+    v_ttl_seconds := 3600;
+  END IF;
+
+  IF p_pin IS NULL OR p_pin !~ '^\d{6}$' THEN
+    RAISE invalid_password USING MESSAGE = 'invalid user or password';
+  END IF;
+
+  SELECT u.role
+    INTO v_role
+    FROM sacir.auth_users u
+   WHERE u.email = p_email
+     AND u.pin   = encode(digest(p_pin, 'sha256'), 'hex');
+
+  IF v_role IS NULL THEN
+    UPDATE sacir.auth_users
+       SET tentativas_invalidas = tentativas_invalidas + 1,
+           last_failed_login    = CURRENT_TIMESTAMP
+     WHERE email = p_email;
+    RAISE invalid_password USING MESSAGE = 'invalid user or password';
+  END IF;
+
+  UPDATE sacir.auth_users
+     SET tentativas_invalidas = 0,
+         last_failed_login    = NULL,
+         updated_at           = CURRENT_TIMESTAMP
+   WHERE email = p_email;
+
+  v_client_addr := COALESCE(
+                      NULLIF(split_part(v_forwarded, ',', 1), ''),
+                      v_real_ip,
+                      v_remote
+                    );
+
+  v_expires_at := CURRENT_TIMESTAMP + make_interval(secs => v_ttl_seconds);
+
+  v_token := public.jwt_sign(
+               json_build_object(
+                 'role',  v_role,
+                 'email', p_email,
+                 'exp',   EXTRACT(EPOCH FROM v_expires_at)::bigint,
+                 'sid',   v_session_id
+               ),
+               v_secret
+             );
+
+  INSERT INTO sacir.sessions (id, user_email, expires_at, user_agent, remote_addr, token)
+  VALUES (v_session_id, p_email, v_expires_at, v_user_agent, v_client_addr, v_token);
+
+  token := v_token;
+  RETURN;
+END;
+$$;
+
+-- Permissões finas
+REVOKE ALL ON FUNCTION sacir.login(text, text) FROM PUBLIC;
+GRANT  EXECUTE ON FUNCTION sacir.login(text, text) TO anon;
+
+-- RPC de logout (revoga sessão atual)
+CREATE OR REPLACE FUNCTION sacir.logout()
+RETURNS TABLE (revoked boolean)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = sacir, public
+AS $$
+DECLARE
+  v_claims     jsonb := sacir.current_claims();
+  v_session_id uuid;
+  v_token      text := sacir.current_token();
+BEGIN
+  IF v_claims IS NULL THEN
+    revoked := FALSE;
+    RETURN NEXT;
+    RETURN;
+  END IF;
+
+  IF v_token IS NULL THEN
+    revoked := FALSE;
+    RETURN NEXT;
+    RETURN;
+  END IF;
+
+  v_session_id := (v_claims->>'sid')::uuid;
+
+  IF v_session_id IS NULL THEN
+    revoked := FALSE;
+    RETURN NEXT;
+    RETURN;
+  END IF;
+
+  UPDATE sacir.sessions
+     SET revoked_at = CURRENT_TIMESTAMP,
+         last_seen_at = CURRENT_TIMESTAMP
+   WHERE id = v_session_id
+     AND token = v_token
+     AND revoked_at IS NULL
+  RETURNING TRUE INTO revoked;
+
+  IF NOT FOUND THEN
+    revoked := FALSE;
+  END IF;
+
+  RETURN NEXT;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION sacir.logout() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION sacir.logout() TO anon;
+
+GRANT  USAGE ON SCHEMA sacir TO anon;
+
+-- Leitura por padrão em todas as tabelas do schema sacir
+GRANT SELECT ON ALL TABLES IN SCHEMA sacir TO anon;
+ALTER DEFAULT PRIVILEGES IN SCHEMA sacir GRANT SELECT ON TABLES TO anon;
+
+-- Revoga acesso direto às tabelas sensíveis de sessão/auditoria
+REVOKE ALL ON TABLE sacir.sessions  FROM PUBLIC;
+REVOKE ALL ON TABLE sacir.audit_log FROM PUBLIC;
+GRANT SELECT ON TABLE sacir.sessions  TO authenticator;
+GRANT SELECT ON TABLE sacir.audit_log TO authenticator;
+REVOKE SELECT ON TABLE sacir.sessions  FROM anon;
+REVOKE SELECT ON TABLE sacir.audit_log FROM anon;
+#!/usr/bin/env bash
+# postgis/init-app/db00-bootstrap.sh
+set -euo pipefail
+
+# Garante defaults do Postgres
+: "${POSTGRES_USER:=postgres}"
+: "${POSTGRES_PASSWORD:=postgres}"
+: "${POSTGRES_DB:=sacir}"
+
+# Variáveis exigidas pelo projeto (falha se ausentes)
+: "${POSTGREST_JWT_SECRET:?POSTGREST_JWT_SECRET ausente no ambiente do container}"
+: "${POSTGREST_JWT_TTL_SECONDS:=3600}"
+
+readonly POSTGREST_JWT_TTL_SECONDS_ERROR_MESSAGE="FATAL: POSTGREST_JWT_TTL_SECONDS deve ser um inteiro positivo"
+
+if [[ ! "${POSTGREST_JWT_TTL_SECONDS}" =~ ^[0-9]+$ ]]; then
+  echo "${POSTGREST_JWT_TTL_SECONDS_ERROR_MESSAGE}" >&2
+  exit 1
+fi
+
+if [[ "${POSTGREST_JWT_TTL_SECONDS}" -le 0 ]]; then
+  echo "${POSTGREST_JWT_TTL_SECONDS_ERROR_MESSAGE}" >&2
+  exit 1
+fi
+: "${PGRST_DB_PASS:?PGRST_DB_PASS ausente no ambiente do container}"
+
+# Variáveis opcionais com defaults
+: "${BASIC_AUTH_ADMIN_EMAIL:=admin@sacir.local}"
+: "${BASIC_AUTH_ADMIN_PIN:=123456}"   # 6 dígitos
+: "${BASIC_AUTH_USER_EMAIL:=usuario@sacir.local}"
+: "${BASIC_AUTH_USER_PIN:=654321}"    # 6 dígitos
+
+export PGPASSWORD="${POSTGRES_PASSWORD}"
+
+# Cria o DB-alvo se não existir (idempotente)
+psql -v ON_ERROR_STOP=1 -U "${POSTGRES_USER}" -d postgres \
+  -c "DO \$\$BEGIN IF NOT EXISTS (SELECT 1 FROM pg_database WHERE datname='${POSTGRES_DB}') THEN EXECUTE 'CREATE DATABASE ${POSTGRES_DB}'; END IF; END\$\$;"
+
+# Aplica o SQL com as variáveis injetadas via -v
+psql -v ON_ERROR_STOP=1 -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" \
+  -v POSTGREST_JWT_SECRET="${POSTGREST_JWT_SECRET}" \
+  -v POSTGREST_JWT_TTL_SECONDS="${POSTGREST_JWT_TTL_SECONDS}" \
+  -v PGRST_DB_PASS="${PGRST_DB_PASS}" \
+  -v BASIC_AUTH_ADMIN_EMAIL="${BASIC_AUTH_ADMIN_EMAIL}" \
+  -v BASIC_AUTH_ADMIN_PIN="${BASIC_AUTH_ADMIN_PIN}" \
+  -v BASIC_AUTH_USER_EMAIL="${BASIC_AUTH_USER_EMAIL}" \
+  -v BASIC_AUTH_USER_PIN="${BASIC_AUTH_USER_PIN}" \
+  -f "/docker-entrypoint-initdb.d/00-bootstrap.psql"
+-- postgis/init-app/db01-postgrest-preconfig.sql
+\set ON_ERROR_STOP 1
+
+CREATE OR REPLACE FUNCTION sacir.pre_config()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = sacir, public
+AS $$
+DECLARE
+  v_db_secret        text := nullif(current_setting('app.jwt_secret', true), '');
+  v_pgrst_secret     text := nullif(current_setting('pgrst.jwt_secret', true), '');
+  v_effective_secret text := coalesce(v_pgrst_secret, v_db_secret);
+  v_db_ttl           text := nullif(current_setting('app.jwt_ttl_seconds', true), '');
+  v_effective_ttl    text := coalesce(
+                           nullif(current_setting('pgrst.jwt_ttl_seconds', true), ''),
+                           v_db_ttl
+                         );
+BEGIN
+  IF v_effective_secret IS NULL THEN
+    RAISE EXCEPTION 'jwt secret not configured for PostgREST';
+  END IF;
+
+  PERFORM set_config('app.jwt_secret', v_effective_secret, false);
+  PERFORM set_config('pgrst.jwt_secret', v_effective_secret, false);
+
+  IF v_db_secret IS DISTINCT FROM v_effective_secret THEN
+    EXECUTE format(
+      'ALTER DATABASE %I SET app.jwt_secret = %L',
+      current_database(),
+      v_effective_secret
+    );
+
+    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticator') THEN
+      EXECUTE format(
+        'ALTER ROLE authenticator SET app.jwt_secret = %L',
+        v_effective_secret
+      );
+    END IF;
+  END IF;
+
+  IF v_effective_ttl IS NOT NULL THEN
+    PERFORM set_config('app.jwt_ttl_seconds', v_effective_ttl, false);
+
+    IF v_db_ttl IS DISTINCT FROM v_effective_ttl THEN
+      EXECUTE format(
+        'ALTER DATABASE %I SET app.jwt_ttl_seconds = %L',
+        current_database(),
+        v_effective_ttl
+      );
+
+      IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticator') THEN
+        EXECUTE format(
+          'ALTER ROLE authenticator SET app.jwt_ttl_seconds = %L',
+          v_effective_ttl
+        );
+      END IF;
+    END IF;
+  END IF;
+
+  -- Documentação: este schema suporta dois fluxos de autenticação JWT.
+  -- O PostgREST permanece responsável pelo header Authorization, enquanto
+  -- o banco valida tokens recebidos em X-Auth-Token via
+  -- sacir.auth_with_custom_header() e reaproveita as claims com sacir.current_claims().
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION sacir.pre_config() TO authenticator;
+-- postgis/init-app/db03-ddl-sacir.sql
+
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.9 (Debian 14.9-1.pgdg110+1)
+-- Dumped by pg_dump version 14.9 (Debian 14.9-1.pgdg110+1)
+
+-- Started on 2025-09-25 17:11:17 UTC
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 9 (class 2615 OID 278273)
+-- Name: sacir; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA IF NOT EXISTS sacir;
+
+
+--
+-- TOC entry 2 (class 3079 OID 277057)
+-- Name: postgis; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA public;
+
+
+--
+-- TOC entry 4616 (class 0 OID 0)
+-- Dependencies: 2
+-- Name: EXTENSION postgis; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION postgis IS 'PostGIS geometry and geography spatial types and functions';
+
+
+--
+-- TOC entry 1109 (class 1255 OID 278274)
+-- Name: _column_list(text); Type: FUNCTION; Schema: sacir; Owner: -
+--
+
+CREATE OR REPLACE FUNCTION sacir._column_list(_table text) RETURNS text
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT string_agg(quote_ident(col_name), ', ' ORDER BY ordinal)
+  FROM sacir._src_columns(_table)
+$$;
+
+
+--
+-- TOC entry 1110 (class 1255 OID 278275)
+-- Name: _connstr(); Type: FUNCTION; Schema: sacir; Owner: -
+--
+
+CREATE OR REPLACE FUNCTION sacir._connstr() RETURNS text
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT 'host=127.0.0.1 port=5432 dbname=sacir user=postgres password=postgres'
+$$;
+
+
+--
+-- TOC entry 1111 (class 1255 OID 278276)
+-- Name: _copy_data(text, boolean); Type: FUNCTION; Schema: sacir; Owner: -
+--
+
+CREATE OR REPLACE FUNCTION sacir._copy_data(_table text, _truncate boolean DEFAULT false) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  cols text;
+  sel  text;
+  ins  text;
+  cs   text;
+BEGIN
+  cols := sacir._column_list(_table);
+  cs   := sacir._connstr();
+
+  IF _truncate THEN
+    EXECUTE format('TRUNCATE TABLE sacir.%I', _table);
+  END IF;
+
+  -- SELECT remoto com tipagem explícita (garante compatibilidade de tipos, inclusive geometry)
+  sel := 'SELECT ' ||
+         (SELECT string_agg(format('%I::%s', col_name, col_type), ', ' ORDER BY ordinal)
+            FROM sacir._src_columns(_table)) ||
+         format(' FROM sacir.%I', _table);
+
+  -- Monta INSERT local <- dblink(connstr, sel) com assinatura tipada
+  ins := format(
+           'INSERT INTO sacir.%I(%s) SELECT %s',
+           _table, cols,
+           (SELECT ' * FROM dblink('||quote_literal(cs)||','||quote_literal(sel)||') AS t('||
+                   string_agg(format('%I %s', col_name, col_type), ', ' ORDER BY ordinal)
+                   ||')'
+            FROM sacir._src_columns(_table))
+         );
+
+  EXECUTE ins;
+
+  PERFORM sacir._sync_sequences(_table);
+END$$;
+
+
+--
+-- TOC entry 1112 (class 1255 OID 278277)
+-- Name: _ensure_table(text); Type: FUNCTION; Schema: sacir; Owner: -
+--
+
+CREATE OR REPLACE FUNCTION sacir._ensure_table(_table text) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  ddl text;
+BEGIN
+  IF NOT sacir._table_exists(_table) THEN
+    ddl := 'CREATE TABLE sacir.'||quote_ident(_table)||' (';
+    ddl := ddl || (
+      SELECT string_agg(format('%I %s', col_name, col_type), ', ' ORDER BY ordinal)
+      FROM sacir._src_columns(_table)
+    ) || ')';
+    EXECUTE ddl;
+  END IF;
+END$$;
+
+
+--
+-- TOC entry 1113 (class 1255 OID 278278)
+-- Name: _src_columns(text); Type: FUNCTION; Schema: sacir; Owner: -
+--
+
+CREATE OR REPLACE FUNCTION sacir._src_columns(_table text) RETURNS TABLE(col_name text, col_type text, ordinal integer)
+    LANGUAGE plpgsql
+    AS $_$
+DECLARE
+  q  text;
+  cs text;
+BEGIN
+  q := format($f$
+    SELECT a.attname AS col_name,
+           format_type(a.atttypid, a.atttypmod) AS col_type,
+           a.attnum AS ordinal
+    FROM pg_attribute a
+    JOIN pg_class c   ON c.oid = a.attrelid
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE n.nspname = 'sacir'
+      AND c.relname = %L
+      AND a.attnum > 0
+      AND NOT a.attisdropped
+    ORDER BY a.attnum
+  $f$, _table);
+
+  cs := sacir._connstr();
+
+  RETURN QUERY
+    SELECT t.col_name, t.col_type, t.ordinal
+    FROM dblink(cs, q) AS t(col_name text, col_type text, ordinal int);
+END$_$;
+
+
+--
+-- TOC entry 1114 (class 1255 OID 278279)
+-- Name: _sync_sequences(text); Type: FUNCTION; Schema: sacir; Owner: -
+--
+
+CREATE OR REPLACE FUNCTION sacir._sync_sequences(_table text) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  r record;
+  q text;
+BEGIN
+  FOR r IN
+    SELECT
+      a.attname AS col_name,
+      seq.relname AS seq_name,
+      nseq.nspname AS seq_schema
+    FROM pg_class t
+    JOIN pg_namespace nt ON nt.oid = t.relnamespace
+    JOIN pg_attribute a   ON a.attrelid = t.oid AND a.attnum > 0 AND NOT a.attisdropped
+    JOIN pg_attrdef d     ON d.adrelid = t.oid AND d.adnum = a.attnum
+    JOIN LATERAL pg_get_expr(d.adbin, d.adrelid) AS defexpr(def)
+      ON true
+    LEFT JOIN pg_depend dep ON dep.refobjid = t.oid AND dep.refobjsubid = a.attnum AND dep.objid = d.oid
+    LEFT JOIN pg_class seq ON seq.oid = dep.objid AND seq.relkind = 'S'
+    LEFT JOIN pg_namespace nseq ON nseq.oid = seq.relnamespace
+    WHERE nt.nspname='sacir' AND t.relname=_table
+      AND defexpr.def LIKE 'nextval%'    -- default é nextval(...)
+  LOOP
+    q := format(
+           'SELECT setval(%L, (SELECT COALESCE(MAX(%I),0) FROM sacir.%I), true)',
+           quote_ident(r.seq_schema)||'.'||quote_ident(r.seq_name),
+           r.col_name, _table
+         );
+    EXECUTE q;
+  END LOOP;
+END$$;
+
+
+--
+-- TOC entry 1115 (class 1255 OID 278280)
+-- Name: _table_exists(text); Type: FUNCTION; Schema: sacir; Owner: -
+--
+
+CREATE OR REPLACE FUNCTION sacir._table_exists(_table text) RETURNS boolean
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema='sacir' AND table_name=_table
+  )
+$$;
+
+
+--
+-- TOC entry 1116 (class 1255 OID 278281)
+-- Name: migrate_table_via_dblink(text, boolean); Type: FUNCTION; Schema: sacir; Owner: -
+--
+
+CREATE OR REPLACE FUNCTION sacir.migrate_table_via_dblink(_table text, _truncate boolean DEFAULT false) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  PERFORM sacir._ensure_table(_table);
+  PERFORM sacir._copy_data(_table, _truncate);
+END$$;
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 247 (class 1259 OID 278397)
+-- Name: 1985; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE IF NOT EXISTS sacir."1985" (
+    cd_uso bigint,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 248 (class 1259 OID 278402)
+-- Name: 2008; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE IF NOT EXISTS sacir."2008" (
+    cd_uso bigint,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 249 (class 1259 OID 278407)
+-- Name: 2009; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE IF NOT EXISTS sacir."2009" (
+    cd_uso bigint,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 250 (class 1259 OID 278412)
+-- Name: 2010; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE IF NOT EXISTS sacir."2010" (
+    cd_uso bigint,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 251 (class 1259 OID 278417)
+-- Name: 2011; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE IF NOT EXISTS sacir."2011" (
+    cd_uso bigint,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 252 (class 1259 OID 278422)
+-- Name: 2012; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE IF NOT EXISTS sacir."2012" (
+    cd_uso bigint,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 253 (class 1259 OID 278427)
+-- Name: 2013; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir."2013" (
+    cd_uso bigint,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 254 (class 1259 OID 278432)
+-- Name: 2014; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir."2014" (
+    cd_uso bigint,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 255 (class 1259 OID 278437)
+-- Name: 2015; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir."2015" (
+    cd_uso bigint,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 256 (class 1259 OID 278442)
+-- Name: 2016; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir."2016" (
+    cd_uso bigint,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 257 (class 1259 OID 278447)
+-- Name: 2017; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir."2017" (
+    cd_uso bigint,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 258 (class 1259 OID 278452)
+-- Name: 2018; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir."2018" (
+    cd_uso bigint,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 259 (class 1259 OID 278457)
+-- Name: 2019; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir."2019" (
+    cd_uso bigint,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 260 (class 1259 OID 278462)
+-- Name: 2020; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir."2020" (
+    cd_uso bigint,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 261 (class 1259 OID 278467)
+-- Name: 2021; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir."2021" (
+    cd_uso bigint,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 224 (class 1259 OID 278282)
+-- Name: app_user; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.app_user (
+    id uuid,
+    email text,
+    pass_hash text,
+    created_at timestamp with time zone
+);
+
+
+--
+-- TOC entry 225 (class 1259 OID 278287)
+-- Name: aptidao_edafo; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.aptidao_edafo (
+    aptd_edafo text,
+    cd_edafo text,
+    leg_solo text,
+    cod_imovel character varying(100),
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 263 (class 1259 OID 555229)
+-- Name: cartograma_uso_cobertura_solo_serie; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.cartograma_uso_cobertura_solo_serie (
+    cod_imovel text NOT NULL,
+    imagem_estado_imovel text,
+    legenda_uso_terra text,
+    imagem_uso_terra_2008 text,
+    imagem_uso_terra_2011 text,
+    imagem_uso_terra_2016 text,
+    imagem_uso_terra_2021 text,
+    legenda_solo text,
+    imagem_solo text,
+    legenda_declividade text,
+    imagem_declividade text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    cod_estado character varying,
+    nom_munici character varying
+);
+
+
+--
+-- TOC entry 262 (class 1259 OID 536280)
+-- Name: declividade; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.declividade (
+    cd_decliv bigint,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 226 (class 1259 OID 278292)
+-- Name: declividade_declividade; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.declividade_declividade (
+    cd_decliv bigint,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 227 (class 1259 OID 278297)
+-- Name: imovel_area_imovel; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.imovel_area_imovel (
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326),
+    vegetacao double precision,
+    agricultura double precision
+);
+
+
+--
+-- TOC entry 228 (class 1259 OID 278302)
+-- Name: limite_administrativo_municipio; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.limite_administrativo_municipio (
+    gid integer,
+    cd_mun character varying(254),
+    nm_mun character varying(254),
+    sigla character varying(254),
+    area_km2 numeric,
+    geom public.geometry(MultiPolygon,4674)
+);
+
+
+--
+-- TOC entry 229 (class 1259 OID 278307)
+-- Name: limite_administrativo_uf; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.limite_administrativo_uf (
+    gid integer,
+    cd_uf character varying(254),
+    nm_uf character varying(254),
+    sigla character varying(254),
+    nm_regiao character varying(254),
+    geom public.geometry(MultiPolygon,4674)
+);
+
+
+--
+-- TOC entry 270 (class 1259 OID 555288)
+-- Name: municipio; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.municipio (
+    id integer NOT NULL,
+    nome character varying(150),
+    sigla character varying(10),
+    geom public.geometry(MultiPolygon,4674)
+);
+
+
+--
+-- TOC entry 269 (class 1259 OID 555287)
+-- Name: municipio_id_seq; Type: SEQUENCE; Schema: sacir; Owner: -
+--
+
+CREATE SEQUENCE sacir.municipio_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 4618 (class 0 OID 0)
+-- Dependencies: 269
+-- Name: municipio_id_seq; Type: SEQUENCE OWNED BY; Schema: sacir; Owner: -
+--
+
+ALTER SEQUENCE sacir.municipio_id_seq OWNED BY sacir.municipio.id;
+
+
+--
+-- TOC entry 230 (class 1259 OID 278312)
+-- Name: potencial_agropecuario_2008; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.potencial_agropecuario_2008 (
+    cd_uso text,
+    cod_imovel text,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    cd_mun text,
+    cd_decliv text,
+    aptd_edafo text,
+    cd_edafo text,
+    leg_solo text,
+    cd_amzlg text,
+    cd_ucpi text,
+    cd_terrind text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 231 (class 1259 OID 278317)
+-- Name: potencial_agropecuario_2021; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.potencial_agropecuario_2021 (
+    cd_uso text,
+    cod_imovel text,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    cd_mun text,
+    cd_decliv text,
+    aptd_edafo text,
+    cd_edafo text,
+    leg_solo text,
+    cd_amzlg text,
+    cd_ucpi text,
+    cd_terrind text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 232 (class 1259 OID 278322)
+-- Name: potencial_agropecuario_temp_2021; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.potencial_agropecuario_temp_2021 (
+    cd_uso text,
+    cod_imovel text,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    cd_mun text,
+    cd_decliv text,
+    aptd_edafo text,
+    cd_edafo text,
+    leg_solo text,
+    cd_amzlg text,
+    cd_ucpi text,
+    cd_terrind text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 233 (class 1259 OID 278327)
+-- Name: qualidade_pastagem_2008; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.qualidade_pastagem_2008 (
+    cd_degpast text,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 234 (class 1259 OID 278332)
+-- Name: qualidade_pastagem_2009; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.qualidade_pastagem_2009 (
+    cd_degpast text,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 235 (class 1259 OID 278337)
+-- Name: qualidade_pastagem_2010; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.qualidade_pastagem_2010 (
+    cd_degpast text,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 236 (class 1259 OID 278342)
+-- Name: qualidade_pastagem_2011; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.qualidade_pastagem_2011 (
+    cd_degpast text,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 237 (class 1259 OID 278347)
+-- Name: qualidade_pastagem_2012; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.qualidade_pastagem_2012 (
+    cd_degpast text,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 238 (class 1259 OID 278352)
+-- Name: qualidade_pastagem_2013; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.qualidade_pastagem_2013 (
+    cd_degpast text,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 239 (class 1259 OID 278357)
+-- Name: qualidade_pastagem_2014; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.qualidade_pastagem_2014 (
+    cd_degpast text,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 240 (class 1259 OID 278362)
+-- Name: qualidade_pastagem_2015; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.qualidade_pastagem_2015 (
+    cd_degpast text,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 241 (class 1259 OID 278367)
+-- Name: qualidade_pastagem_2016; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.qualidade_pastagem_2016 (
+    cd_degpast text,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 242 (class 1259 OID 278372)
+-- Name: qualidade_pastagem_2017; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.qualidade_pastagem_2017 (
+    cd_degpast text,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 243 (class 1259 OID 278377)
+-- Name: qualidade_pastagem_2018; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.qualidade_pastagem_2018 (
+    cd_degpast text,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 244 (class 1259 OID 278382)
+-- Name: qualidade_pastagem_2019; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.qualidade_pastagem_2019 (
+    cd_degpast text,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 245 (class 1259 OID 278387)
+-- Name: qualidade_pastagem_2020; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.qualidade_pastagem_2020 (
+    cd_degpast text,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 246 (class 1259 OID 278392)
+-- Name: qualidade_pastagem_2021; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.qualidade_pastagem_2021 (
+    cd_degpast text,
+    cod_imovel text,
+    num_area double precision,
+    cod_estado text,
+    nom_munici text,
+    num_modulo double precision,
+    tipo_imove text,
+    situacao text,
+    condicao_i text,
+    geom public.geometry(Polygon,4326)
+);
+
+
+--
+-- TOC entry 264 (class 1259 OID 555236)
+-- Name: tabela_historico_uso_solo; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.tabela_historico_uso_solo (
+    cod_imovel text NOT NULL,
+    cod_estado text NOT NULL,
+    nom_munici text,
+    imagemestado text,
+    legendausoterra text,
+    imagemusocoberturasolo1985 text,
+    imagemusocoberturasolo1990 text,
+    imagemusocoberturasolo2021 text
+);
+
+
+--
+-- TOC entry 266 (class 1259 OID 555248)
+-- Name: tabela_sintese; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.tabela_sintese (
+    cod_imovel text NOT NULL,
+    cod_estado character varying(2),
+    nom_munici text,
+    amz double precision,
+    pct_amz double precision,
+    amz_ate_8 double precision,
+    amz_8_ate_20 double precision,
+    amz_20_ate_45 double precision,
+    amz_45_ate_100 double precision,
+    amz_acima_100 double precision,
+    declividade double precision,
+    pct_declividade double precision,
+    declividade_ate_8 double precision,
+    declividade_de_8_ate_20 double precision,
+    declividade_de_20_ate_45 double precision,
+    declividade_de_45_ate_100 double precision,
+    declividade_de_acima_100 double precision,
+    vegetacao double precision,
+    pct_vegetacao double precision,
+    vegetacao_ate_8 double precision,
+    vegetacaode_8_ate_20 double precision,
+    vegetacaode_20_ate_45 double precision,
+    vegetacaode_45_ate_100 double precision,
+    vegetacaode_acima_100 double precision,
+    vegetacao_livre double precision,
+    pct_vegetacao_livre double precision,
+    vegetacao_livre_ate_8 double precision,
+    vegetacao_livre_8_ate_20 double precision,
+    vegetacao_livre_20_ate_45 double precision,
+    vegetacao_livre_45_ate_100 double precision,
+    vegetacao_livre_acima_100 double precision,
+    vegetacao_livre_apto double precision,
+    pct_vegetacao_livre_apto double precision,
+    vegetacao_livre_ate_8_apto double precision,
+    vegetacao_livre_8_ate_20_apto double precision,
+    vegetacao_livre_20_ate_45_apto double precision,
+    vegetacao_livre_45_ate_100_apto double precision,
+    vegetacao_livre_acima_100_apto double precision,
+    vegetacao_livre_inapto double precision,
+    pct_vegetacao_livre_inapto double precision,
+    vegetacao_livre_ate_8_inapto double precision,
+    vegetacao_livre_8_ate_20_inapto double precision,
+    vegetacao_livre_20_ate_45_inapto double precision,
+    vegetacao_livre_45_ate_100_inapto double precision,
+    vegetacao_livre_acima_100_inapto double precision,
+    agropecuario double precision,
+    pct_agropecuario double precision,
+    agropecuario_ate_8 double precision,
+    agropecuario_de_8_ate_20 double precision,
+    agropecuario_de_20_ate_45 double precision,
+    agropecuario_45_ate_100 double precision,
+    agropecuario_acima_100 double precision,
+    agropecuario_livre double precision,
+    pct_agropecuario_livre double precision,
+    agropecuario_livre_ate_8 double precision,
+    agropecuario_livre_8_ate_20 double precision,
+    agropecuario_livre_20_ate_45 double precision,
+    agropecuario_livre_45_ate_100 double precision,
+    agropecuario_livre_acima_100 double precision,
+    agropecuario_livre_apto double precision,
+    pct_agropecuario_livre_apto double precision,
+    agropecuario_livre_ate_8_apto double precision,
+    agropecuario_livre_8_ate_20_apto double precision,
+    agropecuario_livre_20_ate_45_apto double precision,
+    agropecuario_livre_45_ate_100_apto double precision,
+    agropecuario_livre_acima_100_apto double precision,
+    agropecuario_livre_inapto double precision,
+    pct_agropecuario_livre_inapto double precision,
+    agropecuario_livre_ate_8_inapto double precision,
+    agropecuario_livre_8_ate_20_inapto double precision,
+    agropecuario_livre_20_ate_45_inapto double precision,
+    agropecuario_livre_45_ate_100_inapto double precision,
+    agropecuario_livre_acima_100_inapto double precision,
+    ti double precision,
+    pct_ti double precision,
+    ti_ate_8 double precision,
+    ti_de_8_ate_20 double precision,
+    ti_de_20_ate_45 double precision,
+    ti_de_45_ate_100 double precision,
+    ti_de_acima_100 double precision,
+    vegetacao_ti double precision,
+    pct_vegetacao_ti double precision,
+    vegetacao_ti_ate_8 double precision,
+    vegetacao_ti_8_ate_20 double precision,
+    vegetacao_ti_20_ate_45 double precision,
+    vegetacao_ti_45_ate_100 double precision,
+    vegetacao_ti_acima_100 double precision,
+    agro_ti double precision,
+    pct_agro_ti double precision,
+    agro_ti_ate_8 double precision,
+    agro_ti_8_ate_20 double precision,
+    agro_ti_20_ate_45 double precision,
+    agro_ti_45_ate_100 double precision,
+    agro_ti_acima_100 double precision,
+    ucpi double precision,
+    pct_ucpi double precision,
+    ucpi_ate_8 double precision,
+    ucpi_de_8_ate_20 double precision,
+    ucpi_de_20_ate_45 double precision,
+    ucpi_de_45_ate_100 double precision,
+    ucpi_de_acima_100 double precision,
+    vegetacao_ucpi double precision,
+    pct_vegetacao_ucpi double precision,
+    vegetacao_ucpi_ate_8 double precision,
+    vegetacao_ucpi_8_ate_20 double precision,
+    vegetacao_ucpi_20_ate_45 double precision,
+    vegetacao_ucpi_45_ate_100 double precision,
+    vegetacao_ucpi_acima_100 double precision,
+    agro_ucpi double precision,
+    pct_agro_ucpi double precision,
+    agro_ucpi_ate_8 double precision,
+    agro_ucpi_8_ate_20 double precision,
+    agro_ucpi_20_ate_45 double precision,
+    agro_ucpi_45_ate_100 double precision,
+    agro_ucpi_acima_100 double precision,
+    agua double precision,
+    pct_agua double precision,
+    agua_ate_8 double precision,
+    agua_8_ate_20 double precision,
+    agua_20_ate_45 double precision,
+    agua_45_ate_100 double precision,
+    agua_acima_100 double precision,
+    infra double precision,
+    pct_infra double precision,
+    infra_ate_8 double precision,
+    infra_8_ate_20 double precision,
+    infra_20_ate_45 double precision,
+    infra_45_ate_100 double precision,
+    infra_acima_100 double precision,
+    outros double precision,
+    pct_outros double precision,
+    outros_ate_8 double precision,
+    outros_8_ate_20 double precision,
+    outros_20_ate_45 double precision,
+    outros_45_ate_100 double precision,
+    outros_acima_100 double precision,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- TOC entry 265 (class 1259 OID 555241)
+-- Name: tabela_sintese2008; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.tabela_sintese2008 (
+    cod_imovel text NOT NULL,
+    cod_estado character varying(2),
+    nom_munici text,
+    amz double precision,
+    pct_amz double precision,
+    amz_ate_8 double precision,
+    amz_8_ate_20 double precision,
+    amz_20_ate_45 double precision,
+    amz_45_ate_100 double precision,
+    amz_acima_100 double precision,
+    declividade double precision,
+    pct_declividade double precision,
+    declividade_ate_8 double precision,
+    declividade_de_8_ate_20 double precision,
+    declividade_de_20_ate_45 double precision,
+    declividade_de_45_ate_100 double precision,
+    declividade_de_acima_100 double precision,
+    vegetacao double precision,
+    pct_vegetacao double precision,
+    vegetacao_ate_8 double precision,
+    vegetacaode_8_ate_20 double precision,
+    vegetacaode_20_ate_45 double precision,
+    vegetacaode_45_ate_100 double precision,
+    vegetacaode_acima_100 double precision,
+    vegetacao_livre double precision,
+    pct_vegetacao_livre double precision,
+    vegetacao_livre_ate_8 double precision,
+    vegetacao_livre_8_ate_20 double precision,
+    vegetacao_livre_20_ate_45 double precision,
+    vegetacao_livre_45_ate_100 double precision,
+    vegetacao_livre_acima_100 double precision,
+    vegetacao_livre_apto double precision,
+    pct_vegetacao_livre_apto double precision,
+    vegetacao_livre_ate_8_apto double precision,
+    vegetacao_livre_8_ate_20_apto double precision,
+    vegetacao_livre_20_ate_45_apto double precision,
+    vegetacao_livre_45_ate_100_apto double precision,
+    vegetacao_livre_acima_100_apto double precision,
+    vegetacao_livre_inapto double precision,
+    pct_vegetacao_livre_inapto double precision,
+    vegetacao_livre_ate_8_inapto double precision,
+    vegetacao_livre_8_ate_20_inapto double precision,
+    vegetacao_livre_20_ate_45_inapto double precision,
+    vegetacao_livre_45_ate_100_inapto double precision,
+    vegetacao_livre_acima_100_inapto double precision,
+    agropecuario double precision,
+    pct_agropecuario double precision,
+    agropecuario_ate_8 double precision,
+    agropecuario_de_8_ate_20 double precision,
+    agropecuario_de_20_ate_45 double precision,
+    agropecuario_45_ate_100 double precision,
+    agropecuario_acima_100 double precision,
+    agropecuario_livre double precision,
+    pct_agropecuario_livre double precision,
+    agropecuario_livre_ate_8 double precision,
+    agropecuario_livre_8_ate_20 double precision,
+    agropecuario_livre_20_ate_45 double precision,
+    agropecuario_livre_45_ate_100 double precision,
+    agropecuario_livre_acima_100 double precision,
+    agropecuario_livre_apto double precision,
+    pct_agropecuario_livre_apto double precision,
+    agropecuario_livre_ate_8_apto double precision,
+    agropecuario_livre_8_ate_20_apto double precision,
+    agropecuario_livre_20_ate_45_apto double precision,
+    agropecuario_livre_45_ate_100_apto double precision,
+    agropecuario_livre_acima_100_apto double precision,
+    agropecuario_livre_inapto double precision,
+    pct_agropecuario_livre_inapto double precision,
+    agropecuario_livre_ate_8_inapto double precision,
+    agropecuario_livre_8_ate_20_inapto double precision,
+    agropecuario_livre_20_ate_45_inapto double precision,
+    agropecuario_livre_45_ate_100_inapto double precision,
+    agropecuario_livre_acima_100_inapto double precision,
+    ti double precision,
+    pct_ti double precision,
+    ti_ate_8 double precision,
+    ti_de_8_ate_20 double precision,
+    ti_de_20_ate_45 double precision,
+    ti_de_45_ate_100 double precision,
+    ti_de_acima_100 double precision,
+    vegetacao_ti double precision,
+    pct_vegetacao_ti double precision,
+    vegetacao_ti_ate_8 double precision,
+    vegetacao_ti_8_ate_20 double precision,
+    vegetacao_ti_20_ate_45 double precision,
+    vegetacao_ti_45_ate_100 double precision,
+    vegetacao_ti_acima_100 double precision,
+    agro_ti double precision,
+    pct_agro_ti double precision,
+    agro_ti_ate_8 double precision,
+    agro_ti_8_ate_20 double precision,
+    agro_ti_20_ate_45 double precision,
+    agro_ti_45_ate_100 double precision,
+    agro_ti_acima_100 double precision,
+    ucpi double precision,
+    pct_ucpi double precision,
+    ucpi_ate_8 double precision,
+    ucpi_de_8_ate_20 double precision,
+    ucpi_de_20_ate_45 double precision,
+    ucpi_de_45_ate_100 double precision,
+    ucpi_de_acima_100 double precision,
+    vegetacao_ucpi double precision,
+    pct_vegetacao_ucpi double precision,
+    vegetacao_ucpi_ate_8 double precision,
+    vegetacao_ucpi_8_ate_20 double precision,
+    vegetacao_ucpi_20_ate_45 double precision,
+    vegetacao_ucpi_45_ate_100 double precision,
+    vegetacao_ucpi_acima_100 double precision,
+    agro_ucpi double precision,
+    pct_agro_ucpi double precision,
+    agro_ucpi_ate_8 double precision,
+    agro_ucpi_8_ate_20 double precision,
+    agro_ucpi_20_ate_45 double precision,
+    agro_ucpi_45_ate_100 double precision,
+    agro_ucpi_acima_100 double precision,
+    agua double precision,
+    pct_agua double precision,
+    agua_ate_8 double precision,
+    agua_8_ate_20 double precision,
+    agua_20_ate_45 double precision,
+    agua_45_ate_100 double precision,
+    agua_acima_100 double precision,
+    infra double precision,
+    pct_infra double precision,
+    infra_ate_8 double precision,
+    infra_8_ate_20 double precision,
+    infra_20_ate_45 double precision,
+    infra_45_ate_100 double precision,
+    infra_acima_100 double precision,
+    outros double precision,
+    pct_outros double precision,
+    outros_ate_8 double precision,
+    outros_8_ate_20 double precision,
+    outros_20_ate_45 double precision,
+    outros_45_ate_100 double precision,
+    outros_acima_100 double precision,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- TOC entry 268 (class 1259 OID 555257)
+-- Name: uf; Type: TABLE; Schema: sacir; Owner: -
+--
+
+CREATE TABLE sacir.uf (
+    id integer NOT NULL,
+    nome character varying(100),
+    sigla character(2),
+    geom public.geometry(MultiPolygon,4674)
+);
+
+
+--
+-- TOC entry 267 (class 1259 OID 555256)
+-- Name: uf_id_seq; Type: SEQUENCE; Schema: sacir; Owner: -
+--
+
+CREATE SEQUENCE sacir.uf_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 4619 (class 0 OID 0)
+-- Dependencies: 267
+-- Name: uf_id_seq; Type: SEQUENCE OWNED BY; Schema: sacir; Owner: -
+--
+
+ALTER SEQUENCE sacir.uf_id_seq OWNED BY sacir.uf.id;
+
+
+--
+-- TOC entry 4395 (class 2604 OID 555291)
+-- Name: municipio id; Type: DEFAULT; Schema: sacir; Owner: -
+--
+
+ALTER TABLE ONLY sacir.municipio ALTER COLUMN id SET DEFAULT nextval('sacir.municipio_id_seq'::regclass);
+
+
+--
+-- TOC entry 4394 (class 2604 OID 555260)
+-- Name: uf id; Type: DEFAULT; Schema: sacir; Owner: -
+--
+
+ALTER TABLE ONLY sacir.uf ALTER COLUMN id SET DEFAULT nextval('sacir.uf_id_seq'::regclass);
+
+-- postgis/init-app/db02-security-sacir.sql
+\set ON_ERROR_STOP 1
+
+-- Aplica RLS exigindo sessão ativa em todas as tabelas do schema sacir
+-- As funções sacir.session_is_valid() e sacir.current_email() agora consideram tanto
+-- o header Authorization padrão quanto o header X-Auth-Token validado por
+-- sacir.auth_with_custom_header(), mantendo compatibilidade com ambos os fluxos JWT.
+DO $$
+DECLARE
+  r record;
+  v_policy text;
+BEGIN
+  FOR r IN
+    SELECT schemaname, tablename
+      FROM pg_tables
+     WHERE schemaname = 'sacir'
+       AND tablename NOT IN ('audit_log')
+  LOOP
+    EXECUTE format('ALTER TABLE %I.%I ENABLE ROW LEVEL SECURITY;', r.schemaname, r.tablename);
+
+    v_policy := format('rls_%s_require_session', r.tablename);
+
+    IF EXISTS (
+      SELECT 1
+        FROM pg_policies
+       WHERE schemaname = r.schemaname
+         AND tablename  = r.tablename
+         AND policyname = v_policy
+    ) THEN
+      EXECUTE format('DROP POLICY %I ON %I.%I;', v_policy, r.schemaname, r.tablename);
+    END IF;
+
+    IF r.tablename = 'sessions' THEN
+      EXECUTE format(
+        'CREATE POLICY %I ON %I.%I USING (sacir.session_is_valid() AND user_email = sacir.current_email()) WITH CHECK (sacir.session_is_valid() AND user_email = sacir.current_email());',
+        v_policy,
+        r.schemaname,
+        r.tablename
+      );
+    ELSE
+      EXECUTE format(
+        'CREATE POLICY %I ON %I.%I USING (sacir.session_is_valid()) WITH CHECK (sacir.session_is_valid());',
+        v_policy,
+        r.schemaname,
+        r.tablename
+      );
+    END IF;
+  END LOOP;
+END;
+$$;
+
+-- Cria gatilhos de auditoria para todas as tabelas do schema sacir (exceto a própria audit_log)
+DO $$
+DECLARE
+  r record;
+  v_trigger text;
+BEGIN
+  FOR r IN
+    SELECT schemaname, tablename
+      FROM pg_tables
+     WHERE schemaname = 'sacir'
+       AND tablename <> 'audit_log'
+  LOOP
+    v_trigger := format('trg_audit_%s', r.tablename);
+
+    IF EXISTS (
+      SELECT 1
+        FROM pg_trigger
+       WHERE tgname = v_trigger
+         AND tgrelid = format('%I.%I', r.schemaname, r.tablename)::regclass
+    ) THEN
+      EXECUTE format('DROP TRIGGER %I ON %I.%I;', v_trigger, r.schemaname, r.tablename);
+    END IF;
+
+    EXECUTE format(
+      'CREATE TRIGGER %I
+         AFTER INSERT OR UPDATE OR DELETE ON %I.%I
+         FOR EACH ROW
+         EXECUTE FUNCTION sacir.log_dml();',
+      v_trigger,
+      r.schemaname,
+      r.tablename
+    );
+  END LOOP;
+END;
+$$;
+-- postgis/init-app/db05-index-sacir.sql
+
+SELECT pg_catalog.setval('sacir.municipio_id_seq', 93, true);
+
+SELECT pg_catalog.setval('sacir.uf_id_seq', 27, true);
+
+ALTER TABLE ONLY sacir.municipio
+    ADD CONSTRAINT municipio_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY sacir.uf
+    ADD CONSTRAINT uf_pkey PRIMARY KEY (id);
+
+CREATE INDEX aptidao_edafo_idx_aptidao_edafo_geom ON sacir.aptidao_edafo USING gist (geom);
+
+CREATE INDEX declividade_idx_declividade_geom ON sacir.declividade_declividade USING gist (geom);
+
+CREATE INDEX idx_municipio_geom ON sacir.municipio USING gist (geom);
+
+CREATE INDEX idx_uf_geom ON sacir.uf USING gist (geom);
+
+CREATE INDEX potencial_agropecuario_idx_2008_geom ON sacir.potencial_agropecuario_2008 USING gist (geom);
+
+CREATE INDEX potencial_agropecuario_idx_2021_geom ON sacir.potencial_agropecuario_2021 USING gist (geom);
+
+CREATE INDEX potencial_agropecuario_idx_temp_2021_geom ON sacir.potencial_agropecuario_temp_2021 USING gist (geom);
+
+CREATE UNIQUE INDEX uq_aptidao_cod_imovel ON sacir.aptidao_edafo USING btree (cod_imovel);
+
+CREATE UNIQUE INDEX uq_pot2021_cod_imovel ON sacir.potencial_agropecuario_2021 USING btree (cod_imovel);

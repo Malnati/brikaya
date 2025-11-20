@@ -1,0 +1,136 @@
+#	Tarefa: Bypass no PostgREST e validar 100% no banco (possível)
+• Remova PGRST_JWT_SECRET do PostgREST (ele para de validar JWT; todas as requisições entram como anon).
+• Passe o token até o banco (header próprio).
+• Implemente no banco:
+	•	parser do JWT (split header.payload.signature, base64url decode);
+	•	verificação da assinatura (ex.: HS256 com hmac() do Postgres);
+	•	checagem de exp/nbf/iat;
+	•	cross-check com sacir.sessions (token, sid, revogado, expiração etc).
+• Propague as claims para RLS: dentro de uma função SECURITY DEFINER você pode fazer
+PERFORM set_config('app.jwt.claims', payload::text, true)
+e suas policies RLS passam a ler current_setting('app.jwt.claims', true) ao invés de request.jwt.claims.
+
+# Esqueleto (HS256) direto no banco
+
+Abaixo um esqueleto mínimo (somente exemplo) que valida a assinatura e exp usando só funções nativas do Postgres (sem pgjwt). Ele não depende do PostgREST.
+
+-- helpers base64url
+CREATE OR REPLACE FUNCTION sacir._b64url_to_bytea(t text)
+RETURNS bytea LANGUAGE plpgsql IMMUTABLE AS $$
+DECLARE s text := translate(t, '-_', '+/');
+BEGIN
+  -- re-adiciona '=' de padding
+  WHILE length(s) % 4 <> 0 LOOP s := s || '='; END LOOP;
+  RETURN decode(s, 'base64');
+END$$;
+
+CREATE OR REPLACE FUNCTION sacir._b64url_to_text(t text)
+RETURNS text LANGUAGE sql IMMUTABLE AS $$
+  SELECT convert_from(sacir._b64url_to_bytea(t), 'utf8');
+$$;
+
+-- verifica HS256: assinatura e expiração
+CREATE OR REPLACE FUNCTION sacir.jwt_verify_hs256(_token text, _secret text)
+RETURNS jsonb
+LANGUAGE plpgsql IMMUTABLE AS $$
+DECLARE
+  parts text[];
+  header_b64 text; payload_b64 text; sig_b64 text;
+  signing_input text; expected_sig text;
+  payload jsonb;
+  exp bigint;
+BEGIN
+  IF _token IS NULL OR _token !~ '^[^.]+\\.[^.]+\\.[^.]+$' THEN
+    RAISE EXCEPTION 'invalid token format';
+  END IF;
+
+  parts := string_to_array(_token, '.');
+  header_b64  := parts[1];
+  payload_b64 := parts[2];
+  sig_b64     := parts[3];
+
+  signing_input := header_b64 || '.' || payload_b64;
+
+  -- recalcula assinatura HS256
+  expected_sig := replace(replace(
+                    encode(hmac(signing_input, _secret, 'sha256'), 'base64'),
+                    '+','-'),'/','_');
+  expected_sig := rtrim(expected_sig, '=');
+
+  IF expected_sig <> sig_b64 THEN
+    RAISE EXCEPTION 'invalid signature';
+  END IF;
+
+  payload := sacir._b64url_to_text(payload_b64)::jsonb;
+
+  -- checa exp (se existir)
+  IF (payload ? 'exp') THEN
+    exp := (payload->>'exp')::bigint;
+    IF extract(epoch FROM now())::bigint >= exp THEN
+      RAISE EXCEPTION 'token expired';
+    END IF;
+  END IF;
+
+  RETURN payload;
+END$$;
+
+Função de “autenticar e preparar ambiente” (para RLS)
+
+CREATE OR REPLACE FUNCTION sacir.auth_with_token(_token text)
+RETURNS jsonb
+LANGUAGE plpgsql SECURITY DEFINER
+SET search_path = sacir, public AS $$
+DECLARE
+  secret text := coalesce(
+    nullif(current_setting('pgrst.jwt_secret', true), ''),
+    nullif(current_setting('app.jwt_secret',   true), '')
+  );
+  claims jsonb;
+  sid uuid;
+  email text;
+BEGIN
+  IF secret IS NULL THEN
+    RAISE EXCEPTION 'jwt secret not configured';
+  END IF;
+
+  claims := sacir.jwt_verify_hs256(_token, secret);
+
+  -- opcional: checar coerência com tabela de sessões
+  sid   := (claims->>'sid')::uuid;
+  email :=  claims->>'email';
+
+  PERFORM 1
+    FROM sacir.sessions s
+   WHERE s.id = sid
+     AND s.user_email = email
+     AND s.token = _token
+     AND s.revoked_at IS NULL
+     AND s.expires_at > now();
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'session invalid';
+  END IF;
+
+  -- "injeta" claims para as RLS/policies lerem
+  PERFORM set_config('app.jwt.claims', claims::text, true);
+
+  RETURN claims;
+END$$;
+
+Como usar sem HTTP (ou com PostgREST sem jwt-secret)
+	•	Em chamadas que precisam de sessão, faça primeiro:
+
+SELECT sacir.auth_with_token(:token);
+
+(ou crie uma RPC que receba token no corpo e chame auth_with_token internamente).
+
+	•	Suas policies RLS trocam referências de request.jwt.claims → app.jwt.claims.
+	•	Suas funções current_email(), session_is_valid(), etc., passam a ler de app.jwt.claims (ou parametrize para ler de request.jwt.claims ou app.jwt.claims, o que existir).
+
+Observações importantes
+	•	Se você continuar usando PostgREST com PGRST_JWT_SECRET setado, não tem como “bypassar”: ele rejeita (401) antes de chegar ao banco. Então, para validar no DB, retire PGRST_JWT_SECRET ou aceite que haverá dupla validação (desnecessária).
+	•	Para chaves assimétricas (RS/ES/EdDSA), a verificação no banco fica mais complexa (você precisaria de extensões/PL adicionais). Para HS256 o caminho acima funciona bem.
+
+Conclusão
+	•	Sim, dá para substituir a validação do PostgREST por verificação direta no banco.
+	•	O caminho prático é: tirar o PGRST_JWT_SECRET, criar uma função auth_with_token(token) que valida (assinatura+exp) e seta GUCs para suas RLS/funcões, e então usar esse token como parâmetro nas RPCs que exigirem sessão.
