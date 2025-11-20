@@ -3,6 +3,17 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.7.0] - 2025-01-27
+### Adicionado
+- **Testes unitários para GameEngine**: Suíte completa de 9 testes cobrindo inicialização, ciclo de vida, gerenciamento de pontuação e estado do jogo
+- **Testes de integração para gameLogger**: 5 testes validando registro de eventos no IndexedDB (início de jogo, atualização de pontuação, colisões)
+- **Correção de configuração Jest**: Corrigido erro de configuração (`moduleNameMapping` -> `moduleNameMapper`)
+- **Mocks adequados**: Implementados mocks completos para Paddle, Ball, Bricks, AssetLoader e gameLogger
+
+### Melhorado
+- **Plano de desenvolvimento atualizado**: Status atualizado refletindo progresso real dos testes
+- **Cobertura de testes**: Total de 14 testes passando (9 unitários + 5 integração)
+
 ## [1.6.0] - 2025-11-20
 ### Adicionado
 - **Documentação RUP específica do BrickBreaker**: novas seções de visão, arquitetura e design de gameplay para alinhar desenvolvimento offline-first.

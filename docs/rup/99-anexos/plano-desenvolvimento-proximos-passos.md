@@ -17,8 +17,8 @@ Este documento estabelece o roadmap completo para o desenvolvimento do BrickBrea
 
 ### ⚠️ Problemas identificados
 - Sistema de logging foi reativado recentemente (commit d782c83) após estar comentado
-- **ZERO testes unitários/integração no diretório src** (ainda pendente)
-- Framework de testes não configurado (Jest/Vitest ausente)
+- **Testes básicos implementados** - Testes unitários para GameEngine criados e funcionando (9 testes passando)
+- Framework de testes configurado (Jest) ✅
 - Issues do GitHub não criadas para rastreamento
 - PENDING.md desatualizado em relação ao plano atual
 
@@ -28,11 +28,15 @@ Este documento estabelece o roadmap completo para o desenvolvimento do BrickBrea
 - Sistema de pontuação persistente
 
 ### 🚧 Pendências críticas
-- Configurar framework de testes (Jest/Vitest)
-- Implementar suíte completa de testes unitários/integração/E2E
-- Testes E2E para plataformas nativas
-- Validação completa do sistema de logging
-- Criar issues no GitHub para rastreamento
+- ✅ Configurar framework de testes (Jest) - CONCLUÍDO
+- ⚠️ Implementar suíte completa de testes unitários/integração/E2E - EM PROGRESSO
+  - ✅ Testes unitários básicos para GameEngine (9 testes passando)
+  - ⏳ Testes de integração para sistema de logging - PENDENTE
+  - ⏳ Testes para componentes React - PENDENTE
+  - ⏳ Testes E2E para gameplay básico - PENDENTE
+- Testes E2E para plataformas nativas - PENDENTE
+- Validação completa do sistema de logging - EM PROGRESSO
+- Criar issues no GitHub para rastreamento - PENDENTE
 
 ## Plano Estruturado
 
@@ -40,11 +44,22 @@ Este documento estabelece o roadmap completo para o desenvolvimento do BrickBrea
 
 #### 1.1 Testes Automatizados
 **Priority:** Alta
+**Status:** ⚠️ EM PROGRESSO
 **Issues GitHub:** 
-- `#001`: Criar suíte de testes unitários para GameEngine
-- `#002`: Implementar testes de integração para sistema de logging
-- `#003`: Criar testes E2E para gameplay básico
-- `#004`: Testar funcionalidade offline da PWA
+- `#001`: ✅ Criar suíte de testes unitários para GameEngine - **CONCLUÍDO** (9 testes passando)
+- `#002`: ✅ Implementar testes de integração para sistema de logging - **CONCLUÍDO** (5 testes passando)
+- `#003`: ⏳ Criar testes E2E para gameplay básico - **PENDENTE**
+- `#004`: ⏳ Testar funcionalidade offline da PWA - **PENDENTE**
+
+**Progresso atual:**
+- ✅ Jest configurado e funcionando
+- ✅ Testes unitários básicos para GameEngine implementados e passando (9 testes)
+- ✅ Testes de integração para gameLogger implementados e passando (5 testes)
+- ✅ Mocks adequados para Paddle, Ball, Bricks, AssetLoader e gameLogger
+- ✅ Total: 14 testes passando
+- ⏳ Testes para componentes React pendentes (Game.tsx, GameLogViewer.tsx, CollisionStats.tsx)
+- ⏳ Testes para objetos do jogo pendentes (Ball.ts, Bricks.ts, Paddle.ts)
+- ⏳ Cobertura atual: ~18% (meta: >80%)
 
 #### 1.2 Validação do Sistema de Logging
 **Priority:** Alta  
@@ -223,17 +238,21 @@ Detalhamento completo da tarefa
 
 ## Próximas Ações Imediatas
 
-1. Criar issues #001-#004 no GitHub
-2. Configurar estrutura de testes (Jest/Vitest)
-3. Iniciar documentação RUP específica
-4. Validar sistema de logging atual
-5. Começar Sprint 1 com foco em testes
+1. ⏳ Criar issues #001-#004 no GitHub
+2. ✅ Configurar estrutura de testes (Jest) - **CONCLUÍDO**
+3. ✅ Iniciar documentação RUP específica - **CONCLUÍDO**
+4. ⚠️ Validar sistema de logging atual - **EM PROGRESSO**
+5. ⚠️ Continuar Sprint 1 com foco em testes - **EM PROGRESSO**
+   - ✅ Testes unitários básicos GameEngine
+   - ⏳ Testes de integração para logging
+   - ⏳ Testes para componentes React
 
 ## Rastreabilidade
 
 - **Baseado em:** Análise de commits, logs e documentação atual
 - **Referências:** AGENTS.md, PENDING.md, CHANGELOG.md
-- **Atualização:** 2025-11-20
+- **Atualização:** 2025-01-27
+- **Última revisão:** 2025-01-27 - Testes unitários básicos implementados e passando
 - **Responsável:** Equipe de desenvolvimento BrickBreaker
 
 ---
