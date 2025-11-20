@@ -17,10 +17,10 @@ Este documento estabelece o roadmap completo para o desenvolvimento do BrickBrea
 
 ### ⚠️ Problemas identificados
 - Sistema de logging foi reativado recentemente (commit d782c83) após estar comentado
-- **ZERO testes unitários/integração no diretório src**
-- Documentação RUP genérica, não específica para jogo
-- Pendências não priorizadas no PENDING.md
+- **ZERO testes unitários/integração no diretório src** (ainda pendente)
+- Framework de testes não configurado (Jest/Vitest ausente)
 - Issues do GitHub não criadas para rastreamento
+- PENDING.md desatualizado em relação ao plano atual
 
 ### 🎮 Features implementadas
 - Multiplicação de bolinhas
@@ -28,9 +28,11 @@ Este documento estabelece o roadmap completo para o desenvolvimento do BrickBrea
 - Sistema de pontuação persistente
 
 ### 🚧 Pendências críticas
+- Configurar framework de testes (Jest/Vitest)
+- Implementar suíte completa de testes unitários/integração/E2E
 - Testes E2E para plataformas nativas
 - Validação completa do sistema de logging
-- Documentação específica do jogo
+- Criar issues no GitHub para rastreamento
 
 ## Plano Estruturado
 
@@ -54,10 +56,11 @@ Este documento estabelece o roadmap completo para o desenvolvimento do BrickBrea
 
 #### 1.3 Atualização RUP Específica
 **Priority:** Média
-**Documents to create:**
-- `docs/rup/00-visao/jogo-brickbreaker-spec.md`
-- `docs/rup/01-arquitetura/arquitetura-jogo-spec.md`
-- `docs/rup/02-design/gameplay-mecanicas-spec.md`
+**Status:** ✅ CONCLUÍDO
+**Documents created:**
+- ✅ `docs/rup/00-visao/jogo-brickbreaker-spec.md` - Visão do produto, público-alvo e objetivos
+- ✅ `docs/rup/01-arquitetura/arquitetura-jogo-spec.md` - Arquitetura da engine, objetos e persistência
+- ✅ `docs/rup/02-design/gameplay-mecanicas-spec.md` - Mecânicas de gameplay, física e interface
 
 ### FASE 2: ENHANCEMENTS E FEATURES (Sprints 3-4)
 
