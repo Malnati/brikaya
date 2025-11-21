@@ -1,3 +1,4 @@
+<!-- README.md -->
 # 🎮 BrickBreaker - Jogo Offline com Logging Robusto
 
 Um jogo clássico de Breakout implementado em TypeScript/React com um sistema robusto de logging que registra todas as condições e eventos do jogo no IndexedDB.
@@ -54,6 +55,20 @@ npm run build
 # Build para plataformas nativas (iOS/Android)
 make build-all
 ```
+
+### Docker + Caddy (HTTPS)
+```bash
+# Garantir que a rede externa do Caddy exista (necessário apenas uma vez)
+make docker-create-caddy-network
+
+# Construir e subir os containers do jogo e do proxy
+make docker-build
+make docker-up
+```
+
+- O Caddy escuta em `https://brickbreacker.cranio.dev` por padrão e encaminha para o serviço `brickbreaker` na porta 7979.
+- Configure o DNS do domínio apontando para o host para permitir a emissão automática de certificados TLS (variáveis: `CADDY_DOMAIN`, `CADDY_UPSTREAM`, `ACME_EMAIL`).
+- Logs do proxy podem ser acompanhados com `make docker-logs-caddy` e a configuração pode ser recarregada via `make docker-reload-caddy`.
 
 ## 📊 Sistema de Logging
 

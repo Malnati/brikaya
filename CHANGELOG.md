@@ -3,6 +3,13 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.8.0] - 2025-11-21
+### Adicionado
+- **Serviço Caddy com HTTPS**: Novo container dedicado que publica `brickbreacker.cranio.dev` com TLS automático e proxy para o serviço `brickbreaker`.
+- **Infraestrutura Docker atualizada**: `docker-compose.yml` com volumes de configuração/certificados e rede compartilhada `vmi2889919_caddy_mesh`.
+- **Automação Makefile**: Alvos para criar a rede externa, acompanhar logs e recarregar a configuração do Caddy.
+- **Documentação operacional**: Instruções de uso do Caddy via Docker e variáveis configuráveis no README.
+
 ## [1.7.0] - 2025-01-27
 ### Adicionado
 - **Testes unitários para GameEngine**: Suíte completa de 9 testes cobrindo inicialização, ciclo de vida, gerenciamento de pontuação e estado do jogo

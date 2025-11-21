@@ -1,0 +1,32 @@
+# caddy/Caddyfile
+{
+    email {$ACME_EMAIL}
+    auto_https on
+    admin off
+    storage file_system {
+        root /data
+    }
+}
+
+{$CADDY_DOMAIN} {
+    encode zstd gzip
+
+    log {
+        output stdout
+        format console
+    }
+
+    @healthcheck {
+        path /healthz
+    }
+
+    handle @healthcheck {
+        respond "healthy" 200
+    }
+
+    reverse_proxy {$CADDY_UPSTREAM} {
+        transport http {
+            versions h1.1 h2c
+        }
+    }
+}
