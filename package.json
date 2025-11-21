@@ -14,7 +14,7 @@
     "test:colors:dev": "npm run dev & sleep 5 && npm run test:colors && pkill -f 'vite'"
   },
   "dependencies": {
-    "@capacitor/android": "^7.4.2",
+    "@capacitor/android": "^7.4.4",
     "@capacitor/cli": "^7.4.2",
     "@capacitor/core": "^7.4.2",
     "@capacitor/ios": "^7.4.2",
