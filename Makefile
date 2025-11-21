@@ -5,6 +5,13 @@
 ASSET_DIR=public/assets
 TEMP_DIR=tmp
 
+# Reverse proxy configuration
+CADDY_DOMAIN=brickbreacker.cranio.dev
+CADDY_UPSTREAM=http://brickbreaker:7979
+CADDY_NETWORK=vmi2889919_caddy_mesh
+CADDY_SERVICE=caddy
+ACME_EMAIL=infra@cranio.dev
+
 # Development configuration
 NODE_MODULES=node_modules
 DIST_DIR=dist
@@ -19,7 +26,7 @@ KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
 # Target padrão: mostrar help quando make é executado sem argumentos
 .DEFAULT_GOAL := help
 
-.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes docker-build docker-up docker-down docker-logs docker-shell
+.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes docker-build docker-up docker-down docker-logs docker-shell docker-create-caddy-network docker-logs-caddy docker-reload-caddy
 
 # Função para matar processos anteriores
 kill-processes:
@@ -138,10 +145,10 @@ docker-build:
 	@docker compose build
 
 # Docker: Iniciar containers
-docker-up:
-	@echo "🚀 Iniciando containers Docker..."
-	@docker compose up -d
-	@echo "✅ Aplicação disponível em http://localhost:7979"
+docker-up: docker-create-caddy-network
+        @echo "🚀 Iniciando containers Docker..."
+        @docker compose up -d
+        @echo "✅ Aplicação disponível em http://localhost:7979"
 
 # Docker: Parar containers
 docker-down:
@@ -150,11 +157,24 @@ docker-down:
 
 # Docker: Ver logs
 docker-logs:
-	@docker compose logs -f brickbreaker
+        @docker compose logs -f brickbreaker
 
 # Docker: Acessar shell do container
 docker-shell:
-	@docker compose exec brickbreaker /bin/bash
+        @docker compose exec brickbreaker /bin/bash
+
+# Docker: Garantir rede externa do Caddy
+docker-create-caddy-network:
+        @echo "🔌 Garantindo rede externa do Caddy..."
+        @docker network inspect $(CADDY_NETWORK) >/dev/null 2>&1 || docker network create --driver bridge $(CADDY_NETWORK)
+
+# Docker: Ver logs do Caddy
+docker-logs-caddy:
+        @docker compose logs -f $(CADDY_SERVICE)
+
+# Docker: Recarregar configuração do Caddy
+docker-reload-caddy:
+        @docker compose exec $(CADDY_SERVICE) caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
 
 # Docker: Build de produção
 docker-build-prod:
@@ -187,16 +207,19 @@ help:
 	@echo "  android        - Abrir projeto Android no Android Studio"
 	@echo "  build-all      - Build PWA e copiar para Capacitor"
 	@echo ""
-	@echo "Docker:"
-	@echo "  docker-build   - Construir imagem Docker"
-	@echo "  docker-up      - Iniciar containers Docker"
-	@echo "  docker-down    - Parar containers Docker"
-	@echo "  docker-logs    - Ver logs do container"
-	@echo "  docker-shell   - Acessar shell do container"
-	@echo "  docker-build-prod - Build de produção via Docker"
-	@echo ""
-	@echo "Testes:"
-	@echo "  test-colors    - Testar cores do jogo"
+        @echo "Docker:"
+        @echo "  docker-build   - Construir imagem Docker"
+        @echo "  docker-up      - Iniciar containers Docker"
+        @echo "  docker-down    - Parar containers Docker"
+        @echo "  docker-logs    - Ver logs do container"
+        @echo "  docker-shell   - Acessar shell do container"
+        @echo "  docker-build-prod - Build de produção via Docker"
+        @echo "  docker-create-caddy-network - Garantir rede externa do Caddy"
+        @echo "  docker-logs-caddy - Ver logs do reverse proxy Caddy"
+        @echo "  docker-reload-caddy - Recarregar configuração ativa do Caddy"
+        @echo ""
+        @echo "Testes:"
+        @echo "  test-colors    - Testar cores do jogo"
 	@echo "  test-colors-dev - Testar cores em modo desenvolvimento"
 	@echo "  test-colors-manual - Teste manual de cores (com servidor HTTP)"
 	@echo "  check-colors   - Verificar integridade das cores (CI/CD)"
