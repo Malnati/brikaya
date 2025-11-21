@@ -1,8 +1,81 @@
 <!-- CHANGELOG.md -->
 - Estrutura inicial do projeto criada com arquivos vazios e TODOs
 - Implementação completa do jogo Breakout com suporte offline
-
 - Resolvido conflitos para integrar mudancas da main
+
+## [1.8.0] - 2025-11-21
+### Adicionado
+- **Serviço Caddy com HTTPS**: Novo container dedicado que publica `brickbreacker.cranio.dev` com TLS automático e proxy para o serviço `brickbreaker`.
+- **Infraestrutura Docker atualizada**: `docker-compose.yml` com volumes de configuração/certificados e rede compartilhada `vmi2889919_caddy_mesh`.
+- **Automação Makefile**: Alvos para criar a rede externa, acompanhar logs e recarregar a configuração do Caddy.
+- **Documentação operacional**: Instruções de uso do Caddy via Docker e variáveis configuráveis no README.
+
+## [1.7.0] - 2025-01-27
+### Adicionado
+- **Testes unitários para GameEngine**: Suíte completa de 9 testes cobrindo inicialização, ciclo de vida, gerenciamento de pontuação e estado do jogo
+- **Testes de integração para gameLogger**: 5 testes validando registro de eventos no IndexedDB (início de jogo, atualização de pontuação, colisões)
+- **Correção de configuração Jest**: Corrigido erro de configuração (`moduleNameMapping` -> `moduleNameMapper`)
+- **Mocks adequados**: Implementados mocks completos para Paddle, Ball, Bricks, AssetLoader e gameLogger
+
+### Melhorado
+- **Plano de desenvolvimento atualizado**: Status atualizado refletindo progresso real dos testes
+- **Cobertura de testes**: Total de 14 testes passando (9 unitários + 5 integração)
+
+## [1.6.0] - 2025-11-20
+### Adicionado
+- **Documentação RUP específica do BrickBreaker**: novas seções de visão, arquitetura e design de gameplay para alinhar desenvolvimento offline-first.
+- **Guia de testes e critérios de aceite**: estratégia focada em engine, persistência e PWA offline com rastreabilidade para issues #001–#012.
+- **Checklist atualizado**: validação de estrutura, service worker, build Capacitor e cobertura de testes.
+
+## [1.5.0] - 2025-11-20
+### Adicionado
+- **Plano de desenvolvimento**: Criado plano detalhado para próximos passos em `docs/rup/99-anexos/plano-desenvolvimento-proximos-passos.md`
+  - Definidas 3 fases de desenvolvimento (Estabilização, Enhancements, Release)
+  - Mapeadas 12 issues do GitHub prioritárias (#001-#012)
+  - Planejada atualização completa da documentação RUP específica
+  - Integrado plano com diretrizes do AGENTS.md
+  - Estabelecido cronograma de 4 sprints (8 semanas)
+  - Definidas métricas de sucesso e critérios de qualidade
+
+### Planejado
+- **Testes automatizados**: Suíte completa de testes unitários, integração e E2E
+- **Documentação específica**: RUP adaptado para contexto de jogo BrickBreaker
+- **Builds nativos**: Configuração iOS/Android via Capacitor com testes
+- **Métricas de qualidade**: Cobertura >80%, performance <100ms, zero bugs críticos
+
+## [1.4.0] - 2025-11-20
+### Removido
+- **Documentação legada**: Removida toda documentação específica do projeto anterior (CLImate INvestment)
+  - Diretórios removidos: `00-visao/`, `01-arquitetura/`, `02-design/`, `02-planejamento/`, `03-agentes-ia/`, `04-testes-e-validacao/`, `05-entrega-e-implantacao/`, `05-operacao-release/`, `06-governanca-tecnica-e-controle-de-qualidade/`, `06-ux-brand/`, `99-anexos/MVP/`
+  - Arquivos removidos: `validation-issue-log.json`, `validation-report.md`, `validation-report-spec.md`, `mapeamento-white-label.md`
+  - Referências removidas: `manus/`, `modules/` (específicos de backend/banco de dados)
+
+### Melhorado
+- **Estrutura RUP**: Adaptada documentação RUP genérica para contexto do BrickBreaker
+  - README principal atualizado para refletir jogo PWA offline
+  - Checklists mantidos e adaptados para desenvolvimento de jogos
+  - Referências técnicas reutilizáveis preservadas (Heroicons, Swagger)
+  - Documentação agora focada em desenvolvimento de jogos e não em fintech
+
+## [1.3.0] - 2025-11-20
+### Adicionado
+- **Infraestrutura Docker**: Adicionada estrutura completa para execução via Docker
+  - `Dockerfile` para containerização do projeto
+  - `docker-compose.yml` para orquestração de containers
+  - `.dockerignore` para otimização de builds
+  - Novos targets no Makefile: `docker-build`, `docker-up`, `docker-down`, `docker-logs`, `docker-shell`, `docker-build-prod`
+
+### Ajustado
+- **Branding**: Adaptados arquivos de branding para o contexto do jogo BrickBreaker
+  - `branding/tokens.json`: Atualizado com paleta de cores do jogo (#1a1a1a, #2d2d2d, #00d4ff)
+  - `branding/assets/README.md`: Documentação adaptada para o contexto do jogo
+  - Removidas referências ao projeto anterior (APP, marketplace)
+  
+### Melhorado
+- **Makefile**: Reorganizado e melhorado com seções claras
+  - Adicionado cabeçalho descritivo
+  - Help reorganizado por categorias (Desenvolvimento Local, Builds Nativos, Docker, Testes)
+  - Mantidos todos os targets relevantes para o projeto de jogo
 
 ## [1.1.0] - 2024-07-31
 ### Melhorado
@@ -14,6 +87,9 @@
 
 ## [1.2.0] - 2024-08-01
 ### Adicionado
+
+- Multiplicação de bolinhas ao quebrar múltiplos blocos em uma mesma trajetória
+- Jogo termina apenas quando todas as bolinhas são perdidas ou todos os blocos são destruídos
 - Penalidade ao não quebrar blocos: uma nova linha é inserida no topo quando a
   bola retorna à raquete sem destruir blocos.
 
@@ -25,5 +101,4 @@
 ### Adicionado
 - Integração com Capacitor para build nativo iOS e Android
 - Novos targets no Makefile para gerar e preparar o build
-
 

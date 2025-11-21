@@ -1,0 +1,88 @@
+# .github/dependabot.yml
+# Dependabot configuration for automated security alerts and dependency updates
+
+version: 2
+updates:
+  # API dependencies
+  - package-ecosystem: "npm"
+    directory: "/api"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "Malnati"
+    labels:
+      - "dependencies"
+      - "api"
+    commit-message:
+      prefix: "chore(api)"
+      include: "scope"
+    
+  # Extension dependencies
+  - package-ecosystem: "npm"
+    directory: "/extension"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "Malnati"
+    labels:
+      - "dependencies"
+      - "extension"
+    commit-message:
+      prefix: "chore(extension)"
+      include: "scope"
+    
+  # UI dependencies
+  - package-ecosystem: "npm"
+    directory: "/ui"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "Malnati"
+    labels:
+      - "dependencies"
+      - "ui"
+    commit-message:
+      prefix: "chore(ui)"
+      include: "scope"
+    
+  # Root dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "Malnati"
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "chore(root)"
+      include: "scope"
+    
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "Malnati"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(actions)"
+      include: "scope"

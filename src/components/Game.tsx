@@ -2,6 +2,8 @@
 import { useRef, useEffect, useState } from 'react';
 import { useGameLoop } from '../hooks/useGameLoop';
 import { useColorDebug } from '../hooks/useColorDebug';
+import { CollisionStats } from './CollisionStats';
+import GameLogViewer from './GameLogViewer';
 import { CANVAS_WIDTH, CANVAS_HEIGHT, MIN_CANVAS_WIDTH, MIN_CANVAS_HEIGHT, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT } from '../constants/game';
 
 interface GameProps {
@@ -13,6 +15,8 @@ interface GameProps {
 export default function Game({ onScoreUpdate, onGameWon, onGameOver }: GameProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: CANVAS_WIDTH, height: CANVAS_HEIGHT });
+  const [showCollisionStats, setShowCollisionStats] = useState(false);
+  const [showGameLogs, setShowGameLogs] = useState(false);
   
   // Responsividade do canvas
   useEffect(() => {
@@ -59,6 +63,23 @@ export default function Game({ onScoreUpdate, onGameWon, onGameOver }: GameProps
 
   return (
     <div className="game-container">
+      <div className="game-controls">
+        <button 
+          onClick={() => setShowCollisionStats(true)}
+          className="stats-button"
+          title="Ver estatísticas de colisões"
+        >
+          📊 Colisões
+        </button>
+        <button 
+          onClick={() => setShowGameLogs(true)}
+          className="stats-button"
+          title="Ver logs detalhados do jogo"
+        >
+          📋 Logs do Jogo
+        </button>
+      </div>
+      
       <canvas 
         ref={canvasRef} 
         width={canvasSize.width} 
@@ -69,6 +90,40 @@ export default function Game({ onScoreUpdate, onGameWon, onGameOver }: GameProps
           touchAction: 'none' // Previne zoom e scroll no touch
         }}
       />
+      
+      <CollisionStats 
+        isVisible={showCollisionStats}
+        onClose={() => setShowCollisionStats(false)}
+      />
+      
+      <GameLogViewer 
+        isVisible={showGameLogs}
+        onClose={() => setShowGameLogs(false)}
+      />
+      
+      <style>{`
+        .game-controls {
+          display: flex;
+          justify-content: center;
+          margin-bottom: 10px;
+          gap: 10px;
+        }
+        
+        .stats-button {
+          background: #333;
+          color: white;
+          border: 1px solid #555;
+          padding: 8px 16px;
+          border-radius: 5px;
+          cursor: pointer;
+          font-family: inherit;
+          font-size: 14px;
+        }
+        
+        .stats-button:hover {
+          background: #444;
+        }
+      `}</style>
     </div>
   );
 }

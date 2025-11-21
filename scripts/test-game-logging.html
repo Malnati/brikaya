@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste do Sistema de Logging - BrickBreaker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .test-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        .test-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        
+        .test-button:hover {
+            background: #0056b3;
+        }
+        
+        .test-button.danger {
+            background: #dc3545;
+        }
+        
+        .test-button.danger:hover {
+            background: #c82333;
+        }
+        
+        .test-button.success {
+            background: #28a745;
+        }
+        
+        .test-button.success:hover {
+            background: #218838;
+        }
+        
+        .results {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .stat-item {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste do Sistema de Logging - BrickBreaker</h1>
+    
+    <div class="test-container">
+        <h2>📊 Status do Sistema</h2>
+        <div id="systemStatus" class="status info">Verificando status do sistema...</div>
+        
+        <div class="stats-grid" id="systemStats">
+            <!-- Estatísticas serão inseridas aqui -->
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <div class="test-section">
+            <h3>🎮 Testes de Eventos do Jogo</h3>
+            <button class="test-button" onclick="testGameStart()">Testar Início do Jogo</button>
+            <button class="test-button" onclick="testGameEnd()">Testar Fim do Jogo</button>
+            <button class="test-button" onclick="testScoreUpdate()">Testar Atualização de Pontuação</button>
+            <button class="test-button" onclick="testBallLost()">Testar Bola Perdida</button>
+            <button class="test-button" onclick="testBrickDestroyed()">Testar Bloco Destruído</button>
+            <button class="test-button" onclick="testCollision()">Testar Colisão</button>
+            <button class="test-button" onclick="testPaddleMove()">Testar Movimento da Raquete</button>
+            <button class="test-button" onclick="testGameStateChange()">Testar Mudança de Estado</button>
+            <button class="test-button" onclick="testRestartGame()">Testar Reiniciar Jogo</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>📋 Consultas e Análises</h3>
+            <button class="test-button" onclick="getAllEvents()">Buscar Todos os Eventos</button>
+            <button class="test-button" onclick="getRecentEvents()">Buscar Eventos Recentes</button>
+            <button class="test-button" onclick="getEventsByType()">Buscar por Tipo</button>
+            <button class="test-button" onclick="getGameStats()">Obter Estatísticas</button>
+            <button class="test-button" onclick="exportData()">Exportar Dados</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>🗑️ Limpeza e Manutenção</h3>
+            <button class="test-button danger" onclick="clearAllEvents()">Limpar Todos os Eventos</button>
+            <button class="test-button" onclick="testImportData()">Testar Importação</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔍 Resultados dos Testes</h3>
+            <div id="testResults" class="results">Aguardando testes...</div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Importar o gameLogger do projeto principal
+        import { gameLogger } from '../src/storage/gameLogger.js';
+        
+        let testResults = [];
+        
+        function logTest(message, type = 'info') {
+            const timestamp = new Date().toLocaleString('pt-BR');
+            const logEntry = `[${timestamp}] ${message}`;
+            testResults.push(logEntry);
+            
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = testResults.join('\n');
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+            
+            LOG(logEntry);
+        }
+        
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('systemStatus');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+        
+        function updateStats(stats) {
+            const statsDiv = document.getElementById('systemStats');
+            statsDiv.innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-value">${stats.totalGames}</div>
+                    <div class="stat-label">Total de Jogos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${stats.totalEvents}</div>
+                    <div class="stat-label">Total de Eventos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${stats.averageScore.toFixed(0)}</div>
+                    <div class="stat-label">Pontuação Média</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${stats.gamesWon}</div>
+                    <div class="stat-label">Jogos Vencidos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${stats.gamesLost}</div>
+                    <div class="stat-label">Jogos Perdidos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${Math.round(stats.averageGameDuration / 1000)}s</div>
+                    <div class="stat-label">Duração Média</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${stats.totalBricksDestroyed}</div>
+                    <div class="stat-label">Blocos Destruídos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">${stats.totalCollisions}</div>
+                    <div class="stat-label">Total de Colisões</div>
+                </div>
+            `;
+        }
+        
+        // Testes de eventos
+        window.testGameStart = async function() {
+            try {
+                logTest('🧪 Testando início do jogo...');
+                
+                const gameState = {
+                    score: 0,
+                    ballsCount: 1,
+                    bricksRemaining: 15,
+                    gameWon: false,
+                    gameOver: false,
+                    level: 1,
+                    canvasSize: { width: 480, height: 320 },
+                    gameDimensions: {
+                        brickWidth: 75,
+                        brickHeight: 20,
+                        brickCols: 5,
+                        brickRows: 3,
+                        paddleWidth: 75,
+                        paddleHeight: 10,
+                        ballRadius: 10
+                    }
+                };
+                
+                const ballPositions = [{ x: 240, y: 290, velocity: { dx: 2, dy: -2 }, radius: 10 }];
+                const paddlePosition = { x: 202.5, y: 310, width: 75, height: 10 };
+                
+                await gameLogger.logGameStart(gameState, ballPositions, paddlePosition);
+                logTest('✅ Início do jogo registrado com sucesso', 'success');
+                
+                await refreshStats();
+            } catch (error) {
+                logTest(`❌ Erro ao testar início do jogo: ${error.message}`, 'error');
+            }
+        };
+        
+        window.testGameEnd = async function() {
+            try {
+                logTest('🧪 Testando fim do jogo...');
+                
+                const gameState = {
+                    score: 150,
+                    ballsCount: 0,
+                    bricksRemaining: 0,
+                    gameWon: true,
+                    gameOver: false,
+                    level: 1,
+                    canvasSize: { width: 480, height: 320 },
+                    gameDimensions: {
+                        brickWidth: 75,
+                        brickHeight: 20,
+                        brickCols: 5,
+                        brickRows: 3,
+                        paddleWidth: 75,
+                        paddleHeight: 10,
+                        ballRadius: 10
+                    }
+                };
+                
+                const ballPositions = [];
+                const paddlePosition = { x: 202.5, y: 310, width: 75, height: 10 };
+                
+                await gameLogger.logGameEnd(gameState, ballPositions, paddlePosition, 'win');
+                logTest('✅ Fim do jogo registrado com sucesso', 'success');
+                
+                await refreshStats();
+            } catch (error) {
+                logTest(`❌ Erro ao testar fim do jogo: ${error.message}`, 'error');
+            }
+        };
+        
+        window.testScoreUpdate = async function() {
+            try {
+                logTest('🧪 Testando atualização de pontuação...');
+                
+                const gameState = {
+                    score: 160,
+                    ballsCount: 1,
+                    bricksRemaining: 14,
+                    gameWon: false,
+                    gameOver: false,
+                    level: 1,
+                    canvasSize: { width: 480, height: 320 },
+                    gameDimensions: {
+                        brickWidth: 75,
+                        brickHeight: 20,
+                        brickCols: 5,
+                        brickRows: 3,
+                        paddleWidth: 75,
+                        paddleHeight: 10,
+                        ballRadius: 10
+                    }
+                };
+                
+                const ballPositions = [{ x: 250, y: 150, velocity: { dx: 2, dy: 2 }, radius: 10 }];
+                const paddlePosition = { x: 200, y: 310, width: 75, height: 10 };
+                
+                await gameLogger.logScoreUpdate(gameState, ballPositions, paddlePosition, 10, 'brick_destroyed');
+                logTest('✅ Atualização de pontuação registrada com sucesso', 'success');
+                
+                await refreshStats();
+            } catch (error) {
+                logTest(`❌ Erro ao testar atualização de pontuação: ${error.message}`, 'error');
+            }
+        };
+        
+        window.testBallLost = async function() {
+            try {
+                logTest('🧪 Testando bola perdida...');
+                
+                const gameState = {
+                    score: 160,
+                    ballsCount: 0,
+                    bricksRemaining: 14,
+                    gameWon: false,
+                    gameOver: true,
+                    level: 1,
+                    canvasSize: { width: 480, height: 320 },
+                    gameDimensions: {
+                        brickWidth: 75,
+                        brickHeight: 20,
+                        brickCols: 5,
+                        brickRows: 3,
+                        paddleWidth: 75,
+                        paddleHeight: 10,
+                        ballRadius: 10
+                    }
+                };
+                
+                const ballPositions = [];
+                const paddlePosition = { x: 200, y: 310, width: 75, height: 10 };
+                const lostBallPosition = { x: 300, y: 330 };
+                const lostBallVelocity = { dx: 1, dy: 2 };
+                
+                await gameLogger.logBallLost(gameState, ballPositions, paddlePosition, lostBallPosition, lostBallVelocity);
+                logTest('✅ Bola perdida registrada com sucesso', 'success');
+                
+                await refreshStats();
+            } catch (error) {
+                logTest(`❌ Erro ao testar bola perdida: ${error.message}`, 'error');
+            }
+        };
+        
+        window.testBrickDestroyed = async function() {
+            try {
+                logTest('🧪 Testando bloco destruído...');
+                
+                const gameState = {
+                    score: 160,
+                    ballsCount: 1,
+                    bricksRemaining: 14,
+                    gameWon: false,
+                    gameOver: false,
+                    level: 1,
+                    canvasSize: { width: 480, height: 320 },
+                    gameDimensions: {
+                        brickWidth: 75,
+                        brickHeight: 20,
+                        brickCols: 5,
+                        brickRows: 3,
+                        paddleWidth: 75,
+                        paddleHeight: 10,
+                        ballRadius: 10
+                    }
+                };
+                
+                const ballPositions = [{ x: 250, y: 150, velocity: { dx: 2, dy: 2 }, radius: 10 }];
+                const paddlePosition = { x: 200, y: 310, width: 75, height: 10 };
+                const brickPosition = { x: 240, y: 50, width: 75, height: 20 };
+                const brickIndex = { col: 2, row: 0 };
+                const brickColorIndex = 1;
+                const ballPosition = { x: 250, y: 150 };
+                const ballVelocity = { dx: 2, dy: 2 };
+                
+                await gameLogger.logBrickDestroyed(
+                    gameState, 
+                    ballPositions, 
+                    paddlePosition, 
+                    brickPosition, 
+                    brickIndex, 
+                    brickColorIndex, 
+                    ballPosition, 
+                    ballVelocity
+                );
+                logTest('✅ Bloco destruído registrado com sucesso', 'success');
+                
+                await refreshStats();
+            } catch (error) {
+                logTest(`❌ Erro ao testar bloco destruído: ${error.message}`, 'error');
+            }
+        };
+        
+        window.testCollision = async function() {
+            try {
+                logTest('🧪 Testando colisão...');
+                
+                const gameState = {
+                    score: 160,
+                    ballsCount: 1,
+                    bricksRemaining: 14,
+                    gameWon: false,
+                    gameOver: false,
+                    level: 1,
+                    canvasSize: { width: 480, height: 320 },
+                    gameDimensions: {
+                        brickWidth: 75,
+                        brickHeight: 20,
+                        brickCols: 5,
+                        brickRows: 3,
+                        paddleWidth: 75,
+                        paddleHeight: 10,
+                        ballRadius: 10
+                    }
+                };
+                
+                const ballPositions = [{ x: 250, y: 150, velocity: { dx: 2, dy: 2 }, radius: 10 }];
+                const paddlePosition = { x: 200, y: 310, width: 75, height: 10 };
+                
+                await gameLogger.logCollision(
+                    gameState,
+                    ballPositions,
+                    paddlePosition,
+                    {
+                        type: 'paddle',
+                        ballPosition: { x: 250, y: 150 },
+                        targetPosition: paddlePosition,
+                        hitPosition: 0.5,
+                        velocityBefore: { dx: 2, dy: 2 },
+                        velocityAfter: { dx: 2, dy: -2 }
+                    }
+                );
+                logTest('✅ Colisão registrada com sucesso', 'success');
+                
+                await refreshStats();
+            } catch (error) {
+                logTest(`❌ Erro ao testar colisão: ${error.message}`, 'error');
+            }
+        };
+        
+        window.testPaddleMove = async function() {
+            try {
+                logTest('🧪 Testando movimento da raquete...');
+                
+                const gameState = {
+                    score: 160,
+                    ballsCount: 1,
+                    bricksRemaining: 14,
+                    gameWon: false,
+                    gameOver: false,
+                    level: 1,
+                    canvasSize: { width: 480, height: 320 },
+                    gameDimensions: {
+                        brickWidth: 75,
+                        brickHeight: 20,
+                        brickCols: 5,
+                        brickRows: 3,
+                        paddleWidth: 75,
+                        paddleHeight: 10,
+                        ballRadius: 10
+                    }
+                };
+                
+                const ballPositions = [{ x: 250, y: 150, velocity: { dx: 2, dy: 2 }, radius: 10 }];
+                const paddlePosition = { x: 210, y: 310, width: 75, height: 10 };
+                const previousPosition = { x: 200, y: 310 };
+                
+                await gameLogger.logPaddleMove(gameState, ballPositions, paddlePosition, 'right', previousPosition);
+                logTest('✅ Movimento da raquete registrado com sucesso', 'success');
+                
+                await refreshStats();
+            } catch (error) {
+                logTest(`❌ Erro ao testar movimento da raquete: ${error.message}`, 'error');
+            }
+        };
+        
+        window.testGameStateChange = async function() {
+            try {
+                logTest('🧪 Testando mudança de estado do jogo...');
+                
+                const gameState = {
+                    score: 160,
+                    ballsCount: 1,
+                    bricksRemaining: 0,
+                    gameWon: true,
+                    gameOver: false,
+                    level: 1,
+                    canvasSize: { width: 480, height: 320 },
+                    gameDimensions: {
+                        brickWidth: 75,
+                        brickHeight: 20,
+                        brickCols: 5,
+                        brickRows: 3,
+                        paddleWidth: 75,
+                        paddleHeight: 10,
+                        ballRadius: 10
+                    }
+                };
+                
+                const ballPositions = [{ x: 250, y: 150, velocity: { dx: 2, dy: 2 }, radius: 10 }];
+                const paddlePosition = { x: 200, y: 310, width: 75, height: 10 };
+                
+                await gameLogger.logGameStateChange(gameState, ballPositions, paddlePosition, 'game_won');
+                logTest('✅ Mudança de estado registrada com sucesso', 'success');
+                
+                await refreshStats();
+            } catch (error) {
+                logTest(`❌ Erro ao testar mudança de estado: ${error.message}`, 'error');
+            }
+        };
+        
+        window.testRestartGame = async function() {
+            try {
+                logTest('🧪 Testando reiniciar jogo...');
+                
+                const gameState = {
+                    score: 0,
+                    ballsCount: 1,
+                    bricksRemaining: 15,
+                    gameWon: false,
+                    gameOver: false,
+                    level: 1,
+                    canvasSize: { width: 480, height: 320 },
+                    gameDimensions: {
+                        brickWidth: 75,
+                        brickHeight: 20,
+                        brickCols: 5,
+                        brickRows: 3,
+                        paddleWidth: 75,
+                        paddleHeight: 10,
+                        ballRadius: 10
+                    }
+                };
+                
+                const ballPositions = [{ x: 240, y: 290, velocity: { dx: 2, dy: -2 }, radius: 10 }];
+                const paddlePosition = { x: 202.5, y: 310, width: 75, height: 10 };
+                
+                await gameLogger.logRestartGame(gameState, ballPositions, paddlePosition);
+                logTest('✅ Reiniciar jogo registrado com sucesso', 'success');
+                
+                await refreshStats();
+            } catch (error) {
+                logTest(`❌ Erro ao testar reiniciar jogo: ${error.message}`, 'error');
+            }
+        };
+        
+        // Consultas
+        window.getAllEvents = async function() {
+            try {
+                logTest('🔍 Buscando todos os eventos...');
+                const events = await gameLogger.getAllEvents();
+                logTest(`✅ Encontrados ${events.length} eventos`, 'success');
+                logTest(`📋 Últimos 5 eventos: ${JSON.stringify(events.slice(-5).map(e => ({ type: e.type, timestamp: new Date(e.timestamp).toLocaleString() })), null, 2)}`);
+            } catch (error) {
+                logTest(`❌ Erro ao buscar eventos: ${error.message}`, 'error');
+            }
+        };
+        
+        window.getRecentEvents = async function() {
+            try {
+                logTest('🔍 Buscando eventos recentes...');
+                const events = await gameLogger.getRecentEvents(10);
+                logTest(`✅ Encontrados ${events.length} eventos recentes`, 'success');
+            } catch (error) {
+                logTest(`❌ Erro ao buscar eventos recentes: ${error.message}`, 'error');
+            }
+        };
+        
+        window.getEventsByType = async function() {
+            try {
+                logTest('🔍 Buscando eventos por tipo...');
+                const collisionEvents = await gameLogger.getEventsByType('collision');
+                const scoreEvents = await gameLogger.getEventsByType('score_update');
+                logTest(`✅ Colisões: ${collisionEvents.length}, Pontuações: ${scoreEvents.length}`, 'success');
+            } catch (error) {
+                logTest(`❌ Erro ao buscar eventos por tipo: ${error.message}`, 'error');
+            }
+        };
+        
+        window.getGameStats = async function() {
+            try {
+                logTest('📊 Obtendo estatísticas...');
+                const stats = await gameLogger.getGameStats();
+                logTest('✅ Estatísticas obtidas com sucesso', 'success');
+                logTest(`📋 Estatísticas: ${JSON.stringify(stats, null, 2)}`);
+                updateStats(stats);
+            } catch (error) {
+                logTest(`❌ Erro ao obter estatísticas: ${error.message}`, 'error');
+            }
+        };
+        
+        window.exportData = async function() {
+            try {
+                logTest('📤 Exportando dados...');
+                const jsonData = await gameLogger.exportGameData();
+                logTest('✅ Dados exportados com sucesso', 'success');
+                
+                // Criar download
+                const blob = new Blob([jsonData], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `brickbreaker-test-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                logTest('📁 Arquivo de exportação criado');
+            } catch (error) {
+                logTest(`❌ Erro ao exportar dados: ${error.message}`, 'error');
+            }
+        };
+        
+        window.clearAllEvents = async function() {
+            if (confirm('Tem certeza que deseja limpar todos os eventos?')) {
+                try {
+                    logTest('🗑️ Limpando todos os eventos...');
+                    await gameLogger.clearAllEvents();
+                    logTest('✅ Todos os eventos foram limpos', 'success');
+                    await refreshStats();
+                } catch (error) {
+                    logTest(`❌ Erro ao limpar eventos: ${error.message}`, 'error');
+                }
+            }
+        };
+        
+        window.testImportData = async function() {
+            try {
+                logTest('📥 Testando importação de dados...');
+                
+                // Criar dados de teste
+                const testData = {
+                    exportTimestamp: Date.now(),
+                    exportVersion: '2.0',
+                    stats: {
+                        totalGames: 1,
+                        totalEvents: 3,
+                        byType: { 'game_start': 1, 'score_update': 1, 'game_end': 1 },
+                        averageScore: 100,
+                        gamesWon: 1,
+                        gamesLost: 0,
+                        averageGameDuration: 60000,
+                        totalBricksDestroyed: 10,
+                        totalCollisions: 5,
+                        averageBallsPerGame: 1
+                    },
+                    events: [
+                        {
+                            id: 'test-1',
+                            timestamp: Date.now() - 60000,
+                            type: 'game_start',
+                            gameState: {
+                                score: 0,
+                                ballsCount: 1,
+                                bricksRemaining: 15,
+                                gameWon: false,
+                                gameOver: false,
+                                level: 1,
+                                canvasSize: { width: 480, height: 320 },
+                                gameDimensions: {
+                                    brickWidth: 75,
+                                    brickHeight: 20,
+                                    brickCols: 5,
+                                    brickRows: 3,
+                                    paddleWidth: 75,
+                                    paddleHeight: 10,
+                                    ballRadius: 10
+                                }
+                            },
+                            ballPositions: [{ x: 240, y: 290, velocity: { dx: 2, dy: -2 }, radius: 10 }],
+                            paddlePosition: { x: 202.5, y: 310, width: 75, height: 10 }
+                        }
+                    ]
+                };
+                
+                await gameLogger.importGameData(JSON.stringify(testData));
+                logTest('✅ Importação de dados testada com sucesso', 'success');
+                await refreshStats();
+            } catch (error) {
+                logTest(`❌ Erro ao testar importação: ${error.message}`, 'error');
+            }
+        };
+        
+        async function refreshStats() {
+            try {
+                const stats = await gameLogger.getGameStats();
+                updateStats(stats);
+                updateStatus(`Sistema funcionando - ${stats.totalEvents} eventos registrados`, 'success');
+            } catch (error) {
+                updateStatus(`Erro ao atualizar estatísticas: ${error.message}`, 'error');
+            }
+        }
+        
+        // Inicialização
+        async function initialize() {
+            try {
+                logTest('🚀 Inicializando sistema de logging...');
+                await gameLogger.initialize();
+                logTest('✅ Sistema de logging inicializado com sucesso', 'success');
+                
+                await refreshStats();
+                
+                logTest('🎯 Sistema pronto para testes!');
+                updateStatus('Sistema funcionando corretamente', 'success');
+            } catch (error) {
+                logTest(`❌ Erro na inicialização: ${error.message}`, 'error');
+                updateStatus(`Erro na inicialização: ${error.message}`, 'error');
+            }
+        }
+        
+        // Inicializar quando a página carregar
+        document.addEventListener('DOMContentLoaded', initialize);
+    </script>
+</body>
+</html> 

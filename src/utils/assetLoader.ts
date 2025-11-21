@@ -1,6 +1,7 @@
 // src/utils/assetLoader.ts
 
 import { ASSET_PATHS } from '../constants/assets';
+import { LOG, ERROR, WARN } from './logger';
 
 export class AssetLoader {
   private static imageCache: Map<string, HTMLImageElement> = new Map();
@@ -20,14 +21,14 @@ export class AssetLoader {
       
       // Adicionar timeout para evitar travamento
       const timeout = setTimeout(() => {
-        console.error(`Timeout ao carregar imagem: ${path}`);
+        ERROR(`Timeout ao carregar imagem: ${path}`);
         this.loadPromises.delete(path);
         reject(new Error(`Timeout loading image: ${path}`));
       }, 10000); // 10 segundos de timeout
       
       img.onload = () => {
         clearTimeout(timeout);
-        console.log(`✅ Imagem carregada com sucesso: ${path}`);
+        LOG(`✅ Imagem carregada com sucesso: ${path}`);
         this.imageCache.set(path, img);
         this.loadPromises.delete(path);
         resolve(img);
@@ -35,7 +36,7 @@ export class AssetLoader {
       
       img.onerror = (error) => {
         clearTimeout(timeout);
-        console.error(`❌ Erro ao carregar imagem: ${path}`, error);
+        ERROR(`❌ Erro ao carregar imagem: ${path}`, error);
         this.loadPromises.delete(path);
         reject(new Error(`Failed to load image: ${path}`));
       };
@@ -50,7 +51,7 @@ export class AssetLoader {
 
   static async preloadAllAssets(): Promise<void> {
     const assetPaths = Object.values(ASSET_PATHS);
-    console.log('🔄 Carregando assets:', assetPaths);
+    LOG('🔄 Carregando assets:', assetPaths);
     
     const results = await Promise.allSettled(
       assetPaths.map(path => this.preloadImage(path))
@@ -59,24 +60,24 @@ export class AssetLoader {
     const successful = results.filter(result => result.status === 'fulfilled').length;
     const failed = results.filter(result => result.status === 'rejected').length;
     
-    console.log(`📊 Resultado do carregamento: ${successful} sucessos, ${failed} falhas`);
+    LOG(`📊 Resultado do carregamento: ${successful} sucessos, ${failed} falhas`);
     
     if (failed > 0) {
-      console.warn('⚠️  Algumas imagens falharam ao carregar, mas o jogo continuará com fallback');
+      WARN('⚠️  Algumas imagens falharam ao carregar, mas o jogo continuará com fallback');
       results.forEach((result, index) => {
         if (result.status === 'rejected') {
-          console.error(`  ❌ Falha: ${assetPaths[index]} - ${result.reason}`);
+          ERROR(`  ❌ Falha: ${assetPaths[index]} - ${result.reason}`);
         }
       });
     } else {
-      console.log('✅ Todos os assets carregados com sucesso!');
+      LOG('✅ Todos os assets carregados com sucesso!');
     }
   }
 
   static getImage(path: string): HTMLImageElement | null {
     const image = this.imageCache.get(path) || null;
     if (!image) {
-      console.warn(`Imagem não encontrada no cache: ${path}`);
+      WARN(`Imagem não encontrada no cache: ${path}`);
     }
     return image;
   }

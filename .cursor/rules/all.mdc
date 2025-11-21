@@ -28,7 +28,7 @@ description: |
       - Suporta refatorações automatizadas com maior segurança.
   
     Exceções:
-      - Strings que aparecem uma única vez e são claramente autoexplicativas (ex: `console.log("Debug info")`) podem ser toleradas, desde que não representem configuração ou dados relevantes.
+      - Strings que aparecem uma única vez e são claramente autoexplicativas (ex: `LOG("Debug info")`) podem ser toleradas, desde que não representem configuração ou dados relevantes.
 
   # Regras do arquivo: dependencies.mdc
 
