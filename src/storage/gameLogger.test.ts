@@ -187,6 +187,52 @@ describe('GameLogger', () => {
     }, 10000);
   });
 
+  describe('level events', () => {
+    it('deve registrar conclusão e início de fase com metadados da próxima velocidade', async () => {
+      (gameLogger as any).db = mockIndexedDB.mockDB;
+
+      const gameState = {
+        score: 150,
+        ballsCount: 1,
+        bricksRemaining: 0,
+        gameWon: false,
+        gameOver: false,
+        level: 1,
+        canvasSize: { width: 393, height: 852 },
+        gameDimensions: {
+          brickWidth: 60,
+          brickHeight: 20,
+          brickCols: 1,
+          brickRows: 1,
+          paddleWidth: 80,
+          paddleHeight: 10,
+          ballRadius: 5,
+        },
+      };
+      const ballPositions = [
+        { x: 196.5, y: 822, velocity: { dx: 1.232, dy: -1.232 }, radius: 5 },
+      ];
+      const paddlePosition = { x: 156.5, y: 842, width: 80, height: 10 };
+
+      await gameLogger.logLevelComplete(gameState, ballPositions, paddlePosition, 1, 2, 1.12, 1800);
+      await gameLogger.logLevelStart({ ...gameState, level: 2 }, ballPositions, paddlePosition, 2, 1.12);
+
+      const events = mockIndexedDB.mockStore.add.mock.calls.map(call => call[0]);
+      expect(events.map(event => event.type)).toEqual(['level_complete', 'level_start']);
+      expect(events[0].metadata).toMatchObject({
+        completedLevel: 1,
+        nextLevel: 2,
+        nextSpeedMultiplier: 1.12,
+        pauseMs: 1800,
+      });
+      expect(events[1].metadata).toMatchObject({
+        level: 2,
+        speedMultiplier: 1.12,
+        scoreCarriedOver: 150,
+      });
+    }, 10000);
+  });
+
   describe('logCollision', () => {
     it('deve registrar colisão', async () => {
       // Garantir que o DB está mockado

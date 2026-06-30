@@ -72,6 +72,19 @@ async function clearGameDatabases(page) {
   });
 }
 
+async function clearOfflineState(page) {
+  await page.evaluate(async () => {
+    if ('serviceWorker' in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations.map(registration => registration.unregister()));
+    }
+    if ('caches' in window) {
+      const cacheNames = await caches.keys();
+      await Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)));
+    }
+  });
+}
+
 function summarizeEvents(events) {
   const byType = {};
   for (const event of events) {
@@ -105,6 +118,7 @@ async function run() {
     page.on('pageerror', error => consoleProblems.push({ type: 'pageerror', text: error.message }));
 
     await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
+    await clearOfflineState(page);
     await clearGameDatabases(page);
     await page.reload({ waitUntil: 'networkidle0', timeout: 60000 });
     await page.waitForSelector('canvas', { timeout: 30000 });

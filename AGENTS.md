@@ -507,8 +507,12 @@ src/
 - Correções de tela, gameplay, logs ou estatísticas devem começar pela reprodução no aplicativo publicado no Cloudflare Pages; localhost é apenas pré-check técnico e nunca é prova da verdade.
 - Antes de corrigir, analise evidências de layout, IndexedDB, logs do jogo, estatísticas de colisão, console e comportamento inicial.
 - Toda correção deve adicionar ou atualizar cobertura automatizada que execute contra uma URL publicada no Cloudflare Pages.
-- Os comandos oficiais de QA publicado são `make cloudflare-mobile-qa` e `make cloudflare-no-score-reset`; use `BRICKBREAKER_PUBLIC_URL` para apontar para preview de branch ou produção.
+- Os comandos oficiais de QA publicado são `make cloudflare-mobile-qa`, `make cloudflare-no-score-reset`, `make cloudflare-phase-transition-qa` e `make cloudflare-dashboard-layout-qa`; use `BRICKBREAKER_PUBLIC_URL` para apontar para preview de branch ou produção.
 - Pontuação, colisão com tijolo e atualização de HUD não podem reiniciar o `GameEngine`, registrar `restart_game` sem ação humana, criar novo `game_start` ou recolocar a bolinha na posição inicial.
+- Ao concluir todos os tijolos, o jogo deve pausar antes da próxima fase, registrar `level_complete`, mostrar toast acima da área de tijolos com a velocidade da próxima fase, registrar `level_start` e só então continuar.
+- O dashboard pode evoluir visualmente, mas o quadro do tabuleiro/canvas não deve ser redesenhado sem escopo explícito.
+- Slots de anúncio devem permanecer placeholders offline até autorização futura; não adicionar scripts externos, `adsbygoogle`, `ca-pub-*` nem `data-ad-slot`.
+- Antes de iniciar branch de feature, reconsulte e resolva PRs pendentes de version bump/Dependabot no GitHub; se houver conflito, consolide em PR próprio, mergeie e supere os PRs abertos antes da feature.
 - O fluxo obrigatório é: analisar logs/estatísticas → corrigir → adicionar cobertura → testar contra Cloudflare publicado → corrigir novamente se falhar → validar evidência visual → abrir PR → aguardar checks → fazer merge sem intervenção humana quando CI e QA publicado passarem.
 - PRs de UI/gameplay devem incluir screenshot em `docs/assets/issues/.../evidence/` e recibo JSON do teste publicado.
 - Não mescle PR se a única evidência for local. Se Cloudflare, GitHub Actions ou credenciais bloquearem teste publicado, reporte blocker e não declare conclusão.

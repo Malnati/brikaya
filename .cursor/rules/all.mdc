@@ -70,7 +70,7 @@ description: |
     - Não adicionar `node-fetch` (já incluído no Node.js 18+)
     - Não duplicar `puppeteer` em dependencies e devDependencies
     - Não adicionar dependências desnecessárias para o projeto
-    - Verificar compatibilidade com Node.js 20+
+    - Verificar compatibilidade com Node.js 23+
   
     Comandos de instalação:
     - Usar `make install-all` para instalar todas as dependências
@@ -260,7 +260,11 @@ description: |
     - Reproduzir defeitos no aplicativo publicado no Cloudflare Pages.
     - Analisar logs, estatísticas, IndexedDB, console, screenshot e comportamento inicial antes de corrigir.
     - Adicionar cobertura automatizada que rode contra URL publicada (`BRICKBREAKER_PUBLIC_URL`).
-    - Executar `make cloudflare-mobile-qa` e `make cloudflare-no-score-reset` contra preview Cloudflare de branch antes de PR/merge.
+    - Executar `make cloudflare-mobile-qa`, `make cloudflare-no-score-reset`, `make cloudflare-phase-transition-qa` e `make cloudflare-dashboard-layout-qa` contra preview Cloudflare de branch antes de PR/merge.
     - Garantir que colisão com tijolo/pontuação não gere novo `game_start`, não gere `restart_game` sem ação humana e não retorne a bolinha à posição inicial.
-    - Após merge, executar `make cloudflare-mobile-qa` e `make cloudflare-no-score-reset` contra `https://malnati-brickbreaker.pages.dev/`.
+    - Garantir que conclusão de todos os tijolos pause a jogada, registre `level_complete`, mostre toast da próxima fase/velocidade, registre `level_start` e continue sem `game_end`.
+    - Garantir que dashboard responsivo preserve o quadro do canvas e não corte botões em iPhone 15.
+    - Manter slots de anúncio como placeholders offline; não adicionar scripts externos, `adsbygoogle`, `ca-pub-*` ou `data-ad-slot`.
+    - Antes de feature, reconsultar e resolver PRs pendentes de version bump/Dependabot no GitHub.
+    - Após merge, executar `make cloudflare-mobile-qa`, `make cloudflare-no-score-reset`, `make cloudflare-phase-transition-qa` e `make cloudflare-dashboard-layout-qa` contra `https://malnati-brickbreaker.pages.dev/`.
     - Bloquear merge se a validação publicada falhar ou se só houver evidência local.

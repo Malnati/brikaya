@@ -1,8 +1,9 @@
 // src/hooks/useGameLoop.ts
 import { useEffect, RefObject, useRef } from 'react';
 
-import { GameEngine } from '../logic/GameEngine';
+import { GameEngine, GameQaScenario } from '../logic/GameEngine';
 import { LOG, ERROR } from '../utils/logger';
+import { LevelTransitionPayload } from '../constants/game';
 
 interface CanvasSize {
   width: number;
@@ -13,6 +14,7 @@ interface GameLoopCallbacks {
   onScoreUpdate: (score: number) => void;
   onGameWon?: () => void;
   onGameOver?: () => void;
+  onLevelTransition?: (payload: LevelTransitionPayload) => void;
 }
 
 export function useGameLoop(
@@ -20,14 +22,16 @@ export function useGameLoop(
   onScoreUpdate: (score: number) => void,
   onGameWon?: () => void,
   onGameOver?: () => void,
-  canvasSize?: CanvasSize
+  canvasSize?: CanvasSize,
+  onLevelTransition?: (payload: LevelTransitionPayload) => void,
+  qaScenario?: GameQaScenario | null
 ) {
   const engineRef = useRef<GameEngine | null>(null);
-  const callbacksRef = useRef<GameLoopCallbacks>({ onScoreUpdate, onGameWon, onGameOver });
+  const callbacksRef = useRef<GameLoopCallbacks>({ onScoreUpdate, onGameWon, onGameOver, onLevelTransition });
 
   useEffect(() => {
-    callbacksRef.current = { onScoreUpdate, onGameWon, onGameOver };
-  }, [onScoreUpdate, onGameWon, onGameOver]);
+    callbacksRef.current = { onScoreUpdate, onGameWon, onGameOver, onLevelTransition };
+  }, [onScoreUpdate, onGameWon, onGameOver, onLevelTransition]);
 
   useEffect(() => {
     if (!canvasRef.current) {
@@ -46,7 +50,9 @@ export function useGameLoop(
         score => callbacksRef.current.onScoreUpdate(score),
         () => callbacksRef.current.onGameWon?.(),
         () => callbacksRef.current.onGameOver?.(),
-        canvasSize
+        canvasSize,
+        payload => callbacksRef.current.onLevelTransition?.(payload),
+        qaScenario
       );
       engineRef.current = engine;
       LOG(`🎮 GameEngine criado com sucesso, chamando start()...`);
@@ -61,5 +67,5 @@ export function useGameLoop(
       engineRef.current?.stop();
       engineRef.current = null;
     };
-  }, [canvasRef, canvasSize]);
+  }, [canvasRef, canvasSize, qaScenario]);
 }

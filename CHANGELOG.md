@@ -3,6 +3,18 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.11.0] - 2026-06-30
+### Adicionado
+- Pausa automática entre fases com toast exibindo fase e velocidade da próxima jogada.
+- Progressão de velocidade por fase com teto de `2.2×`.
+- Dashboard responsivo moderno em volta do tabuleiro, preservando o quadro do canvas.
+- Placeholders offline de publicidade, sem scripts externos ou identificadores reais de anúncio.
+- QA publicado para transição de fase e dashboard responsivo em Cloudflare Pages.
+
+### Corrigido
+- Conclusão de todos os tijolos deixa de encerrar o jogo por vitória e passa a registrar `level_complete` e `level_start`.
+- Cobertura unitária para progressão de fase, multiplicador de velocidade e eventos de fase.
+
 
 ## [1.10.0] - 2026-06-30
 ### Corrigido
