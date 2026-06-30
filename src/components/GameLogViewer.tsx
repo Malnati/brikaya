@@ -5,7 +5,7 @@ import { gameLogger } from '../storage/gameLogger';
 interface GameEvent {
   id: string;
   timestamp: number;
-  type: 'game_start' | 'game_end' | 'score_update' | 'ball_lost' | 'ball_added' | 'brick_destroyed' | 'brick_added' | 'paddle_move' | 'collision' | 'power_up' | 'level_complete' | 'game_state_change' | 'restart_game';
+  type: 'game_start' | 'game_end' | 'score_update' | 'ball_lost' | 'ball_added' | 'brick_destroyed' | 'brick_added' | 'paddle_move' | 'collision' | 'power_up' | 'level_complete' | 'level_start' | 'game_state_change' | 'restart_game';
   gameState: {
     score: number;
     ballsCount: number;
@@ -75,6 +75,7 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
     'collision': '💥 Colisão',
     'power_up': '⚡ Power-up',
     'level_complete': '🎯 Nível Completo',
+    'level_start': '▶️ Início da Fase',
     'game_state_change': '🔄 Mudança de Estado',
     'restart_game': '🔄 Reiniciar Jogo'
   };
@@ -91,6 +92,7 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
     'collision': '#E91E63',
     'power_up': '#00BCD4',
     'level_complete': '#8BC34A',
+    'level_start': '#4CAF50',
     'game_state_change': '#FFC107',
     'restart_game': '#9E9E9E'
   };

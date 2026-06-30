@@ -9,6 +9,7 @@ jest.mock("../objects/Paddle", () => ({
     onKeyDown: jest.fn(),
     onKeyUp: jest.fn(),
     setPosition: jest.fn(),
+    reset: jest.fn(),
     update: jest.fn(),
     draw: jest.fn(),
   })),
@@ -47,6 +48,8 @@ jest.mock("../storage/gameLogger", () => ({
     logGameStart: jest.fn().mockResolvedValue(undefined),
     logGameEnd: jest.fn().mockResolvedValue(undefined),
     logScoreUpdate: jest.fn().mockResolvedValue(undefined),
+    logLevelComplete: jest.fn().mockResolvedValue(undefined),
+    logLevelStart: jest.fn().mockResolvedValue(undefined),
     logGameStateChange: jest.fn().mockResolvedValue(undefined),
     logRestartGame: jest.fn().mockResolvedValue(undefined),
     logCollision: jest.fn().mockResolvedValue(undefined),
@@ -64,6 +67,7 @@ describe("GameEngine", () => {
   let onScoreUpdate: jest.MockedFunction<(score: number) => void>;
   let onGameWon: jest.MockedFunction<() => void>;
   let onGameOver: jest.MockedFunction<() => void>;
+  let onLevelTransition: jest.MockedFunction<(payload: any) => void>;
 
   beforeEach(() => {
     // Criar canvas mock
@@ -75,6 +79,7 @@ describe("GameEngine", () => {
     onScoreUpdate = jest.fn();
     onGameWon = jest.fn();
     onGameOver = jest.fn();
+    onLevelTransition = jest.fn();
 
     // Limpar todos os mocks
     jest.clearAllMocks();
@@ -176,6 +181,52 @@ describe("GameEngine", () => {
 
       expect(onScoreUpdate).toHaveBeenCalled();
       expect(mockGameLogger.logScoreUpdate).toHaveBeenCalled();
+    });
+
+    it("deve pausar e preparar próxima fase quando último tijolo é destruído", async () => {
+      jest.useFakeTimers();
+      const mockGameLogger = require("../storage/gameLogger").gameLogger;
+      mockGameLogger.logScoreUpdate = jest.fn().mockResolvedValue(undefined);
+      mockGameLogger.logLevelComplete = jest.fn().mockResolvedValue(undefined);
+      mockGameLogger.logLevelStart = jest.fn().mockResolvedValue(undefined);
+
+      const mockBricks = require("../objects/Bricks").Bricks;
+      mockBricks.mockImplementation(() => ({
+        isAllDestroyed: jest.fn(() => true),
+        isBrickActive: jest.fn(() => false),
+        getRows: jest.fn(() => 1),
+        collide: jest.fn(),
+        draw: jest.fn(),
+      }));
+
+      engine = new GameEngine(
+        canvas,
+        onScoreUpdate,
+        onGameWon,
+        onGameOver,
+        undefined,
+        onLevelTransition,
+      );
+
+      const onBrickDestroyed = (engine as any).onBrickDestroyed.bind(engine);
+      await onBrickDestroyed();
+
+      expect(onGameWon).not.toHaveBeenCalled();
+      expect(mockGameLogger.logGameEnd).not.toHaveBeenCalled();
+      expect(mockGameLogger.logLevelComplete).toHaveBeenCalled();
+      expect(onLevelTransition).toHaveBeenCalledWith({
+        currentLevel: 1,
+        nextLevel: 2,
+        nextSpeedMultiplier: 1.12,
+        pauseMs: 1800,
+      });
+      expect((engine as any).getCurrentGameState().level).toBe(1);
+
+      await jest.advanceTimersByTimeAsync(1800);
+
+      expect((engine as any).getCurrentGameState().level).toBe(2);
+      expect(mockGameLogger.logLevelStart).toHaveBeenCalled();
+      jest.useRealTimers();
     });
   });
 

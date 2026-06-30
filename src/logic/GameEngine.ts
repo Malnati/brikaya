@@ -2,7 +2,14 @@
 import { Paddle } from '../objects/Paddle';
 import { Ball } from '../objects/Ball';
 import { Bricks } from '../objects/Bricks';
-import { GAME_COLOR, calculateDynamicDimensions, DynamicGameDimensions } from '../constants/game';
+import {
+  GAME_COLOR,
+  LEVEL_CLEAR_PAUSE_MS,
+  LevelTransitionPayload,
+  calculateDynamicDimensions,
+  calculateLevelSpeedMultiplier,
+  DynamicGameDimensions
+} from '../constants/game';
 import { POINTS_PER_BRICK } from '../constants/gameState';
 import { AssetLoader } from '../utils/assetLoader';
 import { gameLogger } from '../storage/gameLogger';
@@ -16,6 +23,8 @@ interface CanvasSize {
   width: number;
   height: number;
 }
+
+export type GameQaScenario = 'single-brick-phase-clear';
 
 export class GameEngine {
   private ctx: CanvasRenderingContext2D;
@@ -33,6 +42,10 @@ export class GameEngine {
   private scaleY = 1;
   private isStopped = true;
   private isTouching = false;
+  private isLevelTransitioning = false;
+  private levelTransitionTimer: ReturnType<typeof setTimeout> | null = null;
+  private level = 1;
+  private qaScenarioConsumed = false;
   private readonly handleKeyDown = (event: KeyboardEvent) => this.paddle.onKeyDown(event);
   private readonly handleKeyUp = (event: KeyboardEvent) => this.paddle.onKeyUp(event);
   private readonly handleTouchStart = (event: TouchEvent) => this.onTouchStart(event);
@@ -44,9 +57,11 @@ export class GameEngine {
   constructor(
     private canvas: HTMLCanvasElement,
     private onScoreUpdate: (score: number) => void,
-    private onGameWon?: () => void,
+    _onGameWon?: () => void,
     private onGameOver?: () => void,
-    canvasSize?: CanvasSize
+    canvasSize?: CanvasSize,
+    private onLevelTransition?: (payload: LevelTransitionPayload) => void,
+    private qaScenario?: GameQaScenario | null
   ) {
     LOG(`🚀 GameEngine constructor iniciado`);
 
@@ -62,7 +77,7 @@ export class GameEngine {
     LOG(`📏 Canvas size: ${this.canvasSize.width}x${this.canvasSize.height}`);
 
     // Calcular dimensões dinâmicas baseadas no tamanho do canvas
-    this.dimensions = calculateDynamicDimensions(this.canvasSize.width, this.canvasSize.height);
+    this.dimensions = this.createDimensions(this.canvasSize.width, this.canvasSize.height);
 
     LOG(`📐 Dimensões calculadas: ${this.dimensions.brickCols} colunas x ${this.dimensions.brickRows} linhas`);
     LOG(`📐 Tamanho dos blocos: ${this.dimensions.brickWidth}x${this.dimensions.brickHeight}`);
@@ -73,9 +88,41 @@ export class GameEngine {
 
     LOG(`⚽ Criando Ball...`);
     this.paddle = new Paddle(this.canvasSize.width, this.canvasSize.height, this.dimensions);
-    this.balls.push(new Ball(this.canvasSize.width, this.canvasSize.height, this.dimensions));
+    this.balls.push(new Ball(
+      this.canvasSize.width,
+      this.canvasSize.height,
+      this.dimensions,
+      calculateLevelSpeedMultiplier(this.level)
+    ));
+    this.prepareQaBall();
 
     LOG(`🏗️  Criando Bricks...`);
+    this.configureBrickRows();
+    this.bricks = this.createBricks();
+
+    LOG(`🎮 GameEngine constructor finalizado`);
+    this.setupListeners();
+  }
+
+  private createDimensions(canvasWidth: number, canvasHeight: number): DynamicGameDimensions {
+    const dimensions = calculateDynamicDimensions(canvasWidth, canvasHeight);
+    if (this.qaScenario === 'single-brick-phase-clear' && !this.qaScenarioConsumed) {
+      return {
+        ...dimensions,
+        brickCols: 1,
+        brickRows: 1,
+        brickWidth: Math.min(96, Math.max(56, canvasWidth * 0.24)),
+        brickHeight: Math.min(28, Math.max(18, canvasHeight * 0.05)),
+        brickPadding: 8,
+        brickOffsetTop: Math.max(24, canvasHeight * 0.12),
+        brickOffsetLeft: (canvasWidth - Math.min(96, Math.max(56, canvasWidth * 0.24))) / 2
+      };
+    }
+
+    return dimensions;
+  }
+
+  private configureBrickRows() {
     const availableHeight =
       this.canvasSize.height -
       this.dimensions.paddleHeight -
@@ -84,14 +131,24 @@ export class GameEngine {
       availableHeight / (this.dimensions.brickHeight + this.dimensions.brickPadding)
     );
     this.maxBrickRows = Math.max(this.dimensions.brickRows, computedRows);
-    this.bricks = new Bricks(
+  }
+
+  private createBricks(): Bricks {
+    return new Bricks(
       this.dimensions,
       this.onBrickDestroyed.bind(this),
       this.maxBrickRows
     );
+  }
 
-    LOG(`🎮 GameEngine constructor finalizado`);
-    this.setupListeners();
+  private prepareQaBall() {
+    if (this.qaScenario !== 'single-brick-phase-clear' || this.qaScenarioConsumed || this.balls.length === 0) return;
+
+    const ball = this.balls[0];
+    const targetX = this.dimensions.brickOffsetLeft + this.dimensions.brickWidth / 2;
+    const targetY = this.dimensions.brickOffsetTop + this.dimensions.brickHeight + ball.position.radius - 1;
+    ball.setPosition(targetX, targetY);
+    ball.setDirection(0);
   }
 
   private async preloadAssets() {
@@ -126,30 +183,70 @@ export class GameEngine {
     ).catch(error => ERROR('❌ Erro ao registrar pontuação:', error));
 
     // Verificar se todos os blocos foram destruídos
-    if (this.bricks.isAllDestroyed() && !this.gameWon) {
-      LOG(`🏆 GAME WON! Todos os blocos destruídos!`);
-      this.gameWon = true;
-
-      // Log da mudança de estado do jogo
-      await gameLogger.logGameStateChange(
-        gameState,
-        ballPositions,
-        paddlePosition,
-        'game_won'
-      ).catch(error => ERROR('❌ Erro ao registrar mudança de estado:', error));
-
-      // Log do fim do jogo (vitória)
-      await gameLogger.logGameEnd(
-        gameState,
-        ballPositions,
-        paddlePosition,
-        'win'
-      ).catch(error => ERROR('❌ Erro ao registrar vitória:', error));
-
-      if (this.onGameWon) {
-        this.onGameWon();
-      }
+    if (this.bricks.isAllDestroyed() && !this.isLevelTransitioning) {
+      await this.startLevelTransition(gameState, ballPositions, paddlePosition);
     }
+  }
+
+  private async startLevelTransition(
+    gameState: ReturnType<GameEngine['getCurrentGameState']>,
+    ballPositions: ReturnType<GameEngine['getBallPositions']>,
+    paddlePosition: { x: number; y: number; width: number; height: number }
+  ) {
+    this.isLevelTransitioning = true;
+    const currentLevel = this.level;
+    const nextLevel = currentLevel + 1;
+    const nextSpeedMultiplier = calculateLevelSpeedMultiplier(nextLevel);
+    const payload: LevelTransitionPayload = {
+      currentLevel,
+      nextLevel,
+      nextSpeedMultiplier,
+      pauseMs: LEVEL_CLEAR_PAUSE_MS
+    };
+
+    await gameLogger.logLevelComplete(
+      gameState,
+      ballPositions,
+      paddlePosition,
+      currentLevel,
+      nextLevel,
+      nextSpeedMultiplier,
+      LEVEL_CLEAR_PAUSE_MS
+    ).catch(error => ERROR('❌ Erro ao registrar fase concluída:', error));
+
+    this.onLevelTransition?.(payload);
+
+    this.levelTransitionTimer = setTimeout(() => {
+      void this.finishLevelTransition(nextLevel, nextSpeedMultiplier);
+    }, LEVEL_CLEAR_PAUSE_MS);
+  }
+
+  private async finishLevelTransition(nextLevel: number, nextSpeedMultiplier: number) {
+    this.level = nextLevel;
+    if (this.qaScenario === 'single-brick-phase-clear' && !this.qaScenarioConsumed) {
+      this.qaScenarioConsumed = true;
+      this.dimensions = this.createDimensions(this.canvasSize.width, this.canvasSize.height);
+      this.configureBrickRows();
+    }
+    this.paddle.reset();
+    this.balls = [new Ball(
+      this.canvasSize.width,
+      this.canvasSize.height,
+      this.dimensions,
+      nextSpeedMultiplier
+    )];
+    this.prepareQaBall();
+    this.bricks = this.createBricks();
+    this.isLevelTransitioning = false;
+
+    const gameState = this.getCurrentGameState();
+    await gameLogger.logLevelStart(
+      gameState,
+      this.getBallPositions(),
+      this.paddle.position,
+      nextLevel,
+      nextSpeedMultiplier
+    ).catch(error => ERROR('❌ Erro ao registrar início de fase:', error));
   }
 
   private getRemainingBricksCount(): number {
@@ -171,7 +268,7 @@ export class GameEngine {
       bricksRemaining: this.getRemainingBricksCount(),
       gameWon: this.gameWon,
       gameOver: this.gameOver,
-      level: 1, // Por enquanto sempre nível 1, pode ser expandido no futuro
+      level: this.level,
       canvasSize: this.canvasSize,
       gameDimensions: {
         brickWidth: this.dimensions.brickWidth,
@@ -300,6 +397,10 @@ export class GameEngine {
   public stop() {
     this.isStopped = true;
     this.isTouching = false;
+    if (this.levelTransitionTimer) {
+      clearTimeout(this.levelTransitionTimer);
+      this.levelTransitionTimer = null;
+    }
     cancelAnimationFrame(this.animationFrame);
     this.removeListeners();
   }
@@ -314,15 +415,6 @@ export class GameEngine {
       this.ctx.font = `${16 * Math.min(this.scaleX, this.scaleY)}px Arial`;
       this.ctx.textAlign = 'center';
       this.ctx.fillText('Loading...', this.canvasSize.width / 2, this.canvasSize.height / 2);
-    } else if (this.gameWon) {
-      // Mostrar tela de vitória
-      this.ctx.fillStyle = GAME_COLOR;
-      this.ctx.font = `${24 * Math.min(this.scaleX, this.scaleY)}px Arial`;
-      this.ctx.textAlign = 'center';
-      this.ctx.fillText('VITÓRIA!', this.canvasSize.width / 2, this.canvasSize.height / 2 - 20);
-      this.ctx.font = `${16 * Math.min(this.scaleX, this.scaleY)}px Arial`;
-      this.ctx.fillText(`Pontuação: ${this.score}`, this.canvasSize.width / 2, this.canvasSize.height / 2 + 10);
-      this.ctx.fillText('Toque em "Restart Game" para jogar novamente', this.canvasSize.width / 2, this.canvasSize.height / 2 + 40);
     } else if (this.gameOver) {
       // Mostrar tela de fim de jogo
       this.ctx.fillStyle = '#ff4444';
@@ -337,6 +429,9 @@ export class GameEngine {
         try {
           this.bricks.draw(this.ctx);
           this.paddle.draw(this.ctx);
+        if (this.isLevelTransitioning) {
+          this.balls.forEach(ball => ball.draw(this.ctx));
+        } else {
         for (let i = this.balls.length - 1; i >= 0; i--) {
           const ball = this.balls[i];
 
@@ -353,6 +448,7 @@ export class GameEngine {
             ball.resetBrickHits();
           }
           ball.draw(this.ctx);
+        }
         }
         if (this.balls.length === 0) {
           // Game over - no balls left

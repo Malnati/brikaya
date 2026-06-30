@@ -51,6 +51,12 @@ export class Paddle {
     this.logPaddleMove('touch');
   }
 
+  reset() {
+    this.dx = 0;
+    this.x = (this.canvasWidth - this.width) / 2;
+    this.previousPosition = this.position;
+  }
+
   update() {
     this.previousPosition = this.position;
     this.x += this.dx;

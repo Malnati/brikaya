@@ -16,6 +16,12 @@ export const BALL_RADIUS = 10;
 export const BALL_SPEED = 2;
 export const MOBILE_CANVAS_WIDTH_THRESHOLD = 480;
 export const MOBILE_BALL_SPEED_MULTIPLIER = 0.55;
+export const LEVEL_CLEAR_PAUSE_MS = 1800;
+export const LEVEL_TOAST_ENTER_MS = 250;
+export const LEVEL_TOAST_VISIBLE_MS = 1200;
+export const LEVEL_TOAST_EXIT_MS = 350;
+export const LEVEL_SPEED_STEP = 0.12;
+export const MAX_LEVEL_SPEED_MULTIPLIER = 2.2;
 
 export const PADDLE_WIDTH = 75;
 export const PADDLE_HEIGHT = 10;
@@ -40,6 +46,17 @@ export function calculateInitialBallSpeed(canvasWidth: number): number {
   }
 
   return BALL_SPEED;
+}
+
+export interface LevelTransitionPayload {
+  currentLevel: number;
+  nextLevel: number;
+  nextSpeedMultiplier: number;
+  pauseMs: number;
+}
+
+export function calculateLevelSpeedMultiplier(level: number): number {
+  return Math.min(1 + (level - 1) * LEVEL_SPEED_STEP, MAX_LEVEL_SPEED_MULTIPLIER);
 }
 
 // Funções para calcular dimensões dinâmicas

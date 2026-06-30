@@ -93,6 +93,19 @@ async function readIndexedDbSummary(page) {
   }, REQUIRED_DATABASE_NAMES, REQUIRED_EVENT_TYPES);
 }
 
+async function clearOfflineState(page) {
+  await page.evaluate(async () => {
+    if ('serviceWorker' in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations.map(registration => registration.unregister()));
+    }
+    if ('caches' in window) {
+      const cacheNames = await caches.keys();
+      await Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)));
+    }
+  });
+}
+
 async function collectLayoutState(page) {
   return page.evaluate(minTouchTargetSize => {
     const viewport = {
@@ -166,6 +179,8 @@ async function run() {
     page.on('pageerror', error => consoleProblems.push({ type: 'pageerror', text: error.message }));
 
     await page.goto(publicUrl, { waitUntil: 'networkidle0', timeout: 60000 });
+    await clearOfflineState(page);
+    await page.reload({ waitUntil: 'networkidle0', timeout: 60000 });
     await page.waitForSelector('canvas', { timeout: 30000 });
     await new Promise(resolve => setTimeout(resolve, OBSERVATION_DURATION_MS));
 

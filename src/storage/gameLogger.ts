@@ -7,7 +7,7 @@ LOG('📦 GameLogger.ts carregado');
 interface GameEvent {
   id: string;
   timestamp: number;
-  type: 'game_start' | 'game_end' | 'score_update' | 'ball_lost' | 'ball_added' | 'brick_destroyed' | 'brick_added' | 'paddle_move' | 'collision' | 'power_up' | 'level_complete' | 'game_state_change' | 'restart_game';
+  type: 'game_start' | 'game_end' | 'score_update' | 'ball_lost' | 'ball_added' | 'brick_destroyed' | 'brick_added' | 'paddle_move' | 'collision' | 'power_up' | 'level_complete' | 'level_start' | 'game_state_change' | 'restart_game';
   gameState: {
     score: number;
     ballsCount: number;
@@ -70,15 +70,15 @@ class GameLogger {
     LOG('🏗️ this:', this);
     LOG('🏗️ DB_NAME:', this.DB_NAME);
     LOG('🏗️ DB_VERSION:', this.DB_VERSION);
-    
+
     // Verificar se IndexedDB está disponível
     if (!window.indexedDB) {
       ERROR('❌ IndexedDB não está disponível neste navegador');
       throw new Error('IndexedDB não está disponível');
     }
-    
+
     LOG('✅ IndexedDB está disponível');
-    
+
     return new Promise((resolve, reject) => {
       LOG('🗄️ Abrindo IndexedDB:', this.DB_NAME, 'versão:', this.DB_VERSION);
       const request = indexedDB.open(this.DB_NAME, this.DB_VERSION);
@@ -104,7 +104,7 @@ class GameLogger {
         const db = (event.target as IDBOpenDBRequest).result;
         LOG('🗄️ Versão antiga:', event.oldVersion);
         LOG('🗄️ Versão nova:', event.newVersion);
-        
+
         if (!db.objectStoreNames.contains(this.STORE_NAME)) {
           LOG('🏗️ Criando object store:', this.STORE_NAME);
           const store = db.createObjectStore(this.STORE_NAME, { keyPath: 'id' });
@@ -137,7 +137,7 @@ class GameLogger {
     LOG('📝 event.type:', event.type);
     LOG('📝 this.db:', this.db);
     LOG('📝 this:', this);
-    
+
     if (!this.db) {
       WARN('⚠️ IndexedDB não inicializado, pulando registro de evento');
       return;
@@ -155,13 +155,13 @@ class GameLogger {
       LOG('🗄️ Iniciando transação no IndexedDB...');
       const transaction = this.db!.transaction([this.STORE_NAME], 'readwrite');
       const store = transaction.objectStore(this.STORE_NAME);
-      
+
       const eventToStore = {
         ...gameEvent,
         gameId: this.currentGameId,
         gameStartTime: this.gameStartTime
       };
-      
+
       LOG('📝 Adicionando evento ao store:', eventToStore.id);
       const request = store.add(eventToStore);
 
@@ -182,18 +182,18 @@ class GameLogger {
 
   // Métodos específicos para diferentes tipos de eventos
   async logGameStart(
-    gameState: GameEvent['gameState'], 
-    ballPositions: GameEvent['ballPositions'], 
+    gameState: GameEvent['gameState'],
+    ballPositions: GameEvent['ballPositions'],
     paddlePosition: GameEvent['paddlePosition']
   ): Promise<void> {
     LOG('🎮 logGameStart chamado');
     LOG('🎮 gameState:', gameState);
     LOG('🎮 ballPositions:', ballPositions);
     LOG('🎮 paddlePosition:', paddlePosition);
-    
+
     this.currentGameId = this.generateGameId();
     this.gameStartTime = Date.now();
-    
+
     await this.logEvent({
       type: 'game_start',
       gameState,
@@ -207,36 +207,36 @@ class GameLogger {
   }
 
   async logGameEnd(
-    gameState: GameEvent['gameState'], 
-    ballPositions: GameEvent['ballPositions'], 
-    paddlePosition: GameEvent['paddlePosition'], 
+    gameState: GameEvent['gameState'],
+    ballPositions: GameEvent['ballPositions'],
+    paddlePosition: GameEvent['paddlePosition'],
     reason: 'win' | 'lose'
   ): Promise<void> {
     const gameDuration = this.gameStartTime ? Date.now() - this.gameStartTime : 0;
-    
+
     await this.logEvent({
       type: 'game_end',
       gameState,
       ballPositions,
       paddlePosition,
-      metadata: { 
-        reason, 
+      metadata: {
+        reason,
         gameId: this.currentGameId,
         gameDuration,
         finalScore: gameState.score,
         totalBricksDestroyed: gameState.gameDimensions.brickCols * gameState.gameDimensions.brickRows - gameState.bricksRemaining
       }
     });
-    
+
     this.currentGameId = null;
     this.gameStartTime = null;
   }
 
   async logScoreUpdate(
-    gameState: GameEvent['gameState'], 
-    ballPositions: GameEvent['ballPositions'], 
-    paddlePosition: GameEvent['paddlePosition'], 
-    pointsAdded: number, 
+    gameState: GameEvent['gameState'],
+    ballPositions: GameEvent['ballPositions'],
+    paddlePosition: GameEvent['paddlePosition'],
+    pointsAdded: number,
     reason: string
   ): Promise<void> {
     await this.logEvent({
@@ -244,8 +244,8 @@ class GameLogger {
       gameState,
       ballPositions,
       paddlePosition,
-      metadata: { 
-        pointsAdded, 
+      metadata: {
+        pointsAdded,
         reason,
         newTotalScore: gameState.score,
         bricksRemaining: gameState.bricksRemaining
@@ -254,9 +254,9 @@ class GameLogger {
   }
 
   async logBallLost(
-    gameState: GameEvent['gameState'], 
-    ballPositions: GameEvent['ballPositions'], 
-    paddlePosition: GameEvent['paddlePosition'], 
+    gameState: GameEvent['gameState'],
+    ballPositions: GameEvent['ballPositions'],
+    paddlePosition: GameEvent['paddlePosition'],
     lostBallPosition: { x: number; y: number },
     lostBallVelocity: { dx: number; dy: number }
   ): Promise<void> {
@@ -265,7 +265,7 @@ class GameLogger {
       gameState,
       ballPositions,
       paddlePosition,
-      metadata: { 
+      metadata: {
         lostBallPosition,
         lostBallVelocity,
         remainingBalls: gameState.ballsCount - 1,
@@ -279,9 +279,9 @@ class GameLogger {
   }
 
   async logBallAdded(
-    gameState: GameEvent['gameState'], 
-    ballPositions: GameEvent['ballPositions'], 
-    paddlePosition: GameEvent['paddlePosition'], 
+    gameState: GameEvent['gameState'],
+    ballPositions: GameEvent['ballPositions'],
+    paddlePosition: GameEvent['paddlePosition'],
     newBallPosition: { x: number; y: number }
   ): Promise<void> {
     await this.logEvent({
@@ -289,7 +289,7 @@ class GameLogger {
       gameState,
       ballPositions,
       paddlePosition,
-      metadata: { 
+      metadata: {
         newBallPosition,
         totalBalls: gameState.ballsCount
       }
@@ -297,8 +297,8 @@ class GameLogger {
   }
 
   async logBrickDestroyed(
-    gameState: GameEvent['gameState'], 
-    ballPositions: GameEvent['ballPositions'], 
+    gameState: GameEvent['gameState'],
+    ballPositions: GameEvent['ballPositions'],
     paddlePosition: GameEvent['paddlePosition'],
     brickPosition: { x: number; y: number; width: number; height: number },
     brickIndex: { col: number; row: number },
@@ -333,9 +333,9 @@ class GameLogger {
   }
 
   async logBrickAdded(
-    gameState: GameEvent['gameState'], 
-    ballPositions: GameEvent['ballPositions'], 
-    paddlePosition: GameEvent['paddlePosition'], 
+    gameState: GameEvent['gameState'],
+    ballPositions: GameEvent['ballPositions'],
+    paddlePosition: GameEvent['paddlePosition'],
     rowAdded: number
   ): Promise<void> {
     await this.logEvent({
@@ -343,7 +343,7 @@ class GameLogger {
       gameState,
       ballPositions,
       paddlePosition,
-      metadata: { 
+      metadata: {
         rowAdded,
         newTotalBricks: gameState.bricksRemaining + gameState.gameDimensions.brickCols
       }
@@ -351,9 +351,9 @@ class GameLogger {
   }
 
   async logPaddleMove(
-    gameState: GameEvent['gameState'], 
-    ballPositions: GameEvent['ballPositions'], 
-    paddlePosition: GameEvent['paddlePosition'], 
+    gameState: GameEvent['gameState'],
+    ballPositions: GameEvent['ballPositions'],
+    paddlePosition: GameEvent['paddlePosition'],
     direction: 'left' | 'right' | 'touch',
     previousPosition?: { x: number; y: number }
   ): Promise<void> {
@@ -362,7 +362,7 @@ class GameLogger {
       gameState,
       ballPositions,
       paddlePosition,
-      metadata: { 
+      metadata: {
         direction,
         previousPosition,
         movementDistance: previousPosition ? Math.abs(paddlePosition.x - previousPosition.x) : 0,
@@ -387,20 +387,46 @@ class GameLogger {
   }
 
   async logLevelComplete(
-    gameState: GameEvent['gameState'], 
-    ballPositions: GameEvent['ballPositions'], 
-    paddlePosition: GameEvent['paddlePosition'], 
-    level: number
+    gameState: GameEvent['gameState'],
+    ballPositions: GameEvent['ballPositions'],
+    paddlePosition: GameEvent['paddlePosition'],
+    completedLevel: number,
+    nextLevel: number,
+    nextSpeedMultiplier: number,
+    pauseMs: number
   ): Promise<void> {
     await this.logEvent({
       type: 'level_complete',
       gameState,
       ballPositions,
       paddlePosition,
-      metadata: { 
-        level,
+      metadata: {
+        completedLevel,
+        nextLevel,
+        nextSpeedMultiplier,
+        pauseMs,
         levelScore: gameState.score,
         levelDuration: this.gameStartTime ? Date.now() - this.gameStartTime : 0
+      }
+    });
+  }
+
+  async logLevelStart(
+    gameState: GameEvent['gameState'],
+    ballPositions: GameEvent['ballPositions'],
+    paddlePosition: GameEvent['paddlePosition'],
+    level: number,
+    speedMultiplier: number
+  ): Promise<void> {
+    await this.logEvent({
+      type: 'level_start',
+      gameState,
+      ballPositions,
+      paddlePosition,
+      metadata: {
+        level,
+        speedMultiplier,
+        scoreCarriedOver: gameState.score
       }
     });
   }
@@ -416,7 +442,7 @@ class GameLogger {
       gameState,
       ballPositions,
       paddlePosition,
-      metadata: { 
+      metadata: {
         changeType,
         previousState: {
           gameWon: !gameState.gameWon,
@@ -436,7 +462,7 @@ class GameLogger {
       gameState,
       ballPositions,
       paddlePosition,
-      metadata: { 
+      metadata: {
         previousGameId: this.currentGameId,
         restartTime: Date.now()
       }
@@ -592,7 +618,7 @@ class GameLogger {
     const gameStartEvents = allEvents.filter(e => e.type === 'game_start');
     const collisionEvents = allEvents.filter(e => e.type === 'collision');
     // const brickDestroyedEvents = allEvents.filter(e => e.type === 'brick_destroyed');
-    
+
     const byType: Record<string, number> = {};
     let totalScore = 0;
     let gamesWon = 0;
@@ -637,14 +663,14 @@ class GameLogger {
   async exportGameData(): Promise<string> {
     const allEvents = await this.getAllEvents();
     const stats = await this.getGameStats();
-    
+
     const exportData = {
       exportTimestamp: Date.now(),
       exportVersion: '2.0',
       stats,
       events: allEvents
     };
-    
+
     return JSON.stringify(exportData, null, 2);
   }
 
@@ -652,7 +678,7 @@ class GameLogger {
   async importGameData(jsonData: string): Promise<void> {
     try {
       const importData = JSON.parse(jsonData);
-      
+
       if (importData.events && Array.isArray(importData.events)) {
         for (const event of importData.events) {
           await this.logEvent(event);
@@ -690,4 +716,4 @@ if (document.readyState === 'loading') {
   }).catch(error => {
     ERROR('❌ Falha ao inicializar GameLogger:', error);
   });
-} 
+}

@@ -15,18 +15,36 @@ export class Ball {
   private y: number;
   private dx: number;
   private dy: number;
-  private readonly radius: number;
+  private radius: number;
   private blockHitsThisRun = 0;
   private paddleCollision = false;
 
-  constructor(private canvasWidth: number, canvasHeight: number, dimensions: DynamicGameDimensions) {
-    const initialSpeed = calculateInitialBallSpeed(canvasWidth);
+  constructor(private canvasWidth: number, canvasHeight: number, dimensions: DynamicGameDimensions, speedMultiplier = 1) {
+    this.radius = dimensions.ballRadius;
+    this.x = canvasWidth / 2;
+    this.y = canvasHeight - BALL_INITIAL_Y_OFFSET;
+    const initialSpeed = calculateInitialBallSpeed(canvasWidth) * speedMultiplier;
+    this.dx = initialSpeed;
+    this.dy = -initialSpeed;
+    LOG(`⚽ Ball inicializada: pos=(${this.x}, ${this.y}), raio=${this.radius}`);
+  }
+
+  resetForLevel(
+    canvasWidth: number,
+    canvasHeight: number,
+    dimensions: DynamicGameDimensions,
+    speedMultiplier: number
+  ): void {
+    const initialSpeed = calculateInitialBallSpeed(canvasWidth) * speedMultiplier;
+
+    this.canvasWidth = canvasWidth;
     this.radius = dimensions.ballRadius;
     this.x = canvasWidth / 2;
     this.y = canvasHeight - BALL_INITIAL_Y_OFFSET;
     this.dx = initialSpeed;
     this.dy = -initialSpeed;
-    LOG(`⚽ Ball inicializada: pos=(${this.x}, ${this.y}), raio=${this.radius}`);
+    this.blockHitsThisRun = 0;
+    this.paddleCollision = false;
   }
 
   async update(
