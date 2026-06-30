@@ -3,6 +3,17 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+
+## [1.10.0] - 2026-06-30
+### Corrigido
+- Layout mobile do BrickBreaker para iPhone 15, evitando canvas e botões fora da viewport.
+- Ciclo do GameEngine para limpar loops/listeners no restart/re-render e reduzir velocidade inicial em mobile.
+- Visualização de logs e estatísticas para uso em telas mobile publicadas.
+
+### Adicionado
+- QA automatizado contra Cloudflare Pages publicado via `make cloudflare-mobile-qa`.
+- Regras Codex/agents/rules para exigir análise de logs/estatísticas, teste publicado no Cloudflare, PR e merge automatizado após CI.
+
 ## [1.9.0] - 2026-06-30
 ### Adicionado
 - Publicação zero custo no Cloudflare Pages via Direct Upload para `malnati-brickbreaker.pages.dev` com targets `cloudflare-env-check`, `cloudflare-build` e `cloudflare-deploy`.

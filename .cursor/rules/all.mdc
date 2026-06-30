@@ -244,3 +244,15 @@ description: |
     - O arquivo deve estar localizado na raiz do projeto.
     - Cada item deve conter uma breve descrição do trabalho pendente ou concluído.
     - Mantenha o histórico atualizado sempre que houver novas pendências ou resolução das existentes.
+
+  # Regras do arquivo: cloudflare-published-qa.mdc
+
+  Para BrickBreaker, testes locais nunca são prova da verdade para gameplay, UI, logs, estatísticas, PWA ou validação mobile.
+
+    Fluxo obrigatório:
+    - Reproduzir defeitos no aplicativo publicado no Cloudflare Pages.
+    - Analisar logs, estatísticas, IndexedDB, console, screenshot e comportamento inicial antes de corrigir.
+    - Adicionar cobertura automatizada que rode contra URL publicada (`BRICKBREAKER_PUBLIC_URL`).
+    - Executar `make cloudflare-mobile-qa` contra preview Cloudflare de branch antes de PR/merge.
+    - Após merge, executar `make cloudflare-mobile-qa` contra `https://malnati-brickbreaker.pages.dev/`.
+    - Bloquear merge se a validação publicada falhar ou se só houver evidência local.

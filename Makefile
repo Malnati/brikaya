@@ -32,7 +32,7 @@ KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
 # Target padrão: mostrar help quando make é executado sem argumentos
 .DEFAULT_GOAL := help
 
-.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-deploy docker-build docker-up docker-down docker-logs docker-shell docker-create-caddy-network docker-logs-caddy docker-reload-caddy
+.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-deploy cloudflare-mobile-qa docker-build docker-up docker-down docker-logs docker-shell docker-create-caddy-network docker-logs-caddy docker-reload-caddy
 
 # Função para matar processos anteriores
 kill-processes:
@@ -76,6 +76,11 @@ cloudflare-build:
 cloudflare-deploy: cloudflare-env-check cloudflare-build
 	@node scripts/cloudflare-pages.js ensure-project
 	@node scripts/cloudflare-pages.js deploy
+
+
+# Validar layout, logs e estatísticas contra o app publicado no Cloudflare Pages
+cloudflare-mobile-qa:
+	@npm run test:cloudflare-mobile
 
 # Executar o jogo em modo de desenvolvimento
 dev: kill-processes
@@ -225,6 +230,7 @@ help:
 	@echo "  cloudflare-env-check - Validar variáveis Cloudflare sem exibir valores"
 	@echo "  cloudflare-build     - Gerar build estático para Pages"
 	@echo "  cloudflare-deploy    - Publicar dist no Cloudflare Pages"
+	@echo "  cloudflare-mobile-qa - Testar iPhone 15/logs contra Cloudflare publicado"
 	@echo ""
 	@echo "Builds Nativos:"
 	@echo "  build-pwa      - Gerar build da PWA"

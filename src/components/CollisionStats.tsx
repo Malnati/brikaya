@@ -139,6 +139,7 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
           background: rgba(0, 0, 0, 0.7);
           display: flex;
           align-items: center;
+          flex-wrap: wrap;
           justify-content: center;
           z-index: 1000;
         }
@@ -147,10 +148,13 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
           background: #1a1a1a;
           border: 2px solid #333;
           border-radius: 12px;
-          padding: 20px;
-          max-width: 600px;
-          max-height: 80vh;
+          padding: 16px;
+          width: min(600px, calc(100vw - 32px));
+          max-width: calc(100vw - 32px);
+          max-height: calc(100dvh - 32px);
           overflow-y: auto;
+          overflow-x: hidden;
+          box-sizing: border-box;
           color: white;
           font-family: 'Courier New', monospace;
         }
@@ -174,8 +178,8 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
           color: white;
           border: none;
           border-radius: 50%;
-          width: 30px;
-          height: 30px;
+          min-width: 44px;
+          min-height: 44px;
           cursor: pointer;
           font-size: 16px;
         }
@@ -226,6 +230,7 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
         .type-stat {
           display: flex;
           align-items: center;
+          flex-wrap: wrap;
           margin-bottom: 5px;
           padding: 3px 0;
         }
@@ -248,6 +253,7 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
 
         .stats-actions {
           display: flex;
+          flex-wrap: wrap;
           gap: 10px;
           margin-bottom: 20px;
         }
@@ -256,6 +262,7 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
           background: #333;
           color: white;
           border: 1px solid #555;
+          min-height: 44px;
           padding: 8px 16px;
           border-radius: 5px;
           cursor: pointer;
@@ -281,8 +288,9 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
         }
 
         .collisions-list {
-          max-height: 200px;
+          max-height: min(200px, 40dvh);
           overflow-y: auto;
+          overflow-x: hidden;
           border: 1px solid #333;
           border-radius: 5px;
           padding: 10px;
@@ -291,6 +299,7 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
         .collision-item {
           display: flex;
           align-items: center;
+          flex-wrap: wrap;
           margin-bottom: 5px;
           padding: 3px 0;
           font-size: 12px;

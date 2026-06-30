@@ -11,7 +11,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:colors": "node scripts/test-colors.js",
-    "test:colors:dev": "npm run dev & sleep 5 && npm run test:colors && pkill -f 'vite'"
+    "test:colors:dev": "npm run dev & sleep 5 && npm run test:colors && pkill -f 'vite'",
+    "test:cloudflare-mobile": "node tests/e2e/cloudflare-mobile-qa.js"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.4",

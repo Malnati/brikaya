@@ -1,5 +1,11 @@
 /* src/styles/index.css */
+html {
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
 body {
+  margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -9,8 +15,19 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  overflow: hidden; /* Previne scroll em mobile */
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#root {
+  width: 100%;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  box-sizing: border-box;
+  padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
 }
 
 .app-container {
@@ -20,8 +37,8 @@ body {
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   border: 1px solid #404040;
-  max-width: 100vw;
-  max-height: 100vh;
+  width: min(100%, 960px);
+  max-width: 100%;
   box-sizing: border-box;
 }
 
@@ -50,9 +67,13 @@ body {
 
 .game-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 10px 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 8px 0;
 }
 
 .victory-message {
@@ -151,6 +172,9 @@ canvas {
   border-radius: 5px;
   background-color: #0f0f0f;
   box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+  box-sizing: border-box;
+  display: block;
+  max-width: 100%;
   touch-action: none; /* Previne zoom e scroll no touch */
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -162,9 +186,13 @@ canvas {
 
 /* Media queries para responsividade */
 @media (max-width: 768px) {
+  #root {
+    padding: max(6px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
+  }
+
   .app-container {
-    padding: 15px;
-    margin: 10px;
+    padding: 12px;
+    margin: 0;
     border-radius: 8px;
   }
   
@@ -199,9 +227,13 @@ canvas {
 }
 
 @media (max-width: 480px) {
+  #root {
+    padding: max(4px, env(safe-area-inset-top)) max(4px, env(safe-area-inset-right)) max(4px, env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-left));
+  }
+
   .app-container {
-    padding: 10px;
-    margin: 5px;
+    padding: 8px;
+    margin: 0;
   }
   
   .app-container h1 {
@@ -237,7 +269,7 @@ canvas {
 @media (max-height: 500px) and (orientation: landscape) {
   .app-container {
     padding: 8px;
-    margin: 5px;
+    margin: 0;
   }
   
   .app-container h1 {
