@@ -81,20 +81,20 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
   };
 
   const eventTypeColors: Record<string, string> = {
-    'game_start': '#4CAF50',
-    'game_end': '#F44336',
-    'score_update': '#2196F3',
-    'ball_lost': '#FF9800',
-    'ball_added': '#9C27B0',
-    'brick_destroyed': '#FF5722',
-    'brick_added': '#795548',
-    'paddle_move': '#607D8B',
-    'collision': '#E91E63',
-    'power_up': '#00BCD4',
-    'level_complete': '#8BC34A',
-    'level_start': '#4CAF50',
-    'game_state_change': '#FFC107',
-    'restart_game': '#9E9E9E'
+    'game_start': 'var(--bb-color-primary)',
+    'game_end': 'var(--bb-color-danger)',
+    'score_update': 'var(--bb-color-primary-strong)',
+    'ball_lost': 'var(--bb-color-secondary)',
+    'ball_added': 'var(--bb-color-tertiary)',
+    'brick_destroyed': 'var(--bb-color-secondary)',
+    'brick_added': 'var(--bb-color-outline)',
+    'paddle_move': 'var(--bb-color-outline)',
+    'collision': 'var(--bb-color-secondary)',
+    'power_up': 'var(--bb-color-primary)',
+    'level_complete': 'var(--bb-color-primary-strong)',
+    'level_start': 'var(--bb-color-primary)',
+    'game_state_change': 'var(--bb-color-tertiary)',
+    'restart_game': 'var(--bb-color-muted)'
   };
 
   const loadEvents = async () => {
@@ -378,9 +378,9 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
           overflow-y: auto;
           overflow-x: hidden;
           box-sizing: border-box;
-          font-family: Arial, sans-serif;
-          color: #1a1a1a;
-          background: #f8f9fa;
+          font-family: var(--bb-font-body);
+          color: var(--bb-color-text);
+          background: var(--bb-color-panel);
           border-radius: 8px;
         }
 
@@ -388,11 +388,11 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
           min-width: 44px;
           min-height: 44px;
           padding: 8px 12px;
-          border: 1px solid #ddd;
+          border: 1px solid var(--bb-color-outline-soft);
           border-radius: 4px;
           cursor: pointer;
-          color: #1a1a1a;
-          background: white;
+          color: var(--bb-color-text);
+          background: var(--bb-color-surface);
         }
 
         .header {
@@ -405,7 +405,7 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
         }
 
         .header h2 {
-          color: #1a1a1a;
+          color: var(--bb-color-text);
         }
 
         .controls {
@@ -417,18 +417,18 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
         .filter-select, .refresh-button, .export-button, .clear-button {
           min-height: 44px;
           padding: 8px 12px;
-          border: 1px solid #ddd;
+          border: 1px solid var(--bb-color-outline-soft);
           border-radius: 4px;
-          background: white;
+          background: var(--bb-color-surface);
           cursor: pointer;
         }
 
         .refresh-button:hover, .export-button:hover, .clear-button:hover {
-          background: #f0f0f0;
+          background: var(--bb-color-panel-soft);
         }
 
         .stats-panel {
-          background: #f8f9fa;
+          background: var(--bb-color-panel);
           border-radius: 8px;
           padding: 20px;
           margin-bottom: 20px;
@@ -446,19 +446,19 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
           justify-content: space-between;
           align-items: center;
           padding: 10px;
-          background: white;
+          background: var(--bb-color-surface);
           border-radius: 4px;
-          border-left: 4px solid #007bff;
+          border-left: 4px solid var(--bb-color-primary);
         }
 
         .stat-label {
           font-weight: bold;
-          color: #666;
+          color: var(--bb-color-muted);
         }
 
         .stat-value {
           font-size: 1.1em;
-          color: #333;
+          color: var(--bb-color-text);
         }
 
         .events-container {
@@ -468,11 +468,11 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
         }
 
         .event-item {
-          background: white;
-          border: 1px solid #ddd;
+          background: var(--bb-color-surface);
+          border: 1px solid var(--bb-color-outline-soft);
           border-radius: 8px;
           margin-bottom: 10px;
-          border-left: 4px solid #ddd;
+          border-left: 4px solid var(--bb-color-outline-soft);
         }
 
         .event-header {
@@ -486,7 +486,7 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
         }
 
         .event-header:hover {
-          background: #f8f9fa;
+          background: var(--bb-color-panel);
         }
 
         .event-type {
@@ -506,13 +506,13 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
 
         .event-time, .event-score, .event-balls, .event-bricks {
           font-size: 0.9em;
-          color: #666;
+          color: var(--bb-color-muted);
         }
 
         .event-details {
           padding: 20px;
-          border-top: 1px solid #eee;
-          background: #f8f9fa;
+          border-top: 1px solid var(--bb-color-outline-soft);
+          background: var(--bb-color-panel);
         }
 
         .detail-section {
@@ -521,8 +521,8 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
 
         .detail-section h4 {
           margin: 0 0 10px 0;
-          color: #333;
-          border-bottom: 1px solid #ddd;
+          color: var(--bb-color-text);
+          border-bottom: 1px solid var(--bb-color-outline-soft);
           padding-bottom: 5px;
         }
 
@@ -533,14 +533,14 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
         }
 
         .ball-info {
-          background: white;
+          background: var(--bb-color-surface);
           padding: 10px;
           border-radius: 4px;
           margin-bottom: 10px;
         }
 
         .metadata-json {
-          background: #f1f1f1;
+          background: var(--bb-color-surface);
           padding: 10px;
           border-radius: 4px;
           font-family: 'Courier New', monospace;
@@ -552,7 +552,7 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
         .loading, .no-events {
           text-align: center;
           padding: 40px;
-          color: #666;
+          color: var(--bb-color-muted);
           font-style: italic;
         }
 
@@ -561,7 +561,7 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
           min-width: 44px;
           min-height: 44px;
           padding: 8px 12px;
-          border: 1px solid #ddd;
+          border: 1px solid var(--bb-color-outline-soft);
           border-radius: 4px;
           cursor: pointer;
         }

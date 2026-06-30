@@ -3,6 +3,16 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.12.0] - 2026-06-30
+### Adicionado
+- Seletor visível de tema `Claro`/`Escuro`, com persistência local da preferência.
+- Tokens CSS alinhados ao Design System Kinetic Neon e Kinetic High-Contrast sem dependências externas.
+- QA publicado `make cloudflare-theme-qa` para validar tema, persistência, ausência de features fora de escopo e ausência de recursos externos.
+- Documentação de escopo para impedir que protótipos do Design System criem funcionalidades não aprovadas.
+
+### Alterado
+- Dashboard, botões, chips, toast, placeholders, logs e estatísticas passam a usar tokens compartilhados de tema.
+
 ## [1.11.0] - 2026-06-30
 ### Adicionado
 - Pausa automática entre fases com toast exibindo fase e velocidade da próxima jogada.

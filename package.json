@@ -15,7 +15,8 @@
     "test:cloudflare-mobile": "node tests/e2e/cloudflare-mobile-qa.js",
     "test:cloudflare-no-score-reset": "node tests/e2e/cloudflare-no-score-reset-after-brick.js",
     "test:cloudflare-phase-transition": "node tests/e2e/cloudflare-phase-transition-qa.js",
-    "test:cloudflare-dashboard-layout": "node tests/e2e/cloudflare-dashboard-layout-qa.js"
+    "test:cloudflare-dashboard-layout": "node tests/e2e/cloudflare-dashboard-layout-qa.js",
+    "test:cloudflare-theme": "node tests/e2e/cloudflare-theme-qa.js"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.4",

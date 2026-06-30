@@ -32,7 +32,7 @@ KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
 # Target padrão: mostrar help quando make é executado sem argumentos
 .DEFAULT_GOAL := help
 
-.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-deploy cloudflare-mobile-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-dashboard-layout-qa docker-build docker-up docker-down docker-logs docker-shell docker-create-caddy-network docker-logs-caddy docker-reload-caddy
+.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-deploy cloudflare-mobile-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa docker-build docker-up docker-down docker-logs docker-shell docker-create-caddy-network docker-logs-caddy docker-reload-caddy
 
 # Função para matar processos anteriores
 kill-processes:
@@ -90,6 +90,9 @@ cloudflare-phase-transition-qa:
 
 cloudflare-dashboard-layout-qa:
 	@npm run test:cloudflare-dashboard-layout
+
+cloudflare-theme-qa:
+	@npm run test:cloudflare-theme
 
 # Executar o jogo em modo de desenvolvimento
 dev: kill-processes
@@ -243,6 +246,7 @@ help:
 	@echo "  cloudflare-no-score-reset - Validar continuidade após tijolo no Cloudflare publicado"
 	@echo "  cloudflare-phase-transition-qa - Validar pausa/toast de fase no Cloudflare publicado"
 	@echo "  cloudflare-dashboard-layout-qa - Validar dashboard responsivo no Cloudflare publicado"
+	@echo "  cloudflare-theme-qa - Validar tema claro/escuro contra Cloudflare publicado"
 	@echo ""
 	@echo "Builds Nativos:"
 	@echo "  build-pwa      - Gerar build da PWA"

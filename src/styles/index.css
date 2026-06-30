@@ -1,14 +1,33 @@
 /* src/styles/index.css */
 :root {
-  --color-bg: #10131f;
-  --color-surface: #171b2b;
-  --color-panel: #20263a;
-  --color-panel-soft: #273047;
-  --color-accent: #00d4ff;
-  --color-accent-strong: #32e0ff;
-  --color-text: #f3f7ff;
-  --color-muted: #aeb8cc;
-  --color-danger: #ff5f6f;
+  color-scheme: dark;
+  --bb-color-background: #131313;
+  --bb-color-surface: #1c1b1b;
+  --bb-color-panel: #20201f;
+  --bb-color-panel-soft: #2a2a2a;
+  --bb-color-text: #e5e2e1;
+  --bb-color-muted: #bbc9cf;
+  --bb-color-primary: #00d4ff;
+  --bb-color-primary-strong: #3cd7ff;
+  --bb-color-secondary: #ff4b89;
+  --bb-color-tertiary: #ad00ff;
+  --bb-color-outline: #859398;
+  --bb-color-outline-soft: #3c494e;
+  --bb-color-danger: #ffb4ab;
+  --bb-color-danger-strong: #93000a;
+  --bb-color-board: #0e0e0e;
+  --bb-color-on-primary: #003642;
+  --bb-shadow-panel: 0 24px 70px rgba(0, 0, 0, 0.34);
+  --bb-shadow-accent: 0 0 24px rgba(0, 212, 255, 0.14);
+  --color-bg: var(--bb-color-background);
+  --color-surface: var(--bb-color-surface);
+  --color-panel: var(--bb-color-panel);
+  --color-panel-soft: var(--bb-color-panel-soft);
+  --color-accent: var(--bb-color-primary);
+  --color-accent-strong: var(--bb-color-primary-strong);
+  --color-text: var(--bb-color-text);
+  --color-muted: var(--bb-color-muted);
+  --color-danger: var(--bb-color-danger);
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 16px;
@@ -17,7 +36,35 @@
   --radius-sm: 8px;
   --radius-md: 16px;
   --radius-lg: 24px;
-  --shadow-panel: 0 24px 70px rgba(0, 0, 0, 0.34);
+  --shadow-panel: var(--bb-shadow-panel);
+  --bb-font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  --bb-font-display: var(--bb-font-body);
+  --bb-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bb-color-background: #fcf8fb;
+  --bb-color-surface: #ffffff;
+  --bb-color-panel: #f6f3f5;
+  --bb-color-panel-soft: #eae7ea;
+  --bb-color-text: #1b1b1d;
+  --bb-color-muted: #3d4949;
+  --bb-color-primary: #006a6a;
+  --bb-color-primary-strong: #00a3a3;
+  --bb-color-secondary: #b40066;
+  --bb-color-tertiary: #6c37df;
+  --bb-color-outline: #6d7a79;
+  --bb-color-outline-soft: #bcc9c8;
+  --bb-color-danger: #ba1a1a;
+  --bb-color-danger-strong: #93000a;
+  --bb-color-board: #ffffff;
+  --bb-color-on-primary: #ffffff;
+  --bb-shadow-panel: 0 10px 30px -5px rgba(0, 163, 163, 0.08);
+  --bb-shadow-accent: 0 0 24px rgba(0, 163, 163, 0.16);
 }
 
 html {
@@ -28,14 +75,12 @@ html {
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--bb-font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background:
-    radial-gradient(circle at 10% 0%, rgba(0, 212, 255, 0.16), transparent 28%),
-    radial-gradient(circle at 90% 12%, rgba(124, 92, 255, 0.16), transparent 28%),
+    radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--bb-color-primary) 18%, transparent), transparent 28%),
+    radial-gradient(circle at 90% 12%, color-mix(in srgb, var(--bb-color-tertiary) 18%, transparent), transparent 28%),
     var(--color-bg);
   color: var(--color-text);
   min-height: 100dvh;
@@ -66,8 +111,8 @@ select {
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  background: linear-gradient(180deg, rgba(32, 38, 58, 0.96), rgba(23, 27, 43, 0.98));
-  border: 1px solid rgba(174, 184, 204, 0.18);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--bb-color-panel) 96%, transparent), color-mix(in srgb, var(--bb-color-surface) 98%, transparent));
+  border: 1px solid color-mix(in srgb, var(--bb-color-outline) 24%, transparent);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-panel);
   padding: var(--space-4);
@@ -83,6 +128,15 @@ select {
 
 .dashboard-title-group {
   text-align: left;
+  min-width: 0;
+}
+
+.dashboard-header-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
   min-width: 0;
 }
 
@@ -113,13 +167,51 @@ select {
   align-items: center;
   min-height: 32px;
   padding: 4px 12px;
-  border: 1px solid rgba(0, 212, 255, 0.32);
+  border: 1px solid color-mix(in srgb, var(--bb-color-primary) 44%, transparent);
   border-radius: 999px;
-  background: rgba(0, 212, 255, 0.1);
+  background: color-mix(in srgb, var(--bb-color-primary) 12%, transparent);
   color: var(--color-text);
   font-size: 0.94rem;
   font-weight: 700;
   white-space: nowrap;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  padding: 4px;
+  border: 1px solid color-mix(in srgb, var(--bb-color-outline) 34%, transparent);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--bb-color-surface) 82%, transparent);
+  box-sizing: border-box;
+}
+
+.theme-toggle__button {
+  min-width: 64px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--space-1);
+  color: var(--bb-color-muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.86rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.theme-toggle__button--active {
+  color: var(--bb-color-on-primary);
+  background: var(--bb-color-primary);
+  border-color: var(--bb-color-primary-strong);
+  box-shadow: var(--bb-shadow-accent);
+}
+
+.theme-toggle__button:focus-visible {
+  outline: 2px solid var(--bb-color-primary-strong);
+  outline-offset: 2px;
 }
 
 .dashboard-layout {
@@ -159,8 +251,8 @@ select {
 canvas {
   border: 2px solid var(--color-accent);
   border-radius: 5px;
-  background-color: #0f0f0f;
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+  background-color: var(--bb-color-board);
+  box-shadow: var(--bb-shadow-accent);
   box-sizing: border-box;
   display: block;
   max-width: 100%;
@@ -184,13 +276,13 @@ canvas {
   min-width: min(76%, 340px);
   box-sizing: border-box;
   padding: 8px 16px;
-  border: 1px solid rgba(0, 212, 255, 0.48);
+  border: 1px solid color-mix(in srgb, var(--bb-color-primary) 58%, transparent);
   border-radius: 999px;
-  background: rgba(16, 19, 31, 0.9);
+  background: color-mix(in srgb, var(--bb-color-surface) 92%, transparent);
   color: var(--color-text);
   font-weight: 800;
   text-align: center;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+  box-shadow: var(--bb-shadow-panel);
   transition: opacity 350ms ease, transform 350ms ease;
 }
 
@@ -228,7 +320,7 @@ canvas {
   min-width: 44px;
   padding: 10px 16px;
   border-radius: 999px;
-  border: 1px solid rgba(174, 184, 204, 0.22);
+  border: 1px solid color-mix(in srgb, var(--bb-color-outline) 30%, transparent);
   cursor: pointer;
   font-size: 0.95rem;
   font-weight: 800;
@@ -240,15 +332,15 @@ canvas {
 }
 
 .dashboard-button--primary {
-  color: #081018;
+  color: var(--bb-color-on-primary);
   background: var(--color-accent);
   border-color: var(--color-accent-strong);
 }
 
 .dashboard-button--secondary:hover,
 .dashboard-button--secondary:focus-visible {
-  background: #303a56;
-  border-color: rgba(0, 212, 255, 0.5);
+  background: color-mix(in srgb, var(--bb-color-primary) 14%, var(--bb-color-panel-soft));
+  border-color: color-mix(in srgb, var(--bb-color-primary) 58%, transparent);
 }
 
 .dashboard-button--primary:hover,
@@ -257,7 +349,7 @@ canvas {
 }
 
 .dashboard-button:focus-visible {
-  outline: 2px solid #ffffff;
+  outline: 2px solid var(--bb-color-primary-strong);
   outline-offset: 2px;
 }
 
@@ -271,7 +363,7 @@ canvas {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.16);
+  background: color-mix(in srgb, var(--bb-color-surface) 34%, transparent);
 }
 
 .ad-slot {
@@ -279,9 +371,9 @@ canvas {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  border: 1px dashed rgba(174, 184, 204, 0.36);
+  border: 1px dashed color-mix(in srgb, var(--bb-color-outline) 44%, transparent);
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.04);
+  background: color-mix(in srgb, var(--bb-color-surface) 46%, transparent);
   color: var(--color-muted);
   font-size: 0.78rem;
   letter-spacing: 0.08em;
@@ -314,13 +406,13 @@ canvas {
 }
 
 .victory-message {
-  background: rgba(0, 212, 255, 0.12);
-  border: 1px solid rgba(0, 212, 255, 0.4);
+  background: color-mix(in srgb, var(--bb-color-primary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--bb-color-primary) 44%, transparent);
 }
 
 .game-over-message {
-  background: rgba(255, 95, 111, 0.14);
-  border: 1px solid rgba(255, 95, 111, 0.48);
+  background: color-mix(in srgb, var(--bb-color-danger) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--bb-color-danger) 48%, transparent);
 }
 
 .victory-message h2,
@@ -366,6 +458,11 @@ canvas {
     align-items: flex-start;
     flex-direction: column;
     gap: var(--space-2);
+  }
+
+  .dashboard-header-controls {
+    justify-content: flex-start;
+    width: 100%;
   }
 
   .score-strip {
@@ -416,9 +513,22 @@ canvas {
     gap: 4px;
   }
 
+  .dashboard-header-controls {
+    gap: var(--space-1);
+  }
+
   .score-chip {
     font-size: 0.78rem;
     padding: 4px 8px;
+  }
+
+  .theme-toggle {
+    width: 100%;
+  }
+
+  .theme-toggle__button {
+    flex: 1 1 0;
+    min-width: 0;
   }
 
   .play-column,
@@ -459,6 +569,11 @@ canvas {
     margin-bottom: var(--space-2);
   }
 
+  .dashboard-header-controls {
+    justify-content: flex-end;
+    width: auto;
+  }
+
   .dashboard-eyebrow {
     display: none;
   }
@@ -469,6 +584,22 @@ canvas {
 
   .score-chip {
     min-height: 24px;
+    font-size: 0.72rem;
+  }
+
+  .score-strip {
+    width: auto;
+  }
+
+  .theme-toggle {
+    width: auto;
+    min-height: 44px;
+  }
+
+  .theme-toggle__button {
+    min-height: 44px;
+    min-width: 52px;
+    padding: 6px 8px;
     font-size: 0.72rem;
   }
 
@@ -490,7 +621,8 @@ canvas {
 
 @media (prefers-reduced-motion: reduce) {
   .level-toast,
-  .dashboard-button {
+  .dashboard-button,
+  .theme-toggle__button {
     transition-property: opacity, background, border-color;
   }
 

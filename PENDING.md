@@ -7,3 +7,5 @@
 - [x] Cloudflare QA publicado garante que pontuação/tijolo não reinicia a bolinha nem o motor.
 
 - [x] Cloudflare QA publicado cobre pausa/toast de próxima fase e dashboard responsivo.
+
+- [x] Design System adaptado apenas às superfícies existentes, com tema claro/escuro e QA publicado obrigatório.

@@ -136,7 +136,7 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
           left: 0;
           right: 0;
           bottom: 0;
-          background: rgba(0, 0, 0, 0.7);
+          background: color-mix(in srgb, var(--bb-color-background) 72%, transparent);
           display: flex;
           align-items: center;
           flex-wrap: wrap;
@@ -145,8 +145,8 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
         }
 
         .collision-stats-modal {
-          background: #1a1a1a;
-          border: 2px solid #333;
+          background: var(--bb-color-surface);
+          border: 2px solid var(--bb-color-outline-soft);
           border-radius: 12px;
           padding: 16px;
           width: min(600px, calc(100vw - 32px));
@@ -155,8 +155,8 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
           overflow-y: auto;
           overflow-x: hidden;
           box-sizing: border-box;
-          color: white;
-          font-family: 'Courier New', monospace;
+          color: var(--bb-color-text);
+          font-family: var(--bb-font-mono);
         }
 
         .collision-stats-header {
@@ -164,18 +164,18 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
           justify-content: space-between;
           align-items: center;
           margin-bottom: 20px;
-          border-bottom: 1px solid #333;
+          border-bottom: 1px solid var(--bb-color-outline-soft);
           padding-bottom: 10px;
         }
 
         .collision-stats-header h2 {
           margin: 0;
-          color: #00d4ff;
+          color: var(--bb-color-primary);
         }
 
         .close-button {
-          background: #ff4444;
-          color: white;
+          background: var(--bb-color-danger-strong);
+          color: var(--bb-color-text);
           border: none;
           border-radius: 50%;
           min-width: 44px;
@@ -186,15 +186,15 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
 
         .loading {
           text-align: center;
-          color: #00d4ff;
+          color: var(--bb-color-primary);
           font-style: italic;
         }
 
         .error {
-          color: #ff4444;
+          color: var(--bb-color-danger);
           text-align: center;
           padding: 10px;
-          background: rgba(255, 68, 68, 0.1);
+          background: color-mix(in srgb, var(--bb-color-danger) 12%, transparent);
           border-radius: 5px;
         }
 
@@ -210,11 +210,11 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
         }
 
         .stat-label {
-          color: #ccc;
+          color: var(--bb-color-muted);
         }
 
         .stat-value {
-          color: #00d4ff;
+          color: var(--bb-color-primary);
           font-weight: bold;
         }
 
@@ -223,7 +223,7 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
         }
 
         .stats-by-type h3 {
-          color: #00d4ff;
+          color: var(--bb-color-primary);
           margin-bottom: 10px;
         }
 
@@ -242,12 +242,12 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
 
         .type-name {
           flex: 1;
-          color: #ccc;
+          color: var(--bb-color-muted);
           text-transform: capitalize;
         }
 
         .type-count {
-          color: #00d4ff;
+          color: var(--bb-color-primary);
           font-weight: bold;
         }
 
@@ -259,9 +259,9 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
         }
 
         .action-button {
-          background: #333;
-          color: white;
-          border: 1px solid #555;
+          background: var(--bb-color-panel-soft);
+          color: var(--bb-color-text);
+          border: 1px solid var(--bb-color-outline);
           min-height: 44px;
           padding: 8px 16px;
           border-radius: 5px;
@@ -270,20 +270,20 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
         }
 
         .action-button:hover {
-          background: #444;
+          background: color-mix(in srgb, var(--bb-color-primary) 14%, var(--bb-color-panel-soft));
         }
 
         .action-button.danger {
-          background: #ff4444;
-          border-color: #ff6666;
+          background: var(--bb-color-danger-strong);
+          border-color: var(--bb-color-danger);
         }
 
         .action-button.danger:hover {
-          background: #ff6666;
+          background: var(--bb-color-danger);
         }
 
         .recent-collisions h3 {
-          color: #00d4ff;
+          color: var(--bb-color-primary);
           margin-bottom: 10px;
         }
 
@@ -291,7 +291,7 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
           max-height: min(200px, 40dvh);
           overflow-y: auto;
           overflow-x: hidden;
-          border: 1px solid #333;
+          border: 1px solid var(--bb-color-outline-soft);
           border-radius: 5px;
           padding: 10px;
         }
@@ -311,20 +311,20 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
         }
 
         .collision-time {
-          color: #888;
+          color: var(--bb-color-muted);
           margin-right: 10px;
           min-width: 80px;
         }
 
         .collision-type {
-          color: #ccc;
+          color: var(--bb-color-muted);
           margin-right: 10px;
           min-width: 60px;
           text-transform: capitalize;
         }
 
         .collision-position {
-          color: #00d4ff;
+          color: var(--bb-color-primary);
           font-family: monospace;
         }
       `}</style>

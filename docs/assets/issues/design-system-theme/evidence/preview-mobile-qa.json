@@ -1,0 +1,416 @@
+{
+  "publicUrl": "https://feature-design-system-theme.malnati-brickbreaker.pages.dev/",
+  "screenshotPath": "docs/assets/issues/design-system-theme/evidence/preview-mobile-iphone15.png",
+  "layoutState": {
+    "title": "Breakout",
+    "heading": "Breakout",
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393,
+      "scrollHeight": 852
+    },
+    "buttons": [
+      {
+        "text": "Claro",
+        "rect": {
+          "x": 18,
+          "y": 104.84375,
+          "width": 176.5,
+          "height": 44,
+          "right": 194.5,
+          "bottom": 148.84375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "Escuro",
+        "rect": {
+          "x": 198.5,
+          "y": 104.84375,
+          "width": 176.5,
+          "height": 44,
+          "right": 375,
+          "bottom": 148.84375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "≡Logs",
+        "rect": {
+          "x": 13,
+          "y": 413.84375,
+          "width": 179.5,
+          "height": 44,
+          "right": 192.5,
+          "bottom": 457.84375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "◈Colisões",
+        "rect": {
+          "x": 200.5,
+          "y": 413.84375,
+          "width": 179.5,
+          "height": 44,
+          "right": 380,
+          "bottom": 457.84375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "↻Reiniciar",
+        "rect": {
+          "x": 13,
+          "y": 465.84375,
+          "width": 179.5,
+          "height": 44,
+          "right": 192.5,
+          "bottom": 509.84375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "0Zerar pontuação",
+        "rect": {
+          "x": 200.5,
+          "y": 465.84375,
+          "width": 179.5,
+          "height": 44,
+          "right": 380,
+          "bottom": 509.84375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      }
+    ],
+    "canvas": {
+      "x": 19,
+      "y": 161.84375,
+      "width": 355,
+      "height": 244,
+      "right": 374,
+      "bottom": 405.84375
+    },
+    "scoreValue": 0,
+    "hasHorizontalOverflow": false,
+    "bodyOverflow": "hidden auto"
+  },
+  "logsState": {
+    "title": "Breakout",
+    "heading": "Breakout",
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393,
+      "scrollHeight": 1463
+    },
+    "buttons": [
+      {
+        "text": "Claro",
+        "rect": {
+          "x": 18,
+          "y": 104.84375,
+          "width": 176.5,
+          "height": 44,
+          "right": 194.5,
+          "bottom": 148.84375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "Escuro",
+        "rect": {
+          "x": 198.5,
+          "y": 104.84375,
+          "width": 176.5,
+          "height": 44,
+          "right": 375,
+          "bottom": 148.84375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "≡Logs",
+        "rect": {
+          "x": 13,
+          "y": 413.84375,
+          "width": 179.5,
+          "height": 44,
+          "right": 192.5,
+          "bottom": 457.84375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "◈Colisões",
+        "rect": {
+          "x": 200.5,
+          "y": 413.84375,
+          "width": 179.5,
+          "height": 44,
+          "right": 380,
+          "bottom": 457.84375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "✕ Fechar",
+        "rect": {
+          "x": 29,
+          "y": 489.84375,
+          "width": 92.09375,
+          "height": 44,
+          "right": 121.09375,
+          "bottom": 533.84375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "🔄 Atualizar",
+        "rect": {
+          "x": 29,
+          "y": 697.65625,
+          "width": 162.5,
+          "height": 44,
+          "right": 191.5,
+          "bottom": 741.65625
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "📤 Exportar",
+        "rect": {
+          "x": 201.5,
+          "y": 697.65625,
+          "width": 162.5,
+          "height": 44,
+          "right": 364,
+          "bottom": 741.65625
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "🗑️ Limpar",
+        "rect": {
+          "x": 29,
+          "y": 751.65625,
+          "width": 335,
+          "height": 44,
+          "right": 364,
+          "bottom": 795.65625
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "↻Reiniciar",
+        "rect": {
+          "x": 13,
+          "y": 1309.84375,
+          "width": 179.5,
+          "height": 44,
+          "right": 192.5,
+          "bottom": 1353.84375
+        },
+        "visibleInViewport": false,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "0Zerar pontuação",
+        "rect": {
+          "x": 200.5,
+          "y": 1309.84375,
+          "width": 179.5,
+          "height": 44,
+          "right": 380,
+          "bottom": 1353.84375
+        },
+        "visibleInViewport": false,
+        "hasTouchTarget": true
+      }
+    ],
+    "canvas": {
+      "x": 19,
+      "y": 161.84375,
+      "width": 355,
+      "height": 244,
+      "right": 374,
+      "bottom": 405.84375
+    },
+    "scoreValue": 0,
+    "hasHorizontalOverflow": false,
+    "bodyOverflow": "hidden auto"
+  },
+  "statsState": {
+    "title": "Breakout",
+    "heading": "Breakout",
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393,
+      "scrollHeight": 852
+    },
+    "buttons": [
+      {
+        "text": "Claro",
+        "rect": {
+          "x": 18,
+          "y": 104.84375,
+          "width": 176.5,
+          "height": 44,
+          "right": 194.5,
+          "bottom": 148.84375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "Escuro",
+        "rect": {
+          "x": 198.5,
+          "y": 104.84375,
+          "width": 176.5,
+          "height": 44,
+          "right": 375,
+          "bottom": 148.84375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "≡Logs",
+        "rect": {
+          "x": 13,
+          "y": 413.84375,
+          "width": 179.5,
+          "height": 44,
+          "right": 192.5,
+          "bottom": 457.84375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "◈Colisões",
+        "rect": {
+          "x": 200.5,
+          "y": 413.84375,
+          "width": 179.5,
+          "height": 44,
+          "right": 380,
+          "bottom": 457.84375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "✕",
+        "rect": {
+          "x": 315,
+          "y": 207,
+          "width": 44,
+          "height": 44,
+          "right": 359,
+          "bottom": 251
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "Mostrar Colisões Recentes",
+        "rect": {
+          "x": 34,
+          "y": 535,
+          "width": 274.828125,
+          "height": 44,
+          "right": 308.828125,
+          "bottom": 579
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "Limpar Todas as Colisões",
+        "rect": {
+          "x": 34,
+          "y": 589,
+          "width": 265.1875,
+          "height": 44,
+          "right": 299.1875,
+          "bottom": 633
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "↻Reiniciar",
+        "rect": {
+          "x": 13,
+          "y": 465.84375,
+          "width": 179.5,
+          "height": 44,
+          "right": 192.5,
+          "bottom": 509.84375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "0Zerar pontuação",
+        "rect": {
+          "x": 200.5,
+          "y": 465.84375,
+          "width": 179.5,
+          "height": 44,
+          "right": 380,
+          "bottom": 509.84375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      }
+    ],
+    "canvas": {
+      "x": 19,
+      "y": 161.84375,
+      "width": 355,
+      "height": 244,
+      "right": 374,
+      "bottom": 405.84375
+    },
+    "scoreValue": 0,
+    "hasHorizontalOverflow": false,
+    "bodyOverflow": "hidden auto"
+  },
+  "indexedDbSummary": {
+    "databaseNames": [
+      "BrickBreakerCollisions",
+      "BrickBreakerGameLog",
+      "SystemDebugLog",
+      "breakout"
+    ],
+    "eventTypes": [
+      "game_start",
+      "game_start",
+      "brick_destroyed",
+      "score_update"
+    ],
+    "hasRequiredDatabases": true,
+    "hasRequiredEvents": true,
+    "eventCount": 4
+  },
+  "consoleProblems": []
+}

@@ -260,11 +260,14 @@ description: |
     - Reproduzir defeitos no aplicativo publicado no Cloudflare Pages.
     - Analisar logs, estatísticas, IndexedDB, console, screenshot e comportamento inicial antes de corrigir.
     - Adicionar cobertura automatizada que rode contra URL publicada (`BRICKBREAKER_PUBLIC_URL`).
-    - Executar `make cloudflare-mobile-qa`, `make cloudflare-no-score-reset`, `make cloudflare-phase-transition-qa` e `make cloudflare-dashboard-layout-qa` contra preview Cloudflare de branch antes de PR/merge.
+    - Executar `make cloudflare-mobile-qa`, `make cloudflare-no-score-reset`, `make cloudflare-phase-transition-qa`, `make cloudflare-dashboard-layout-qa` e `make cloudflare-theme-qa` contra preview Cloudflare de branch antes de PR/merge.
     - Garantir que colisão com tijolo/pontuação não gere novo `game_start`, não gere `restart_game` sem ação humana e não retorne a bolinha à posição inicial.
     - Garantir que conclusão de todos os tijolos pause a jogada, registre `level_complete`, mostre toast da próxima fase/velocidade, registre `level_start` e continue sem `game_end`.
     - Garantir que dashboard responsivo preserve o quadro do canvas e não corte botões em iPhone 15.
+    - Garantir que adaptação ao Design System só altere superfícies existentes e não crie loja, upgrades, ranking, leaderboard, settings, tutorial, multiplayer, créditos, vidas ou navegação inferior sem escopo explícito.
+    - Garantir que tema claro/escuro tenha seletor visível em tela, persista a escolha localmente e passe em `make cloudflare-theme-qa` contra Cloudflare Pages publicado.
+    - Não copiar `design-system/*/code.html` para o produto; esses arquivos podem conter CDN, fontes, ícones ou imagens remotas incompatíveis com PWA offline.
     - Manter slots de anúncio como placeholders offline; não adicionar scripts externos, `adsbygoogle`, `ca-pub-*` ou `data-ad-slot`.
     - Antes de feature, reconsultar e resolver PRs pendentes de version bump/Dependabot no GitHub.
-    - Após merge, executar `make cloudflare-mobile-qa`, `make cloudflare-no-score-reset`, `make cloudflare-phase-transition-qa` e `make cloudflare-dashboard-layout-qa` contra `https://malnati-brickbreaker.pages.dev/`.
+    - Após merge, executar `make cloudflare-mobile-qa`, `make cloudflare-no-score-reset`, `make cloudflare-phase-transition-qa`, `make cloudflare-dashboard-layout-qa` e `make cloudflare-theme-qa` contra `https://malnati-brickbreaker.pages.dev/`.
     - Bloquear merge se a validação publicada falhar ou se só houver evidência local.

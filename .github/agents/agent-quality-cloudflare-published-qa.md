@@ -17,13 +17,15 @@ Garantir que defeitos de BrickBreaker sejam analisados e validados no aplicativo
 1. Reproduzir defeitos em URL Cloudflare publicada.
 2. Analisar layout, console, IndexedDB, logs do jogo e estatísticas antes de alterar código.
 3. Adicionar cobertura automatizada contra `BRICKBREAKER_PUBLIC_URL`.
-4. Executar `make cloudflare-mobile-qa`, `make cloudflare-no-score-reset`, `make cloudflare-phase-transition-qa` e `make cloudflare-dashboard-layout-qa` no preview Cloudflare da branch.
+4. Executar `make cloudflare-mobile-qa`, `make cloudflare-no-score-reset`, `make cloudflare-phase-transition-qa`, `make cloudflare-dashboard-layout-qa` e `make cloudflare-theme-qa` no preview Cloudflare da branch.
 5. Bloquear regressão onde pontuação/tijolo recria motor, registra `restart_game` sem ação humana ou retorna a bolinha ao início.
 6. Validar que conclusão de fase pausa antes da próxima fase, mostra toast com velocidade, registra `level_complete` e `level_start`, e não registra `game_end`.
 7. Validar que dashboard responsivo não corta botões no iPhone 15, preserva o quadro do canvas e mantém placeholders de anúncio offline sem scripts externos.
-8. Antes de feature, reconsultar GitHub e resolver PRs pendentes de version bump/Dependabot.
-9. Anexar screenshot e recibo JSON em PRs de UI/gameplay.
-10. Mesclar PR somente se CI e QA publicado passarem.
+8. Validar que adaptação ao Design System não adiciona loja, upgrades, ranking, leaderboard, settings, tutorial, multiplayer, créditos, vidas ou navegação inferior.
+9. Validar que tema claro/escuro tem seletor visível, persiste após reload e não usa CDN, fontes, ícones ou imagens remotas.
+10. Antes de feature, reconsultar GitHub e resolver PRs pendentes de version bump/Dependabot.
+11. Anexar screenshot e recibo JSON em PRs de UI/gameplay.
+12. Mesclar PR somente se CI e QA publicado passarem.
 
 ## Comandos
 
@@ -34,6 +36,7 @@ BRICKBREAKER_PUBLIC_URL=<cloudflare-preview-or-production-url> make cloudflare-m
 BRICKBREAKER_PUBLIC_URL=<cloudflare-preview-or-production-url> make cloudflare-no-score-reset
 BRICKBREAKER_PUBLIC_URL=<cloudflare-preview-or-production-url> make cloudflare-phase-transition-qa
 BRICKBREAKER_PUBLIC_URL=<cloudflare-preview-or-production-url> make cloudflare-dashboard-layout-qa
+BRICKBREAKER_PUBLIC_URL=<cloudflare-preview-or-production-url> make cloudflare-theme-qa
 ```
 
 ## Critérios de bloqueio
@@ -47,5 +50,8 @@ BRICKBREAKER_PUBLIC_URL=<cloudflare-preview-or-production-url> make cloudflare-d
 - Fase completa chama vitória/fim de jogo em vez de pausar e continuar.
 - Toast de fase ausente, cobrindo raquete ou sem velocidade da próxima fase.
 - Dashboard com overflow, botão menor que 44px ou botão cortado em iPhone 15.
+- Tema claro/escuro sem persistência, sem seletor visível ou validado apenas localmente.
+- Design System usado para criar funcionalidade fora de escopo.
+- Uso de CDN, Google Fonts, Material Symbols, imagens remotas ou scripts externos.
 - Placeholder de anúncio com script externo ou identificador real de anúncio.
 - PR sem evidência visual publicada.
