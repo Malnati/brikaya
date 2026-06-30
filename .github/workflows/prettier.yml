@@ -35,6 +35,7 @@ jobs:
           fi
 
       - name: Run Prettier action
+        if: steps.find-projects.outputs.dirs != ''
         uses: creyD/prettier_action@v4.6
         with:
           dry: false

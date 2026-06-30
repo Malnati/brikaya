@@ -1,5 +1,6 @@
 // src/hooks/useGameLoop.ts
-import { useEffect, RefObject, useCallback } from 'react';
+import { useEffect, RefObject, useCallback, useRef } from 'react';
+
 import { GameEngine } from '../logic/GameEngine';
 import { LOG, ERROR } from '../utils/logger';
 
@@ -15,15 +16,15 @@ export function useGameLoop(
   onGameOver?: () => void,
   canvasSize?: CanvasSize
 ) {
-  // Memoizar as funções para evitar recriações desnecessárias
-  const memoizedOnScoreUpdate = useCallback(onScoreUpdate, []);
+  const engineRef = useRef<GameEngine | null>(null);
+  const memoizedOnScoreUpdate = useCallback(onScoreUpdate, [onScoreUpdate]);
   const memoizedOnGameWon = useCallback(onGameWon || (() => {}), [onGameWon]);
   const memoizedOnGameOver = useCallback(onGameOver || (() => {}), [onGameOver]);
 
   useEffect(() => {
     if (!canvasRef.current) {
       LOG('❌ canvasRef.current não está disponível');
-      return;
+      return undefined;
     }
     
     LOG(`🎮 Iniciando GameEngine...`);
@@ -31,9 +32,11 @@ export function useGameLoop(
     LOG(`🎮 Canvas size:`, canvasRef.current.width, 'x', canvasRef.current.height);
     
     try {
+      engineRef.current?.stop();
       const engine = new GameEngine(canvasRef.current, memoizedOnScoreUpdate, memoizedOnGameWon, memoizedOnGameOver, canvasSize);
+      engineRef.current = engine;
       LOG(`🎮 GameEngine criado com sucesso, chamando start()...`);
-      engine.start();
+      void engine.start();
       LOG(`🎮 engine.start() chamado`);
     } catch (error) {
       ERROR('❌ Erro ao criar/iniciar GameEngine:', error);
@@ -41,7 +44,8 @@ export function useGameLoop(
     
     return () => {
       LOG(`🛑 Parando GameEngine...`);
-      // engine.stop();
+      engineRef.current?.stop();
+      engineRef.current = null;
     };
-  }, [canvasRef, memoizedOnScoreUpdate, memoizedOnGameWon, memoizedOnGameOver]); // Removido canvasSize das dependências
+  }, [canvasRef, canvasSize, memoizedOnScoreUpdate, memoizedOnGameWon, memoizedOnGameOver]);
 }

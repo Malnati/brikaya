@@ -14,6 +14,8 @@ export const TOUCH_DEAD_ZONE = 10;
 
 export const BALL_RADIUS = 10;
 export const BALL_SPEED = 2;
+export const MOBILE_CANVAS_WIDTH_THRESHOLD = 480;
+export const MOBILE_BALL_SPEED_MULTIPLIER = 0.55;
 
 export const PADDLE_WIDTH = 75;
 export const PADDLE_HEIGHT = 10;
@@ -31,6 +33,14 @@ export const BRICK_COLS = 5;
 
 export const GAME_COLOR = '#00d4ff';
 export const ROOT_ELEMENT_ID = 'root';
+
+export function calculateInitialBallSpeed(canvasWidth: number): number {
+  if (canvasWidth <= MOBILE_CANVAS_WIDTH_THRESHOLD) {
+    return BALL_SPEED * MOBILE_BALL_SPEED_MULTIPLIER;
+  }
+
+  return BALL_SPEED;
+}
 
 // Funções para calcular dimensões dinâmicas
 export interface DynamicGameDimensions {

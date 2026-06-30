@@ -5,13 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc -p tsconfig.app.json && vite build",
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:colors": "node scripts/test-colors.js",
-    "test:colors:dev": "npm run dev & sleep 5 && npm run test:colors && pkill -f 'vite'"
+    "test:colors:dev": "npm run dev & sleep 5 && npm run test:colors && pkill -f 'vite'",
+    "test:cloudflare-mobile": "node tests/e2e/cloudflare-mobile-qa.js"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.4",
@@ -19,7 +20,7 @@
     "@capacitor/core": "^7.4.2",
     "@capacitor/ios": "^7.4.2",
     "idb": "^7.1.1",
-    "prettier": "^3.6.2",
+    "prettier": "^3.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -38,6 +39,7 @@
     "ts-jest": "^29.4.5",
     "typescript": "^5.2.2",
     "vite": "^7.2.4",
-    "vitest": "^4.0.12"
+    "vitest": "^4.0.12",
+    "wrangler": "^4.105.0"
   }
 }

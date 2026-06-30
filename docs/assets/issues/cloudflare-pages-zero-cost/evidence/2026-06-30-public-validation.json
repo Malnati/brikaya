@@ -1,0 +1,33 @@
+{
+  "generatedAt": "2026-06-30T07:51:22.698Z",
+  "publicUrl": "https://malnati-brickbreaker.pages.dev/",
+  "screenshotPath": "docs/assets/issues/cloudflare-pages-zero-cost/evidence/2026-06-30-public-desktop.png",
+  "onlineState": {
+    "title": "Breakout",
+    "heading": "Breakout",
+    "canvasCount": 1,
+    "hasAlertText": false,
+    "manifestIconSources": [
+      "/icons/icon-192.png",
+      "/icons/icon-512.png"
+    ],
+    "serviceWorkerControlled": true,
+    "indexedDbNames": [
+      "BrickBreakerCollisions",
+      "BrickBreakerGameLog",
+      "SystemDebugLog",
+      "breakout"
+    ],
+    "visibleText": "Breakout\n\nScore: 0\n\nTotal: 0\n\n📊 Colisões\n📋 Logs do Jogo\nRestart Game\nResetar Pontuação\n📊 Ver Logs"
+  },
+  "offlineState": {
+    "title": "Breakout",
+    "heading": "Breakout",
+    "canvasCount": 1,
+    "serviceWorkerControlled": true,
+    "bodyTextIncludesGame": true
+  },
+  "externalRequestCount": 0,
+  "externalRequests": [],
+  "consoleErrors": []
+}

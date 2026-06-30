@@ -56,7 +56,7 @@ interface GameLogViewerProps {
   onClose?: () => void;
 }
 
-const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = false, onClose }) => {
+const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose }) => {
   const [events, setEvents] = useState<GameEvent[]>([]);
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState<string>('all');
@@ -100,7 +100,7 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = false, onClos
     try {
       const allEvents = await gameLogger.getAllEvents();
       setEvents(allEvents);
-      
+
       const gameStats = await gameLogger.getGameStats();
       setStats(gameStats);
     } catch (error) {
@@ -158,8 +158,8 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = false, onClos
     return `(${vel.dx.toFixed(2)}, ${vel.dy.toFixed(2)})`;
   };
 
-  const filteredEvents = filter === 'all' 
-    ? events 
+  const filteredEvents = filter === 'all'
+    ? events
     : events.filter(event => event.type === filter);
 
   useEffect(() => {
@@ -180,8 +180,8 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = false, onClos
       <div className="header">
         <h2>📊 Visualizador de Logs do Jogo</h2>
         <div className="controls">
-          <select 
-            value={filter} 
+          <select
+            value={filter}
             onChange={(e) => setFilter(e.target.value)}
             className="filter-select"
           >
@@ -250,8 +250,8 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = false, onClos
             <div className="no-events">Nenhum evento encontrado</div>
           ) : (
             filteredEvents.map((event) => (
-              <div 
-                key={event.id} 
+              <div
+                key={event.id}
                 className="event-item"
                 style={{ borderLeftColor: eventTypeColors[event.type] }}
               >
@@ -368,10 +368,29 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = false, onClos
 
       <style>{`
         .game-log-viewer {
+          width: 100%;
           max-width: 1200px;
-          margin: 0 auto;
-          padding: 20px;
+          max-height: calc(100dvh - 24px);
+          margin: 16px auto 0;
+          padding: 16px;
+          overflow-y: auto;
+          overflow-x: hidden;
+          box-sizing: border-box;
           font-family: Arial, sans-serif;
+          color: #1a1a1a;
+          background: #f8f9fa;
+          border-radius: 8px;
+        }
+
+        .close-button {
+          min-width: 44px;
+          min-height: 44px;
+          padding: 8px 12px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          cursor: pointer;
+          color: #1a1a1a;
+          background: white;
         }
 
         .header {
@@ -383,6 +402,10 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = false, onClos
           gap: 10px;
         }
 
+        .header h2 {
+          color: #1a1a1a;
+        }
+
         .controls {
           display: flex;
           gap: 10px;
@@ -390,6 +413,7 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = false, onClos
         }
 
         .filter-select, .refresh-button, .export-button, .clear-button {
+          min-height: 44px;
           padding: 8px 12px;
           border: 1px solid #ddd;
           border-radius: 4px;
@@ -436,8 +460,9 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = false, onClos
         }
 
         .events-container {
-          max-height: 600px;
+          max-height: min(600px, 55dvh);
           overflow-y: auto;
+          overflow-x: hidden;
         }
 
         .event-item {
@@ -530,13 +555,26 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = false, onClos
         }
 
         @media (max-width: 768px) {
-          .header {
+          .close-button {
+          min-width: 44px;
+          min-height: 44px;
+          padding: 8px 12px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+
+        .header {
             flex-direction: column;
             align-items: stretch;
           }
 
           .controls {
             justify-content: center;
+          }
+
+          .filter-select, .refresh-button, .export-button, .clear-button {
+            flex: 1 1 140px;
           }
 
           .event-header {
@@ -557,4 +595,4 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = false, onClos
   );
 };
 
-export default GameLogViewer; 
+export default GameLogViewer;
