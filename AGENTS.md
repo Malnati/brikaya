@@ -85,6 +85,17 @@ Cada arquivo gerado deve conter seu caminho completo como primeira linha comenta
 - Capacitor para builds nativos (iOS/Android).
 - Cada arquivo de configuração deve seguir os padrões estabelecidos.
 
+## Cloudflare/Google para Codex
+
+- A publicação web padrão deste projeto deve usar **Cloudflare Pages Direct Upload** com saída estática em `dist/`, sem Workers, Pages Functions, KV, D1, R2, Access, AI, Images, Browser Rendering ou qualquer produto que possa gerar custo.
+- O projeto Cloudflare Pages padrão tentado é `brickbreaker`; como o subdomínio limpo pode estar indisponível globalmente, use `malnati-brickbreaker` como fallback operacional para publicar em `https://malnati-brickbreaker.pages.dev/`.
+- O custo zero é um bloqueio obrigatório: se Cloudflare, Google ou outro painel solicitar upgrade, cobrança, overage, compra de domínio, ativação comercial ou autorização de gastos, interrompa a tarefa e peça confirmação explícita.
+- Use as credenciais definidas em `/Users/mal/GitHub/malnati/.env` para Cloudflare e Google quando CLI/API forem suficientes. Nunca imprima tokens, secrets, refresh tokens, JSON de service account nem IDs sensíveis.
+- O Google Console não é necessário no fluxo padrão. Se for necessário usá-lo, use exclusivamente o projeto Tookyn: `https://console.cloud.google.com/welcome?project=tookyn`.
+- Se for necessário usar Google Chrome, selecione uma janela existente antes de iniciar, não abra novas janelas, abra abas temporárias apenas nessa janela e feche todas as abas criadas durante a execução ao terminar. Não feche abas preexistentes do usuário.
+- Se uma nova variável do BrickBreaker for necessária, grave-a no `.env` local do projeto e espelhe-a em `/Users/mal/GitHub/malnati/.env`; mantenha os dois arquivos fora do Git e documente apenas os nomes em `.env.example` e nos docs.
+- Os targets oficiais são `make cloudflare-env-check`, `make cloudflare-build` e `make cloudflare-deploy`.
+
 ⸻
 
 ## Convenções de Código

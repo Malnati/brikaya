@@ -3,6 +3,19 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.9.0] - 2026-06-30
+### Adicionado
+- Publicação zero custo no Cloudflare Pages via Direct Upload para `malnati-brickbreaker.pages.dev` com targets `cloudflare-env-check`, `cloudflare-build` e `cloudflare-deploy`.
+- Documentação operacional para uso de `/Users/mal/GitHub/malnati/.env`, política de Google Chrome/Google Console e matriz de custo zero.
+- `.env.example` com variáveis não sensíveis do projeto Pages.
+
+### Corrigido
+- `Makefile` volta a executar `make help` com indentação válida.
+- Build de produção usa `tsconfig.app.json` para excluir testes TypeScript do pacote estático.
+- Service Worker volta a ser registrado e passa a cachear assets de produção com estratégia cache-first.
+- Manifest PWA passa a usar ícones PNG locais.
+- Alertas/debug visíveis foram removidos do carregamento inicial.
+
 ## [1.8.0] - 2025-11-21
 ### Adicionado
 - **Serviço Caddy com HTTPS**: Novo container dedicado que publica `brickbreacker.cranio.dev` com TLS automático e proxy para o serviço `brickbreaker`.
@@ -101,4 +114,3 @@
 ### Adicionado
 - Integração com Capacitor para build nativo iOS e Android
 - Novos targets no Makefile para gerar e preparar o build
-
