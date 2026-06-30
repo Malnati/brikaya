@@ -2,6 +2,13 @@
 description: |
   // .cursor/rules/all.mdc
 
+  # Regra obrigatória: runtime Node.js v23
+
+  - Este repositório deve usar Node.js v23.x e npm 10.x para qualquer execução Codex, build, teste, deploy Cloudflare ou automação técnica.
+  - Antes de executar comandos Node/npm, validar `node --version`; a saída deve começar com `v23.`.
+  - Não usar shell que troque silenciosamente para Node x64/v22; preferir zsh/Homebrew arm64 ativo.
+  - Se a versão não for v23.x, parar e corrigir o runtime antes de prosseguir.
+
   # Regras do arquivo: constants.mdc
 
   Nenhum valor fixo (hardcoded) deve ser utilizado diretamente no corpo de funções, métodos ou blocos de código.

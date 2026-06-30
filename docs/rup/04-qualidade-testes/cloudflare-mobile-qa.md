@@ -5,6 +5,10 @@
 
 Testes locais são pré-checks técnicos. A prova da verdade do BrickBreaker é sempre o aplicativo publicado no Cloudflare Pages.
 
+## Runtime obrigatório
+
+Antes de qualquer build, deploy ou QA publicado, execute `node --version` e confirme Node v23.x. Testes gerados por outro runtime não são evidência aceita para este projeto.
+
 ## Fluxo obrigatório
 
 1. Publicar a branch no Cloudflare Pages Direct Upload.
