@@ -63,6 +63,25 @@ Assertivas mínimas:
 - slot inferior não fica entre canvas e controles principais;
 - placeholders de publicidade mantêm distância visual da área jogável.
 
+## Tema claro/escuro e Design System
+
+Comando:
+
+```bash
+BRICKBREAKER_PUBLIC_URL=<cloudflare-preview-ou-producao> make cloudflare-theme-qa
+```
+
+Assertivas mínimas:
+
+- seletor `Claro`/`Escuro` visível em iPhone 15 e desktop;
+- tema muda `data-theme`;
+- escolha persiste após reload;
+- botões mantêm alvo mínimo de 44px;
+- canvas permanece inteiro visível;
+- logs e colisões continuam acessíveis;
+- loja, ranking, leaderboard, upgrades, tutorial, multiplayer e settings não aparecem;
+- nenhuma requisição externa é feita.
+
 ## Política de publicidade
 
 - Esta entrega permite apenas placeholders offline com texto `Publicidade`.
@@ -82,13 +101,15 @@ Salvar em `docs/assets/issues/phase-pause-modern-dashboard/evidence/`:
 - JSON do `cloudflare-dashboard-layout-qa`;
 - JSON do `cloudflare-mobile-qa`;
 - JSON do `cloudflare-no-score-reset`.
+- JSON do `cloudflare-theme-qa`;
+- screenshots iPhone 15 e desktop nos temas claro e escuro.
 
 ## Merge
 
 O PR só pode ser mergeado se:
 
 - CI passar;
-- preview Cloudflare passar nos quatro comandos de QA;
+- preview Cloudflare passar nos cinco comandos de QA;
 - PR incluir evidência visual e JSON publicados;
 - produção for publicada após merge;
-- produção passar nos quatro comandos de QA contra `https://malnati-brickbreaker.pages.dev/`.
+- produção passar nos cinco comandos de QA contra `https://malnati-brickbreaker.pages.dev/`.

@@ -17,9 +17,10 @@ Antes de qualquer build, deploy ou QA publicado, execute `node --version` e conf
 4. Executar `make cloudflare-no-score-reset` para provar que colisão com tijolo/pontuação não reinicia motor, não registra `restart_game` sem ação humana e não recoloca a bolinha no ponto inicial.
 5. Executar `make cloudflare-phase-transition-qa` para provar pausa, toast, `level_complete`, `level_start` e ausência de `game_end` em conclusão de fase.
 6. Executar `make cloudflare-dashboard-layout-qa` para validar iPhone SE, iPhone 12/13/14, iPhone 15, iPhone Pro Max, landscape, tablet e desktop.
-7. Salvar evidências em `docs/assets/issues/<slug>/evidence/` quando houver PR de UI/gameplay.
-8. Mesclar apenas após CI e QA publicado passarem.
-9. Após merge, repetir QA contra `https://malnati-brickbreaker.pages.dev/`.
+7. Executar `make cloudflare-theme-qa` para provar seletor claro/escuro, persistência, ausência de features fora de escopo e ausência de recursos externos.
+8. Salvar evidências em `docs/assets/issues/<slug>/evidence/` quando houver PR de UI/gameplay.
+9. Mesclar apenas após CI e QA publicado passarem.
+10. Após merge, repetir QA contra `https://malnati-brickbreaker.pages.dev/`.
 
 ## Comando
 
@@ -28,6 +29,7 @@ BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-
 BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-no-score-reset
 BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-phase-transition-qa
 BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-dashboard-layout-qa
+BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-theme-qa
 ```
 
 ## Evidência esperada
@@ -37,4 +39,5 @@ BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-
 - JSON de continuidade pós-tijolo com contagem de `game_start`, `restart_game`, `score_update` e posição da bolinha.
 - JSON de transição de fase com `level_complete`, `level_start`, pausa observada, toast e screenshot.
 - JSON de layout responsivo com viewports obrigatórios, botões 44px+, canvas visível e placeholders de anúncio seguros.
+- JSON de tema com screenshots claro/escuro, persistência após reload e bloqueio de recursos externos.
 - Registro no PR com link para os artefatos.

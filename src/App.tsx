@@ -2,10 +2,12 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import Game from './components/Game';
 import { AdSlotPlaceholder } from './components/AdSlotPlaceholder';
+import { ThemeToggle } from './components/ThemeToggle';
 import { saveScore, getTotalScore, resetScores } from './storage/score';
 import { LEVEL_TOAST_EXIT_MS, LEVEL_TOAST_VISIBLE_MS, LevelTransitionPayload } from './constants/game';
 import { LOG } from './utils/logger';
 import { GameQaScenario } from './logic/GameEngine';
+import { useThemePreference } from './hooks/useThemePreference';
 
 LOG('🚦 App.tsx carregado');
 
@@ -19,6 +21,7 @@ export default function App() {
   const [level, setLevel] = useState(1);
   const [levelToastPayload, setLevelToastPayload] = useState<LevelTransitionPayload | null>(null);
   const [isLevelToastVisible, setIsLevelToastVisible] = useState(false);
+  const { theme, selectTheme } = useThemePreference();
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const levelTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hideToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -99,13 +102,16 @@ export default function App() {
       <section className="game-dashboard" aria-label="Jogo Breakout">
         <header className="dashboard-header">
           <div className="dashboard-title-group">
-            <p className="dashboard-eyebrow">Arcade offline</p>
+            <p className="dashboard-eyebrow">Arcade clássico</p>
             <h1>Breakout</h1>
           </div>
-          <div className="score-strip" aria-label="Painel de pontuação">
-            <span className="score-chip">Fase {level}</span>
-            <span className="score-chip">Score {score}</span>
-            <span className="score-chip">Total {totalScore}</span>
+          <div className="dashboard-header-controls">
+            <div className="score-strip" aria-label="Painel de pontuação">
+              <span className="score-chip">Fase {level}</span>
+              <span className="score-chip">Score {score}</span>
+              <span className="score-chip">Total {totalScore}</span>
+            </div>
+            <ThemeToggle theme={theme} onThemeChange={selectTheme} />
           </div>
         </header>
 
