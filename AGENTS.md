@@ -77,6 +77,13 @@ Cada arquivo gerado deve conter seu caminho completo como primeira linha comenta
 
 ⸻
 
+## Runtime Node.js obrigatório
+
+- Este repositório deve ser executado com **Node.js v23.x** e npm 10.x.
+- Antes de qualquer `npm ci`, build, teste, deploy Cloudflare ou execução Codex técnica, rode `node --version` e confirme que a saída começa com `v23.`.
+- Use o runtime arm64/Homebrew já ativo no macOS (`/opt/homebrew/...`) quando disponível; não use shells que troquem silenciosamente para Node x64/v22.
+- Se `node --version` não começar com `v23.`, interrompa a execução e corrija o runtime antes de continuar.
+
 ## Convenções de Configuração
 
 - O projeto utiliza `package.json` para gerenciamento de dependências.
