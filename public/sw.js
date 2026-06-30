@@ -1,6 +1,6 @@
 // public/sw.js
-const CACHE_NAME = 'breakout-cache-v1';
-const ASSETS_TO_CACHE = [
+const CACHE_NAME = 'breakout-cache-v2';
+const PRECACHE_URLS = [
   '/',
   '/index.html',
   '/manifest.webmanifest',
@@ -8,22 +8,21 @@ const ASSETS_TO_CACHE = [
   '/sw.js',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
-  '/src/main.tsx',
-  '/src/App.tsx',
-  '/src/components/Game.tsx',
-  '/src/hooks/useGameLoop.ts',
-  '/src/logic/GameEngine.ts',
-  '/src/objects/Ball.ts',
-  '/src/objects/Paddle.ts',
-  '/src/objects/Bricks.ts',
-  '/src/registerServiceWorker.ts',
   '/assets/ballGrey.png',
-  '/assets/paddle.png'
+  '/assets/paddle.png',
+  '/assets/brick_blue.png',
+  '/assets/brick_green.png',
+  '/assets/brick_purple.png',
+  '/assets/brick_red.png',
+  '/assets/brick_yellow.png'
 ];
+const GET_METHOD = 'GET';
+const DOCUMENT_DESTINATION = 'document';
+const INDEX_URL = '/index.html';
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS_TO_CACHE))
+    caches.open(CACHE_NAME).then(cache => cache.addAll(PRECACHE_URLS))
   );
   self.skipWaiting();
 });
@@ -44,14 +43,30 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  if (event.request.method !== GET_METHOD) {
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request).then(response => {
-      if (response) {
-        return response;
+    caches.match(event.request).then(cachedResponse => {
+      if (cachedResponse) {
+        return cachedResponse;
       }
-      return fetch(event.request).catch(() => {
-        if (event.request.destination === 'document') {
-          return caches.match('/index.html');
+
+      return fetch(event.request).then(networkResponse => {
+        const requestUrl = new URL(event.request.url);
+        const shouldCacheResponse =
+          requestUrl.origin === self.location.origin && networkResponse.ok;
+
+        if (shouldCacheResponse) {
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
+        }
+
+        return networkResponse;
+      }).catch(() => {
+        if (event.request.destination === DOCUMENT_DESTINATION) {
+          return caches.match(INDEX_URL);
         }
       });
     })

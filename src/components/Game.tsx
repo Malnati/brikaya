@@ -1,5 +1,6 @@
 // src/components/Game.tsx
 import { useRef, useEffect, useState } from 'react';
+
 import { useGameLoop } from '../hooks/useGameLoop';
 import { useColorDebug } from '../hooks/useColorDebug';
 import { CollisionStats } from './CollisionStats';
@@ -12,58 +13,65 @@ interface GameProps {
   onGameOver?: () => void;
 }
 
+const CANVAS_CONTAINER_HORIZONTAL_INSET = 16;
+const AVAILABLE_CANVAS_HEIGHT_RATIO = 0.42;
+const RESIZE_EVENT_NAME = 'resize';
+const ORIENTATION_CHANGE_EVENT_NAME = 'orientationchange';
+const TOUCH_ACTION_NONE = 'none';
+
 export default function Game({ onScoreUpdate, onGameWon, onGameOver }: GameProps) {
+  const surfaceRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: CANVAS_WIDTH, height: CANVAS_HEIGHT });
   const [showCollisionStats, setShowCollisionStats] = useState(false);
   const [showGameLogs, setShowGameLogs] = useState(false);
   
-  // Responsividade do canvas
   useEffect(() => {
     const updateCanvasSize = () => {
-      const container = canvasRef.current?.parentElement;
+      const container = surfaceRef.current;
       if (!container) return;
       
-      const containerWidth = container.clientWidth - 40; // Padding
-      const containerHeight = window.innerHeight * 0.6; // 60% da altura da tela
-      
-      // Calcular proporção do canvas original
+      const containerWidth = Math.max(MIN_CANVAS_WIDTH, container.clientWidth - CANVAS_CONTAINER_HORIZONTAL_INSET);
+      const containerHeight = Math.max(MIN_CANVAS_HEIGHT, window.innerHeight * AVAILABLE_CANVAS_HEIGHT_RATIO);
       const aspectRatio = CANVAS_WIDTH / CANVAS_HEIGHT;
       
       let newWidth = containerWidth;
       let newHeight = containerWidth / aspectRatio;
       
-      // Se a altura calculada for maior que o disponível, ajustar pela altura
       if (newHeight > containerHeight) {
         newHeight = containerHeight;
         newWidth = containerHeight * aspectRatio;
       }
       
-      // Aplicar limites mínimo e máximo
       newWidth = Math.max(MIN_CANVAS_WIDTH, Math.min(MAX_CANVAS_WIDTH, newWidth));
       newHeight = Math.max(MIN_CANVAS_HEIGHT, Math.min(MAX_CANVAS_HEIGHT, newHeight));
       
-      setCanvasSize({ width: newWidth, height: newHeight });
+      const nextSize = { width: Math.floor(newWidth), height: Math.floor(newHeight) };
+      setCanvasSize(currentSize => {
+        if (currentSize.width === nextSize.width && currentSize.height === nextSize.height) {
+          return currentSize;
+        }
+
+        return nextSize;
+      });
     };
     
     updateCanvasSize();
-    window.addEventListener('resize', updateCanvasSize);
-    window.addEventListener('orientationchange', updateCanvasSize);
+    window.addEventListener(RESIZE_EVENT_NAME, updateCanvasSize);
+    window.addEventListener(ORIENTATION_CHANGE_EVENT_NAME, updateCanvasSize);
     
     return () => {
-      window.removeEventListener('resize', updateCanvasSize);
-      window.removeEventListener('orientationchange', updateCanvasSize);
+      window.removeEventListener(RESIZE_EVENT_NAME, updateCanvasSize);
+      window.removeEventListener(ORIENTATION_CHANGE_EVENT_NAME, updateCanvasSize);
     };
   }, []);
   
   useGameLoop(canvasRef, onScoreUpdate, onGameWon, onGameOver, canvasSize);
-  
-  // Debug de cores (apenas em desenvolvimento)
   useColorDebug(canvasRef);
 
   return (
-    <div className="game-container">
-      <div className="game-controls">
+    <div className="game-surface" ref={surfaceRef}>
+      <div className="game-controls" aria-label="Ferramentas do jogo">
         <button 
           onClick={() => setShowCollisionStats(true)}
           className="stats-button"
@@ -87,7 +95,7 @@ export default function Game({ onScoreUpdate, onGameWon, onGameOver }: GameProps
         style={{
           maxWidth: '100%',
           height: 'auto',
-          touchAction: 'none' // Previne zoom e scroll no touch
+          touchAction: TOUCH_ACTION_NONE
         }}
       />
       
@@ -102,22 +110,41 @@ export default function Game({ onScoreUpdate, onGameWon, onGameOver }: GameProps
       />
       
       <style>{`
+        .game-surface {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
+          box-sizing: border-box;
+        }
+
         .game-controls {
           display: flex;
           justify-content: center;
-          margin-bottom: 10px;
-          gap: 10px;
+          align-items: center;
+          flex-wrap: wrap;
+          width: 100%;
+          max-width: 100%;
+          margin-bottom: 8px;
+          gap: 8px;
+          box-sizing: border-box;
         }
         
         .stats-button {
           background: #333;
           color: white;
           border: 1px solid #555;
-          padding: 8px 16px;
+          padding: 8px 12px;
           border-radius: 5px;
           cursor: pointer;
           font-family: inherit;
           font-size: 14px;
+          min-height: 44px;
+          max-width: 100%;
+          box-sizing: border-box;
         }
         
         .stats-button:hover {

@@ -34,7 +34,7 @@ echo -e "${BLUE}📝 Instalando git hook pre-push...${NC}"
 cat > "$PRE_PUSH_HOOK" << 'HOOK_EOF'
 #!/bin/bash
 # .git/hooks/pre-push
-# Git hook que executa Prettier via Docker antes de cada push
+# Git hook que executa Prettier e reforça QA publicado antes de cada push
 
 # Não usar set -e porque Prettier pode retornar códigos diferentes de 0
 # mesmo quando funciona corretamente
@@ -98,6 +98,13 @@ if [ "$GIT_STATUS" != "$NEW_GIT_STATUS" ]; then
   echo ""
   echo -e "${YELLOW}Ou execute manualmente: make format-prettier${NC}"
   exit 1
+fi
+
+echo -e "${BLUE}☁️  QA publicado Cloudflare é obrigatório para gameplay/UI/logs.${NC}"
+echo -e "${BLUE}💡 Execute antes do PR/merge: BRICKBREAKER_PUBLIC_URL=<preview-cloudflare> make cloudflare-mobile-qa${NC}"
+if [ "${BRICKBREAKER_RUN_PUBLISHED_QA_ON_PUSH:-0}" = "1" ]; then
+  echo -e "${BLUE}☁️  Executando QA publicado Cloudflare no pre-push...${NC}"
+  make cloudflare-mobile-qa
 fi
 
 echo -e "${GREEN}✅ Nenhuma mudança de formatação necessária. Prosseguindo com push...${NC}"

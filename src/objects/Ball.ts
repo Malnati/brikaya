@@ -1,5 +1,5 @@
 // src/objects/Ball.ts
-import { BALL_SPEED } from '../constants/game';
+import { calculateInitialBallSpeed } from '../constants/game';
 import { DynamicGameDimensions } from '../constants/game';
 import { ASSET_PATHS } from '../constants/assets';
 import { AssetLoader } from '../utils/assetLoader';
@@ -13,16 +13,19 @@ const MAX_BOUNCE_ANGLE = Math.PI / 3; // 60 graus
 export class Ball {
   private x: number;
   private y: number;
-  private dx = BALL_SPEED;
-  private dy = -BALL_SPEED;
+  private dx: number;
+  private dy: number;
   private readonly radius: number;
   private blockHitsThisRun = 0;
   private paddleCollision = false;
 
   constructor(private canvasWidth: number, canvasHeight: number, dimensions: DynamicGameDimensions) {
+    const initialSpeed = calculateInitialBallSpeed(canvasWidth);
     this.radius = dimensions.ballRadius;
     this.x = canvasWidth / 2;
     this.y = canvasHeight - BALL_INITIAL_Y_OFFSET;
+    this.dx = initialSpeed;
+    this.dy = -initialSpeed;
     LOG(`⚽ Ball inicializada: pos=(${this.x}, ${this.y}), raio=${this.radius}`);
   }
 

@@ -3,6 +3,32 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+
+## [1.10.0] - 2026-06-30
+### Corrigido
+- Layout mobile do BrickBreaker para iPhone 15, evitando canvas e botões fora da viewport.
+- Ciclo do GameEngine para limpar loops/listeners no restart/re-render, reduzir velocidade inicial em mobile e não reiniciar após pontuação/tijolo.
+- Visualização de logs e estatísticas para uso em telas mobile publicadas.
+- Workflow de Prettier para não ficar bloqueado quando nenhum diretório Node elegível é encontrado.
+- `package-lock.json` sincronizado com `package.json` para permitir `npm ci`.
+
+### Adicionado
+- QA automatizado contra Cloudflare Pages publicado via `make cloudflare-mobile-qa` e `make cloudflare-no-score-reset`.
+- Regras Codex/agents/rules para exigir análise de logs/estatísticas, teste publicado no Cloudflare, PR e merge automatizado após CI.
+
+## [1.9.0] - 2026-06-30
+### Adicionado
+- Publicação zero custo no Cloudflare Pages via Direct Upload para `malnati-brickbreaker.pages.dev` com targets `cloudflare-env-check`, `cloudflare-build` e `cloudflare-deploy`.
+- Documentação operacional para uso de `/Users/mal/GitHub/malnati/.env`, política de Google Chrome/Google Console e matriz de custo zero.
+- `.env.example` com variáveis não sensíveis do projeto Pages.
+
+### Corrigido
+- `Makefile` volta a executar `make help` com indentação válida.
+- Build de produção usa `tsconfig.app.json` para excluir testes TypeScript do pacote estático.
+- Service Worker volta a ser registrado e passa a cachear assets de produção com estratégia cache-first.
+- Manifest PWA passa a usar ícones PNG locais.
+- Alertas/debug visíveis foram removidos do carregamento inicial.
+
 ## [1.8.0] - 2025-11-21
 ### Adicionado
 - **Serviço Caddy com HTTPS**: Novo container dedicado que publica `brickbreacker.cranio.dev` com TLS automático e proxy para o serviço `brickbreaker`.
@@ -101,4 +127,3 @@
 ### Adicionado
 - Integração com Capacitor para build nativo iOS e Android
 - Novos targets no Makefile para gerar e preparar o build
-

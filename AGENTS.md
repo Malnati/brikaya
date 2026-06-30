@@ -77,6 +77,13 @@ Cada arquivo gerado deve conter seu caminho completo como primeira linha comenta
 
 ⸻
 
+## Runtime Node.js obrigatório
+
+- Este repositório deve ser executado com **Node.js v23.x** e npm 10.x.
+- Antes de qualquer `npm ci`, build, teste, deploy Cloudflare ou execução Codex técnica, rode `node --version` e confirme que a saída começa com `v23.`.
+- Use o runtime arm64/Homebrew já ativo no macOS (`/opt/homebrew/...`) quando disponível; não use shells que troquem silenciosamente para Node x64/v22.
+- Se `node --version` não começar com `v23.`, interrompa a execução e corrija o runtime antes de continuar.
+
 ## Convenções de Configuração
 
 - O projeto utiliza `package.json` para gerenciamento de dependências.
@@ -84,6 +91,17 @@ Cada arquivo gerado deve conter seu caminho completo como primeira linha comenta
 - Vite como ferramenta padrão de bundling.
 - Capacitor para builds nativos (iOS/Android).
 - Cada arquivo de configuração deve seguir os padrões estabelecidos.
+
+## Cloudflare/Google para Codex
+
+- A publicação web padrão deste projeto deve usar **Cloudflare Pages Direct Upload** com saída estática em `dist/`, sem Workers, Pages Functions, KV, D1, R2, Access, AI, Images, Browser Rendering ou qualquer produto que possa gerar custo.
+- O projeto Cloudflare Pages padrão tentado é `brickbreaker`; como o subdomínio limpo pode estar indisponível globalmente, use `malnati-brickbreaker` como fallback operacional para publicar em `https://malnati-brickbreaker.pages.dev/`.
+- O custo zero é um bloqueio obrigatório: se Cloudflare, Google ou outro painel solicitar upgrade, cobrança, overage, compra de domínio, ativação comercial ou autorização de gastos, interrompa a tarefa e peça confirmação explícita.
+- Use as credenciais definidas em `/Users/mal/GitHub/malnati/.env` para Cloudflare e Google quando CLI/API forem suficientes. Nunca imprima tokens, secrets, refresh tokens, JSON de service account nem IDs sensíveis.
+- O Google Console não é necessário no fluxo padrão. Se for necessário usá-lo, use exclusivamente o projeto Tookyn: `https://console.cloud.google.com/welcome?project=tookyn`.
+- Se for necessário usar Google Chrome, selecione uma janela existente antes de iniciar, não abra novas janelas, abra abas temporárias apenas nessa janela e feche todas as abas criadas durante a execução ao terminar. Não feche abas preexistentes do usuário.
+- Se uma nova variável do BrickBreaker for necessária, grave-a no `.env` local do projeto e espelhe-a em `/Users/mal/GitHub/malnati/.env`; mantenha os dois arquivos fora do Git e documente apenas os nomes em `.env.example` e nos docs.
+- Os targets oficiais são `make cloudflare-env-check`, `make cloudflare-build` e `make cloudflare-deploy`.
 
 ⸻
 
@@ -483,3 +501,14 @@ src/
 - **Documento:** `AGENTS.md` (versão adaptada para projeto de jogo)
 - **Regras adicionais:** `.cursor/rules/all.mdc`
 - **Status:** Ativo e sob revisão contínua
+
+## Fluxo obrigatório — correções de gameplay, logs e estatísticas
+
+- Correções de tela, gameplay, logs ou estatísticas devem começar pela reprodução no aplicativo publicado no Cloudflare Pages; localhost é apenas pré-check técnico e nunca é prova da verdade.
+- Antes de corrigir, analise evidências de layout, IndexedDB, logs do jogo, estatísticas de colisão, console e comportamento inicial.
+- Toda correção deve adicionar ou atualizar cobertura automatizada que execute contra uma URL publicada no Cloudflare Pages.
+- Os comandos oficiais de QA publicado são `make cloudflare-mobile-qa` e `make cloudflare-no-score-reset`; use `BRICKBREAKER_PUBLIC_URL` para apontar para preview de branch ou produção.
+- Pontuação, colisão com tijolo e atualização de HUD não podem reiniciar o `GameEngine`, registrar `restart_game` sem ação humana, criar novo `game_start` ou recolocar a bolinha na posição inicial.
+- O fluxo obrigatório é: analisar logs/estatísticas → corrigir → adicionar cobertura → testar contra Cloudflare publicado → corrigir novamente se falhar → validar evidência visual → abrir PR → aguardar checks → fazer merge sem intervenção humana quando CI e QA publicado passarem.
+- PRs de UI/gameplay devem incluir screenshot em `docs/assets/issues/.../evidence/` e recibo JSON do teste publicado.
+- Não mescle PR se a única evidência for local. Se Cloudflare, GitHub Actions ou credenciais bloquearem teste publicado, reporte blocker e não declare conclusão.
