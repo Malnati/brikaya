@@ -20,7 +20,7 @@
     "@capacitor/core": "^7.4.2",
     "@capacitor/ios": "^7.4.2",
     "idb": "^7.1.1",
-    "prettier": "^3.6.2",
+    "prettier": "^3.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
