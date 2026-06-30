@@ -56,6 +56,23 @@ npm run build
 make build-all
 ```
 
+### Publicação gratuita no Cloudflare Pages
+```bash
+# Validar variáveis sem exibir segredos
+make cloudflare-env-check
+
+# Gerar build estático
+make cloudflare-build
+
+# Publicar no Cloudflare Pages Direct Upload
+make cloudflare-deploy
+```
+
+- O fluxo publica apenas arquivos estáticos em `dist/`, usando o projeto `malnati-brickbreaker` e o domínio gratuito `https://malnati-brickbreaker.pages.dev/`.
+- O fluxo não usa Workers, Pages Functions, KV, D1, R2, Access, AI, Images, Browser Rendering, domínio pago ou qualquer recurso que gere custo.
+- Credenciais Cloudflare/Google devem vir de `/Users/mal/GitHub/malnati/.env`; variáveis específicas do BrickBreaker também ficam no `.env` local e são espelhadas no `.env` de `/Users/mal/GitHub/malnati/`.
+- Guia completo: [`docs/rup/03-implementacao/publicacao-cloudflare-pages-zero-custo.md`](docs/rup/03-implementacao/publicacao-cloudflare-pages-zero-custo.md).
+
 ### Docker + Caddy (HTTPS)
 ```bash
 # Garantir que a rede externa do Caddy exista (necessário apenas uma vez)

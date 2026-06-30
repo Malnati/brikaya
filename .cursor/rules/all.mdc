@@ -2,6 +2,13 @@
 description: |
   // .cursor/rules/all.mdc
 
+  # Regra obrigatória: runtime Node.js v23
+
+  - Este repositório deve usar Node.js v23.x e npm 10.x para qualquer execução Codex, build, teste, deploy Cloudflare ou automação técnica.
+  - Antes de executar comandos Node/npm, validar `node --version`; a saída deve começar com `v23.`.
+  - Não usar shell que troque silenciosamente para Node x64/v22; preferir zsh/Homebrew arm64 ativo.
+  - Se a versão não for v23.x, parar e corrigir o runtime antes de prosseguir.
+
   # Regras do arquivo: constants.mdc
 
   Nenhum valor fixo (hardcoded) deve ser utilizado diretamente no corpo de funções, métodos ou blocos de código.
@@ -244,3 +251,16 @@ description: |
     - O arquivo deve estar localizado na raiz do projeto.
     - Cada item deve conter uma breve descrição do trabalho pendente ou concluído.
     - Mantenha o histórico atualizado sempre que houver novas pendências ou resolução das existentes.
+
+  # Regras do arquivo: cloudflare-published-qa.mdc
+
+  Para BrickBreaker, testes locais nunca são prova da verdade para gameplay, UI, logs, estatísticas, PWA ou validação mobile.
+
+    Fluxo obrigatório:
+    - Reproduzir defeitos no aplicativo publicado no Cloudflare Pages.
+    - Analisar logs, estatísticas, IndexedDB, console, screenshot e comportamento inicial antes de corrigir.
+    - Adicionar cobertura automatizada que rode contra URL publicada (`BRICKBREAKER_PUBLIC_URL`).
+    - Executar `make cloudflare-mobile-qa` e `make cloudflare-no-score-reset` contra preview Cloudflare de branch antes de PR/merge.
+    - Garantir que colisão com tijolo/pontuação não gere novo `game_start`, não gere `restart_game` sem ação humana e não retorne a bolinha à posição inicial.
+    - Após merge, executar `make cloudflare-mobile-qa` e `make cloudflare-no-score-reset` contra `https://malnati-brickbreaker.pages.dev/`.
+    - Bloquear merge se a validação publicada falhar ou se só houver evidência local.
