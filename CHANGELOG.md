@@ -10,6 +10,7 @@
 - Ciclo do GameEngine para limpar loops/listeners no restart/re-render e reduzir velocidade inicial em mobile.
 - Visualização de logs e estatísticas para uso em telas mobile publicadas.
 - Workflow de Prettier para não ficar bloqueado quando nenhum diretório Node elegível é encontrado.
+- `package-lock.json` sincronizado com `package.json` para permitir `npm ci`.
 
 ### Adicionado
 - QA automatizado contra Cloudflare Pages publicado via `make cloudflare-mobile-qa`.
