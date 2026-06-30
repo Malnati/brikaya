@@ -7,13 +7,13 @@
 ## [1.10.0] - 2026-06-30
 ### Corrigido
 - Layout mobile do BrickBreaker para iPhone 15, evitando canvas e botões fora da viewport.
-- Ciclo do GameEngine para limpar loops/listeners no restart/re-render e reduzir velocidade inicial em mobile.
+- Ciclo do GameEngine para limpar loops/listeners no restart/re-render, reduzir velocidade inicial em mobile e não reiniciar após pontuação/tijolo.
 - Visualização de logs e estatísticas para uso em telas mobile publicadas.
 - Workflow de Prettier para não ficar bloqueado quando nenhum diretório Node elegível é encontrado.
 - `package-lock.json` sincronizado com `package.json` para permitir `npm ci`.
 
 ### Adicionado
-- QA automatizado contra Cloudflare Pages publicado via `make cloudflare-mobile-qa`.
+- QA automatizado contra Cloudflare Pages publicado via `make cloudflare-mobile-qa` e `make cloudflare-no-score-reset`.
 - Regras Codex/agents/rules para exigir análise de logs/estatísticas, teste publicado no Cloudflare, PR e merge automatizado após CI.
 
 ## [1.9.0] - 2026-06-30

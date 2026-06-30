@@ -1,0 +1,376 @@
+{
+  "publicUrl": "https://fix-no-score-reset-after-bri.malnati-brickbreaker.pages.dev/",
+  "screenshotPath": "docs/assets/issues/no-score-reset-after-brick/evidence/2026-06-30-cloudflare-preview-mobile.png",
+  "layoutState": {
+    "title": "Breakout",
+    "heading": "Breakout",
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393,
+      "scrollHeight": 852
+    },
+    "buttons": [
+      {
+        "text": "📊 Colisões",
+        "rect": {
+          "x": 73.546875,
+          "y": 119.921875,
+          "width": 102.8125,
+          "height": 44,
+          "right": 176.359375,
+          "bottom": 163.921875
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "📋 Logs do Jogo",
+        "rect": {
+          "x": 184.359375,
+          "y": 119.921875,
+          "width": 135.078125,
+          "height": 44,
+          "right": 319.4375,
+          "bottom": 163.921875
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "Restart Game",
+        "rect": {
+          "x": 119.265625,
+          "y": 423.921875,
+          "width": 154.453125,
+          "height": 45,
+          "right": 273.71875,
+          "bottom": 468.921875
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "Resetar Pontuação",
+        "rect": {
+          "x": 96.78125,
+          "y": 478.921875,
+          "width": 199.4375,
+          "height": 45,
+          "right": 296.21875,
+          "bottom": 523.921875
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "📊 Ver Logs",
+        "rect": {
+          "x": 126.375,
+          "y": 533.921875,
+          "width": 140.234375,
+          "height": 52,
+          "right": 266.609375,
+          "bottom": 585.921875
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      }
+    ],
+    "canvas": {
+      "x": 19,
+      "y": 171.921875,
+      "width": 355,
+      "height": 244,
+      "right": 374,
+      "bottom": 415.921875
+    },
+    "scoreValue": 10,
+    "hasHorizontalOverflow": false,
+    "bodyOverflow": "hidden auto"
+  },
+  "logsState": {
+    "title": "Breakout",
+    "heading": "Breakout",
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393,
+      "scrollHeight": 1458
+    },
+    "buttons": [
+      {
+        "text": "📊 Colisões",
+        "rect": {
+          "x": 73.546875,
+          "y": 119.921875,
+          "width": 102.8125,
+          "height": 44,
+          "right": 176.359375,
+          "bottom": 163.921875
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "📋 Logs do Jogo",
+        "rect": {
+          "x": 184.359375,
+          "y": 119.921875,
+          "width": 135.078125,
+          "height": 44,
+          "right": 319.4375,
+          "bottom": 163.921875
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "✕ Fechar",
+        "rect": {
+          "x": 155.8125,
+          "y": 447.921875,
+          "width": 81.359375,
+          "height": 44,
+          "right": 237.171875,
+          "bottom": 491.921875
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "🔄 Atualizar",
+        "rect": {
+          "x": 29,
+          "y": 655.734375,
+          "width": 162.5,
+          "height": 44,
+          "right": 191.5,
+          "bottom": 699.734375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "📤 Exportar",
+        "rect": {
+          "x": 201.5,
+          "y": 655.734375,
+          "width": 162.5,
+          "height": 44,
+          "right": 364,
+          "bottom": 699.734375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "🗑️ Limpar",
+        "rect": {
+          "x": 29,
+          "y": 709.734375,
+          "width": 335,
+          "height": 44,
+          "right": 364,
+          "bottom": 753.734375
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "Restart Game",
+        "rect": {
+          "x": 119.265625,
+          "y": 1267.921875,
+          "width": 154.453125,
+          "height": 45,
+          "right": 273.71875,
+          "bottom": 1312.921875
+        },
+        "visibleInViewport": false,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "Resetar Pontuação",
+        "rect": {
+          "x": 96.78125,
+          "y": 1322.921875,
+          "width": 199.4375,
+          "height": 45,
+          "right": 296.21875,
+          "bottom": 1367.921875
+        },
+        "visibleInViewport": false,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "📊 Ver Logs",
+        "rect": {
+          "x": 126.375,
+          "y": 1377.921875,
+          "width": 140.234375,
+          "height": 52,
+          "right": 266.609375,
+          "bottom": 1429.921875
+        },
+        "visibleInViewport": false,
+        "hasTouchTarget": true
+      }
+    ],
+    "canvas": {
+      "x": 19,
+      "y": 171.921875,
+      "width": 355,
+      "height": 244,
+      "right": 374,
+      "bottom": 415.921875
+    },
+    "scoreValue": 10,
+    "hasHorizontalOverflow": false,
+    "bodyOverflow": "hidden auto"
+  },
+  "statsState": {
+    "title": "Breakout",
+    "heading": "Breakout",
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393,
+      "scrollHeight": 852
+    },
+    "buttons": [
+      {
+        "text": "📊 Colisões",
+        "rect": {
+          "x": 73.546875,
+          "y": 119.921875,
+          "width": 102.8125,
+          "height": 44,
+          "right": 176.359375,
+          "bottom": 163.921875
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "📋 Logs do Jogo",
+        "rect": {
+          "x": 184.359375,
+          "y": 119.921875,
+          "width": 135.078125,
+          "height": 44,
+          "right": 319.4375,
+          "bottom": 163.921875
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "✕",
+        "rect": {
+          "x": 315,
+          "y": 208.5,
+          "width": 44,
+          "height": 44,
+          "right": 359,
+          "bottom": 252.5
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "Mostrar Colisões Recentes",
+        "rect": {
+          "x": 34,
+          "y": 533,
+          "width": 234,
+          "height": 44,
+          "right": 268,
+          "bottom": 577
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "Limpar Todas as Colisões",
+        "rect": {
+          "x": 34,
+          "y": 587,
+          "width": 225.984375,
+          "height": 44,
+          "right": 259.984375,
+          "bottom": 631
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "Restart Game",
+        "rect": {
+          "x": 119.265625,
+          "y": 423.921875,
+          "width": 154.453125,
+          "height": 45,
+          "right": 273.71875,
+          "bottom": 468.921875
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "Resetar Pontuação",
+        "rect": {
+          "x": 96.78125,
+          "y": 478.921875,
+          "width": 199.4375,
+          "height": 45,
+          "right": 296.21875,
+          "bottom": 523.921875
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "📊 Ver Logs",
+        "rect": {
+          "x": 126.375,
+          "y": 533.921875,
+          "width": 140.234375,
+          "height": 52,
+          "right": 266.609375,
+          "bottom": 585.921875
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      }
+    ],
+    "canvas": {
+      "x": 19,
+      "y": 171.921875,
+      "width": 355,
+      "height": 244,
+      "right": 374,
+      "bottom": 415.921875
+    },
+    "scoreValue": 10,
+    "hasHorizontalOverflow": false,
+    "bodyOverflow": "hidden auto"
+  },
+  "indexedDbSummary": {
+    "databaseNames": [
+      "BrickBreakerCollisions",
+      "BrickBreakerGameLog",
+      "SystemDebugLog",
+      "breakout"
+    ],
+    "eventTypes": [
+      "game_start",
+      "brick_destroyed",
+      "score_update"
+    ],
+    "hasRequiredDatabases": true,
+    "hasRequiredEvents": true,
+    "eventCount": 3
+  },
+  "consoleProblems": []
+}

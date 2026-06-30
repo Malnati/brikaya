@@ -46,7 +46,14 @@ export default function Game({ onScoreUpdate, onGameWon, onGameOver }: GameProps
       newWidth = Math.max(MIN_CANVAS_WIDTH, Math.min(MAX_CANVAS_WIDTH, newWidth));
       newHeight = Math.max(MIN_CANVAS_HEIGHT, Math.min(MAX_CANVAS_HEIGHT, newHeight));
       
-      setCanvasSize({ width: Math.floor(newWidth), height: Math.floor(newHeight) });
+      const nextSize = { width: Math.floor(newWidth), height: Math.floor(newHeight) };
+      setCanvasSize(currentSize => {
+        if (currentSize.width === nextSize.width && currentSize.height === nextSize.height) {
+          return currentSize;
+        }
+
+        return nextSize;
+      });
     };
     
     updateCanvasSize();
