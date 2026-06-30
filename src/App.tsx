@@ -1,5 +1,5 @@
 // src/App.tsx
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import Game from './components/Game';
 import GameLogViewer from './components/GameLogViewer';
 import { saveScore, getTotalScore, resetScores } from './storage/score';
@@ -9,6 +9,7 @@ LOG('🚦 App.tsx carregado');
 
 export default function App() {
   const [score, setScore] = useState(0);
+  const scoreRef = useRef(0);
   const [totalScore, setTotalScore] = useState(0);
   const [gameKey, setGameKey] = useState(0);
   const [gameWon, setGameWon] = useState(false);
@@ -16,28 +17,30 @@ export default function App() {
   const [showLogs, setShowLogs] = useState(false);
 
   const handleScoreUpdate = useCallback((newScore: number) => {
+    scoreRef.current = newScore;
     setScore(newScore);
   }, []);
 
   const handleGameWon = useCallback(async () => {
     setGameWon(true);
-    await saveScore(score);
+    await saveScore(scoreRef.current);
     const total = await getTotalScore();
     setTotalScore(total);
-  }, [score]);
+  }, []);
 
   const handleGameOver = useCallback(async () => {
     setGameOver(true);
-    await saveScore(score);
+    await saveScore(scoreRef.current);
     const total = await getTotalScore();
     setTotalScore(total);
-  }, [score]);
+  }, []);
 
   useEffect(() => {
     getTotalScore().then(setTotalScore);
   }, []);
 
   const handleRestart = useCallback(() => {
+    scoreRef.current = 0;
     setScore(0);
     setGameWon(false);
     setGameOver(false);

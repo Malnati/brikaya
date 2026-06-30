@@ -253,6 +253,7 @@ description: |
     - Reproduzir defeitos no aplicativo publicado no Cloudflare Pages.
     - Analisar logs, estatísticas, IndexedDB, console, screenshot e comportamento inicial antes de corrigir.
     - Adicionar cobertura automatizada que rode contra URL publicada (`BRICKBREAKER_PUBLIC_URL`).
-    - Executar `make cloudflare-mobile-qa` contra preview Cloudflare de branch antes de PR/merge.
-    - Após merge, executar `make cloudflare-mobile-qa` contra `https://malnati-brickbreaker.pages.dev/`.
+    - Executar `make cloudflare-mobile-qa` e `make cloudflare-no-score-reset` contra preview Cloudflare de branch antes de PR/merge.
+    - Garantir que colisão com tijolo/pontuação não gere novo `game_start`, não gere `restart_game` sem ação humana e não retorne a bolinha à posição inicial.
+    - Após merge, executar `make cloudflare-mobile-qa` e `make cloudflare-no-score-reset` contra `https://malnati-brickbreaker.pages.dev/`.
     - Bloquear merge se a validação publicada falhar ou se só houver evidência local.
