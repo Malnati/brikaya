@@ -1,32 +1,46 @@
 // src/App.tsx
-import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
-import Game from './components/Game';
-import { AdSlotPlaceholder } from './components/AdSlotPlaceholder';
-import { ThemeToggle } from './components/ThemeToggle';
-import { AudioToggle } from './components/AudioToggle';
-import { CollisionStats } from './components/CollisionStats';
-import GameLogViewer from './components/GameLogViewer';
-import { saveScore, getTotalScore, resetScores, getHighScore, saveHighScore } from './storage/score';
-import { LEVEL_TOAST_EXIT_MS, LEVEL_TOAST_VISIBLE_MS, LevelTransitionPayload } from './constants/game';
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
+import Game from "./components/Game";
+import { AdSlotPlaceholder } from "./components/AdSlotPlaceholder";
+import { ThemeToggle } from "./components/ThemeToggle";
+import { AudioToggle } from "./components/AudioToggle";
+import { CollisionStats } from "./components/CollisionStats";
+import GameLogViewer from "./components/GameLogViewer";
+import {
+  saveScore,
+  getTotalScore,
+  resetScores,
+  getHighScore,
+  saveHighScore,
+} from "./storage/score";
+import {
+  LEVEL_TOAST_EXIT_MS,
+  LEVEL_TOAST_VISIBLE_MS,
+  LevelTransitionPayload,
+} from "./constants/game";
 import {
   AUDIO_QA_SCENARIO,
   GAMEPLAY_MUSIC_AUDIO_ID,
   GAME_AUDIO_IDS,
   MENU_MUSIC_AUDIO_ID,
   type GameAudioSink,
-} from './constants/audio';
-import { BRICKBREAKER_OFFLINE_READY_EVENT } from './registerServiceWorker';
-import { LOG } from './utils/logger';
-import { audioManager } from './utils/audioManager';
-import { GameQaScenario } from './logic/GameEngine';
-import { useThemePreference } from './hooks/useThemePreference';
-import { useAudioPreference } from './hooks/useAudioPreference';
+} from "./constants/audio";
+import { BRICKBREAKER_OFFLINE_READY_EVENT } from "./registerServiceWorker";
+import { LOG } from "./utils/logger";
+import { audioManager } from "./utils/audioManager";
+import { GameQaScenario } from "./logic/GameEngine";
+import { useThemePreference } from "./hooks/useThemePreference";
+import { useAudioPreference } from "./hooks/useAudioPreference";
 
-LOG('🚦 App.tsx carregado');
+LOG("🚦 App.tsx carregado");
 
-const FIRST_AUDIO_INTERACTION_EVENTS = ['pointerdown', 'keydown', 'touchstart'] as const;
+const FIRST_AUDIO_INTERACTION_EVENTS = [
+  "pointerdown",
+  "keydown",
+  "touchstart",
+] as const;
 const OFFLINE_READY_VISIBLE_MS = 2400;
-const LATE_PHASE_STABILITY_QA_SCENARIO = 'late-phase-stability';
+const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
 
 export default function App() {
   const [score, setScore] = useState(0);
@@ -37,7 +51,8 @@ export default function App() {
   const [gameWon, setGameWon] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [level, setLevel] = useState(1);
-  const [levelToastPayload, setLevelToastPayload] = useState<LevelTransitionPayload | null>(null);
+  const [levelToastPayload, setLevelToastPayload] =
+    useState<LevelTransitionPayload | null>(null);
   const [isLevelToastVisible, setIsLevelToastVisible] = useState(false);
   const [isOfflineReadyVisible, setIsOfflineReadyVisible] = useState(false);
   const { theme, selectTheme } = useThemePreference();
@@ -45,32 +60,39 @@ export default function App() {
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const levelTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hideToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const offlineReadyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const offlineReadyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showCollisionStats, setShowCollisionStats] = useState(false);
   const [showGameLogs, setShowGameLogs] = useState(false);
   const qaScenario = useMemo<GameQaScenario | null>(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    const scenario = searchParams.get('qaScenario');
-    if (scenario === 'single-brick-phase-clear') return 'single-brick-phase-clear';
-    if (scenario === LATE_PHASE_STABILITY_QA_SCENARIO) return LATE_PHASE_STABILITY_QA_SCENARIO;
+    const scenario = searchParams.get("qaScenario");
+    if (scenario === "single-brick-phase-clear")
+      return "single-brick-phase-clear";
+    if (scenario === LATE_PHASE_STABILITY_QA_SCENARIO)
+      return LATE_PHASE_STABILITY_QA_SCENARIO;
     if (scenario === AUDIO_QA_SCENARIO) return AUDIO_QA_SCENARIO;
     return null;
   }, []);
-  const audioSink = useMemo<GameAudioSink>(() => ({
-    playAudio: id => {
-      void audioManager.play(id);
-    },
-    startGameplayMusic: () => {
-      void audioManager.playMusic(GAMEPLAY_MUSIC_AUDIO_ID);
-    },
-    startMenuMusic: () => {
-      void audioManager.playMusic(MENU_MUSIC_AUDIO_ID);
-    },
-    setHighIntensity: active => {
-      void audioManager.setHighIntensity(active);
-    },
-  }), []);
+  const audioSink = useMemo<GameAudioSink>(
+    () => ({
+      playAudio: (id) => {
+        void audioManager.play(id);
+      },
+      startGameplayMusic: () => {
+        void audioManager.playMusic(GAMEPLAY_MUSIC_AUDIO_ID);
+      },
+      startMenuMusic: () => {
+        void audioManager.playMusic(MENU_MUSIC_AUDIO_ID);
+      },
+      setHighIntensity: (active) => {
+        void audioManager.setHighIntensity(active);
+      },
+    }),
+    [],
+  );
 
   const handleScoreUpdate = useCallback((newScore: number) => {
     scoreRef.current = newScore;
@@ -106,16 +128,24 @@ export default function App() {
     audioSink.startMenuMusic();
   }, [audioSink, persistFinalScore]);
 
-  useEffect(() => () => {
-    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-    if (levelTimerRef.current) clearTimeout(levelTimerRef.current);
-    if (hideToastTimerRef.current) clearTimeout(hideToastTimerRef.current);
-    if (offlineReadyTimerRef.current) clearTimeout(offlineReadyTimerRef.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+      if (levelTimerRef.current) clearTimeout(levelTimerRef.current);
+      if (hideToastTimerRef.current) clearTimeout(hideToastTimerRef.current);
+      if (offlineReadyTimerRef.current)
+        clearTimeout(offlineReadyTimerRef.current);
+    },
+    [],
+  );
 
   useEffect(() => {
-    getTotalScore().then(setTotalScore).catch(() => audioSink.playAudio(GAME_AUDIO_IDS.ERROR_SOFT));
-    getHighScore().then(setHighScore).catch(() => audioSink.playAudio(GAME_AUDIO_IDS.ERROR_SOFT));
+    getTotalScore()
+      .then(setTotalScore)
+      .catch(() => audioSink.playAudio(GAME_AUDIO_IDS.ERROR_SOFT));
+    getHighScore()
+      .then(setHighScore)
+      .catch(() => audioSink.playAudio(GAME_AUDIO_IDS.ERROR_SOFT));
   }, [audioSink]);
 
   useEffect(() => {
@@ -133,7 +163,7 @@ export default function App() {
     if (isAudioMuted) return undefined;
 
     const unlockAudio = () => {
-      void audioManager.unlock().then(unlocked => {
+      void audioManager.unlock().then((unlocked) => {
         if (unlocked) {
           void audioManager.playMusic(GAMEPLAY_MUSIC_AUDIO_ID);
         }
@@ -141,7 +171,10 @@ export default function App() {
     };
 
     for (const eventName of FIRST_AUDIO_INTERACTION_EVENTS) {
-      window.addEventListener(eventName, unlockAudio, { once: true, passive: true });
+      window.addEventListener(eventName, unlockAudio, {
+        once: true,
+        passive: true,
+      });
     }
 
     return () => {
@@ -155,28 +188,33 @@ export default function App() {
     if (!isMenuOpen) return undefined;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         audioSink.playAudio(GAME_AUDIO_IDS.PANEL_CLOSE);
         setIsMenuOpen(false);
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [audioSink, isMenuOpen]);
 
   useEffect(() => {
     const showOfflineReady = () => {
       setIsOfflineReadyVisible(true);
       audioSink.playAudio(GAME_AUDIO_IDS.OFFLINE_READY);
-      if (offlineReadyTimerRef.current) clearTimeout(offlineReadyTimerRef.current);
+      if (offlineReadyTimerRef.current)
+        clearTimeout(offlineReadyTimerRef.current);
       offlineReadyTimerRef.current = setTimeout(() => {
         setIsOfflineReadyVisible(false);
       }, OFFLINE_READY_VISIBLE_MS);
     };
 
     window.addEventListener(BRICKBREAKER_OFFLINE_READY_EVENT, showOfflineReady);
-    return () => window.removeEventListener(BRICKBREAKER_OFFLINE_READY_EVENT, showOfflineReady);
+    return () =>
+      window.removeEventListener(
+        BRICKBREAKER_OFFLINE_READY_EVENT,
+        showOfflineReady,
+      );
   }, [audioSink]);
 
   const handleRestart = useCallback(() => {
@@ -188,7 +226,7 @@ export default function App() {
     setLevel(1);
     setLevelToastPayload(null);
     setIsLevelToastVisible(false);
-    setGameKey(prev => prev + 1);
+    setGameKey((prev) => prev + 1);
     setIsMenuOpen(false);
   }, [audioSink]);
 
@@ -236,10 +274,13 @@ export default function App() {
     setShowCollisionStats(false);
   }, [audioSink]);
 
-  const handleThemeChange = useCallback((nextTheme: Parameters<typeof selectTheme>[0]) => {
-    audioSink.playAudio(GAME_AUDIO_IDS.THEME_TOGGLE);
-    selectTheme(nextTheme);
-  }, [audioSink, selectTheme]);
+  const handleThemeChange = useCallback(
+    (nextTheme: Parameters<typeof selectTheme>[0]) => {
+      audioSink.playAudio(GAME_AUDIO_IDS.THEME_TOGGLE);
+      selectTheme(nextTheme);
+    },
+    [audioSink, selectTheme],
+  );
 
   const handleAudioToggle = useCallback(async () => {
     if (!isAudioMuted) {
@@ -252,30 +293,35 @@ export default function App() {
     }
   }, [audioSink, isAudioMuted, toggleAudio]);
 
-  const handleLevelTransition = useCallback((payload: LevelTransitionPayload) => {
-    audioSink.playAudio(GAME_AUDIO_IDS.LEVEL_TOAST_IN);
-    setLevelToastPayload(payload);
-    setIsLevelToastVisible(true);
-    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-    if (levelTimerRef.current) clearTimeout(levelTimerRef.current);
-    if (hideToastTimerRef.current) clearTimeout(hideToastTimerRef.current);
+  const handleLevelTransition = useCallback(
+    (payload: LevelTransitionPayload) => {
+      audioSink.playAudio(GAME_AUDIO_IDS.LEVEL_TOAST_IN);
+      setLevelToastPayload(payload);
+      setIsLevelToastVisible(true);
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+      if (levelTimerRef.current) clearTimeout(levelTimerRef.current);
+      if (hideToastTimerRef.current) clearTimeout(hideToastTimerRef.current);
 
-    toastTimerRef.current = setTimeout(() => {
-      setIsLevelToastVisible(false);
-    }, LEVEL_TOAST_VISIBLE_MS);
+      toastTimerRef.current = setTimeout(() => {
+        setIsLevelToastVisible(false);
+      }, LEVEL_TOAST_VISIBLE_MS);
 
-    levelTimerRef.current = setTimeout(() => {
-      setLevel(payload.nextLevel);
-    }, payload.pauseMs);
+      levelTimerRef.current = setTimeout(() => {
+        setLevel(payload.nextLevel);
+      }, payload.pauseMs);
 
-    hideToastTimerRef.current = setTimeout(() => {
-      setLevelToastPayload(null);
-    }, payload.pauseMs + LEVEL_TOAST_EXIT_MS);
-  }, [audioSink]);
+      hideToastTimerRef.current = setTimeout(() => {
+        setLevelToastPayload(null);
+      }, payload.pauseMs + LEVEL_TOAST_EXIT_MS);
+    },
+    [audioSink],
+  );
 
   const handleLevelChange = useCallback((nextLevel: number) => {
     setLevel(nextLevel);
   }, []);
+
+  const restartLabel = gameWon || gameOver ? "Jogar de novo" : "Reiniciar";
 
   return (
     <main className="app-shell">
@@ -292,7 +338,6 @@ export default function App() {
               <span className="score-chip">Total {totalScore}</span>
               <span className="score-chip">Recorde {highScore}</span>
             </div>
-            <AudioToggle muted={isAudioMuted} onToggle={handleAudioToggle} />
             <button
               type="button"
               className="dashboard-menu-button"
@@ -313,7 +358,11 @@ export default function App() {
               aria-label="Fechar menu"
               onClick={handleCloseMenu}
             />
-            <aside id="game-settings-menu" className="settings-drawer" aria-label="Menu do jogo">
+            <aside
+              id="game-settings-menu"
+              className="settings-drawer"
+              aria-label="Menu do jogo"
+            >
               <div className="settings-drawer__header">
                 <h2>Menu</h2>
                 <button
@@ -326,28 +375,39 @@ export default function App() {
                 </button>
               </div>
               <div className="settings-drawer__section">
-                <h3>Partida</h3>
-                <button type="button" onClick={handleRestart} className="dashboard-button dashboard-button--primary">
-                  <span aria-hidden="true" className="button-icon">↻</span>
-                  {gameWon || gameOver ? 'Jogar de novo' : 'Reiniciar'}
-                </button>
-              </div>
-              <div className="settings-drawer__section">
                 <h3>Tema</h3>
                 <ThemeToggle theme={theme} onThemeChange={handleThemeChange} />
               </div>
               <div className="settings-drawer__section">
                 <h3>Ferramentas</h3>
-                <button type="button" onClick={handleOpenLogs} className="dashboard-button dashboard-button--secondary">
-                  <span aria-hidden="true" className="button-icon">≡</span>
+                <button
+                  type="button"
+                  onClick={handleOpenLogs}
+                  className="dashboard-button dashboard-button--secondary"
+                >
+                  <span aria-hidden="true" className="button-icon">
+                    ≡
+                  </span>
                   Logs
                 </button>
-                <button type="button" onClick={handleOpenCollisionStats} className="dashboard-button dashboard-button--secondary">
-                  <span aria-hidden="true" className="button-icon">◈</span>
+                <button
+                  type="button"
+                  onClick={handleOpenCollisionStats}
+                  className="dashboard-button dashboard-button--secondary"
+                >
+                  <span aria-hidden="true" className="button-icon">
+                    ◈
+                  </span>
                   Colisões
                 </button>
-                <button type="button" onClick={handleResetScores} className="dashboard-button dashboard-button--secondary">
-                  <span aria-hidden="true" className="button-icon">0</span>
+                <button
+                  type="button"
+                  onClick={handleResetScores}
+                  className="dashboard-button dashboard-button--secondary"
+                >
+                  <span aria-hidden="true" className="button-icon">
+                    0
+                  </span>
                   Zerar pontuação
                 </button>
               </div>
@@ -369,6 +429,30 @@ export default function App() {
                 isLevelToastVisible={isLevelToastVisible}
                 qaScenario={qaScenario}
                 audioSink={audioSink}
+                overlayControls={
+                  <div
+                    className="game-corner-controls"
+                    aria-label="Controles principais"
+                  >
+                    <AudioToggle
+                      muted={isAudioMuted}
+                      onToggle={handleAudioToggle}
+                      iconOnly
+                      className="game-icon-control game-icon-control--audio"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRestart}
+                      className="dashboard-button dashboard-button--primary game-icon-control game-icon-control--restart"
+                      aria-label={restartLabel}
+                      title={restartLabel}
+                    >
+                      <span aria-hidden="true" className="button-icon">
+                        ↻
+                      </span>
+                    </button>
+                  </div>
+                }
               />
             </div>
             <AdSlotPlaceholder variant="bottom" />
@@ -377,33 +461,30 @@ export default function App() {
         </div>
 
         <div className="game-status-region" aria-live="polite">
-        {isOfflineReadyVisible && (
-          <div className="offline-ready-message">
-            <p>Pronto para jogar offline</p>
-          </div>
-        )}
-        {gameWon && (
-          <div className="victory-message">
-            <h2>Fase concluída</h2>
-            <p>Pontuação final: {score}</p>
-          </div>
-        )}
-        {gameOver && (
-          <div className="game-over-message">
-            <h2>Fim de jogo</h2>
-            <p>Pontuação final: {score}</p>
-          </div>
-        )}
+          {isOfflineReadyVisible && (
+            <div className="offline-ready-message">
+              <p>Pronto para jogar offline</p>
+            </div>
+          )}
+          {gameWon && (
+            <div className="victory-message">
+              <h2>Fase concluída</h2>
+              <p>Pontuação final: {score}</p>
+            </div>
+          )}
+          {gameOver && (
+            <div className="game-over-message">
+              <h2>Fim de jogo</h2>
+              <p>Pontuação final: {score}</p>
+            </div>
+          )}
         </div>
       </section>
       <CollisionStats
         isVisible={showCollisionStats}
         onClose={handleCloseCollisionStats}
       />
-      <GameLogViewer
-        isVisible={showGameLogs}
-        onClose={handleCloseLogs}
-      />
+      <GameLogViewer isVisible={showGameLogs} onClose={handleCloseLogs} />
     </main>
   );
 }

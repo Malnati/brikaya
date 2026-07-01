@@ -1,18 +1,27 @@
 // src/App.test.tsx
-import React from 'react';
-import { render, screen, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import React from "react";
+import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
-import App from './App';
+import App from "./App";
 
-jest.mock('./components/Game', () => ({
+jest.mock("./components/Game", () => ({
   __esModule: true,
-  default: function MockGame() {
-    return <canvas aria-label="Tabuleiro do jogo" />;
+  default: function MockGame({
+    overlayControls,
+  }: {
+    overlayControls?: React.ReactNode;
+  }) {
+    return (
+      <div>
+        <canvas aria-label="Tabuleiro do jogo" />
+        {overlayControls}
+      </div>
+    );
   },
 }));
 
-jest.mock('./storage/score', () => ({
+jest.mock("./storage/score", () => ({
   saveScore: jest.fn().mockResolvedValue(undefined),
   getTotalScore: jest.fn().mockResolvedValue(0),
   getHighScore: jest.fn().mockResolvedValue(0),
@@ -20,17 +29,17 @@ jest.mock('./storage/score', () => ({
   resetScores: jest.fn().mockResolvedValue(undefined),
 }));
 
-jest.mock('./utils/logger', () => ({
+jest.mock("./utils/logger", () => ({
   LOG: jest.fn(),
   ERROR: jest.fn(),
   WARN: jest.fn(),
 }));
 
 function mockSystemTheme(prefersDark: boolean) {
-  Object.defineProperty(window, 'matchMedia', {
+  Object.defineProperty(window, "matchMedia", {
     writable: true,
     value: jest.fn().mockImplementation((query: string) => ({
-      matches: prefersDark && query === '(prefers-color-scheme: dark)',
+      matches: prefersDark && query === "(prefers-color-scheme: dark)",
       media: query,
       onchange: null,
       addEventListener: jest.fn(),
@@ -42,86 +51,137 @@ function mockSystemTheme(prefersDark: boolean) {
   });
 }
 
-describe('App theme selector', () => {
+describe("App theme selector", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    document.documentElement.removeAttribute('data-theme');
+    document.documentElement.removeAttribute("data-theme");
     window.localStorage.clear();
   });
 
-  it('mantém configurações no menu lateral fechado por padrão', () => {
+  it("mantém configurações no menu lateral fechado por padrão", () => {
     mockSystemTheme(true);
 
     render(<App />);
 
-    expect(screen.getByRole('button', { name: 'Menu' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Reiniciar' })).not.toBeInTheDocument();
-    expect(screen.queryByLabelText('Tema da interface')).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /zerar pontuação/i })).not.toBeInTheDocument();
-    expect(screen.queryByText(/loja|ranking|upgrades|tutorial|multiplayer|settings/i)).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Menu" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Som" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Reiniciar" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByLabelText("Tema da interface"),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /zerar pontuação/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        /loja|ranking|upgrades|tutorial|multiplayer|settings/i,
+      ),
+    ).not.toBeInTheDocument();
   });
 
-  it('abre menu lateral com partida, tema, logs, colisões e zerar pontuação', async () => {
+  it("abre menu lateral com tema, logs, colisões e zerar pontuação", async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
 
     render(<App />);
 
-    await user.click(screen.getByRole('button', { name: 'Menu' }));
+    await user.click(screen.getByRole("button", { name: "Menu" }));
 
-    expect(screen.getByRole('complementary', { name: 'Menu do jogo' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Reiniciar' })).toBeInTheDocument();
-    const themeGroup = screen.getByLabelText('Tema da interface');
-    expect(within(themeGroup).getByRole('button', { name: 'Claro' })).toBeInTheDocument();
-    expect(within(themeGroup).getByRole('button', { name: 'Escuro' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /logs/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /colisões/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /zerar pontuação/i })).toBeInTheDocument();
+    const drawer = screen.getByRole("complementary", { name: "Menu do jogo" });
+    expect(drawer).toBeInTheDocument();
+    expect(
+      within(drawer).queryByRole("button", { name: "Reiniciar" }),
+    ).not.toBeInTheDocument();
+    expect(within(drawer).queryByText("Partida")).not.toBeInTheDocument();
+    const themeGroup = screen.getByLabelText("Tema da interface");
+    expect(
+      within(themeGroup).getByRole("button", { name: "Claro" }),
+    ).toBeInTheDocument();
+    expect(
+      within(themeGroup).getByRole("button", { name: "Escuro" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /logs/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /colisões/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /zerar pontuação/i }),
+    ).toBeInTheDocument();
   });
 
-  it('alterna tema, aplica no documento e persiste escolha', async () => {
+  it("alterna tema, aplica no documento e persiste escolha", async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
 
     render(<App />);
 
-    expect(document.documentElement.dataset.theme).toBe('dark');
-    await user.click(screen.getByRole('button', { name: 'Menu' }));
+    expect(document.documentElement.dataset.theme).toBe("dark");
+    await user.click(screen.getByRole("button", { name: "Menu" }));
 
-    await user.click(screen.getByRole('button', { name: 'Claro' }));
+    await user.click(screen.getByRole("button", { name: "Claro" }));
 
-    expect(document.documentElement.dataset.theme).toBe('light');
-    expect(window.localStorage.setItem).toHaveBeenCalledWith('brickbreaker-theme', 'light');
+    expect(document.documentElement.dataset.theme).toBe("light");
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(
+      "brickbreaker-theme",
+      "light",
+    );
 
-    await user.click(screen.getByRole('button', { name: 'Escuro' }));
+    await user.click(screen.getByRole("button", { name: "Escuro" }));
 
-    expect(document.documentElement.dataset.theme).toBe('dark');
-    expect(window.localStorage.setItem).toHaveBeenCalledWith('brickbreaker-theme', 'dark');
+    expect(document.documentElement.dataset.theme).toBe("dark");
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(
+      "brickbreaker-theme",
+      "dark",
+    );
   });
 
-  it('reinicia pelo menu lateral e fecha o drawer', async () => {
+  it("mostra controles principais como ícones discretos", () => {
+    mockSystemTheme(true);
+
+    render(<App />);
+
+    const audioButton = screen.getByRole("button", { name: "Som" });
+    const restartButton = screen.getByRole("button", { name: "Reiniciar" });
+
+    expect(audioButton).toHaveTextContent("♪");
+    expect(audioButton).not.toHaveTextContent("Som");
+    expect(restartButton).toHaveTextContent("↻");
+    expect(restartButton).not.toHaveTextContent("Reiniciar");
+  });
+
+  it("alterna som preservando estado acessível no ícone", async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
 
     render(<App />);
 
-    await user.click(screen.getByRole('button', { name: 'Menu' }));
-    await user.click(screen.getByRole('button', { name: 'Reiniciar' }));
+    const audioButton = screen.getByRole("button", { name: "Som" });
+    expect(audioButton).toHaveAttribute("aria-pressed", "true");
 
-    expect(screen.queryByRole('complementary', { name: 'Menu do jogo' })).not.toBeInTheDocument();
+    await user.click(audioButton);
+
+    const mutedButton = screen.getByRole("button", { name: "Sem som" });
+    expect(mutedButton).toHaveAttribute("aria-pressed", "false");
+    expect(mutedButton).toHaveTextContent("×");
   });
 
-  it('fecha menu lateral com Escape', async () => {
+  it("fecha menu lateral com Escape", async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
 
     render(<App />);
 
-    await user.click(screen.getByRole('button', { name: 'Menu' }));
-    expect(screen.getByRole('complementary', { name: 'Menu do jogo' })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Menu" }));
+    expect(
+      screen.getByRole("complementary", { name: "Menu do jogo" }),
+    ).toBeInTheDocument();
 
-    await user.keyboard('{Escape}');
+    await user.keyboard("{Escape}");
 
-    expect(screen.queryByRole('complementary', { name: 'Menu do jogo' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("complementary", { name: "Menu do jogo" }),
+    ).not.toBeInTheDocument();
   });
 });

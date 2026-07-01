@@ -1,0 +1,757 @@
+{
+  "url": "https://fix-main-screen-icon-control.malnati-brickbreaker.pages.dev",
+  "screenshotPath": "tmp/screenshots/cloudflare-dashboard-layout.png",
+  "desktopScreenshotPath": "tmp/screenshots/cloudflare-dashboard-layout-desktop.png",
+  "results": [
+    {
+      "viewport": {
+        "name": "iphone-se",
+        "width": 375,
+        "height": 667,
+        "scrollWidth": 375,
+        "scrollHeight": 667
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 10",
+        "Total 20",
+        "Recorde 10"
+      ],
+      "canvas": {
+        "x": 19,
+        "y": 145.84375,
+        "width": 337,
+        "height": 244,
+        "right": 356,
+        "bottom": 389.84375
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 349,
+        "height": 124.84375,
+        "right": 362,
+        "bottom": 137.84375
+      },
+      "scoreStrip": {
+        "x": 13,
+        "y": 57.84375,
+        "width": 277,
+        "height": 80,
+        "right": 290,
+        "bottom": 137.84375
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "width": 68,
+          "height": 44,
+          "x": 294,
+          "y": 75.84375,
+          "right": 362,
+          "bottom": 119.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "width": 44,
+          "height": 44,
+          "x": 27,
+          "y": 337.84375,
+          "right": 71,
+          "bottom": 381.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Jogar de novo",
+          "title": "Jogar de novo",
+          "width": 44,
+          "height": 44,
+          "x": 304,
+          "y": 337.84375,
+          "right": 348,
+          "bottom": 381.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 13,
+        "y": 413.84375,
+        "width": 349,
+        "height": 56,
+        "right": 362,
+        "bottom": 469.84375
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 24,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-12-14",
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "scrollHeight": 844
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 10",
+        "Total 30",
+        "Recorde 10"
+      ],
+      "canvas": {
+        "x": 19,
+        "y": 145.84375,
+        "width": 352,
+        "height": 244,
+        "right": 371,
+        "bottom": 389.84375
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 364,
+        "height": 124.84375,
+        "right": 377,
+        "bottom": 137.84375
+      },
+      "scoreStrip": {
+        "x": 13,
+        "y": 57.84375,
+        "width": 292,
+        "height": 80,
+        "right": 305,
+        "bottom": 137.84375
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "width": 68,
+          "height": 44,
+          "x": 309,
+          "y": 75.84375,
+          "right": 377,
+          "bottom": 119.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "width": 44,
+          "height": 44,
+          "x": 27,
+          "y": 337.84375,
+          "right": 71,
+          "bottom": 381.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Jogar de novo",
+          "title": "Jogar de novo",
+          "width": 44,
+          "height": 44,
+          "x": 319,
+          "y": 337.84375,
+          "right": 363,
+          "bottom": 381.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 13,
+        "y": 413.84375,
+        "width": 364,
+        "height": 56,
+        "right": 377,
+        "bottom": 469.84375
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 24,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-15",
+        "width": 393,
+        "height": 852,
+        "scrollWidth": 393,
+        "scrollHeight": 852
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 10",
+        "Total 40",
+        "Recorde 10"
+      ],
+      "canvas": {
+        "x": 19,
+        "y": 145.84375,
+        "width": 355,
+        "height": 244,
+        "right": 374,
+        "bottom": 389.84375
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 367,
+        "height": 124.84375,
+        "right": 380,
+        "bottom": 137.84375
+      },
+      "scoreStrip": {
+        "x": 13,
+        "y": 57.84375,
+        "width": 295,
+        "height": 80,
+        "right": 308,
+        "bottom": 137.84375
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "width": 68,
+          "height": 44,
+          "x": 312,
+          "y": 75.84375,
+          "right": 380,
+          "bottom": 119.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "width": 44,
+          "height": 44,
+          "x": 27,
+          "y": 337.84375,
+          "right": 71,
+          "bottom": 381.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Jogar de novo",
+          "title": "Jogar de novo",
+          "width": 44,
+          "height": 44,
+          "x": 322,
+          "y": 337.84375,
+          "right": 366,
+          "bottom": 381.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 13,
+        "y": 413.84375,
+        "width": 367,
+        "height": 56,
+        "right": 380,
+        "bottom": 469.84375
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 24,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-pro-max",
+        "width": 430,
+        "height": 932,
+        "scrollWidth": 430,
+        "scrollHeight": 932
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 10",
+        "Total 50",
+        "Recorde 10"
+      ],
+      "canvas": {
+        "x": 19,
+        "y": 109.84375,
+        "width": 392,
+        "height": 262,
+        "right": 411,
+        "bottom": 371.84375
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 404,
+        "height": 88.84375,
+        "right": 417,
+        "bottom": 101.84375
+      },
+      "scoreStrip": {
+        "x": 13,
+        "y": 60.84375,
+        "width": 332,
+        "height": 38,
+        "right": 345,
+        "bottom": 98.84375
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "width": 68,
+          "height": 44,
+          "x": 349,
+          "y": 57.84375,
+          "right": 417,
+          "bottom": 101.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "width": 44,
+          "height": 44,
+          "x": 27,
+          "y": 319.84375,
+          "right": 71,
+          "bottom": 363.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Jogar de novo",
+          "title": "Jogar de novo",
+          "width": 44,
+          "height": 44,
+          "x": 359,
+          "y": 319.84375,
+          "right": 403,
+          "bottom": 363.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 13,
+        "y": 395.84375,
+        "width": 404,
+        "height": 56,
+        "right": 417,
+        "bottom": 451.84375
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 24,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-15-landscape",
+        "width": 852,
+        "height": 393,
+        "scrollWidth": 852,
+        "scrollHeight": 393
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 10",
+        "Total 60",
+        "Recorde 10"
+      ],
+      "canvas": {
+        "x": 300.5,
+        "y": 65,
+        "width": 251,
+        "height": 169,
+        "right": 551.5,
+        "bottom": 234
+      },
+      "header": {
+        "x": 15,
+        "y": 13,
+        "width": 822,
+        "height": 44,
+        "right": 837,
+        "bottom": 57
+      },
+      "scoreStrip": {
+        "x": 465.90625,
+        "y": 19,
+        "width": 299.09375,
+        "height": 32,
+        "right": 765,
+        "bottom": 51
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "width": 68,
+          "height": 44,
+          "x": 769,
+          "y": 13,
+          "right": 837,
+          "bottom": 57,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "width": 44,
+          "height": 44,
+          "x": 308.5,
+          "y": 182,
+          "right": 352.5,
+          "bottom": 226,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Jogar de novo",
+          "title": "Jogar de novo",
+          "width": 44,
+          "height": 44,
+          "x": 499.5,
+          "y": 182,
+          "right": 543.5,
+          "bottom": 226,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": false,
+      "sideAdDistance": null,
+      "bottomAdDistance": null,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "tablet",
+        "width": 768,
+        "height": 1024,
+        "scrollWidth": 768,
+        "scrollHeight": 1024
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 10",
+        "Total 70",
+        "Recorde 10"
+      ],
+      "canvas": {
+        "x": 59.5,
+        "y": 157.203125,
+        "width": 649,
+        "height": 434,
+        "right": 708.5,
+        "bottom": 591.203125
+      },
+      "header": {
+        "x": 19,
+        "y": 19,
+        "width": 730,
+        "height": 130.203125,
+        "right": 749,
+        "bottom": 149.203125
+      },
+      "scoreStrip": {
+        "x": 19,
+        "y": 63.203125,
+        "width": 730,
+        "height": 38,
+        "right": 749,
+        "bottom": 101.203125
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "width": 68,
+          "height": 44,
+          "x": 19,
+          "y": 105.203125,
+          "right": 87,
+          "bottom": 149.203125,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "width": 44,
+          "height": 44,
+          "x": 67.5,
+          "y": 539.203125,
+          "right": 111.5,
+          "bottom": 583.203125,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Jogar de novo",
+          "title": "Jogar de novo",
+          "width": 44,
+          "height": 44,
+          "x": 656.5,
+          "y": 539.203125,
+          "right": 700.5,
+          "bottom": 583.203125,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 124,
+        "y": 623.203125,
+        "width": 520,
+        "height": 56,
+        "right": 644,
+        "bottom": 679.203125
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 32,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "desktop",
+        "width": 1280,
+        "height": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 720
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 10",
+        "Total 70",
+        "Recorde 10"
+      ],
+      "canvas": {
+        "x": 226.5,
+        "y": 86.15625,
+        "width": 457,
+        "height": 306,
+        "right": 683.5,
+        "bottom": 392.15625
+      },
+      "header": {
+        "x": 33,
+        "y": 33,
+        "width": 1214,
+        "height": 45.15625,
+        "right": 1247,
+        "bottom": 78.15625
+      },
+      "scoreStrip": {
+        "x": 853.359375,
+        "y": 37,
+        "width": 321.640625,
+        "height": 36,
+        "right": 1175,
+        "bottom": 73
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "width": 68,
+          "height": 44,
+          "x": 1179,
+          "y": 33,
+          "right": 1247,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "width": 44,
+          "height": 44,
+          "x": 234.5,
+          "y": 340.15625,
+          "right": 278.5,
+          "bottom": 384.15625,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "width": 44,
+          "height": 44,
+          "x": 631.5,
+          "y": 340.15625,
+          "right": 675.5,
+          "bottom": 384.15625,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": {
+        "x": 1027,
+        "y": 86.15625,
+        "width": 220,
+        "height": 394,
+        "right": 1247,
+        "bottom": 480.15625
+      },
+      "bottomSlot": {
+        "x": 195,
+        "y": 416.15625,
+        "width": 520,
+        "height": 64,
+        "right": 715,
+        "bottom": 480.15625
+      },
+      "sideSlotVisible": true,
+      "bottomSlotVisible": true,
+      "sideAdDistance": 343.5,
+      "bottomAdDistance": 24,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    }
+  ],
+  "consoleProblems": []
+}

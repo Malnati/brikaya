@@ -1,4 +1,11 @@
-import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  jest,
+} from "@jest/globals";
 
 import {
   LEVEL_CLEAR_PAUSE_MS,
@@ -10,10 +17,10 @@ import {
   calculateSpeedReductionPerBrick,
   type PhaseSpeedConfig,
   type SpeedReductionSnapshot,
-  type SpeedStateSnapshot
-} from '../constants/game';
-import { POINTS_PER_BRICK } from '../constants/gameState';
-import { GameEngine } from './GameEngine';
+  type SpeedStateSnapshot,
+} from "../constants/game";
+import { POINTS_PER_BRICK } from "../constants/gameState";
+import { GameEngine } from "./GameEngine";
 
 const mockBallInstances: any[] = [];
 const mockBricksInstances: any[] = [];
@@ -21,7 +28,9 @@ let mockBricksAllDestroyed = false;
 let mockBricksRows = 5;
 let mockBrickActiveValue = true;
 
-function buildSpeedStateFromConfig(config: PhaseSpeedConfig): SpeedStateSnapshot {
+function buildSpeedStateFromConfig(
+  config: PhaseSpeedConfig,
+): SpeedStateSnapshot {
   return {
     level: config.level,
     initialBrickCount: config.initialBrickCount,
@@ -34,11 +43,11 @@ function buildSpeedStateFromConfig(config: PhaseSpeedConfig): SpeedStateSnapshot
     previousLevelMaxSpeed: config.previousLevelMaxSpeed,
     levelStartedAt: config.levelStartedAt,
     elapsedLevelMs: 0,
-    minReached: false
+    minReached: false,
   };
 }
 
-jest.mock('../objects/Paddle', () => ({
+jest.mock("../objects/Paddle", () => ({
   Paddle: jest.fn().mockImplementation(() => ({
     position: { x: 200, y: 580, width: 80, height: 10 },
     onKeyDown: jest.fn(),
@@ -46,11 +55,11 @@ jest.mock('../objects/Paddle', () => ({
     setPosition: jest.fn(),
     reset: jest.fn(),
     update: jest.fn(),
-    draw: jest.fn()
-  }))
+    draw: jest.fn(),
+  })),
 }));
 
-jest.mock('../objects/Ball', () => ({
+jest.mock("../objects/Ball", () => ({
   Ball: jest.fn().mockImplementation(() => {
     let speedState: SpeedStateSnapshot = {
       level: 1,
@@ -64,7 +73,7 @@ jest.mock('../objects/Ball', () => ({
       previousLevelMaxSpeed: 2,
       levelStartedAt: Date.now(),
       elapsedLevelMs: 0,
-      minReached: false
+      minReached: false,
     };
     let lastSpeedReduction: SpeedReductionSnapshot | null = null;
     let velocity = { dx: 2, dy: -2 };
@@ -78,7 +87,10 @@ jest.mock('../objects/Ball', () => ({
       applyPhaseSpeedConfig: jest.fn((config: PhaseSpeedConfig) => {
         speedState = buildSpeedStateFromConfig(config);
         lastSpeedReduction = null;
-        velocity = { dx: config.initialSpawnSpeed, dy: -config.initialSpawnSpeed };
+        velocity = {
+          dx: config.initialSpawnSpeed,
+          dy: -config.initialSpawnSpeed,
+        };
       }),
       getSpeedStateSnapshot: jest.fn(() => speedState),
       getLastSpeedReduction: jest.fn(() => lastSpeedReduction),
@@ -95,37 +107,37 @@ jest.mock('../objects/Ball', () => ({
       },
       __setLastSpeedReduction: (snapshot: SpeedReductionSnapshot | null) => {
         lastSpeedReduction = snapshot;
-      }
+      },
     };
 
     mockBallInstances.push(mockBall);
     return mockBall;
-  })
+  }),
 }));
 
-jest.mock('../objects/Bricks', () => ({
+jest.mock("../objects/Bricks", () => ({
   Bricks: jest.fn().mockImplementation(() => {
     const mockBricks = {
       isAllDestroyed: jest.fn(() => mockBricksAllDestroyed),
       isBrickActive: jest.fn(() => mockBrickActiveValue),
       getRows: jest.fn(() => mockBricksRows),
       collide: jest.fn(),
-      draw: jest.fn()
+      draw: jest.fn(),
     };
 
     mockBricksInstances.push(mockBricks);
     return mockBricks;
-  })
+  }),
 }));
 
-jest.mock('../utils/assetLoader', () => ({
+jest.mock("../utils/assetLoader", () => ({
   AssetLoader: {
     preloadAllAssets: jest.fn().mockResolvedValue(undefined),
-    getImage: jest.fn(() => null)
-  }
+    getImage: jest.fn(() => null),
+  },
 }));
 
-jest.mock('../storage/gameLogger', () => ({
+jest.mock("../storage/gameLogger", () => ({
   gameLogger: {
     db: {},
     getCurrentGameId: jest.fn(() => null),
@@ -137,17 +149,17 @@ jest.mock('../storage/gameLogger', () => ({
     logGameStateChange: jest.fn().mockResolvedValue(undefined),
     logRestartGame: jest.fn().mockResolvedValue(undefined),
     logBallAdded: jest.fn().mockResolvedValue(undefined),
-    logCollision: jest.fn().mockResolvedValue(undefined)
-  }
+    logCollision: jest.fn().mockResolvedValue(undefined),
+  },
 }));
 
-jest.mock('../utils/logger', () => ({
+jest.mock("../utils/logger", () => ({
   LOG: jest.fn(),
   ERROR: jest.fn(),
-  WARN: jest.fn()
+  WARN: jest.fn(),
 }));
 
-describe('GameEngine', () => {
+describe("GameEngine", () => {
   let canvas: HTMLCanvasElement;
   let mockContext: CanvasRenderingContext2D;
   let onScoreUpdate: jest.MockedFunction<(score: number) => void>;
@@ -164,7 +176,7 @@ describe('GameEngine', () => {
     mockBrickActiveValue = true;
     jest.clearAllMocks();
 
-    canvas = document.createElement('canvas');
+    canvas = document.createElement("canvas");
     canvas.width = 800;
     canvas.height = 600;
 
@@ -176,11 +188,11 @@ describe('GameEngine', () => {
       arc: jest.fn(),
       fill: jest.fn(),
       closePath: jest.fn(),
-      fillStyle: '',
-      font: '',
-      textAlign: 'left'
+      fillStyle: "",
+      font: "",
+      textAlign: "left",
     } as unknown as CanvasRenderingContext2D;
-    jest.spyOn(canvas, 'getContext').mockReturnValue(mockContext);
+    jest.spyOn(canvas, "getContext").mockReturnValue(mockContext);
 
     onScoreUpdate = jest.fn();
     onGameWon = jest.fn();
@@ -193,7 +205,7 @@ describe('GameEngine', () => {
     jest.useRealTimers();
   });
 
-  it('inicializa estado com speedState na fase 1', () => {
+  it("inicializa estado com speedState na fase 1", () => {
     const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
     const gameState = (engine as any).getCurrentGameState();
 
@@ -204,36 +216,49 @@ describe('GameEngine', () => {
       initialSpawnSpeed: calculateLevelInitialSpawnSpeed(canvas.width, 1),
       maxSpeed: calculateLevelMaxSpeed(canvas.width, 1),
       minSpeed: calculateLevelMinSpeed(canvas.width, 1),
-      previousLevelMaxSpeed: calculateLevelPreviousMaxSpeed(canvas.width, 1)
+      previousLevelMaxSpeed: calculateLevelPreviousMaxSpeed(canvas.width, 1),
     });
-    expect(gameState.speedState.initialBrickCount).toBe(gameState.bricksRemaining);
+    expect(gameState.speedState.initialBrickCount).toBe(
+      gameState.bricksRemaining,
+    );
     expect(gameState.speedState.elapsedLevelMs).toBeGreaterThanOrEqual(0);
   });
 
-  it('lança erro sem contexto 2D', () => {
-    const canvasWithoutContext = document.createElement('canvas');
-    jest.spyOn(canvasWithoutContext, 'getContext').mockReturnValue(null);
+  it("lança erro sem contexto 2D", () => {
+    const canvasWithoutContext = document.createElement("canvas");
+    jest.spyOn(canvasWithoutContext, "getContext").mockReturnValue(null);
 
     expect(() => {
-      new GameEngine(canvasWithoutContext, onScoreUpdate, onGameWon, onGameOver);
-    }).toThrow('No 2D context');
+      new GameEngine(
+        canvasWithoutContext,
+        onScoreUpdate,
+        onGameWon,
+        onGameOver,
+      );
+    }).toThrow("No 2D context");
   });
 
-  it('inicia o jogo e registra game_start com speedState', async () => {
+  it("inicia o jogo e registra game_start com speedState", async () => {
     const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
-    const preloadSpy = jest.spyOn(engine as any, 'preloadAssets').mockResolvedValue(undefined);
-    const loopSpy = jest.spyOn(engine as any, 'loop').mockImplementation(async () => undefined);
-    const mockGameLogger = require('../storage/gameLogger').gameLogger;
+    const preloadSpy = jest
+      .spyOn(engine as any, "preloadAssets")
+      .mockResolvedValue(undefined);
+    const loopSpy = jest
+      .spyOn(engine as any, "loop")
+      .mockImplementation(async () => undefined);
+    const mockGameLogger = require("../storage/gameLogger").gameLogger;
 
     await engine.start();
 
     expect(preloadSpy).toHaveBeenCalled();
     expect(mockGameLogger.logGameStart).toHaveBeenCalled();
-    expect(mockGameLogger.logGameStart.mock.calls[0][0]).toHaveProperty('speedState');
+    expect(mockGameLogger.logGameStart.mock.calls[0][0]).toHaveProperty(
+      "speedState",
+    );
     expect(loopSpy).toHaveBeenCalled();
   });
 
-  it('notifica o nível inicial para manter HUD alinhado em fases avançadas', async () => {
+  it("notifica o nível inicial para manter HUD alinhado em fases avançadas", async () => {
     const engine = new (GameEngine as any)(
       canvas,
       onScoreUpdate,
@@ -241,20 +266,20 @@ describe('GameEngine', () => {
       onGameOver,
       undefined,
       undefined,
-      'late-phase-stability',
+      "late-phase-stability",
       undefined,
-      onLevelChange
+      onLevelChange,
     );
-    jest.spyOn(engine as any, 'preloadAssets').mockResolvedValue(undefined);
-    jest.spyOn(engine as any, 'loop').mockImplementation(async () => undefined);
+    jest.spyOn(engine as any, "preloadAssets").mockResolvedValue(undefined);
+    jest.spyOn(engine as any, "loop").mockImplementation(async () => undefined);
 
     await engine.start();
 
     expect(onLevelChange).toHaveBeenCalledWith(11);
   });
 
-  it('para o jogo corretamente', () => {
-    const cancelAnimationFrameSpy = jest.spyOn(window, 'cancelAnimationFrame');
+  it("para o jogo corretamente", () => {
+    const cancelAnimationFrameSpy = jest.spyOn(window, "cancelAnimationFrame");
     const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
 
     engine.stop();
@@ -262,14 +287,39 @@ describe('GameEngine', () => {
     expect(cancelAnimationFrameSpy).toHaveBeenCalled();
   });
 
-  it('reduz currentSpeed no score_update após destruir tijolo', async () => {
+  it("instrui reinício pelo ícone da tela principal no fim de jogo", async () => {
+    const requestAnimationFrameSpy = jest
+      .spyOn(window, "requestAnimationFrame")
+      .mockReturnValue(0);
     const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
-    const mockGameLogger = require('../storage/gameLogger').gameLogger;
+
+    (engine as any).assetsLoaded = true;
+    (engine as any).gameOver = true;
+    (engine as any).isStopped = false;
+
+    await (engine as any).loop();
+
+    expect(mockContext.fillText).toHaveBeenCalledWith(
+      "Use ↻ para jogar novamente",
+      canvas.width / 2,
+      canvas.height / 2 + 40,
+    );
+    expect(mockContext.fillText).not.toHaveBeenCalledWith(
+      expect.stringContaining("menu"),
+      expect.any(Number),
+      expect.any(Number),
+    );
+    requestAnimationFrameSpy.mockRestore();
+  });
+
+  it("reduz currentSpeed no score_update após destruir tijolo", async () => {
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+    const mockGameLogger = require("../storage/gameLogger").gameLogger;
     const ball = mockBallInstances[0];
     const initialState = (engine as any).getCurrentGameState().speedState;
     const reducedSpeed = Math.max(
       initialState.minSpeed,
-      initialState.currentSpeed - initialState.reductionPerBrick
+      initialState.currentSpeed - initialState.reductionPerBrick,
     );
     const speedReduction: SpeedReductionSnapshot = {
       level: 1,
@@ -280,14 +330,14 @@ describe('GameEngine', () => {
       minSpeed: initialState.minSpeed,
       maxSpeed: initialState.maxSpeed,
       minReached: reducedSpeed <= initialState.minSpeed,
-      elapsedLevelMs: 250
+      elapsedLevelMs: 250,
     };
 
     ball.__setSpeedState({
       currentSpeed: reducedSpeed,
       successfulBrickHits: 1,
       elapsedLevelMs: 250,
-      minReached: speedReduction.minReached
+      minReached: speedReduction.minReached,
     });
     ball.__setLastSpeedReduction(speedReduction);
 
@@ -295,13 +345,17 @@ describe('GameEngine', () => {
 
     expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_BRICK);
     expect(mockGameLogger.logScoreUpdate).toHaveBeenCalled();
-    expect(mockGameLogger.logScoreUpdate.mock.calls[0][0].speedState.currentSpeed).toBe(reducedSpeed);
-    expect(mockGameLogger.logScoreUpdate.mock.calls[0][5]).toMatchObject(speedReduction);
+    expect(
+      mockGameLogger.logScoreUpdate.mock.calls[0][0].speedState.currentSpeed,
+    ).toBe(reducedSpeed);
+    expect(mockGameLogger.logScoreUpdate.mock.calls[0][5]).toMatchObject(
+      speedReduction,
+    );
   });
 
-  it('recalcula payload e reinicia speedState ao entrar na fase 2', async () => {
+  it("recalcula payload e reinicia speedState ao entrar na fase 2", async () => {
     jest.useFakeTimers();
-    jest.setSystemTime(new Date('2026-06-30T12:00:00Z'));
+    jest.setSystemTime(new Date("2026-06-30T12:00:00Z"));
     mockBricksAllDestroyed = true;
 
     const engine = new GameEngine(
@@ -310,21 +364,27 @@ describe('GameEngine', () => {
       onGameWon,
       onGameOver,
       undefined,
-      onLevelTransition
+      onLevelTransition,
     );
-    const mockGameLogger = require('../storage/gameLogger').gameLogger;
+    const mockGameLogger = require("../storage/gameLogger").gameLogger;
     const beforeState = (engine as any).getCurrentGameState().speedState;
 
     await (engine as any).onBrickDestroyed();
 
     const payload = onLevelTransition.mock.calls[0][0];
     const expectedNextLevel = 2;
-    const expectedNextMaxSpeed = calculateLevelMaxSpeed(canvas.width, expectedNextLevel);
-    const expectedNextMinSpeed = calculateLevelMinSpeed(canvas.width, expectedNextLevel);
+    const expectedNextMaxSpeed = calculateLevelMaxSpeed(
+      canvas.width,
+      expectedNextLevel,
+    );
+    const expectedNextMinSpeed = calculateLevelMinSpeed(
+      canvas.width,
+      expectedNextLevel,
+    );
     const expectedNextInitialBrickCount = beforeState.initialBrickCount;
     const expectedNextReductionPerBrick = calculateSpeedReductionPerBrick(
       expectedNextMaxSpeed,
-      expectedNextInitialBrickCount
+      expectedNextInitialBrickCount,
     );
 
     expect(mockGameLogger.logLevelComplete).toHaveBeenCalled();
@@ -336,45 +396,58 @@ describe('GameEngine', () => {
       nextMaxSpeed: expectedNextMaxSpeed,
       nextMinSpeed: expectedNextMinSpeed,
       nextReductionPerBrick: expectedNextReductionPerBrick,
-      nextInitialBrickCount: expectedNextInitialBrickCount
+      nextInitialBrickCount: expectedNextInitialBrickCount,
     });
     expect((engine as any).getCurrentGameState().level).toBe(1);
 
-    jest.setSystemTime(new Date('2026-06-30T12:00:02Z'));
+    jest.setSystemTime(new Date("2026-06-30T12:00:02Z"));
     await jest.advanceTimersByTimeAsync(LEVEL_CLEAR_PAUSE_MS);
 
     const afterState = (engine as any).getCurrentGameState();
     expect(afterState.level).toBe(2);
     expect(afterState.speedState.level).toBe(2);
-    expect(afterState.speedState.currentSpeed).toBe(afterState.speedState.maxSpeed);
-    expect(afterState.speedState.initialBrickCount).toBe(afterState.bricksRemaining);
-    expect(afterState.speedState.levelStartedAt).toBeGreaterThan(beforeState.levelStartedAt);
+    expect(afterState.speedState.currentSpeed).toBe(
+      afterState.speedState.maxSpeed,
+    );
+    expect(afterState.speedState.initialBrickCount).toBe(
+      afterState.bricksRemaining,
+    );
+    expect(afterState.speedState.levelStartedAt).toBeGreaterThan(
+      beforeState.levelStartedAt,
+    );
     expect(mockGameLogger.logLevelStart).toHaveBeenCalled();
-    expect(mockGameLogger.logLevelStart.mock.calls[0][0].speedState).toMatchObject({
+    expect(
+      mockGameLogger.logLevelStart.mock.calls[0][0].speedState,
+    ).toMatchObject({
       currentSpeed: expectedNextMaxSpeed,
       initialSpawnSpeed: expectedNextMaxSpeed,
       maxSpeed: expectedNextMaxSpeed,
-      minSpeed: expectedNextMinSpeed
+      minSpeed: expectedNextMinSpeed,
     });
   });
 
-  it('retorna gameState com speedState e telemetria inicial da fase', () => {
+  it("retorna gameState com speedState e telemetria inicial da fase", () => {
     const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
     const gameState = (engine as any).getCurrentGameState();
 
-    expect(gameState).toHaveProperty('speedState');
-    expect(gameState.speedState.initialBrickCount).toBe(gameState.bricksRemaining);
+    expect(gameState).toHaveProperty("speedState");
+    expect(gameState.speedState.initialBrickCount).toBe(
+      gameState.bricksRemaining,
+    );
     expect(gameState.speedState.successfulBrickHits).toBe(0);
     expect(gameState.speedState.elapsedLevelMs).toBeGreaterThanOrEqual(0);
   });
 
-  it('mantém contador de hits da fase mesmo quando o hit vem de bolas diferentes', async () => {
+  it("mantém contador de hits da fase mesmo quando o hit vem de bolas diferentes", async () => {
     const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
-    const mockGameLogger = require('../storage/gameLogger').gameLogger;
+    const mockGameLogger = require("../storage/gameLogger").gameLogger;
     const ball = mockBallInstances[0];
     const initialState = (engine as any).getCurrentGameState().speedState;
 
-    ball.__setSpeedState({ successfulBrickHits: 1, currentSpeed: initialState.maxSpeed - 1 });
+    ball.__setSpeedState({
+      successfulBrickHits: 1,
+      currentSpeed: initialState.maxSpeed - 1,
+    });
     ball.__setLastSpeedReduction({
       level: 1,
       hitNumber: 1,
@@ -384,11 +457,14 @@ describe('GameEngine', () => {
       minSpeed: initialState.minSpeed,
       maxSpeed: initialState.maxSpeed,
       minReached: false,
-      elapsedLevelMs: 200
+      elapsedLevelMs: 200,
     });
     await (engine as any).onBrickDestroyed(0);
 
-    ball.__setSpeedState({ successfulBrickHits: 1, currentSpeed: initialState.maxSpeed - 2 });
+    ball.__setSpeedState({
+      successfulBrickHits: 1,
+      currentSpeed: initialState.maxSpeed - 2,
+    });
     ball.__setLastSpeedReduction({
       level: 1,
       hitNumber: 1,
@@ -398,22 +474,25 @@ describe('GameEngine', () => {
       minSpeed: initialState.minSpeed,
       maxSpeed: initialState.maxSpeed,
       minReached: false,
-      elapsedLevelMs: 400
+      elapsedLevelMs: 400,
     });
     await (engine as any).onBrickDestroyed(1);
 
-    expect(mockGameLogger.logScoreUpdate.mock.calls[1][0].speedState.successfulBrickHits).toBe(2);
+    expect(
+      mockGameLogger.logScoreUpdate.mock.calls[1][0].speedState
+        .successfulBrickHits,
+    ).toBe(2);
     expect(mockGameLogger.logScoreUpdate.mock.calls[1][5]).toMatchObject({
       hitNumber: 2,
-      speedAfter: initialState.maxSpeed - 2
+      speedAfter: initialState.maxSpeed - 2,
     });
   });
 
-  it('registra bolas adicionadas ao ativar multiball', () => {
+  it("registra bolas adicionadas ao ativar multiball", () => {
     const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
-    const mockGameLogger = require('../storage/gameLogger').gameLogger;
+    const mockGameLogger = require("../storage/gameLogger").gameLogger;
 
-    (engine as any).activatePowerUp('multiball');
+    (engine as any).activatePowerUp("multiball");
 
     expect((engine as any).getCurrentGameState().ballsCount).toBe(3);
     expect(mockGameLogger.logBallAdded).toHaveBeenCalledTimes(2);
