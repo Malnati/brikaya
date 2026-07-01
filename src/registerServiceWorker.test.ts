@@ -235,6 +235,35 @@ describe("registerServiceWorker", () => {
     });
   });
 
+  it("acompanha worker já instalando quando o registro resolve", async () => {
+    const { windowRef } = createWindowMock();
+    const activeController = createWorkerMock().worker;
+    const { navigatorRef, registration } =
+      createServiceWorkerMock(activeController);
+    const newWorker = createWorkerMock();
+    (registration as unknown as { installing: ServiceWorker }).installing =
+      newWorker.worker;
+
+    registerServiceWorker({
+      windowRef,
+      navigatorRef,
+      log: jest.fn(),
+      reloadPage: jest.fn(),
+    });
+    await flushPromises();
+
+    newWorker.setState(INSTALLED_STATE);
+    emit(
+      newWorker.workerListeners,
+      STATE_CHANGE_EVENT_NAME,
+      new Event(STATE_CHANGE_EVENT_NAME),
+    );
+
+    expect(newWorker.postMessage).toHaveBeenCalledWith({
+      type: SKIP_WAITING_MESSAGE_TYPE,
+    });
+  });
+
   it("recarrega uma única vez quando o controlador muda após versão existente", async () => {
     const reloadPage = jest.fn();
     const { windowRef } = createWindowMock();

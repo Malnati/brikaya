@@ -27,6 +27,7 @@ const SERVICE_WORKER_UPDATE_FAILED_MESSAGE =
 
 const boundUpdateRegistrations = new WeakSet<ServiceWorkerRegistration>();
 const boundControllerContainers = new WeakSet<ServiceWorkerContainer>();
+const boundInstallingWorkers = new WeakSet<ServiceWorker>();
 
 interface RegisterServiceWorkerOptions {
   windowRef?: Window;
@@ -79,21 +80,45 @@ function requestUpdate(
   });
 }
 
-function postSkipWaiting(worker: ServiceWorker | null) {
-  worker?.postMessage({ type: SKIP_WAITING_MESSAGE_TYPE });
+function postSkipWaiting(worker: ServiceWorker) {
+  worker.postMessage({ type: SKIP_WAITING_MESSAGE_TYPE });
+}
+
+function postSkipWaitingWhenInstalled(
+  worker: ServiceWorker | null,
+  serviceWorker: ServiceWorkerContainer,
+) {
+  const hasActiveController = Boolean(serviceWorker.controller);
+
+  if (!hasActiveController || !worker) {
+    return;
+  }
+
+  if (worker.state === INSTALLED_STATE) {
+    postSkipWaiting(worker);
+    return;
+  }
+
+  if (boundInstallingWorkers.has(worker)) {
+    return;
+  }
+
+  boundInstallingWorkers.add(worker);
+  worker.addEventListener(STATE_CHANGE_EVENT_NAME, () => {
+    if (worker.state === INSTALLED_STATE) {
+      postSkipWaiting(worker);
+    }
+  });
 }
 
 function handleInstalledWorker(
   registration: ServiceWorkerRegistration,
   serviceWorker: ServiceWorkerContainer,
 ) {
-  const hasActiveController = Boolean(serviceWorker.controller);
-
-  if (!hasActiveController) {
-    return;
-  }
-
-  postSkipWaiting(registration.waiting || registration.installing);
+  postSkipWaitingWhenInstalled(
+    registration.waiting || registration.installing,
+    serviceWorker,
+  );
 }
 
 function bindInstalledWorkerListener(
@@ -101,17 +126,7 @@ function bindInstalledWorkerListener(
   serviceWorker: ServiceWorkerContainer,
 ) {
   registration.addEventListener(UPDATE_FOUND_EVENT_NAME, () => {
-    const newWorker = registration.installing;
-
-    if (!newWorker) {
-      return;
-    }
-
-    newWorker.addEventListener(STATE_CHANGE_EVENT_NAME, () => {
-      if (newWorker.state === INSTALLED_STATE) {
-        handleInstalledWorker(registration, serviceWorker);
-      }
-    });
+    postSkipWaitingWhenInstalled(registration.installing, serviceWorker);
   });
 }
 
