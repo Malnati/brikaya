@@ -26,6 +26,7 @@ const VERSION_MESSAGE = "VERSION";
 const WAIT_TIMEOUT_MS = 60000;
 const VERSION_MESSAGE_TIMEOUT_MS = 1500;
 const WAIT_STEP_MS = 500;
+const UPDATE_TRIGGER_INTERVAL_MS = 3000;
 const RETRY_ATTEMPTS = 6;
 const NAVIGATION_TIMEOUT_MS = 60000;
 const BROWSER_CLOSE_TIMEOUT_MS = 5000;
@@ -219,6 +220,7 @@ async function triggerRuntimeUpdateCheck(page) {
 
 async function waitForActiveBuild(page, expectedBuildId) {
   const startedAt = Date.now();
+  let lastUpdateTriggerAt = 0;
   let lastVersion = null;
   let lastState = null;
 
@@ -227,7 +229,10 @@ async function waitForActiveBuild(page, expectedBuildId) {
       await page.waitForSelector("canvas", {
         timeout: VERSION_MESSAGE_TIMEOUT_MS,
       });
-      await triggerRuntimeUpdateCheck(page);
+      if (Date.now() - lastUpdateTriggerAt >= UPDATE_TRIGGER_INTERVAL_MS) {
+        await triggerRuntimeUpdateCheck(page);
+        lastUpdateTriggerAt = Date.now();
+      }
       lastVersion = await readActiveServiceWorkerVersion(page);
       lastState = await collectRuntimeState(page);
 
