@@ -69,21 +69,6 @@ function screenshotPath() {
   return env(SCREENSHOT_ENV_KEY, DEFAULT_SCREENSHOT_PATH);
 }
 
-function isTransientNavigationError(error) {
-  const message = error instanceof Error ? error.message : String(error);
-  return /Execution context was destroyed|Cannot find context|Target closed|Frame was detached/i.test(
-    message,
-  );
-}
-
-async function waitForPageToSettle(page) {
-  try {
-    await page.waitForSelector("canvas", {
-      timeout: VERSION_MESSAGE_TIMEOUT_MS,
-    });
-  } catch {}
-}
-
 function parseBuildId(source) {
   const match = source.match(BUILD_ID_PATTERN);
   return match?.[1] || null;
@@ -110,15 +95,15 @@ async function closeBrowser(browser) {
   }
 }
 
-async function fetchLatestBuildId(page, targetUrl) {
+async function fetchLatestBuildId(_page, targetUrl) {
   let lastError = null;
 
   for (let attempt = 0; attempt < RETRY_ATTEMPTS; attempt += 1) {
     try {
-      const source = await page.evaluate(async (url) => {
-        const response = await fetch(url, { cache: "no-store" });
-        return response.text();
-      }, swUrl(targetUrl));
+      const response = await fetch(swUrl(targetUrl), {
+        headers: { "Cache-Control": "no-cache" },
+      });
+      const source = await response.text();
       const buildId = parseBuildId(source);
 
       return {
@@ -127,12 +112,6 @@ async function fetchLatestBuildId(page, targetUrl) {
       };
     } catch (error) {
       lastError = error;
-
-      if (!isTransientNavigationError(error)) {
-        throw error;
-      }
-
-      await waitForPageToSettle(page);
       await new Promise((resolve) => setTimeout(resolve, WAIT_STEP_MS));
     }
   }
@@ -305,6 +284,18 @@ async function run() {
     }
 
     const cacheNamesAfterWait = await readCacheNames(page);
+    const staleCacheNamesBefore = cacheNamesBeforeWait.filter((cacheName) => {
+      return (
+        cacheName.startsWith("breakout-cache") &&
+        cacheName !== activeAfterWait?.cacheName
+      );
+    });
+    const staleCacheNamesAfter = cacheNamesAfterWait.filter((cacheName) => {
+      return (
+        cacheName.startsWith("breakout-cache") &&
+        cacheName !== activeAfterWait?.cacheName
+      );
+    });
     const result = {
       mode: selectedMode,
       url: targetUrl,
@@ -316,6 +307,8 @@ async function run() {
       verifyState,
       cacheNamesBeforeWait,
       cacheNamesAfterWait,
+      staleCacheNamesBefore,
+      staleCacheNamesAfter,
       navigationEvents,
       consoleProblems,
       screenshotPath: screenshotPath(),
@@ -330,6 +323,16 @@ async function run() {
         cacheNamesAfterWait.includes(activeAfterWait.cacheName),
         "Cache ativo não encontrado após atualização.",
       );
+      if (
+        staleCacheNamesBefore.length > 0 &&
+        activeBeforeWait?.buildId !== latest.buildId
+      ) {
+        assert(
+          staleCacheNamesAfter.length === 0,
+          `Caches antigos não foram removidos: ${staleCacheNamesAfter.join(", ")}`,
+        );
+      }
+
       assert(
         verifyState.hasCanvas,
         "Canvas não renderizou após atualização automática.",
