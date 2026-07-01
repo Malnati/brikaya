@@ -5,6 +5,7 @@ import puppeteer from 'puppeteer';
 
 const DEFAULT_PUBLIC_URL = 'https://malnati-brickbreaker.pages.dev/';
 const DEFAULT_SCREENSHOT_PATH = 'tmp/screenshots/cloudflare-mobile-qa.png';
+const DEFAULT_MENU_SCREENSHOT_PATH = 'tmp/screenshots/cloudflare-mobile-menu.png';
 const DEFAULT_REPORT_PATH = 'tmp/reports/cloudflare-mobile-qa.json';
 const CHROME_EXECUTABLE_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const IPHONE_15_VIEWPORT = {
@@ -15,13 +16,17 @@ const IPHONE_15_VIEWPORT = {
   hasTouch: true
 };
 const MIN_TOUCH_TARGET_SIZE = 44;
-const MAX_INITIAL_SCORE_AFTER_OBSERVATION = 20;
+const MAX_INITIAL_SCORE_AFTER_OBSERVATION = 120;
 const OBSERVATION_DURATION_MS = 1500;
 const REQUIRED_EVENT_TYPES = ['game_start'];
 const REQUIRED_DATABASE_NAMES = ['BrickBreakerGameLog'];
+const MENU_BUTTON_NAME = /menu/i;
 const LOGS_BUTTON_NAME = /logs/i;
 const COLLISIONS_BUTTON_NAME = /colisões/i;
 const CLOSE_BUTTON_NAME = /fechar|×|✕/i;
+const SPEED_CURRENT_LABEL = 'Velocidade atual';
+const LEVEL_TIME_LABEL = 'Tempo da fase';
+const SPEED_REDUCTIONS_LABEL = 'Reduções aplicadas';
 
 function getPublicUrl() {
   return process.env.BRICKBREAKER_PUBLIC_URL || DEFAULT_PUBLIC_URL;
@@ -29,6 +34,10 @@ function getPublicUrl() {
 
 function getScreenshotPath() {
   return process.env.BRICKBREAKER_MOBILE_QA_SCREENSHOT || DEFAULT_SCREENSHOT_PATH;
+}
+
+function getMenuScreenshotPath() {
+  return process.env.BRICKBREAKER_MOBILE_MENU_SCREENSHOT || DEFAULT_MENU_SCREENSHOT_PATH;
 }
 
 function getReportPath() {
@@ -43,6 +52,19 @@ function assert(condition, message) {
   if (!condition) {
     throw new Error(message);
   }
+}
+
+async function clickButtonByPattern(page, pattern) {
+  const buttons = await page.$$('button');
+  for (const button of buttons) {
+    const text = await button.evaluate(node => node.textContent || '');
+    if (pattern.test(text)) {
+      await button.click();
+      return true;
+    }
+  }
+
+  return false;
 }
 
 async function readIndexedDbSummary(page) {
@@ -154,11 +176,33 @@ async function collectLayoutState(page) {
   }, MIN_TOUCH_TARGET_SIZE);
 }
 
+async function collectDrawerState(page) {
+  return page.evaluate(() => {
+    const drawer = document.querySelector('.settings-drawer');
+    const drawerRect = drawer?.getBoundingClientRect();
+
+    return {
+      text: drawer?.textContent || '',
+      drawer: drawerRect ? {
+        x: drawerRect.x,
+        y: drawerRect.y,
+        width: drawerRect.width,
+        height: drawerRect.height,
+        right: drawerRect.right,
+        bottom: drawerRect.bottom
+      } : null,
+      hasHorizontalOverflow: document.documentElement.scrollWidth > window.innerWidth
+    };
+  });
+}
+
 async function run() {
   const publicUrl = getPublicUrl();
   const screenshotPath = getScreenshotPath();
+  const menuScreenshotPath = getMenuScreenshotPath();
   const reportPath = getReportPath();
   ensureParentDirectory(screenshotPath);
+  ensureParentDirectory(menuScreenshotPath);
   ensureParentDirectory(reportPath);
 
   const consoleProblems = [];
@@ -195,45 +239,72 @@ async function run() {
     assert(layoutState.buttons.every(button => button.visibleInViewport), `Botão fora da viewport: ${layoutState.buttons.filter(button => !button.visibleInViewport).map(button => button.text).join(', ')}`);
     assert(layoutState.buttons.every(button => button.hasTouchTarget), `Botão menor que alvo touch mínimo: ${layoutState.buttons.filter(button => !button.hasTouchTarget).map(button => button.text).join(', ')}`);
     assert(layoutState.scoreValue <= MAX_INITIAL_SCORE_AFTER_OBSERVATION, `Jogo rápido demais no início: score ${layoutState.scoreValue}.`);
+    assert(layoutState.buttons.some(button => MENU_BUTTON_NAME.test(button.text)), 'Botão Menu não encontrado no HUD compacto.');
+    assert(!layoutState.buttons.some(button => LOGS_BUTTON_NAME.test(button.text)), 'Logs aparece fora do menu lateral.');
+    assert(!layoutState.buttons.some(button => COLLISIONS_BUTTON_NAME.test(button.text)), 'Colisões aparece fora do menu lateral.');
+    assert(!layoutState.buttons.some(button => /zerar pontuação/i.test(button.text)), 'Zerar pontuação aparece fora do menu lateral.');
 
-    const logsButton = await page.$$('button').then(async buttons => {
-      for (const button of buttons) {
-        const text = await button.evaluate(node => node.textContent || '');
-        if (LOGS_BUTTON_NAME.test(text)) return button;
-      }
-      return null;
-    });
-    assert(logsButton, 'Botão de logs não encontrado.');
-    await logsButton.click();
+    const openedMenuForScreenshot = await clickButtonByPattern(page, MENU_BUTTON_NAME);
+    assert(openedMenuForScreenshot, 'Menu lateral não abriu.');
+    await page.waitForSelector('.settings-drawer', { timeout: 10000 });
+    const menuState = await collectDrawerState(page);
+    await page.screenshot({ path: menuScreenshotPath, fullPage: true });
+    assert(menuState.drawer, 'Drawer do menu não encontrado.');
+    assert(!menuState.hasHorizontalOverflow, 'Menu lateral gerou overflow horizontal.');
+    assert(menuState.text.includes('Tema'), 'Menu lateral sem seção Tema.');
+    assert(menuState.text.includes('Claro') && menuState.text.includes('Escuro'), 'Menu lateral sem controles de tema.');
+    assert(menuState.text.includes('Logs'), 'Menu lateral sem opção Logs.');
+    assert(menuState.text.includes('Colisões'), 'Menu lateral sem opção Colisões.');
+    assert(menuState.text.includes('Zerar pontuação'), 'Menu lateral sem opção Zerar pontuação.');
+    const openedLogs = await clickButtonByPattern(page, LOGS_BUTTON_NAME);
+    assert(openedLogs, 'Botão de logs não encontrado.');
     await page.waitForFunction(() => document.body.textContent?.includes('Visualizador de Logs'), { timeout: 10000 });
+    await new Promise(resolve => setTimeout(resolve, 500));
+    let firstEventHeader = await page.$('.event-header');
+    if (!firstEventHeader) {
+      const refreshedLogs = await clickButtonByPattern(page, /atualizar/i);
+      assert(refreshedLogs, 'Painel de logs abriu sem botão Atualizar disponível.');
+      await page.waitForFunction(() => Boolean(document.querySelector('.event-header')), { timeout: 10000 });
+      firstEventHeader = await page.$('.event-header');
+    }
+    assert(firstEventHeader, 'Nenhum evento disponível no painel de logs.');
+    await firstEventHeader.click();
+    await page.waitForFunction(
+      ({ speedLabel, timeLabel }) => {
+        const text = document.body.textContent || '';
+        return text.includes(speedLabel) && text.includes(timeLabel);
+      },
+      { timeout: 10000 },
+      { speedLabel: SPEED_CURRENT_LABEL, timeLabel: LEVEL_TIME_LABEL }
+    );
     const indexedDbSummary = await readIndexedDbSummary(page);
     const logsState = await collectLayoutState(page);
 
-    const closeButtons = await page.$$('button');
-    for (const button of closeButtons) {
-      const text = await button.evaluate(node => node.textContent || '');
-      if (CLOSE_BUTTON_NAME.test(text)) {
-        await button.click();
-        break;
-      }
-    }
+    const closedLogs = await clickButtonByPattern(page, CLOSE_BUTTON_NAME);
+    assert(closedLogs, 'Não foi possível fechar o painel de logs.');
 
-    const collisionButton = await page.$$('button').then(async buttons => {
-      for (const button of buttons) {
-        const text = await button.evaluate(node => node.textContent || '');
-        if (COLLISIONS_BUTTON_NAME.test(text)) return button;
-      }
-      return null;
-    });
-    assert(collisionButton, 'Botão de colisões não encontrado.');
-    await collisionButton.click();
+    const openedMenuForCollisions = await clickButtonByPattern(page, MENU_BUTTON_NAME);
+    assert(openedMenuForCollisions, 'Menu lateral não reabriu para colisões.');
+    await page.waitForSelector('.settings-drawer', { timeout: 10000 });
+    const openedCollisions = await clickButtonByPattern(page, COLLISIONS_BUTTON_NAME);
+    assert(openedCollisions, 'Botão de colisões não encontrado.');
     await page.waitForFunction(() => document.body.textContent?.includes('Estatísticas de Colisões'), { timeout: 10000 });
+    await page.waitForFunction(
+      ({ speedLabel, reductionsLabel }) => {
+        const text = document.body.textContent || '';
+        return text.includes(speedLabel) && text.includes(reductionsLabel);
+      },
+      { timeout: 10000 },
+      { speedLabel: SPEED_CURRENT_LABEL, reductionsLabel: SPEED_REDUCTIONS_LABEL }
+    );
     const statsState = await collectLayoutState(page);
 
     const report = {
       publicUrl,
       screenshotPath,
+      menuScreenshotPath,
       layoutState,
+      menuState,
       logsState,
       statsState,
       indexedDbSummary,

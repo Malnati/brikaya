@@ -1,23 +1,16 @@
 // src/hooks/useCollisionStats.ts
 import { useState, useEffect, useCallback } from 'react';
-import { collisionTracker } from '../utils/collisionTracker';
+import { collisionTracker, type CollisionStatsSummary } from '../utils/collisionTracker';
 import { ERROR } from '../utils/logger';
 
-interface CollisionStats {
-  total: number;
-  byType: Record<string, number>;
-  recentActivity: {
-    lastMinute: number;
-    last5Minutes: number;
-    lastHour: number;
-  };
-}
-
 export function useCollisionStats(refreshInterval: number = 1000) {
-  const [stats, setStats] = useState<CollisionStats>({
+  const [stats, setStats] = useState<CollisionStatsSummary>({
     total: 0,
     byType: {},
-    recentActivity: { lastMinute: 0, last5Minutes: 0, lastHour: 0 }
+    recentActivity: { lastMinute: 0, last5Minutes: 0, lastHour: 0 },
+    latestSpeedState: null,
+    brickSpeedSamples: [],
+    minSpeedReachedCount: 0
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -81,4 +74,4 @@ export function useCollisionStats(refreshInterval: number = 1000) {
     getRecentCollisions,
     getCollisionsByType
   };
-} 
+}

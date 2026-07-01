@@ -3,8 +3,6 @@ import { useRef, useEffect, useState } from 'react';
 
 import { useGameLoop } from '../hooks/useGameLoop';
 import { useColorDebug } from '../hooks/useColorDebug';
-import { CollisionStats } from './CollisionStats';
-import GameLogViewer from './GameLogViewer';
 import { LevelToast } from './LevelToast';
 import { CANVAS_WIDTH, CANVAS_HEIGHT, MIN_CANVAS_WIDTH, MIN_CANVAS_HEIGHT, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT, LevelTransitionPayload } from '../constants/game';
 import { GameQaScenario } from '../logic/GameEngine';
@@ -40,8 +38,6 @@ export default function Game({
   const surfaceRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: CANVAS_WIDTH, height: CANVAS_HEIGHT });
-  const [showCollisionStats, setShowCollisionStats] = useState(false);
-  const [showGameLogs, setShowGameLogs] = useState(false);
 
   useEffect(() => {
     const updateCanvasSize = () => {
@@ -105,27 +101,6 @@ export default function Game({
           }}
         />
       </div>
-      <div className="game-tools" aria-label="Ferramentas do jogo">
-        <button type="button" onClick={() => setShowGameLogs(true)} className="dashboard-button dashboard-button--secondary">
-          <span aria-hidden="true" className="button-icon">≡</span>
-          Logs
-        </button>
-        <button type="button" onClick={() => setShowCollisionStats(true)} className="dashboard-button dashboard-button--secondary">
-          <span aria-hidden="true" className="button-icon">◈</span>
-          Colisões
-        </button>
-      </div>
-
-      <CollisionStats
-        isVisible={showCollisionStats}
-        onClose={() => setShowCollisionStats(false)}
-      />
-
-      <GameLogViewer
-        isVisible={showGameLogs}
-        onClose={() => setShowGameLogs(false)}
-      />
-
     </div>
   );
 }

@@ -1,7 +1,7 @@
 // src/objects/Bricks.ts
 import { BRICK_COLORS } from '../constants/assets';
-import { DynamicGameDimensions } from '../constants/game';
-import { gameLogger } from '../storage/gameLogger';
+import { DynamicGameDimensions, SpeedReductionSnapshot } from '../constants/game';
+import { gameLogger, type LoggedGameState } from '../storage/gameLogger';
 import { AssetLoader } from '../utils/assetLoader';
 import { collisionTracker } from '../utils/collisionTracker';
 import { ERROR, LOG, WARN } from '../utils/logger';
@@ -127,25 +127,10 @@ export class Bricks {
       bounceY: () => void; 
       registerBrickHit: () => void;
       getVelocity: () => { dx: number; dy: number };
+      getSpeedStateSnapshot: () => LoggedGameState['speedState'];
+      getLastSpeedReduction: () => SpeedReductionSnapshot | null;
     },
-    gameState?: { 
-      score: number; 
-      ballsCount: number; 
-      bricksRemaining: number;
-      gameWon: boolean;
-      gameOver: boolean;
-      level: number;
-      canvasSize: { width: number; height: number };
-      gameDimensions: {
-        brickWidth: number;
-        brickHeight: number;
-        brickCols: number;
-        brickRows: number;
-        paddleWidth: number;
-        paddleHeight: number;
-        ballRadius: number;
-      };
-    }
+    gameState?: LoggedGameState
   ): Promise<boolean> {
     let collided = false;
     let destroyedCount = 0;
@@ -170,35 +155,46 @@ export class Bricks {
             ballBottom > brickTop &&
             ballTop < brickBottom
           ) {
+            const ballVelocityBefore = ball.getVelocity();
+            ball.bounceY();
+            ball.registerBrickHit();
+            b.status = BRICK_DESTROYED;
+            const ballVelocityAfter = ball.getVelocity();
+            const speedState = ball.getSpeedStateSnapshot();
+            const speedReduction = ball.getLastSpeedReduction();
+
             // Registrar colisão com bloco
             if (gameState) {
-              const ballVelocity = ball.getVelocity();
+              const updatedGameState: LoggedGameState = {
+                ...gameState,
+                bricksRemaining: Math.max(0, gameState.bricksRemaining - 1),
+                speedState
+              };
               LOG(`🧱 Colisão com bloco detectada - Pos: (${Math.round(ball.position.x)}, ${Math.round(ball.position.y)}), Bloco: [${c}, ${r}], Cor: ${b.colorIndex}`);
               
               gameLogger.logBrickDestroyed(
-                gameState,
-                [{ x: ball.position.x, y: ball.position.y, velocity: ballVelocity, radius: ball.position.radius }],
+                updatedGameState,
+                [{ x: ball.position.x, y: ball.position.y, velocity: ballVelocityAfter, radius: ball.position.radius }],
                 { x: 0, y: 0, width: 0, height: 0 }, // Paddle position será atualizada pelo GameEngine
                 { x: b.x, y: b.y, width: this.dimensions.brickWidth, height: this.dimensions.brickHeight },
                 { col: c, row: r },
                 b.colorIndex,
                 ball.position,
-                ballVelocity
+                ballVelocityBefore,
+                ballVelocityAfter,
+                speedReduction
               ).catch((error) => ERROR('❌ Erro ao registrar destruição de bloco:', error));
               
               collisionTracker.logBrickCollision(
                 ball.position,
-                ballVelocity,
-                gameState,
+                ballVelocityAfter,
+                updatedGameState,
                 { x: b.x, y: b.y, width: this.dimensions.brickWidth, height: this.dimensions.brickHeight },
                 { col: c, row: r },
-                b.colorIndex
+                b.colorIndex,
+                speedReduction
               ).catch(error => ERROR('❌ Erro ao registrar colisão com bloco:', error));
             }
-            
-            ball.bounceY();
-            ball.registerBrickHit();
-            b.status = BRICK_DESTROYED;
             destroyedCount++;
             if (this.onBrickDestroyed) {
               await this.onBrickDestroyed();

@@ -22,6 +22,10 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
     return new Date(timestamp).toLocaleTimeString('pt-BR');
   };
 
+  const formatSpeed = (speed: number | null | undefined) => {
+    return typeof speed === 'number' ? speed.toFixed(3) : '—';
+  };
+
   const getCollisionTypeIcon = (type: string) => {
     switch (type) {
       case 'wall': return '🧱';
@@ -73,6 +77,21 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
                 <span className="stat-label">Última Hora:</span>
                 <span className="stat-value">{stats.recentActivity.lastHour}</span>
               </div>
+
+              <div className="stat-item">
+                <span className="stat-label">Velocidade atual:</span>
+                <span className="stat-value">{formatSpeed(stats.latestSpeedState?.currentSpeed)}</span>
+              </div>
+
+              <div className="stat-item">
+                <span className="stat-label">Reduções aplicadas:</span>
+                <span className="stat-value">{stats.brickSpeedSamples.length}</span>
+              </div>
+
+              <div className="stat-item">
+                <span className="stat-label">Mínimo atingido:</span>
+                <span className="stat-value">{stats.minSpeedReachedCount}</span>
+              </div>
             </div>
 
             <div className="stats-by-type">
@@ -119,6 +138,9 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
                       </span>
                       <span className="collision-position">
                         ({Math.round(collision.ballPosition.x)}, {Math.round(collision.ballPosition.y)})
+                      </span>
+                      <span className="collision-position">
+                        {' '}• Velocidade: {formatSpeed(collision.gameState?.speedState?.currentSpeed)}
                       </span>
                     </div>
                   ))}
@@ -330,4 +352,4 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
       `}</style>
     </div>
   );
-} 
+}

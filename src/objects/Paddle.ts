@@ -1,6 +1,14 @@
 // src/objects/Paddle.ts
-import { PADDLE_SPEED, GAME_COLOR } from '../constants/game';
-import { DynamicGameDimensions } from '../constants/game';
+import {
+  PADDLE_SPEED,
+  GAME_COLOR,
+  DynamicGameDimensions,
+  calculateLevelInitialSpawnSpeed,
+  calculateLevelMaxSpeed,
+  calculateLevelMinSpeed,
+  calculateLevelPreviousMaxSpeed,
+  calculateSpeedReductionPerBrick
+} from '../constants/game';
 import { ASSET_PATHS } from '../constants/assets';
 import { AssetLoader } from '../utils/assetLoader';
 import { gameLogger } from '../storage/gameLogger';
@@ -88,6 +96,12 @@ export class Paddle {
   }
 
   private logPaddleMove(direction: 'left' | 'right' | 'touch') {
+    const level = 1;
+    const initialBrickCount = 1;
+    const initialSpawnSpeed = calculateLevelInitialSpawnSpeed(this.canvasWidth, level);
+    const maxSpeed = calculateLevelMaxSpeed(this.canvasWidth, level);
+    const minSpeed = calculateLevelMinSpeed(this.canvasWidth, level);
+
     // Log do movimento da raquete - dados básicos, serão complementados pelo GameEngine
     const gameState = {
       score: 0,
@@ -105,6 +119,20 @@ export class Paddle {
         paddleWidth: this.width,
         paddleHeight: this.height,
         ballRadius: 10
+      },
+      speedState: {
+        level,
+        initialBrickCount,
+        successfulBrickHits: 0,
+        initialSpawnSpeed,
+        maxSpeed,
+        minSpeed,
+        currentSpeed: initialSpawnSpeed,
+        reductionPerBrick: calculateSpeedReductionPerBrick(maxSpeed, initialBrickCount),
+        previousLevelMaxSpeed: calculateLevelPreviousMaxSpeed(this.canvasWidth, level),
+        levelStartedAt: Date.now(),
+        elapsedLevelMs: 0,
+        minReached: false
       }
     };
     

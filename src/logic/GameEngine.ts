@@ -6,8 +6,16 @@ import {
   GAME_COLOR,
   LEVEL_CLEAR_PAUSE_MS,
   LevelTransitionPayload,
+  PhaseSpeedConfig,
+  SpeedReductionSnapshot,
+  SpeedStateSnapshot,
   calculateDynamicDimensions,
+  calculateLevelInitialSpawnSpeed,
+  calculateLevelMaxSpeed,
+  calculateLevelMinSpeed,
+  calculateLevelPreviousMaxSpeed,
   calculateLevelSpeedMultiplier,
+  calculateSpeedReductionPerBrick,
   DynamicGameDimensions
 } from '../constants/game';
 import { POINTS_PER_BRICK } from '../constants/gameState';
@@ -45,6 +53,10 @@ export class GameEngine {
   private isLevelTransitioning = false;
   private levelTransitionTimer: ReturnType<typeof setTimeout> | null = null;
   private level = 1;
+  private levelStartedAt = Date.now();
+  private initialBrickCount = 0;
+  private latestSpeedReduction: SpeedReductionSnapshot | null = null;
+  private phaseSpeedConfig: PhaseSpeedConfig | null = null;
   private qaScenarioConsumed = false;
   private readonly handleKeyDown = (event: KeyboardEvent) => this.paddle.onKeyDown(event);
   private readonly handleKeyUp = (event: KeyboardEvent) => this.paddle.onKeyUp(event);
@@ -99,6 +111,7 @@ export class GameEngine {
     LOG(`🏗️  Criando Bricks...`);
     this.configureBrickRows();
     this.bricks = this.createBricks();
+    this.startLevelSpeedTracking(this.level);
 
     LOG(`🎮 GameEngine constructor finalizado`);
     this.setupListeners();
@@ -166,6 +179,7 @@ export class GameEngine {
   private async onBrickDestroyed() {
     this.score += POINTS_PER_BRICK;
     this.onScoreUpdate(this.score);
+    this.latestSpeedReduction = this.getLatestSpeedReductionFromBalls();
 
     LOG(`🎯 onBrickDestroyed: Score = ${this.score}, Verificando se todos os blocos foram destruídos...`);
 
@@ -179,7 +193,8 @@ export class GameEngine {
       ballPositions,
       paddlePosition,
       POINTS_PER_BRICK,
-      'brick_destroyed'
+      'brick_destroyed',
+      this.latestSpeedReduction
     ).catch(error => ERROR('❌ Erro ao registrar pontuação:', error));
 
     // Verificar se todos os blocos foram destruídos
@@ -197,11 +212,19 @@ export class GameEngine {
     const currentLevel = this.level;
     const nextLevel = currentLevel + 1;
     const nextSpeedMultiplier = calculateLevelSpeedMultiplier(nextLevel);
+    const nextInitialBrickCount = this.getExpectedInitialBrickCountForLevel(nextLevel);
+    const nextMaxSpeed = calculateLevelMaxSpeed(this.canvasSize.width, nextLevel);
+    const nextMinSpeed = calculateLevelMinSpeed(this.canvasSize.width, nextLevel);
+    const nextReductionPerBrick = calculateSpeedReductionPerBrick(nextMaxSpeed, nextInitialBrickCount);
     const payload: LevelTransitionPayload = {
       currentLevel,
       nextLevel,
       nextSpeedMultiplier,
-      pauseMs: LEVEL_CLEAR_PAUSE_MS
+      pauseMs: LEVEL_CLEAR_PAUSE_MS,
+      nextMaxSpeed,
+      nextMinSpeed,
+      nextReductionPerBrick,
+      nextInitialBrickCount
     };
 
     await gameLogger.logLevelComplete(
@@ -211,7 +234,13 @@ export class GameEngine {
       currentLevel,
       nextLevel,
       nextSpeedMultiplier,
-      LEVEL_CLEAR_PAUSE_MS
+      LEVEL_CLEAR_PAUSE_MS,
+      {
+        nextMaxSpeed,
+        nextMinSpeed,
+        nextReductionPerBrick,
+        nextInitialBrickCount
+      }
     ).catch(error => ERROR('❌ Erro ao registrar fase concluída:', error));
 
     this.onLevelTransition?.(payload);
@@ -237,6 +266,7 @@ export class GameEngine {
     )];
     this.prepareQaBall();
     this.bricks = this.createBricks();
+    this.startLevelSpeedTracking(nextLevel);
     this.isLevelTransitioning = false;
 
     const gameState = this.getCurrentGameState();
@@ -278,7 +308,8 @@ export class GameEngine {
         paddleWidth: this.dimensions.paddleWidth,
         paddleHeight: this.dimensions.paddleHeight,
         ballRadius: this.dimensions.ballRadius
-      }
+      },
+      speedState: this.buildSpeedStateSnapshot()
     };
   }
 
@@ -289,6 +320,85 @@ export class GameEngine {
       velocity: ball.getVelocity(),
       radius: ball.position.radius
     }));
+  }
+
+  private getInitialBrickCount(): number {
+    return Math.max(1, this.getRemainingBricksCount());
+  }
+
+  private getElapsedLevelMs(): number {
+    return Math.max(0, Date.now() - this.levelStartedAt);
+  }
+
+  private buildPhaseSpeedConfig(level: number, initialBrickCount: number, levelStartedAt: number): PhaseSpeedConfig {
+    const maxSpeed = calculateLevelMaxSpeed(this.canvasSize.width, level);
+    return {
+      level,
+      initialBrickCount,
+      initialSpawnSpeed: calculateLevelInitialSpawnSpeed(this.canvasSize.width, level),
+      maxSpeed,
+      minSpeed: calculateLevelMinSpeed(this.canvasSize.width, level),
+      reductionPerBrick: calculateSpeedReductionPerBrick(maxSpeed, initialBrickCount),
+      previousLevelMaxSpeed: calculateLevelPreviousMaxSpeed(this.canvasSize.width, level),
+      levelStartedAt
+    };
+  }
+
+  private startLevelSpeedTracking(level: number) {
+    this.levelStartedAt = Date.now();
+    this.initialBrickCount = this.getInitialBrickCount();
+    this.latestSpeedReduction = null;
+    this.phaseSpeedConfig = this.buildPhaseSpeedConfig(level, this.initialBrickCount, this.levelStartedAt);
+    this.balls.forEach(ball => ball.applyPhaseSpeedConfig(this.phaseSpeedConfig!));
+  }
+
+  private getLatestSpeedReductionFromBalls(): SpeedReductionSnapshot | null {
+    for (const ball of this.balls) {
+      const speedReduction = ball.getLastSpeedReduction();
+      if (speedReduction) {
+        return speedReduction;
+      }
+    }
+
+    return null;
+  }
+
+  private buildSpeedStateSnapshot(): SpeedStateSnapshot {
+    const activeBall = this.balls[0];
+    if (activeBall) {
+      return activeBall.getSpeedStateSnapshot();
+    }
+
+    const fallbackConfig = this.phaseSpeedConfig ?? this.buildPhaseSpeedConfig(
+      this.level,
+      Math.max(1, this.initialBrickCount || this.dimensions.brickCols * this.dimensions.brickRows),
+      this.levelStartedAt
+    );
+    const currentSpeed = this.latestSpeedReduction?.speedAfter ?? fallbackConfig.initialSpawnSpeed;
+
+    return {
+      level: fallbackConfig.level,
+      initialBrickCount: fallbackConfig.initialBrickCount,
+      successfulBrickHits: this.latestSpeedReduction?.hitNumber ?? 0,
+      initialSpawnSpeed: fallbackConfig.initialSpawnSpeed,
+      maxSpeed: fallbackConfig.maxSpeed,
+      minSpeed: fallbackConfig.minSpeed,
+      currentSpeed,
+      reductionPerBrick: fallbackConfig.reductionPerBrick,
+      previousLevelMaxSpeed: fallbackConfig.previousLevelMaxSpeed,
+      levelStartedAt: fallbackConfig.levelStartedAt,
+      elapsedLevelMs: this.getElapsedLevelMs(),
+      minReached: currentSpeed <= fallbackConfig.minSpeed
+    };
+  }
+
+  private getExpectedInitialBrickCountForLevel(level: number): number {
+    if (this.qaScenario === 'single-brick-phase-clear' && !this.qaScenarioConsumed && level > this.level) {
+      const previewDimensions = calculateDynamicDimensions(this.canvasSize.width, this.canvasSize.height);
+      return previewDimensions.brickCols * previewDimensions.brickRows;
+    }
+
+    return this.dimensions.brickCols * this.dimensions.brickRows;
   }
 
   private setupListeners() {
@@ -444,8 +554,8 @@ export class GameEngine {
             continue;
           }
           if (ball.consumePaddleCollision()) {
-            // Apenas resetar o contador de hits, sem criar novas bolinhas
-            ball.resetBrickHits();
+            // Colisão com raquete já foi consumida; não resetar hits da fase
+            // porque a velocidade agora depende do total de blocos acertados.
           }
           ball.draw(this.ctx);
         }

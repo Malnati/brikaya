@@ -1,4 +1,5 @@
 <!-- PENDING.md -->
+- [ ] Executar `make cloudflare-mobile-qa`, `make cloudflare-no-score-reset`, `make cloudflare-phase-transition-qa`, `make cloudflare-dashboard-layout-qa` e `make cloudflare-theme-qa` contra `https://malnati-brickbreaker.pages.dev/` após merge da feature de controle de velocidade por fase.
 - [ ] Validar emissão do certificado TLS do Caddy após apontar o DNS de `brickbreacker.cranio.dev` para o host.
 - [ ] Monitorar o endpoint `/healthz` exposto pelo Caddy para integração com monitoramento externo.
 

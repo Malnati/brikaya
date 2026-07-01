@@ -3,6 +3,8 @@ import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import Game from './components/Game';
 import { AdSlotPlaceholder } from './components/AdSlotPlaceholder';
 import { ThemeToggle } from './components/ThemeToggle';
+import { CollisionStats } from './components/CollisionStats';
+import GameLogViewer from './components/GameLogViewer';
 import { saveScore, getTotalScore, resetScores } from './storage/score';
 import { LEVEL_TOAST_EXIT_MS, LEVEL_TOAST_VISIBLE_MS, LevelTransitionPayload } from './constants/game';
 import { LOG } from './utils/logger';
@@ -25,6 +27,9 @@ export default function App() {
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const levelTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hideToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showCollisionStats, setShowCollisionStats] = useState(false);
+  const [showGameLogs, setShowGameLogs] = useState(false);
   const qaScenario = useMemo<GameQaScenario | null>(() => {
     const searchParams = new URLSearchParams(window.location.search);
     return searchParams.get('qaScenario') === 'single-brick-phase-clear'
@@ -61,6 +66,19 @@ export default function App() {
     getTotalScore().then(setTotalScore);
   }, []);
 
+  useEffect(() => {
+    if (!isMenuOpen) return undefined;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isMenuOpen]);
+
   const handleRestart = useCallback(() => {
     scoreRef.current = 0;
     setScore(0);
@@ -75,6 +93,17 @@ export default function App() {
   const handleResetScores = useCallback(async () => {
     await resetScores();
     setTotalScore(0);
+    setIsMenuOpen(false);
+  }, []);
+
+  const handleOpenLogs = useCallback(() => {
+    setShowGameLogs(true);
+    setIsMenuOpen(false);
+  }, []);
+
+  const handleOpenCollisionStats = useCallback(() => {
+    setShowCollisionStats(true);
+    setIsMenuOpen(false);
   }, []);
 
   const handleLevelTransition = useCallback((payload: LevelTransitionPayload) => {
@@ -111,9 +140,60 @@ export default function App() {
               <span className="score-chip">Score {score}</span>
               <span className="score-chip">Total {totalScore}</span>
             </div>
-            <ThemeToggle theme={theme} onThemeChange={selectTheme} />
+            <button
+              type="button"
+              className="dashboard-menu-button"
+              aria-expanded={isMenuOpen}
+              aria-controls="game-settings-menu"
+              onClick={() => setIsMenuOpen(true)}
+            >
+              Menu
+            </button>
           </div>
         </header>
+
+        {isMenuOpen && (
+          <>
+            <button
+              type="button"
+              className="settings-drawer-backdrop"
+              aria-label="Fechar menu"
+              onClick={() => setIsMenuOpen(false)}
+            />
+            <aside id="game-settings-menu" className="settings-drawer" aria-label="Menu do jogo">
+              <div className="settings-drawer__header">
+                <h2>Menu</h2>
+                <button
+                  type="button"
+                  className="settings-drawer__close"
+                  aria-label="Fechar menu"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  ×
+                </button>
+              </div>
+              <div className="settings-drawer__section">
+                <h3>Tema</h3>
+                <ThemeToggle theme={theme} onThemeChange={selectTheme} />
+              </div>
+              <div className="settings-drawer__section">
+                <h3>Ferramentas</h3>
+                <button type="button" onClick={handleOpenLogs} className="dashboard-button dashboard-button--secondary">
+                  <span aria-hidden="true" className="button-icon">≡</span>
+                  Logs
+                </button>
+                <button type="button" onClick={handleOpenCollisionStats} className="dashboard-button dashboard-button--secondary">
+                  <span aria-hidden="true" className="button-icon">◈</span>
+                  Colisões
+                </button>
+                <button type="button" onClick={handleResetScores} className="dashboard-button dashboard-button--secondary">
+                  <span aria-hidden="true" className="button-icon">0</span>
+                  Zerar pontuação
+                </button>
+              </div>
+            </aside>
+          </>
+        )}
 
         <div className="dashboard-layout">
           <div className="play-column">
@@ -129,14 +209,10 @@ export default function App() {
                 qaScenario={qaScenario}
               />
             </div>
-            <div className="dashboard-actions" aria-label="Ações principais">
+            <div className="dashboard-actions dashboard-actions--primary" aria-label="Ações principais">
               <button type="button" onClick={handleRestart} className="dashboard-button dashboard-button--primary">
                 <span aria-hidden="true" className="button-icon">↻</span>
                 {gameWon || gameOver ? 'Jogar de novo' : 'Reiniciar'}
-              </button>
-              <button type="button" onClick={handleResetScores} className="dashboard-button dashboard-button--secondary">
-                <span aria-hidden="true" className="button-icon">0</span>
-                Zerar pontuação
               </button>
             </div>
             <AdSlotPlaceholder variant="bottom" />
@@ -159,6 +235,14 @@ export default function App() {
         )}
         </div>
       </section>
+      <CollisionStats
+        isVisible={showCollisionStats}
+        onClose={() => setShowCollisionStats(false)}
+      />
+      <GameLogViewer
+        isVisible={showGameLogs}
+        onClose={() => setShowGameLogs(false)}
+      />
     </main>
   );
 }

@@ -47,15 +47,33 @@ describe('App theme selector', () => {
     window.localStorage.clear();
   });
 
-  it('renderiza seletor Claro/Escuro e não renderiza funcionalidades fora de escopo', () => {
+  it('mantém configurações no menu lateral fechado por padrão', () => {
     mockSystemTheme(true);
 
     render(<App />);
 
+    expect(screen.getByRole('button', { name: 'Menu' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Reiniciar' })).toBeInTheDocument();
+    expect(screen.queryByLabelText('Tema da interface')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /zerar pontuação/i })).not.toBeInTheDocument();
+    expect(screen.queryByText(/loja|ranking|upgrades|tutorial|multiplayer|settings/i)).not.toBeInTheDocument();
+  });
+
+  it('abre menu lateral com tema, logs, colisões e zerar pontuação', async () => {
+    mockSystemTheme(true);
+    const user = userEvent.setup();
+
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: 'Menu' }));
+
+    expect(screen.getByRole('complementary', { name: 'Menu do jogo' })).toBeInTheDocument();
     const themeGroup = screen.getByLabelText('Tema da interface');
     expect(within(themeGroup).getByRole('button', { name: 'Claro' })).toBeInTheDocument();
     expect(within(themeGroup).getByRole('button', { name: 'Escuro' })).toBeInTheDocument();
-    expect(screen.queryByText(/loja|ranking|upgrades|tutorial|multiplayer|settings/i)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /logs/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /colisões/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /zerar pontuação/i })).toBeInTheDocument();
   });
 
   it('alterna tema, aplica no documento e persiste escolha', async () => {
@@ -65,6 +83,7 @@ describe('App theme selector', () => {
     render(<App />);
 
     expect(document.documentElement.dataset.theme).toBe('dark');
+    await user.click(screen.getByRole('button', { name: 'Menu' }));
 
     await user.click(screen.getByRole('button', { name: 'Claro' }));
 
@@ -75,5 +94,19 @@ describe('App theme selector', () => {
 
     expect(document.documentElement.dataset.theme).toBe('dark');
     expect(window.localStorage.setItem).toHaveBeenCalledWith('brickbreaker-theme', 'dark');
+  });
+
+  it('fecha menu lateral com Escape', async () => {
+    mockSystemTheme(true);
+    const user = userEvent.setup();
+
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: 'Menu' }));
+    expect(screen.getByRole('complementary', { name: 'Menu do jogo' })).toBeInTheDocument();
+
+    await user.keyboard('{Escape}');
+
+    expect(screen.queryByRole('complementary', { name: 'Menu do jogo' })).not.toBeInTheDocument();
   });
 });

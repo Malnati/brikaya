@@ -10,6 +10,7 @@ const CHROME_EXECUTABLE_PATH = '/Applications/Google Chrome.app/Contents/MacOS/G
 const VIEWPORT = { width: 393, height: 852, deviceScaleFactor: 3, isMobile: true, hasTouch: true };
 const MAX_WAIT_FOR_SCORE_MS = 30000;
 const INITIAL_POSITION_TOLERANCE_PX = 1;
+const SPEED_TOLERANCE = 0.0001;
 const GAME_LOG_DB_NAME = 'BrickBreakerGameLog';
 const GAME_LOG_STORE_NAME = 'gameEvents';
 const GAME_LOG_DB_VERSION = 2;
@@ -158,6 +159,10 @@ async function run() {
     const events = await readGameEvents(page);
     const byType = summarizeEvents(events);
     const scoreEvents = events.filter(event => event.type === 'score_update');
+    const scoreSpeedReduction = scoreEvents.find(event => event.metadata?.speedReduction)?.metadata?.speedReduction || null;
+    const expectedFirstLevelSpawnSpeed = scoreSpeedReduction
+      ? scoreSpeedReduction.maxSpeed * 3
+      : null;
     const lastBall = events[events.length - 1]?.ballPositions?.[0] || null;
     const restartedToInitialPosition = Boolean(lastBall)
       && Math.abs(lastBall.x - startBall.x) <= INITIAL_POSITION_TOLERANCE_PX
@@ -172,6 +177,8 @@ async function run() {
       lastBall,
       restartedToInitialPosition,
       scoreEvents: scoreEvents.length,
+      scoreSpeedReduction,
+      expectedFirstLevelSpawnSpeed,
       consoleProblems,
       screenshotPath: outScreenshot
     };
@@ -179,6 +186,13 @@ async function run() {
     console.log(JSON.stringify(report, null, 2));
 
     assert(scoreEvents.length > 0, 'Nenhum score_update foi observado no app publicado.');
+    assert(scoreSpeedReduction, 'score_update não registrou metadata.speedReduction.');
+    assert(Math.abs(scoreSpeedReduction.speedBefore - expectedFirstLevelSpawnSpeed) <= SPEED_TOLERANCE, `Fase 1 não começou 3x no spawn inicial: speedBefore=${scoreSpeedReduction.speedBefore}, esperado=${expectedFirstLevelSpawnSpeed}.`);
+    assert(scoreSpeedReduction.speedBefore > scoreSpeedReduction.maxSpeed, 'Override 3x não ficou restrito ao spawn acima do maxSpeed da Fase 1.');
+    assert(scoreSpeedReduction.speedAfter + SPEED_TOLERANCE >= scoreSpeedReduction.minSpeed, 'speedAfter ficou abaixo do minSpeed.');
+    if (!scoreSpeedReduction.minReached) {
+      assert(scoreSpeedReduction.speedBefore > scoreSpeedReduction.speedAfter, 'speedBefore não ficou acima de speedAfter antes do mínimo.');
+    }
     assert((byType.game_start || 0) === 1, `Motor reiniciou após pontuar: game_start=${byType.game_start || 0}.`);
     assert((byType.restart_game || 0) === 0, `Restart sem ação humana após pontuar: restart_game=${byType.restart_game || 0}.`);
     assert(!restartedToInitialPosition, 'Bolinha voltou à posição inicial após colisão com tijolo.');

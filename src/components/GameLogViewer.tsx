@@ -1,55 +1,17 @@
 // src/components/GameLogViewer.tsx
 import React, { useState, useEffect } from 'react';
-import { gameLogger } from '../storage/gameLogger';
+import {
+  gameLogger,
+  type GameEvent,
+  type GameStatsSummary
+} from '../storage/gameLogger';
 
-interface GameEvent {
-  id: string;
-  timestamp: number;
-  type: 'game_start' | 'game_end' | 'score_update' | 'ball_lost' | 'ball_added' | 'brick_destroyed' | 'brick_added' | 'paddle_move' | 'collision' | 'power_up' | 'level_complete' | 'level_start' | 'game_state_change' | 'restart_game';
-  gameState: {
-    score: number;
-    ballsCount: number;
-    bricksRemaining: number;
-    gameWon: boolean;
-    gameOver: boolean;
-    level: number;
-    canvasSize: { width: number; height: number };
-    gameDimensions: {
-      brickWidth: number;
-      brickHeight: number;
-      brickCols: number;
-      brickRows: number;
-      paddleWidth: number;
-      paddleHeight: number;
-      ballRadius: number;
-    };
-  };
-  ballPositions: Array<{
-    x: number;
-    y: number;
-    velocity: { dx: number; dy: number };
-    radius: number;
-  }>;
-  paddlePosition: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  };
-  collisionInfo?: {
-    type: 'wall' | 'paddle' | 'brick' | 'ceiling';
-    ballPosition: { x: number; y: number };
-    targetPosition?: { x: number; y: number; width?: number; height?: number };
-    brickIndex?: { col: number; row: number };
-    brickColorIndex?: number;
-    wallType?: 'left' | 'right';
-    hitPosition?: number;
-    collisionAngle?: number;
-    velocityBefore?: { dx: number; dy: number };
-    velocityAfter?: { dx: number; dy: number };
-  };
-  metadata?: Record<string, any>;
-}
+const SPEED_LABEL_CURRENT = 'Velocidade atual';
+const SPEED_LABEL_MAX = 'Velocidade máxima';
+const SPEED_LABEL_MIN = 'Velocidade mínima';
+const SPEED_LABEL_REDUCTION = 'Redução por bloco';
+const SPEED_LABEL_HITS = 'Blocos atingidos';
+const SPEED_LABEL_TIME = 'Tempo da fase';
 
 interface GameLogViewerProps {
   isVisible?: boolean;
@@ -61,7 +23,7 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState<string>('all');
   const [showDetails, setShowDetails] = useState<Record<string, boolean>>({});
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<GameStatsSummary | null>(null);
 
   const eventTypeLabels: Record<string, string> = {
     'game_start': '🎮 Início do Jogo',
@@ -160,6 +122,14 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
     return `(${vel.dx.toFixed(2)}, ${vel.dy.toFixed(2)})`;
   };
 
+  const formatSpeed = (speed: number) => {
+    return speed.toFixed(3);
+  };
+
+  const formatElapsedLevelMs = (elapsedLevelMs: number) => {
+    return `${(elapsedLevelMs / 1000).toFixed(2)}s`;
+  };
+
   const filteredEvents = filter === 'all'
     ? events
     : events.filter(event => event.type === filter);
@@ -240,6 +210,24 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
               <span className="stat-label">Total de Colisões:</span>
               <span className="stat-value">{stats.totalCollisions}</span>
             </div>
+            <div className="stat-item">
+              <span className="stat-label">Última Velocidade:</span>
+              <span className="stat-value">
+                {stats.latestSpeedState ? formatSpeed(stats.latestSpeedState.currentSpeed) : '—'}
+              </span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Reduções Aplicadas:</span>
+              <span className="stat-value">{stats.totalSpeedReductions}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Mínimo Atingido:</span>
+              <span className="stat-value">{stats.minSpeedReachedCount}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Tempo Médio da Fase:</span>
+              <span className="stat-value">{formatElapsedLevelMs(stats.averageLevelDurationMs)}</span>
+            </div>
           </div>
         </div>
       )}
@@ -251,7 +239,18 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
           {filteredEvents.length === 0 ? (
             <div className="no-events">Nenhum evento encontrado</div>
           ) : (
-            filteredEvents.map((event) => (
+            filteredEvents.map((event) => {
+              const speedReduction = event.metadata?.speedReduction as
+                | {
+                    speedBefore: number;
+                    speedAfter: number;
+                    reductionApplied: number;
+                    hitNumber: number;
+                    minReached: boolean;
+                  }
+                | undefined;
+
+              return (
               <div
                 key={event.id}
                 className="event-item"
@@ -291,6 +290,12 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
                         <div>Nível: {event.gameState.level}</div>
                         <div>Vitória: {event.gameState.gameWon ? 'Sim' : 'Não'}</div>
                         <div>Game Over: {event.gameState.gameOver ? 'Sim' : 'Não'}</div>
+                        <div>{SPEED_LABEL_CURRENT}: {formatSpeed(event.gameState.speedState.currentSpeed)}</div>
+                        <div>{SPEED_LABEL_MAX}: {formatSpeed(event.gameState.speedState.maxSpeed)}</div>
+                        <div>{SPEED_LABEL_MIN}: {formatSpeed(event.gameState.speedState.minSpeed)}</div>
+                        <div>{SPEED_LABEL_REDUCTION}: {formatSpeed(event.gameState.speedState.reductionPerBrick)}</div>
+                        <div>{SPEED_LABEL_HITS}: {event.gameState.speedState.successfulBrickHits}</div>
+                        <div>{SPEED_LABEL_TIME}: {formatElapsedLevelMs(event.gameState.speedState.elapsedLevelMs)}</div>
                       </div>
                     </div>
 
@@ -355,6 +360,15 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
                     {event.metadata && Object.keys(event.metadata).length > 0 && (
                       <div className="detail-section">
                         <h4>📋 Metadados</h4>
+                        {speedReduction && (
+                          <div className="detail-grid">
+                            <div>Velocidade Antes: {formatSpeed(speedReduction.speedBefore)}</div>
+                            <div>Velocidade Depois: {formatSpeed(speedReduction.speedAfter)}</div>
+                            <div>Redução Aplicada: {formatSpeed(speedReduction.reductionApplied)}</div>
+                            <div>Hit nº: {speedReduction.hitNumber}</div>
+                            <div>Mínimo Atingido: {speedReduction.minReached ? 'Sim' : 'Não'}</div>
+                          </div>
+                        )}
                         <pre className="metadata-json">
                           {JSON.stringify(event.metadata, null, 2)}
                         </pre>
@@ -363,7 +377,8 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
                   </div>
                 )}
               </div>
-            ))
+            );
+            })
           )}
         </div>
       )}
