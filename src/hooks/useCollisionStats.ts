@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { collisionTracker, type CollisionStatsSummary } from '../utils/collisionTracker';
 import { ERROR } from '../utils/logger';
 
-export function useCollisionStats(refreshInterval: number = 1000) {
+export function useCollisionStats(refreshInterval: number = 1000, enabled: boolean = true) {
   const [stats, setStats] = useState<CollisionStatsSummary>({
     total: 0,
     byType: {},
@@ -58,12 +58,14 @@ export function useCollisionStats(refreshInterval: number = 1000) {
   }, []);
 
   useEffect(() => {
+    if (!enabled) return undefined;
+
     refreshStats();
 
     const interval = setInterval(refreshStats, refreshInterval);
 
     return () => clearInterval(interval);
-  }, [refreshStats, refreshInterval]);
+  }, [enabled, refreshStats, refreshInterval]);
 
   return {
     stats,

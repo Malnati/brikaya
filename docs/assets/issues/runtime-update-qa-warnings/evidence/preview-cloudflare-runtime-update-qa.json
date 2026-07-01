@@ -1,0 +1,69 @@
+{
+  "mode": "verify",
+  "url": "https://89d40e66.malnati-brickbreaker.pages.dev/",
+  "profileDir": "tmp/browser-profiles/cloudflare-runtime-update",
+  "latest": {
+    "buildId": "preview-fix-runtime-update-qa-warnings-20260701174406",
+    "hasPlaceholder": false
+  },
+  "activeBeforeWait": {
+    "buildId": "preview-fix-runtime-update-qa-warnings-20260701174406",
+    "cacheName": "breakout-cache-preview-fix-runtime-update-qa-warnings-20260701174406"
+  },
+  "activeAfterWait": {
+    "buildId": "preview-fix-runtime-update-qa-warnings-20260701174406",
+    "cacheName": "breakout-cache-preview-fix-runtime-update-qa-warnings-20260701174406"
+  },
+  "seedState": {
+    "title": "Breakout",
+    "hasCanvas": true,
+    "canvas": {
+      "x": 19,
+      "y": 109.84375,
+      "width": 355,
+      "height": 244,
+      "right": 374,
+      "bottom": 353.84375
+    },
+    "hasController": true,
+    "cacheNames": [],
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393
+    }
+  },
+  "verifyState": {
+    "title": "Breakout",
+    "hasCanvas": true,
+    "canvas": {
+      "x": 19,
+      "y": 109.84375,
+      "width": 355,
+      "height": 244,
+      "right": 374,
+      "bottom": 353.84375
+    },
+    "hasController": true,
+    "cacheNames": [],
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393
+    }
+  },
+  "cacheNamesBeforeWait": [
+    "breakout-cache-preview-fix-runtime-update-qa-warnings-20260701174406"
+  ],
+  "cacheNamesAfterWait": [
+    "breakout-cache-preview-fix-runtime-update-qa-warnings-20260701174406"
+  ],
+  "staleCacheNamesBefore": [],
+  "staleCacheNamesAfter": [],
+  "navigationEvents": [
+    "about:blank",
+    "https://89d40e66.malnati-brickbreaker.pages.dev/"
+  ],
+  "consoleProblems": [],
+  "screenshotPath": "tmp/screenshots/cloudflare-runtime-update-qa.png"
+}

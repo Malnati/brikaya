@@ -8,7 +8,7 @@ interface CollisionStatsProps {
 }
 
 export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
-  const { stats, loading, error, clearAllCollisions, getRecentCollisions } = useCollisionStats(2000);
+  const { stats, loading, error, clearAllCollisions, getRecentCollisions } = useCollisionStats(2000, isVisible);
   const [showRecentCollisions, setShowRecentCollisions] = useState(false);
   const [recentCollisions, setRecentCollisions] = useState<any[]>([]);
 

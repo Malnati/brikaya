@@ -65,6 +65,22 @@ GitHub Issues está desativado no repositório `Malnati/brickbreaker`, então es
 - `BUILD_ID` publicado permanece sem placeholder.
 - Nenhuma regressão nos QAs publicados existentes.
 
+## Diagnosis
+
+- Os arquivos `public/icons/icon-192.png` e `public/icons/icon-512.png` declaravam dimensões corretas no `IHDR`, mas tinham payload `IDAT` inválido; `zlib.inflate` falhava e Chrome recusava o ícone do manifesto.
+- `GameLogViewer` e `CollisionStats` eram montados fechados, mas ainda executavam leituras/polling em IndexedDB.
+- `DebugLogger` tentava armazenar argumentos não clonáveis, como funções, referências circulares e objetos de erro crus.
+- `useColorDebug` executava leitura periódica de pixels do canvas em produção, mesmo sem fluxo explícito de debug.
+
+## Resolution
+
+- Ícones PWA substituídos por PNGs locais válidos 192x192 e 512x512.
+- `GameLogViewer` só carrega logs quando `isVisible=true`.
+- `useCollisionStats` recebeu controle `enabled`; `CollisionStats` fechado não inicia polling.
+- `DebugLogger` passa a serializar argumentos antes de gravar e transforma falhas internas em no-op silencioso.
+- `useColorDebug` roda apenas em `localhost`, `127.0.0.1` ou com `?debugColors=1`.
+- `cloudflare-runtime-update-qa` agora falha se capturar warnings/errors de console relevantes.
+
 ## Execution plan
 
 1. Reproduzir warnings com perfil persistente limpo e com perfil persistente já usado.
@@ -101,6 +117,29 @@ BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-
 - Lista dos warnings removidos ou justificativa dos warnings remanescentes.
 - Saída resumida de testes/build.
 - Confirmação do `BUILD_ID` publicado sem placeholder.
+
+## Evidence — preview
+
+- Preview: `https://89d40e66.malnati-brickbreaker.pages.dev/`
+- `PATH=/opt/homebrew/bin:$PATH node --version`: `v23.5.0`.
+- `make help`: passou.
+- `npm test -- --runInBand`: 12 suites, 53 testes, 0 falhas.
+- `npm run build`: passou; `BUILD_ID` de preview `preview-fix-runtime-update-qa-warnings-20260701174406`.
+- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.malnati-brickbreaker.pages.dev/ make cloudflare-runtime-update-qa`: passou com `consoleProblems: []`.
+- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.malnati-brickbreaker.pages.dev/ make cloudflare-mobile-qa`: passou com `consoleProblems: []`.
+- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.malnati-brickbreaker.pages.dev/ make cloudflare-dashboard-layout-qa`: passou com `consoleProblems: []`.
+- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.malnati-brickbreaker.pages.dev/ make cloudflare-no-score-reset`: passou com `consoleProblems: []`.
+- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.malnati-brickbreaker.pages.dev/ make cloudflare-phase-transition-qa`: passou com `consoleProblems: []`.
+- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.malnati-brickbreaker.pages.dev/ make cloudflare-theme-qa`: passou com `consoleProblems: []`.
+
+Recibos JSON:
+
+- [runtime update](../../assets/issues/runtime-update-qa-warnings/evidence/preview-cloudflare-runtime-update-qa.json)
+- [mobile QA](../../assets/issues/runtime-update-qa-warnings/evidence/preview-cloudflare-mobile-qa.json)
+- [dashboard layout QA](../../assets/issues/runtime-update-qa-warnings/evidence/preview-cloudflare-dashboard-layout.json)
+- [no score reset QA](../../assets/issues/runtime-update-qa-warnings/evidence/preview-cloudflare-no-score-reset-after-brick.json)
+- [phase transition QA](../../assets/issues/runtime-update-qa-warnings/evidence/preview-cloudflare-phase-transition.json)
+- [theme QA](../../assets/issues/runtime-update-qa-warnings/evidence/preview-cloudflare-theme-qa.json)
 
 ## GitHub epic/sub-issue links
 

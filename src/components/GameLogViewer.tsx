@@ -135,8 +135,10 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
     : events.filter(event => event.type === filter);
 
   useEffect(() => {
+    if (!isVisible) return;
+
     loadEvents();
-  }, []);
+  }, [isVisible]);
 
   if (!isVisible) {
     return null;
