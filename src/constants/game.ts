@@ -22,6 +22,8 @@ export const LEVEL_TOAST_VISIBLE_MS = 1200;
 export const LEVEL_TOAST_EXIT_MS = 350;
 export const LEVEL_SPEED_STEP = 0.12;
 export const MAX_LEVEL_SPEED_MULTIPLIER = 2.2;
+export const FIRST_LEVEL_MIN_SPEED_DIVISOR = 2;
+export const SPEED_PRECISION_FACTOR = 1000;
 
 export const PADDLE_WIDTH = 75;
 export const PADDLE_HEIGHT = 10;
@@ -53,10 +55,85 @@ export interface LevelTransitionPayload {
   nextLevel: number;
   nextSpeedMultiplier: number;
   pauseMs: number;
+  nextMaxSpeed: number;
+  nextMinSpeed: number;
+  nextReductionPerBrick: number;
+  nextInitialBrickCount: number;
+}
+
+export interface SpeedStateSnapshot {
+  level: number;
+  initialBrickCount: number;
+  successfulBrickHits: number;
+  maxSpeed: number;
+  minSpeed: number;
+  currentSpeed: number;
+  reductionPerBrick: number;
+  previousLevelMaxSpeed: number;
+  levelStartedAt: number;
+  elapsedLevelMs: number;
+  minReached: boolean;
+}
+
+export interface SpeedReductionSnapshot {
+  level: number;
+  hitNumber: number;
+  speedBefore: number;
+  speedAfter: number;
+  reductionApplied: number;
+  minSpeed: number;
+  maxSpeed: number;
+  minReached: boolean;
+  elapsedLevelMs: number;
+}
+
+export interface PhaseSpeedConfig {
+  level: number;
+  initialBrickCount: number;
+  maxSpeed: number;
+  minSpeed: number;
+  reductionPerBrick: number;
+  previousLevelMaxSpeed: number;
+  levelStartedAt: number;
 }
 
 export function calculateLevelSpeedMultiplier(level: number): number {
   return Math.min(1 + (level - 1) * LEVEL_SPEED_STEP, MAX_LEVEL_SPEED_MULTIPLIER);
+}
+
+export function roundSpeedValue(speed: number): number {
+  return Math.round(speed * SPEED_PRECISION_FACTOR) / SPEED_PRECISION_FACTOR;
+}
+
+export function calculateLevelMaxSpeed(canvasWidth: number, level: number): number {
+  return roundSpeedValue(calculateInitialBallSpeed(canvasWidth) * calculateLevelSpeedMultiplier(level));
+}
+
+export function calculateLevelPreviousMaxSpeed(canvasWidth: number, level: number): number {
+  if (level <= 1) {
+    return calculateLevelMaxSpeed(canvasWidth, level);
+  }
+
+  return calculateLevelMaxSpeed(canvasWidth, level - 1);
+}
+
+export function calculateLevelMinSpeed(canvasWidth: number, level: number): number {
+  if (level <= 1) {
+    return roundSpeedValue(calculateLevelMaxSpeed(canvasWidth, level) / FIRST_LEVEL_MIN_SPEED_DIVISOR);
+  }
+
+  return roundSpeedValue(
+    calculateLevelPreviousMaxSpeed(canvasWidth, level) / FIRST_LEVEL_MIN_SPEED_DIVISOR
+  );
+}
+
+export function calculateSpeedReductionPerBrick(maxSpeed: number, initialBrickCount: number): number {
+  const safeBrickCount = Math.max(1, initialBrickCount);
+  return roundSpeedValue(maxSpeed / safeBrickCount);
+}
+
+export function calculateClampedSpeed(speed: number, minSpeed: number, maxSpeed: number): number {
+  return roundSpeedValue(Math.min(maxSpeed, Math.max(minSpeed, speed)));
 }
 
 // Funções para calcular dimensões dinâmicas

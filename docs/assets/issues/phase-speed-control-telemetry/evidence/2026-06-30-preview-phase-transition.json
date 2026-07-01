@@ -1,0 +1,120 @@
+{
+  "url": "https://07346cf0.malnati-brickbreaker.pages.dev/?qaScenario=single-brick-phase-clear",
+  "screenshotPath": "tmp/screenshots/cloudflare-phase-transition.png",
+  "byType": {
+    "game_start": 1,
+    "brick_destroyed": 1,
+    "score_update": 1,
+    "level_complete": 1,
+    "level_start": 1
+  },
+  "eventTypes": [
+    "game_start",
+    "brick_destroyed",
+    "score_update",
+    "level_complete",
+    "level_start"
+  ],
+  "levelCompleteMetadata": {
+    "completedLevel": 1,
+    "nextLevel": 2,
+    "nextSpeedMultiplier": 1.12,
+    "pauseMs": 1800,
+    "levelScore": 10,
+    "levelDuration": 3,
+    "speedState": {
+      "level": 1,
+      "initialBrickCount": 1,
+      "successfulBrickHits": 1,
+      "maxSpeed": 1.1,
+      "minSpeed": 0.55,
+      "currentSpeed": 0.55,
+      "reductionPerBrick": 1.1,
+      "previousLevelMaxSpeed": 1.1,
+      "levelStartedAt": 1782871292387,
+      "elapsedLevelMs": 123,
+      "minReached": true
+    },
+    "nextMaxSpeed": 1.232,
+    "nextMinSpeed": 0.55,
+    "nextReductionPerBrick": 0.082,
+    "nextInitialBrickCount": 15
+  },
+  "levelStartMetadata": {
+    "level": 2,
+    "speedMultiplier": 1.12,
+    "scoreCarriedOver": 10,
+    "speedState": {
+      "level": 2,
+      "initialBrickCount": 15,
+      "successfulBrickHits": 0,
+      "maxSpeed": 1.232,
+      "minSpeed": 0.55,
+      "currentSpeed": 1.232,
+      "reductionPerBrick": 0.082,
+      "previousLevelMaxSpeed": 1.1,
+      "levelStartedAt": 1782871294317,
+      "elapsedLevelMs": 0,
+      "minReached": false
+    }
+  },
+  "levelCompleteSpeedState": {
+    "level": 1,
+    "initialBrickCount": 1,
+    "successfulBrickHits": 1,
+    "maxSpeed": 1.1,
+    "minSpeed": 0.55,
+    "currentSpeed": 0.55,
+    "reductionPerBrick": 1.1,
+    "previousLevelMaxSpeed": 1.1,
+    "levelStartedAt": 1782871292387,
+    "elapsedLevelMs": 123,
+    "minReached": true
+  },
+  "levelStartSpeedState": {
+    "level": 2,
+    "initialBrickCount": 15,
+    "successfulBrickHits": 0,
+    "maxSpeed": 1.232,
+    "minSpeed": 0.55,
+    "currentSpeed": 1.232,
+    "reductionPerBrick": 0.082,
+    "previousLevelMaxSpeed": 1.1,
+    "levelStartedAt": 1782871294317,
+    "elapsedLevelMs": 0,
+    "minReached": false
+  },
+  "pauseDeltaMs": 1806,
+  "toastVisibleState": {
+    "text": "Fase 2 • velocidade 1.12×",
+    "toast": {
+      "x": 47.40625,
+      "y": 205.75,
+      "width": 298.1875,
+      "height": 34,
+      "right": 345.59375,
+      "bottom": 239.75
+    },
+    "canvas": {
+      "x": 19,
+      "y": 161.84375,
+      "width": 355,
+      "height": 244,
+      "right": 374,
+      "bottom": 405.84375
+    }
+  },
+  "finalLayout": {
+    "text": "",
+    "toast": null,
+    "canvas": {
+      "x": 19,
+      "y": 161.84375,
+      "width": 355,
+      "height": 244,
+      "right": 374,
+      "bottom": 405.84375
+    }
+  },
+  "consoleProblems": []
+}

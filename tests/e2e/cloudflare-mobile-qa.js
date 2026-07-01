@@ -22,6 +22,9 @@ const REQUIRED_DATABASE_NAMES = ['BrickBreakerGameLog'];
 const LOGS_BUTTON_NAME = /logs/i;
 const COLLISIONS_BUTTON_NAME = /colisões/i;
 const CLOSE_BUTTON_NAME = /fechar|×|✕/i;
+const SPEED_CURRENT_LABEL = 'Velocidade atual';
+const LEVEL_TIME_LABEL = 'Tempo da fase';
+const SPEED_REDUCTIONS_LABEL = 'Reduções aplicadas';
 
 function getPublicUrl() {
   return process.env.BRICKBREAKER_PUBLIC_URL || DEFAULT_PUBLIC_URL;
@@ -43,6 +46,19 @@ function assert(condition, message) {
   if (!condition) {
     throw new Error(message);
   }
+}
+
+async function clickButtonByPattern(page, pattern) {
+  const buttons = await page.$$('button');
+  for (const button of buttons) {
+    const text = await button.evaluate(node => node.textContent || '');
+    if (pattern.test(text)) {
+      await button.click();
+      return true;
+    }
+  }
+
+  return false;
 }
 
 async function readIndexedDbSummary(page) {
@@ -196,38 +212,44 @@ async function run() {
     assert(layoutState.buttons.every(button => button.hasTouchTarget), `Botão menor que alvo touch mínimo: ${layoutState.buttons.filter(button => !button.hasTouchTarget).map(button => button.text).join(', ')}`);
     assert(layoutState.scoreValue <= MAX_INITIAL_SCORE_AFTER_OBSERVATION, `Jogo rápido demais no início: score ${layoutState.scoreValue}.`);
 
-    const logsButton = await page.$$('button').then(async buttons => {
-      for (const button of buttons) {
-        const text = await button.evaluate(node => node.textContent || '');
-        if (LOGS_BUTTON_NAME.test(text)) return button;
-      }
-      return null;
-    });
-    assert(logsButton, 'Botão de logs não encontrado.');
-    await logsButton.click();
+    const openedLogs = await clickButtonByPattern(page, LOGS_BUTTON_NAME);
+    assert(openedLogs, 'Botão de logs não encontrado.');
     await page.waitForFunction(() => document.body.textContent?.includes('Visualizador de Logs'), { timeout: 10000 });
+    await new Promise(resolve => setTimeout(resolve, 500));
+    let firstEventHeader = await page.$('.event-header');
+    if (!firstEventHeader) {
+      const refreshedLogs = await clickButtonByPattern(page, /atualizar/i);
+      assert(refreshedLogs, 'Painel de logs abriu sem botão Atualizar disponível.');
+      await page.waitForFunction(() => Boolean(document.querySelector('.event-header')), { timeout: 10000 });
+      firstEventHeader = await page.$('.event-header');
+    }
+    assert(firstEventHeader, 'Nenhum evento disponível no painel de logs.');
+    await firstEventHeader.click();
+    await page.waitForFunction(
+      ({ speedLabel, timeLabel }) => {
+        const text = document.body.textContent || '';
+        return text.includes(speedLabel) && text.includes(timeLabel);
+      },
+      { timeout: 10000 },
+      { speedLabel: SPEED_CURRENT_LABEL, timeLabel: LEVEL_TIME_LABEL }
+    );
     const indexedDbSummary = await readIndexedDbSummary(page);
     const logsState = await collectLayoutState(page);
 
-    const closeButtons = await page.$$('button');
-    for (const button of closeButtons) {
-      const text = await button.evaluate(node => node.textContent || '');
-      if (CLOSE_BUTTON_NAME.test(text)) {
-        await button.click();
-        break;
-      }
-    }
+    const closedLogs = await clickButtonByPattern(page, CLOSE_BUTTON_NAME);
+    assert(closedLogs, 'Não foi possível fechar o painel de logs.');
 
-    const collisionButton = await page.$$('button').then(async buttons => {
-      for (const button of buttons) {
-        const text = await button.evaluate(node => node.textContent || '');
-        if (COLLISIONS_BUTTON_NAME.test(text)) return button;
-      }
-      return null;
-    });
-    assert(collisionButton, 'Botão de colisões não encontrado.');
-    await collisionButton.click();
+    const openedCollisions = await clickButtonByPattern(page, COLLISIONS_BUTTON_NAME);
+    assert(openedCollisions, 'Botão de colisões não encontrado.');
     await page.waitForFunction(() => document.body.textContent?.includes('Estatísticas de Colisões'), { timeout: 10000 });
+    await page.waitForFunction(
+      ({ speedLabel, reductionsLabel }) => {
+        const text = document.body.textContent || '';
+        return text.includes(speedLabel) && text.includes(reductionsLabel);
+      },
+      { timeout: 10000 },
+      { speedLabel: SPEED_CURRENT_LABEL, reductionsLabel: SPEED_REDUCTIONS_LABEL }
+    );
     const statsState = await collectLayoutState(page);
 
     const report = {

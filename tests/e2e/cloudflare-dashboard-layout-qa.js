@@ -11,6 +11,13 @@ const CHROME_EXECUTABLE_PATH = '/Applications/Google Chrome.app/Contents/MacOS/G
 const MIN_TOUCH_TARGET_SIZE = 44;
 const MIN_SIDE_AD_DISTANCE_PX = 150;
 const MIN_BOTTOM_AD_DISTANCE_PX = 24;
+const LOGS_BUTTON_NAME = /logs/i;
+const COLLISIONS_BUTTON_NAME = /colisões/i;
+const CLOSE_BUTTON_NAME = /fechar|×|✕/i;
+const SPEED_CURRENT_LABEL = 'Velocidade atual';
+const LEVEL_TIME_LABEL = 'Tempo da fase';
+const SPEED_REDUCTIONS_LABEL = 'Reduções aplicadas';
+const OVERLAY_TARGET_VIEWPORTS = ['iphone-15', 'desktop'];
 const VIEWPORTS = [
   { name: 'iphone-se', width: 375, height: 667, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
   { name: 'iphone-12-14', width: 390, height: 844, deviceScaleFactor: 3, isMobile: true, hasTouch: true },
@@ -128,6 +135,27 @@ async function clearOfflineState(page) {
   });
 }
 
+async function clickButtonByPattern(page, pattern) {
+  const buttons = await page.$$('button');
+  for (const button of buttons) {
+    const text = await button.evaluate(node => node.textContent || '');
+    if (pattern.test(text)) {
+      await button.click();
+      return true;
+    }
+  }
+
+  return false;
+}
+
+async function collectOverlayLayoutState(page) {
+  return page.evaluate(() => ({
+    hasHorizontalOverflow: document.documentElement.scrollWidth > window.innerWidth,
+    scrollWidth: document.documentElement.scrollWidth,
+    viewportWidth: window.innerWidth,
+  }));
+}
+
 async function run() {
   const targetUrl = publicUrl();
   const parsed = new URL(targetUrl);
@@ -188,6 +216,50 @@ async function run() {
       }
       if (state.bottomSlotVisible) {
         assert(state.bottomAdDistance >= MIN_BOTTOM_AD_DISTANCE_PX || state.viewport.height < 500, `${viewport.name}: slot inferior perto demais do tabuleiro.`);
+      }
+
+      if (OVERLAY_TARGET_VIEWPORTS.includes(viewport.name)) {
+        const openedLogs = await clickButtonByPattern(page, LOGS_BUTTON_NAME);
+        assert(openedLogs, `${viewport.name}: não abriu painel de logs.`);
+        await page.waitForFunction(() => document.body.textContent?.includes('Visualizador de Logs'), { timeout: 10000 });
+        await new Promise(resolve => setTimeout(resolve, 500));
+        let firstEventHeader = await page.$('.event-header');
+        if (!firstEventHeader) {
+          const refreshedLogs = await clickButtonByPattern(page, /atualizar/i);
+          assert(refreshedLogs, `${viewport.name}: logs abriu sem botão Atualizar disponível.`);
+          await page.waitForFunction(() => Boolean(document.querySelector('.event-header')), { timeout: 10000 });
+          firstEventHeader = await page.$('.event-header');
+        }
+        if (firstEventHeader) {
+          await firstEventHeader.click();
+        }
+        await page.waitForFunction(
+          ({ speedLabel, timeLabel }) => {
+            const text = document.body.textContent || '';
+            return text.includes(speedLabel) && text.includes(timeLabel);
+          },
+          { timeout: 10000 },
+          { speedLabel: SPEED_CURRENT_LABEL, timeLabel: LEVEL_TIME_LABEL }
+        );
+        const logsOverlayState = await collectOverlayLayoutState(page);
+        assert(!logsOverlayState.hasHorizontalOverflow, `${viewport.name}: logs gerou overflow horizontal ${logsOverlayState.scrollWidth} > ${logsOverlayState.viewportWidth}.`);
+        const closedLogs = await clickButtonByPattern(page, CLOSE_BUTTON_NAME);
+        assert(closedLogs, `${viewport.name}: não fechou painel de logs.`);
+
+        const openedCollisions = await clickButtonByPattern(page, COLLISIONS_BUTTON_NAME);
+        assert(openedCollisions, `${viewport.name}: não abriu painel de colisões.`);
+        await page.waitForFunction(
+          ({ speedLabel, reductionsLabel }) => {
+            const text = document.body.textContent || '';
+            return text.includes(speedLabel) && text.includes(reductionsLabel);
+          },
+          { timeout: 10000 },
+          { speedLabel: SPEED_CURRENT_LABEL, reductionsLabel: SPEED_REDUCTIONS_LABEL }
+        );
+        const collisionsOverlayState = await collectOverlayLayoutState(page);
+        assert(!collisionsOverlayState.hasHorizontalOverflow, `${viewport.name}: colisões gerou overflow horizontal ${collisionsOverlayState.scrollWidth} > ${collisionsOverlayState.viewportWidth}.`);
+        const closedCollisions = await clickButtonByPattern(page, CLOSE_BUTTON_NAME);
+        assert(closedCollisions, `${viewport.name}: não fechou painel de colisões.`);
       }
     }
 

@@ -1,43 +1,71 @@
 // src/storage/gameLogger.ts
+import {
+  LevelTransitionPayload,
+  SpeedReductionSnapshot,
+  SpeedStateSnapshot
+} from '../constants/game';
 
 import { LOG, ERROR, WARN } from '../utils/logger';
 
 LOG('📦 GameLogger.ts carregado');
 
-interface GameEvent {
+export type GameEventType =
+  | 'game_start'
+  | 'game_end'
+  | 'score_update'
+  | 'ball_lost'
+  | 'ball_added'
+  | 'brick_destroyed'
+  | 'brick_added'
+  | 'paddle_move'
+  | 'collision'
+  | 'power_up'
+  | 'level_complete'
+  | 'level_start'
+  | 'game_state_change'
+  | 'restart_game';
+
+export interface LoggedGameState {
+  score: number;
+  ballsCount: number;
+  bricksRemaining: number;
+  gameWon: boolean;
+  gameOver: boolean;
+  level: number;
+  canvasSize: { width: number; height: number };
+  gameDimensions: {
+    brickWidth: number;
+    brickHeight: number;
+    brickCols: number;
+    brickRows: number;
+    paddleWidth: number;
+    paddleHeight: number;
+    ballRadius: number;
+  };
+  speedState: SpeedStateSnapshot;
+}
+
+export interface LoggedBallPosition {
+  x: number;
+  y: number;
+  velocity: { dx: number; dy: number };
+  radius: number;
+}
+
+export interface LoggedPaddlePosition {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface GameEvent {
   id: string;
   timestamp: number;
-  type: 'game_start' | 'game_end' | 'score_update' | 'ball_lost' | 'ball_added' | 'brick_destroyed' | 'brick_added' | 'paddle_move' | 'collision' | 'power_up' | 'level_complete' | 'level_start' | 'game_state_change' | 'restart_game';
-  gameState: {
-    score: number;
-    ballsCount: number;
-    bricksRemaining: number;
-    gameWon: boolean;
-    gameOver: boolean;
-    level: number;
-    canvasSize: { width: number; height: number };
-    gameDimensions: {
-      brickWidth: number;
-      brickHeight: number;
-      brickCols: number;
-      brickRows: number;
-      paddleWidth: number;
-      paddleHeight: number;
-      ballRadius: number;
-    };
-  };
-  ballPositions: Array<{
-    x: number;
-    y: number;
-    velocity: { dx: number; dy: number };
-    radius: number;
-  }>;
-  paddlePosition: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  };
+  type: GameEventType;
+  gameState: LoggedGameState;
+  ballPositions: LoggedBallPosition[];
+  paddlePosition: LoggedPaddlePosition;
   collisionInfo?: {
     type: 'wall' | 'paddle' | 'brick' | 'ceiling';
     ballPosition: { x: number; y: number };
@@ -50,7 +78,25 @@ interface GameEvent {
     velocityBefore?: { dx: number; dy: number };
     velocityAfter?: { dx: number; dy: number };
   };
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
+}
+
+export interface GameStatsSummary {
+  totalGames: number;
+  totalEvents: number;
+  byType: Record<string, number>;
+  averageScore: number;
+  gamesWon: number;
+  gamesLost: number;
+  averageGameDuration: number;
+  totalBricksDestroyed: number;
+  totalCollisions: number;
+  averageBallsPerGame: number;
+  latestSpeedState: SpeedStateSnapshot | null;
+  totalSpeedReductions: number;
+  averageReductionApplied: number;
+  minSpeedReachedCount: number;
+  averageLevelDurationMs: number;
 }
 
 class GameLogger {
@@ -130,6 +176,10 @@ class GameLogger {
 
   getCurrentGameId(): string | null {
     return this.currentGameId;
+  }
+
+  private getTotalBricks(gameState: LoggedGameState): number {
+    return gameState.gameDimensions.brickCols * gameState.gameDimensions.brickRows;
   }
 
   async logEvent(event: Omit<GameEvent, 'id' | 'timestamp'>): Promise<void> {
@@ -224,7 +274,8 @@ class GameLogger {
         gameId: this.currentGameId,
         gameDuration,
         finalScore: gameState.score,
-        totalBricksDestroyed: gameState.gameDimensions.brickCols * gameState.gameDimensions.brickRows - gameState.bricksRemaining
+        totalBricksDestroyed: this.getTotalBricks(gameState) - gameState.bricksRemaining,
+        speedState: gameState.speedState
       }
     });
 
@@ -237,7 +288,8 @@ class GameLogger {
     ballPositions: GameEvent['ballPositions'],
     paddlePosition: GameEvent['paddlePosition'],
     pointsAdded: number,
-    reason: string
+    reason: string,
+    speedReduction?: SpeedReductionSnapshot | null
   ): Promise<void> {
     await this.logEvent({
       type: 'score_update',
@@ -248,7 +300,9 @@ class GameLogger {
         pointsAdded,
         reason,
         newTotalScore: gameState.score,
-        bricksRemaining: gameState.bricksRemaining
+        bricksRemaining: gameState.bricksRemaining,
+        speedReduction: speedReduction ?? undefined,
+        speedState: gameState.speedState
       }
     });
   }
@@ -270,10 +324,11 @@ class GameLogger {
         lostBallVelocity,
         remainingBalls: gameState.ballsCount - 1,
         gameProgress: {
-          bricksDestroyed: gameState.gameDimensions.brickCols * gameState.gameDimensions.brickRows - gameState.bricksRemaining,
-          totalBricks: gameState.gameDimensions.brickCols * gameState.gameDimensions.brickRows,
-          percentageComplete: ((gameState.gameDimensions.brickCols * gameState.gameDimensions.brickRows - gameState.bricksRemaining) / (gameState.gameDimensions.brickCols * gameState.gameDimensions.brickRows)) * 100
-        }
+          bricksDestroyed: this.getTotalBricks(gameState) - gameState.bricksRemaining,
+          totalBricks: this.getTotalBricks(gameState),
+          percentageComplete: ((this.getTotalBricks(gameState) - gameState.bricksRemaining) / this.getTotalBricks(gameState)) * 100
+        },
+        speedState: gameState.speedState
       }
     });
   }
@@ -291,7 +346,8 @@ class GameLogger {
       paddlePosition,
       metadata: {
         newBallPosition,
-        totalBalls: gameState.ballsCount
+        totalBalls: gameState.ballsCount,
+        speedState: gameState.speedState
       }
     });
   }
@@ -304,7 +360,9 @@ class GameLogger {
     brickIndex: { col: number; row: number },
     brickColorIndex: number,
     ballPosition: { x: number; y: number },
-    ballVelocity: { dx: number; dy: number }
+    ballVelocityBefore: { dx: number; dy: number },
+    ballVelocityAfter?: { dx: number; dy: number },
+    speedReduction?: SpeedReductionSnapshot | null
   ): Promise<void> {
     await this.logEvent({
       type: 'brick_destroyed',
@@ -317,16 +375,19 @@ class GameLogger {
         targetPosition: brickPosition,
         brickIndex,
         brickColorIndex,
-        velocityBefore: ballVelocity
+        velocityBefore: ballVelocityBefore,
+        velocityAfter: ballVelocityAfter ?? ballVelocityBefore
       },
       metadata: {
         brickColorIndex,
         brickPosition: brickIndex,
-        remainingBricks: gameState.bricksRemaining - 1,
+        remainingBricks: gameState.bricksRemaining,
+        speedReduction: speedReduction ?? undefined,
+        speedState: gameState.speedState,
         gameProgress: {
-          bricksDestroyed: gameState.gameDimensions.brickCols * gameState.gameDimensions.brickRows - gameState.bricksRemaining + 1,
-          totalBricks: gameState.gameDimensions.brickCols * gameState.gameDimensions.brickRows,
-          percentageComplete: ((gameState.gameDimensions.brickCols * gameState.gameDimensions.brickRows - gameState.bricksRemaining + 1) / (gameState.gameDimensions.brickCols * gameState.gameDimensions.brickRows)) * 100
+          bricksDestroyed: this.getTotalBricks(gameState) - gameState.bricksRemaining,
+          totalBricks: this.getTotalBricks(gameState),
+          percentageComplete: ((this.getTotalBricks(gameState) - gameState.bricksRemaining) / this.getTotalBricks(gameState)) * 100
         }
       }
     });
@@ -345,7 +406,8 @@ class GameLogger {
       paddlePosition,
       metadata: {
         rowAdded,
-        newTotalBricks: gameState.bricksRemaining + gameState.gameDimensions.brickCols
+        newTotalBricks: gameState.bricksRemaining + gameState.gameDimensions.brickCols,
+        speedState: gameState.speedState
       }
     });
   }
@@ -366,7 +428,8 @@ class GameLogger {
         direction,
         previousPosition,
         movementDistance: previousPosition ? Math.abs(paddlePosition.x - previousPosition.x) : 0,
-        paddleCenter: paddlePosition.x + paddlePosition.width / 2
+        paddleCenter: paddlePosition.x + paddlePosition.width / 2,
+        speedState: gameState.speedState
       }
     });
   }
@@ -382,7 +445,10 @@ class GameLogger {
       gameState,
       ballPositions,
       paddlePosition,
-      collisionInfo
+      collisionInfo,
+      metadata: {
+        speedState: gameState.speedState
+      }
     });
   }
 
@@ -393,7 +459,11 @@ class GameLogger {
     completedLevel: number,
     nextLevel: number,
     nextSpeedMultiplier: number,
-    pauseMs: number
+    pauseMs: number,
+    levelTransitionPayload?: Pick<
+      LevelTransitionPayload,
+      'nextMaxSpeed' | 'nextMinSpeed' | 'nextReductionPerBrick' | 'nextInitialBrickCount'
+    >
   ): Promise<void> {
     await this.logEvent({
       type: 'level_complete',
@@ -406,7 +476,12 @@ class GameLogger {
         nextSpeedMultiplier,
         pauseMs,
         levelScore: gameState.score,
-        levelDuration: this.gameStartTime ? Date.now() - this.gameStartTime : 0
+        levelDuration: this.gameStartTime ? Date.now() - this.gameStartTime : 0,
+        speedState: gameState.speedState,
+        nextMaxSpeed: levelTransitionPayload?.nextMaxSpeed,
+        nextMinSpeed: levelTransitionPayload?.nextMinSpeed,
+        nextReductionPerBrick: levelTransitionPayload?.nextReductionPerBrick,
+        nextInitialBrickCount: levelTransitionPayload?.nextInitialBrickCount
       }
     });
   }
@@ -426,7 +501,8 @@ class GameLogger {
       metadata: {
         level,
         speedMultiplier,
-        scoreCarriedOver: gameState.score
+        scoreCarriedOver: gameState.score,
+        speedState: gameState.speedState
       }
     });
   }
@@ -447,7 +523,8 @@ class GameLogger {
         previousState: {
           gameWon: !gameState.gameWon,
           gameOver: !gameState.gameOver
-        }
+        },
+        speedState: gameState.speedState
       }
     });
   }
@@ -464,7 +541,8 @@ class GameLogger {
       paddlePosition,
       metadata: {
         previousGameId: this.currentGameId,
-        restartTime: Date.now()
+        restartTime: Date.now(),
+        speedState: gameState.speedState
       }
     });
   }
@@ -601,23 +679,15 @@ class GameLogger {
     });
   }
 
-  async getGameStats(): Promise<{
-    totalGames: number;
-    totalEvents: number;
-    byType: Record<string, number>;
-    averageScore: number;
-    gamesWon: number;
-    gamesLost: number;
-    averageGameDuration: number;
-    totalBricksDestroyed: number;
-    totalCollisions: number;
-    averageBallsPerGame: number;
-  }> {
+  async getGameStats(): Promise<GameStatsSummary> {
     const allEvents = await this.getAllEvents();
     const gameEndEvents = allEvents.filter(e => e.type === 'game_end');
     const gameStartEvents = allEvents.filter(e => e.type === 'game_start');
     const collisionEvents = allEvents.filter(e => e.type === 'collision');
-    // const brickDestroyedEvents = allEvents.filter(e => e.type === 'brick_destroyed');
+    const speedReductionEvents = allEvents.filter(
+      event => Boolean(event.metadata?.speedReduction)
+    );
+    const levelCompleteEvents = allEvents.filter(e => e.type === 'level_complete');
 
     const byType: Record<string, number> = {};
     let totalScore = 0;
@@ -625,6 +695,9 @@ class GameLogger {
     let gamesLost = 0;
     let totalGameDuration = 0;
     let totalBricksDestroyed = 0;
+    let totalReductionApplied = 0;
+    let minSpeedReachedCount = 0;
+    let totalLevelDurationMs = 0;
 
     allEvents.forEach(event => {
       byType[event.type] = (byType[event.type] || 0) + 1;
@@ -638,12 +711,35 @@ class GameLogger {
         gamesLost++;
       }
       if (event.metadata?.gameDuration) {
-        totalGameDuration += event.metadata.gameDuration;
+        totalGameDuration += Number(event.metadata.gameDuration);
       }
       if (event.metadata?.totalBricksDestroyed) {
-        totalBricksDestroyed += event.metadata.totalBricksDestroyed;
+        totalBricksDestroyed += Number(event.metadata.totalBricksDestroyed);
       }
     });
+
+    speedReductionEvents.forEach(event => {
+      const speedReduction = event.metadata?.speedReduction as SpeedReductionSnapshot | undefined;
+      if (!speedReduction) {
+        return;
+      }
+
+      totalReductionApplied += speedReduction.reductionApplied;
+      if (speedReduction.minReached) {
+        minSpeedReachedCount++;
+      }
+    });
+
+    levelCompleteEvents.forEach(event => {
+      const speedState = event.metadata?.speedState as SpeedStateSnapshot | undefined;
+      if (speedState) {
+        totalLevelDurationMs += speedState.elapsedLevelMs;
+      }
+    });
+
+    const latestSpeedState = [...allEvents]
+      .reverse()
+      .find(event => event.gameState?.speedState)?.gameState.speedState ?? null;
 
     return {
       totalGames: gameEndEvents.length,
@@ -655,7 +751,12 @@ class GameLogger {
       averageGameDuration: gameEndEvents.length > 0 ? totalGameDuration / gameEndEvents.length : 0,
       totalBricksDestroyed,
       totalCollisions: collisionEvents.length,
-      averageBallsPerGame: gameStartEvents.length > 0 ? allEvents.filter(e => e.type === 'ball_lost').length / gameStartEvents.length : 0
+      averageBallsPerGame: gameStartEvents.length > 0 ? allEvents.filter(e => e.type === 'ball_lost').length / gameStartEvents.length : 0,
+      latestSpeedState,
+      totalSpeedReductions: speedReductionEvents.length,
+      averageReductionApplied: speedReductionEvents.length > 0 ? totalReductionApplied / speedReductionEvents.length : 0,
+      minSpeedReachedCount,
+      averageLevelDurationMs: levelCompleteEvents.length > 0 ? totalLevelDurationMs / levelCompleteEvents.length : 0
     };
   }
 
@@ -666,7 +767,7 @@ class GameLogger {
 
     const exportData = {
       exportTimestamp: Date.now(),
-      exportVersion: '2.0',
+      exportVersion: '2.1',
       stats,
       events: allEvents
     };

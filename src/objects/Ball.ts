@@ -1,11 +1,17 @@
 // src/objects/Ball.ts
-import { calculateInitialBallSpeed } from '../constants/game';
-import { DynamicGameDimensions } from '../constants/game';
+import {
+  calculateClampedSpeed,
+  calculateInitialBallSpeed,
+  DynamicGameDimensions,
+  PhaseSpeedConfig,
+  SpeedReductionSnapshot,
+  SpeedStateSnapshot
+} from '../constants/game';
 import { ASSET_PATHS } from '../constants/assets';
 import { AssetLoader } from '../utils/assetLoader';
 import { collisionTracker } from '../utils/collisionTracker';
 import { ERROR, LOG } from '../utils/logger';
-import { gameLogger } from '../storage/gameLogger';
+import { gameLogger, type LoggedGameState } from '../storage/gameLogger';
 
 const BALL_INITIAL_Y_OFFSET = 30;
 const MAX_BOUNCE_ANGLE = Math.PI / 3; // 60 graus
@@ -18,6 +24,15 @@ export class Ball {
   private radius: number;
   private blockHitsThisRun = 0;
   private paddleCollision = false;
+  private level = 1;
+  private maxSpeed = 0;
+  private minSpeed = 0;
+  private currentSpeed = 0;
+  private reductionPerBrick = 0;
+  private initialBrickCount = 0;
+  private previousLevelMaxSpeed = 0;
+  private levelStartedAt = Date.now();
+  private lastSpeedReduction: SpeedReductionSnapshot | null = null;
 
   constructor(private canvasWidth: number, canvasHeight: number, dimensions: DynamicGameDimensions, speedMultiplier = 1) {
     this.radius = dimensions.ballRadius;
@@ -26,6 +41,10 @@ export class Ball {
     const initialSpeed = calculateInitialBallSpeed(canvasWidth) * speedMultiplier;
     this.dx = initialSpeed;
     this.dy = -initialSpeed;
+    this.currentSpeed = initialSpeed;
+    this.maxSpeed = initialSpeed;
+    this.minSpeed = initialSpeed;
+    this.previousLevelMaxSpeed = initialSpeed;
     LOG(`⚽ Ball inicializada: pos=(${this.x}, ${this.y}), raio=${this.radius}`);
   }
 
@@ -43,8 +62,27 @@ export class Ball {
     this.y = canvasHeight - BALL_INITIAL_Y_OFFSET;
     this.dx = initialSpeed;
     this.dy = -initialSpeed;
+    this.currentSpeed = initialSpeed;
+    this.maxSpeed = initialSpeed;
+    this.minSpeed = initialSpeed;
+    this.previousLevelMaxSpeed = initialSpeed;
     this.blockHitsThisRun = 0;
     this.paddleCollision = false;
+    this.lastSpeedReduction = null;
+  }
+
+  applyPhaseSpeedConfig(config: PhaseSpeedConfig): void {
+    this.level = config.level;
+    this.initialBrickCount = config.initialBrickCount;
+    this.maxSpeed = config.maxSpeed;
+    this.minSpeed = config.minSpeed;
+    this.reductionPerBrick = config.reductionPerBrick;
+    this.previousLevelMaxSpeed = config.previousLevelMaxSpeed;
+    this.levelStartedAt = config.levelStartedAt;
+    this.blockHitsThisRun = 0;
+    this.lastSpeedReduction = null;
+
+    this.setVelocityFromAngleAndSpeed(this.getCurrentAngle(), this.maxSpeed);
   }
 
   async update(
@@ -52,45 +90,11 @@ export class Ball {
     bricks: { 
       collide: (
         ball: Ball, 
-        gameState?: { 
-          score: number; 
-          ballsCount: number; 
-          bricksRemaining: number;
-          gameWon: boolean;
-          gameOver: boolean;
-          level: number;
-          canvasSize: { width: number; height: number };
-          gameDimensions: {
-            brickWidth: number;
-            brickHeight: number;
-            brickCols: number;
-            brickRows: number;
-            paddleWidth: number;
-            paddleHeight: number;
-            ballRadius: number;
-          };
-        }
+        gameState?: LoggedGameState
       ) => Promise<boolean> 
     },
     maxHeight: number,
-    gameState: { 
-      score: number; 
-      ballsCount: number; 
-      bricksRemaining: number;
-      gameWon: boolean;
-      gameOver: boolean;
-      level: number;
-      canvasSize: { width: number; height: number };
-      gameDimensions: {
-        brickWidth: number;
-        brickHeight: number;
-        brickCols: number;
-        brickRows: number;
-        paddleWidth: number;
-        paddleHeight: number;
-        ballRadius: number;
-      };
-    }
+    gameState: LoggedGameState
   ): Promise<boolean> {
     this.x += this.dx;
     this.y += this.dy;
@@ -165,28 +169,31 @@ export class Ball {
         LOG(`🏓 Registrando colisão com raquete - Hit position: ${hitPosition.toFixed(2)}`);
         
         const velocityBefore = { dx: this.dx, dy: this.dy };
+        this.handlePaddleCollision(paddlePos);
+        const velocityAfter = { dx: this.dx, dy: this.dy };
         
         gameLogger.logCollision(
           gameState,
-          [{ x: this.x, y: this.y, velocity: velocityBefore, radius: this.radius }],
+          [{ x: this.x, y: this.y, velocity: velocityAfter, radius: this.radius }],
           paddlePos,
           {
             type: 'paddle',
             ballPosition: { x: this.x, y: this.y },
             targetPosition: paddlePos,
-            hitPosition
+            hitPosition,
+            velocityBefore,
+            velocityAfter
           }
         ).catch(error => ERROR('❌ Erro ao registrar colisão com raquete:', error));
         
         collisionTracker.logPaddleCollision(
           { x: this.x, y: this.y },
-          velocityBefore,
+          velocityAfter,
           gameState,
           paddlePos,
           hitPosition
         ).catch(error => ERROR('❌ Erro ao registrar colisão com raquete:', error));
-        
-        this.handlePaddleCollision(paddlePos);
+
         this.paddleCollision = true;
         return Promise.resolve(true);
       } else {
@@ -225,16 +232,14 @@ export class Ball {
     // Converte a posição de hit para um ângulo (-MAX_BOUNCE_ANGLE a +MAX_BOUNCE_ANGLE)
     // Isso cria uma física mais realista onde o ângulo depende da posição do hit
     const angle = (hitPosition - 0.5) * 2 * MAX_BOUNCE_ANGLE;
-    
-    // Calcula a velocidade total com uma pequena variação baseada na posição do hit
-    // Isso torna o jogo mais dinâmico e imprevisível
-    const baseSpeed = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
-    const speedVariation = 0.8 + (hitPosition * 0.4); // Varia entre 0.8x e 1.2x da velocidade base
-    const speed = baseSpeed * speedVariation;
-    
-    // Aplica o novo ângulo e velocidade
-    this.dx = speed * Math.sin(angle);
-    this.dy = -speed * Math.cos(angle); // Sempre para cima após bater na raquete
+
+    // Mantém a função da raquete sobre o ângulo, mas não deixa a magnitude sair
+    // da faixa [minSpeed, maxSpeed] da fase atual.
+    const desiredSpeed = this.getCurrentSpeedMagnitude();
+    const clampedSpeed = calculateClampedSpeed(desiredSpeed, this.minSpeed, this.maxSpeed);
+
+    // Aplica o novo ângulo e velocidade clampada
+    this.setVelocityFromAngleAndSpeed(angle, clampedSpeed);
     
     // Garante que a bolinha não fique presa na raquete
     this.y = paddlePos.y - this.radius;
@@ -270,12 +275,21 @@ export class Ball {
     return { dx: this.dx, dy: this.dy };
   }
 
+  getCurrentSpeedMagnitude() {
+    return calculateClampedSpeed(
+      this.currentSpeed || Math.sqrt(this.dx * this.dx + this.dy * this.dy),
+      this.minSpeed || 0,
+      this.maxSpeed || Number.MAX_SAFE_INTEGER
+    );
+  }
+
   bounceY() {
     this.dy = -this.dy;
   }
 
   registerBrickHit() {
     this.blockHitsThisRun += 1;
+    this.reduceSpeedAfterBrickHit();
   }
 
   getBrickHitsThisRun() {
@@ -284,6 +298,27 @@ export class Ball {
 
   resetBrickHits() {
     this.blockHitsThisRun = 0;
+  }
+
+  getLastSpeedReduction() {
+    return this.lastSpeedReduction;
+  }
+
+  getSpeedStateSnapshot(): SpeedStateSnapshot {
+    const currentSpeed = this.getCurrentSpeedMagnitude();
+    return {
+      level: this.level,
+      initialBrickCount: this.initialBrickCount,
+      successfulBrickHits: this.blockHitsThisRun,
+      maxSpeed: this.maxSpeed,
+      minSpeed: this.minSpeed,
+      currentSpeed,
+      reductionPerBrick: this.reductionPerBrick,
+      previousLevelMaxSpeed: this.previousLevelMaxSpeed,
+      levelStartedAt: this.levelStartedAt,
+      elapsedLevelMs: Math.max(0, Date.now() - this.levelStartedAt),
+      minReached: currentSpeed <= this.minSpeed
+    };
   }
 
   consumePaddleCollision() {
@@ -298,8 +333,44 @@ export class Ball {
   }
 
   setDirection(angle: number) {
-    const speed = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
-    this.dx = speed * Math.sin(angle);
-    this.dy = -speed * Math.cos(angle);
+    this.setVelocityFromAngleAndSpeed(angle, this.getCurrentSpeedMagnitude());
+  }
+
+  private setVelocityFromAngleAndSpeed(angle: number, speed: number) {
+    const clampedSpeed = calculateClampedSpeed(speed, this.minSpeed, this.maxSpeed || speed);
+    this.currentSpeed = clampedSpeed;
+    this.dx = clampedSpeed * Math.sin(angle);
+    this.dy = -clampedSpeed * Math.cos(angle);
+  }
+
+  private getCurrentAngle() {
+    return Math.atan2(this.dx, -this.dy);
+  }
+
+  private reduceSpeedAfterBrickHit() {
+    const speedBefore = this.getCurrentSpeedMagnitude();
+    const nextSpeed = calculateClampedSpeed(
+      speedBefore - this.reductionPerBrick,
+      this.minSpeed,
+      this.maxSpeed
+    );
+    const reductionApplied = calculateClampedSpeed(
+      speedBefore - nextSpeed,
+      0,
+      this.maxSpeed
+    );
+
+    this.setVelocityFromAngleAndSpeed(this.getCurrentAngle(), nextSpeed);
+    this.lastSpeedReduction = {
+      level: this.level,
+      hitNumber: this.blockHitsThisRun,
+      speedBefore,
+      speedAfter: nextSpeed,
+      reductionApplied,
+      minSpeed: this.minSpeed,
+      maxSpeed: this.maxSpeed,
+      minReached: nextSpeed <= this.minSpeed,
+      elapsedLevelMs: Math.max(0, Date.now() - this.levelStartedAt)
+    };
   }
 }

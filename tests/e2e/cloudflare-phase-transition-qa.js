@@ -13,6 +13,7 @@ const GAME_LOG_STORE_NAME = 'gameEvents';
 const GAME_LOG_DB_VERSION = 2;
 const MAX_WAIT_FOR_LEVEL_MS = 30000;
 const MIN_LEVEL_PAUSE_MS = 1500;
+const SPEED_TOLERANCE = 0.0001;
 const REQUIRED_EVENT_TYPES = ['game_start', 'brick_destroyed', 'score_update', 'level_complete', 'level_start'];
 
 function publicUrl() {
@@ -202,6 +203,8 @@ async function run() {
     const levelStart = events.find(event => event.type === 'level_start');
     const pauseDeltaMs = levelComplete && levelStart ? levelStart.timestamp - levelComplete.timestamp : 0;
     const finalLayout = await collectToastState(page);
+    const levelCompleteSpeedState = levelComplete?.metadata?.speedState || null;
+    const levelStartSpeedState = levelStart?.metadata?.speedState || null;
 
     const report = {
       url: targetUrl,
@@ -210,6 +213,8 @@ async function run() {
       eventTypes,
       levelCompleteMetadata: levelComplete?.metadata || null,
       levelStartMetadata: levelStart?.metadata || null,
+      levelCompleteSpeedState,
+      levelStartSpeedState,
       pauseDeltaMs,
       toastVisibleState,
       finalLayout,
@@ -229,7 +234,12 @@ async function run() {
     assert(toastVisibleState.toast.bottom < toastVisibleState.canvas.y + toastVisibleState.canvas.height * 0.45, 'Toast cobriu área baixa do tabuleiro.');
     assert(levelComplete?.metadata?.nextLevel === 2, 'level_complete não registrou próxima fase 2.');
     assert(levelComplete?.metadata?.nextSpeedMultiplier === 1.12, 'level_complete não registrou velocidade 1.12.');
+    assert(levelCompleteSpeedState, 'level_complete não registrou metadata.speedState.');
     assert(levelStart?.metadata?.level === 2, 'level_start não registrou fase 2.');
+    assert(levelStartSpeedState, 'level_start não registrou metadata.speedState.');
+    assert(Math.abs(levelStartSpeedState.currentSpeed - levelStartSpeedState.maxSpeed) <= SPEED_TOLERANCE, 'Fase 2 não iniciou em currentSpeed === maxSpeed.');
+    assert(Math.abs(levelStartSpeedState.minSpeed - (levelCompleteSpeedState.maxSpeed / 2)) <= SPEED_TOLERANCE, 'minSpeed da Fase 2 não deriva da maxSpeed da Fase 1 / 2.');
+    assert(levelComplete?.metadata?.nextReductionPerBrick > 0, 'nextReductionPerBrick ausente em level_complete.');
     assert(pauseDeltaMs >= MIN_LEVEL_PAUSE_MS, `Pausa curta demais: ${pauseDeltaMs}ms.`);
     assert(finalLayout.text === '', 'Toast permaneceu após a pausa.');
     assert(consoleProblems.length === 0, `Console publicou warnings/errors: ${JSON.stringify(consoleProblems.slice(0, 5))}`);
