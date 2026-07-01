@@ -12,6 +12,7 @@ const INSTALLED_STATE = "installed";
 const SKIP_WAITING_MESSAGE_TYPE = "SKIP_WAITING";
 const SERVICE_WORKER_PATH = "/sw.js";
 const SERVICE_WORKER_SCOPE = "/";
+const SERVICE_WORKER_UPDATE_VIA_CACHE = "none";
 const FLUSH_PROMISES_COUNT = 3;
 
 type Listener = (event?: Event | MessageEvent) => void;
@@ -149,6 +150,7 @@ describe("registerServiceWorker", () => {
 
     expect(serviceWorker.register).toHaveBeenCalledWith(SERVICE_WORKER_PATH, {
       scope: SERVICE_WORKER_SCOPE,
+      updateViaCache: SERVICE_WORKER_UPDATE_VIA_CACHE,
     });
     expect(registration.update).toHaveBeenCalledTimes(1);
   });
@@ -170,6 +172,7 @@ describe("registerServiceWorker", () => {
 
     expect(serviceWorker.register).toHaveBeenCalledWith(SERVICE_WORKER_PATH, {
       scope: SERVICE_WORKER_SCOPE,
+      updateViaCache: SERVICE_WORKER_UPDATE_VIA_CACHE,
     });
   });
 
@@ -258,6 +261,34 @@ describe("registerServiceWorker", () => {
       STATE_CHANGE_EVENT_NAME,
       new Event(STATE_CHANGE_EVENT_NAME),
     );
+
+    expect(newWorker.postMessage).toHaveBeenCalledWith({
+      type: SKIP_WAITING_MESSAGE_TYPE,
+    });
+  });
+
+  it("ativa worker já em espera quando update resolve com nova versão", async () => {
+    const { windowRef } = createWindowMock();
+    const activeController = createWorkerMock().worker;
+    const { navigatorRef, registration } =
+      createServiceWorkerMock(activeController);
+    const newWorker = createWorkerMock();
+    newWorker.setState(INSTALLED_STATE);
+    (registration as unknown as { update: jest.Mock }).update.mockImplementation(
+      () => {
+        (registration as unknown as { waiting: ServiceWorker }).waiting =
+          newWorker.worker;
+        return Promise.resolve(registration);
+      },
+    );
+
+    registerServiceWorker({
+      windowRef,
+      navigatorRef,
+      log: jest.fn(),
+      reloadPage: jest.fn(),
+    });
+    await flushPromises();
 
     expect(newWorker.postMessage).toHaveBeenCalledWith({
       type: SKIP_WAITING_MESSAGE_TYPE,

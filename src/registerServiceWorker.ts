@@ -3,6 +3,7 @@ import { LOG } from "./utils/logger";
 
 const SERVICE_WORKER_PATH = "/sw.js";
 const SERVICE_WORKER_SCOPE = "/";
+const SERVICE_WORKER_UPDATE_VIA_CACHE = "none";
 const LOAD_EVENT_NAME = "load";
 const PAGE_SHOW_EVENT_NAME = "pageshow";
 const FOCUS_EVENT_NAME = "focus";
@@ -73,11 +74,15 @@ function clearReloadGuard(windowRef: Window) {
 
 function requestUpdate(
   registration: ServiceWorkerRegistration,
+  serviceWorker: ServiceWorkerContainer,
   log: RegisterServiceWorkerOptions["log"],
 ) {
-  registration.update().catch((error) => {
-    log?.(SERVICE_WORKER_UPDATE_FAILED_MESSAGE, error);
-  });
+  registration
+    .update()
+    .then(() => handleInstalledWorker(registration, serviceWorker))
+    .catch((error) => {
+      log?.(SERVICE_WORKER_UPDATE_FAILED_MESSAGE, error);
+    });
 }
 
 function postSkipWaiting(worker: ServiceWorker) {
@@ -133,6 +138,7 @@ function bindInstalledWorkerListener(
 function bindRuntimeUpdateChecks(
   windowRef: Window,
   registration: ServiceWorkerRegistration,
+  serviceWorker: ServiceWorkerContainer,
   log: RegisterServiceWorkerOptions["log"],
 ) {
   if (boundUpdateRegistrations.has(registration)) {
@@ -140,7 +146,7 @@ function bindRuntimeUpdateChecks(
   }
 
   boundUpdateRegistrations.add(registration);
-  const checkForUpdate = () => requestUpdate(registration, log);
+  const checkForUpdate = () => requestUpdate(registration, serviceWorker, log);
 
   windowRef.addEventListener(PAGE_SHOW_EVENT_NAME, checkForUpdate);
   windowRef.addEventListener(FOCUS_EVENT_NAME, checkForUpdate);
@@ -203,7 +209,10 @@ export function registerServiceWorker(
 
   runAfterLoad(windowRef, () => {
     serviceWorker
-      .register(SERVICE_WORKER_PATH, { scope: SERVICE_WORKER_SCOPE })
+      .register(SERVICE_WORKER_PATH, {
+        scope: SERVICE_WORKER_SCOPE,
+        updateViaCache: SERVICE_WORKER_UPDATE_VIA_CACHE,
+      })
       .then((registration) => {
         log(SERVICE_WORKER_REGISTERED_MESSAGE, registration.scope);
         windowRef.setTimeout(
@@ -217,9 +226,9 @@ export function registerServiceWorker(
           hadControllerAtRegistration,
         );
         bindInstalledWorkerListener(registration, serviceWorker);
-        bindRuntimeUpdateChecks(windowRef, registration, log);
+        bindRuntimeUpdateChecks(windowRef, registration, serviceWorker, log);
         handleInstalledWorker(registration, serviceWorker);
-        requestUpdate(registration, log);
+        requestUpdate(registration, serviceWorker, log);
       })
       .catch((error) => {
         log(SERVICE_WORKER_REGISTRATION_FAILED_MESSAGE, error);
