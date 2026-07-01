@@ -92,25 +92,26 @@ describe('Ball', () => {
     expect(calculateLevelSpeedMultiplier(99)).toBe(MAX_LEVEL_SPEED_MULTIPLIER);
   });
 
-  it('inicia fase 1 com override 3x no spawn inicial sem alterar máxima da fase', () => {
+  it('inicia fase 1 com a nova base como máxima e spawn inicial', () => {
     const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
     const config = buildPhaseSpeedConfig(PHASE_ONE);
 
     ball.applyPhaseSpeedConfig(config);
 
-    expect(ball.getCurrentSpeedMagnitude()).toBe(config.initialSpawnSpeed);
+    expect(ball.getCurrentSpeedMagnitude()).toBe(config.maxSpeed);
+    expect(config.initialSpawnSpeed).toBe(config.maxSpeed);
     expect(config.maxSpeed).toBe(calculateLevelMaxSpeed(CANVAS_WIDTH, PHASE_ONE));
     expect(ball.getSpeedStateSnapshot()).toMatchObject({
       level: PHASE_ONE,
       maxSpeed: config.maxSpeed,
       minSpeed: config.minSpeed,
-      currentSpeed: config.initialSpawnSpeed,
+      currentSpeed: config.maxSpeed,
       initialBrickCount: INITIAL_BRICK_COUNT,
       successfulBrickHits: 0,
     });
   });
 
-  it('inicia fase 2 sem herdar override 3x da fase 1', () => {
+  it('inicia fase 2 na máxima derivada da nova base da fase 1', () => {
     const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
     const config = buildPhaseSpeedConfig(PHASE_TWO);
 
@@ -164,7 +165,7 @@ describe('Ball', () => {
 
     ball.applyPhaseSpeedConfig(config);
 
-    expect(ball.getCurrentSpeedMagnitude()).toBeGreaterThan(config.maxSpeed);
+    expect(ball.getCurrentSpeedMagnitude()).toBe(config.maxSpeed);
     (ball as any).setPosition(150, 400);
     (ball as any).handlePaddleCollision({ x: 100, y: 430, width: 100, height: 12 });
 

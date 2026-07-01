@@ -144,6 +144,7 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
     assert(state.themeToggle, `${viewportName}: seletor de tema ausente.`);
     assert(state.buttons.some(button => button.text === 'Claro'), `${viewportName}: botão Claro ausente.`);
     assert(state.buttons.some(button => button.text === 'Escuro'), `${viewportName}: botão Escuro ausente.`);
+    assert(state.buttons.some(button => /reiniciar|jogar de novo/i.test(button.text)), `${viewportName}: reiniciar inacessível no menu.`);
     assert(state.buttons.some(button => /logs/i.test(button.text)), `${viewportName}: logs inacessível no menu.`);
     assert(state.buttons.some(button => /colisões/i.test(button.text)), `${viewportName}: colisões inacessível no menu.`);
     assert(state.buttons.some(button => /zerar pontuação/i.test(button.text)), `${viewportName}: zerar pontuação inacessível no menu.`);
@@ -151,6 +152,7 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
     assert(!state.themeToggle, `${viewportName}: seletor de tema apareceu fora do menu.`);
     assert(!state.buttons.some(button => button.text === 'Claro'), `${viewportName}: botão Claro apareceu fora do menu.`);
     assert(!state.buttons.some(button => button.text === 'Escuro'), `${viewportName}: botão Escuro apareceu fora do menu.`);
+    assert(!state.buttons.some(button => /reiniciar|jogar de novo/i.test(button.text)), `${viewportName}: reiniciar apareceu fora do menu.`);
     assert(!state.buttons.some(button => /logs/i.test(button.text)), `${viewportName}: logs apareceu fora do menu.`);
     assert(!state.buttons.some(button => /colisões/i.test(button.text)), `${viewportName}: colisões apareceu fora do menu.`);
     assert(!state.buttons.some(button => /zerar pontuação/i.test(button.text)), `${viewportName}: zerar pontuação apareceu fora do menu.`);

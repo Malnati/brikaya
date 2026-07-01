@@ -161,7 +161,7 @@ async function run() {
     const scoreEvents = events.filter(event => event.type === 'score_update');
     const scoreSpeedReduction = scoreEvents.find(event => event.metadata?.speedReduction)?.metadata?.speedReduction || null;
     const expectedFirstLevelSpawnSpeed = scoreSpeedReduction
-      ? scoreSpeedReduction.maxSpeed * 3
+      ? scoreSpeedReduction.maxSpeed
       : null;
     const lastBall = events[events.length - 1]?.ballPositions?.[0] || null;
     const restartedToInitialPosition = Boolean(lastBall)
@@ -187,8 +187,8 @@ async function run() {
 
     assert(scoreEvents.length > 0, 'Nenhum score_update foi observado no app publicado.');
     assert(scoreSpeedReduction, 'score_update não registrou metadata.speedReduction.');
-    assert(Math.abs(scoreSpeedReduction.speedBefore - expectedFirstLevelSpawnSpeed) <= SPEED_TOLERANCE, `Fase 1 não começou 3x no spawn inicial: speedBefore=${scoreSpeedReduction.speedBefore}, esperado=${expectedFirstLevelSpawnSpeed}.`);
-    assert(scoreSpeedReduction.speedBefore > scoreSpeedReduction.maxSpeed, 'Override 3x não ficou restrito ao spawn acima do maxSpeed da Fase 1.');
+    assert(Math.abs(scoreSpeedReduction.speedBefore - expectedFirstLevelSpawnSpeed) <= SPEED_TOLERANCE, `Fase 1 não começou na nova máxima inicial: speedBefore=${scoreSpeedReduction.speedBefore}, esperado=${expectedFirstLevelSpawnSpeed}.`);
+    assert(Math.abs(scoreSpeedReduction.speedBefore - scoreSpeedReduction.maxSpeed) <= SPEED_TOLERANCE, 'Fase 1 não iniciou em currentSpeed === maxSpeed.');
     assert(scoreSpeedReduction.speedAfter + SPEED_TOLERANCE >= scoreSpeedReduction.minSpeed, 'speedAfter ficou abaixo do minSpeed.');
     if (!scoreSpeedReduction.minReached) {
       assert(scoreSpeedReduction.speedBefore > scoreSpeedReduction.speedAfter, 'speedBefore não ficou acima de speedAfter antes do mínimo.');

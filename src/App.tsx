@@ -187,6 +187,7 @@ export default function App() {
     setLevelToastPayload(null);
     setIsLevelToastVisible(false);
     setGameKey(prev => prev + 1);
+    setIsMenuOpen(false);
   }, [audioSink]);
 
   const handleResetScores = useCallback(async () => {
@@ -319,6 +320,13 @@ export default function App() {
                 </button>
               </div>
               <div className="settings-drawer__section">
+                <h3>Partida</h3>
+                <button type="button" onClick={handleRestart} className="dashboard-button dashboard-button--primary">
+                  <span aria-hidden="true" className="button-icon">↻</span>
+                  {gameWon || gameOver ? 'Jogar de novo' : 'Reiniciar'}
+                </button>
+              </div>
+              <div className="settings-drawer__section">
                 <h3>Tema</h3>
                 <ThemeToggle theme={theme} onThemeChange={handleThemeChange} />
               </div>
@@ -355,12 +363,6 @@ export default function App() {
                 qaScenario={qaScenario}
                 audioSink={audioSink}
               />
-            </div>
-            <div className="dashboard-actions dashboard-actions--primary" aria-label="Ações principais">
-              <button type="button" onClick={handleRestart} className="dashboard-button dashboard-button--primary">
-                <span aria-hidden="true" className="button-icon">↻</span>
-                {gameWon || gameOver ? 'Jogar de novo' : 'Reiniciar'}
-              </button>
             </div>
             <AdSlotPlaceholder variant="bottom" />
           </div>

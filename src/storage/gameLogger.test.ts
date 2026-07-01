@@ -6,12 +6,12 @@ const BASE_SPEED_STATE = {
   level: 1,
   initialBrickCount: 40,
   successfulBrickHits: 0,
-  initialSpawnSpeed: 6.72,
-  maxSpeed: 2.24,
-  minSpeed: 1.12,
-  currentSpeed: 6.72,
-  reductionPerBrick: 0.056,
-  previousLevelMaxSpeed: 2.24,
+  initialSpawnSpeed: 12,
+  maxSpeed: 12,
+  minSpeed: 3,
+  currentSpeed: 12,
+  reductionPerBrick: 0.3,
+  previousLevelMaxSpeed: 12,
   levelStartedAt: 1_782_870_000_000,
   elapsedLevelMs: 0,
   minReached: false,
@@ -183,7 +183,7 @@ describe('GameLogger', () => {
         bricksRemaining: 45,
         speedState: {
           successfulBrickHits: 1,
-          currentSpeed: 2.184,
+          currentSpeed: 11.7,
           elapsedLevelMs: 320,
         },
       });
@@ -192,11 +192,11 @@ describe('GameLogger', () => {
       const speedReduction = {
         level: 1,
         hitNumber: 1,
-        speedBefore: 2.24,
-        speedAfter: 2.184,
-        reductionApplied: 0.056,
-        minSpeed: 1.12,
-        maxSpeed: 2.24,
+        speedBefore: 12,
+        speedAfter: 11.7,
+        reductionApplied: 0.3,
+        minSpeed: 3,
+        maxSpeed: 12,
         minReached: false,
         elapsedLevelMs: 320,
       };
@@ -363,7 +363,7 @@ describe('GameLogger', () => {
             score: 10,
             speedState: {
               successfulBrickHits: 1,
-              currentSpeed: 2.184,
+              currentSpeed: 11.7,
             },
           }),
           ballPositions: buildBallPositions(),
@@ -372,11 +372,11 @@ describe('GameLogger', () => {
             speedReduction: {
               level: 1,
               hitNumber: 1,
-              speedBefore: 2.24,
-              speedAfter: 2.184,
-              reductionApplied: 0.056,
-              minSpeed: 1.12,
-              maxSpeed: 2.24,
+              speedBefore: 12,
+              speedAfter: 11.7,
+              reductionApplied: 0.3,
+              minSpeed: 3,
+              maxSpeed: 12,
               minReached: false,
               elapsedLevelMs: 200,
             },
@@ -390,7 +390,7 @@ describe('GameLogger', () => {
             score: 20,
             speedState: {
               successfulBrickHits: 2,
-              currentSpeed: 1.12,
+              currentSpeed: 3,
               minReached: true,
             },
           }),
@@ -400,11 +400,11 @@ describe('GameLogger', () => {
             speedReduction: {
               level: 1,
               hitNumber: 2,
-              speedBefore: 1.176,
-              speedAfter: 1.12,
-              reductionApplied: 0.056,
-              minSpeed: 1.12,
-              maxSpeed: 2.24,
+              speedBefore: 3.3,
+              speedAfter: 3,
+              reductionApplied: 0.3,
+              minSpeed: 3,
+              maxSpeed: 12,
               minReached: true,
               elapsedLevelMs: 400,
             },
@@ -417,7 +417,7 @@ describe('GameLogger', () => {
           gameState: buildGameState({
             speedState: {
               elapsedLevelMs: 1800,
-              currentSpeed: 1.12,
+              currentSpeed: 3,
               minReached: true,
             },
           }),
@@ -427,7 +427,7 @@ describe('GameLogger', () => {
             speedState: {
               ...BASE_SPEED_STATE,
               elapsedLevelMs: 1800,
-              currentSpeed: 1.12,
+              currentSpeed: 3,
               minReached: true,
             },
           },
@@ -438,7 +438,7 @@ describe('GameLogger', () => {
           type: 'collision',
           gameState: buildGameState({
             speedState: {
-              currentSpeed: 1.12,
+              currentSpeed: 3,
               minReached: true,
             },
           }),
@@ -453,11 +453,11 @@ describe('GameLogger', () => {
       const stats = await gameLogger.getGameStats();
 
       expect(stats.totalSpeedReductions).toBe(2);
-      expect(stats.averageReductionApplied).toBeCloseTo(0.056, 5);
+      expect(stats.averageReductionApplied).toBeCloseTo(0.3, 5);
       expect(stats.minSpeedReachedCount).toBe(1);
       expect(stats.averageLevelDurationMs).toBe(1800);
       expect(stats.latestSpeedState).toMatchObject({
-        currentSpeed: 1.12,
+        currentSpeed: 3,
         minReached: true,
       });
     });

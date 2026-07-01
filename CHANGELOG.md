@@ -4,6 +4,12 @@
 - Resolvido conflitos para integrar mudancas da main
 
 
+## [1.16.0] - 2026-07-01
+### Alterado
+- Velocidade-base da progressão passa a partir da Fase 1 com 2x sobre o spawn inicial efetivo anterior, removendo o override isolado acima de `maxSpeed`.
+- `minSpeed` por fase passa a usar divisor 4 em vez de 2, mantendo `reductionPerBrick` por quantidade inicial de blocos.
+- Ação `Reiniciar`/`Jogar de novo` foi movida para a seção `Partida` do menu lateral, liberando espaço persistente para o jogo e publicidade.
+
 ## [1.15.0] - 2026-07-01
 ### Adicionado
 - Integração local de 90 arquivos MP3 CC0/domínio público em `public/assets/audio/`, cobrindo os 38 IDs lógicos de `docs/audio.md` com `sfx_ad_placeholder_none` como no-op silencioso.

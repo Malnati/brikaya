@@ -55,13 +55,13 @@ describe('App theme selector', () => {
     render(<App />);
 
     expect(screen.getByRole('button', { name: 'Menu' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Reiniciar' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Reiniciar' })).not.toBeInTheDocument();
     expect(screen.queryByLabelText('Tema da interface')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /zerar pontuação/i })).not.toBeInTheDocument();
     expect(screen.queryByText(/loja|ranking|upgrades|tutorial|multiplayer|settings/i)).not.toBeInTheDocument();
   });
 
-  it('abre menu lateral com tema, logs, colisões e zerar pontuação', async () => {
+  it('abre menu lateral com partida, tema, logs, colisões e zerar pontuação', async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
 
@@ -70,6 +70,7 @@ describe('App theme selector', () => {
     await user.click(screen.getByRole('button', { name: 'Menu' }));
 
     expect(screen.getByRole('complementary', { name: 'Menu do jogo' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Reiniciar' })).toBeInTheDocument();
     const themeGroup = screen.getByLabelText('Tema da interface');
     expect(within(themeGroup).getByRole('button', { name: 'Claro' })).toBeInTheDocument();
     expect(within(themeGroup).getByRole('button', { name: 'Escuro' })).toBeInTheDocument();
@@ -96,6 +97,18 @@ describe('App theme selector', () => {
 
     expect(document.documentElement.dataset.theme).toBe('dark');
     expect(window.localStorage.setItem).toHaveBeenCalledWith('brickbreaker-theme', 'dark');
+  });
+
+  it('reinicia pelo menu lateral e fecha o drawer', async () => {
+    mockSystemTheme(true);
+    const user = userEvent.setup();
+
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: 'Menu' }));
+    await user.click(screen.getByRole('button', { name: 'Reiniciar' }));
+
+    expect(screen.queryByRole('complementary', { name: 'Menu do jogo' })).not.toBeInTheDocument();
   });
 
   it('fecha menu lateral com Escape', async () => {
