@@ -3,6 +3,9 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.14.1] - 2026-07-01
+### Documentado
+- Tarefa Markdown para investigar warnings não bloqueantes do QA runtime update sem alterar Service Worker, gameplay, HUD ou cache.
 
 ## [1.14.0] - 2026-07-01
 ### Adicionado
