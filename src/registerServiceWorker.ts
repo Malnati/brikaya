@@ -18,6 +18,7 @@ const RELOAD_CLIENT_MESSAGE_TYPE = "RELOAD_CLIENT";
 const RELOAD_GUARD_KEY = "brickbreaker-sw-controller-reload";
 const RELOAD_GUARD_VALUE = "pending";
 const RELOAD_GUARD_RESET_DELAY_MS = 1000;
+const POST_REGISTRATION_UPDATE_DELAYS_MS = [1000, 3000, 10000];
 const SERVICE_WORKER_UNAVAILABLE_MESSAGE =
   "Service Worker indisponível neste navegador.";
 const SERVICE_WORKER_REGISTERED_MESSAGE = "Service Worker registrado.";
@@ -156,6 +157,10 @@ function bindRuntimeUpdateChecks(
       checkForUpdate();
     }
   });
+
+  for (const delayMs of POST_REGISTRATION_UPDATE_DELAYS_MS) {
+    windowRef.setTimeout(checkForUpdate, delayMs);
+  }
 }
 
 function bindControllerReload(

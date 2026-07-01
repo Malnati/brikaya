@@ -13,6 +13,7 @@ const SKIP_WAITING_MESSAGE_TYPE = "SKIP_WAITING";
 const SERVICE_WORKER_PATH = "/sw.js";
 const SERVICE_WORKER_SCOPE = "/";
 const SERVICE_WORKER_UPDATE_VIA_CACHE = "none";
+const POST_REGISTRATION_UPDATE_DELAYS_MS = [1000, 3000, 10000];
 const FLUSH_PROMISES_COUNT = 3;
 
 type Listener = (event?: Event | MessageEvent) => void;
@@ -202,6 +203,26 @@ describe("registerServiceWorker", () => {
     );
 
     expect(registration.update).toHaveBeenCalledTimes(4);
+  });
+
+  it("agenda checagens após registro para cobrir abertura com cache antigo", async () => {
+    const { windowRef } = createWindowMock();
+    const { navigatorRef } = createServiceWorkerMock();
+
+    registerServiceWorker({
+      windowRef,
+      navigatorRef,
+      log: jest.fn(),
+      reloadPage: jest.fn(),
+    });
+    await flushPromises();
+
+    for (const delayMs of POST_REGISTRATION_UPDATE_DELAYS_MS) {
+      expect(windowRef.setTimeout).toHaveBeenCalledWith(
+        expect.any(Function),
+        delayMs,
+      );
+    }
   });
 
   it("envia SKIP_WAITING quando uma nova versão instala com controlador ativo", async () => {
