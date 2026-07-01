@@ -3,6 +3,19 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+
+## [1.15.0] - 2026-07-01
+### Adicionado
+- Integração local de 90 arquivos MP3 CC0/domínio público em `public/assets/audio/`, cobrindo os 38 IDs lógicos de `docs/audio.md` com `sfx_ad_placeholder_none` como no-op silencioso.
+- Manifesto de áudio em `src/constants/audio.ts`, gerenciador Web Audio offline-safe, controle `Som`/`Sem som`, música de menu/gameplay, camada de intensidade, ducking e falha silenciosa sem quebrar o jogo.
+- Gatilhos sonoros para início, raquete, parede, teto, tijolos por cor, score, bola perdida, fase concluída, toast, nova fase, game over, UI, high-score, offline pronto, combos e power-ups mínimos.
+- Documento de prova `docs/audio-assets.md` com fonte, licença verificada, arquivo original, runtime, duração, SHA-256 e conversão por asset.
+- Validação `npm run test:audio-assets` e target `make cloudflare-audio-qa` para QA publicado de eventos lógicos, cache e ausência de requests externos de áudio.
+
+### Alterado
+- Service Worker passa a precachear todos os áudios locais para manter o PWA jogável offline após o primeiro carregamento.
+- Pontuação local passa a manter recorde para acionar feedback de novo high-score.
+
 ## [1.14.2] - 2026-07-01
 ### Corrigido
 - Ícones locais do manifesto PWA substituídos por PNGs válidos para remover warning de imagem inválida no Chrome.
@@ -34,12 +47,14 @@
 - Override local de spawn inicial da Fase 1 com `initialSpawnSpeed` 3x, sem alterar `maxSpeed`, `minSpeed` ou `reductionPerBrick`.
 - Logs, estatísticas e QA publicado para velocidade atual, tempo da fase, reduções por bloco e limite mínimo atingido.
 - Tag/release de rollback `stable/pre-speed-control-2026-06-30` antes da feature.
+- Documentação do pacote completo de áudios em `docs/audio.md`, com músicas, efeitos de gameplay, sons de UI, reservas futuras, regras de mix e critérios offline para aquisição ou produção posterior.
 
 ### Alterado
 - A bola agora inicia cada fase na velocidade máxima da fase e reduz por constante fixa a cada bloco destruído.
 - A colisão com a raquete preserva o ângulo e apenas clampa a magnitude na faixa permitida da fase.
 - Payloads de transição de fase, `gameLogger`, `collisionTracker`, painéis de logs/colisões e testes passaram a carregar tempos e velocidades.
 - O HUD persistente foi compactado e tema, logs, colisões e zerar pontuação foram movidos para menu lateral fechado por padrão.
+
 
 ## [1.12.0] - 2026-06-30
 ### Adicionado

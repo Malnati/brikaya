@@ -117,6 +117,7 @@ function createServiceWorkerMock(controller: ServiceWorker | null = null) {
   const serviceWorker = {
     controller,
     register: jest.fn().mockResolvedValue(registration),
+    ready: Promise.resolve(registration),
     addEventListener: jest.fn((eventName: string, listener: Listener) => {
       containerListeners[eventName] = [
         ...(containerListeners[eventName] || []),

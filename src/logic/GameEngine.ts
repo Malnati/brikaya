@@ -2,6 +2,7 @@
 import { Paddle } from '../objects/Paddle';
 import { Ball } from '../objects/Ball';
 import { Bricks } from '../objects/Bricks';
+import { PowerUp, type PowerUpType } from '../objects/PowerUp';
 import {
   GAME_COLOR,
   LEVEL_CLEAR_PAUSE_MS,
@@ -21,18 +22,51 @@ import {
 import { POINTS_PER_BRICK } from '../constants/gameState';
 import { AssetLoader } from '../utils/assetLoader';
 import { gameLogger } from '../storage/gameLogger';
+import { AUDIO_QA_SCENARIO, GAME_AUDIO_IDS, type AudioId, type GameAudioSink } from '../constants/audio';
 import { LOG, ERROR, WARN } from '../utils/logger';
 
 LOG('📦 GameEngine.ts carregado, gameLogger:', gameLogger);
 
 const ERROR_NO_2D_CONTEXT = 'No 2D context';
+const SINGLE_BRICK_QA_SCENARIO = 'single-brick-phase-clear';
+const COMBO_WINDOW_MS = 1200;
+const COMBO_COOLDOWN_MS = 500;
+const COMBO_SMALL_THRESHOLD = 3;
+const COMBO_LARGE_THRESHOLD = 6;
+const POWER_UP_SPAWN_INTERVAL = 5;
+const POWER_UP_DURATION_MS = 8000;
+const POWER_UP_START_Y_OFFSET = 16;
+const POWER_UP_EDGE_PADDING = 24;
+const WIDE_PADDLE_SCALE = 1.45;
+const SLOW_BALL_MULTIPLIER = 0.75;
+const MULTIBALL_ANGLE_OFFSET = 0.42;
+const HIGH_INTENSITY_SPEED_MULTIPLIER = 1.6;
+const POWER_UP_TYPES: PowerUpType[] = ['multiball', 'wide_paddle', 'slow_ball'];
+const BRICK_COLOR_AUDIO_IDS: AudioId[] = [
+  GAME_AUDIO_IDS.BRICK_BREAK_RED,
+  GAME_AUDIO_IDS.BRICK_BREAK_BLUE,
+  GAME_AUDIO_IDS.BRICK_BREAK_GREEN,
+  GAME_AUDIO_IDS.BRICK_BREAK_YELLOW,
+  GAME_AUDIO_IDS.BRICK_BREAK_PURPLE,
+];
+const CANVAS_FONT_FAMILY = 'Arial';
+const LOADING_TEXT = 'Carregando';
+const GAME_OVER_TEXT = 'FIM DE JOGO!';
+const SCORE_TEXT_PREFIX = 'Pontuação';
+const RESTART_HINT_TEXT = 'Toque em "Reiniciar" para jogar novamente';
+const NOOP_AUDIO_SINK: GameAudioSink = {
+  playAudio: () => {},
+  startGameplayMusic: () => {},
+  startMenuMusic: () => {},
+  setHighIntensity: () => {},
+};
 
 interface CanvasSize {
   width: number;
   height: number;
 }
 
-export type GameQaScenario = 'single-brick-phase-clear';
+export type GameQaScenario = typeof SINGLE_BRICK_QA_SCENARIO | typeof AUDIO_QA_SCENARIO;
 
 export class GameEngine {
   private ctx: CanvasRenderingContext2D;
@@ -58,6 +92,13 @@ export class GameEngine {
   private latestSpeedReduction: SpeedReductionSnapshot | null = null;
   private phaseSpeedConfig: PhaseSpeedConfig | null = null;
   private qaScenarioConsumed = false;
+  private comboCount = 0;
+  private lastBrickDestroyedAt = 0;
+  private lastComboAudioAt = 0;
+  private destroyedBricksSincePowerUp = 0;
+  private activePowerUp: PowerUp | null = null;
+  private nextPowerUpIndex = 0;
+  private powerUpEffectTimers: ReturnType<typeof setTimeout>[] = [];
   private readonly handleKeyDown = (event: KeyboardEvent) => this.paddle.onKeyDown(event);
   private readonly handleKeyUp = (event: KeyboardEvent) => this.paddle.onKeyUp(event);
   private readonly handleTouchStart = (event: TouchEvent) => this.onTouchStart(event);
@@ -73,7 +114,8 @@ export class GameEngine {
     private onGameOver?: () => void,
     canvasSize?: CanvasSize,
     private onLevelTransition?: (payload: LevelTransitionPayload) => void,
-    private qaScenario?: GameQaScenario | null
+    private qaScenario?: GameQaScenario | null,
+    private audioSink: GameAudioSink = NOOP_AUDIO_SINK
   ) {
     LOG(`🚀 GameEngine constructor iniciado`);
 
@@ -119,7 +161,7 @@ export class GameEngine {
 
   private createDimensions(canvasWidth: number, canvasHeight: number): DynamicGameDimensions {
     const dimensions = calculateDynamicDimensions(canvasWidth, canvasHeight);
-    if (this.qaScenario === 'single-brick-phase-clear' && !this.qaScenarioConsumed) {
+    if (this.qaScenario === SINGLE_BRICK_QA_SCENARIO && !this.qaScenarioConsumed) {
       return {
         ...dimensions,
         brickCols: 1,
@@ -155,7 +197,7 @@ export class GameEngine {
   }
 
   private prepareQaBall() {
-    if (this.qaScenario !== 'single-brick-phase-clear' || this.qaScenarioConsumed || this.balls.length === 0) return;
+    if (this.qaScenario !== SINGLE_BRICK_QA_SCENARIO || this.qaScenarioConsumed || this.balls.length === 0) return;
 
     const ball = this.balls[0];
     const targetX = this.dimensions.brickOffsetLeft + this.dimensions.brickWidth / 2;
@@ -176,7 +218,10 @@ export class GameEngine {
     }
   }
 
-  private async onBrickDestroyed() {
+  private async onBrickDestroyed(colorIndex: number) {
+    this.playBrickAudio(colorIndex);
+    this.updateComboAudio();
+    this.maybeSpawnPowerUp();
     this.score += POINTS_PER_BRICK;
     this.onScoreUpdate(this.score);
     this.latestSpeedReduction = this.getLatestSpeedReductionFromBalls();
@@ -209,6 +254,9 @@ export class GameEngine {
     paddlePosition: { x: number; y: number; width: number; height: number }
   ) {
     this.isLevelTransitioning = true;
+    this.clearPowerUpEffects();
+    this.activePowerUp = null;
+    this.audioSink.playAudio(GAME_AUDIO_IDS.LEVEL_COMPLETE);
     const currentLevel = this.level;
     const nextLevel = currentLevel + 1;
     const nextSpeedMultiplier = calculateLevelSpeedMultiplier(nextLevel);
@@ -243,6 +291,7 @@ export class GameEngine {
       }
     ).catch(error => ERROR('❌ Erro ao registrar fase concluída:', error));
 
+    this.audioSink.setHighIntensity(nextSpeedMultiplier >= HIGH_INTENSITY_SPEED_MULTIPLIER);
     this.onLevelTransition?.(payload);
 
     this.levelTransitionTimer = setTimeout(() => {
@@ -252,12 +301,14 @@ export class GameEngine {
 
   private async finishLevelTransition(nextLevel: number, nextSpeedMultiplier: number) {
     this.level = nextLevel;
-    if (this.qaScenario === 'single-brick-phase-clear' && !this.qaScenarioConsumed) {
+    if (this.qaScenario === SINGLE_BRICK_QA_SCENARIO && !this.qaScenarioConsumed) {
       this.qaScenarioConsumed = true;
       this.dimensions = this.createDimensions(this.canvasSize.width, this.canvasSize.height);
       this.configureBrickRows();
     }
     this.paddle.reset();
+    this.activePowerUp = null;
+    this.destroyedBricksSincePowerUp = 0;
     this.balls = [new Ball(
       this.canvasSize.width,
       this.canvasSize.height,
@@ -268,6 +319,9 @@ export class GameEngine {
     this.bricks = this.createBricks();
     this.startLevelSpeedTracking(nextLevel);
     this.isLevelTransitioning = false;
+    this.audioSink.playAudio(GAME_AUDIO_IDS.LEVEL_START);
+    this.audioSink.startGameplayMusic();
+    this.audioSink.setHighIntensity(nextSpeedMultiplier >= HIGH_INTENSITY_SPEED_MULTIPLIER);
 
     const gameState = this.getCurrentGameState();
     await gameLogger.logLevelStart(
@@ -392,8 +446,114 @@ export class GameEngine {
     };
   }
 
+
+  private playBrickAudio(colorIndex: number) {
+    const colorAudioId = BRICK_COLOR_AUDIO_IDS[colorIndex] || GAME_AUDIO_IDS.BRICK_BREAK_RED;
+    this.audioSink.playAudio(GAME_AUDIO_IDS.BRICK_HIT);
+    this.audioSink.playAudio(colorAudioId);
+    this.audioSink.playAudio(GAME_AUDIO_IDS.SCORE_TICK);
+  }
+
+  private updateComboAudio() {
+    const now = Date.now();
+    this.comboCount = now - this.lastBrickDestroyedAt <= COMBO_WINDOW_MS ? this.comboCount + 1 : 1;
+    this.lastBrickDestroyedAt = now;
+
+    if (now - this.lastComboAudioAt < COMBO_COOLDOWN_MS) return;
+    if (this.comboCount >= COMBO_LARGE_THRESHOLD) {
+      this.audioSink.playAudio(GAME_AUDIO_IDS.COMBO_LARGE);
+      this.lastComboAudioAt = now;
+      return;
+    }
+    if (this.comboCount >= COMBO_SMALL_THRESHOLD) {
+      this.audioSink.playAudio(GAME_AUDIO_IDS.COMBO_SMALL);
+      this.lastComboAudioAt = now;
+    }
+  }
+
+  private maybeSpawnPowerUp() {
+    this.destroyedBricksSincePowerUp += 1;
+    if (this.activePowerUp || this.destroyedBricksSincePowerUp < POWER_UP_SPAWN_INTERVAL) return;
+
+    this.destroyedBricksSincePowerUp = 0;
+    const powerUpType = POWER_UP_TYPES[this.nextPowerUpIndex % POWER_UP_TYPES.length];
+    this.nextPowerUpIndex += 1;
+    const ballPosition = this.balls[0]?.position;
+    const spawnX = Math.max(
+      POWER_UP_EDGE_PADDING,
+      Math.min(this.canvasSize.width - POWER_UP_EDGE_PADDING, ballPosition?.x ?? this.canvasSize.width / 2),
+    );
+    const spawnY = this.dimensions.brickOffsetTop + POWER_UP_START_Y_OFFSET;
+    this.activePowerUp = new PowerUp(spawnX, spawnY, powerUpType);
+    this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_SPAWN);
+  }
+
+  private updatePowerUp() {
+    if (!this.activePowerUp || this.isLevelTransitioning || this.gameOver) return;
+
+    this.activePowerUp.update();
+    if (this.activePowerUp.intersects(this.paddle.position)) {
+      const powerUpType = this.activePowerUp.getType();
+      this.activePowerUp = null;
+      this.activatePowerUp(powerUpType);
+      return;
+    }
+
+    if (this.activePowerUp.isOutOfBounds(this.canvasSize.height)) {
+      this.activePowerUp = null;
+    }
+  }
+
+  private activatePowerUp(powerUpType: PowerUpType) {
+    this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_COLLECT);
+
+    if (powerUpType === 'multiball') {
+      const baseBall = this.balls[0];
+      if (baseBall) {
+        this.balls.push(baseBall.createClone(MULTIBALL_ANGLE_OFFSET));
+        this.balls.push(baseBall.createClone(-MULTIBALL_ANGLE_OFFSET));
+      }
+      this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_ACTIVATE_MULTIBALL);
+      return;
+    }
+
+    if (powerUpType === 'wide_paddle') {
+      this.paddle.setWidthScale(WIDE_PADDLE_SCALE);
+      this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_ACTIVATE_WIDE_PADDLE);
+      this.schedulePowerUpExpiration(() => {
+        this.paddle.setWidthScale(1);
+      });
+      return;
+    }
+
+    this.balls.forEach(ball => ball.multiplyVelocity(SLOW_BALL_MULTIPLIER));
+    this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_ACTIVATE_SLOW_BALL);
+    this.schedulePowerUpExpiration(() => {
+      this.balls.forEach(ball => ball.multiplyVelocity(1 / SLOW_BALL_MULTIPLIER));
+    });
+  }
+
+  private schedulePowerUpExpiration(onExpire: () => void) {
+    const timer = setTimeout(() => {
+      onExpire();
+      this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_EXPIRE);
+      this.powerUpEffectTimers = this.powerUpEffectTimers.filter(activeTimer => activeTimer !== timer);
+    }, POWER_UP_DURATION_MS);
+    this.powerUpEffectTimers.push(timer);
+  }
+
+  private clearPowerUpEffects() {
+    for (const timer of this.powerUpEffectTimers) {
+      clearTimeout(timer);
+    }
+    this.powerUpEffectTimers = [];
+    if (typeof this.paddle?.setWidthScale === 'function') {
+      this.paddle.setWidthScale(1);
+    }
+  }
+
   private getExpectedInitialBrickCountForLevel(level: number): number {
-    if (this.qaScenario === 'single-brick-phase-clear' && !this.qaScenarioConsumed && level > this.level) {
+    if (this.qaScenario === SINGLE_BRICK_QA_SCENARIO && !this.qaScenarioConsumed && level > this.level) {
       const previewDimensions = calculateDynamicDimensions(this.canvasSize.width, this.canvasSize.height);
       return previewDimensions.brickCols * previewDimensions.brickRows;
     }
@@ -499,6 +659,10 @@ export class GameEngine {
       ERROR('❌ Erro ao registrar início do jogo:', error);
     });
 
+    this.audioSink.playAudio(GAME_AUDIO_IDS.GAME_START);
+    this.audioSink.startGameplayMusic();
+    this.audioSink.setHighIntensity(calculateLevelSpeedMultiplier(this.level) >= HIGH_INTENSITY_SPEED_MULTIPLIER);
+
     if (!this.isStopped) {
       this.loop();
     }
@@ -507,6 +671,7 @@ export class GameEngine {
   public stop() {
     this.isStopped = true;
     this.isTouching = false;
+    this.clearPowerUpEffects();
     if (this.levelTransitionTimer) {
       clearTimeout(this.levelTransitionTimer);
       this.levelTransitionTimer = null;
@@ -522,33 +687,33 @@ export class GameEngine {
     if (!this.assetsLoaded) {
       // Show loading indicator
       this.ctx.fillStyle = GAME_COLOR;
-      this.ctx.font = `${16 * Math.min(this.scaleX, this.scaleY)}px Arial`;
+      this.ctx.font = `${16 * Math.min(this.scaleX, this.scaleY)}px ${CANVAS_FONT_FAMILY}`;
       this.ctx.textAlign = 'center';
-      this.ctx.fillText('Loading...', this.canvasSize.width / 2, this.canvasSize.height / 2);
+      this.ctx.fillText(LOADING_TEXT, this.canvasSize.width / 2, this.canvasSize.height / 2);
     } else if (this.gameOver) {
       // Mostrar tela de fim de jogo
       this.ctx.fillStyle = '#ff4444';
-      this.ctx.font = `${24 * Math.min(this.scaleX, this.scaleY)}px Arial`;
+      this.ctx.font = `${24 * Math.min(this.scaleX, this.scaleY)}px ${CANVAS_FONT_FAMILY}`;
       this.ctx.textAlign = 'center';
-      this.ctx.fillText('FIM DE JOGO!', this.canvasSize.width / 2, this.canvasSize.height / 2 - 20);
-      this.ctx.font = `${16 * Math.min(this.scaleX, this.scaleY)}px Arial`;
-      this.ctx.fillText(`Pontuação: ${this.score}`, this.canvasSize.width / 2, this.canvasSize.height / 2 + 10);
-      this.ctx.fillText('Toque em "Restart Game" para jogar novamente', this.canvasSize.width / 2, this.canvasSize.height / 2 + 40);
+      this.ctx.fillText(GAME_OVER_TEXT, this.canvasSize.width / 2, this.canvasSize.height / 2 - 20);
+      this.ctx.font = `${16 * Math.min(this.scaleX, this.scaleY)}px ${CANVAS_FONT_FAMILY}`;
+      this.ctx.fillText(`${SCORE_TEXT_PREFIX}: ${this.score}`, this.canvasSize.width / 2, this.canvasSize.height / 2 + 10);
+      this.ctx.fillText(RESTART_HINT_TEXT, this.canvasSize.width / 2, this.canvasSize.height / 2 + 40);
     } else {
               // Normal game rendering
         try {
           this.bricks.draw(this.ctx);
+          this.paddle.update();
+          this.updatePowerUp();
           this.paddle.draw(this.ctx);
+          this.activePowerUp?.draw(this.ctx);
         if (this.isLevelTransitioning) {
           this.balls.forEach(ball => ball.draw(this.ctx));
         } else {
         for (let i = this.balls.length - 1; i >= 0; i--) {
           const ball = this.balls[i];
 
-          // Atualizar posição da raquete antes de chamar ball.update
-          this.paddle.update();
-
-          const inPlay = await ball.update(this.paddle, this.bricks, this.canvasSize.height, this.getCurrentGameState());
+          const inPlay = await ball.update(this.paddle, this.bricks, this.canvasSize.height, this.getCurrentGameState(), this.audioSink);
           if (!inPlay) {
             this.balls.splice(i, 1);
             continue;
@@ -563,6 +728,8 @@ export class GameEngine {
         if (this.balls.length === 0) {
           // Game over - no balls left
           this.gameOver = true;
+          this.audioSink.playAudio(GAME_AUDIO_IDS.GAME_OVER);
+          this.audioSink.startMenuMusic();
 
           // Log da mudança de estado do jogo
           const gameState = this.getCurrentGameState();

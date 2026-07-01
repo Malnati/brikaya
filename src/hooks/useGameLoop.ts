@@ -4,6 +4,7 @@ import { useEffect, RefObject, useRef } from 'react';
 import { GameEngine, GameQaScenario } from '../logic/GameEngine';
 import { LOG, ERROR } from '../utils/logger';
 import { LevelTransitionPayload } from '../constants/game';
+import type { GameAudioSink } from '../constants/audio';
 
 interface CanvasSize {
   width: number;
@@ -24,7 +25,8 @@ export function useGameLoop(
   onGameOver?: () => void,
   canvasSize?: CanvasSize,
   onLevelTransition?: (payload: LevelTransitionPayload) => void,
-  qaScenario?: GameQaScenario | null
+  qaScenario?: GameQaScenario | null,
+  audioSink?: GameAudioSink
 ) {
   const engineRef = useRef<GameEngine | null>(null);
   const callbacksRef = useRef<GameLoopCallbacks>({ onScoreUpdate, onGameWon, onGameOver, onLevelTransition });
@@ -52,7 +54,8 @@ export function useGameLoop(
         () => callbacksRef.current.onGameOver?.(),
         canvasSize,
         payload => callbacksRef.current.onLevelTransition?.(payload),
-        qaScenario
+        qaScenario,
+        audioSink
       );
       engineRef.current = engine;
       LOG(`🎮 GameEngine criado com sucesso, chamando start()...`);
@@ -67,5 +70,5 @@ export function useGameLoop(
       engineRef.current?.stop();
       engineRef.current = null;
     };
-  }, [canvasRef, canvasSize, qaScenario]);
+  }, [audioSink, canvasRef, canvasSize, qaScenario]);
 }
