@@ -5,6 +5,8 @@ import { Bricks } from "../objects/Bricks";
 import { PowerUp, type PowerUpType } from "../objects/PowerUp";
 import {
   GAME_COLOR,
+  CANVAS_HEIGHT,
+  CANVAS_WIDTH,
   LEVEL_CLEAR_PAUSE_MS,
   LevelTransitionPayload,
   PhaseSpeedConfig,
@@ -62,6 +64,7 @@ const LOADING_TEXT = "Carregando";
 const GAME_OVER_TEXT = "FIM DE JOGO!";
 const SCORE_TEXT_PREFIX = "Pontuação";
 const RESTART_HINT_TEXT = "Use ↻ para jogar novamente";
+const CENTER_DIVISOR = 2;
 const NOOP_AUDIO_SINK: GameAudioSink = {
   playAudio: () => {},
   startGameplayMusic: () => {},
@@ -165,8 +168,8 @@ export class GameEngine {
     );
 
     // Calcular escala para manter proporções
-    this.scaleX = this.canvasSize.width / 480; // CANVAS_WIDTH original
-    this.scaleY = this.canvasSize.height / 320; // CANVAS_HEIGHT original
+    this.scaleX = this.canvasSize.width / CANVAS_WIDTH;
+    this.scaleY = this.canvasSize.height / CANVAS_HEIGHT;
 
     if (this.qaScenario === LATE_PHASE_STABILITY_QA_SCENARIO) {
       this.level = LATE_PHASE_STABILITY_LEVEL;
@@ -221,6 +224,58 @@ export class GameEngine {
     }
 
     return dimensions;
+  }
+
+  private createResizedDimensions(
+    canvasWidth: number,
+    canvasHeight: number,
+  ): DynamicGameDimensions {
+    const dimensions = this.createDimensions(canvasWidth, canvasHeight);
+    const brickCols = this.dimensions.brickCols;
+    const brickRows = this.dimensions.brickRows;
+    const totalBricksWidth =
+      brickCols * dimensions.brickWidth +
+      (brickCols - 1) * dimensions.brickPadding;
+
+    return {
+      ...dimensions,
+      brickCols,
+      brickRows,
+      brickOffsetLeft: (canvasWidth - totalBricksWidth) / CENTER_DIVISOR,
+    };
+  }
+
+  public resize(nextCanvasSize: CanvasSize) {
+    if (
+      nextCanvasSize.width === this.canvasSize.width &&
+      nextCanvasSize.height === this.canvasSize.height
+    ) {
+      return;
+    }
+
+    LOG(
+      `📐 Redimensionando canvas sem reiniciar: ${this.canvasSize.width}x${this.canvasSize.height} -> ${nextCanvasSize.width}x${nextCanvasSize.height}`,
+    );
+
+    this.canvasSize = nextCanvasSize;
+    this.canvas.width = nextCanvasSize.width;
+    this.canvas.height = nextCanvasSize.height;
+    this.dimensions = this.createResizedDimensions(
+      this.canvasSize.width,
+      this.canvasSize.height,
+    );
+    this.configureBrickRows();
+    this.scaleX = this.canvasSize.width / CANVAS_WIDTH;
+    this.scaleY = this.canvasSize.height / CANVAS_HEIGHT;
+    this.paddle.resize(
+      this.canvasSize.width,
+      this.canvasSize.height,
+      this.dimensions,
+    );
+    this.balls.forEach((ball) =>
+      ball.resize(this.canvasSize.width, this.canvasSize.height, this.dimensions),
+    );
+    this.bricks.resize(this.dimensions, this.maxBrickRows);
   }
 
   private configureBrickRows() {

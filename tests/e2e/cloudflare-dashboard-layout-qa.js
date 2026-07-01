@@ -9,11 +9,16 @@ const DEFAULT_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-dashboard-layout.png";
 const DEFAULT_DESKTOP_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-dashboard-layout-desktop.png";
+const DEFAULT_LANDSCAPE_SCREENSHOT_PATH =
+  "tmp/screenshots/cloudflare-dashboard-layout-landscape.png";
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const MIN_TOUCH_TARGET_SIZE = 44;
 const MIN_SIDE_AD_DISTANCE_PX = 150;
 const MIN_BOTTOM_AD_DISTANCE_PX = 24;
+const LANDSCAPE_VIEWPORT_NAME = "iphone-15-landscape";
+const MIN_LANDSCAPE_CANVAS_HEIGHT_RATIO = 0.76;
+const MIN_LANDSCAPE_CANVAS_WIDTH_RATIO = 0.55;
 const MENU_BUTTON_NAME = /menu/i;
 const LOGS_BUTTON_NAME = /logs/i;
 const COLLISIONS_BUTTON_NAME = /colisões/i;
@@ -102,6 +107,13 @@ function desktopScreenshotPath() {
   );
 }
 
+function landscapeScreenshotPath() {
+  return (
+    process.env.BRICKBREAKER_DASHBOARD_LANDSCAPE_SCREENSHOT ||
+    DEFAULT_LANDSCAPE_SCREENSHOT_PATH
+  );
+}
+
 function ensureParentDirectory(filePath) {
   mkdirSync(dirname(resolve(filePath)), { recursive: true });
 }
@@ -140,6 +152,13 @@ async function collectLayoutState(page, viewportName) {
       };
       const canvas = rectOf(document.querySelector("canvas"));
       const header = rectOf(document.querySelector(".dashboard-header"));
+      const titleGroupElement = document.querySelector(
+        ".dashboard-title-group",
+      );
+      const titleGroup = rectOf(titleGroupElement);
+      const titleGroupDisplay = titleGroupElement
+        ? getComputedStyle(titleGroupElement).display
+        : "";
       const scoreStrip = rectOf(document.querySelector(".score-strip"));
       const sideSlot = rectOf(document.querySelector(".ad-slot--side"));
       const bottomSlot = rectOf(document.querySelector(".ad-slot--bottom"));
@@ -199,6 +218,12 @@ async function collectLayoutState(page, viewportName) {
         ),
         canvas,
         header,
+        titleGroup,
+        titleGroupVisible:
+          Boolean(titleGroup) &&
+          titleGroupDisplay !== "none" &&
+          titleGroup.width > 0 &&
+          titleGroup.height > 0,
         scoreStrip,
         buttons,
         sideSlot,
@@ -238,6 +263,64 @@ async function clearOfflineState(page) {
   });
 }
 
+async function readEventCountsSince(page, minTimestamp) {
+  return page.evaluate(async (timestamp) => {
+    async function readEvents() {
+      return new Promise((resolve) => {
+        const request = indexedDB.open("BrickBreakerGameLog", 2);
+        request.onerror = () => resolve([]);
+        request.onsuccess = () => {
+          const db = request.result;
+          if (!db.objectStoreNames.contains("gameEvents")) {
+            db.close();
+            resolve([]);
+            return;
+          }
+
+          const transaction = db.transaction(["gameEvents"], "readonly");
+          const store = transaction.objectStore("gameEvents");
+          const allRequest = store.getAll();
+          allRequest.onerror = () => {
+            db.close();
+            resolve([]);
+          };
+          allRequest.onsuccess = () => {
+            db.close();
+            resolve(allRequest.result || []);
+          };
+        };
+      });
+    }
+
+    const events = (await readEvents()).filter(
+      (event) => event.timestamp >= timestamp,
+    );
+    const byType = events.reduce((accumulator, event) => {
+      accumulator[event.type] = (accumulator[event.type] || 0) + 1;
+      return accumulator;
+    }, {});
+
+    return {
+      count: events.length,
+      byType,
+    };
+  }, minTimestamp);
+}
+
+async function waitForEventTypeSince(page, minTimestamp, eventType) {
+  const timeoutAt = Date.now() + 10000;
+
+  while (Date.now() < timeoutAt) {
+    const summary = await readEventCountsSince(page, minTimestamp);
+    if ((summary.byType[eventType] || 0) > 0) {
+      return summary;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+
+  throw new Error(`Evento ${eventType} não apareceu no prazo esperado.`);
+}
+
 async function clickButtonByPattern(page, pattern) {
   const buttons = await page.$$("button");
   for (const button of buttons) {
@@ -271,9 +354,11 @@ async function run() {
   const outReport = reportPath();
   const outScreenshot = screenshotPath();
   const outDesktopScreenshot = desktopScreenshotPath();
+  const outLandscapeScreenshot = landscapeScreenshotPath();
   ensureParentDirectory(outReport);
   ensureParentDirectory(outScreenshot);
   ensureParentDirectory(outDesktopScreenshot);
+  ensureParentDirectory(outLandscapeScreenshot);
 
   const consoleProblems = [];
   const browser = await puppeteer.launch({
@@ -377,10 +462,12 @@ async function run() {
         `${viewport.name}: ícone Reiniciar/Jogar de novo ausente na tela principal.`,
       );
       for (const button of [audioIcon, restartIcon]) {
-        assert(
-          button.y >= state.canvas.bottom,
-          `${viewport.name}: ícone ${button.ariaLabel} ficou sobre o quadro do jogo.`,
-        );
+        if (viewport.name !== LANDSCAPE_VIEWPORT_NAME) {
+          assert(
+            button.y >= state.canvas.bottom,
+            `${viewport.name}: ícone ${button.ariaLabel} ficou sobre o quadro do jogo.`,
+          );
+        }
         assert(
           button.x >= state.canvas.x && button.right <= state.canvas.right,
           `${viewport.name}: ícone ${button.ariaLabel} saiu da largura do quadro do jogo.`,
@@ -429,6 +516,26 @@ async function run() {
           state.bottomAdDistance >= MIN_BOTTOM_AD_DISTANCE_PX ||
             state.viewport.height < 500,
           `${viewport.name}: slot inferior perto demais do tabuleiro.`,
+        );
+      }
+      if (viewport.name === LANDSCAPE_VIEWPORT_NAME) {
+        assert(
+          state.canvas.height / state.viewport.height >=
+            MIN_LANDSCAPE_CANVAS_HEIGHT_RATIO,
+          `${viewport.name}: canvas não usa altura suficiente em landscape.`,
+        );
+        assert(
+          state.canvas.width / state.viewport.width >=
+            MIN_LANDSCAPE_CANVAS_WIDTH_RATIO,
+          `${viewport.name}: canvas não usa largura suficiente em landscape.`,
+        );
+        assert(
+          !state.titleGroupVisible,
+          `${viewport.name}: título/eyebrow continuam ocupando espaço.`,
+        );
+        assert(
+          !state.bottomSlotVisible && !state.sideSlotVisible,
+          `${viewport.name}: anúncios continuam visíveis no modo imersivo.`,
         );
       }
 
@@ -530,9 +637,13 @@ async function run() {
       }
     }
 
-    await page.setViewport(
-      VIEWPORTS.find((viewport) => viewport.name === "iphone-15"),
+    const portraitViewport = VIEWPORTS.find(
+      (viewport) => viewport.name === "iphone-15",
     );
+    const landscapeViewport = VIEWPORTS.find(
+      (viewport) => viewport.name === LANDSCAPE_VIEWPORT_NAME,
+    );
+    await page.setViewport(portraitViewport);
     await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
     await clearOfflineState(page);
     await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
@@ -544,12 +655,67 @@ async function run() {
     await clearOfflineState(page);
     await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
     await page.screenshot({ path: outDesktopScreenshot, fullPage: true });
+    await page.setViewport(landscapeViewport);
+    await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
+    await clearOfflineState(page);
+    await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
+    await page.waitForSelector("canvas", { timeout: 30000 });
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    await page.screenshot({ path: outLandscapeScreenshot, fullPage: true });
+    await page.setViewport(portraitViewport);
+    await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
+    await clearOfflineState(page);
+    const orientationStartedAt = Date.now();
+    await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
+    await page.waitForSelector("canvas", { timeout: 30000 });
+    const beforeOrientationEvents = await waitForEventTypeSince(
+      page,
+      orientationStartedAt,
+      "game_start",
+    );
+    await page.setViewport(landscapeViewport);
+    await page.waitForFunction(
+      ({ minHeightRatio, minWidthRatio }) => {
+        const canvas = document.querySelector("canvas");
+        if (!canvas) return false;
+        const rect = canvas.getBoundingClientRect();
+        return (
+          rect.height / window.innerHeight >= minHeightRatio &&
+          rect.width / window.innerWidth >= minWidthRatio
+        );
+      },
+      { timeout: 10000 },
+      {
+        minHeightRatio: MIN_LANDSCAPE_CANVAS_HEIGHT_RATIO,
+        minWidthRatio: MIN_LANDSCAPE_CANVAS_WIDTH_RATIO,
+      },
+    );
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    const afterOrientationEvents = await readEventCountsSince(
+      page,
+      orientationStartedAt,
+    );
+    assert(
+      (afterOrientationEvents.byType.game_start || 0) ===
+        (beforeOrientationEvents.byType.game_start || 0),
+      "Rotação para landscape registrou novo game_start.",
+    );
+    assert(
+      (afterOrientationEvents.byType.restart_game || 0) ===
+        (beforeOrientationEvents.byType.restart_game || 0),
+      "Rotação para landscape registrou restart_game.",
+    );
 
     const report = {
       url: targetUrl,
       screenshotPath: outScreenshot,
       desktopScreenshotPath: outDesktopScreenshot,
+      landscapeScreenshotPath: outLandscapeScreenshot,
       results,
+      orientationEvents: {
+        before: beforeOrientationEvents,
+        after: afterOrientationEvents,
+      },
       consoleProblems,
     };
     writeFileSync(outReport, JSON.stringify(report, null, 2));

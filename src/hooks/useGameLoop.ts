@@ -48,7 +48,6 @@ export function useGameLoop(
     LOG(`🎮 Canvas size:`, canvasRef.current.width, 'x', canvasRef.current.height);
 
     try {
-      engineRef.current?.stop();
       const engine = new GameEngine(
         canvasRef.current,
         score => callbacksRef.current.onScoreUpdate(score),
@@ -73,5 +72,10 @@ export function useGameLoop(
       engineRef.current?.stop();
       engineRef.current = null;
     };
-  }, [audioSink, canvasRef, canvasSize, qaScenario]);
+  }, [audioSink, canvasRef, qaScenario]);
+
+  useEffect(() => {
+    if (!canvasSize) return;
+    engineRef.current?.resize(canvasSize);
+  }, [canvasSize]);
 }

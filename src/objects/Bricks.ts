@@ -121,6 +121,15 @@ export class Bricks {
     this.rows += 1;
   }
 
+  resize(dimensions: DynamicGameDimensions, maxRows?: number) {
+    this.dimensions = {
+      ...dimensions,
+      brickCols: this.bricks.length,
+      brickRows: this.rows
+    };
+    this.maxRows = Math.max(this.rows, maxRows ?? this.maxRows);
+  }
+
   async collide(
     ball: { 
       position: { x: number; y: number; radius: number }; 

@@ -18,13 +18,14 @@ const KEY_LEFT = 'ArrowLeft';
 const KEY_RIGHT = 'ArrowRight';
 const PADDLE_MIN_SCALE = 1;
 const PADDLE_MAX_SCALE = 1.8;
+const PADDLE_DEFAULT_SCALE = 1;
 
 export class Paddle {
   private x: number;
   private dx = 0;
   private width: number;
-  private readonly baseWidth: number;
-  private readonly height: number;
+  private baseWidth: number;
+  private height: number;
   private previousPosition: { x: number; y: number } | null = null;
 
   constructor(private canvasWidth: number, private canvasHeight: number, dimensions: DynamicGameDimensions) {
@@ -75,6 +76,22 @@ export class Paddle {
     const centerX = this.x + this.width / 2;
     this.width = this.baseWidth * nextScale;
     this.x = centerX - this.width / 2;
+    if (this.x < 0) this.x = 0;
+    if (this.x + this.width > this.canvasWidth) this.x = this.canvasWidth - this.width;
+    this.previousPosition = this.position;
+  }
+
+  resize(canvasWidth: number, canvasHeight: number, dimensions: DynamicGameDimensions) {
+    const centerRatio = this.canvasWidth > 0 ? (this.x + this.width / 2) / this.canvasWidth : 0.5;
+    const activeScale = this.baseWidth > 0 ? this.width / this.baseWidth : PADDLE_DEFAULT_SCALE;
+
+    this.canvasWidth = canvasWidth;
+    this.canvasHeight = canvasHeight;
+    this.baseWidth = dimensions.paddleWidth;
+    this.height = dimensions.paddleHeight;
+    this.width = this.baseWidth * activeScale;
+    this.x = centerRatio * canvasWidth - this.width / 2;
+
     if (this.x < 0) this.x = 0;
     if (this.x + this.width > this.canvasWidth) this.x = this.canvasWidth - this.width;
     this.previousPosition = this.position;
