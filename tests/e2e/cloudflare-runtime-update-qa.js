@@ -207,6 +207,16 @@ async function openGame(page, targetUrl) {
   await page.evaluate(() => navigator.serviceWorker?.ready || null);
 }
 
+async function triggerRuntimeUpdateCheck(page) {
+  try {
+    await page.evaluate(() => {
+      window.dispatchEvent(new Event("focus"));
+      window.dispatchEvent(new PageTransitionEvent("pageshow"));
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+  } catch {}
+}
+
 async function waitForActiveBuild(page, expectedBuildId) {
   const startedAt = Date.now();
   let lastVersion = null;
@@ -217,6 +227,7 @@ async function waitForActiveBuild(page, expectedBuildId) {
       await page.waitForSelector("canvas", {
         timeout: VERSION_MESSAGE_TIMEOUT_MS,
       });
+      await triggerRuntimeUpdateCheck(page);
       lastVersion = await readActiveServiceWorkerVersion(page);
       lastState = await collectRuntimeState(page);
 
