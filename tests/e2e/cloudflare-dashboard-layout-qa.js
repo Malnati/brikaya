@@ -11,6 +11,7 @@ const CHROME_EXECUTABLE_PATH = '/Applications/Google Chrome.app/Contents/MacOS/G
 const MIN_TOUCH_TARGET_SIZE = 44;
 const MIN_SIDE_AD_DISTANCE_PX = 150;
 const MIN_BOTTOM_AD_DISTANCE_PX = 24;
+const MENU_BUTTON_NAME = /menu/i;
 const LOGS_BUTTON_NAME = /logs/i;
 const COLLISIONS_BUTTON_NAME = /colisões/i;
 const CLOSE_BUTTON_NAME = /fechar|×|✕/i;
@@ -201,13 +202,16 @@ async function run() {
       assert(state.canvas.x >= 0 && state.canvas.right <= state.viewport.width, `${viewport.name}: canvas excede viewport.`);
       assert(state.canvas.bottom <= state.viewport.height, `${viewport.name}: canvas não fica inteiro visível.`);
       assert(state.header && state.scoreStrip, `${viewport.name}: header/chips ausentes.`);
+      assert(state.header.height <= Math.max(96, state.viewport.height * 0.2), `${viewport.name}: header alto demais para HUD compacto.`);
       assert(state.chips.some(text => text.includes('Fase')), `${viewport.name}: chip de fase ausente.`);
       assert(state.chips.some(text => text.includes('Score')), `${viewport.name}: chip de score ausente.`);
       assert(state.chips.some(text => text.includes('Total')), `${viewport.name}: chip de total ausente.`);
       assert(state.buttons.every(button => button.hasTouchTarget), `${viewport.name}: botão menor que 44px: ${state.buttons.filter(button => !button.hasTouchTarget).map(button => button.text).join(', ')}.`);
       assert(state.buttons.every(button => button.visibleInViewport), `${viewport.name}: botão cortado: ${state.buttons.filter(button => !button.visibleInViewport).map(button => button.text).join(', ')}.`);
-      assert(state.buttons.some(button => /logs/i.test(button.text)), `${viewport.name}: logs inacessível.`);
-      assert(state.buttons.some(button => /colisões/i.test(button.text)), `${viewport.name}: colisões inacessível.`);
+      assert(state.buttons.some(button => MENU_BUTTON_NAME.test(button.text)), `${viewport.name}: menu inacessível.`);
+      assert(!state.buttons.some(button => LOGS_BUTTON_NAME.test(button.text)), `${viewport.name}: logs apareceu fora do menu.`);
+      assert(!state.buttons.some(button => COLLISIONS_BUTTON_NAME.test(button.text)), `${viewport.name}: colisões apareceu fora do menu.`);
+      assert(!state.buttons.some(button => /zerar pontuação/i.test(button.text)), `${viewport.name}: zerar pontuação apareceu fora do menu.`);
       if (state.sideSlotVisible) {
         assert(state.sideAdDistance >= MIN_SIDE_AD_DISTANCE_PX, `${viewport.name}: slot lateral perto demais do tabuleiro.`);
       }
@@ -219,6 +223,11 @@ async function run() {
       }
 
       if (OVERLAY_TARGET_VIEWPORTS.includes(viewport.name)) {
+        const openedMenuForLogs = await clickButtonByPattern(page, MENU_BUTTON_NAME);
+        assert(openedMenuForLogs, `${viewport.name}: não abriu menu para logs.`);
+        await page.waitForSelector('.settings-drawer', { timeout: 10000 });
+        const menuOverlayState = await collectOverlayLayoutState(page);
+        assert(!menuOverlayState.hasHorizontalOverflow, `${viewport.name}: menu gerou overflow horizontal ${menuOverlayState.scrollWidth} > ${menuOverlayState.viewportWidth}.`);
         const openedLogs = await clickButtonByPattern(page, LOGS_BUTTON_NAME);
         assert(openedLogs, `${viewport.name}: não abriu painel de logs.`);
         await page.waitForFunction(() => document.body.textContent?.includes('Visualizador de Logs'), { timeout: 10000 });
@@ -246,6 +255,9 @@ async function run() {
         const closedLogs = await clickButtonByPattern(page, CLOSE_BUTTON_NAME);
         assert(closedLogs, `${viewport.name}: não fechou painel de logs.`);
 
+        const openedMenuForCollisions = await clickButtonByPattern(page, MENU_BUTTON_NAME);
+        assert(openedMenuForCollisions, `${viewport.name}: não abriu menu para colisões.`);
+        await page.waitForSelector('.settings-drawer', { timeout: 10000 });
         const openedCollisions = await clickButtonByPattern(page, COLLISIONS_BUTTON_NAME);
         assert(openedCollisions, `${viewport.name}: não abriu painel de colisões.`);
         await page.waitForFunction(

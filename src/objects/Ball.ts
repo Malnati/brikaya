@@ -4,6 +4,7 @@ import {
   calculateInitialBallSpeed,
   DynamicGameDimensions,
   PhaseSpeedConfig,
+  roundSpeedValue,
   SpeedReductionSnapshot,
   SpeedStateSnapshot
 } from '../constants/game';
@@ -27,6 +28,7 @@ export class Ball {
   private level = 1;
   private maxSpeed = 0;
   private minSpeed = 0;
+  private initialSpawnSpeed = 0;
   private currentSpeed = 0;
   private reductionPerBrick = 0;
   private initialBrickCount = 0;
@@ -42,6 +44,7 @@ export class Ball {
     this.dx = initialSpeed;
     this.dy = -initialSpeed;
     this.currentSpeed = initialSpeed;
+    this.initialSpawnSpeed = initialSpeed;
     this.maxSpeed = initialSpeed;
     this.minSpeed = initialSpeed;
     this.previousLevelMaxSpeed = initialSpeed;
@@ -63,6 +66,7 @@ export class Ball {
     this.dx = initialSpeed;
     this.dy = -initialSpeed;
     this.currentSpeed = initialSpeed;
+    this.initialSpawnSpeed = initialSpeed;
     this.maxSpeed = initialSpeed;
     this.minSpeed = initialSpeed;
     this.previousLevelMaxSpeed = initialSpeed;
@@ -74,6 +78,7 @@ export class Ball {
   applyPhaseSpeedConfig(config: PhaseSpeedConfig): void {
     this.level = config.level;
     this.initialBrickCount = config.initialBrickCount;
+    this.initialSpawnSpeed = config.initialSpawnSpeed;
     this.maxSpeed = config.maxSpeed;
     this.minSpeed = config.minSpeed;
     this.reductionPerBrick = config.reductionPerBrick;
@@ -82,7 +87,7 @@ export class Ball {
     this.blockHitsThisRun = 0;
     this.lastSpeedReduction = null;
 
-    this.setVelocityFromAngleAndSpeed(this.getCurrentAngle(), this.maxSpeed);
+    this.setVelocityFromAngleAndSpeed(this.getCurrentAngle(), this.initialSpawnSpeed, false);
   }
 
   async update(
@@ -279,7 +284,7 @@ export class Ball {
     return calculateClampedSpeed(
       this.currentSpeed || Math.sqrt(this.dx * this.dx + this.dy * this.dy),
       this.minSpeed || 0,
-      this.maxSpeed || Number.MAX_SAFE_INTEGER
+      Number.MAX_SAFE_INTEGER
     );
   }
 
@@ -310,6 +315,7 @@ export class Ball {
       level: this.level,
       initialBrickCount: this.initialBrickCount,
       successfulBrickHits: this.blockHitsThisRun,
+      initialSpawnSpeed: this.initialSpawnSpeed,
       maxSpeed: this.maxSpeed,
       minSpeed: this.minSpeed,
       currentSpeed,
@@ -336,8 +342,9 @@ export class Ball {
     this.setVelocityFromAngleAndSpeed(angle, this.getCurrentSpeedMagnitude());
   }
 
-  private setVelocityFromAngleAndSpeed(angle: number, speed: number) {
-    const clampedSpeed = calculateClampedSpeed(speed, this.minSpeed, this.maxSpeed || speed);
+  private setVelocityFromAngleAndSpeed(angle: number, speed: number, clampMax = true) {
+    const maxSpeed = clampMax ? this.maxSpeed || speed : Math.max(speed, this.maxSpeed || speed);
+    const clampedSpeed = calculateClampedSpeed(speed, this.minSpeed, maxSpeed);
     this.currentSpeed = clampedSpeed;
     this.dx = clampedSpeed * Math.sin(angle);
     this.dy = -clampedSpeed * Math.cos(angle);
@@ -349,18 +356,10 @@ export class Ball {
 
   private reduceSpeedAfterBrickHit() {
     const speedBefore = this.getCurrentSpeedMagnitude();
-    const nextSpeed = calculateClampedSpeed(
-      speedBefore - this.reductionPerBrick,
-      this.minSpeed,
-      this.maxSpeed
-    );
-    const reductionApplied = calculateClampedSpeed(
-      speedBefore - nextSpeed,
-      0,
-      this.maxSpeed
-    );
+    const nextSpeed = roundSpeedValue(Math.max(this.minSpeed, speedBefore - this.reductionPerBrick));
+    const reductionApplied = roundSpeedValue(speedBefore - nextSpeed);
 
-    this.setVelocityFromAngleAndSpeed(this.getCurrentAngle(), nextSpeed);
+    this.setVelocityFromAngleAndSpeed(this.getCurrentAngle(), nextSpeed, false);
     this.lastSpeedReduction = {
       level: this.level,
       hitNumber: this.blockHitsThisRun,

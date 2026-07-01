@@ -4,6 +4,7 @@ import { describe, expect, it, jest } from '@jest/globals';
 import { Ball } from './Ball';
 import {
   calculateInitialBallSpeed,
+  calculateLevelInitialSpawnSpeed,
   calculateLevelMaxSpeed,
   calculateLevelMinSpeed,
   calculateLevelPreviousMaxSpeed,
@@ -65,6 +66,7 @@ function buildPhaseSpeedConfig(level: number): PhaseSpeedConfig {
   return {
     level,
     initialBrickCount: INITIAL_BRICK_COUNT,
+    initialSpawnSpeed: calculateLevelInitialSpawnSpeed(CANVAS_WIDTH, level),
     maxSpeed,
     minSpeed: calculateLevelMinSpeed(CANVAS_WIDTH, level),
     reductionPerBrick: calculateSpeedReductionPerBrick(maxSpeed, INITIAL_BRICK_COUNT),
@@ -90,21 +92,32 @@ describe('Ball', () => {
     expect(calculateLevelSpeedMultiplier(99)).toBe(MAX_LEVEL_SPEED_MULTIPLIER);
   });
 
-  it('inicia fase na velocidade máxima configurada', () => {
+  it('inicia fase 1 com override 3x no spawn inicial sem alterar máxima da fase', () => {
     const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
     const config = buildPhaseSpeedConfig(PHASE_ONE);
 
     ball.applyPhaseSpeedConfig(config);
 
-    expect(ball.getCurrentSpeedMagnitude()).toBe(config.maxSpeed);
+    expect(ball.getCurrentSpeedMagnitude()).toBe(config.initialSpawnSpeed);
+    expect(config.maxSpeed).toBe(calculateLevelMaxSpeed(CANVAS_WIDTH, PHASE_ONE));
     expect(ball.getSpeedStateSnapshot()).toMatchObject({
       level: PHASE_ONE,
       maxSpeed: config.maxSpeed,
       minSpeed: config.minSpeed,
-      currentSpeed: config.maxSpeed,
+      currentSpeed: config.initialSpawnSpeed,
       initialBrickCount: INITIAL_BRICK_COUNT,
       successfulBrickHits: 0,
     });
+  });
+
+  it('inicia fase 2 sem herdar override 3x da fase 1', () => {
+    const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const config = buildPhaseSpeedConfig(PHASE_TWO);
+
+    ball.applyPhaseSpeedConfig(config);
+
+    expect(ball.getCurrentSpeedMagnitude()).toBe(config.maxSpeed);
+    expect(config.initialSpawnSpeed).toBe(config.maxSpeed);
   });
 
   it('reduz velocidade por constante fixa ao acertar bloco', () => {
@@ -115,14 +128,14 @@ describe('Ball', () => {
     ball.registerBrickHit();
 
     expect(ball.getCurrentSpeedMagnitude()).toBeCloseTo(
-      config.maxSpeed - config.reductionPerBrick,
+      config.initialSpawnSpeed - config.reductionPerBrick,
       5
     );
     expect(ball.getLastSpeedReduction()?.level).toBe(PHASE_ONE);
     expect(ball.getLastSpeedReduction()?.hitNumber).toBe(1);
-    expect(ball.getLastSpeedReduction()?.speedBefore).toBeCloseTo(config.maxSpeed, 5);
+    expect(ball.getLastSpeedReduction()?.speedBefore).toBeCloseTo(config.initialSpawnSpeed, 5);
     expect(ball.getLastSpeedReduction()?.speedAfter).toBeCloseTo(
-      config.maxSpeed - config.reductionPerBrick,
+      config.initialSpawnSpeed - config.reductionPerBrick,
       5
     );
     expect(ball.getLastSpeedReduction()?.reductionApplied).toBeCloseTo(
@@ -147,19 +160,17 @@ describe('Ball', () => {
 
   it('mantém magnitude clampada na faixa da fase ao bater na raquete', () => {
     const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
-    const config = buildPhaseSpeedConfig(PHASE_TWO);
+    const config = buildPhaseSpeedConfig(PHASE_ONE);
 
     ball.applyPhaseSpeedConfig(config);
-    ball.registerBrickHit();
-    ball.registerBrickHit();
 
-    const speedBeforePaddleHit = ball.getCurrentSpeedMagnitude();
+    expect(ball.getCurrentSpeedMagnitude()).toBeGreaterThan(config.maxSpeed);
     (ball as any).setPosition(150, 400);
     (ball as any).handlePaddleCollision({ x: 100, y: 430, width: 100, height: 12 });
 
     expect(ball.getCurrentSpeedMagnitude()).toBeGreaterThanOrEqual(config.minSpeed);
     expect(ball.getCurrentSpeedMagnitude()).toBeLessThanOrEqual(config.maxSpeed);
-    expect(ball.getCurrentSpeedMagnitude()).toBeCloseTo(speedBeforePaddleHit, 5);
+    expect(ball.getCurrentSpeedMagnitude()).toBe(config.maxSpeed);
   });
 
   it('mantém módulo válido ao inverter direção no teto', () => {
@@ -174,6 +185,5 @@ describe('Ball', () => {
 
     expect(ball.getCurrentSpeedMagnitude()).toBeCloseTo(speedBeforeBounce, 5);
     expect(ball.getCurrentSpeedMagnitude()).toBeGreaterThanOrEqual(config.minSpeed);
-    expect(ball.getCurrentSpeedMagnitude()).toBeLessThanOrEqual(config.maxSpeed);
   });
 });

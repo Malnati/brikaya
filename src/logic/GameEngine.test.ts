@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals
 
 import {
   LEVEL_CLEAR_PAUSE_MS,
+  calculateLevelInitialSpawnSpeed,
   calculateLevelMaxSpeed,
   calculateLevelMinSpeed,
   calculateLevelPreviousMaxSpeed,
@@ -25,9 +26,10 @@ function buildSpeedStateFromConfig(config: PhaseSpeedConfig): SpeedStateSnapshot
     level: config.level,
     initialBrickCount: config.initialBrickCount,
     successfulBrickHits: 0,
+    initialSpawnSpeed: config.initialSpawnSpeed,
     maxSpeed: config.maxSpeed,
     minSpeed: config.minSpeed,
-    currentSpeed: config.maxSpeed,
+    currentSpeed: config.initialSpawnSpeed,
     reductionPerBrick: config.reductionPerBrick,
     previousLevelMaxSpeed: config.previousLevelMaxSpeed,
     levelStartedAt: config.levelStartedAt,
@@ -54,6 +56,7 @@ jest.mock('../objects/Ball', () => ({
       level: 1,
       initialBrickCount: 1,
       successfulBrickHits: 0,
+      initialSpawnSpeed: 2,
       maxSpeed: 2,
       minSpeed: 1,
       currentSpeed: 2,
@@ -75,7 +78,7 @@ jest.mock('../objects/Ball', () => ({
       applyPhaseSpeedConfig: jest.fn((config: PhaseSpeedConfig) => {
         speedState = buildSpeedStateFromConfig(config);
         lastSpeedReduction = null;
-        velocity = { dx: config.maxSpeed, dy: -config.maxSpeed };
+        velocity = { dx: config.initialSpawnSpeed, dy: -config.initialSpawnSpeed };
       }),
       getSpeedStateSnapshot: jest.fn(() => speedState),
       getLastSpeedReduction: jest.fn(() => lastSpeedReduction),
@@ -192,7 +195,8 @@ describe('GameEngine', () => {
     expect(gameState.speedState).toMatchObject({
       level: 1,
       successfulBrickHits: 0,
-      currentSpeed: calculateLevelMaxSpeed(canvas.width, 1),
+      currentSpeed: calculateLevelInitialSpawnSpeed(canvas.width, 1),
+      initialSpawnSpeed: calculateLevelInitialSpawnSpeed(canvas.width, 1),
       maxSpeed: calculateLevelMaxSpeed(canvas.width, 1),
       minSpeed: calculateLevelMinSpeed(canvas.width, 1),
       previousLevelMaxSpeed: calculateLevelPreviousMaxSpeed(canvas.width, 1)
@@ -323,6 +327,7 @@ describe('GameEngine', () => {
     expect(mockGameLogger.logLevelStart).toHaveBeenCalled();
     expect(mockGameLogger.logLevelStart.mock.calls[0][0].speedState).toMatchObject({
       currentSpeed: expectedNextMaxSpeed,
+      initialSpawnSpeed: expectedNextMaxSpeed,
       maxSpeed: expectedNextMaxSpeed,
       minSpeed: expectedNextMinSpeed
     });

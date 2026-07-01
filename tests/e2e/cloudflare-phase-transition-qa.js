@@ -235,9 +235,12 @@ async function run() {
     assert(levelComplete?.metadata?.nextLevel === 2, 'level_complete não registrou próxima fase 2.');
     assert(levelComplete?.metadata?.nextSpeedMultiplier === 1.12, 'level_complete não registrou velocidade 1.12.');
     assert(levelCompleteSpeedState, 'level_complete não registrou metadata.speedState.');
+    assert(Math.abs(levelCompleteSpeedState.initialSpawnSpeed - (levelCompleteSpeedState.maxSpeed * 3)) <= SPEED_TOLERANCE, 'Fase 1 não registrou initialSpawnSpeed 3x no level_complete.');
+    assert(Math.abs(levelCompleteSpeedState.minSpeed - (levelCompleteSpeedState.maxSpeed / 2)) <= SPEED_TOLERANCE, 'minSpeed da Fase 1 foi afetado pelo override 3x.');
     assert(levelStart?.metadata?.level === 2, 'level_start não registrou fase 2.');
     assert(levelStartSpeedState, 'level_start não registrou metadata.speedState.');
     assert(Math.abs(levelStartSpeedState.currentSpeed - levelStartSpeedState.maxSpeed) <= SPEED_TOLERANCE, 'Fase 2 não iniciou em currentSpeed === maxSpeed.');
+    assert(Math.abs(levelStartSpeedState.initialSpawnSpeed - levelStartSpeedState.maxSpeed) <= SPEED_TOLERANCE, 'Fase 2 herdou indevidamente o override 3x.');
     assert(Math.abs(levelStartSpeedState.minSpeed - (levelCompleteSpeedState.maxSpeed / 2)) <= SPEED_TOLERANCE, 'minSpeed da Fase 2 não deriva da maxSpeed da Fase 1 / 2.');
     assert(levelComplete?.metadata?.nextReductionPerBrick > 0, 'nextReductionPerBrick ausente em level_complete.');
     assert(pauseDeltaMs >= MIN_LEVEL_PAUSE_MS, `Pausa curta demais: ${pauseDeltaMs}ms.`);

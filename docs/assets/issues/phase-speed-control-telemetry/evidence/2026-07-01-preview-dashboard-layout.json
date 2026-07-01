@@ -1,0 +1,610 @@
+{
+  "url": "https://953ffd78.malnati-brickbreaker.pages.dev",
+  "screenshotPath": "tmp/screenshots/cloudflare-dashboard-layout.png",
+  "desktopScreenshotPath": "tmp/screenshots/cloudflare-dashboard-layout-desktop.png",
+  "results": [
+    {
+      "viewport": {
+        "name": "iphone-se",
+        "width": 375,
+        "height": 667,
+        "scrollWidth": 375,
+        "scrollHeight": 667
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 10",
+        "Total 0"
+      ],
+      "canvas": {
+        "x": 19,
+        "y": 109.84375,
+        "width": 337,
+        "height": 244,
+        "right": 356,
+        "bottom": 353.84375
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 349,
+        "height": 88.84375,
+        "right": 362,
+        "bottom": 101.84375
+      },
+      "scoreStrip": {
+        "x": 13,
+        "y": 60.84375,
+        "width": 277,
+        "height": 38,
+        "right": 290,
+        "bottom": 98.84375
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "width": 68,
+          "height": 44,
+          "x": 294,
+          "y": 57.84375,
+          "right": 362,
+          "bottom": 101.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "↻Reiniciar",
+          "width": 240,
+          "height": 44,
+          "x": 67.5,
+          "y": 361.84375,
+          "right": 307.5,
+          "bottom": 405.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 13,
+        "y": 429.84375,
+        "width": 349,
+        "height": 56,
+        "right": 362,
+        "bottom": 485.84375
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 76,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-12-14",
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "scrollHeight": 844
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 10",
+        "Total 0"
+      ],
+      "canvas": {
+        "x": 19,
+        "y": 109.84375,
+        "width": 352,
+        "height": 244,
+        "right": 371,
+        "bottom": 353.84375
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 364,
+        "height": 88.84375,
+        "right": 377,
+        "bottom": 101.84375
+      },
+      "scoreStrip": {
+        "x": 13,
+        "y": 60.84375,
+        "width": 292,
+        "height": 38,
+        "right": 305,
+        "bottom": 98.84375
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "width": 68,
+          "height": 44,
+          "x": 309,
+          "y": 57.84375,
+          "right": 377,
+          "bottom": 101.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "↻Reiniciar",
+          "width": 240,
+          "height": 44,
+          "x": 75,
+          "y": 361.84375,
+          "right": 315,
+          "bottom": 405.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 13,
+        "y": 429.84375,
+        "width": 364,
+        "height": 56,
+        "right": 377,
+        "bottom": 485.84375
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 76,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-15",
+        "width": 393,
+        "height": 852,
+        "scrollWidth": 393,
+        "scrollHeight": 852
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 10",
+        "Total 0"
+      ],
+      "canvas": {
+        "x": 19,
+        "y": 109.84375,
+        "width": 355,
+        "height": 244,
+        "right": 374,
+        "bottom": 353.84375
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 367,
+        "height": 88.84375,
+        "right": 380,
+        "bottom": 101.84375
+      },
+      "scoreStrip": {
+        "x": 13,
+        "y": 60.84375,
+        "width": 295,
+        "height": 38,
+        "right": 308,
+        "bottom": 98.84375
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "width": 68,
+          "height": 44,
+          "x": 312,
+          "y": 57.84375,
+          "right": 380,
+          "bottom": 101.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "↻Reiniciar",
+          "width": 240,
+          "height": 44,
+          "x": 76.5,
+          "y": 361.84375,
+          "right": 316.5,
+          "bottom": 405.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 13,
+        "y": 429.84375,
+        "width": 367,
+        "height": 56,
+        "right": 380,
+        "bottom": 485.84375
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 76,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-pro-max",
+        "width": 430,
+        "height": 932,
+        "scrollWidth": 430,
+        "scrollHeight": 932
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 10",
+        "Total 10"
+      ],
+      "canvas": {
+        "x": 19,
+        "y": 109.84375,
+        "width": 392,
+        "height": 262,
+        "right": 411,
+        "bottom": 371.84375
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 404,
+        "height": 88.84375,
+        "right": 417,
+        "bottom": 101.84375
+      },
+      "scoreStrip": {
+        "x": 13,
+        "y": 60.84375,
+        "width": 332,
+        "height": 38,
+        "right": 345,
+        "bottom": 98.84375
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "width": 68,
+          "height": 44,
+          "x": 349,
+          "y": 57.84375,
+          "right": 417,
+          "bottom": 101.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "↻Reiniciar",
+          "width": 240,
+          "height": 44,
+          "x": 95,
+          "y": 379.84375,
+          "right": 335,
+          "bottom": 423.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 13,
+        "y": 447.84375,
+        "width": 404,
+        "height": 56,
+        "right": 417,
+        "bottom": 503.84375
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 76,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-15-landscape",
+        "width": 852,
+        "height": 393,
+        "scrollWidth": 852,
+        "scrollHeight": 393
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 10",
+        "Total 10"
+      ],
+      "canvas": {
+        "x": 300.5,
+        "y": 65,
+        "width": 251,
+        "height": 169,
+        "right": 551.5,
+        "bottom": 234
+      },
+      "header": {
+        "x": 15,
+        "y": 13,
+        "width": 822,
+        "height": 44,
+        "right": 837,
+        "bottom": 57
+      },
+      "scoreStrip": {
+        "x": 558.90625,
+        "y": 19,
+        "width": 206.09375,
+        "height": 32,
+        "right": 765,
+        "bottom": 51
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "width": 68,
+          "height": 44,
+          "x": 769,
+          "y": 13,
+          "right": 837,
+          "bottom": 57,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "↻Reiniciar",
+          "width": 240,
+          "height": 44,
+          "x": 306,
+          "y": 250,
+          "right": 546,
+          "bottom": 294,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": false,
+      "sideAdDistance": null,
+      "bottomAdDistance": null,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "tablet",
+        "width": 768,
+        "height": 1024,
+        "scrollWidth": 768,
+        "scrollHeight": 1024
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 10",
+        "Total 10"
+      ],
+      "canvas": {
+        "x": 59.5,
+        "y": 157.203125,
+        "width": 649,
+        "height": 434,
+        "right": 708.5,
+        "bottom": 591.203125
+      },
+      "header": {
+        "x": 19,
+        "y": 19,
+        "width": 730,
+        "height": 130.203125,
+        "right": 749,
+        "bottom": 149.203125
+      },
+      "scoreStrip": {
+        "x": 19,
+        "y": 63.203125,
+        "width": 730,
+        "height": 38,
+        "right": 749,
+        "bottom": 101.203125
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "width": 68,
+          "height": 44,
+          "x": 19,
+          "y": 105.203125,
+          "right": 87,
+          "bottom": 149.203125,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "↻Reiniciar",
+          "width": 240,
+          "height": 44,
+          "x": 264,
+          "y": 607.203125,
+          "right": 504,
+          "bottom": 651.203125,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 124,
+        "y": 683.203125,
+        "width": 520,
+        "height": 56,
+        "right": 644,
+        "bottom": 739.203125
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 92,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "desktop",
+        "width": 1280,
+        "height": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 720
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 10",
+        "Total 10"
+      ],
+      "canvas": {
+        "x": 226.5,
+        "y": 86.15625,
+        "width": 457,
+        "height": 306,
+        "right": 683.5,
+        "bottom": 392.15625
+      },
+      "header": {
+        "x": 33,
+        "y": 33,
+        "width": 1214,
+        "height": 45.15625,
+        "right": 1247,
+        "bottom": 78.15625
+      },
+      "scoreStrip": {
+        "x": 953.25,
+        "y": 37,
+        "width": 221.75,
+        "height": 36,
+        "right": 1175,
+        "bottom": 73
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "width": 68,
+          "height": 44,
+          "x": 1179,
+          "y": 33,
+          "right": 1247,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "↻Reiniciar",
+          "width": 240,
+          "height": 44,
+          "x": 335,
+          "y": 408.15625,
+          "right": 575,
+          "bottom": 452.15625,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        }
+      ],
+      "sideSlot": {
+        "x": 1027,
+        "y": 86.15625,
+        "width": 220,
+        "height": 454,
+        "right": 1247,
+        "bottom": 540.15625
+      },
+      "bottomSlot": {
+        "x": 195,
+        "y": 476.15625,
+        "width": 520,
+        "height": 64,
+        "right": 715,
+        "bottom": 540.15625
+      },
+      "sideSlotVisible": true,
+      "bottomSlotVisible": true,
+      "sideAdDistance": 343.5,
+      "bottomAdDistance": 84,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    }
+  ],
+  "consoleProblems": []
+}

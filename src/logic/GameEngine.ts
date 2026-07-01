@@ -10,6 +10,7 @@ import {
   SpeedReductionSnapshot,
   SpeedStateSnapshot,
   calculateDynamicDimensions,
+  calculateLevelInitialSpawnSpeed,
   calculateLevelMaxSpeed,
   calculateLevelMinSpeed,
   calculateLevelPreviousMaxSpeed,
@@ -334,6 +335,7 @@ export class GameEngine {
     return {
       level,
       initialBrickCount,
+      initialSpawnSpeed: calculateLevelInitialSpawnSpeed(this.canvasSize.width, level),
       maxSpeed,
       minSpeed: calculateLevelMinSpeed(this.canvasSize.width, level),
       reductionPerBrick: calculateSpeedReductionPerBrick(maxSpeed, initialBrickCount),
@@ -372,12 +374,13 @@ export class GameEngine {
       Math.max(1, this.initialBrickCount || this.dimensions.brickCols * this.dimensions.brickRows),
       this.levelStartedAt
     );
-    const currentSpeed = this.latestSpeedReduction?.speedAfter ?? fallbackConfig.maxSpeed;
+    const currentSpeed = this.latestSpeedReduction?.speedAfter ?? fallbackConfig.initialSpawnSpeed;
 
     return {
       level: fallbackConfig.level,
       initialBrickCount: fallbackConfig.initialBrickCount,
       successfulBrickHits: this.latestSpeedReduction?.hitNumber ?? 0,
+      initialSpawnSpeed: fallbackConfig.initialSpawnSpeed,
       maxSpeed: fallbackConfig.maxSpeed,
       minSpeed: fallbackConfig.minSpeed,
       currentSpeed,

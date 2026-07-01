@@ -3,8 +3,10 @@ import { describe, expect, it } from '@jest/globals';
 
 import {
   FIRST_LEVEL_MIN_SPEED_DIVISOR,
+  FIRST_LEVEL_INITIAL_SPAWN_SPEED_MULTIPLIER,
   calculateClampedSpeed,
   calculateInitialBallSpeed,
+  calculateLevelInitialSpawnSpeed,
   calculateLevelMaxSpeed,
   calculateLevelMinSpeed,
   calculateLevelPreviousMaxSpeed,
@@ -22,6 +24,17 @@ describe('game speed helpers', () => {
     const expected = calculateInitialBallSpeed(CANVAS_WIDTH) * calculateLevelSpeedMultiplier(PHASE_ONE);
 
     expect(calculateLevelMaxSpeed(CANVAS_WIDTH, PHASE_ONE)).toBeCloseTo(expected, 5);
+  });
+
+  it('aplica override 3x somente no spawn inicial da fase 1', () => {
+    expect(calculateLevelInitialSpawnSpeed(CANVAS_WIDTH, PHASE_ONE)).toBeCloseTo(
+      calculateLevelMaxSpeed(CANVAS_WIDTH, PHASE_ONE) * FIRST_LEVEL_INITIAL_SPAWN_SPEED_MULTIPLIER,
+      5
+    );
+    expect(calculateLevelInitialSpawnSpeed(CANVAS_WIDTH, PHASE_TWO)).toBeCloseTo(
+      calculateLevelMaxSpeed(CANVAS_WIDTH, PHASE_TWO),
+      5
+    );
   });
 
   it('calcula velocidade máxima anterior da fase 2 a partir da fase 1', () => {

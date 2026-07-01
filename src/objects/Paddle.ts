@@ -3,6 +3,7 @@ import {
   PADDLE_SPEED,
   GAME_COLOR,
   DynamicGameDimensions,
+  calculateLevelInitialSpawnSpeed,
   calculateLevelMaxSpeed,
   calculateLevelMinSpeed,
   calculateLevelPreviousMaxSpeed,
@@ -97,6 +98,7 @@ export class Paddle {
   private logPaddleMove(direction: 'left' | 'right' | 'touch') {
     const level = 1;
     const initialBrickCount = 1;
+    const initialSpawnSpeed = calculateLevelInitialSpawnSpeed(this.canvasWidth, level);
     const maxSpeed = calculateLevelMaxSpeed(this.canvasWidth, level);
     const minSpeed = calculateLevelMinSpeed(this.canvasWidth, level);
 
@@ -122,9 +124,10 @@ export class Paddle {
         level,
         initialBrickCount,
         successfulBrickHits: 0,
+        initialSpawnSpeed,
         maxSpeed,
         minSpeed,
-        currentSpeed: maxSpeed,
+        currentSpeed: initialSpawnSpeed,
         reductionPerBrick: calculateSpeedReductionPerBrick(maxSpeed, initialBrickCount),
         previousLevelMaxSpeed: calculateLevelPreviousMaxSpeed(this.canvasWidth, level),
         levelStartedAt: Date.now(),

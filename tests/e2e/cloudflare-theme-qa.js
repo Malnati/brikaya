@@ -11,6 +11,7 @@ const DEFAULT_DESKTOP_LIGHT_SCREENSHOT = 'tmp/screenshots/cloudflare-theme-deskt
 const DEFAULT_DESKTOP_DARK_SCREENSHOT = 'tmp/screenshots/cloudflare-theme-desktop-dark.png';
 const CHROME_EXECUTABLE_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const MIN_TOUCH_TARGET_SIZE = 44;
+const BROWSER_CLOSE_TIMEOUT_MS = 5000;
 const LIGHT_THEME = 'light';
 const DARK_THEME = 'dark';
 const THEME_STORAGE_KEY = 'brickbreaker-theme';
@@ -50,6 +51,21 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+async function closeBrowser(browser) {
+  const browserProcess = browser.process();
+  let closed = false;
+  await Promise.race([
+    browser.close().then(() => {
+      closed = true;
+    }),
+    new Promise(resolve => setTimeout(resolve, BROWSER_CLOSE_TIMEOUT_MS))
+  ]);
+
+  if (!closed && browserProcess) {
+    browserProcess.kill('SIGKILL');
+  }
+}
+
 async function clickButtonByText(page, label) {
   const buttons = await page.$$('button');
   for (const button of buttons) {
@@ -60,6 +76,11 @@ async function clickButtonByText(page, label) {
     }
   }
   throw new Error(`Botão não encontrado: ${label}`);
+}
+
+async function openMenu(page) {
+  await clickButtonByText(page, 'Menu');
+  await page.waitForSelector('.settings-drawer', { timeout: 10000 });
 }
 
 async function collectState(page) {
@@ -97,6 +118,7 @@ async function collectState(page) {
       storedTheme: window.localStorage.getItem('brickbreaker-theme'),
       heading: document.querySelector('h1')?.textContent || '',
       themeToggle: Boolean(document.querySelector('[aria-label="Tema da interface"]')),
+      menuOpen: Boolean(document.querySelector('.settings-drawer')),
       buttons,
       bodyText,
       forbiddenResources,
@@ -114,19 +136,31 @@ async function collectState(page) {
   });
 }
 
-function assertBaseState(state, viewportName) {
+function assertBaseState(state, viewportName, expectMenuOpen = false) {
   assert(state.heading.includes('Breakout'), `${viewportName}: heading Breakout ausente.`);
-  assert(state.themeToggle, `${viewportName}: seletor de tema ausente.`);
-  assert(state.buttons.some(button => button.text === 'Claro'), `${viewportName}: botão Claro ausente.`);
-  assert(state.buttons.some(button => button.text === 'Escuro'), `${viewportName}: botão Escuro ausente.`);
+  assert(state.buttons.some(button => button.text === 'Menu'), `${viewportName}: botão Menu ausente.`);
+  if (expectMenuOpen) {
+    assert(state.menuOpen, `${viewportName}: menu lateral fechado.`);
+    assert(state.themeToggle, `${viewportName}: seletor de tema ausente.`);
+    assert(state.buttons.some(button => button.text === 'Claro'), `${viewportName}: botão Claro ausente.`);
+    assert(state.buttons.some(button => button.text === 'Escuro'), `${viewportName}: botão Escuro ausente.`);
+    assert(state.buttons.some(button => /logs/i.test(button.text)), `${viewportName}: logs inacessível no menu.`);
+    assert(state.buttons.some(button => /colisões/i.test(button.text)), `${viewportName}: colisões inacessível no menu.`);
+    assert(state.buttons.some(button => /zerar pontuação/i.test(button.text)), `${viewportName}: zerar pontuação inacessível no menu.`);
+  } else {
+    assert(!state.themeToggle, `${viewportName}: seletor de tema apareceu fora do menu.`);
+    assert(!state.buttons.some(button => button.text === 'Claro'), `${viewportName}: botão Claro apareceu fora do menu.`);
+    assert(!state.buttons.some(button => button.text === 'Escuro'), `${viewportName}: botão Escuro apareceu fora do menu.`);
+    assert(!state.buttons.some(button => /logs/i.test(button.text)), `${viewportName}: logs apareceu fora do menu.`);
+    assert(!state.buttons.some(button => /colisões/i.test(button.text)), `${viewportName}: colisões apareceu fora do menu.`);
+    assert(!state.buttons.some(button => /zerar pontuação/i.test(button.text)), `${viewportName}: zerar pontuação apareceu fora do menu.`);
+  }
   assert(state.buttons.every(button => button.hasTouchTarget), `${viewportName}: botão menor que 44px: ${state.buttons.filter(button => !button.hasTouchTarget).map(button => button.text).join(', ')}.`);
   assert(state.buttons.every(button => button.visibleInViewport), `${viewportName}: botão cortado: ${state.buttons.filter(button => !button.visibleInViewport).map(button => button.text).join(', ')}.`);
   assert(!state.hasHorizontalOverflow, `${viewportName}: overflow horizontal.`);
   assert(state.canvas, `${viewportName}: canvas ausente.`);
   assert(state.canvas.right <= state.viewport.width, `${viewportName}: canvas excede largura.`);
   assert(state.canvas.bottom <= state.viewport.height, `${viewportName}: canvas excede altura.`);
-  assert(state.buttons.some(button => /logs/i.test(button.text)), `${viewportName}: logs inacessível.`);
-  assert(state.buttons.some(button => /colisões/i.test(button.text)), `${viewportName}: colisões inacessível.`);
   for (const forbiddenFeature of FORBIDDEN_VISIBLE_FEATURES) {
     assert(!forbiddenFeature.test(state.bodyText), `${viewportName}: funcionalidade fora de escopo visível: ${forbiddenFeature}.`);
   }
@@ -145,10 +179,11 @@ async function validateViewport(page, targetUrl, viewportName, viewport, screens
   assertBaseState(initialState, `${viewportName}/inicial`);
   assert(initialState.theme === DARK_THEME, `${viewportName}: tema inicial deveria seguir sistema escuro.`);
 
+  await openMenu(page);
   await clickButtonByText(page, 'Claro');
   await page.waitForFunction(theme => document.documentElement.dataset.theme === theme, {}, LIGHT_THEME);
   const lightState = await collectState(page);
-  assertBaseState(lightState, `${viewportName}/claro`);
+  assertBaseState(lightState, `${viewportName}/claro`, true);
   assert(lightState.theme === LIGHT_THEME, `${viewportName}: tema claro não aplicado.`);
   assert(lightState.storedTheme === LIGHT_THEME, `${viewportName}: tema claro não persistido.`);
   await page.screenshot({ path: screenshots.light, fullPage: true });
@@ -156,12 +191,14 @@ async function validateViewport(page, targetUrl, viewportName, viewport, screens
   await page.reload({ waitUntil: 'networkidle0', timeout: 60000 });
   await page.waitForSelector('canvas', { timeout: 30000 });
   const reloadedLightState = await collectState(page);
+  assertBaseState(reloadedLightState, `${viewportName}/claro-reload`);
   assert(reloadedLightState.theme === LIGHT_THEME, `${viewportName}: tema claro não persistiu após reload.`);
 
+  await openMenu(page);
   await clickButtonByText(page, 'Escuro');
   await page.waitForFunction(theme => document.documentElement.dataset.theme === theme, {}, DARK_THEME);
   const darkState = await collectState(page);
-  assertBaseState(darkState, `${viewportName}/escuro`);
+  assertBaseState(darkState, `${viewportName}/escuro`, true);
   assert(darkState.theme === DARK_THEME, `${viewportName}: tema escuro não aplicado.`);
   assert(darkState.storedTheme === DARK_THEME, `${viewportName}: tema escuro não persistido.`);
   await page.screenshot({ path: screenshots.dark, fullPage: true });
@@ -230,7 +267,7 @@ async function run() {
     writeFileSync(reportPath, JSON.stringify(report, null, 2));
     console.log(JSON.stringify(report, null, 2));
   } finally {
-    await browser.close();
+    await closeBrowser(browser);
   }
 }
 

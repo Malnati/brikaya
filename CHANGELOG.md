@@ -6,6 +6,7 @@
 ## [1.13.0] - 2026-06-30
 ### Adicionado
 - Controle de velocidade por fase com `maxSpeed`, `minSpeed`, `reductionPerBrick` e telemetria persistida em `speedState`.
+- Override local de spawn inicial da Fase 1 com `initialSpawnSpeed` 3x, sem alterar `maxSpeed`, `minSpeed` ou `reductionPerBrick`.
 - Logs, estatísticas e QA publicado para velocidade atual, tempo da fase, reduções por bloco e limite mínimo atingido.
 - Tag/release de rollback `stable/pre-speed-control-2026-06-30` antes da feature.
 
@@ -13,6 +14,7 @@
 - A bola agora inicia cada fase na velocidade máxima da fase e reduz por constante fixa a cada bloco destruído.
 - A colisão com a raquete preserva o ângulo e apenas clampa a magnitude na faixa permitida da fase.
 - Payloads de transição de fase, `gameLogger`, `collisionTracker`, painéis de logs/colisões e testes passaram a carregar tempos e velocidades.
+- O HUD persistente foi compactado e tema, logs, colisões e zerar pontuação foram movidos para menu lateral fechado por padrão.
 
 ## [1.12.0] - 2026-06-30
 ### Adicionado
