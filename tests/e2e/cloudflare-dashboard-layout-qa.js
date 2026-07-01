@@ -211,6 +211,7 @@ async function run() {
       assert(state.buttons.some(button => MENU_BUTTON_NAME.test(button.text)), `${viewport.name}: menu inacessível.`);
       assert(!state.buttons.some(button => LOGS_BUTTON_NAME.test(button.text)), `${viewport.name}: logs apareceu fora do menu.`);
       assert(!state.buttons.some(button => COLLISIONS_BUTTON_NAME.test(button.text)), `${viewport.name}: colisões apareceu fora do menu.`);
+      assert(!state.buttons.some(button => /reiniciar|jogar de novo/i.test(button.text)), `${viewport.name}: reiniciar apareceu fora do menu.`);
       assert(!state.buttons.some(button => /zerar pontuação/i.test(button.text)), `${viewport.name}: zerar pontuação apareceu fora do menu.`);
       if (state.sideSlotVisible) {
         assert(state.sideAdDistance >= MIN_SIDE_AD_DISTANCE_PX, `${viewport.name}: slot lateral perto demais do tabuleiro.`);

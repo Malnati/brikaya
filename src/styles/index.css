@@ -314,16 +314,6 @@ canvas {
   opacity: 0;
 }
 
-.dashboard-actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  width: 100%;
-  max-width: 100%;
-  gap: var(--space-2);
-  box-sizing: border-box;
-}
 
 .dashboard-button {
   display: inline-flex;
@@ -345,11 +335,6 @@ canvas {
   transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
 }
 
-.dashboard-actions--primary .dashboard-button {
-  flex: 0 1 240px;
-  min-height: 44px;
-  padding: 9px 14px;
-}
 
 .dashboard-button--primary {
   color: var(--bb-color-on-primary);
@@ -656,8 +641,7 @@ canvas {
     min-width: 0;
   }
 
-  .play-column,
-  .dashboard-actions {
+  .play-column {
     gap: var(--space-2);
   }
 
@@ -727,9 +711,6 @@ canvas {
     font-size: 0.72rem;
   }
 
-  .dashboard-actions {
-    gap: 4px;
-  }
 
   .dashboard-button {
     min-height: 44px;

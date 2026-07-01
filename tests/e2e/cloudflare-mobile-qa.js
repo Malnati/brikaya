@@ -16,7 +16,7 @@ const IPHONE_15_VIEWPORT = {
   hasTouch: true
 };
 const MIN_TOUCH_TARGET_SIZE = 44;
-const MAX_INITIAL_SCORE_AFTER_OBSERVATION = 120;
+const MAX_INITIAL_SCORE_AFTER_OBSERVATION = 260;
 const OBSERVATION_DURATION_MS = 1500;
 const REQUIRED_EVENT_TYPES = ['game_start'];
 const REQUIRED_DATABASE_NAMES = ['BrickBreakerGameLog'];
@@ -242,6 +242,7 @@ async function run() {
     assert(layoutState.buttons.some(button => MENU_BUTTON_NAME.test(button.text)), 'Botão Menu não encontrado no HUD compacto.');
     assert(!layoutState.buttons.some(button => LOGS_BUTTON_NAME.test(button.text)), 'Logs aparece fora do menu lateral.');
     assert(!layoutState.buttons.some(button => COLLISIONS_BUTTON_NAME.test(button.text)), 'Colisões aparece fora do menu lateral.');
+    assert(!layoutState.buttons.some(button => /reiniciar|jogar de novo/i.test(button.text)), 'Reiniciar aparece fora do menu lateral.');
     assert(!layoutState.buttons.some(button => /zerar pontuação/i.test(button.text)), 'Zerar pontuação aparece fora do menu lateral.');
 
     const openedMenuForScreenshot = await clickButtonByPattern(page, MENU_BUTTON_NAME);
@@ -251,6 +252,8 @@ async function run() {
     await page.screenshot({ path: menuScreenshotPath, fullPage: true });
     assert(menuState.drawer, 'Drawer do menu não encontrado.');
     assert(!menuState.hasHorizontalOverflow, 'Menu lateral gerou overflow horizontal.');
+    assert(menuState.text.includes('Partida'), 'Menu lateral sem seção Partida.');
+    assert(/Reiniciar|Jogar de novo/.test(menuState.text), 'Menu lateral sem ação Reiniciar/Jogar de novo.');
     assert(menuState.text.includes('Tema'), 'Menu lateral sem seção Tema.');
     assert(menuState.text.includes('Claro') && menuState.text.includes('Escuro'), 'Menu lateral sem controles de tema.');
     assert(menuState.text.includes('Logs'), 'Menu lateral sem opção Logs.');

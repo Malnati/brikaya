@@ -22,8 +22,8 @@ export const LEVEL_TOAST_VISIBLE_MS = 1200;
 export const LEVEL_TOAST_EXIT_MS = 350;
 export const LEVEL_SPEED_STEP = 0.12;
 export const MAX_LEVEL_SPEED_MULTIPLIER = 2.2;
-export const FIRST_LEVEL_MIN_SPEED_DIVISOR = 2;
-export const FIRST_LEVEL_INITIAL_SPAWN_SPEED_MULTIPLIER = 3;
+export const FIRST_LEVEL_MIN_SPEED_DIVISOR = 4;
+export const FIRST_LEVEL_BASE_SPEED_MULTIPLIER = 6;
 export const SPEED_PRECISION_FACTOR = 1000;
 
 export const PADDLE_WIDTH = 75;
@@ -109,14 +109,14 @@ export function roundSpeedValue(speed: number): number {
 }
 
 export function calculateLevelMaxSpeed(canvasWidth: number, level: number): number {
-  return roundSpeedValue(calculateInitialBallSpeed(canvasWidth) * calculateLevelSpeedMultiplier(level));
+  return roundSpeedValue(
+    calculateInitialBallSpeed(canvasWidth)
+      * FIRST_LEVEL_BASE_SPEED_MULTIPLIER
+      * calculateLevelSpeedMultiplier(level)
+  );
 }
 
 export function calculateLevelInitialSpawnSpeed(canvasWidth: number, level: number): number {
-  if (level <= 1) {
-    return roundSpeedValue(calculateLevelMaxSpeed(canvasWidth, level) * FIRST_LEVEL_INITIAL_SPAWN_SPEED_MULTIPLIER);
-  }
-
   return calculateLevelMaxSpeed(canvasWidth, level);
 }
 
