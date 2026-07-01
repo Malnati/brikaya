@@ -3,6 +3,17 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+
+## [1.14.0] - 2026-07-01
+### Adicionado
+- Atualização automática do PWA ao abrir, focar ou voltar para o jogo quando uma nova versão estiver disponível.
+- `BUILD_ID` carimbado no `dist/sw.js` a cada build, com `CACHE_NAME` derivado da versão publicada.
+- QA publicado `make cloudflare-runtime-update-qa` para validar troca de Service Worker na mesma URL sem refresh manual.
+
+### Alterado
+- Registro do Service Worker agora verifica atualizações em `load`, `pageshow`, `focus` e `visibilitychange`, aplica `skipWaiting` internamente e recarrega uma única vez por troca de controlador.
+- Ativação do Service Worker remove caches antigos do BrickBreaker e recarrega clientes do mesmo origin apenas quando havia cache anterior.
+
 ## [1.13.0] - 2026-06-30
 ### Adicionado
 - Controle de velocidade por fase com `maxSpeed`, `minSpeed`, `reductionPerBrick` e telemetria persistida em `speedState`.

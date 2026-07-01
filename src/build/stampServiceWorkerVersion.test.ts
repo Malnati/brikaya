@@ -1,0 +1,51 @@
+// src/build/stampServiceWorkerVersion.test.ts
+import { execFileSync } from 'node:child_process';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+
+const SCRIPT_PATH = 'scripts/stamp-service-worker-version.mjs';
+const TEMP_SW_FILE = 'tmp/tests/stamp-service-worker-version/sw.js';
+const PLACEHOLDER = '__BRICKBREAKER_BUILD_ID__';
+const BUILD_ID = 'qa-build-123';
+const UNSAFE_BUILD_ID = 'qa/build 123';
+
+function writeTempServiceWorker() {
+  const swFilePath = resolve(TEMP_SW_FILE);
+  mkdirSync(dirname(swFilePath), { recursive: true });
+  writeFileSync(swFilePath, [
+    '// dist/sw.js',
+    `const BUILD_ID = '${PLACEHOLDER}';`,
+    'const CACHE_PREFIX = \'breakout-cache\';',
+    'const CACHE_NAME = `${CACHE_PREFIX}-${BUILD_ID}`;',
+  ].join('\n'));
+  return swFilePath;
+}
+
+describe('stamp-service-worker-version', () => {
+  beforeEach(() => {
+    rmSync(resolve('tmp/tests/stamp-service-worker-version'), { recursive: true, force: true });
+  });
+
+  afterEach(() => {
+    rmSync(resolve('tmp/tests/stamp-service-worker-version'), { recursive: true, force: true });
+  });
+
+  it('carimba o BUILD_ID e mantém CACHE_NAME derivado da versão', () => {
+    const swFilePath = writeTempServiceWorker();
+    const output = execFileSync(process.execPath, [SCRIPT_PATH], {
+      cwd: process.cwd(),
+      env: {
+        ...process.env,
+        BRICKBREAKER_SW_FILE: swFilePath,
+        BRICKBREAKER_BUILD_ID: UNSAFE_BUILD_ID,
+      },
+      encoding: 'utf8',
+    });
+    const stampedSource = readFileSync(swFilePath, 'utf8');
+
+    expect(output).toContain(BUILD_ID);
+    expect(stampedSource).toContain(`const BUILD_ID = '${BUILD_ID}';`);
+    expect(stampedSource).toContain('const CACHE_NAME = `${CACHE_PREFIX}-${BUILD_ID}`;');
+    expect(stampedSource).not.toContain(PLACEHOLDER);
+  });
+});

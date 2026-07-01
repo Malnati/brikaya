@@ -1,0 +1,92 @@
+{
+  "mode": "verify",
+  "url": "https://feature-runtime-update-reloa.malnati-brickbreaker.pages.dev/",
+  "profileDir": "tmp/browser-profiles/cloudflare-runtime-update-preview-final",
+  "latest": {
+    "buildId": "preview-d6caa2d-20260701120430",
+    "hasPlaceholder": false
+  },
+  "activeBeforeWait": {
+    "buildId": "preview-d6caa2d-20260701120430",
+    "cacheName": "breakout-cache-preview-d6caa2d-20260701120430"
+  },
+  "activeAfterWait": {
+    "buildId": "preview-d6caa2d-20260701120430",
+    "cacheName": "breakout-cache-preview-d6caa2d-20260701120430"
+  },
+  "seedState": {
+    "title": "Breakout",
+    "hasCanvas": true,
+    "canvas": {
+      "x": 19,
+      "y": 109.84375,
+      "width": 355,
+      "height": 244,
+      "right": 374,
+      "bottom": 353.84375
+    },
+    "hasController": true,
+    "cacheNames": [],
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393
+    }
+  },
+  "verifyState": {
+    "title": "Breakout",
+    "hasCanvas": true,
+    "canvas": {
+      "x": 19,
+      "y": 109.84375,
+      "width": 355,
+      "height": 244,
+      "right": 374,
+      "bottom": 353.84375
+    },
+    "hasController": true,
+    "cacheNames": [],
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393
+    }
+  },
+  "cacheNamesBeforeWait": [
+    "breakout-cache-preview-d6caa2d-20260701120430"
+  ],
+  "cacheNamesAfterWait": [
+    "breakout-cache-preview-d6caa2d-20260701120430"
+  ],
+  "navigationEvents": [
+    "about:blank",
+    "https://feature-runtime-update-reloa.malnati-brickbreaker.pages.dev/"
+  ],
+  "consoleProblems": [
+    {
+      "type": "warning",
+      "text": "⚠️ IndexedDB não inicializado"
+    },
+    {
+      "type": "warning",
+      "text": "⚠️ IndexedDB não inicializado"
+    },
+    {
+      "type": "warning",
+      "text": "⚠️ IndexedDB não inicializado"
+    },
+    {
+      "type": "warning",
+      "text": "Error while trying to use the following icon from the Manifest: https://feature-runtime-update-reloa.malnati-brickbreaker.pages.dev/icons/icon-192.png (Download error or resource isn't a valid image)"
+    },
+    {
+      "type": "warning",
+      "text": "Falha ao armazenar log no IndexedDB: JSHandle@error"
+    },
+    {
+      "type": "warning",
+      "text": "Falha ao armazenar log no IndexedDB: JSHandle@error"
+    }
+  ],
+  "screenshotPath": "tmp/screenshots/cloudflare-runtime-update-preview-final.png"
+}
