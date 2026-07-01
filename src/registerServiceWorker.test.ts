@@ -255,6 +255,11 @@ describe("registerServiceWorker", () => {
     });
     await flushPromises();
 
+    expect(newWorker.postMessage).toHaveBeenCalledWith({
+      type: SKIP_WAITING_MESSAGE_TYPE,
+    });
+
+    newWorker.postMessage.mockClear();
     newWorker.setState(INSTALLED_STATE);
     emit(
       newWorker.workerListeners,
