@@ -3,11 +3,24 @@ import { useEffect, useRef } from 'react';
 import { ColorValidator } from '../utils/colorValidator';
 import { LOG, ERROR, WARN } from '../utils/logger';
 
+const COLOR_DEBUG_QUERY_PARAM = 'debugColors';
+const COLOR_DEBUG_QUERY_ENABLED_VALUE = '1';
+const LOCAL_DEBUG_HOSTNAMES = new Set(['localhost', '127.0.0.1']);
+
+function isColorDebugEnabled(): boolean {
+  const searchParams = new URLSearchParams(window.location.search);
+  return (
+    searchParams.get(COLOR_DEBUG_QUERY_PARAM) === COLOR_DEBUG_QUERY_ENABLED_VALUE ||
+    LOCAL_DEBUG_HOSTNAMES.has(window.location.hostname)
+  );
+}
+
 export function useColorDebug(canvasRef: React.RefObject<HTMLCanvasElement>) {
   const debugIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (!canvasRef.current) return;
+    if (!isColorDebugEnabled()) return;
 
     // Função para verificar cores periodicamente
     const checkColors = async () => {
@@ -56,4 +69,4 @@ export function useColorDebug(canvasRef: React.RefObject<HTMLCanvasElement>) {
   };
 
   return { manualCheck };
-} 
+}

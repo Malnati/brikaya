@@ -3,6 +3,17 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.14.2] - 2026-07-01
+### Corrigido
+- Ícones locais do manifesto PWA substituídos por PNGs válidos para remover warning de imagem inválida no Chrome.
+- Painéis de logs e colisões deixam de consultar IndexedDB quando fechados.
+- `DebugLogger` serializa argumentos não clonáveis e não emite warnings quando o armazenamento de debug não está pronto.
+- Debug periódico de cores no canvas fica limitado a localhost ou `?debugColors=1`.
+
+### Testado
+- Cobertura unitária para validade dos ícones, `DebugLogger`, painel de logs fechado e estatísticas de colisão fechadas.
+- QA runtime update passa a falhar quando houver warnings/errors de console relevantes.
+
 ## [1.14.1] - 2026-07-01
 ### Documentado
 - Tarefa Markdown para investigar warnings não bloqueantes do QA runtime update sem alterar Service Worker, gameplay, HUD ou cache.

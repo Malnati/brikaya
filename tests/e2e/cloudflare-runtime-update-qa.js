@@ -358,6 +358,10 @@ async function run() {
           verifyState.viewport.scrollWidth <= verifyState.viewport.width,
         "Atualização automática gerou overflow horizontal.",
       );
+      assert(
+        consoleProblems.length === 0,
+        `Console reportou warnings/errors durante QA runtime: ${consoleProblems.map((problem) => problem.text).join(" | ")}`,
+      );
     }
 
     ensureParentDirectory(screenshotPath());

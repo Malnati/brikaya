@@ -1,0 +1,49 @@
+{
+  "url": "https://89d40e66.malnati-brickbreaker.pages.dev/",
+  "byType": {
+    "game_start": 1,
+    "score_update": 1,
+    "brick_destroyed": 1,
+    "collision": 1
+  },
+  "eventTypes": [
+    "game_start",
+    "score_update",
+    "brick_destroyed",
+    "collision"
+  ],
+  "startBall": {
+    "x": 175.5,
+    "y": 210,
+    "velocity": {
+      "dx": 2.3334523779156067,
+      "dy": -2.3334523779156067
+    },
+    "radius": 8
+  },
+  "lastBall": {
+    "x": 342.52781410441764,
+    "y": 129.68186204536326,
+    "velocity": {
+      "dx": -2.281833582888989,
+      "dy": 2.2818335828889884
+    },
+    "radius": 8
+  },
+  "restartedToInitialPosition": false,
+  "scoreEvents": 1,
+  "scoreSpeedReduction": {
+    "level": 1,
+    "hitNumber": 1,
+    "speedBefore": 3.3,
+    "speedAfter": 3.227,
+    "reductionApplied": 0.073,
+    "minSpeed": 0.55,
+    "maxSpeed": 1.1,
+    "minReached": false,
+    "elapsedLevelMs": 988
+  },
+  "expectedFirstLevelSpawnSpeed": 3.3000000000000003,
+  "consoleProblems": [],
+  "screenshotPath": "tmp/screenshots/cloudflare-no-score-reset-after-brick.png"
+}

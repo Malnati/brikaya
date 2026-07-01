@@ -1,111 +1,130 @@
 // src/storage/debugLogger.ts
 
-console.log('📦 DebugLogger.ts carregado');
+const FUNCTION_PLACEHOLDER = '[Function]';
+const SYMBOL_PLACEHOLDER = '[Symbol]';
+const UNDEFINED_PLACEHOLDER = '[Undefined]';
+const CIRCULAR_PLACEHOLDER = '[Circular]';
+const DEPTH_LIMIT_PLACEHOLDER = '[DepthLimit]';
+const BIGINT_SUFFIX = 'n';
+const MAX_SERIALIZATION_DEPTH = 5;
+const DEFAULT_RECENT_LOG_LIMIT = 100;
+const EXPORT_VERSION = '1.0';
+const EMPTY_LOG_STATS = {
+  totalLogs: 0,
+  byLevel: {},
+  byHour: {},
+  errorRate: 0,
+  averageLogsPerMinute: 0
+};
 
 interface LogEntry {
   id: string;
   timestamp: number;
   level: 'log' | 'warn' | 'error';
   message: string;
-  args: any[];
+  args: unknown[];
   stack?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 class DebugLogger {
   private db: IDBDatabase | null = null;
+  private initPromise: Promise<void> | null = null;
   private readonly DB_NAME = 'SystemDebugLog';
   private readonly LOGS_STORE_NAME = 'systemLogs';
   private readonly DB_VERSION = 1;
 
-  constructor() {
-    console.log('🏗️ DebugLogger constructor chamado');
-  }
-
   async initialize(): Promise<void> {
-    console.log('🏗️ DebugLogger.initialize() chamado - INÍCIO');
-    console.log('🏗️ this:', this);
-    console.log('🏗️ DB_NAME:', this.DB_NAME);
-    console.log('🏗️ DB_VERSION:', this.DB_VERSION);
-    
-    // Verificar se IndexedDB está disponível
-    if (!window.indexedDB) {
-      console.error('❌ IndexedDB não está disponível neste navegador');
-      throw new Error('IndexedDB não está disponível');
-    }
-    
-    console.log('✅ IndexedDB está disponível');
-    
-    return new Promise((resolve, reject) => {
-      console.log('🗄️ Abrindo IndexedDB:', this.DB_NAME, 'versão:', this.DB_VERSION);
+    if (this.db) return;
+    if (this.initPromise) return this.initPromise;
+    if (typeof window === 'undefined' || !window.indexedDB) return;
+
+    this.initPromise = new Promise<void>((resolve) => {
       const request = indexedDB.open(this.DB_NAME, this.DB_VERSION);
 
-      request.onerror = () => {
-        console.error('❌ Erro ao abrir IndexedDB para DebugLogger:', request.error);
-        console.error('❌ Código do erro:', request.error?.code);
-        console.error('❌ Nome do erro:', request.error?.name);
-        reject(request.error);
-      };
+      request.onerror = () => resolve();
 
       request.onsuccess = () => {
         this.db = request.result;
-        console.log('✅ DebugLogger IndexedDB inicializado com sucesso');
-        console.log('🗄️ Database:', this.db);
-        console.log('🗄️ Object stores:', this.db.objectStoreNames);
-        console.log('🗄️ Version:', this.db.version);
         resolve();
       };
 
       request.onupgradeneeded = (event) => {
-        console.log('🔄 Upgrade necessário do IndexedDB...');
         const db = (event.target as IDBOpenDBRequest).result;
-        console.log('🗄️ Versão antiga:', event.oldVersion);
-        console.log('🗄️ Versão nova:', event.newVersion);
-        
-        // Criar store para logs do sistema
         if (!db.objectStoreNames.contains(this.LOGS_STORE_NAME)) {
-          console.log('🏗️ Criando object store para logs do sistema:', this.LOGS_STORE_NAME);
           const logsStore = db.createObjectStore(this.LOGS_STORE_NAME, { keyPath: 'id' });
           logsStore.createIndex('timestamp', 'timestamp', { unique: false });
           logsStore.createIndex('level', 'level', { unique: false });
           logsStore.createIndex('message', 'message', { unique: false });
-          console.log('✅ Store de logs do sistema criada no IndexedDB');
-        } else {
-          console.log('✅ Object store de logs já existe:', this.LOGS_STORE_NAME);
         }
       };
+    }).finally(() => {
+      this.initPromise = null;
     });
+
+    await this.initPromise;
   }
 
   private generateId(): string {
     return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
 
-  // Funções para logs do sistema
-  async log(message: string, ...args: any[]): Promise<void> {
+  private serializeLogArgument(
+    value: unknown,
+    visited: WeakSet<object> = new WeakSet<object>(),
+    depth = 0
+  ): unknown {
+    if (typeof value === 'function') return FUNCTION_PLACEHOLDER;
+    if (typeof value === 'symbol') return SYMBOL_PLACEHOLDER;
+    if (typeof value === 'undefined') return UNDEFINED_PLACEHOLDER;
+    if (typeof value === 'bigint') return `${value.toString()}${BIGINT_SUFFIX}`;
+    if (value === null || typeof value !== 'object') return value;
+    if (depth >= MAX_SERIALIZATION_DEPTH) return DEPTH_LIMIT_PLACEHOLDER;
+    if (visited.has(value)) return CIRCULAR_PLACEHOLDER;
+
+    visited.add(value);
+
+    if (value instanceof Error) {
+      return {
+        name: value.name,
+        message: value.message,
+        stack: value.stack
+      };
+    }
+
+    if (Array.isArray(value)) {
+      return value.map(item => this.serializeLogArgument(item, visited, depth + 1));
+    }
+
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([key, item]) => [
+        key,
+        this.serializeLogArgument(item, visited, depth + 1)
+      ])
+    );
+  }
+
+  async log(message: string, ...args: unknown[]): Promise<void> {
     await this.storeLog('log', message, args);
   }
 
-  async warn(message: string, ...args: any[]): Promise<void> {
+  async warn(message: string, ...args: unknown[]): Promise<void> {
     await this.storeLog('warn', message, args);
   }
 
-  async error(message: string, ...args: any[]): Promise<void> {
+  async error(message: string, ...args: unknown[]): Promise<void> {
     await this.storeLog('error', message, args);
   }
 
-  private async storeLog(level: 'log' | 'warn' | 'error', message: string, args: any[]): Promise<void> {
-    if (!this.db) {
-      // Se o IndexedDB não estiver inicializado, apenas retorna sem erro
-      return;
-    }
+  private async storeLog(level: 'log' | 'warn' | 'error', message: string, args: unknown[]): Promise<void> {
+    if (!this.db) return;
 
     const logEntry: LogEntry = {
       id: this.generateId(),
       timestamp: Date.now(),
       level,
       message,
-      args,
+      args: args.map(arg => this.serializeLogArgument(arg)),
       stack: new Error().stack,
       metadata: {
         url: window.location.href,
@@ -121,18 +140,11 @@ class DebugLogger {
         request.onsuccess = () => resolve();
         request.onerror = () => reject(request.error);
       });
-    } catch (error) {
-      // Silenciosamente ignora erros de armazenamento de logs para evitar loops infinitos
-      console.warn('Falha ao armazenar log no IndexedDB:', error);
-    }
+    } catch {}
   }
 
-  // Métodos para gerenciar logs do sistema
   async getAllLogs(): Promise<LogEntry[]> {
-    if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
-      return [];
-    }
+    if (!this.db) return [];
 
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction([this.LOGS_STORE_NAME], 'readonly');
@@ -140,23 +152,15 @@ class DebugLogger {
       const request = store.getAll();
 
       request.onsuccess = () => {
-        const logs = request.result.sort((a, b) => a.timestamp - b.timestamp);
-        console.log(`📊 Total de logs recuperados: ${logs.length}`);
-        resolve(logs);
+        resolve(request.result.sort((a, b) => a.timestamp - b.timestamp));
       };
 
-      request.onerror = () => {
-        console.error('❌ Erro ao recuperar logs:', request.error);
-        reject(request.error);
-      };
+      request.onerror = () => reject(request.error);
     });
   }
 
   async getLogsByLevel(level: 'log' | 'warn' | 'error'): Promise<LogEntry[]> {
-    if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
-      return [];
-    }
+    if (!this.db) return [];
 
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction([this.LOGS_STORE_NAME], 'readonly');
@@ -165,30 +169,21 @@ class DebugLogger {
       const request = index.getAll(level);
 
       request.onsuccess = () => {
-        const logs = request.result.sort((a, b) => a.timestamp - b.timestamp);
-        console.log(`📊 Logs do nível ${level}: ${logs.length}`);
-        resolve(logs);
+        resolve(request.result.sort((a, b) => a.timestamp - b.timestamp));
       };
 
-      request.onerror = () => {
-        console.error('❌ Erro ao recuperar logs por nível:', request.error);
-        reject(request.error);
-      };
+      request.onerror = () => reject(request.error);
     });
   }
 
-  async getRecentLogs(limit: number = 100): Promise<LogEntry[]> {
-    if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
-      return [];
-    }
+  async getRecentLogs(limit: number = DEFAULT_RECENT_LOG_LIMIT): Promise<LogEntry[]> {
+    if (!this.db) return [];
 
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction([this.LOGS_STORE_NAME], 'readonly');
       const store = transaction.objectStore(this.LOGS_STORE_NAME);
       const index = store.index('timestamp');
       const request = index.openCursor(null, 'prev');
-
       const logs: LogEntry[] = [];
       let count = 0;
 
@@ -199,23 +194,16 @@ class DebugLogger {
           count++;
           cursor.continue();
         } else {
-          console.log(`📊 Últimos ${logs.length} logs recuperados`);
           resolve(logs.reverse());
         }
       };
 
-      request.onerror = () => {
-        console.error('❌ Erro ao recuperar logs recentes:', request.error);
-        reject(request.error);
-      };
+      request.onerror = () => reject(request.error);
     });
   }
 
   async searchLogs(searchTerm: string): Promise<LogEntry[]> {
-    if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
-      return [];
-    }
+    if (!this.db) return [];
 
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction([this.LOGS_STORE_NAME], 'readonly');
@@ -223,45 +211,28 @@ class DebugLogger {
       const request = store.getAll();
 
       request.onsuccess = () => {
-        const allLogs = request.result;
-        const filteredLogs = allLogs.filter(log => 
-          log.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          log.args.some((arg: any) => 
-            typeof arg === 'string' && arg.toLowerCase().includes(searchTerm.toLowerCase())
-          )
+        const normalizedSearchTerm = searchTerm.toLowerCase();
+        const filteredLogs = request.result.filter((log: LogEntry) =>
+          log.message.toLowerCase().includes(normalizedSearchTerm) ||
+          log.args.some((arg: unknown) => String(arg).toLowerCase().includes(normalizedSearchTerm))
         ).sort((a, b) => a.timestamp - b.timestamp);
-        
-        console.log(`📊 Logs encontrados para "${searchTerm}": ${filteredLogs.length}`);
         resolve(filteredLogs);
       };
 
-      request.onerror = () => {
-        console.error('❌ Erro ao buscar logs:', request.error);
-        reject(request.error);
-      };
+      request.onerror = () => reject(request.error);
     });
   }
 
   async clearAllLogs(): Promise<void> {
-    if (!this.db) {
-      console.warn('⚠️ IndexedDB não inicializado');
-      return;
-    }
+    if (!this.db) return;
 
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction([this.LOGS_STORE_NAME], 'readwrite');
       const store = transaction.objectStore(this.LOGS_STORE_NAME);
       const request = store.clear();
 
-      request.onsuccess = () => {
-        console.log('🗑️ Todos os logs foram removidos do IndexedDB');
-        resolve();
-      };
-
-      request.onerror = () => {
-        console.error('❌ Erro ao limpar logs:', request.error);
-        reject(request.error);
-      };
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
     });
   }
 
@@ -273,104 +244,76 @@ class DebugLogger {
     averageLogsPerMinute: number;
   }> {
     const allLogs = await this.getAllLogs();
+    if (allLogs.length === 0) return { ...EMPTY_LOG_STATS };
+
     const byLevel: Record<string, number> = {};
     const byHour: Record<number, number> = {};
-    
     let totalErrors = 0;
-    let totalWarns = 0;
-    let totalLogs = 0;
 
     allLogs.forEach(log => {
       byLevel[log.level] = (byLevel[log.level] || 0) + 1;
-      
       const hour = new Date(log.timestamp).getHours();
       byHour[hour] = (byHour[hour] || 0) + 1;
-
       if (log.level === 'error') totalErrors++;
-      else if (log.level === 'warn') totalWarns++;
-      else totalLogs++;
     });
 
-    const totalEntries = allLogs.length;
-    const timeSpan = totalEntries > 1 ? 
-      (allLogs[allLogs.length - 1].timestamp - allLogs[0].timestamp) / (1000 * 60) : 0;
+    const timeSpan = allLogs.length > 1
+      ? (allLogs[allLogs.length - 1].timestamp - allLogs[0].timestamp) / (1000 * 60)
+      : 0;
 
     return {
-      totalLogs: totalEntries,
+      totalLogs: allLogs.length,
       byLevel,
       byHour,
-      errorRate: totalEntries > 0 ? (totalErrors / totalEntries) * 100 : 0,
-      averageLogsPerMinute: timeSpan > 0 ? totalEntries / timeSpan : 0
+      errorRate: (totalErrors / allLogs.length) * 100,
+      averageLogsPerMinute: timeSpan > 0 ? allLogs.length / timeSpan : 0
     };
   }
 
   async exportLogData(): Promise<string> {
     const allLogs = await this.getAllLogs();
     const stats = await this.getLogStats();
-    
     const exportData = {
       exportTimestamp: Date.now(),
-      exportVersion: '1.0',
+      exportVersion: EXPORT_VERSION,
       stats,
       logs: allLogs
     };
-    
+
     return JSON.stringify(exportData, null, 2);
   }
 
   async importLogData(jsonData: string): Promise<void> {
-    try {
-      const importData = JSON.parse(jsonData);
-      
-      if (importData.logs && Array.isArray(importData.logs)) {
-        for (const log of importData.logs) {
-          await this.storeLog(log.level, log.message, log.args);
-        }
-        console.log(`📊 Importados ${importData.logs.length} logs`);
+    const importData = JSON.parse(jsonData);
+
+    if (importData.logs && Array.isArray(importData.logs)) {
+      for (const logEntry of importData.logs) {
+        await this.storeLog(logEntry.level, logEntry.message, logEntry.args);
       }
-    } catch (error) {
-      console.error('❌ Erro ao importar logs:', error);
-      throw error;
     }
   }
-
 }
 
-// Funções estáticas para serem chamadas diretamente pelo logger.ts
-export async function log(message: string, ...args: any[]): Promise<void> {
+export async function log(message: string, ...args: unknown[]): Promise<void> {
   return debugLogger.log(message, ...args);
 }
 
-export async function warn(message: string, ...args: any[]): Promise<void> {
+export async function warn(message: string, ...args: unknown[]): Promise<void> {
   return debugLogger.warn(message, ...args);
 }
 
-export async function error(message: string, ...args: any[]): Promise<void> {
+export async function error(message: string, ...args: unknown[]): Promise<void> {
   return debugLogger.error(message, ...args);
 }
 
-// Instância singleton
 export const debugLogger = new DebugLogger();
 
-console.log('📦 Instância do DebugLogger criada');
-
-// Inicializar automaticamente quando o DOM estiver pronto
-if (document.readyState === 'loading') {
-  console.log('📦 DOM ainda carregando, aguardando DOMContentLoaded...');
-  document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Inicializando DebugLogger (DOMContentLoaded)...');
-    debugLogger.initialize().then(() => {
-      console.log('✅ DebugLogger inicializado com sucesso!');
-    }).catch(error => {
-      console.error('❌ Falha ao inicializar DebugLogger:', error);
-    });
-  });
-} else {
-  // DOM já está pronto
-  console.log('🚀 Inicializando DebugLogger (DOM já pronto)...');
-  debugLogger.initialize().then(() => {
-    console.log('✅ DebugLogger inicializado com sucesso!');
-  }).catch(error => {
-    console.error('❌ Falha ao inicializar DebugLogger:', error);
-  });
-} 
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      debugLogger.initialize();
+    }, { once: true });
+  } else {
+    debugLogger.initialize();
+  }
+}
