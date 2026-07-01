@@ -99,8 +99,9 @@ function postSkipWaitingWhenInstalled(
     return;
   }
 
+  postSkipWaiting(worker);
+
   if (worker.state === INSTALLED_STATE) {
-    postSkipWaiting(worker);
     return;
   }
 
