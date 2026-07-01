@@ -83,6 +83,8 @@ jest.mock('../objects/Ball', () => ({
       getSpeedStateSnapshot: jest.fn(() => speedState),
       getLastSpeedReduction: jest.fn(() => lastSpeedReduction),
       consumePaddleCollision: jest.fn(() => false),
+      createClone: jest.fn(() => mockBall),
+      multiplyVelocity: jest.fn(),
       setPosition: jest.fn((x: number, y: number) => {
         mockBall.position.x = x;
         mockBall.position.y = y;
@@ -134,6 +136,7 @@ jest.mock('../storage/gameLogger', () => ({
     logLevelStart: jest.fn().mockResolvedValue(undefined),
     logGameStateChange: jest.fn().mockResolvedValue(undefined),
     logRestartGame: jest.fn().mockResolvedValue(undefined),
+    logBallAdded: jest.fn().mockResolvedValue(undefined),
     logCollision: jest.fn().mockResolvedValue(undefined)
   }
 }));
@@ -151,6 +154,7 @@ describe('GameEngine', () => {
   let onGameWon: jest.MockedFunction<() => void>;
   let onGameOver: jest.MockedFunction<() => void>;
   let onLevelTransition: jest.MockedFunction<(payload: any) => void>;
+  let onLevelChange: jest.MockedFunction<(level: number) => void>;
 
   beforeEach(() => {
     mockBallInstances.length = 0;
@@ -182,6 +186,7 @@ describe('GameEngine', () => {
     onGameWon = jest.fn();
     onGameOver = jest.fn();
     onLevelTransition = jest.fn();
+    onLevelChange = jest.fn();
   });
 
   afterEach(() => {
@@ -226,6 +231,26 @@ describe('GameEngine', () => {
     expect(mockGameLogger.logGameStart).toHaveBeenCalled();
     expect(mockGameLogger.logGameStart.mock.calls[0][0]).toHaveProperty('speedState');
     expect(loopSpy).toHaveBeenCalled();
+  });
+
+  it('notifica o nível inicial para manter HUD alinhado em fases avançadas', async () => {
+    const engine = new (GameEngine as any)(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      undefined,
+      'late-phase-stability',
+      undefined,
+      onLevelChange
+    );
+    jest.spyOn(engine as any, 'preloadAssets').mockResolvedValue(undefined);
+    jest.spyOn(engine as any, 'loop').mockImplementation(async () => undefined);
+
+    await engine.start();
+
+    expect(onLevelChange).toHaveBeenCalledWith(11);
   });
 
   it('para o jogo corretamente', () => {
@@ -341,5 +366,57 @@ describe('GameEngine', () => {
     expect(gameState.speedState.initialBrickCount).toBe(gameState.bricksRemaining);
     expect(gameState.speedState.successfulBrickHits).toBe(0);
     expect(gameState.speedState.elapsedLevelMs).toBeGreaterThanOrEqual(0);
+  });
+
+  it('mantém contador de hits da fase mesmo quando o hit vem de bolas diferentes', async () => {
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+    const mockGameLogger = require('../storage/gameLogger').gameLogger;
+    const ball = mockBallInstances[0];
+    const initialState = (engine as any).getCurrentGameState().speedState;
+
+    ball.__setSpeedState({ successfulBrickHits: 1, currentSpeed: initialState.maxSpeed - 1 });
+    ball.__setLastSpeedReduction({
+      level: 1,
+      hitNumber: 1,
+      speedBefore: initialState.maxSpeed,
+      speedAfter: initialState.maxSpeed - 1,
+      reductionApplied: 1,
+      minSpeed: initialState.minSpeed,
+      maxSpeed: initialState.maxSpeed,
+      minReached: false,
+      elapsedLevelMs: 200
+    });
+    await (engine as any).onBrickDestroyed(0);
+
+    ball.__setSpeedState({ successfulBrickHits: 1, currentSpeed: initialState.maxSpeed - 2 });
+    ball.__setLastSpeedReduction({
+      level: 1,
+      hitNumber: 1,
+      speedBefore: initialState.maxSpeed - 1,
+      speedAfter: initialState.maxSpeed - 2,
+      reductionApplied: 1,
+      minSpeed: initialState.minSpeed,
+      maxSpeed: initialState.maxSpeed,
+      minReached: false,
+      elapsedLevelMs: 400
+    });
+    await (engine as any).onBrickDestroyed(1);
+
+    expect(mockGameLogger.logScoreUpdate.mock.calls[1][0].speedState.successfulBrickHits).toBe(2);
+    expect(mockGameLogger.logScoreUpdate.mock.calls[1][5]).toMatchObject({
+      hitNumber: 2,
+      speedAfter: initialState.maxSpeed - 2
+    });
+  });
+
+  it('registra bolas adicionadas ao ativar multiball', () => {
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+    const mockGameLogger = require('../storage/gameLogger').gameLogger;
+
+    (engine as any).activatePowerUp('multiball');
+
+    expect((engine as any).getCurrentGameState().ballsCount).toBe(3);
+    expect(mockGameLogger.logBallAdded).toHaveBeenCalledTimes(2);
+    expect(mockGameLogger.logBallAdded.mock.calls[1][0].ballsCount).toBe(3);
   });
 });

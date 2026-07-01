@@ -4,6 +4,16 @@
 - Resolvido conflitos para integrar mudancas da main
 
 
+## [1.16.1] - 2026-07-01
+### Corrigido
+- Bolinha em fases altas passa a usar passos internos de movimento e clamp nas bordas para não sair do canvas após a Fase 10.
+- Contadores de hits por fase, bolas ativas e média de bolas por jogo passam a considerar multiball e perdas parciais corretamente.
+- HUD passa a receber o nível inicial real do motor do jogo, evitando divergência visual em cenários de fase avançada.
+
+### Testado
+- Cobertura unitária para alta velocidade, contadores de fase, multiball e estatística de bolas.
+- Novo QA publicado `make cloudflare-phase10-stability-qa` valida Fase 11 com bolinha ativa, sem `game_end`/`ball_lost` indevido.
+
 ## [1.16.0] - 2026-07-01
 ### Alterado
 - Velocidade-base da progressão passa a partir da Fase 1 com 2x sobre o spawn inicial efetivo anterior, removendo o override isolado acima de `maxSpeed`.

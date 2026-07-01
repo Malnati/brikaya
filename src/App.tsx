@@ -26,6 +26,7 @@ LOG('🚦 App.tsx carregado');
 
 const FIRST_AUDIO_INTERACTION_EVENTS = ['pointerdown', 'keydown', 'touchstart'] as const;
 const OFFLINE_READY_VISIBLE_MS = 2400;
+const LATE_PHASE_STABILITY_QA_SCENARIO = 'late-phase-stability';
 
 export default function App() {
   const [score, setScore] = useState(0);
@@ -52,6 +53,7 @@ export default function App() {
     const searchParams = new URLSearchParams(window.location.search);
     const scenario = searchParams.get('qaScenario');
     if (scenario === 'single-brick-phase-clear') return 'single-brick-phase-clear';
+    if (scenario === LATE_PHASE_STABILITY_QA_SCENARIO) return LATE_PHASE_STABILITY_QA_SCENARIO;
     if (scenario === AUDIO_QA_SCENARIO) return AUDIO_QA_SCENARIO;
     return null;
   }, []);
@@ -271,6 +273,10 @@ export default function App() {
     }, payload.pauseMs + LEVEL_TOAST_EXIT_MS);
   }, [audioSink]);
 
+  const handleLevelChange = useCallback((nextLevel: number) => {
+    setLevel(nextLevel);
+  }, []);
+
   return (
     <main className="app-shell">
       <section className="game-dashboard" aria-label="Jogo Breakout">
@@ -358,6 +364,7 @@ export default function App() {
                 onGameWon={handleGameWon}
                 onGameOver={handleGameOver}
                 onLevelTransition={handleLevelTransition}
+                onLevelChange={handleLevelChange}
                 levelToastPayload={levelToastPayload}
                 isLevelToastVisible={isLevelToastVisible}
                 qaScenario={qaScenario}

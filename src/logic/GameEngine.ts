@@ -29,6 +29,9 @@ LOG('📦 GameEngine.ts carregado, gameLogger:', gameLogger);
 
 const ERROR_NO_2D_CONTEXT = 'No 2D context';
 const SINGLE_BRICK_QA_SCENARIO = 'single-brick-phase-clear';
+const LATE_PHASE_STABILITY_QA_SCENARIO = 'late-phase-stability';
+const LATE_PHASE_STABILITY_LEVEL = 11;
+const LATE_PHASE_STABILITY_Y_RATIO = 0.35;
 const COMBO_WINDOW_MS = 1200;
 const COMBO_COOLDOWN_MS = 500;
 const COMBO_SMALL_THRESHOLD = 3;
@@ -66,7 +69,10 @@ interface CanvasSize {
   height: number;
 }
 
-export type GameQaScenario = typeof SINGLE_BRICK_QA_SCENARIO | typeof AUDIO_QA_SCENARIO;
+export type GameQaScenario =
+  | typeof SINGLE_BRICK_QA_SCENARIO
+  | typeof LATE_PHASE_STABILITY_QA_SCENARIO
+  | typeof AUDIO_QA_SCENARIO;
 
 export class GameEngine {
   private ctx: CanvasRenderingContext2D;
@@ -89,6 +95,7 @@ export class GameEngine {
   private level = 1;
   private levelStartedAt = Date.now();
   private initialBrickCount = 0;
+  private successfulBrickHitsThisLevel = 0;
   private latestSpeedReduction: SpeedReductionSnapshot | null = null;
   private phaseSpeedConfig: PhaseSpeedConfig | null = null;
   private qaScenarioConsumed = false;
@@ -115,7 +122,8 @@ export class GameEngine {
     canvasSize?: CanvasSize,
     private onLevelTransition?: (payload: LevelTransitionPayload) => void,
     private qaScenario?: GameQaScenario | null,
-    private audioSink: GameAudioSink = NOOP_AUDIO_SINK
+    private audioSink: GameAudioSink = NOOP_AUDIO_SINK,
+    private onLevelChange?: (level: number) => void
   ) {
     LOG(`🚀 GameEngine constructor iniciado`);
 
@@ -140,6 +148,10 @@ export class GameEngine {
     this.scaleX = this.canvasSize.width / 480; // CANVAS_WIDTH original
     this.scaleY = this.canvasSize.height / 320; // CANVAS_HEIGHT original
 
+    if (this.qaScenario === LATE_PHASE_STABILITY_QA_SCENARIO) {
+      this.level = LATE_PHASE_STABILITY_LEVEL;
+    }
+
     LOG(`⚽ Criando Ball...`);
     this.paddle = new Paddle(this.canvasSize.width, this.canvasSize.height, this.dimensions);
     this.balls.push(new Ball(
@@ -149,6 +161,7 @@ export class GameEngine {
       calculateLevelSpeedMultiplier(this.level)
     ));
     this.prepareQaBall();
+    this.prepareLatePhaseStabilityBall();
 
     LOG(`🏗️  Criando Bricks...`);
     this.configureBrickRows();
@@ -206,6 +219,17 @@ export class GameEngine {
     ball.setDirection(0);
   }
 
+  private prepareLatePhaseStabilityBall() {
+    if (this.qaScenario !== LATE_PHASE_STABILITY_QA_SCENARIO || this.balls.length === 0) return;
+
+    const ball = this.balls[0];
+    ball.setPosition(
+      this.canvasSize.width - ball.position.radius - 1,
+      this.canvasSize.height * LATE_PHASE_STABILITY_Y_RATIO
+    );
+    ball.setDirection(Math.PI / 2);
+  }
+
   private async preloadAssets() {
     try {
       LOG('🎮 Iniciando carregamento de assets...');
@@ -223,8 +247,15 @@ export class GameEngine {
     this.updateComboAudio();
     this.maybeSpawnPowerUp();
     this.score += POINTS_PER_BRICK;
+    this.successfulBrickHitsThisLevel += 1;
     this.onScoreUpdate(this.score);
     this.latestSpeedReduction = this.getLatestSpeedReductionFromBalls();
+    if (this.latestSpeedReduction) {
+      this.latestSpeedReduction = {
+        ...this.latestSpeedReduction,
+        hitNumber: this.successfulBrickHitsThisLevel
+      };
+    }
 
     LOG(`🎯 onBrickDestroyed: Score = ${this.score}, Verificando se todos os blocos foram destruídos...`);
 
@@ -318,6 +349,7 @@ export class GameEngine {
     this.prepareQaBall();
     this.bricks = this.createBricks();
     this.startLevelSpeedTracking(nextLevel);
+    this.onLevelChange?.(this.level);
     this.isLevelTransitioning = false;
     this.audioSink.playAudio(GAME_AUDIO_IDS.LEVEL_START);
     this.audioSink.startGameplayMusic();
@@ -401,6 +433,7 @@ export class GameEngine {
   private startLevelSpeedTracking(level: number) {
     this.levelStartedAt = Date.now();
     this.initialBrickCount = this.getInitialBrickCount();
+    this.successfulBrickHitsThisLevel = 0;
     this.latestSpeedReduction = null;
     this.phaseSpeedConfig = this.buildPhaseSpeedConfig(level, this.initialBrickCount, this.levelStartedAt);
     this.balls.forEach(ball => ball.applyPhaseSpeedConfig(this.phaseSpeedConfig!));
@@ -420,7 +453,11 @@ export class GameEngine {
   private buildSpeedStateSnapshot(): SpeedStateSnapshot {
     const activeBall = this.balls[0];
     if (activeBall) {
-      return activeBall.getSpeedStateSnapshot();
+      const snapshot = activeBall.getSpeedStateSnapshot();
+      return {
+        ...snapshot,
+        successfulBrickHits: this.successfulBrickHitsThisLevel
+      };
     }
 
     const fallbackConfig = this.phaseSpeedConfig ?? this.buildPhaseSpeedConfig(
@@ -433,7 +470,7 @@ export class GameEngine {
     return {
       level: fallbackConfig.level,
       initialBrickCount: fallbackConfig.initialBrickCount,
-      successfulBrickHits: this.latestSpeedReduction?.hitNumber ?? 0,
+      successfulBrickHits: this.successfulBrickHitsThisLevel,
       initialSpawnSpeed: fallbackConfig.initialSpawnSpeed,
       maxSpeed: fallbackConfig.maxSpeed,
       minSpeed: fallbackConfig.minSpeed,
@@ -510,8 +547,19 @@ export class GameEngine {
     if (powerUpType === 'multiball') {
       const baseBall = this.balls[0];
       if (baseBall) {
-        this.balls.push(baseBall.createClone(MULTIBALL_ANGLE_OFFSET));
-        this.balls.push(baseBall.createClone(-MULTIBALL_ANGLE_OFFSET));
+        const clones = [
+          baseBall.createClone(MULTIBALL_ANGLE_OFFSET),
+          baseBall.createClone(-MULTIBALL_ANGLE_OFFSET)
+        ];
+        clones.forEach(clone => {
+          this.balls.push(clone);
+          gameLogger.logBallAdded(
+            this.getCurrentGameState(),
+            this.getBallPositions(),
+            this.paddle.position,
+            clone.position
+          ).catch(error => ERROR('❌ Erro ao registrar bola adicionada:', error));
+        });
       }
       this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_ACTIVATE_MULTIBALL);
       return;
@@ -600,6 +648,7 @@ export class GameEngine {
 
   public async start() {
     this.isStopped = false;
+    this.onLevelChange?.(this.level);
     LOG('🎮 GameEngine.start() chamado - INÍCIO');
     LOG('🎮 this:', this);
     LOG('🎮 gameLogger:', gameLogger);
@@ -716,6 +765,14 @@ export class GameEngine {
           const inPlay = await ball.update(this.paddle, this.bricks, this.canvasSize.height, this.getCurrentGameState(), this.audioSink);
           if (!inPlay) {
             this.balls.splice(i, 1);
+            if (this.balls.length > 0) {
+              await gameLogger.logGameStateChange(
+                this.getCurrentGameState(),
+                this.getBallPositions(),
+                this.paddle.position,
+                'ball_count_change'
+              ).catch(error => ERROR('❌ Erro ao registrar mudança de quantidade de bolas:', error));
+            }
             continue;
           }
           if (ball.consumePaddleCollision()) {

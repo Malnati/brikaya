@@ -16,6 +16,7 @@ interface GameLoopCallbacks {
   onGameWon?: () => void;
   onGameOver?: () => void;
   onLevelTransition?: (payload: LevelTransitionPayload) => void;
+  onLevelChange?: (level: number) => void;
 }
 
 export function useGameLoop(
@@ -26,14 +27,15 @@ export function useGameLoop(
   canvasSize?: CanvasSize,
   onLevelTransition?: (payload: LevelTransitionPayload) => void,
   qaScenario?: GameQaScenario | null,
-  audioSink?: GameAudioSink
+  audioSink?: GameAudioSink,
+  onLevelChange?: (level: number) => void
 ) {
   const engineRef = useRef<GameEngine | null>(null);
-  const callbacksRef = useRef<GameLoopCallbacks>({ onScoreUpdate, onGameWon, onGameOver, onLevelTransition });
+  const callbacksRef = useRef<GameLoopCallbacks>({ onScoreUpdate, onGameWon, onGameOver, onLevelTransition, onLevelChange });
 
   useEffect(() => {
-    callbacksRef.current = { onScoreUpdate, onGameWon, onGameOver, onLevelTransition };
-  }, [onScoreUpdate, onGameWon, onGameOver, onLevelTransition]);
+    callbacksRef.current = { onScoreUpdate, onGameWon, onGameOver, onLevelTransition, onLevelChange };
+  }, [onScoreUpdate, onGameWon, onGameOver, onLevelTransition, onLevelChange]);
 
   useEffect(() => {
     if (!canvasRef.current) {
@@ -55,7 +57,8 @@ export function useGameLoop(
         canvasSize,
         payload => callbacksRef.current.onLevelTransition?.(payload),
         qaScenario,
-        audioSink
+        audioSink,
+        level => callbacksRef.current.onLevelChange?.(level)
       );
       engineRef.current = engine;
       LOG(`🎮 GameEngine criado com sucesso, chamando start()...`);

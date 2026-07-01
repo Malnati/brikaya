@@ -13,6 +13,7 @@ interface GameProps {
   onGameWon?: () => void;
   onGameOver?: () => void;
   onLevelTransition?: (payload: LevelTransitionPayload) => void;
+  onLevelChange?: (level: number) => void;
   levelToastPayload: LevelTransitionPayload | null;
   isLevelToastVisible: boolean;
   qaScenario?: GameQaScenario | null;
@@ -33,6 +34,7 @@ export default function Game({
   onGameWon,
   onGameOver,
   onLevelTransition,
+  onLevelChange,
   levelToastPayload,
   isLevelToastVisible,
   qaScenario,
@@ -86,7 +88,7 @@ export default function Game({
     };
   }, []);
 
-  useGameLoop(canvasRef, onScoreUpdate, onGameWon, onGameOver, canvasSize, onLevelTransition, qaScenario, audioSink);
+  useGameLoop(canvasRef, onScoreUpdate, onGameWon, onGameOver, canvasSize, onLevelTransition, qaScenario, audioSink, onLevelChange);
   useColorDebug(canvasRef);
 
   return (

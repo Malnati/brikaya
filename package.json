@@ -19,7 +19,8 @@
     "test:cloudflare-theme": "node tests/e2e/cloudflare-theme-qa.js",
     "test:cloudflare-runtime-update": "node tests/e2e/cloudflare-runtime-update-qa.js",
     "test:audio-assets": "node scripts/validate-audio-assets.mjs",
-    "test:cloudflare-audio": "node tests/e2e/cloudflare-audio-qa.js"
+    "test:cloudflare-audio": "node tests/e2e/cloudflare-audio-qa.js",
+    "test:cloudflare-phase10-stability": "node tests/e2e/cloudflare-phase10-stability-qa.js"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.4",

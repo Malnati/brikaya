@@ -59,6 +59,7 @@ const CANVAS_WIDTH = 393;
 const CANVAS_HEIGHT = 852;
 const PHASE_ONE = 1;
 const PHASE_TWO = 2;
+const LATE_PHASE = 11;
 const INITIAL_BRICK_COUNT = DIMENSIONS.brickCols * DIMENSIONS.brickRows;
 
 function buildPhaseSpeedConfig(level: number): PhaseSpeedConfig {
@@ -186,5 +187,44 @@ describe('Ball', () => {
 
     expect(ball.getCurrentSpeedMagnitude()).toBeCloseTo(speedBeforeBounce, 5);
     expect(ball.getCurrentSpeedMagnitude()).toBeGreaterThanOrEqual(config.minSpeed);
+  });
+
+  it('mantém a bolinha dentro do canvas ao bater na parede em alta velocidade', async () => {
+    const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const config = buildPhaseSpeedConfig(LATE_PHASE);
+    const bricks = { collide: jest.fn().mockResolvedValue(false) };
+    const paddle = {
+      position: {
+        x: 0,
+        y: CANVAS_HEIGHT + 100,
+        width: DIMENSIONS.paddleWidth,
+        height: DIMENSIONS.paddleHeight,
+      },
+    };
+
+    ball.applyPhaseSpeedConfig(config);
+    ball.setPosition(CANVAS_WIDTH - DIMENSIONS.ballRadius - 1, 120);
+    ball.setDirection(Math.PI / 2);
+
+    await ball.update(
+      paddle,
+      bricks,
+      CANVAS_HEIGHT,
+      {
+        score: 0,
+        ballsCount: 1,
+        bricksRemaining: INITIAL_BRICK_COUNT,
+        gameWon: false,
+        gameOver: false,
+        level: LATE_PHASE,
+        canvasSize: { width: CANVAS_WIDTH, height: CANVAS_HEIGHT },
+        gameDimensions: DIMENSIONS,
+        speedState: ball.getSpeedStateSnapshot(),
+      }
+    );
+
+    expect(ball.position.x).toBeLessThanOrEqual(CANVAS_WIDTH - DIMENSIONS.ballRadius);
+    expect(ball.position.x).toBeGreaterThanOrEqual(DIMENSIONS.ballRadius);
+    expect(ball.getVelocity().dx).toBeLessThan(0);
   });
 });
