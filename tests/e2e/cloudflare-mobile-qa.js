@@ -187,6 +187,9 @@ async function collectLayoutState(page) {
     const canvasRect = document
       .querySelector("canvas")
       ?.getBoundingClientRect();
+    const bottomSlotRect = document
+      .querySelector(".ad-slot--bottom")
+      ?.getBoundingClientRect();
     const scoreText =
       Array.from(document.querySelectorAll("p"))
         .map((element) => element.textContent || "")
@@ -206,6 +209,16 @@ async function collectLayoutState(page) {
             height: canvasRect.height,
             right: canvasRect.right,
             bottom: canvasRect.bottom,
+          }
+        : null,
+      bottomSlot: bottomSlotRect
+        ? {
+            x: bottomSlotRect.x,
+            y: bottomSlotRect.y,
+            width: bottomSlotRect.width,
+            height: bottomSlotRect.height,
+            right: bottomSlotRect.right,
+            bottom: bottomSlotRect.bottom,
           }
         : null,
       scoreValue,
@@ -320,20 +333,40 @@ async function run() {
       layoutState.buttons.some((button) => MENU_BUTTON_NAME.test(button.text)),
       "Botão Menu não encontrado no HUD compacto.",
     );
-    assert(
-      mainButtons.some(
-        (button) => button.ariaLabel === "Som" && button.text === "♪",
-      ),
-      "Ícone Som não encontrado no canto principal.",
+    const audioIcon = mainButtons.find(
+      (button) => button.ariaLabel === "Som" && button.text === "♪",
     );
+    const restartIcon = mainButtons.find(
+      (button) =>
+        /reiniciar|jogar de novo/i.test(button.ariaLabel) &&
+        button.text === "↻",
+    );
+    assert(audioIcon, "Ícone Som não encontrado no canto principal.");
     assert(
-      mainButtons.some(
-        (button) =>
-          /reiniciar|jogar de novo/i.test(button.ariaLabel) &&
-          button.text === "↻",
-      ),
+      restartIcon,
       "Ícone Reiniciar/Jogar de novo não encontrado no canto principal.",
     );
+    assert(
+      layoutState.canvas,
+      "Canvas ausente para validar posição dos ícones.",
+    );
+    for (const button of [audioIcon, restartIcon]) {
+      assert(
+        button.rect.y >= layoutState.canvas.bottom,
+        `Ícone ${button.ariaLabel} ficou sobre o quadro do jogo.`,
+      );
+      assert(
+        button.rect.x >= layoutState.canvas.x &&
+          button.rect.right <= layoutState.canvas.right,
+        `Ícone ${button.ariaLabel} saiu da largura do quadro do jogo.`,
+      );
+      if (layoutState.bottomSlot) {
+        assert(
+          button.rect.bottom <= layoutState.bottomSlot.y,
+          `Ícone ${button.ariaLabel} invadiu a área de publicidade.`,
+        );
+      }
+    }
     assert(
       !layoutState.buttons.some((button) => LOGS_BUTTON_NAME.test(button.text)),
       "Logs aparece fora do menu lateral.",
