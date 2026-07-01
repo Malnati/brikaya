@@ -20,6 +20,7 @@ const MAX_BOUNCE_ANGLE = Math.PI / 3; // 60 graus
 const PADDLE_EDGE_ZONE_RATIO = 0.2;
 const MOTION_STEP_RADIUS_RATIO = 0.75;
 const MIN_MOTION_STEPS = 1;
+const CANVAS_POSITION_FALLBACK_RATIO = 0.5;
 
 export class Ball {
   private x: number;
@@ -85,6 +86,24 @@ export class Ball {
     this.blockHitsThisRun = 0;
     this.paddleCollision = false;
     this.lastSpeedReduction = null;
+  }
+
+  resize(canvasWidth: number, canvasHeight: number, dimensions: DynamicGameDimensions): void {
+    const widthRatio = this.canvasWidth > 0 ? canvasWidth / this.canvasWidth : 1;
+    const heightRatio = this.canvasHeight > 0 ? canvasHeight / this.canvasHeight : 1;
+
+    this.canvasWidth = canvasWidth;
+    this.canvasHeight = canvasHeight;
+    this.dimensions = dimensions;
+    this.radius = dimensions.ballRadius;
+    this.x = Math.max(
+      this.radius,
+      Math.min(canvasWidth - this.radius, this.x * widthRatio || canvasWidth * CANVAS_POSITION_FALLBACK_RATIO),
+    );
+    this.y = Math.max(
+      this.radius,
+      Math.min(canvasHeight - this.radius, this.y * heightRatio || canvasHeight * CANVAS_POSITION_FALLBACK_RATIO),
+    );
   }
 
   applyPhaseSpeedConfig(config: PhaseSpeedConfig): void {

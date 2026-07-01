@@ -691,53 +691,126 @@ canvas {
 }
 
 @media (max-height: 500px) and (orientation: landscape) {
+  html,
+  body,
   #root {
-    padding: 4px max(6px, env(safe-area-inset-right)) 4px
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  body {
+    background: var(--color-bg);
+  }
+
+  #root {
+    padding: max(4px, env(safe-area-inset-top))
+      max(6px, env(safe-area-inset-right))
+      max(4px, env(safe-area-inset-bottom))
       max(6px, env(safe-area-inset-left));
   }
 
+  .app-shell,
   .game-dashboard {
-    padding: 8px;
+    height: 100%;
+    max-width: none;
+  }
+
+  .game-dashboard {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
   .dashboard-header {
     flex-direction: row;
     align-items: center;
-    margin-bottom: var(--space-2);
+    flex: 0 0 auto;
+    gap: var(--space-1);
+    margin-bottom: var(--space-1);
   }
 
+  .dashboard-title-group,
   .dashboard-header-controls {
-    justify-content: flex-end;
-    width: auto;
+    min-width: 0;
   }
 
-  .dashboard-eyebrow {
+  .dashboard-title-group {
     display: none;
   }
 
-  .dashboard-header h1 {
-    font-size: 1rem;
+  .dashboard-header-controls {
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    width: 100%;
+  }
+
+  .score-strip {
+    flex: 1 1 auto;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 4px;
+    width: auto;
+    min-width: 0;
+    overflow: hidden;
   }
 
   .score-chip {
     min-height: 24px;
     font-size: 0.72rem;
+    padding: 3px 8px;
   }
 
-  .score-strip {
-    width: auto;
-  }
-
-  .theme-toggle {
-    width: auto;
+  .dashboard-menu-button {
+    flex: 0 0 auto;
     min-height: 44px;
   }
 
-  .theme-toggle__button {
-    min-height: 44px;
-    min-width: 52px;
-    padding: 6px 8px;
-    font-size: 0.72rem;
+  .dashboard-layout {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .play-column,
+  .game-container,
+  .game-surface {
+    min-height: 0;
+    height: 100%;
+  }
+
+  .play-column {
+    width: 100%;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .game-container,
+  .game-surface {
+    justify-content: center;
+  }
+
+  .game-surface {
+    position: relative;
+  }
+
+  .game-board-frame {
+    max-height: 100%;
+  }
+
+  .game-board-controls {
+    position: absolute;
+    left: 50%;
+    bottom: var(--space-2);
+    z-index: 4;
+    margin-top: 0;
+    transform: translateX(-50%);
   }
 
   .dashboard-button {
@@ -746,7 +819,9 @@ canvas {
     font-size: 0.78rem;
   }
 
-  .ad-slot--bottom {
+  .ad-slot--bottom,
+  .ad-slot--side,
+  .game-status-region {
     display: none;
   }
 }

@@ -4,6 +4,14 @@
 - Resolvido conflitos para integrar mudancas da main
 
 
+## [1.16.4] - 2026-07-01
+### Alterado
+- Mobile em orientação paisagem passa a usar modo imersivo: dashboard sem card, anúncios/status ocultos e canvas ocupando a maior área segura disponível.
+- Redimensionamento do canvas por rotação deixa de recriar o `GameEngine`, preservando fase, pontuação, bolinha e logs de início.
+
+### Testado
+- QA de dashboard publicado passa a validar canvas expandido em iPhone landscape e ausência de `game_start`/`restart_game` durante rotação.
+
 ## [1.16.3] - 2026-07-01
 ### Corrigido
 - Ícones de `Som` e `Reiniciar`/`Jogar de novo` saem de cima do tabuleiro e passam a ficar fora do quadro do jogo.

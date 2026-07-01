@@ -1,5 +1,5 @@
 // src/components/Game.tsx
-import { useRef, useEffect, useState } from "react";
+import { useRef, useLayoutEffect, useState } from "react";
 
 import { useGameLoop } from "../hooks/useGameLoop";
 import { useColorDebug } from "../hooks/useColorDebug";
@@ -33,6 +33,7 @@ interface GameProps {
 const CANVAS_CONTAINER_HORIZONTAL_INSET = 16;
 const AVAILABLE_CANVAS_HEIGHT_RATIO = 0.42;
 const COMPACT_LANDSCAPE_MAX_HEIGHT = 500;
+const COMPACT_LANDSCAPE_CANVAS_INSET = 8;
 const COMPACT_LANDSCAPE_MIN_CANVAS_WIDTH = 240;
 const COMPACT_LANDSCAPE_MIN_CANVAS_HEIGHT = 160;
 const RESIZE_EVENT_NAME = "resize";
@@ -58,7 +59,7 @@ export default function Game({
     height: CANVAS_HEIGHT,
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const updateCanvasSize = () => {
       const container = surfaceRef.current;
       if (!container) return;
@@ -72,13 +73,18 @@ export default function Game({
         ? COMPACT_LANDSCAPE_MIN_CANVAS_HEIGHT
         : MIN_CANVAS_HEIGHT;
 
+      const canvasInset = isCompactLandscape
+        ? COMPACT_LANDSCAPE_CANVAS_INSET
+        : CANVAS_CONTAINER_HORIZONTAL_INSET;
       const containerWidth = Math.max(
         minCanvasWidth,
-        container.clientWidth - CANVAS_CONTAINER_HORIZONTAL_INSET,
+        container.clientWidth - canvasInset,
       );
       const containerHeight = Math.max(
         minCanvasHeight,
-        window.innerHeight * AVAILABLE_CANVAS_HEIGHT_RATIO,
+        isCompactLandscape
+          ? container.clientHeight - canvasInset
+          : window.innerHeight * AVAILABLE_CANVAS_HEIGHT_RATIO,
       );
       const aspectRatio = CANVAS_WIDTH / CANVAS_HEIGHT;
 
