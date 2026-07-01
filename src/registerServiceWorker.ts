@@ -15,6 +15,7 @@ const INSTALLED_STATE = "installed";
 const VISIBLE_STATE = "visible";
 const SKIP_WAITING_MESSAGE_TYPE = "SKIP_WAITING";
 const RELOAD_CLIENT_MESSAGE_TYPE = "RELOAD_CLIENT";
+export const BRICKBREAKER_OFFLINE_READY_EVENT = "brickbreaker-offline-ready";
 const RELOAD_GUARD_KEY = "brickbreaker-sw-controller-reload";
 const RELOAD_GUARD_VALUE = "pending";
 const RELOAD_GUARD_RESET_DELAY_MS = 1000;
@@ -84,6 +85,10 @@ function requestUpdate(
     .catch((error) => {
       log?.(SERVICE_WORKER_UPDATE_FAILED_MESSAGE, error);
     });
+}
+
+function dispatchOfflineReady(windowRef: Window) {
+  windowRef.dispatchEvent(new CustomEvent(BRICKBREAKER_OFFLINE_READY_EVENT));
 }
 
 function postSkipWaiting(worker: ServiceWorker) {
@@ -235,6 +240,9 @@ export function registerServiceWorker(
         bindRuntimeUpdateChecks(windowRef, registration, serviceWorker, log);
         handleInstalledWorker(registration, serviceWorker);
         requestUpdate(registration, serviceWorker, log);
+        serviceWorker.ready
+          .then(() => dispatchOfflineReady(windowRef))
+          .catch((error) => log?.(SERVICE_WORKER_UPDATE_FAILED_MESSAGE, error));
       })
       .catch((error) => {
         log(SERVICE_WORKER_REGISTRATION_FAILED_MESSAGE, error);

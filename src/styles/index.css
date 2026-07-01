@@ -377,6 +377,10 @@ canvas {
   transform: translateY(1px);
 }
 
+.audio-toggle {
+  min-width: 96px;
+}
+
 .button-icon {
   display: inline-grid;
   place-items: center;
@@ -416,6 +420,7 @@ canvas {
   min-height: 0;
 }
 
+.offline-ready-message,
 .victory-message,
 .game-over-message {
   width: min(100%, 520px);
@@ -429,6 +434,7 @@ canvas {
   gap: var(--space-2);
 }
 
+.offline-ready-message,
 .victory-message {
   background: color-mix(in srgb, var(--bb-color-primary) 12%, transparent);
   border: 1px solid color-mix(in srgb, var(--bb-color-primary) 44%, transparent);
@@ -439,6 +445,7 @@ canvas {
   border: 1px solid color-mix(in srgb, var(--bb-color-danger) 48%, transparent);
 }
 
+.offline-ready-message p,
 .victory-message h2,
 .game-over-message h2,
 .victory-message p,
@@ -451,6 +458,7 @@ canvas {
   font-size: 0.95rem;
 }
 
+.offline-ready-message p,
 .victory-message p,
 .game-over-message p {
   font-size: 0.84rem;

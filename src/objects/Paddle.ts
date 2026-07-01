@@ -16,15 +16,19 @@ import { ERROR } from '../utils/logger';
 
 const KEY_LEFT = 'ArrowLeft';
 const KEY_RIGHT = 'ArrowRight';
+const PADDLE_MIN_SCALE = 1;
+const PADDLE_MAX_SCALE = 1.8;
 
 export class Paddle {
   private x: number;
   private dx = 0;
-  private readonly width: number;
+  private width: number;
+  private readonly baseWidth: number;
   private readonly height: number;
   private previousPosition: { x: number; y: number } | null = null;
 
   constructor(private canvasWidth: number, private canvasHeight: number, dimensions: DynamicGameDimensions) {
+    this.baseWidth = dimensions.paddleWidth;
     this.width = dimensions.paddleWidth;
     this.height = dimensions.paddleHeight;
     this.x = (canvasWidth - this.width) / 2;
@@ -61,7 +65,18 @@ export class Paddle {
 
   reset() {
     this.dx = 0;
+    this.width = this.baseWidth;
     this.x = (this.canvasWidth - this.width) / 2;
+    this.previousPosition = this.position;
+  }
+
+  setWidthScale(scale: number) {
+    const nextScale = Math.max(PADDLE_MIN_SCALE, Math.min(PADDLE_MAX_SCALE, scale));
+    const centerX = this.x + this.width / 2;
+    this.width = this.baseWidth * nextScale;
+    this.x = centerX - this.width / 2;
+    if (this.x < 0) this.x = 0;
+    if (this.x + this.width > this.canvasWidth) this.x = this.canvasWidth - this.width;
     this.previousPosition = this.position;
   }
 

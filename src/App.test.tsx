@@ -15,6 +15,8 @@ jest.mock('./components/Game', () => ({
 jest.mock('./storage/score', () => ({
   saveScore: jest.fn().mockResolvedValue(undefined),
   getTotalScore: jest.fn().mockResolvedValue(0),
+  getHighScore: jest.fn().mockResolvedValue(0),
+  saveHighScore: jest.fn().mockResolvedValue(undefined),
   resetScores: jest.fn().mockResolvedValue(undefined),
 }));
 

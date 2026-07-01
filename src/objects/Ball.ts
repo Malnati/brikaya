@@ -13,9 +13,11 @@ import { AssetLoader } from '../utils/assetLoader';
 import { collisionTracker } from '../utils/collisionTracker';
 import { ERROR, LOG } from '../utils/logger';
 import { gameLogger, type LoggedGameState } from '../storage/gameLogger';
+import { GAME_AUDIO_IDS, type GameAudioSink } from '../constants/audio';
 
 const BALL_INITIAL_Y_OFFSET = 30;
 const MAX_BOUNCE_ANGLE = Math.PI / 3; // 60 graus
+const PADDLE_EDGE_ZONE_RATIO = 0.2;
 
 export class Ball {
   private x: number;
@@ -36,11 +38,16 @@ export class Ball {
   private levelStartedAt = Date.now();
   private lastSpeedReduction: SpeedReductionSnapshot | null = null;
 
-  constructor(private canvasWidth: number, canvasHeight: number, dimensions: DynamicGameDimensions, speedMultiplier = 1) {
-    this.radius = dimensions.ballRadius;
-    this.x = canvasWidth / 2;
-    this.y = canvasHeight - BALL_INITIAL_Y_OFFSET;
-    const initialSpeed = calculateInitialBallSpeed(canvasWidth) * speedMultiplier;
+  constructor(
+    private canvasWidth: number,
+    private canvasHeight: number,
+    private dimensions: DynamicGameDimensions,
+    private speedMultiplier = 1
+  ) {
+    this.radius = this.dimensions.ballRadius;
+    this.x = this.canvasWidth / 2;
+    this.y = this.canvasHeight - BALL_INITIAL_Y_OFFSET;
+    const initialSpeed = calculateInitialBallSpeed(this.canvasWidth) * this.speedMultiplier;
     this.dx = initialSpeed;
     this.dy = -initialSpeed;
     this.currentSpeed = initialSpeed;
@@ -60,6 +67,9 @@ export class Ball {
     const initialSpeed = calculateInitialBallSpeed(canvasWidth) * speedMultiplier;
 
     this.canvasWidth = canvasWidth;
+    this.canvasHeight = canvasHeight;
+    this.dimensions = dimensions;
+    this.speedMultiplier = speedMultiplier;
     this.radius = dimensions.ballRadius;
     this.x = canvasWidth / 2;
     this.y = canvasHeight - BALL_INITIAL_Y_OFFSET;
@@ -99,7 +109,8 @@ export class Ball {
       ) => Promise<boolean> 
     },
     maxHeight: number,
-    gameState: LoggedGameState
+    gameState: LoggedGameState,
+    audioSink?: GameAudioSink
   ): Promise<boolean> {
     this.x += this.dx;
     this.y += this.dy;
@@ -109,6 +120,7 @@ export class Ball {
       const wallType = this.x + this.dx > this.canvasWidth - this.radius ? 'right' : 'left';
       LOG(`🧱 Colisão com parede ${wallType} detectada em (${Math.round(this.x)}, ${Math.round(this.y)})`);
       
+      audioSink?.playAudio(GAME_AUDIO_IDS.WALL_HIT);
       const velocityBefore = { dx: this.dx, dy: this.dy };
       this.dx = -this.dx;
       const velocityAfter = { dx: this.dx, dy: this.dy };
@@ -138,6 +150,7 @@ export class Ball {
     if (this.y + this.dy < this.radius) {
       LOG(`🏠 Colisão com teto detectada em (${Math.round(this.x)}, ${Math.round(this.y)})`);
       
+      audioSink?.playAudio(GAME_AUDIO_IDS.CEILING_HIT);
       const velocityBefore = { dx: this.dx, dy: this.dy };
       this.dy = -this.dy;
       const velocityAfter = { dx: this.dx, dy: this.dy };
@@ -171,6 +184,10 @@ export class Ball {
         LOG(`🏓 Bola bateu na raquete em x=${this.x}, raquete=${paddlePos.x}-${paddlePos.x + paddlePos.width}`);
         
         const hitPosition = (this.x - paddlePos.x) / paddlePos.width;
+        const paddleAudioId = hitPosition <= PADDLE_EDGE_ZONE_RATIO || hitPosition >= 1 - PADDLE_EDGE_ZONE_RATIO
+          ? GAME_AUDIO_IDS.PADDLE_HIT_EDGE
+          : GAME_AUDIO_IDS.PADDLE_HIT_CENTER;
+        audioSink?.playAudio(paddleAudioId);
         LOG(`🏓 Registrando colisão com raquete - Hit position: ${hitPosition.toFixed(2)}`);
         
         const velocityBefore = { dx: this.dx, dy: this.dy };
@@ -207,6 +224,7 @@ export class Ball {
         
         LOG(`💀 Registrando bola perdida - Posição: (${Math.round(this.x)}, ${Math.round(this.y)})`);
         
+        audioSink?.playAudio(GAME_AUDIO_IDS.BALL_LOST);
         const lostBallVelocity = { dx: this.dx, dy: this.dy };
         
         gameLogger.logBallLost(
@@ -340,6 +358,31 @@ export class Ball {
 
   setDirection(angle: number) {
     this.setVelocityFromAngleAndSpeed(angle, this.getCurrentSpeedMagnitude());
+  }
+
+  createClone(angleOffset: number): Ball {
+    const clone = new Ball(this.canvasWidth, this.canvasHeight, this.dimensions, this.speedMultiplier);
+    clone.x = this.x;
+    clone.y = this.y;
+    clone.level = this.level;
+    clone.maxSpeed = this.maxSpeed;
+    clone.minSpeed = this.minSpeed;
+    clone.initialSpawnSpeed = this.initialSpawnSpeed;
+    clone.currentSpeed = this.currentSpeed;
+    clone.reductionPerBrick = this.reductionPerBrick;
+    clone.initialBrickCount = this.initialBrickCount;
+    clone.previousLevelMaxSpeed = this.previousLevelMaxSpeed;
+    clone.levelStartedAt = this.levelStartedAt;
+    clone.setVelocityFromAngleAndSpeed(this.getCurrentAngle() + angleOffset, this.getCurrentSpeedMagnitude(), false);
+    return clone;
+  }
+
+  multiplyVelocity(multiplier: number) {
+    const nextSpeed = roundSpeedValue(this.getCurrentSpeedMagnitude() * multiplier);
+    const angle = this.getCurrentAngle();
+    this.currentSpeed = nextSpeed;
+    this.dx = nextSpeed * Math.sin(angle);
+    this.dy = -nextSpeed * Math.cos(angle);
   }
 
   private setVelocityFromAngleAndSpeed(angle: number, speed: number, clampMax = true) {

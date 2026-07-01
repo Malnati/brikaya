@@ -24,7 +24,7 @@ export class Bricks {
 
   constructor(
     dimensions: DynamicGameDimensions,
-    private onBrickDestroyed?: () => void,
+    private onBrickDestroyed?: (colorIndex: number) => void | Promise<void>,
     maxRows?: number,
     private onMaxRowsReached?: () => void
   ) {
@@ -197,7 +197,7 @@ export class Bricks {
             }
             destroyedCount++;
             if (this.onBrickDestroyed) {
-              await this.onBrickDestroyed();
+              await this.onBrickDestroyed(b.colorIndex);
             }
             collided = true;
             break; // Sair do loop após a primeira colisão

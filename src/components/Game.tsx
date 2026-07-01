@@ -6,6 +6,7 @@ import { useColorDebug } from '../hooks/useColorDebug';
 import { LevelToast } from './LevelToast';
 import { CANVAS_WIDTH, CANVAS_HEIGHT, MIN_CANVAS_WIDTH, MIN_CANVAS_HEIGHT, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT, LevelTransitionPayload } from '../constants/game';
 import { GameQaScenario } from '../logic/GameEngine';
+import type { GameAudioSink } from '../constants/audio';
 
 interface GameProps {
   onScoreUpdate: (score: number) => void;
@@ -15,6 +16,7 @@ interface GameProps {
   levelToastPayload: LevelTransitionPayload | null;
   isLevelToastVisible: boolean;
   qaScenario?: GameQaScenario | null;
+  audioSink?: GameAudioSink;
 }
 
 const CANVAS_CONTAINER_HORIZONTAL_INSET = 16;
@@ -33,7 +35,8 @@ export default function Game({
   onLevelTransition,
   levelToastPayload,
   isLevelToastVisible,
-  qaScenario
+  qaScenario,
+  audioSink
 }: GameProps) {
   const surfaceRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -83,7 +86,7 @@ export default function Game({
     };
   }, []);
 
-  useGameLoop(canvasRef, onScoreUpdate, onGameWon, onGameOver, canvasSize, onLevelTransition, qaScenario);
+  useGameLoop(canvasRef, onScoreUpdate, onGameWon, onGameOver, canvasSize, onLevelTransition, qaScenario, audioSink);
   useColorDebug(canvasRef);
 
   return (

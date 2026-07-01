@@ -3,83 +3,182 @@ import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import Game from './components/Game';
 import { AdSlotPlaceholder } from './components/AdSlotPlaceholder';
 import { ThemeToggle } from './components/ThemeToggle';
+import { AudioToggle } from './components/AudioToggle';
 import { CollisionStats } from './components/CollisionStats';
 import GameLogViewer from './components/GameLogViewer';
-import { saveScore, getTotalScore, resetScores } from './storage/score';
+import { saveScore, getTotalScore, resetScores, getHighScore, saveHighScore } from './storage/score';
 import { LEVEL_TOAST_EXIT_MS, LEVEL_TOAST_VISIBLE_MS, LevelTransitionPayload } from './constants/game';
+import {
+  AUDIO_QA_SCENARIO,
+  GAMEPLAY_MUSIC_AUDIO_ID,
+  GAME_AUDIO_IDS,
+  MENU_MUSIC_AUDIO_ID,
+  type GameAudioSink,
+} from './constants/audio';
+import { BRICKBREAKER_OFFLINE_READY_EVENT } from './registerServiceWorker';
 import { LOG } from './utils/logger';
+import { audioManager } from './utils/audioManager';
 import { GameQaScenario } from './logic/GameEngine';
 import { useThemePreference } from './hooks/useThemePreference';
+import { useAudioPreference } from './hooks/useAudioPreference';
 
 LOG('🚦 App.tsx carregado');
+
+const FIRST_AUDIO_INTERACTION_EVENTS = ['pointerdown', 'keydown', 'touchstart'] as const;
+const OFFLINE_READY_VISIBLE_MS = 2400;
 
 export default function App() {
   const [score, setScore] = useState(0);
   const scoreRef = useRef(0);
   const [totalScore, setTotalScore] = useState(0);
+  const [highScore, setHighScore] = useState(0);
   const [gameKey, setGameKey] = useState(0);
   const [gameWon, setGameWon] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [level, setLevel] = useState(1);
   const [levelToastPayload, setLevelToastPayload] = useState<LevelTransitionPayload | null>(null);
   const [isLevelToastVisible, setIsLevelToastVisible] = useState(false);
+  const [isOfflineReadyVisible, setIsOfflineReadyVisible] = useState(false);
   const { theme, selectTheme } = useThemePreference();
+  const { isAudioMuted, toggleAudio } = useAudioPreference();
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const levelTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hideToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const offlineReadyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showCollisionStats, setShowCollisionStats] = useState(false);
   const [showGameLogs, setShowGameLogs] = useState(false);
   const qaScenario = useMemo<GameQaScenario | null>(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    return searchParams.get('qaScenario') === 'single-brick-phase-clear'
-      ? 'single-brick-phase-clear'
-      : null;
+    const scenario = searchParams.get('qaScenario');
+    if (scenario === 'single-brick-phase-clear') return 'single-brick-phase-clear';
+    if (scenario === AUDIO_QA_SCENARIO) return AUDIO_QA_SCENARIO;
+    return null;
   }, []);
+  const audioSink = useMemo<GameAudioSink>(() => ({
+    playAudio: id => {
+      void audioManager.play(id);
+    },
+    startGameplayMusic: () => {
+      void audioManager.playMusic(GAMEPLAY_MUSIC_AUDIO_ID);
+    },
+    startMenuMusic: () => {
+      void audioManager.playMusic(MENU_MUSIC_AUDIO_ID);
+    },
+    setHighIntensity: active => {
+      void audioManager.setHighIntensity(active);
+    },
+  }), []);
 
   const handleScoreUpdate = useCallback((newScore: number) => {
     scoreRef.current = newScore;
     setScore(newScore);
   }, []);
 
+  const persistFinalScore = useCallback(async () => {
+    try {
+      const finalScore = scoreRef.current;
+      await saveScore(finalScore);
+      const previousHighScore = await getHighScore();
+      if (finalScore > previousHighScore) {
+        await saveHighScore(finalScore);
+        setHighScore(finalScore);
+        audioSink.playAudio(GAME_AUDIO_IDS.HIGHSCORE_NEW);
+      }
+      const total = await getTotalScore();
+      setTotalScore(total);
+    } catch {
+      audioSink.playAudio(GAME_AUDIO_IDS.ERROR_SOFT);
+    }
+  }, [audioSink]);
+
   const handleGameWon = useCallback(async () => {
     setGameWon(true);
-    await saveScore(scoreRef.current);
-    const total = await getTotalScore();
-    setTotalScore(total);
-  }, []);
+    await persistFinalScore();
+    audioSink.startMenuMusic();
+  }, [audioSink, persistFinalScore]);
 
   const handleGameOver = useCallback(async () => {
     setGameOver(true);
-    await saveScore(scoreRef.current);
-    const total = await getTotalScore();
-    setTotalScore(total);
-  }, []);
+    await persistFinalScore();
+    audioSink.startMenuMusic();
+  }, [audioSink, persistFinalScore]);
 
   useEffect(() => () => {
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     if (levelTimerRef.current) clearTimeout(levelTimerRef.current);
     if (hideToastTimerRef.current) clearTimeout(hideToastTimerRef.current);
+    if (offlineReadyTimerRef.current) clearTimeout(offlineReadyTimerRef.current);
   }, []);
 
   useEffect(() => {
-    getTotalScore().then(setTotalScore);
-  }, []);
+    getTotalScore().then(setTotalScore).catch(() => audioSink.playAudio(GAME_AUDIO_IDS.ERROR_SOFT));
+    getHighScore().then(setHighScore).catch(() => audioSink.playAudio(GAME_AUDIO_IDS.ERROR_SOFT));
+  }, [audioSink]);
+
+  useEffect(() => {
+    audioManager.exposeQaApi();
+    if (qaScenario === AUDIO_QA_SCENARIO) {
+      void audioManager.runQaTour();
+    }
+  }, [qaScenario]);
+
+  useEffect(() => {
+    audioSink.playAudio(GAME_AUDIO_IDS.AD_PLACEHOLDER_NONE);
+  }, [audioSink]);
+
+  useEffect(() => {
+    if (isAudioMuted) return undefined;
+
+    const unlockAudio = () => {
+      void audioManager.unlock().then(unlocked => {
+        if (unlocked) {
+          void audioManager.playMusic(GAMEPLAY_MUSIC_AUDIO_ID);
+        }
+      });
+    };
+
+    for (const eventName of FIRST_AUDIO_INTERACTION_EVENTS) {
+      window.addEventListener(eventName, unlockAudio, { once: true, passive: true });
+    }
+
+    return () => {
+      for (const eventName of FIRST_AUDIO_INTERACTION_EVENTS) {
+        window.removeEventListener(eventName, unlockAudio);
+      }
+    };
+  }, [isAudioMuted]);
 
   useEffect(() => {
     if (!isMenuOpen) return undefined;
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
+        audioSink.playAudio(GAME_AUDIO_IDS.PANEL_CLOSE);
         setIsMenuOpen(false);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isMenuOpen]);
+  }, [audioSink, isMenuOpen]);
+
+  useEffect(() => {
+    const showOfflineReady = () => {
+      setIsOfflineReadyVisible(true);
+      audioSink.playAudio(GAME_AUDIO_IDS.OFFLINE_READY);
+      if (offlineReadyTimerRef.current) clearTimeout(offlineReadyTimerRef.current);
+      offlineReadyTimerRef.current = setTimeout(() => {
+        setIsOfflineReadyVisible(false);
+      }, OFFLINE_READY_VISIBLE_MS);
+    };
+
+    window.addEventListener(BRICKBREAKER_OFFLINE_READY_EVENT, showOfflineReady);
+    return () => window.removeEventListener(BRICKBREAKER_OFFLINE_READY_EVENT, showOfflineReady);
+  }, [audioSink]);
 
   const handleRestart = useCallback(() => {
+    audioSink.playAudio(GAME_AUDIO_IDS.RESTART);
     scoreRef.current = 0;
     setScore(0);
     setGameWon(false);
@@ -88,25 +187,70 @@ export default function App() {
     setLevelToastPayload(null);
     setIsLevelToastVisible(false);
     setGameKey(prev => prev + 1);
-  }, []);
+  }, [audioSink]);
 
   const handleResetScores = useCallback(async () => {
-    await resetScores();
-    setTotalScore(0);
+    audioSink.playAudio(GAME_AUDIO_IDS.RESET_SCORE);
+    try {
+      await resetScores();
+      setTotalScore(0);
+      setHighScore(0);
+      setIsMenuOpen(false);
+    } catch {
+      audioSink.playAudio(GAME_AUDIO_IDS.ERROR_SOFT);
+    }
+  }, [audioSink]);
+
+  const handleOpenMenu = useCallback(() => {
+    audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+    setIsMenuOpen(true);
+  }, [audioSink]);
+
+  const handleCloseMenu = useCallback(() => {
+    audioSink.playAudio(GAME_AUDIO_IDS.PANEL_CLOSE);
     setIsMenuOpen(false);
-  }, []);
+  }, [audioSink]);
 
   const handleOpenLogs = useCallback(() => {
+    audioSink.playAudio(GAME_AUDIO_IDS.PANEL_OPEN);
     setShowGameLogs(true);
     setIsMenuOpen(false);
-  }, []);
+  }, [audioSink]);
+
+  const handleCloseLogs = useCallback(() => {
+    audioSink.playAudio(GAME_AUDIO_IDS.PANEL_CLOSE);
+    setShowGameLogs(false);
+  }, [audioSink]);
 
   const handleOpenCollisionStats = useCallback(() => {
+    audioSink.playAudio(GAME_AUDIO_IDS.PANEL_OPEN);
     setShowCollisionStats(true);
     setIsMenuOpen(false);
-  }, []);
+  }, [audioSink]);
+
+  const handleCloseCollisionStats = useCallback(() => {
+    audioSink.playAudio(GAME_AUDIO_IDS.PANEL_CLOSE);
+    setShowCollisionStats(false);
+  }, [audioSink]);
+
+  const handleThemeChange = useCallback((nextTheme: Parameters<typeof selectTheme>[0]) => {
+    audioSink.playAudio(GAME_AUDIO_IDS.THEME_TOGGLE);
+    selectTheme(nextTheme);
+  }, [audioSink, selectTheme]);
+
+  const handleAudioToggle = useCallback(async () => {
+    if (!isAudioMuted) {
+      audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+    }
+    await toggleAudio();
+    if (isAudioMuted) {
+      audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+      audioSink.startGameplayMusic();
+    }
+  }, [audioSink, isAudioMuted, toggleAudio]);
 
   const handleLevelTransition = useCallback((payload: LevelTransitionPayload) => {
+    audioSink.playAudio(GAME_AUDIO_IDS.LEVEL_TOAST_IN);
     setLevelToastPayload(payload);
     setIsLevelToastVisible(true);
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
@@ -124,7 +268,7 @@ export default function App() {
     hideToastTimerRef.current = setTimeout(() => {
       setLevelToastPayload(null);
     }, payload.pauseMs + LEVEL_TOAST_EXIT_MS);
-  }, []);
+  }, [audioSink]);
 
   return (
     <main className="app-shell">
@@ -139,13 +283,15 @@ export default function App() {
               <span className="score-chip">Fase {level}</span>
               <span className="score-chip">Score {score}</span>
               <span className="score-chip">Total {totalScore}</span>
+              <span className="score-chip">Recorde {highScore}</span>
             </div>
+            <AudioToggle muted={isAudioMuted} onToggle={handleAudioToggle} />
             <button
               type="button"
               className="dashboard-menu-button"
               aria-expanded={isMenuOpen}
               aria-controls="game-settings-menu"
-              onClick={() => setIsMenuOpen(true)}
+              onClick={handleOpenMenu}
             >
               Menu
             </button>
@@ -158,7 +304,7 @@ export default function App() {
               type="button"
               className="settings-drawer-backdrop"
               aria-label="Fechar menu"
-              onClick={() => setIsMenuOpen(false)}
+              onClick={handleCloseMenu}
             />
             <aside id="game-settings-menu" className="settings-drawer" aria-label="Menu do jogo">
               <div className="settings-drawer__header">
@@ -167,14 +313,14 @@ export default function App() {
                   type="button"
                   className="settings-drawer__close"
                   aria-label="Fechar menu"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={handleCloseMenu}
                 >
                   ×
                 </button>
               </div>
               <div className="settings-drawer__section">
                 <h3>Tema</h3>
-                <ThemeToggle theme={theme} onThemeChange={selectTheme} />
+                <ThemeToggle theme={theme} onThemeChange={handleThemeChange} />
               </div>
               <div className="settings-drawer__section">
                 <h3>Ferramentas</h3>
@@ -207,6 +353,7 @@ export default function App() {
                 levelToastPayload={levelToastPayload}
                 isLevelToastVisible={isLevelToastVisible}
                 qaScenario={qaScenario}
+                audioSink={audioSink}
               />
             </div>
             <div className="dashboard-actions dashboard-actions--primary" aria-label="Ações principais">
@@ -221,6 +368,11 @@ export default function App() {
         </div>
 
         <div className="game-status-region" aria-live="polite">
+        {isOfflineReadyVisible && (
+          <div className="offline-ready-message">
+            <p>Pronto para jogar offline</p>
+          </div>
+        )}
         {gameWon && (
           <div className="victory-message">
             <h2>Fase concluída</h2>
@@ -237,11 +389,11 @@ export default function App() {
       </section>
       <CollisionStats
         isVisible={showCollisionStats}
-        onClose={() => setShowCollisionStats(false)}
+        onClose={handleCloseCollisionStats}
       />
       <GameLogViewer
         isVisible={showGameLogs}
-        onClose={() => setShowGameLogs(false)}
+        onClose={handleCloseLogs}
       />
     </main>
   );
