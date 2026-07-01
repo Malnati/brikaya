@@ -4,6 +4,14 @@
 - Resolvido conflitos para integrar mudancas da main
 
 
+## [1.16.2] - 2026-07-01
+### Alterado
+- Controles `Som` e `Reiniciar`/`Jogar de novo` passam a aparecer como ícones discretos nos cantos inferiores do tabuleiro.
+- Menu lateral fica reservado para tema, logs, colisões e zerar pontuação.
+
+### Testado
+- Cobertura de App e QA publicado validam controles acessíveis, alvos touch de 44px e ausência de overflow.
+
 ## [1.16.1] - 2026-07-01
 ### Corrigido
 - Bolinha em fases altas passa a usar passos internos de movimento e clamp nas bordas para não sair do canvas após a Fase 10.

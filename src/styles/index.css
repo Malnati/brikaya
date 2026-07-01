@@ -37,15 +37,16 @@
   --radius-md: 16px;
   --radius-lg: 24px;
   --shadow-panel: var(--bb-shadow-panel);
-  --bb-font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  --bb-font-body:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   --bb-font-display: var(--bb-font-body);
-  --bb-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
-    'Courier New', monospace;
+  --bb-font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
 }
 
-:root[data-theme='light'] {
+:root[data-theme="light"] {
   color-scheme: light;
   --bb-color-background: #fcf8fb;
   --bb-color-surface: #ffffff;
@@ -79,8 +80,16 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background:
-    radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--bb-color-primary) 18%, transparent), transparent 28%),
-    radial-gradient(circle at 90% 12%, color-mix(in srgb, var(--bb-color-tertiary) 18%, transparent), transparent 28%),
+    radial-gradient(
+      circle at 10% 0%,
+      color-mix(in srgb, var(--bb-color-primary) 18%, transparent),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 90% 12%,
+      color-mix(in srgb, var(--bb-color-tertiary) 18%, transparent),
+      transparent 28%
+    ),
     var(--color-bg);
   color: var(--color-text);
   min-height: 100dvh;
@@ -97,7 +106,9 @@ select {
   width: 100%;
   min-height: 100dvh;
   box-sizing: border-box;
-  padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+  padding: max(8px, env(safe-area-inset-top))
+    max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom))
+    max(8px, env(safe-area-inset-left));
 }
 
 .app-shell {
@@ -111,7 +122,11 @@ select {
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--bb-color-panel) 96%, transparent), color-mix(in srgb, var(--bb-color-surface) 98%, transparent));
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bb-color-panel) 96%, transparent),
+    color-mix(in srgb, var(--bb-color-surface) 98%, transparent)
+  );
   border: 1px solid color-mix(in srgb, var(--bb-color-outline) 24%, transparent);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-panel);
@@ -302,7 +317,9 @@ canvas {
   font-weight: 800;
   text-align: center;
   box-shadow: var(--bb-shadow-panel);
-  transition: opacity 350ms ease, transform 350ms ease;
+  transition:
+    opacity 350ms ease,
+    transform 350ms ease;
 }
 
 .level-toast--visible {
@@ -313,7 +330,6 @@ canvas {
 .level-toast--hidden {
   opacity: 0;
 }
-
 
 .dashboard-button {
   display: inline-flex;
@@ -332,9 +348,11 @@ canvas {
   color: var(--color-text);
   background: var(--color-panel-soft);
   box-sizing: border-box;
-  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease;
 }
-
 
 .dashboard-button--primary {
   color: var(--bb-color-on-primary);
@@ -344,7 +362,11 @@ canvas {
 
 .dashboard-button--secondary:hover,
 .dashboard-button--secondary:focus-visible {
-  background: color-mix(in srgb, var(--bb-color-primary) 14%, var(--bb-color-panel-soft));
+  background: color-mix(
+    in srgb,
+    var(--bb-color-primary) 14%,
+    var(--bb-color-panel-soft)
+  );
   border-color: color-mix(in srgb, var(--bb-color-primary) 58%, transparent);
 }
 
@@ -380,7 +402,8 @@ canvas {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  border: 1px dashed color-mix(in srgb, var(--bb-color-outline) 44%, transparent);
+  border: 1px dashed
+    color-mix(in srgb, var(--bb-color-outline) 44%, transparent);
   border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--bb-color-surface) 46%, transparent);
   color: var(--color-muted);
@@ -469,7 +492,8 @@ canvas {
   padding: var(--space-3);
   box-sizing: border-box;
   overflow-y: auto;
-  border-left: 1px solid color-mix(in srgb, var(--bb-color-outline) 34%, transparent);
+  border-left: 1px solid
+    color-mix(in srgb, var(--bb-color-outline) 34%, transparent);
   background: var(--bb-color-panel);
   box-shadow: var(--shadow-panel);
 }
@@ -543,7 +567,9 @@ canvas {
 
 @media (max-width: 768px) {
   #root {
-    padding: max(6px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
+    padding: max(6px, env(safe-area-inset-top))
+      max(6px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom))
+      max(6px, env(safe-area-inset-left));
   }
 
   .game-dashboard {
@@ -587,7 +613,9 @@ canvas {
 
 @media (max-width: 480px) {
   #root {
-    padding: max(4px, env(safe-area-inset-top)) max(4px, env(safe-area-inset-right)) max(4px, env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-left));
+    padding: max(4px, env(safe-area-inset-top))
+      max(4px, env(safe-area-inset-right)) max(4px, env(safe-area-inset-bottom))
+      max(4px, env(safe-area-inset-left));
   }
 
   .game-dashboard {
@@ -664,7 +692,8 @@ canvas {
 
 @media (max-height: 500px) and (orientation: landscape) {
   #root {
-    padding: 4px max(6px, env(safe-area-inset-right)) 4px max(6px, env(safe-area-inset-left));
+    padding: 4px max(6px, env(safe-area-inset-right)) 4px
+      max(6px, env(safe-area-inset-left));
   }
 
   .game-dashboard {
@@ -711,7 +740,6 @@ canvas {
     font-size: 0.72rem;
   }
 
-
   .dashboard-button {
     min-height: 44px;
     padding: 8px 10px;
@@ -721,6 +749,48 @@ canvas {
   .ad-slot--bottom {
     display: none;
   }
+}
+
+.game-corner-controls {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  z-index: 4;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.game-corner-controls .game-icon-control {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border-radius: 999px;
+  opacity: 0.84;
+  pointer-events: auto;
+  box-shadow: 0 4px 16px
+    color-mix(in srgb, var(--bb-color-ink) 16%, transparent);
+}
+
+.game-corner-controls .game-icon-control:hover,
+.game-corner-controls .game-icon-control:focus-visible {
+  opacity: 1;
+}
+
+.game-corner-controls .audio-toggle--icon {
+  min-width: 44px;
+}
+
+.game-corner-controls .button-icon {
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  font-size: 1rem;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,0 +1,793 @@
+{
+  "url": "https://fix-main-screen-icon-control.malnati-brickbreaker.pages.dev",
+  "screenshotPaths": {
+    "iphone15": {
+      "light": "tmp/screenshots/cloudflare-theme-iphone15-light.png",
+      "dark": "tmp/screenshots/cloudflare-theme-iphone15-dark.png"
+    },
+    "desktop": {
+      "light": "tmp/screenshots/cloudflare-theme-desktop-light.png",
+      "dark": "tmp/screenshots/cloudflare-theme-desktop-dark.png"
+    }
+  },
+  "results": {
+    "iphone15": {
+      "initialState": {
+        "theme": "dark",
+        "storedTheme": null,
+        "heading": "Breakout",
+        "themeToggle": false,
+        "menuOpen": false,
+        "buttons": [
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "title": "",
+            "width": 68,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "♪",
+            "ariaLabel": "Som",
+            "title": "Som",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": false
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "title": "Reiniciar",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          }
+        ],
+        "bodyText": "\n    Arcade clássicoBreakoutFase 1Score 10Total 0Recorde 0Menu♪↻PublicidadePublicidade\n  \n\n",
+        "forbiddenResources": [],
+        "canvas": {
+          "x": 19,
+          "y": 109.84375,
+          "width": 355,
+          "height": 244,
+          "right": 374,
+          "bottom": 353.84375
+        },
+        "viewport": {
+          "width": 393,
+          "height": 852,
+          "scrollWidth": 393
+        },
+        "hasHorizontalOverflow": false
+      },
+      "lightState": {
+        "theme": "light",
+        "storedTheme": "light",
+        "heading": "Breakout",
+        "themeToggle": true,
+        "menuOpen": true,
+        "buttons": [
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "title": "",
+            "width": 68,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "title": "",
+            "width": 393,
+            "height": 852,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "title": "",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "Claro",
+            "ariaLabel": "",
+            "title": "",
+            "width": 136.5,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": true
+          },
+          {
+            "text": "Escuro",
+            "ariaLabel": "",
+            "title": "",
+            "width": 136.5,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "≡Logs",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "◈Colisões",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "♪",
+            "ariaLabel": "Som",
+            "title": "Som",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": false
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "title": "Reiniciar",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          }
+        ],
+        "bodyText": "\n    Arcade clássicoBreakoutFase 1Score 10Total 0Recorde 0MenuMenu×TemaClaroEscuroFerramentas≡Logs◈Colisões0Zerar pontuação♪↻PublicidadePublicidade\n  \n\n",
+        "forbiddenResources": [],
+        "canvas": {
+          "x": 19,
+          "y": 109.84375,
+          "width": 355,
+          "height": 244,
+          "right": 374,
+          "bottom": 353.84375
+        },
+        "viewport": {
+          "width": 393,
+          "height": 852,
+          "scrollWidth": 393
+        },
+        "hasHorizontalOverflow": false
+      },
+      "reloadedLightState": {
+        "theme": "light",
+        "storedTheme": "light",
+        "heading": "Breakout",
+        "themeToggle": false,
+        "menuOpen": false,
+        "buttons": [
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "title": "",
+            "width": 68,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "♪",
+            "ariaLabel": "Som",
+            "title": "Som",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": false
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "title": "Reiniciar",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          }
+        ],
+        "bodyText": "\n    Arcade clássicoBreakoutFase 1Score 10Total 0Recorde 0Menu♪↻PublicidadePublicidade\n  \n\n",
+        "forbiddenResources": [],
+        "canvas": {
+          "x": 19,
+          "y": 109.84375,
+          "width": 355,
+          "height": 244,
+          "right": 374,
+          "bottom": 353.84375
+        },
+        "viewport": {
+          "width": 393,
+          "height": 852,
+          "scrollWidth": 393
+        },
+        "hasHorizontalOverflow": false
+      },
+      "darkState": {
+        "theme": "dark",
+        "storedTheme": "dark",
+        "heading": "Breakout",
+        "themeToggle": true,
+        "menuOpen": true,
+        "buttons": [
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "title": "",
+            "width": 68,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "title": "",
+            "width": 393,
+            "height": 852,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "title": "",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "Claro",
+            "ariaLabel": "",
+            "title": "",
+            "width": 136.5,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "Escuro",
+            "ariaLabel": "",
+            "title": "",
+            "width": 136.5,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": true
+          },
+          {
+            "text": "≡Logs",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "◈Colisões",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "♪",
+            "ariaLabel": "Som",
+            "title": "Som",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": false
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "title": "Reiniciar",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          }
+        ],
+        "bodyText": "\n    Arcade clássicoBreakoutFase 1Score 10Total 0Recorde 0MenuMenu×TemaClaroEscuroFerramentas≡Logs◈Colisões0Zerar pontuação♪↻PublicidadePublicidade\n  \n\n",
+        "forbiddenResources": [],
+        "canvas": {
+          "x": 19,
+          "y": 109.84375,
+          "width": 355,
+          "height": 244,
+          "right": 374,
+          "bottom": 353.84375
+        },
+        "viewport": {
+          "width": 393,
+          "height": 852,
+          "scrollWidth": 393
+        },
+        "hasHorizontalOverflow": false
+      }
+    },
+    "desktop": {
+      "initialState": {
+        "theme": "dark",
+        "storedTheme": null,
+        "heading": "Breakout",
+        "themeToggle": false,
+        "menuOpen": false,
+        "buttons": [
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "title": "",
+            "width": 68,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "♪",
+            "ariaLabel": "Som",
+            "title": "Som",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": false
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "title": "Reiniciar",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          }
+        ],
+        "bodyText": "\n    Arcade clássicoBreakoutFase 1Score 0Total 0Recorde 0Menu♪↻PublicidadePublicidade\n  \n\n",
+        "forbiddenResources": [],
+        "canvas": {
+          "x": 226.5,
+          "y": 86.15625,
+          "width": 457,
+          "height": 306,
+          "right": 683.5,
+          "bottom": 392.15625
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280
+        },
+        "hasHorizontalOverflow": false
+      },
+      "lightState": {
+        "theme": "light",
+        "storedTheme": "light",
+        "heading": "Breakout",
+        "themeToggle": true,
+        "menuOpen": true,
+        "buttons": [
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "title": "",
+            "width": 68,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "title": "",
+            "width": 1280,
+            "height": 720,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "title": "",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "Claro",
+            "ariaLabel": "",
+            "title": "",
+            "width": 64,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": true
+          },
+          {
+            "text": "Escuro",
+            "ariaLabel": "",
+            "title": "",
+            "width": 73.65625,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "≡Logs",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "◈Colisões",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "♪",
+            "ariaLabel": "Som",
+            "title": "Som",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": false
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "title": "Reiniciar",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          }
+        ],
+        "bodyText": "\n    Arcade clássicoBreakoutFase 1Score 10Total 0Recorde 0MenuMenu×TemaClaroEscuroFerramentas≡Logs◈Colisões0Zerar pontuação♪↻PublicidadePublicidade\n  \n\n",
+        "forbiddenResources": [],
+        "canvas": {
+          "x": 226.5,
+          "y": 86.15625,
+          "width": 457,
+          "height": 306,
+          "right": 683.5,
+          "bottom": 392.15625
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280
+        },
+        "hasHorizontalOverflow": false
+      },
+      "reloadedLightState": {
+        "theme": "light",
+        "storedTheme": "light",
+        "heading": "Breakout",
+        "themeToggle": false,
+        "menuOpen": false,
+        "buttons": [
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "title": "",
+            "width": 68,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "♪",
+            "ariaLabel": "Som",
+            "title": "Som",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": false
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "title": "Reiniciar",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          }
+        ],
+        "bodyText": "\n    Arcade clássicoBreakoutFase 1Score 0Total 0Recorde 0Menu♪↻PublicidadePublicidade\n  \n\n",
+        "forbiddenResources": [],
+        "canvas": {
+          "x": 226.5,
+          "y": 86.15625,
+          "width": 457,
+          "height": 306,
+          "right": 683.5,
+          "bottom": 392.15625
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280
+        },
+        "hasHorizontalOverflow": false
+      },
+      "darkState": {
+        "theme": "dark",
+        "storedTheme": "dark",
+        "heading": "Breakout",
+        "themeToggle": true,
+        "menuOpen": true,
+        "buttons": [
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "title": "",
+            "width": 68,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "title": "",
+            "width": 1280,
+            "height": 720,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "title": "",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "Claro",
+            "ariaLabel": "",
+            "title": "",
+            "width": 64,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "Escuro",
+            "ariaLabel": "",
+            "title": "",
+            "width": 73.65625,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": true
+          },
+          {
+            "text": "≡Logs",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "◈Colisões",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "♪",
+            "ariaLabel": "Som",
+            "title": "Som",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": false
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "title": "Reiniciar",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          }
+        ],
+        "bodyText": "\n    Arcade clássicoBreakoutFase 1Score 10Total 0Recorde 0MenuMenu×TemaClaroEscuroFerramentas≡Logs◈Colisões0Zerar pontuação♪↻PublicidadePublicidade\n  \n\n",
+        "forbiddenResources": [],
+        "canvas": {
+          "x": 226.5,
+          "y": 86.15625,
+          "width": 457,
+          "height": 306,
+          "right": 683.5,
+          "bottom": 392.15625
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280
+        },
+        "hasHorizontalOverflow": false
+      }
+    }
+  },
+  "externalRequests": [],
+  "consoleProblems": []
+}
