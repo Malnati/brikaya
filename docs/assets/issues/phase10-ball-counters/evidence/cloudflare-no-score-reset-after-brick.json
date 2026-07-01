@@ -1,0 +1,47 @@
+{
+  "url": "https://fix-phase10-ball-counters.malnati-brickbreaker.pages.dev",
+  "byType": {
+    "game_start": 1,
+    "brick_destroyed": 1,
+    "score_update": 1,
+    "collision": 1,
+    "ball_lost": 1,
+    "game_state_change": 1,
+    "game_end": 1
+  },
+  "eventTypes": [
+    "game_start",
+    "brick_destroyed",
+    "score_update",
+    "collision",
+    "ball_lost",
+    "game_state_change",
+    "game_end"
+  ],
+  "startBall": {
+    "x": 175.5,
+    "y": 210,
+    "velocity": {
+      "dx": 4.666904755831213,
+      "dy": -4.666904755831213
+    },
+    "radius": 8
+  },
+  "lastBall": null,
+  "restartedToInitialPosition": false,
+  "scoreEvents": 1,
+  "scoreSpeedReduction": {
+    "level": 1,
+    "hitNumber": 1,
+    "speedBefore": 6.6,
+    "speedAfter": 6.16,
+    "reductionApplied": 0.44,
+    "minSpeed": 1.65,
+    "maxSpeed": 6.6,
+    "minReached": false,
+    "elapsedLevelMs": 448
+  },
+  "expectedFirstLevelSpawnSpeed": 6.6,
+  "consoleProblems": [],
+  "screenshotPath": "tmp/screenshots/cloudflare-no-score-reset-after-brick.png"
+}

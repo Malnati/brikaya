@@ -18,6 +18,8 @@ import { GAME_AUDIO_IDS, type GameAudioSink } from '../constants/audio';
 const BALL_INITIAL_Y_OFFSET = 30;
 const MAX_BOUNCE_ANGLE = Math.PI / 3; // 60 graus
 const PADDLE_EDGE_ZONE_RATIO = 0.2;
+const MOTION_STEP_RADIUS_RATIO = 0.75;
+const MIN_MOTION_STEPS = 1;
 
 export class Ball {
   private x: number;
@@ -112,140 +114,187 @@ export class Ball {
     gameState: LoggedGameState,
     audioSink?: GameAudioSink
   ): Promise<boolean> {
-    this.x += this.dx;
-    this.y += this.dy;
+    const motionSteps = this.getMotionStepCount();
+    let brickCollisionHandled = false;
 
-    // Colisão com as paredes laterais
-    if (this.x + this.dx > this.canvasWidth - this.radius || this.x + this.dx < this.radius) {
-      const wallType = this.x + this.dx > this.canvasWidth - this.radius ? 'right' : 'left';
-      LOG(`🧱 Colisão com parede ${wallType} detectada em (${Math.round(this.x)}, ${Math.round(this.y)})`);
-      
-      audioSink?.playAudio(GAME_AUDIO_IDS.WALL_HIT);
-      const velocityBefore = { dx: this.dx, dy: this.dy };
-      this.dx = -this.dx;
-      const velocityAfter = { dx: this.dx, dy: this.dy };
-      
-      gameLogger.logCollision(
-        gameState,
-        [{ x: this.x, y: this.y, velocity: velocityAfter, radius: this.radius }],
+    for (let step = 0; step < motionSteps; step += 1) {
+      this.x += this.dx / motionSteps;
+      this.y += this.dy / motionSteps;
+
+      this.resolveWallCollision(paddle.position, gameState, audioSink);
+      this.resolveCeilingCollision(paddle.position, gameState, audioSink);
+
+      if (!brickCollisionHandled) {
+        brickCollisionHandled = await bricks.collide(this, gameState);
+      }
+
+      const inPlay = this.resolvePaddleCollisionOrLoss(
         paddle.position,
-        {
-          type: 'wall',
-          ballPosition: { x: this.x, y: this.y },
-          wallType,
-          velocityBefore,
-          velocityAfter
-        }
-      ).catch((error) => ERROR('❌ Erro ao registrar colisão com parede:', error)); 
-      
-      collisionTracker.logWallCollision(
-        { x: this.x, y: this.y },
-        velocityAfter,
+        maxHeight,
         gameState,
-        wallType
-      ).catch(error => ERROR('❌ Erro ao registrar colisão com parede:', error));
-    }
-    
-    // Colisão com o teto
-    if (this.y + this.dy < this.radius) {
-      LOG(`🏠 Colisão com teto detectada em (${Math.round(this.x)}, ${Math.round(this.y)})`);
-      
-      audioSink?.playAudio(GAME_AUDIO_IDS.CEILING_HIT);
-      const velocityBefore = { dx: this.dx, dy: this.dy };
-      this.dy = -this.dy;
-      const velocityAfter = { dx: this.dx, dy: this.dy };
-      
-      gameLogger.logCollision(
-        gameState,
-        [{ x: this.x, y: this.y, velocity: velocityAfter, radius: this.radius }],
-        paddle.position,
-        {
-          type: 'ceiling',
-          ballPosition: { x: this.x, y: this.y },
-          velocityBefore,
-          velocityAfter
-        }
-      ).catch(error => ERROR('❌ Erro ao registrar colisão com teto:', error));
-      
-      collisionTracker.logCeilingCollision(
-        { x: this.x, y: this.y },
-        velocityAfter,
-        gameState
-      ).catch(error => ERROR('❌ Erro ao registrar colisão com teto:', error));
-    }
+        audioSink
+      );
 
-    // PRIMEIRO: Colisão com blocos
-    await bricks.collide(this, gameState);
-
-    // DEPOIS: Colisão com a raquete ou verificação de fim de jogo
-    if (this.y + this.radius > maxHeight) {
-      const paddlePos = paddle.position;
-      if (this.x > paddlePos.x && this.x < paddlePos.x + paddlePos.width) {
-        LOG(`🏓 Bola bateu na raquete em x=${this.x}, raquete=${paddlePos.x}-${paddlePos.x + paddlePos.width}`);
-        
-        const hitPosition = (this.x - paddlePos.x) / paddlePos.width;
-        const paddleAudioId = hitPosition <= PADDLE_EDGE_ZONE_RATIO || hitPosition >= 1 - PADDLE_EDGE_ZONE_RATIO
-          ? GAME_AUDIO_IDS.PADDLE_HIT_EDGE
-          : GAME_AUDIO_IDS.PADDLE_HIT_CENTER;
-        audioSink?.playAudio(paddleAudioId);
-        LOG(`🏓 Registrando colisão com raquete - Hit position: ${hitPosition.toFixed(2)}`);
-        
-        const velocityBefore = { dx: this.dx, dy: this.dy };
-        this.handlePaddleCollision(paddlePos);
-        const velocityAfter = { dx: this.dx, dy: this.dy };
-        
-        gameLogger.logCollision(
-          gameState,
-          [{ x: this.x, y: this.y, velocity: velocityAfter, radius: this.radius }],
-          paddlePos,
-          {
-            type: 'paddle',
-            ballPosition: { x: this.x, y: this.y },
-            targetPosition: paddlePos,
-            hitPosition,
-            velocityBefore,
-            velocityAfter
-          }
-        ).catch(error => ERROR('❌ Erro ao registrar colisão com raquete:', error));
-        
-        collisionTracker.logPaddleCollision(
-          { x: this.x, y: this.y },
-          velocityAfter,
-          gameState,
-          paddlePos,
-          hitPosition
-        ).catch(error => ERROR('❌ Erro ao registrar colisão com raquete:', error));
-
-        this.paddleCollision = true;
-        return Promise.resolve(true);
-      } else {
-        // A bolinha passou pela raquete
-        LOG(`💀 BOLA PERDIDA! x=${this.x}, y=${this.y}, raquete=${paddlePos.x}-${paddlePos.x + paddlePos.width}`);
-        
-        LOG(`💀 Registrando bola perdida - Posição: (${Math.round(this.x)}, ${Math.round(this.y)})`);
-        
-        audioSink?.playAudio(GAME_AUDIO_IDS.BALL_LOST);
-        const lostBallVelocity = { dx: this.dx, dy: this.dy };
-        
-        gameLogger.logBallLost(
-          gameState,
-          [{ x: this.x, y: this.y, velocity: lostBallVelocity, radius: this.radius }],
-          paddlePos,
-          { x: this.x, y: this.y },
-          lostBallVelocity
-        ).catch(error => ERROR('❌ Erro ao registrar bola perdida:', error));
-        
-        collisionTracker.logBallLost(
-          { x: this.x, y: this.y },
-          lostBallVelocity,
-          gameState,
-          paddlePos
-        ).catch(error => ERROR('❌ Erro ao registrar bola perdida:', error));
-        
+      if (!inPlay) {
         return Promise.resolve(false);
       }
+
+      if (this.paddleCollision) {
+        return Promise.resolve(true);
+      }
     }
+
     return Promise.resolve(true);
+  }
+
+  private getMotionStepCount() {
+    const maxStepDistance = Math.max(MIN_MOTION_STEPS, this.radius * MOTION_STEP_RADIUS_RATIO);
+    return Math.max(MIN_MOTION_STEPS, Math.ceil(this.getCurrentSpeedMagnitude() / maxStepDistance));
+  }
+
+  private resolveWallCollision(
+    paddlePosition: { x: number; y: number; width: number; height: number },
+    gameState: LoggedGameState,
+    audioSink?: GameAudioSink
+  ) {
+    const rightLimit = this.canvasWidth - this.radius;
+    const leftLimit = this.radius;
+    if (this.x <= rightLimit && this.x >= leftLimit) return;
+
+    const wallType = this.x > rightLimit ? 'right' : 'left';
+    LOG(`🧱 Colisão com parede ${wallType} detectada em (${Math.round(this.x)}, ${Math.round(this.y)})`);
+
+    audioSink?.playAudio(GAME_AUDIO_IDS.WALL_HIT);
+    const velocityBefore = { dx: this.dx, dy: this.dy };
+    this.x = wallType === 'right' ? rightLimit : leftLimit;
+    this.dx = wallType === 'right' ? -Math.abs(this.dx) : Math.abs(this.dx);
+    const velocityAfter = { dx: this.dx, dy: this.dy };
+
+    gameLogger.logCollision(
+      gameState,
+      [{ x: this.x, y: this.y, velocity: velocityAfter, radius: this.radius }],
+      paddlePosition,
+      {
+        type: 'wall',
+        ballPosition: { x: this.x, y: this.y },
+        wallType,
+        velocityBefore,
+        velocityAfter
+      }
+    ).catch((error) => ERROR('❌ Erro ao registrar colisão com parede:', error));
+
+    collisionTracker.logWallCollision(
+      { x: this.x, y: this.y },
+      velocityAfter,
+      gameState,
+      wallType
+    ).catch(error => ERROR('❌ Erro ao registrar colisão com parede:', error));
+  }
+
+  private resolveCeilingCollision(
+    paddlePosition: { x: number; y: number; width: number; height: number },
+    gameState: LoggedGameState,
+    audioSink?: GameAudioSink
+  ) {
+    if (this.y >= this.radius) return;
+
+    LOG(`🏠 Colisão com teto detectada em (${Math.round(this.x)}, ${Math.round(this.y)})`);
+
+    audioSink?.playAudio(GAME_AUDIO_IDS.CEILING_HIT);
+    const velocityBefore = { dx: this.dx, dy: this.dy };
+    this.y = this.radius;
+    this.dy = Math.abs(this.dy);
+    const velocityAfter = { dx: this.dx, dy: this.dy };
+
+    gameLogger.logCollision(
+      gameState,
+      [{ x: this.x, y: this.y, velocity: velocityAfter, radius: this.radius }],
+      paddlePosition,
+      {
+        type: 'ceiling',
+        ballPosition: { x: this.x, y: this.y },
+        velocityBefore,
+        velocityAfter
+      }
+    ).catch(error => ERROR('❌ Erro ao registrar colisão com teto:', error));
+
+    collisionTracker.logCeilingCollision(
+      { x: this.x, y: this.y },
+      velocityAfter,
+      gameState
+    ).catch(error => ERROR('❌ Erro ao registrar colisão com teto:', error));
+  }
+
+  private resolvePaddleCollisionOrLoss(
+    paddlePos: { x: number; y: number; width: number; height: number },
+    maxHeight: number,
+    gameState: LoggedGameState,
+    audioSink?: GameAudioSink
+  ) {
+    if (this.y + this.radius <= maxHeight) return true;
+
+    if (this.x > paddlePos.x && this.x < paddlePos.x + paddlePos.width) {
+      LOG(`🏓 Bola bateu na raquete em x=${this.x}, raquete=${paddlePos.x}-${paddlePos.x + paddlePos.width}`);
+
+      const hitPosition = (this.x - paddlePos.x) / paddlePos.width;
+      const paddleAudioId = hitPosition <= PADDLE_EDGE_ZONE_RATIO || hitPosition >= 1 - PADDLE_EDGE_ZONE_RATIO
+        ? GAME_AUDIO_IDS.PADDLE_HIT_EDGE
+        : GAME_AUDIO_IDS.PADDLE_HIT_CENTER;
+      audioSink?.playAudio(paddleAudioId);
+      LOG(`🏓 Registrando colisão com raquete - Hit position: ${hitPosition.toFixed(2)}`);
+
+      const velocityBefore = { dx: this.dx, dy: this.dy };
+      this.handlePaddleCollision(paddlePos);
+      const velocityAfter = { dx: this.dx, dy: this.dy };
+
+      gameLogger.logCollision(
+        gameState,
+        [{ x: this.x, y: this.y, velocity: velocityAfter, radius: this.radius }],
+        paddlePos,
+        {
+          type: 'paddle',
+          ballPosition: { x: this.x, y: this.y },
+          targetPosition: paddlePos,
+          hitPosition,
+          velocityBefore,
+          velocityAfter
+        }
+      ).catch(error => ERROR('❌ Erro ao registrar colisão com raquete:', error));
+
+      collisionTracker.logPaddleCollision(
+        { x: this.x, y: this.y },
+        velocityAfter,
+        gameState,
+        paddlePos,
+        hitPosition
+      ).catch(error => ERROR('❌ Erro ao registrar colisão com raquete:', error));
+
+      this.paddleCollision = true;
+      return true;
+    }
+
+    LOG(`💀 BOLA PERDIDA! x=${this.x}, y=${this.y}, raquete=${paddlePos.x}-${paddlePos.x + paddlePos.width}`);
+    LOG(`💀 Registrando bola perdida - Posição: (${Math.round(this.x)}, ${Math.round(this.y)})`);
+
+    audioSink?.playAudio(GAME_AUDIO_IDS.BALL_LOST);
+    const lostBallVelocity = { dx: this.dx, dy: this.dy };
+
+    gameLogger.logBallLost(
+      gameState,
+      [{ x: this.x, y: this.y, velocity: lostBallVelocity, radius: this.radius }],
+      paddlePos,
+      { x: this.x, y: this.y },
+      lostBallVelocity
+    ).catch(error => ERROR('❌ Erro ao registrar bola perdida:', error));
+
+    collisionTracker.logBallLost(
+      { x: this.x, y: this.y },
+      lostBallVelocity,
+      gameState,
+      paddlePos
+    ).catch(error => ERROR('❌ Erro ao registrar bola perdida:', error));
+
+    return false;
   }
 
   private handlePaddleCollision(paddlePos: { x: number; y: number; width: number; height: number }) {

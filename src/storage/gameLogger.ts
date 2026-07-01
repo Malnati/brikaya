@@ -682,7 +682,6 @@ class GameLogger {
   async getGameStats(): Promise<GameStatsSummary> {
     const allEvents = await this.getAllEvents();
     const gameEndEvents = allEvents.filter(e => e.type === 'game_end');
-    const gameStartEvents = allEvents.filter(e => e.type === 'game_start');
     const collisionEvents = allEvents.filter(e => e.type === 'collision');
     const speedReductionEvents = allEvents.filter(
       event => Boolean(event.metadata?.speedReduction)
@@ -740,6 +739,32 @@ class GameLogger {
     const latestSpeedState = [...allEvents]
       .reverse()
       .find(event => event.gameState?.speedState)?.gameState.speedState ?? null;
+    const peakBallsByGame: number[] = [];
+    let currentPeakBalls = 0;
+
+    [...allEvents]
+      .sort((firstEvent, secondEvent) => firstEvent.timestamp - secondEvent.timestamp)
+      .forEach(event => {
+        if (event.type === 'game_start') {
+          if (currentPeakBalls > 0) {
+            peakBallsByGame.push(currentPeakBalls);
+          }
+          currentPeakBalls = event.gameState.ballsCount;
+          return;
+        }
+
+        currentPeakBalls = Math.max(currentPeakBalls, event.gameState.ballsCount);
+
+        if (event.type === 'game_end' && currentPeakBalls > 0) {
+          peakBallsByGame.push(currentPeakBalls);
+          currentPeakBalls = 0;
+        }
+      });
+
+    if (currentPeakBalls > 0) {
+      peakBallsByGame.push(currentPeakBalls);
+    }
+    const totalPeakBalls = peakBallsByGame.reduce((total, peakBalls) => total + peakBalls, 0);
 
     return {
       totalGames: gameEndEvents.length,
@@ -751,7 +776,7 @@ class GameLogger {
       averageGameDuration: gameEndEvents.length > 0 ? totalGameDuration / gameEndEvents.length : 0,
       totalBricksDestroyed,
       totalCollisions: collisionEvents.length,
-      averageBallsPerGame: gameStartEvents.length > 0 ? allEvents.filter(e => e.type === 'ball_lost').length / gameStartEvents.length : 0,
+      averageBallsPerGame: peakBallsByGame.length > 0 ? totalPeakBalls / peakBallsByGame.length : 0,
       latestSpeedState,
       totalSpeedReductions: speedReductionEvents.length,
       averageReductionApplied: speedReductionEvents.length > 0 ? totalReductionApplied / speedReductionEvents.length : 0,

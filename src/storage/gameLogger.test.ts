@@ -461,6 +461,63 @@ describe('GameLogger', () => {
         minReached: true,
       });
     });
+
+    it('calcula média de bolas por jogo pelo maior número de bolas ativas observado', async () => {
+      const events = [
+        {
+          id: '1',
+          timestamp: 1,
+          type: 'game_start',
+          gameState: buildGameState({ ballsCount: 1 }),
+          ballPositions: buildBallPositions(),
+          paddlePosition: buildPaddlePosition(),
+          metadata: {},
+        },
+        {
+          id: '2',
+          timestamp: 2,
+          type: 'ball_added',
+          gameState: buildGameState({ ballsCount: 3 }),
+          ballPositions: [
+            ...buildBallPositions(),
+            { x: 410, y: 300, velocity: { dx: 3, dy: -2 }, radius: 5 },
+            { x: 390, y: 300, velocity: { dx: -3, dy: -2 }, radius: 5 },
+          ],
+          paddlePosition: buildPaddlePosition(),
+          metadata: {
+            totalBalls: 3,
+          },
+        },
+        {
+          id: '3',
+          timestamp: 3,
+          type: 'ball_lost',
+          gameState: buildGameState({ ballsCount: 2 }),
+          ballPositions: buildBallPositions(),
+          paddlePosition: buildPaddlePosition(),
+          metadata: {
+            remainingBalls: 2,
+          },
+        },
+        {
+          id: '4',
+          timestamp: 4,
+          type: 'game_end',
+          gameState: buildGameState({ ballsCount: 0, score: 20, gameOver: true }),
+          ballPositions: [],
+          paddlePosition: buildPaddlePosition(),
+          metadata: {
+            reason: 'lose',
+          },
+        },
+      ];
+
+      jest.spyOn(gameLogger, 'getAllEvents').mockResolvedValue(events as any);
+
+      const stats = await gameLogger.getGameStats();
+
+      expect(stats.averageBallsPerGame).toBe(3);
+    });
   });
 
   describe('getCurrentGameId', () => {
