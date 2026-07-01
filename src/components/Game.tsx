@@ -27,7 +27,7 @@ interface GameProps {
   isLevelToastVisible: boolean;
   qaScenario?: GameQaScenario | null;
   audioSink?: GameAudioSink;
-  overlayControls?: ReactNode;
+  boardControls?: ReactNode;
 }
 
 const CANVAS_CONTAINER_HORIZONTAL_INSET = 16;
@@ -49,7 +49,7 @@ export default function Game({
   isLevelToastVisible,
   qaScenario,
   audioSink,
-  overlayControls,
+  boardControls,
 }: GameProps) {
   const surfaceRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -152,8 +152,18 @@ export default function Game({
             touchAction: TOUCH_ACTION_NONE,
           }}
         />
-        {overlayControls}
       </div>
+      {boardControls && (
+        <div
+          className="game-board-controls"
+          style={{
+            width: `${canvasSize.width}px`,
+            maxWidth: "100%",
+          }}
+        >
+          {boardControls}
+        </div>
+      )}
     </div>
   );
 }

@@ -359,24 +359,39 @@ async function run() {
         state.buttons.some((button) => MENU_BUTTON_NAME.test(button.text)),
         `${viewport.name}: menu inacessível.`,
       );
+      const mainButtons = state.buttons.filter((button) => !button.inDrawer);
+      const audioIcon = mainButtons.find(
+        (button) => button.ariaLabel === "Som" && button.text === "♪",
+      );
+      const restartIcon = mainButtons.find(
+        (button) =>
+          /reiniciar|jogar de novo/i.test(button.ariaLabel) &&
+          button.text === "↻",
+      );
       assert(
-        state.buttons.some(
-          (button) =>
-            !button.inDrawer &&
-            button.ariaLabel === "Som" &&
-            button.text === "♪",
-        ),
+        audioIcon,
         `${viewport.name}: ícone Som ausente na tela principal.`,
       );
       assert(
-        state.buttons.some(
-          (button) =>
-            !button.inDrawer &&
-            /reiniciar|jogar de novo/i.test(button.ariaLabel) &&
-            button.text === "↻",
-        ),
+        restartIcon,
         `${viewport.name}: ícone Reiniciar/Jogar de novo ausente na tela principal.`,
       );
+      for (const button of [audioIcon, restartIcon]) {
+        assert(
+          button.y >= state.canvas.bottom,
+          `${viewport.name}: ícone ${button.ariaLabel} ficou sobre o quadro do jogo.`,
+        );
+        assert(
+          button.x >= state.canvas.x && button.right <= state.canvas.right,
+          `${viewport.name}: ícone ${button.ariaLabel} saiu da largura do quadro do jogo.`,
+        );
+        if (state.bottomSlotVisible) {
+          assert(
+            button.bottom <= state.bottomSlot.y,
+            `${viewport.name}: ícone ${button.ariaLabel} invadiu a publicidade.`,
+          );
+        }
+      }
       assert(
         !state.buttons.some((button) => LOGS_BUTTON_NAME.test(button.text)),
         `${viewport.name}: logs apareceu fora do menu.`,

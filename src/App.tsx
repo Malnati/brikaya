@@ -429,7 +429,7 @@ export default function App() {
                 isLevelToastVisible={isLevelToastVisible}
                 qaScenario={qaScenario}
                 audioSink={audioSink}
-                overlayControls={
+                boardControls={
                   <div
                     className="game-corner-controls"
                     aria-label="Controles principais"

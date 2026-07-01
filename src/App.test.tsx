@@ -8,14 +8,14 @@ import App from "./App";
 jest.mock("./components/Game", () => ({
   __esModule: true,
   default: function MockGame({
-    overlayControls,
+    boardControls,
   }: {
-    overlayControls?: React.ReactNode;
+    boardControls?: React.ReactNode;
   }) {
     return (
       <div>
         <canvas aria-label="Tabuleiro do jogo" />
-        {overlayControls}
+        {boardControls}
       </div>
     );
   },

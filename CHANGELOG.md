@@ -4,6 +4,13 @@
 - Resolvido conflitos para integrar mudancas da main
 
 
+## [1.16.3] - 2026-07-01
+### Corrigido
+- Ícones de `Som` e `Reiniciar`/`Jogar de novo` saem de cima do tabuleiro e passam a ficar fora do quadro do jogo.
+
+### Testado
+- Cobertura unitária e QA publicado validam que os ícones não sobrepõem o canvas nem a área de publicidade.
+
 ## [1.16.2] - 2026-07-01
 ### Alterado
 - Controles `Som` e `Reiniciar`/`Jogar de novo` passam a aparecer como ícones discretos nos cantos inferiores do tabuleiro.

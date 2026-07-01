@@ -1,0 +1,80 @@
+{
+  "url": "https://fix-icon-controls-outside-bo.malnati-brickbreaker.pages.dev/?qaScenario=late-phase-stability",
+  "screenshotPath": "tmp/screenshots/cloudflare-phase10-stability.png",
+  "byType": {
+    "game_start": 1,
+    "collision": 5,
+    "brick_destroyed": 5,
+    "score_update": 5
+  },
+  "eventTypes": [
+    "game_start",
+    "collision",
+    "brick_destroyed",
+    "score_update",
+    "brick_destroyed",
+    "score_update",
+    "score_update",
+    "brick_destroyed",
+    "brick_destroyed",
+    "score_update",
+    "brick_destroyed",
+    "score_update",
+    "collision",
+    "collision",
+    "collision",
+    "collision"
+  ],
+  "gameStart": {
+    "level": 11,
+    "ballsCount": 1,
+    "speedState": {
+      "level": 11,
+      "initialBrickCount": 15,
+      "successfulBrickHits": 0,
+      "initialSpawnSpeed": 14.52,
+      "maxSpeed": 14.52,
+      "minSpeed": 3.432,
+      "currentSpeed": 14.52,
+      "reductionPerBrick": 0.968,
+      "previousLevelMaxSpeed": 13.728,
+      "levelStartedAt": 1782945444548,
+      "elapsedLevelMs": 18,
+      "minReached": false
+    }
+  },
+  "wallCollision": {
+    "ballPosition": {
+      "x": 343,
+      "y": 84
+    },
+    "velocityAfter": {
+      "dx": -14.52,
+      "dy": -8.890935761809784e-16
+    }
+  },
+  "latestEvent": {
+    "type": "collision",
+    "level": 11,
+    "ballsCount": 1,
+    "gameOver": false
+  },
+  "layout": {
+    "chips": [
+      "Fase 11",
+      "Score 50",
+      "Total 0",
+      "Recorde 0"
+    ],
+    "canvas": {
+      "x": 19,
+      "y": 109.84375,
+      "width": 355,
+      "height": 244,
+      "right": 374,
+      "bottom": 353.84375
+    },
+    "bodyText": "\n    Arcade clássicoBreakoutFase 11Score 50Total 0Recorde 0Menu♪↻PublicidadePublicidadePronto para jogar offline\n  \n\n"
+  },
+  "consoleProblems": []
+}
