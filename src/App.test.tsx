@@ -1,21 +1,43 @@
 // src/App.test.tsx
 import React from "react";
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import App from "./App";
+import type { LevelTransitionPayload } from "./constants/game";
+
+interface MockGameProps {
+  boardControls?: React.ReactNode;
+  startBlocked?: boolean;
+  onLevelTransition?: (payload: LevelTransitionPayload) => void;
+  onGameOver?: () => Promise<void> | void;
+}
+
+const TEST_LEVEL_TRANSITION_PAYLOAD: LevelTransitionPayload = {
+  currentLevel: 1,
+  nextLevel: 2,
+  nextSpeedMultiplier: 1.12,
+  pauseMs: 1800,
+  nextMaxSpeed: 6.72,
+  nextMinSpeed: 1.68,
+  nextReductionPerBrick: 0.336,
+  nextInitialBrickCount: 15,
+};
+const COUNTDOWN_STEP_MS = 600;
+const COUNTDOWN_TOTAL_MS = 1800;
+const LEVEL_UP_OVERLAY_VISIBLE_MS = 1200;
+const RIP_VISIBLE_MS = 1800;
+
+let mockLastGameProps: MockGameProps | null = null;
 
 jest.mock("./components/Game", () => ({
   __esModule: true,
-  default: function MockGame({
-    boardControls,
-  }: {
-    boardControls?: React.ReactNode;
-  }) {
+  default: function MockGame(props: MockGameProps) {
+    mockLastGameProps = props;
     return (
-      <div>
+      <div data-testid="mock-game" data-start-blocked={props.startBlocked}>
         <canvas aria-label="Tabuleiro do jogo" />
-        {boardControls}
+        {props.boardControls}
       </div>
     );
   },
@@ -51,17 +73,28 @@ function mockSystemTheme(prefersDark: boolean) {
   });
 }
 
+async function renderApp() {
+  const result = render(<App />);
+  await act(async () => {});
+  return result;
+}
+
 describe("App theme selector", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockLastGameProps = null;
     document.documentElement.removeAttribute("data-theme");
     window.localStorage.clear();
   });
 
-  it("mantém configurações no menu lateral fechado por padrão", () => {
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  it("mantém configurações no menu lateral fechado por padrão", async () => {
     mockSystemTheme(true);
 
-    render(<App />);
+    await renderApp();
 
     expect(screen.getByRole("button", { name: "Menu" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Som" })).toBeInTheDocument();
@@ -85,7 +118,7 @@ describe("App theme selector", () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
 
-    render(<App />);
+    await renderApp();
 
     await user.click(screen.getByRole("button", { name: "Menu" }));
 
@@ -115,7 +148,7 @@ describe("App theme selector", () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
 
-    render(<App />);
+    await renderApp();
 
     expect(document.documentElement.dataset.theme).toBe("dark");
     await user.click(screen.getByRole("button", { name: "Menu" }));
@@ -137,10 +170,10 @@ describe("App theme selector", () => {
     );
   });
 
-  it("mostra controles principais como ícones discretos", () => {
+  it("mostra controles principais como ícones discretos", async () => {
     mockSystemTheme(true);
 
-    render(<App />);
+    await renderApp();
 
     const audioButton = screen.getByRole("button", { name: "Som" });
     const restartButton = screen.getByRole("button", { name: "Reiniciar" });
@@ -155,7 +188,7 @@ describe("App theme selector", () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
 
-    render(<App />);
+    await renderApp();
 
     const audioButton = screen.getByRole("button", { name: "Som" });
     expect(audioButton).toHaveAttribute("aria-pressed", "true");
@@ -171,7 +204,7 @@ describe("App theme selector", () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
 
-    render(<App />);
+    await renderApp();
 
     await user.click(screen.getByRole("button", { name: "Menu" }));
     expect(
@@ -183,5 +216,92 @@ describe("App theme selector", () => {
     expect(
       screen.queryByRole("complementary", { name: "Menu do jogo" }),
     ).not.toBeInTheDocument();
+  });
+
+  it("bloqueia a primeira partida até a contagem inicial terminar", async () => {
+    jest.useFakeTimers();
+    mockSystemTheme(true);
+
+    await renderApp();
+
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      "data-start-blocked",
+      "true",
+    );
+    expect(screen.getByTestId("game-cinematic-overlay")).toHaveTextContent("3");
+
+    act(() => {
+      jest.advanceTimersByTime(COUNTDOWN_STEP_MS);
+    });
+    expect(screen.getByTestId("game-cinematic-overlay")).toHaveTextContent("2");
+
+    act(() => {
+      jest.advanceTimersByTime(COUNTDOWN_STEP_MS);
+    });
+    expect(screen.getByTestId("game-cinematic-overlay")).toHaveTextContent("1");
+
+    act(() => {
+      jest.advanceTimersByTime(COUNTDOWN_STEP_MS);
+    });
+    expect(
+      screen.queryByTestId("game-cinematic-overlay"),
+    ).not.toBeInTheDocument();
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      "data-start-blocked",
+      "false",
+    );
+  });
+
+  it("mostra mensagem de subida de fase sem reiniciar countdown", async () => {
+    jest.useFakeTimers();
+    mockSystemTheme(true);
+
+    await renderApp();
+
+    act(() => {
+      jest.advanceTimersByTime(COUNTDOWN_TOTAL_MS);
+    });
+    act(() => {
+      mockLastGameProps?.onLevelTransition?.(TEST_LEVEL_TRANSITION_PAYLOAD);
+    });
+
+    expect(screen.getByTestId("level-toast")).toHaveTextContent(
+      "Subindo de nível",
+    );
+    expect(screen.getByTestId("level-toast")).toHaveTextContent("Fase 2");
+    expect(screen.queryByText("3")).not.toBeInTheDocument();
+
+    act(() => {
+      jest.advanceTimersByTime(LEVEL_UP_OVERLAY_VISIBLE_MS);
+    });
+    expect(screen.queryByTestId("level-toast")).not.toBeInTheDocument();
+  });
+
+  it("mostra RIP por tempo curto e reinicia sem nova contagem", async () => {
+    jest.useFakeTimers();
+    mockSystemTheme(true);
+
+    await renderApp();
+
+    act(() => {
+      jest.advanceTimersByTime(COUNTDOWN_TOTAL_MS);
+    });
+    await act(async () => {
+      await mockLastGameProps?.onGameOver?.();
+    });
+
+    expect(screen.getByTestId("game-cinematic-overlay")).toHaveTextContent(
+      "RIP",
+    );
+
+    act(() => {
+      jest.advanceTimersByTime(RIP_VISIBLE_MS);
+    });
+
+    expect(
+      screen.queryByTestId("game-cinematic-overlay"),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText("Fase 1")).toBeInTheDocument();
+    expect(screen.queryByText("3")).not.toBeInTheDocument();
   });
 });

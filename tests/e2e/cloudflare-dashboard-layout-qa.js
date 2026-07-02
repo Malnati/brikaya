@@ -31,6 +31,8 @@ const CLOSE_BUTTON_NAME = /fechar|×|✕/i;
 const SPEED_CURRENT_LABEL = "Velocidade atual";
 const LEVEL_TIME_LABEL = "Tempo da fase";
 const SPEED_REDUCTIONS_LABEL = "Reduções aplicadas";
+const CINEMATIC_OVERLAY_SELECTOR = "[data-testid=\"game-cinematic-overlay\"]";
+const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
 const OVERLAY_TARGET_VIEWPORTS = ["iphone-15", "desktop"];
 const VIEWPORTS = [
   {
@@ -384,6 +386,13 @@ async function collectOverlayLayoutState(page) {
   }));
 }
 
+async function waitForCinematicOverlayToClear(page) {
+  await page.waitForSelector(CINEMATIC_OVERLAY_SELECTOR, {
+    hidden: true,
+    timeout: CINEMATIC_OVERLAY_TIMEOUT_MS,
+  });
+}
+
 async function run() {
   const targetUrl = publicUrl();
   const parsed = new URL(targetUrl);
@@ -426,6 +435,7 @@ async function run() {
       await clearOfflineState(page);
       await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
       await page.waitForSelector("canvas", { timeout: 30000 });
+      await waitForCinematicOverlayToClear(page);
       await new Promise((resolve) => setTimeout(resolve, 600));
       const state = await collectLayoutState(page, viewport.name);
       results.push(state);
@@ -749,6 +759,7 @@ async function run() {
     await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
     await clearOfflineState(page);
     await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
+    await waitForCinematicOverlayToClear(page);
     await page.screenshot({ path: outScreenshot, fullPage: true });
     await page.setViewport(
       VIEWPORTS.find((viewport) => viewport.name === "desktop"),
@@ -756,12 +767,14 @@ async function run() {
     await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
     await clearOfflineState(page);
     await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
+    await waitForCinematicOverlayToClear(page);
     await page.screenshot({ path: outDesktopScreenshot, fullPage: true });
     await page.setViewport(landscapeViewport);
     await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
     await clearOfflineState(page);
     await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
     await page.waitForSelector("canvas", { timeout: 30000 });
+    await waitForCinematicOverlayToClear(page);
     await new Promise((resolve) => setTimeout(resolve, 300));
     await page.screenshot({ path: outLandscapeScreenshot, fullPage: true });
     await page.setViewport(portraitViewport);
@@ -770,6 +783,7 @@ async function run() {
     const orientationStartedAt = Date.now();
     await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
     await page.waitForSelector("canvas", { timeout: 30000 });
+    await waitForCinematicOverlayToClear(page);
     const beforeOrientationEvents = await waitForEventTypeSince(
       page,
       orientationStartedAt,

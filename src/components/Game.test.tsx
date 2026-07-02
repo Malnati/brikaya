@@ -2,6 +2,7 @@
 import { render, screen } from "@testing-library/react";
 
 import Game from "./Game";
+import { useGameLoop } from "../hooks/useGameLoop";
 
 jest.mock("../hooks/useGameLoop", () => ({
   useGameLoop: jest.fn(),
@@ -16,8 +17,6 @@ describe("Game", () => {
     const { container } = render(
       <Game
         onScoreUpdate={jest.fn()}
-        levelToastPayload={null}
-        isLevelToastVisible={false}
         boardControls={
           <div
             className="game-corner-controls"
@@ -38,5 +37,27 @@ describe("Game", () => {
     expect(boardFrame).not.toContainElement(controls);
     expect(controlsFrame).toContainElement(controls);
     expect(controlsFrame?.previousElementSibling).toBe(boardFrame);
+  });
+
+  it("propaga bloqueio de início para o loop do jogo", () => {
+    render(
+      <Game
+        onScoreUpdate={jest.fn()}
+        startBlocked
+      />,
+    );
+
+    expect(useGameLoop).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.any(Function),
+      undefined,
+      undefined,
+      expect.any(Object),
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      true,
+    );
   });
 });

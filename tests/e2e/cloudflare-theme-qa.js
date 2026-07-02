@@ -20,6 +20,8 @@ const BROWSER_CLOSE_TIMEOUT_MS = 5000;
 const LIGHT_THEME = "light";
 const DARK_THEME = "dark";
 const THEME_STORAGE_KEY = "brickbreaker-theme";
+const CINEMATIC_OVERLAY_SELECTOR = "[data-testid=\"game-cinematic-overlay\"]";
+const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
 const FORBIDDEN_VISIBLE_FEATURES = [
   /loja/i,
   /ranking/i,
@@ -100,6 +102,13 @@ async function clickButtonByText(page, label) {
 async function openMenu(page) {
   await clickButtonByText(page, "Menu");
   await page.waitForSelector(".settings-drawer", { timeout: 10000 });
+}
+
+async function waitForCinematicOverlayToClear(page) {
+  await page.waitForSelector(CINEMATIC_OVERLAY_SELECTOR, {
+    hidden: true,
+    timeout: CINEMATIC_OVERLAY_TIMEOUT_MS,
+  });
 }
 
 async function collectState(page) {
@@ -325,6 +334,7 @@ async function validateViewport(
   );
   await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
   await page.waitForSelector("canvas", { timeout: 30000 });
+  await waitForCinematicOverlayToClear(page);
 
   const initialState = await collectState(page);
   assertBaseState(initialState, `${viewportName}/inicial`);
@@ -354,6 +364,7 @@ async function validateViewport(
 
   await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
   await page.waitForSelector("canvas", { timeout: 30000 });
+  await waitForCinematicOverlayToClear(page);
   const reloadedLightState = await collectState(page);
   assertBaseState(reloadedLightState, `${viewportName}/claro-reload`);
   assert(

@@ -28,7 +28,8 @@ export function useGameLoop(
   onLevelTransition?: (payload: LevelTransitionPayload) => void,
   qaScenario?: GameQaScenario | null,
   audioSink?: GameAudioSink,
-  onLevelChange?: (level: number) => void
+  onLevelChange?: (level: number) => void,
+  startBlocked = false
 ) {
   const engineRef = useRef<GameEngine | null>(null);
   const callbacksRef = useRef<GameLoopCallbacks>({ onScoreUpdate, onGameWon, onGameOver, onLevelTransition, onLevelChange });
@@ -38,6 +39,11 @@ export function useGameLoop(
   }, [onScoreUpdate, onGameWon, onGameOver, onLevelTransition, onLevelChange]);
 
   useEffect(() => {
+    if (startBlocked) {
+      LOG('⏳ Início do GameEngine aguardando contagem inicial');
+      return undefined;
+    }
+
     if (!canvasRef.current) {
       LOG('❌ canvasRef.current não está disponível');
       return undefined;
@@ -72,7 +78,7 @@ export function useGameLoop(
       engineRef.current?.stop();
       engineRef.current = null;
     };
-  }, [audioSink, canvasRef, qaScenario]);
+  }, [audioSink, canvasRef, qaScenario, startBlocked]);
 
   useEffect(() => {
     if (!canvasSize) return;

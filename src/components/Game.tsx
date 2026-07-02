@@ -3,17 +3,16 @@ import { useRef, useLayoutEffect, useState } from "react";
 
 import { useGameLoop } from "../hooks/useGameLoop";
 import { useColorDebug } from "../hooks/useColorDebug";
-import { LevelToast } from "./LevelToast";
 import {
   CANVAS_WIDTH,
   CANVAS_HEIGHT,
   IMMERSIVE_LANDSCAPE_ROOT_CLASS,
-  LevelTransitionPayload,
   ROOT_ELEMENT_ID,
 } from "../constants/game";
 import { GameQaScenario } from "../logic/GameEngine";
 import { calculateResponsiveCanvasSize } from "../utils/canvasSizing";
 import type { GameAudioSink } from "../constants/audio";
+import type { LevelTransitionPayload } from "../constants/game";
 import type { ReactNode } from "react";
 
 interface GameProps {
@@ -22,11 +21,10 @@ interface GameProps {
   onGameOver?: () => void;
   onLevelTransition?: (payload: LevelTransitionPayload) => void;
   onLevelChange?: (level: number) => void;
-  levelToastPayload: LevelTransitionPayload | null;
-  isLevelToastVisible: boolean;
   qaScenario?: GameQaScenario | null;
   audioSink?: GameAudioSink;
   boardControls?: ReactNode;
+  startBlocked?: boolean;
 }
 
 const RESIZE_EVENT_NAME = "resize";
@@ -85,11 +83,10 @@ export default function Game({
   onGameOver,
   onLevelTransition,
   onLevelChange,
-  levelToastPayload,
-  isLevelToastVisible,
   qaScenario,
   audioSink,
   boardControls,
+  startBlocked = false,
 }: GameProps) {
   const surfaceRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -183,6 +180,7 @@ export default function Game({
     qaScenario,
     audioSink,
     onLevelChange,
+    startBlocked,
   );
   useColorDebug(canvasRef);
 
@@ -196,7 +194,6 @@ export default function Game({
       ref={surfaceRef}
     >
       <div className="game-board-frame">
-        <LevelToast payload={levelToastPayload} visible={isLevelToastVisible} />
         <canvas
           ref={canvasRef}
           width={canvasSize.width}

@@ -1,0 +1,82 @@
+{
+  "levelTargetUrl": "https://22c11aa0.malnati-brickbreaker.pages.dev/?qaScenario=single-brick-phase-clear",
+  "ripTargetUrl": "https://22c11aa0.malnati-brickbreaker.pages.dev/?qaScenario=cinematic-rip",
+  "countdownDurationMs": 1739,
+  "ripDurationMs": 1780,
+  "countdownState": {
+    "text": "3",
+    "type": "countdown",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 393,
+      "height": 852,
+      "right": 393,
+      "bottom": 852
+    },
+    "viewport": {
+      "width": 393,
+      "height": 852
+    },
+    "hasBodyScroll": false
+  },
+  "levelUpState": {
+    "text": "Subindo de nívelFase 2Velocidade 1.12×",
+    "type": "levelUp",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 393,
+      "height": 852,
+      "right": 393,
+      "bottom": 852
+    },
+    "viewport": {
+      "width": 393,
+      "height": 852
+    },
+    "hasBodyScroll": false
+  },
+  "ripState": {
+    "text": "RIPRecomeçando...",
+    "type": "rip",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 393,
+      "height": 852,
+      "right": 393,
+      "bottom": 852
+    },
+    "viewport": {
+      "width": 393,
+      "height": 852
+    },
+    "hasBodyScroll": false
+  },
+  "levelAudioIds": [
+    "music_gameplay_loop",
+    "sfx_ad_placeholder_none",
+    "sfx_brick_break_yellow",
+    "sfx_brick_hit",
+    "sfx_game_start",
+    "sfx_level_complete",
+    "sfx_level_toast_in",
+    "sfx_offline_ready",
+    "sfx_score_tick"
+  ],
+  "ripAudioIds": [
+    "music_gameplay_loop",
+    "music_menu_loop",
+    "sfx_ad_placeholder_none",
+    "sfx_ball_lost",
+    "sfx_game_over",
+    "sfx_game_start",
+    "sfx_offline_ready",
+    "sfx_score_tick"
+  ],
+  "levelUpScreenshotPath": "docs/assets/issues/cinematic-round-effects/evidence/cloudflare-cinematic-level-up.png",
+  "ripScreenshotPath": "docs/assets/issues/cinematic-round-effects/evidence/cloudflare-cinematic-rip.png",
+  "externalAudioRequests": [],
+  "consoleProblems": []
+}
