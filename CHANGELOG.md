@@ -4,6 +4,15 @@
 - Resolvido conflitos para integrar mudancas da main
 
 
+## [1.16.6] - 2026-07-02
+### Corrigido
+- Mobile/tablet em paisagem passa a ativar modo imersivo por `visualViewport`, ponteiro touch e classe raiz, evitando que o jogo fique preso ao card central quando o navegador altera a viewport.
+- Canvas em paisagem imersiva passa a usar quase toda a área segura disponível sem alterar a proporção do tabuleiro nem recriar o `GameEngine`.
+
+### Testado
+- Cobertura unitária valida cálculo responsivo para portrait, celular landscape, tablet landscape touch e desktop sem toque.
+- QA publicado de dashboard passa a exigir classe imersiva, canvas com ao menos 90% da altura da viewport, shell sem overflow e ausência de novo `game_start`/`restart_game` na rotação.
+
 ## [1.16.5] - 2026-07-01
 ### Alterado
 - Velocidade-base da progressão reduzida de `6x` para `3x`.
