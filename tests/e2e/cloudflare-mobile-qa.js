@@ -146,6 +146,8 @@ async function clearOfflineState(page) {
         cacheNames.map((cacheName) => caches.delete(cacheName)),
       );
     }
+    window.localStorage.clear();
+    window.sessionStorage.clear();
   });
 }
 
