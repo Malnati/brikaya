@@ -1,5 +1,5 @@
 {
-  "targetUrl": "https://df74c314.malnati-brickbreaker.pages.dev/?qaScenario=audio-event-tour",
+  "targetUrl": "https://84bb6a5b.malnati-brickbreaker.pages.dev/?qaScenario=audio-event-tour",
   "screenshotPath": "docs/assets/issues/audio-cc0-integration/evidence/cloudflare-audio-control.png",
   "expectedAudioIds": [
     "music_menu_loop",
@@ -36,6 +36,7 @@
     "sfx_powerup_activate_multiball",
     "sfx_powerup_activate_wide_paddle",
     "sfx_powerup_activate_slow_ball",
+    "sfx_powerup_activate_laser_fan",
     "sfx_powerup_expire",
     "sfx_highscore_new",
     "sfx_offline_ready",
@@ -69,6 +70,7 @@
     "sfx_paddle_hit_edge",
     "sfx_panel_close",
     "sfx_panel_open",
+    "sfx_powerup_activate_laser_fan",
     "sfx_powerup_activate_multiball",
     "sfx_powerup_activate_slow_ball",
     "sfx_powerup_activate_wide_paddle",
@@ -145,6 +147,7 @@
     "/assets/audio/sfx_panel_close-02.mp3",
     "/assets/audio/sfx_panel_open-01.mp3",
     "/assets/audio/sfx_panel_open-02.mp3",
+    "/assets/audio/sfx_powerup_activate_laser_fan-01.mp3",
     "/assets/audio/sfx_powerup_activate_multiball-01.mp3",
     "/assets/audio/sfx_powerup_activate_multiball-02.mp3",
     "/assets/audio/sfx_powerup_activate_slow_ball-01.mp3",
@@ -237,6 +240,7 @@
     "/assets/audio/sfx_panel_close-02.mp3",
     "/assets/audio/sfx_panel_open-01.mp3",
     "/assets/audio/sfx_panel_open-02.mp3",
+    "/assets/audio/sfx_powerup_activate_laser_fan-01.mp3",
     "/assets/audio/sfx_powerup_activate_multiball-01.mp3",
     "/assets/audio/sfx_powerup_activate_multiball-02.mp3",
     "/assets/audio/sfx_powerup_activate_slow_ball-01.mp3",
@@ -330,6 +334,7 @@
     "/assets/audio/sfx_panel_close-02.mp3",
     "/assets/audio/sfx_panel_open-01.mp3",
     "/assets/audio/sfx_panel_open-02.mp3",
+    "/assets/audio/sfx_powerup_activate_laser_fan-01.mp3",
     "/assets/audio/sfx_powerup_activate_multiball-01.mp3",
     "/assets/audio/sfx_powerup_activate_multiball-02.mp3",
     "/assets/audio/sfx_powerup_activate_slow_ball-01.mp3",
@@ -359,6 +364,6 @@
     "/assets/audio/sfx_wall_hit-05.mp3"
   ],
   "cacheNames": [
-    "breakout-cache-20260701182651"
+    "breakout-cache-20260702034858"
   ]
 }

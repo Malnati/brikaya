@@ -20,6 +20,7 @@ import {
   type SpeedStateSnapshot,
 } from "../constants/game";
 import { POINTS_PER_BRICK } from "../constants/gameState";
+import { GAME_AUDIO_IDS, type GameAudioSink } from "../constants/audio";
 import { GameEngine } from "./GameEngine";
 
 const mockBallInstances: any[] = [];
@@ -53,6 +54,7 @@ jest.mock("../objects/Paddle", () => ({
     onKeyDown: jest.fn(),
     onKeyUp: jest.fn(),
     setPosition: jest.fn(),
+    setWidthScale: jest.fn(),
     reset: jest.fn(),
     update: jest.fn(),
     draw: jest.fn(),
@@ -498,6 +500,40 @@ describe("GameEngine", () => {
       speedAfter: initialState.maxSpeed - 2,
     });
   });
+
+  it.each([
+    ["multiball", GAME_AUDIO_IDS.POWERUP_ACTIVATE_MULTIBALL],
+    ["wide_paddle", GAME_AUDIO_IDS.POWERUP_ACTIVATE_WIDE_PADDLE],
+    ["slow_ball", GAME_AUDIO_IDS.POWERUP_ACTIVATE_SLOW_BALL],
+    ["laser_fan", GAME_AUDIO_IDS.POWERUP_ACTIVATE_LASER_FAN],
+  ] as const)(
+    "toca SFX específico ao ativar %s",
+    (powerUpType, expectedAudioId) => {
+      const playAudio = jest.fn();
+      const audioSink: GameAudioSink = {
+        playAudio,
+        startGameplayMusic: jest.fn(),
+        startMenuMusic: jest.fn(),
+        setHighIntensity: jest.fn(),
+      };
+      const engine = new GameEngine(
+        canvas,
+        onScoreUpdate,
+        onGameWon,
+        onGameOver,
+        undefined,
+        undefined,
+        undefined,
+        audioSink,
+      );
+
+      (engine as any).activatePowerUp(powerUpType);
+
+      expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.POWERUP_COLLECT);
+      expect(playAudio).toHaveBeenCalledWith(expectedAudioId);
+      engine.stop();
+    },
+  );
 
   it("registra bolas adicionadas ao ativar multiball", () => {
     const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);

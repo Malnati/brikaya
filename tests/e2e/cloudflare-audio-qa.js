@@ -122,7 +122,13 @@ async function run() {
       return {
         title: document.title,
         heading: document.querySelector('h1')?.textContent || '',
-        soundButton: Array.from(document.querySelectorAll('button')).map(button => button.textContent?.trim() || '').find(text => /som/i.test(text)) || '',
+        soundButton: Array.from(document.querySelectorAll('button'))
+          .map(button => [
+            button.textContent?.trim() || '',
+            button.getAttribute('aria-label') || '',
+            button.getAttribute('title') || '',
+          ].join(' ').trim())
+          .find(text => /som/i.test(text)) || '',
         audioEvents: audioState.events || [],
         cacheNames,
         cachedAudioPaths: [...new Set(cachedAudioPaths)].sort(),

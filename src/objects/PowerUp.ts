@@ -1,7 +1,6 @@
 // src/objects/PowerUp.ts
 import { GAME_COLOR } from '../constants/game';
-
-export type PowerUpType = 'multiball' | 'wide_paddle' | 'slow_ball';
+import type { PowerUpType } from '../constants/powerUps';
 
 const POWER_UP_SIZE = 18;
 const POWER_UP_FALL_SPEED = 1.2;
@@ -11,16 +10,19 @@ const POWER_UP_TEXT_COLOR = '#001014';
 const POWER_UP_WIDE_PADDLE_COLOR = '#00d4ff';
 const POWER_UP_SLOW_BALL_COLOR = '#ffdf4d';
 const POWER_UP_MULTIBALL_COLOR = '#ff4b89';
+const POWER_UP_LASER_FAN_COLOR = '#f5f7ff';
 const POWER_UP_DEFAULT_COLOR = GAME_COLOR;
 const POWER_UP_LABELS: Record<PowerUpType, string> = {
   multiball: 'M',
   wide_paddle: 'W',
   slow_ball: 'S',
+  laser_fan: 'L',
 };
 const POWER_UP_COLORS: Record<PowerUpType, string> = {
   multiball: POWER_UP_MULTIBALL_COLOR,
   wide_paddle: POWER_UP_WIDE_PADDLE_COLOR,
   slow_ball: POWER_UP_SLOW_BALL_COLOR,
+  laser_fan: POWER_UP_LASER_FAN_COLOR,
 };
 
 interface PaddleBounds {

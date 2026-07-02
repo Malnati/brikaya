@@ -83,6 +83,7 @@ const PRECACHE_URLS = [
   "/assets/audio/sfx_powerup_activate_multiball-02.mp3",
   "/assets/audio/sfx_powerup_activate_slow_ball-01.mp3",
   "/assets/audio/sfx_powerup_activate_slow_ball-02.mp3",
+  "/assets/audio/sfx_powerup_activate_laser_fan-01.mp3",
   "/assets/audio/sfx_powerup_activate_wide_paddle-01.mp3",
   "/assets/audio/sfx_powerup_activate_wide_paddle-02.mp3",
   "/assets/audio/sfx_powerup_collect-01.mp3",
