@@ -31,7 +31,7 @@ const CLOSE_BUTTON_NAME = /fechar|×|✕/i;
 const SPEED_CURRENT_LABEL = "Velocidade atual";
 const LEVEL_TIME_LABEL = "Tempo da fase";
 const SPEED_REDUCTIONS_LABEL = "Reduções aplicadas";
-const CINEMATIC_OVERLAY_SELECTOR = "[data-testid=\"game-cinematic-overlay\"]";
+const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
 const OVERLAY_TARGET_VIEWPORTS = ["iphone-15", "desktop"];
 const VIEWPORTS = [
@@ -179,6 +179,10 @@ async function collectLayoutState(page, viewportName) {
       const rootRect = rectOf(rootElement);
       const appShell = rectOf(document.querySelector(".app-shell"));
       const dashboard = rectOf(document.querySelector(".game-dashboard"));
+      const buildVersionElement = document.querySelector(
+        ".build-version-badge",
+      );
+      const buildVersion = rectOf(buildVersionElement);
       const dashboardLayout = rectOf(
         document.querySelector(".dashboard-layout"),
       );
@@ -251,6 +255,13 @@ async function collectLayoutState(page, viewportName) {
         appShell,
         dashboard,
         dashboardLayout,
+        buildVersion: buildVersionElement
+          ? {
+              text: buildVersionElement.textContent?.trim() || "",
+              ariaLabel: buildVersionElement.getAttribute("aria-label") || "",
+              rect: buildVersion,
+            }
+          : null,
         isLandscapeImmersive:
           document.documentElement.classList.contains(immersiveRootClass),
         heading: document.querySelector("h1")?.textContent || "",
