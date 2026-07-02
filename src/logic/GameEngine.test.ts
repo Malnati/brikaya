@@ -385,6 +385,7 @@ describe("GameEngine", () => {
     const expectedNextReductionPerBrick = calculateSpeedReductionPerBrick(
       expectedNextMaxSpeed,
       expectedNextInitialBrickCount,
+      expectedNextMinSpeed,
     );
 
     expect(mockGameLogger.logLevelComplete).toHaveBeenCalled();
@@ -408,6 +409,16 @@ describe("GameEngine", () => {
     expect(afterState.speedState.level).toBe(2);
     expect(afterState.speedState.currentSpeed).toBe(
       afterState.speedState.maxSpeed,
+    );
+    expect(afterState.speedState.minSpeed).toBe(
+      calculateLevelMaxSpeed(canvas.width, expectedNextLevel) / 4,
+    );
+    expect(afterState.speedState.reductionPerBrick).toBe(
+      calculateSpeedReductionPerBrick(
+        afterState.speedState.maxSpeed,
+        afterState.speedState.initialBrickCount,
+        afterState.speedState.minSpeed,
+      ),
     );
     expect(afterState.speedState.initialBrickCount).toBe(
       afterState.bricksRemaining,

@@ -23,7 +23,7 @@ export const LEVEL_TOAST_EXIT_MS = 350;
 export const LEVEL_SPEED_STEP = 0.12;
 export const MAX_LEVEL_SPEED_MULTIPLIER = 2.2;
 export const FIRST_LEVEL_MIN_SPEED_DIVISOR = 4;
-export const FIRST_LEVEL_BASE_SPEED_MULTIPLIER = 6;
+export const FIRST_LEVEL_BASE_SPEED_MULTIPLIER = 3;
 export const SPEED_PRECISION_FACTOR = 1000;
 
 export const PADDLE_WIDTH = 75;
@@ -129,18 +129,16 @@ export function calculateLevelPreviousMaxSpeed(canvasWidth: number, level: numbe
 }
 
 export function calculateLevelMinSpeed(canvasWidth: number, level: number): number {
-  if (level <= 1) {
-    return roundSpeedValue(calculateLevelMaxSpeed(canvasWidth, level) / FIRST_LEVEL_MIN_SPEED_DIVISOR);
-  }
-
-  return roundSpeedValue(
-    calculateLevelPreviousMaxSpeed(canvasWidth, level) / FIRST_LEVEL_MIN_SPEED_DIVISOR
-  );
+  return roundSpeedValue(calculateLevelMaxSpeed(canvasWidth, level) / FIRST_LEVEL_MIN_SPEED_DIVISOR);
 }
 
-export function calculateSpeedReductionPerBrick(maxSpeed: number, initialBrickCount: number): number {
+export function calculateSpeedReductionPerBrick(
+  maxSpeed: number,
+  initialBrickCount: number,
+  minSpeed: number
+): number {
   const safeBrickCount = Math.max(1, initialBrickCount);
-  return roundSpeedValue(maxSpeed / safeBrickCount);
+  return roundSpeedValue(Math.max(0, maxSpeed - minSpeed) / safeBrickCount);
 }
 
 export function calculateClampedSpeed(speed: number, minSpeed: number, maxSpeed: number): number {

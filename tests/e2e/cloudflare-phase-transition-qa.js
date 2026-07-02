@@ -14,6 +14,7 @@ const GAME_LOG_DB_VERSION = 2;
 const MAX_WAIT_FOR_LEVEL_MS = 30000;
 const MIN_LEVEL_PAUSE_MS = 1500;
 const SPEED_TOLERANCE = 0.0001;
+const SPEED_PRECISION_FACTOR = 1000;
 const REQUIRED_EVENT_TYPES = ['game_start', 'brick_destroyed', 'score_update', 'level_complete', 'level_start'];
 
 function publicUrl() {
@@ -34,6 +35,10 @@ function ensureParentDirectory(filePath) {
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+function roundSpeedValue(speed) {
+  return Math.round(speed * SPEED_PRECISION_FACTOR) / SPEED_PRECISION_FACTOR;
 }
 
 function withQaScenario(url) {
@@ -205,6 +210,9 @@ async function run() {
     const finalLayout = await collectToastState(page);
     const levelCompleteSpeedState = levelComplete?.metadata?.speedState || null;
     const levelStartSpeedState = levelStart?.metadata?.speedState || null;
+    const expectedLevelStartReductionPerBrick = levelStartSpeedState
+      ? roundSpeedValue((levelStartSpeedState.maxSpeed - levelStartSpeedState.minSpeed) / levelStartSpeedState.initialBrickCount)
+      : null;
 
     const report = {
       url: targetUrl,
@@ -215,6 +223,7 @@ async function run() {
       levelStartMetadata: levelStart?.metadata || null,
       levelCompleteSpeedState,
       levelStartSpeedState,
+      expectedLevelStartReductionPerBrick,
       pauseDeltaMs,
       toastVisibleState,
       finalLayout,
@@ -241,8 +250,11 @@ async function run() {
     assert(levelStartSpeedState, 'level_start não registrou metadata.speedState.');
     assert(Math.abs(levelStartSpeedState.currentSpeed - levelStartSpeedState.maxSpeed) <= SPEED_TOLERANCE, 'Fase 2 não iniciou em currentSpeed === maxSpeed.');
     assert(Math.abs(levelStartSpeedState.initialSpawnSpeed - levelStartSpeedState.maxSpeed) <= SPEED_TOLERANCE, 'Fase 2 não iniciou em initialSpawnSpeed === maxSpeed.');
-    assert(Math.abs(levelStartSpeedState.minSpeed - (levelCompleteSpeedState.maxSpeed / 4)) <= SPEED_TOLERANCE, 'minSpeed da Fase 2 não deriva da maxSpeed da Fase 1 / 4.');
+    assert(Math.abs(levelStartSpeedState.minSpeed - (levelStartSpeedState.maxSpeed / 4)) <= SPEED_TOLERANCE, 'minSpeed da Fase 2 não deriva da própria maxSpeed / 4.');
+    assert(levelStartSpeedState.minSpeed > levelCompleteSpeedState.minSpeed, 'minSpeed da Fase 2 não ficou acima do mínimo da Fase 1.');
     assert(levelComplete?.metadata?.nextReductionPerBrick > 0, 'nextReductionPerBrick ausente em level_complete.');
+    assert(Math.abs(levelComplete.metadata.nextReductionPerBrick - expectedLevelStartReductionPerBrick) <= SPEED_TOLERANCE, 'nextReductionPerBrick não distribuiu a faixa maxSpeed-minSpeed pelos blocos da Fase 2.');
+    assert(Math.abs(levelStartSpeedState.reductionPerBrick - expectedLevelStartReductionPerBrick) <= SPEED_TOLERANCE, 'level_start não registrou reductionPerBrick gradual da Fase 2.');
     assert(pauseDeltaMs >= MIN_LEVEL_PAUSE_MS, `Pausa curta demais: ${pauseDeltaMs}ms.`);
     assert(finalLayout.text === '', 'Toast permaneceu após a pausa.');
     assert(consoleProblems.length === 0, `Console publicou warnings/errors: ${JSON.stringify(consoleProblems.slice(0, 5))}`);
