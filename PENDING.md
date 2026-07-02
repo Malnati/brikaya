@@ -10,3 +10,5 @@
 - [x] Cloudflare QA publicado cobre pausa/toast de próxima fase e dashboard responsivo.
 
 - [x] Design System adaptado apenas às superfícies existentes, com tema claro/escuro e QA publicado obrigatório.
+
+- [x] Validar modo paisagem imersivo mobile/tablet no Cloudflare publicado antes do merge, sem Fullscreen API obrigatória.

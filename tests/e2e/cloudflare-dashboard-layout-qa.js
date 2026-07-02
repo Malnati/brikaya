@@ -19,6 +19,9 @@ const MIN_BOTTOM_AD_DISTANCE_PX = 24;
 const LANDSCAPE_VIEWPORT_NAME = "iphone-15-landscape";
 const MIN_LANDSCAPE_CANVAS_HEIGHT_RATIO = 0.76;
 const MIN_LANDSCAPE_CANVAS_WIDTH_RATIO = 0.55;
+const MIN_IMMERSIVE_CANVAS_HEIGHT_RATIO = 0.9;
+const IMMERSIVE_ROOT_CLASS = "bb-landscape-immersive";
+const MAX_IMMERSIVE_SAFE_AREA_RESERVE_PX = 32;
 const MENU_BUTTON_NAME = /menu/i;
 const LOGS_BUTTON_NAME = /logs/i;
 const COLLISIONS_BUTTON_NAME = /colisões/i;
@@ -129,6 +132,7 @@ async function collectLayoutState(page, viewportName) {
       minSideAdDistance,
       minBottomAdDistance,
       viewportName,
+      immersiveRootClass,
     }) => {
       function rectOf(element) {
         if (!element) return null;
@@ -150,6 +154,10 @@ async function collectLayoutState(page, viewportName) {
         scrollWidth: document.documentElement.scrollWidth,
         scrollHeight: document.documentElement.scrollHeight,
       };
+      const rootElement = document.getElementById("root");
+      const rootRect = rectOf(rootElement);
+      const appShell = rectOf(document.querySelector(".app-shell"));
+      const dashboard = rectOf(document.querySelector(".game-dashboard"));
       const canvas = rectOf(document.querySelector("canvas"));
       const header = rectOf(document.querySelector(".dashboard-header"));
       const titleGroupElement = document.querySelector(
@@ -212,6 +220,11 @@ async function collectLayoutState(page, viewportName) {
 
       return {
         viewport,
+        root: rootRect,
+        appShell,
+        dashboard,
+        isLandscapeImmersive:
+          document.documentElement.classList.contains(immersiveRootClass),
         heading: document.querySelector("h1")?.textContent || "",
         chips: Array.from(document.querySelectorAll(".score-chip")).map(
           (chip) => chip.textContent?.trim() || "",
@@ -242,6 +255,7 @@ async function collectLayoutState(page, viewportName) {
       minSideAdDistance: MIN_SIDE_AD_DISTANCE_PX,
       minBottomAdDistance: MIN_BOTTOM_AD_DISTANCE_PX,
       viewportName,
+      immersiveRootClass: IMMERSIVE_ROOT_CLASS,
     },
   );
 }
@@ -520,8 +534,23 @@ async function run() {
       }
       if (viewport.name === LANDSCAPE_VIEWPORT_NAME) {
         assert(
+          state.isLandscapeImmersive,
+          `${viewport.name}: classe imersiva não foi aplicada.`,
+        );
+        assert(
+          state.root &&
+            state.appShell &&
+            state.dashboard &&
+            state.root.height >= state.viewport.height - 1 &&
+            state.appShell.height >=
+              state.viewport.height - MAX_IMMERSIVE_SAFE_AREA_RESERVE_PX &&
+            state.dashboard.height >=
+              state.viewport.height - MAX_IMMERSIVE_SAFE_AREA_RESERVE_PX,
+          `${viewport.name}: shell imersivo não ocupa a viewport inteira.`,
+        );
+        assert(
           state.canvas.height / state.viewport.height >=
-            MIN_LANDSCAPE_CANVAS_HEIGHT_RATIO,
+            MIN_IMMERSIVE_CANVAS_HEIGHT_RATIO,
           `${viewport.name}: canvas não usa altura suficiente em landscape.`,
         );
         assert(
@@ -675,19 +704,21 @@ async function run() {
     );
     await page.setViewport(landscapeViewport);
     await page.waitForFunction(
-      ({ minHeightRatio, minWidthRatio }) => {
+      ({ minHeightRatio, minWidthRatio, immersiveRootClass }) => {
         const canvas = document.querySelector("canvas");
         if (!canvas) return false;
         const rect = canvas.getBoundingClientRect();
         return (
+          document.documentElement.classList.contains(immersiveRootClass) &&
           rect.height / window.innerHeight >= minHeightRatio &&
           rect.width / window.innerWidth >= minWidthRatio
         );
       },
       { timeout: 10000 },
       {
-        minHeightRatio: MIN_LANDSCAPE_CANVAS_HEIGHT_RATIO,
+        minHeightRatio: MIN_IMMERSIVE_CANVAS_HEIGHT_RATIO,
         minWidthRatio: MIN_LANDSCAPE_CANVAS_WIDTH_RATIO,
+        immersiveRootClass: IMMERSIVE_ROOT_CLASS,
       },
     );
     await new Promise((resolve) => setTimeout(resolve, 800));

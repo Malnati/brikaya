@@ -7,13 +7,12 @@ import { LevelToast } from "./LevelToast";
 import {
   CANVAS_WIDTH,
   CANVAS_HEIGHT,
-  MIN_CANVAS_WIDTH,
-  MIN_CANVAS_HEIGHT,
-  MAX_CANVAS_WIDTH,
-  MAX_CANVAS_HEIGHT,
+  IMMERSIVE_LANDSCAPE_ROOT_CLASS,
   LevelTransitionPayload,
+  ROOT_ELEMENT_ID,
 } from "../constants/game";
 import { GameQaScenario } from "../logic/GameEngine";
+import { calculateResponsiveCanvasSize } from "../utils/canvasSizing";
 import type { GameAudioSink } from "../constants/audio";
 import type { ReactNode } from "react";
 
@@ -30,15 +29,55 @@ interface GameProps {
   boardControls?: ReactNode;
 }
 
-const CANVAS_CONTAINER_HORIZONTAL_INSET = 16;
-const AVAILABLE_CANVAS_HEIGHT_RATIO = 0.42;
-const COMPACT_LANDSCAPE_MAX_HEIGHT = 500;
-const COMPACT_LANDSCAPE_CANVAS_INSET = 8;
-const COMPACT_LANDSCAPE_MIN_CANVAS_WIDTH = 240;
-const COMPACT_LANDSCAPE_MIN_CANVAS_HEIGHT = 160;
 const RESIZE_EVENT_NAME = "resize";
 const ORIENTATION_CHANGE_EVENT_NAME = "orientationchange";
+const VISUAL_VIEWPORT_SCROLL_EVENT_NAME = "scroll";
 const TOUCH_ACTION_NONE = "none";
+const POINTER_COARSE_MEDIA_QUERY = "(pointer: coarse)";
+const HOVER_NONE_MEDIA_QUERY = "(hover: none)";
+const VISUAL_VIEWPORT_WIDTH_CSS_VAR = "--bb-visual-viewport-width";
+const VISUAL_VIEWPORT_HEIGHT_CSS_VAR = "--bb-visual-viewport-height";
+const PIXEL_UNIT = "px";
+const GAME_SURFACE_CLASS_NAME = "game-surface";
+const GAME_SURFACE_IMMERSIVE_CLASS_NAME =
+  "game-surface game-surface--immersive-landscape";
+
+function readPixelValue(value: string): number {
+  const parsedValue = Number.parseFloat(value);
+  return Number.isFinite(parsedValue) ? parsedValue : 0;
+}
+
+function getRootPadding() {
+  const rootElement = document.getElementById(ROOT_ELEMENT_ID);
+  if (!rootElement) return { inline: 0, block: 0 };
+
+  const rootStyle = getComputedStyle(rootElement);
+  return {
+    inline:
+      readPixelValue(rootStyle.paddingLeft) +
+      readPixelValue(rootStyle.paddingRight),
+    block:
+      readPixelValue(rootStyle.paddingTop) +
+      readPixelValue(rootStyle.paddingBottom),
+  };
+}
+
+function setViewportCssVariables(width: number, height: number) {
+  document.documentElement.style.setProperty(
+    VISUAL_VIEWPORT_WIDTH_CSS_VAR,
+    `${width}${PIXEL_UNIT}`,
+  );
+  document.documentElement.style.setProperty(
+    VISUAL_VIEWPORT_HEIGHT_CSS_VAR,
+    `${height}${PIXEL_UNIT}`,
+  );
+}
+
+function clearImmersiveViewportState() {
+  document.documentElement.classList.remove(IMMERSIVE_LANDSCAPE_ROOT_CLASS);
+  document.documentElement.style.removeProperty(VISUAL_VIEWPORT_WIDTH_CSS_VAR);
+  document.documentElement.style.removeProperty(VISUAL_VIEWPORT_HEIGHT_CSS_VAR);
+}
 
 export default function Game({
   onScoreUpdate,
@@ -58,54 +97,40 @@ export default function Game({
     width: CANVAS_WIDTH,
     height: CANVAS_HEIGHT,
   });
+  const [isLandscapeImmersive, setIsLandscapeImmersive] = useState(false);
 
   useLayoutEffect(() => {
     const updateCanvasSize = () => {
       const container = surfaceRef.current;
       if (!container) return;
-      const isCompactLandscape =
-        window.innerHeight < COMPACT_LANDSCAPE_MAX_HEIGHT &&
-        window.innerWidth > window.innerHeight;
-      const minCanvasWidth = isCompactLandscape
-        ? COMPACT_LANDSCAPE_MIN_CANVAS_WIDTH
-        : MIN_CANVAS_WIDTH;
-      const minCanvasHeight = isCompactLandscape
-        ? COMPACT_LANDSCAPE_MIN_CANVAS_HEIGHT
-        : MIN_CANVAS_HEIGHT;
-
-      const canvasInset = isCompactLandscape
-        ? COMPACT_LANDSCAPE_CANVAS_INSET
-        : CANVAS_CONTAINER_HORIZONTAL_INSET;
-      const containerWidth = Math.max(
-        minCanvasWidth,
-        container.clientWidth - canvasInset,
+      const visualViewport = window.visualViewport;
+      const viewportWidth = visualViewport?.width || window.innerWidth;
+      const viewportHeight = visualViewport?.height || window.innerHeight;
+      const rootPadding = getRootPadding();
+      const nextSize = calculateResponsiveCanvasSize({
+        containerWidth: container.clientWidth,
+        containerHeight: container.clientHeight,
+        viewportWidth: window.innerWidth,
+        viewportHeight: window.innerHeight,
+        visualViewportWidth: visualViewport?.width,
+        visualViewportHeight: visualViewport?.height,
+        rootPaddingInline: rootPadding.inline,
+        rootPaddingBlock: rootPadding.block,
+        pointerCoarse:
+          window.matchMedia?.(POINTER_COARSE_MEDIA_QUERY).matches ||
+          navigator.maxTouchPoints > 0,
+        hoverNone: window.matchMedia?.(HOVER_NONE_MEDIA_QUERY).matches || false,
+      });
+      setViewportCssVariables(viewportWidth, viewportHeight);
+      document.documentElement.classList.toggle(
+        IMMERSIVE_LANDSCAPE_ROOT_CLASS,
+        nextSize.isImmersiveLandscape,
       );
-      const containerHeight = Math.max(
-        minCanvasHeight,
-        isCompactLandscape
-          ? container.clientHeight - canvasInset
-          : window.innerHeight * AVAILABLE_CANVAS_HEIGHT_RATIO,
+      setIsLandscapeImmersive((currentValue) =>
+        currentValue === nextSize.isImmersiveLandscape
+          ? currentValue
+          : nextSize.isImmersiveLandscape,
       );
-      const aspectRatio = CANVAS_WIDTH / CANVAS_HEIGHT;
-
-      let newWidth = containerWidth;
-      let newHeight = containerWidth / aspectRatio;
-
-      if (newHeight > containerHeight) {
-        newHeight = containerHeight;
-        newWidth = containerHeight * aspectRatio;
-      }
-
-      newWidth = Math.max(minCanvasWidth, Math.min(MAX_CANVAS_WIDTH, newWidth));
-      newHeight = Math.max(
-        minCanvasHeight,
-        Math.min(MAX_CANVAS_HEIGHT, newHeight),
-      );
-
-      const nextSize = {
-        width: Math.floor(newWidth),
-        height: Math.floor(newHeight),
-      };
       setCanvasSize((currentSize) => {
         if (
           currentSize.width === nextSize.width &&
@@ -121,6 +146,14 @@ export default function Game({
     updateCanvasSize();
     window.addEventListener(RESIZE_EVENT_NAME, updateCanvasSize);
     window.addEventListener(ORIENTATION_CHANGE_EVENT_NAME, updateCanvasSize);
+    window.visualViewport?.addEventListener(
+      RESIZE_EVENT_NAME,
+      updateCanvasSize,
+    );
+    window.visualViewport?.addEventListener(
+      VISUAL_VIEWPORT_SCROLL_EVENT_NAME,
+      updateCanvasSize,
+    );
 
     return () => {
       window.removeEventListener(RESIZE_EVENT_NAME, updateCanvasSize);
@@ -128,6 +161,15 @@ export default function Game({
         ORIENTATION_CHANGE_EVENT_NAME,
         updateCanvasSize,
       );
+      window.visualViewport?.removeEventListener(
+        RESIZE_EVENT_NAME,
+        updateCanvasSize,
+      );
+      window.visualViewport?.removeEventListener(
+        VISUAL_VIEWPORT_SCROLL_EVENT_NAME,
+        updateCanvasSize,
+      );
+      clearImmersiveViewportState();
     };
   }, []);
 
@@ -145,7 +187,14 @@ export default function Game({
   useColorDebug(canvasRef);
 
   return (
-    <div className="game-surface" ref={surfaceRef}>
+    <div
+      className={
+        isLandscapeImmersive
+          ? GAME_SURFACE_IMMERSIVE_CLASS_NAME
+          : GAME_SURFACE_CLASS_NAME
+      }
+      ref={surfaceRef}
+    >
       <div className="game-board-frame">
         <LevelToast payload={levelToastPayload} visible={isLevelToastVisible} />
         <canvas

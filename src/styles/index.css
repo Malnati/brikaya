@@ -37,6 +37,8 @@
   --radius-md: 16px;
   --radius-lg: 24px;
   --shadow-panel: var(--bb-shadow-panel);
+  --bb-visual-viewport-width: 100vw;
+  --bb-visual-viewport-height: 100dvh;
   --bb-font-body:
     -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
     "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
@@ -824,6 +826,151 @@ canvas {
   .game-status-region {
     display: none;
   }
+}
+
+html.bb-landscape-immersive,
+html.bb-landscape-immersive body,
+html.bb-landscape-immersive #root {
+  width: var(--bb-visual-viewport-width);
+  height: var(--bb-visual-viewport-height);
+  min-height: var(--bb-visual-viewport-height);
+  max-height: var(--bb-visual-viewport-height);
+  overflow: hidden;
+}
+
+html.bb-landscape-immersive body {
+  position: fixed;
+  inset: 0;
+  background: var(--color-bg);
+  overscroll-behavior: none;
+}
+
+html.bb-landscape-immersive #root {
+  position: fixed;
+  inset: 0;
+  padding: max(4px, env(safe-area-inset-top))
+    max(6px, env(safe-area-inset-right))
+    max(4px, env(safe-area-inset-bottom))
+    max(6px, env(safe-area-inset-left));
+}
+
+html.bb-landscape-immersive .app-shell,
+html.bb-landscape-immersive .game-dashboard {
+  height: 100%;
+  max-width: none;
+}
+
+html.bb-landscape-immersive .game-dashboard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+html.bb-landscape-immersive .dashboard-header {
+  position: absolute;
+  top: max(4px, env(safe-area-inset-top));
+  left: max(6px, env(safe-area-inset-left));
+  right: max(6px, env(safe-area-inset-right));
+  z-index: 5;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-1);
+  margin-bottom: 0;
+}
+
+html.bb-landscape-immersive .dashboard-title-group {
+  display: none;
+}
+
+html.bb-landscape-immersive .dashboard-header-controls {
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  width: 100%;
+  min-width: 0;
+}
+
+html.bb-landscape-immersive .score-strip {
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  gap: 4px;
+  width: auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+html.bb-landscape-immersive .score-chip {
+  min-height: 24px;
+  padding: 3px 8px;
+  background: color-mix(in srgb, var(--bb-color-panel) 74%, transparent);
+  font-size: 0.72rem;
+}
+
+html.bb-landscape-immersive .dashboard-menu-button {
+  flex: 0 0 auto;
+  min-height: 44px;
+}
+
+html.bb-landscape-immersive .dashboard-layout {
+  display: flex;
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0;
+}
+
+html.bb-landscape-immersive .play-column,
+html.bb-landscape-immersive .game-container,
+html.bb-landscape-immersive .game-surface {
+  min-height: 0;
+  height: 100%;
+}
+
+html.bb-landscape-immersive .play-column {
+  width: 100%;
+  justify-content: center;
+  gap: 0;
+}
+
+html.bb-landscape-immersive .game-container,
+html.bb-landscape-immersive .game-surface {
+  justify-content: center;
+}
+
+html.bb-landscape-immersive .game-surface {
+  position: relative;
+}
+
+html.bb-landscape-immersive .game-board-frame {
+  max-height: 100%;
+}
+
+html.bb-landscape-immersive .game-board-controls {
+  position: absolute;
+  left: 50%;
+  bottom: max(4px, env(safe-area-inset-bottom));
+  z-index: 4;
+  margin-top: 0;
+  transform: translateX(-50%);
+}
+
+html.bb-landscape-immersive .dashboard-button {
+  min-height: 44px;
+  padding: 8px 10px;
+  font-size: 0.78rem;
+}
+
+html.bb-landscape-immersive .ad-slot--bottom,
+html.bb-landscape-immersive .ad-slot--side,
+html.bb-landscape-immersive .game-status-region {
+  display: none;
 }
 
 .game-board-controls {

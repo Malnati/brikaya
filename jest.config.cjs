@@ -1,4 +1,4 @@
-// jest.config.js
+// jest.config.cjs
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   preset: 'ts-jest',
@@ -10,6 +10,7 @@ module.exports = {
   testMatch: [
     '<rootDir>/src/**/__tests__/**/*.{ts,tsx}',
     '<rootDir>/src/**/*.{test,spec}.{ts,tsx}',
+    '<rootDir>/tests/unit/**/*.{test,spec}.{ts,tsx}',
   ],
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
