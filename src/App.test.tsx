@@ -114,6 +114,16 @@ describe("App theme selector", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("exibe a versão de build discreta no shell", async () => {
+    mockSystemTheme(true);
+
+    await renderApp();
+
+    const version = screen.getByText(/^v\d+$/);
+    expect(version).toHaveClass("build-version-badge");
+    expect(version).toHaveAccessibleName("Versão do build v0");
+  });
+
   it("abre menu lateral com tema, logs, colisões e zerar pontuação", async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();

@@ -187,6 +187,8 @@ async function collectLayoutState(page) {
     const canvasRect = document
       .querySelector("canvas")
       ?.getBoundingClientRect();
+    const buildVersionElement = document.querySelector(".build-version-badge");
+    const buildVersionRect = buildVersionElement?.getBoundingClientRect();
     const bottomSlotRect = document
       .querySelector(".ad-slot--bottom")
       ?.getBoundingClientRect();
@@ -201,6 +203,22 @@ async function collectLayoutState(page) {
       heading: document.querySelector("h1")?.textContent || "",
       viewport,
       buttons,
+      buildVersion: buildVersionElement
+        ? {
+            text: buildVersionElement.textContent?.trim() || "",
+            ariaLabel: buildVersionElement.getAttribute("aria-label") || "",
+            rect: buildVersionRect
+              ? {
+                  x: buildVersionRect.x,
+                  y: buildVersionRect.y,
+                  width: buildVersionRect.width,
+                  height: buildVersionRect.height,
+                  right: buildVersionRect.right,
+                  bottom: buildVersionRect.bottom,
+                }
+              : null,
+          }
+        : null,
       canvas: canvasRect
         ? {
             x: canvasRect.x,

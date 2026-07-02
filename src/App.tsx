@@ -33,6 +33,10 @@ import {
   type GameAudioSink,
 } from "./constants/audio";
 import { BRICKBREAKER_OFFLINE_READY_EVENT } from "./registerServiceWorker";
+import {
+  BUILD_VERSION_ARIA_LABEL,
+  BUILD_VERSION_LABEL,
+} from "./constants/buildVersion";
 import { LOG } from "./utils/logger";
 import { audioManager } from "./utils/audioManager";
 import { GameQaScenario } from "./logic/GameEngine";
@@ -215,10 +219,13 @@ export default function App() {
     const timers = CINEMATIC_COUNTDOWN_STEPS.slice(
       COUNTDOWN_NEXT_STEP_INDEX,
     ).map((step, index) =>
-      setTimeout(() => {
-        audioSink.playAudio(GAME_AUDIO_IDS.COUNTDOWN_TICK);
-        setCinematicOverlay({ type: "countdown", value: step });
-      }, (index + COUNTDOWN_TIMER_OFFSET) * CINEMATIC_COUNTDOWN_STEP_MS),
+      setTimeout(
+        () => {
+          audioSink.playAudio(GAME_AUDIO_IDS.COUNTDOWN_TICK);
+          setCinematicOverlay({ type: "countdown", value: step });
+        },
+        (index + COUNTDOWN_TIMER_OFFSET) * CINEMATIC_COUNTDOWN_STEP_MS,
+      ),
     );
 
     timers.push(
@@ -554,6 +561,12 @@ export default function App() {
           )}
         </div>
       </section>
+      <small
+        className="build-version-badge"
+        aria-label={BUILD_VERSION_ARIA_LABEL}
+      >
+        {BUILD_VERSION_LABEL}
+      </small>
       <CollisionStats
         isVisible={showCollisionStats}
         onClose={handleCloseCollisionStats}

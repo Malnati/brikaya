@@ -3,6 +3,13 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.17.2] - 2026-07-02
+### Adicionado
+- Número de versão incremental `vN` baseado na contagem de commits Git, exibido discretamente no canto inferior direito do shell do jogo.
+
+### Testado
+- Cobertura unitária e QA publicado validam presença do `vN` sem sobrepor canvas, controles ou publicidade.
+
 ## [1.17.1] - 2026-07-02
 ### Alterado
 - Efeitos cinematográficos de contagem inicial, subida de fase e RIP passam a usar imagens locais CC0/domínio público de Kenney, distribuídas com o PWA offline.

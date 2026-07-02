@@ -314,8 +314,7 @@ canvas {
   min-width: 100vw;
   min-height: 100dvh;
   padding: max(24px, env(safe-area-inset-top))
-    max(24px, env(safe-area-inset-right))
-    max(24px, env(safe-area-inset-bottom))
+    max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom))
     max(24px, env(safe-area-inset-left));
   pointer-events: auto;
   text-align: center;
@@ -591,6 +590,18 @@ canvas {
   min-height: 0;
 }
 
+.build-version-badge {
+  display: block;
+  margin-top: var(--space-1);
+  color: color-mix(in srgb, var(--color-muted) 64%, transparent);
+  font-family: var(--bb-font-mono);
+  font-size: 0.55rem;
+  line-height: 1;
+  text-align: right;
+  pointer-events: none;
+  user-select: none;
+}
+
 .offline-ready-message,
 .victory-message,
 .game-over-message {
@@ -845,7 +856,6 @@ canvas {
   .settings-drawer .dashboard-button {
     flex-basis: auto;
   }
-
 }
 
 @media (max-height: 500px) and (orientation: landscape) {
@@ -862,8 +872,7 @@ canvas {
 
   #root {
     padding: max(4px, env(safe-area-inset-top))
-      max(6px, env(safe-area-inset-right))
-      max(4px, env(safe-area-inset-bottom))
+      max(6px, env(safe-area-inset-right)) max(4px, env(safe-area-inset-bottom))
       max(6px, env(safe-area-inset-left));
   }
 
@@ -1005,8 +1014,7 @@ html.bb-landscape-immersive #root {
   position: fixed;
   inset: 0;
   padding: max(4px, env(safe-area-inset-top))
-    max(6px, env(safe-area-inset-right))
-    max(4px, env(safe-area-inset-bottom))
+    max(6px, env(safe-area-inset-right)) max(4px, env(safe-area-inset-bottom))
     max(6px, env(safe-area-inset-left));
 }
 
