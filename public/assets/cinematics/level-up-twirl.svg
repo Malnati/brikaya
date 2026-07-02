@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Espiral de subida de fase">
+  <path d="M199 137c-7 47-69 70-110 39-48-36-26-113 34-121 42-6 75 30 64 68-10 34-55 45-80 21-19-19-12-51 15-61" fill="none" stroke="#00f0ff" stroke-width="15" stroke-linecap="round"/>
+  <path d="M204 137l22-9-10 22z" fill="#00f0ff"/>
+  <circle cx="122" cy="83" r="9" fill="#ffe052"/>
+  <circle cx="79" cy="164" r="7" fill="#ffffff"/>
+</svg>

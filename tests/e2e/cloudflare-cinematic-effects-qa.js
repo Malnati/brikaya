@@ -29,11 +29,11 @@ const REQUIRED_COUNTDOWN_MEDIA = ['countdown-circle', 'countdown-spark'];
 const REQUIRED_LEVEL_UP_MEDIA = ['level-up-twirl', 'level-up-star'];
 const REQUIRED_RIP_MEDIA = ['rip-smoke'];
 const REQUIRED_CINEMATIC_MEDIA_PATHS = [
-  '/assets/cinematics/countdown-circle.png',
-  '/assets/cinematics/countdown-spark.png',
-  '/assets/cinematics/level-up-star.png',
-  '/assets/cinematics/level-up-twirl.png',
-  '/assets/cinematics/rip-smoke.png',
+  '/assets/cinematics/countdown-circle.svg',
+  '/assets/cinematics/countdown-spark.svg',
+  '/assets/cinematics/level-up-star.svg',
+  '/assets/cinematics/level-up-twirl.svg',
+  '/assets/cinematics/rip-smoke.svg',
 ];
 const MEDIA_EXTENSION_PATTERN = /\.(gif|jpe?g|mp3|mp4|ogg|png|webm|webp|wav)(\?|$)/i;
 const PAGES_DEV_HOST_SUFFIX = '.pages.dev';

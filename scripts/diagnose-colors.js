@@ -69,11 +69,11 @@ class ColorDiagnostic {
         
         // Lista de imagens para verificar
         const imagesToCheck = [
-          '/assets/brick_red.png',
-          '/assets/brick_blue.png',
-          '/assets/brick_green.png',
-          '/assets/brick_yellow.png',
-          '/assets/brick_purple.png'
+          '/assets/bricks/brick-red.svg',
+          '/assets/bricks/brick-blue.svg',
+          '/assets/bricks/brick-green.svg',
+          '/assets/bricks/brick-yellow.svg',
+          '/assets/bricks/brick-purple.svg'
         ];
         
         // Verificar carregamento de cada imagem

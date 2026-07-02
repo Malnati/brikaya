@@ -1,6 +1,7 @@
 // src/utils/assetLoader.ts
 
-import { ASSET_PATHS } from '../constants/assets';
+import { RUNTIME_IMAGE_ASSET_PATHS } from '../constants/assets';
+import { POWER_UP_ICON_PATHS } from '../constants/powerUps';
 import { LOG, ERROR, WARN } from './logger';
 
 export class AssetLoader {
@@ -50,7 +51,10 @@ export class AssetLoader {
   }
 
   static async preloadAllAssets(): Promise<void> {
-    const assetPaths = Object.values(ASSET_PATHS);
+    const assetPaths = [
+      ...RUNTIME_IMAGE_ASSET_PATHS,
+      ...Object.values(POWER_UP_ICON_PATHS),
+    ];
     LOG('🔄 Carregando assets:', assetPaths);
     
     const results = await Promise.allSettled(

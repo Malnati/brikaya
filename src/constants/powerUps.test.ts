@@ -32,6 +32,8 @@ describe("registry de power-ups", () => {
       expect(definition.type).toBe(powerUpType);
       expect(definition.visibleName).toBeTruthy();
       expect(definition.visual).toBeTruthy();
+      expect(definition.iconPath).toMatch(/^\/assets\/powerups\/.+\.svg$/);
+      expect(definition.iconPath).not.toMatch(/https?:|data:|\.png|\.jpg|\.jpeg|\.webp/i);
       expect(definition.activationAudioId).toBe(
         getPowerUpActivationAudioId(powerUpType),
       );
