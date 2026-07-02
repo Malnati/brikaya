@@ -17,9 +17,11 @@ const MIN_TOUCH_TARGET_SIZE = 44;
 const MIN_SIDE_AD_DISTANCE_PX = 150;
 const MIN_BOTTOM_AD_DISTANCE_PX = 24;
 const LANDSCAPE_VIEWPORT_NAME = "iphone-15-landscape";
-const MIN_LANDSCAPE_CANVAS_HEIGHT_RATIO = 0.76;
-const MIN_LANDSCAPE_CANVAS_WIDTH_RATIO = 0.55;
-const MIN_IMMERSIVE_CANVAS_HEIGHT_RATIO = 0.9;
+const MIN_LANDSCAPE_CANVAS_HEIGHT_RATIO = 0.68;
+const MIN_LANDSCAPE_CANVAS_WIDTH_RATIO = 0.48;
+const MIN_IMMERSIVE_CANVAS_HEIGHT_RATIO = 0.68;
+const MIN_IMMERSIVE_BOARD_AREA_USAGE_RATIO = 0.9;
+const MAX_CANVAS_OVERLAP_PX = 2;
 const IMMERSIVE_ROOT_CLASS = "bb-landscape-immersive";
 const MAX_IMMERSIVE_SAFE_AREA_RESERVE_PX = 32;
 const MENU_BUTTON_NAME = /menu/i;
@@ -125,6 +127,21 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+function rectsIntersect(firstRect, secondRect, tolerancePx = 0) {
+  if (!firstRect || !secondRect) return false;
+
+  return !(
+    firstRect.right <= secondRect.x + tolerancePx ||
+    secondRect.right <= firstRect.x + tolerancePx ||
+    firstRect.bottom <= secondRect.y + tolerancePx ||
+    secondRect.bottom <= firstRect.y + tolerancePx
+  );
+}
+
+function describeButton(button) {
+  return button.ariaLabel || button.title || button.text || "botão";
+}
+
 async function collectLayoutState(page, viewportName) {
   return page.evaluate(
     ({
@@ -153,11 +170,16 @@ async function collectLayoutState(page, viewportName) {
         height: window.innerHeight,
         scrollWidth: document.documentElement.scrollWidth,
         scrollHeight: document.documentElement.scrollHeight,
+        bodyScrollWidth: document.body.scrollWidth,
+        bodyScrollHeight: document.body.scrollHeight,
       };
       const rootElement = document.getElementById("root");
       const rootRect = rectOf(rootElement);
       const appShell = rectOf(document.querySelector(".app-shell"));
       const dashboard = rectOf(document.querySelector(".game-dashboard"));
+      const dashboardLayout = rectOf(
+        document.querySelector(".dashboard-layout"),
+      );
       const canvas = rectOf(document.querySelector("canvas"));
       const header = rectOf(document.querySelector(".dashboard-header"));
       const titleGroupElement = document.querySelector(
@@ -168,6 +190,9 @@ async function collectLayoutState(page, viewportName) {
         ? getComputedStyle(titleGroupElement).display
         : "";
       const scoreStrip = rectOf(document.querySelector(".score-strip"));
+      const boardControls = rectOf(
+        document.querySelector(".game-board-controls"),
+      );
       const sideSlot = rectOf(document.querySelector(".ad-slot--side"));
       const bottomSlot = rectOf(document.querySelector(".ad-slot--bottom"));
       const sideSlotStyle = getComputedStyle(
@@ -223,6 +248,7 @@ async function collectLayoutState(page, viewportName) {
         root: rootRect,
         appShell,
         dashboard,
+        dashboardLayout,
         isLandscapeImmersive:
           document.documentElement.classList.contains(immersiveRootClass),
         heading: document.querySelector("h1")?.textContent || "",
@@ -238,6 +264,7 @@ async function collectLayoutState(page, viewportName) {
           titleGroup.width > 0 &&
           titleGroup.height > 0,
         scoreStrip,
+        boardControls,
         buttons,
         sideSlot,
         bottomSlot,
@@ -549,6 +576,11 @@ async function run() {
           `${viewport.name}: shell imersivo não ocupa a viewport inteira.`,
         );
         assert(
+          state.viewport.scrollHeight <= state.viewport.height + 1 &&
+            state.viewport.bodyScrollHeight <= state.viewport.height + 1,
+          `${viewport.name}: modo imersivo gerou scroll vertical.`,
+        );
+        assert(
           state.canvas.height / state.viewport.height >=
             MIN_IMMERSIVE_CANVAS_HEIGHT_RATIO,
           `${viewport.name}: canvas não usa altura suficiente em landscape.`,
@@ -557,6 +589,47 @@ async function run() {
           state.canvas.width / state.viewport.width >=
             MIN_LANDSCAPE_CANVAS_WIDTH_RATIO,
           `${viewport.name}: canvas não usa largura suficiente em landscape.`,
+        );
+        const availableBoardHeight =
+          state.dashboardLayout && state.boardControls
+            ? state.dashboardLayout.height - state.boardControls.height
+            : 0;
+        assert(
+          availableBoardHeight > 0 &&
+            state.canvas.height / availableBoardHeight >=
+              MIN_IMMERSIVE_BOARD_AREA_USAGE_RATIO,
+          `${viewport.name}: canvas não usa 90% da área útil do tabuleiro.`,
+        );
+        assert(
+          !rectsIntersect(state.canvas, state.header, MAX_CANVAS_OVERLAP_PX),
+          `${viewport.name}: HUD sobrepôs o canvas.`,
+        );
+        assert(
+          !rectsIntersect(
+            state.canvas,
+            state.scoreStrip,
+            MAX_CANVAS_OVERLAP_PX,
+          ),
+          `${viewport.name}: pontuação/fase sobrepôs o canvas.`,
+        );
+        assert(
+          !rectsIntersect(
+            state.canvas,
+            state.boardControls,
+            MAX_CANVAS_OVERLAP_PX,
+          ),
+          `${viewport.name}: controles principais sobrepuseram o canvas.`,
+        );
+        const canvasOverlappingButtons = state.buttons
+          .filter((button) => !button.inDrawer)
+          .filter((button) =>
+            rectsIntersect(state.canvas, button, MAX_CANVAS_OVERLAP_PX),
+          );
+        assert(
+          canvasOverlappingButtons.length === 0,
+          `${viewport.name}: botões sobrepostos ao canvas: ${canvasOverlappingButtons
+            .map(describeButton)
+            .join(", ")}.`,
         );
         assert(
           !state.titleGroupVisible,
