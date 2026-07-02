@@ -3,6 +3,20 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.17.0] - 2026-07-02
+### Adicionado
+- Overlay cinematográfico inicial com contagem `3`, `2`, `1` em tela cheia, limitado a 1,8s e exibido apenas no primeiro carregamento da página.
+- Mensagem visual em tela cheia entre fases informando a subida de nível durante a pausa existente.
+- Overlay `RIP` em tela cheia ao perder, limitado a 1,8s, com reinício automático sem confirmação.
+- QA Puppeteer publicado para validar countdown, subida de fase, RIP, áudio local e ausência de countdown em reinícios posteriores.
+
+### Alterado
+- Início do `GameEngine` passa a aguardar o fim da contagem inicial, sem alterar resize/orientation ou reinícios posteriores.
+- SFX locais já catalogados de início e subida de fase passam a tocar em volume audível para acompanhar os novos efeitos visuais.
+
+### Testado
+- Cobertura de App valida countdown inicial, mensagem de fase e reinício automático pós-RIP sem nova contagem.
+
 ## [1.16.8] - 2026-07-02
 ### Adicionado
 - Registry obrigatório de power-ups com áudio específico de ativação, nome visível e visual lógico para `multiball`, `wide_paddle`, `slow_ball` e `laser_fan`.

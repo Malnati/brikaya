@@ -239,8 +239,8 @@ async function run() {
     assert(toastVisibleState.text.includes('Fase 2'), 'Toast não informou Fase 2.');
     assert(toastVisibleState.text.includes('1.12×'), 'Toast não informou velocidade 1.12×.');
     assert(toastVisibleState.toast && toastVisibleState.canvas, 'Toast ou canvas não encontrado.');
-    assert(toastVisibleState.toast.y >= toastVisibleState.canvas.y, 'Toast ficou acima do quadro do canvas.');
-    assert(toastVisibleState.toast.bottom < toastVisibleState.canvas.y + toastVisibleState.canvas.height * 0.45, 'Toast cobriu área baixa do tabuleiro.');
+    assert(toastVisibleState.toast.width >= toastVisibleState.canvas.width, 'Overlay de fase não cobriu a largura do tabuleiro.');
+    assert(toastVisibleState.toast.height >= toastVisibleState.canvas.height, 'Overlay de fase não cobriu a altura do tabuleiro.');
     assert(levelComplete?.metadata?.nextLevel === 2, 'level_complete não registrou próxima fase 2.');
     assert(levelComplete?.metadata?.nextSpeedMultiplier === 1.12, 'level_complete não registrou velocidade 1.12.');
     assert(levelCompleteSpeedState, 'level_complete não registrou metadata.speedState.');

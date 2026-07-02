@@ -42,8 +42,11 @@ LOG("📦 GameEngine.ts carregado, gameLogger:", gameLogger);
 const ERROR_NO_2D_CONTEXT = "No 2D context";
 const SINGLE_BRICK_QA_SCENARIO = "single-brick-phase-clear";
 const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
+const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
 const LATE_PHASE_STABILITY_LEVEL = 11;
 const LATE_PHASE_STABILITY_Y_RATIO = 0.35;
+const CINEMATIC_RIP_X_RATIO = 0.12;
+const CINEMATIC_RIP_Y_OFFSET = 2;
 const COMBO_WINDOW_MS = 1200;
 const COMBO_COOLDOWN_MS = 500;
 const COMBO_SMALL_THRESHOLD = 3;
@@ -84,6 +87,7 @@ interface CanvasSize {
 export type GameQaScenario =
   | typeof SINGLE_BRICK_QA_SCENARIO
   | typeof LATE_PHASE_STABILITY_QA_SCENARIO
+  | typeof CINEMATIC_RIP_QA_SCENARIO
   | typeof AUDIO_QA_SCENARIO;
 
 export class GameEngine {
@@ -194,6 +198,7 @@ export class GameEngine {
       ),
     );
     this.prepareQaBall();
+    this.prepareCinematicRipBall();
     this.prepareLatePhaseStabilityBall();
 
     LOG(`🏗️  Criando Bricks...`);
@@ -335,6 +340,21 @@ export class GameEngine {
       this.canvasSize.height * LATE_PHASE_STABILITY_Y_RATIO,
     );
     ball.setDirection(Math.PI / 2);
+  }
+
+  private prepareCinematicRipBall() {
+    if (
+      this.qaScenario !== CINEMATIC_RIP_QA_SCENARIO ||
+      this.balls.length === 0
+    )
+      return;
+
+    const ball = this.balls[0];
+    ball.setPosition(
+      this.canvasSize.width * CINEMATIC_RIP_X_RATIO,
+      this.canvasSize.height + ball.position.radius + CINEMATIC_RIP_Y_OFFSET,
+    );
+    ball.setDirection(Math.PI);
   }
 
   private async preloadAssets() {

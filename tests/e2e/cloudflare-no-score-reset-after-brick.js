@@ -44,6 +44,7 @@ async function readGameEvents(page) {
   return page.evaluate(async ({ dbName, storeName, dbVersion }) => new Promise(resolve => {
     const request = indexedDB.open(dbName, dbVersion);
     request.onerror = () => resolve([]);
+    request.onblocked = () => resolve([]);
     request.onsuccess = () => {
       const db = request.result;
       if (!db.objectStoreNames.contains(storeName)) {
@@ -128,6 +129,33 @@ async function run() {
     await clearGameDatabases(page);
     await page.reload({ waitUntil: 'networkidle0', timeout: 60000 });
     await page.waitForSelector('canvas', { timeout: 30000 });
+    await page.waitForFunction(async ({ dbName, storeName, dbVersion }) => {
+      const events = await new Promise(resolve => {
+        const request = indexedDB.open(dbName, dbVersion);
+        request.onerror = () => resolve([]);
+        request.onblocked = () => resolve([]);
+        request.onsuccess = () => {
+          const db = request.result;
+          if (!db.objectStoreNames.contains(storeName)) {
+            db.close();
+            resolve([]);
+            return;
+          }
+          const tx = db.transaction([storeName], 'readonly');
+          const store = tx.objectStore(storeName);
+          const allRequest = store.getAll();
+          allRequest.onerror = () => {
+            db.close();
+            resolve([]);
+          };
+          allRequest.onsuccess = () => {
+            db.close();
+            resolve(allRequest.result || []);
+          };
+        };
+      });
+      return events.some(event => event.type === 'game_start');
+    }, { timeout: MAX_WAIT_FOR_SCORE_MS }, { dbName: GAME_LOG_DB_NAME, storeName: GAME_LOG_STORE_NAME, dbVersion: GAME_LOG_DB_VERSION });
 
     const startEvents = await readGameEvents(page);
     const startBall = startEvents.find(event => event.type === 'game_start')?.ballPositions?.[0] || null;
@@ -137,6 +165,7 @@ async function run() {
       const events = await new Promise(resolve => {
         const request = indexedDB.open(dbName, dbVersion);
         request.onerror = () => resolve([]);
+        request.onblocked = () => resolve([]);
         request.onsuccess = () => {
           const db = request.result;
           if (!db.objectStoreNames.contains(storeName)) {

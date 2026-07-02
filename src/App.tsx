@@ -7,6 +7,10 @@ import { AudioToggle } from "./components/AudioToggle";
 import { CollisionStats } from "./components/CollisionStats";
 import GameLogViewer from "./components/GameLogViewer";
 import {
+  GameCinematicOverlay,
+  type GameCinematicOverlayState,
+} from "./components/GameCinematicOverlay";
+import {
   saveScore,
   getTotalScore,
   resetScores,
@@ -14,8 +18,11 @@ import {
   saveHighScore,
 } from "./storage/score";
 import {
-  LEVEL_TOAST_EXIT_MS,
-  LEVEL_TOAST_VISIBLE_MS,
+  CINEMATIC_COUNTDOWN_STEP_MS,
+  CINEMATIC_COUNTDOWN_STEPS,
+  CINEMATIC_COUNTDOWN_TOTAL_MS,
+  CINEMATIC_RIP_VISIBLE_MS,
+  LEVEL_UP_OVERLAY_VISIBLE_MS,
   LevelTransitionPayload,
 } from "./constants/game";
 import {
@@ -41,6 +48,16 @@ const FIRST_AUDIO_INTERACTION_EVENTS = [
 ] as const;
 const OFFLINE_READY_VISIBLE_MS = 2400;
 const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
+const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
+const COUNTDOWN_FIRST_STEP_INDEX = 0;
+const COUNTDOWN_NEXT_STEP_INDEX = 1;
+const COUNTDOWN_TIMER_OFFSET = 1;
+const SPEED_LABEL_FRACTION_DIGITS = 2;
+const SPEED_LABEL_SUFFIX = "×";
+const INITIAL_COUNTDOWN_OVERLAY: GameCinematicOverlayState = {
+  type: "countdown",
+  value: CINEMATIC_COUNTDOWN_STEPS[COUNTDOWN_FIRST_STEP_INDEX],
+};
 
 export default function App() {
   const [score, setScore] = useState(0);
@@ -51,15 +68,19 @@ export default function App() {
   const [gameWon, setGameWon] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [level, setLevel] = useState(1);
-  const [levelToastPayload, setLevelToastPayload] =
-    useState<LevelTransitionPayload | null>(null);
-  const [isLevelToastVisible, setIsLevelToastVisible] = useState(false);
+  const [cinematicOverlay, setCinematicOverlay] =
+    useState<GameCinematicOverlayState>(INITIAL_COUNTDOWN_OVERLAY);
+  const [isInitialCountdownActive, setIsInitialCountdownActive] =
+    useState(true);
+  const [isCinematicRipScenarioConsumed, setIsCinematicRipScenarioConsumed] =
+    useState(false);
   const [isOfflineReadyVisible, setIsOfflineReadyVisible] = useState(false);
   const { theme, selectTheme } = useThemePreference();
   const { isAudioMuted, toggleAudio } = useAudioPreference();
-  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const levelTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const hideToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cinematicTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const countdownTimerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const ripTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const offlineReadyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
@@ -73,6 +94,8 @@ export default function App() {
       return "single-brick-phase-clear";
     if (scenario === LATE_PHASE_STABILITY_QA_SCENARIO)
       return LATE_PHASE_STABILITY_QA_SCENARIO;
+    if (scenario === CINEMATIC_RIP_QA_SCENARIO)
+      return CINEMATIC_RIP_QA_SCENARIO;
     if (scenario === AUDIO_QA_SCENARIO) return AUDIO_QA_SCENARIO;
     return null;
   }, []);
@@ -93,6 +116,15 @@ export default function App() {
     }),
     [],
   );
+  const effectiveQaScenario = useMemo<GameQaScenario | null>(() => {
+    if (
+      qaScenario === CINEMATIC_RIP_QA_SCENARIO &&
+      isCinematicRipScenarioConsumed
+    )
+      return null;
+
+    return qaScenario;
+  }, [isCinematicRipScenarioConsumed, qaScenario]);
 
   const handleScoreUpdate = useCallback((newScore: number) => {
     scoreRef.current = newScore;
@@ -116,23 +148,44 @@ export default function App() {
     }
   }, [audioSink]);
 
+  const resetGameState = useCallback(() => {
+    scoreRef.current = 0;
+    setScore(0);
+    setGameWon(false);
+    setGameOver(false);
+    setLevel(1);
+    setCinematicOverlay(null);
+    setGameKey((prev) => prev + 1);
+    setIsMenuOpen(false);
+  }, []);
+
   const handleGameWon = useCallback(async () => {
     setGameWon(true);
     await persistFinalScore();
     audioSink.startMenuMusic();
   }, [audioSink, persistFinalScore]);
 
-  const handleGameOver = useCallback(async () => {
+  const handleGameOver = useCallback(() => {
     setGameOver(true);
-    await persistFinalScore();
-    audioSink.startMenuMusic();
-  }, [audioSink, persistFinalScore]);
+    setCinematicOverlay({ type: "rip" });
+    if (ripTimerRef.current) clearTimeout(ripTimerRef.current);
+    ripTimerRef.current = setTimeout(() => {
+      if (qaScenario === CINEMATIC_RIP_QA_SCENARIO) {
+        setIsCinematicRipScenarioConsumed(true);
+      }
+      resetGameState();
+    }, CINEMATIC_RIP_VISIBLE_MS);
+    void persistFinalScore();
+  }, [persistFinalScore, qaScenario, resetGameState]);
 
   useEffect(
     () => () => {
-      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
       if (levelTimerRef.current) clearTimeout(levelTimerRef.current);
-      if (hideToastTimerRef.current) clearTimeout(hideToastTimerRef.current);
+      if (cinematicTimerRef.current) clearTimeout(cinematicTimerRef.current);
+      if (ripTimerRef.current) clearTimeout(ripTimerRef.current);
+      for (const countdownTimer of countdownTimerRefs.current) {
+        clearTimeout(countdownTimer);
+      }
       if (offlineReadyTimerRef.current)
         clearTimeout(offlineReadyTimerRef.current);
     },
@@ -154,6 +207,35 @@ export default function App() {
       void audioManager.runQaTour();
     }
   }, [qaScenario]);
+
+  useEffect(() => {
+    if (!isInitialCountdownActive) return undefined;
+
+    audioSink.playAudio(GAME_AUDIO_IDS.COUNTDOWN_TICK);
+    const timers = CINEMATIC_COUNTDOWN_STEPS.slice(
+      COUNTDOWN_NEXT_STEP_INDEX,
+    ).map((step, index) =>
+      setTimeout(() => {
+        audioSink.playAudio(GAME_AUDIO_IDS.COUNTDOWN_TICK);
+        setCinematicOverlay({ type: "countdown", value: step });
+      }, (index + COUNTDOWN_TIMER_OFFSET) * CINEMATIC_COUNTDOWN_STEP_MS),
+    );
+
+    timers.push(
+      setTimeout(() => {
+        setCinematicOverlay(null);
+        setIsInitialCountdownActive(false);
+      }, CINEMATIC_COUNTDOWN_TOTAL_MS),
+    );
+    countdownTimerRefs.current = timers;
+
+    return () => {
+      for (const countdownTimer of timers) {
+        clearTimeout(countdownTimer);
+      }
+      countdownTimerRefs.current = [];
+    };
+  }, [audioSink, isInitialCountdownActive]);
 
   useEffect(() => {
     audioSink.playAudio(GAME_AUDIO_IDS.AD_PLACEHOLDER_NONE);
@@ -219,16 +301,9 @@ export default function App() {
 
   const handleRestart = useCallback(() => {
     audioSink.playAudio(GAME_AUDIO_IDS.RESTART);
-    scoreRef.current = 0;
-    setScore(0);
-    setGameWon(false);
-    setGameOver(false);
-    setLevel(1);
-    setLevelToastPayload(null);
-    setIsLevelToastVisible(false);
-    setGameKey((prev) => prev + 1);
-    setIsMenuOpen(false);
-  }, [audioSink]);
+    if (ripTimerRef.current) clearTimeout(ripTimerRef.current);
+    resetGameState();
+  }, [audioSink, resetGameState]);
 
   const handleResetScores = useCallback(async () => {
     audioSink.playAudio(GAME_AUDIO_IDS.RESET_SCORE);
@@ -295,24 +370,24 @@ export default function App() {
 
   const handleLevelTransition = useCallback(
     (payload: LevelTransitionPayload) => {
-      audioSink.playAudio(GAME_AUDIO_IDS.LEVEL_TOAST_IN);
-      setLevelToastPayload(payload);
-      setIsLevelToastVisible(true);
-      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+      audioSink.playAudio(GAME_AUDIO_IDS.LEVEL_UP_OVERLAY);
+      setCinematicOverlay({
+        type: "levelUp",
+        nextLevel: payload.nextLevel,
+        speedLabel: `${payload.nextSpeedMultiplier.toFixed(
+          SPEED_LABEL_FRACTION_DIGITS,
+        )}${SPEED_LABEL_SUFFIX}`,
+      });
       if (levelTimerRef.current) clearTimeout(levelTimerRef.current);
-      if (hideToastTimerRef.current) clearTimeout(hideToastTimerRef.current);
+      if (cinematicTimerRef.current) clearTimeout(cinematicTimerRef.current);
 
-      toastTimerRef.current = setTimeout(() => {
-        setIsLevelToastVisible(false);
-      }, LEVEL_TOAST_VISIBLE_MS);
+      cinematicTimerRef.current = setTimeout(() => {
+        setCinematicOverlay(null);
+      }, LEVEL_UP_OVERLAY_VISIBLE_MS);
 
       levelTimerRef.current = setTimeout(() => {
         setLevel(payload.nextLevel);
       }, payload.pauseMs);
-
-      hideToastTimerRef.current = setTimeout(() => {
-        setLevelToastPayload(null);
-      }, payload.pauseMs + LEVEL_TOAST_EXIT_MS);
     },
     [audioSink],
   );
@@ -425,10 +500,9 @@ export default function App() {
                 onGameOver={handleGameOver}
                 onLevelTransition={handleLevelTransition}
                 onLevelChange={handleLevelChange}
-                levelToastPayload={levelToastPayload}
-                isLevelToastVisible={isLevelToastVisible}
-                qaScenario={qaScenario}
+                qaScenario={effectiveQaScenario}
                 audioSink={audioSink}
+                startBlocked={isInitialCountdownActive}
                 boardControls={
                   <div
                     className="game-corner-controls"
@@ -485,6 +559,7 @@ export default function App() {
         onClose={handleCloseCollisionStats}
       />
       <GameLogViewer isVisible={showGameLogs} onClose={handleCloseLogs} />
+      <GameCinematicOverlay state={cinematicOverlay} />
     </main>
   );
 }
