@@ -3,6 +3,18 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.17.1] - 2026-07-02
+### Alterado
+- Efeitos cinematográficos de contagem inicial, subida de fase e RIP passam a usar imagens locais CC0/domínio público de Kenney, distribuídas com o PWA offline.
+- Overlay mantém os textos essenciais acessíveis e usa as imagens apenas como camadas decorativas sem dependências externas.
+
+### Adicionado
+- Recibo de licença e SHA-256 dos assets cinematográficos em `docs/assets/issues/cinematic-public-domain-media/evidence/`.
+- Validação `npm run test:cinematic-media-assets` para garantir paths locais, precache no service worker e política CC0/domínio público.
+
+### Testado
+- QA cinematográfico publicado passa a validar mídia local, cache PWA e ausência de requests externos de mídia.
+
 ## [1.17.0] - 2026-07-02
 ### Adicionado
 - Overlay cinematográfico inicial com contagem `3`, `2`, `1` em tela cheia, limitado a 1,8s e exibido apenas no primeiro carregamento da página.

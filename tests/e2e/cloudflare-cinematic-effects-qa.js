@@ -4,11 +4,14 @@ import { dirname, resolve } from 'node:path';
 import puppeteer from 'puppeteer';
 
 const DEFAULT_PUBLIC_URL = 'https://malnati-brickbreaker.pages.dev/';
-const DEFAULT_REPORT_PATH = 'tmp/reports/cloudflare-cinematic-effects.json';
+const DEFAULT_REPORT_PATH =
+  'docs/assets/issues/cinematic-public-domain-media/evidence/cloudflare-cinematic-effects.json';
+const DEFAULT_COUNTDOWN_SCREENSHOT_PATH =
+  'docs/assets/issues/cinematic-public-domain-media/evidence/cloudflare-cinematic-countdown.png';
 const DEFAULT_LEVEL_UP_SCREENSHOT_PATH =
-  'docs/assets/issues/cinematic-round-effects/evidence/cloudflare-cinematic-level-up.png';
+  'docs/assets/issues/cinematic-public-domain-media/evidence/cloudflare-cinematic-level-up.png';
 const DEFAULT_RIP_SCREENSHOT_PATH =
-  'docs/assets/issues/cinematic-round-effects/evidence/cloudflare-cinematic-rip.png';
+  'docs/assets/issues/cinematic-public-domain-media/evidence/cloudflare-cinematic-rip.png';
 const CHROME_EXECUTABLE_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const VIEWPORT = { width: 393, height: 852, deviceScaleFactor: 3, isMobile: true, hasTouch: true };
 const COUNTDOWN_MAX_DURATION_MS = 2000;
@@ -22,6 +25,17 @@ const SINGLE_BRICK_QA_SCENARIO = 'single-brick-phase-clear';
 const CINEMATIC_RIP_QA_SCENARIO = 'cinematic-rip';
 const REQUIRED_LEVEL_AUDIO_IDS = ['sfx_score_tick', 'sfx_level_toast_in'];
 const REQUIRED_RIP_AUDIO_IDS = ['sfx_game_over'];
+const REQUIRED_COUNTDOWN_MEDIA = ['countdown-circle', 'countdown-spark'];
+const REQUIRED_LEVEL_UP_MEDIA = ['level-up-twirl', 'level-up-star'];
+const REQUIRED_RIP_MEDIA = ['rip-smoke'];
+const REQUIRED_CINEMATIC_MEDIA_PATHS = [
+  '/assets/cinematics/countdown-circle.png',
+  '/assets/cinematics/countdown-spark.png',
+  '/assets/cinematics/level-up-star.png',
+  '/assets/cinematics/level-up-twirl.png',
+  '/assets/cinematics/rip-smoke.png',
+];
+const MEDIA_EXTENSION_PATTERN = /\.(gif|jpe?g|mp3|mp4|ogg|png|webm|webp|wav)(\?|$)/i;
 const PAGES_DEV_HOST_SUFFIX = '.pages.dev';
 
 function env(name, fallback) {
@@ -77,6 +91,12 @@ async function overlaySnapshot(page, selector) {
       hasBodyScroll:
         document.documentElement.scrollHeight > window.innerHeight ||
         document.body.scrollHeight > window.innerHeight,
+      media: [...(overlay?.querySelectorAll('img[data-cinematic-media]') || [])].map((item) => ({
+        id: item.getAttribute('data-cinematic-media') || '',
+        src: item.getAttribute('src') || '',
+        ariaHidden: item.getAttribute('aria-hidden') || '',
+        alt: item.getAttribute('alt') || '',
+      })),
     };
   }, selector);
 }
@@ -94,12 +114,40 @@ function assertFullViewport(snapshot, label) {
   assert(snapshot.rect.height >= snapshot.viewport.height * 0.96, `${label}: altura não cobre viewport.`);
 }
 
+function assertMedia(snapshot, requiredIds, label) {
+  const mediaIds = snapshot.media.map(item => item.id).sort();
+  for (const requiredId of requiredIds) {
+    assert(mediaIds.includes(requiredId), `${label}: mídia ausente ${requiredId}.`);
+  }
+  for (const item of snapshot.media) {
+    assert(item.src.startsWith('/assets/cinematics/'), `${label}: mídia fora de /assets/cinematics/: ${item.src}`);
+    assert(item.ariaHidden === 'true', `${label}: mídia decorativa sem aria-hidden=true: ${item.id}`);
+    assert(item.alt === '', `${label}: mídia decorativa sem alt vazio: ${item.id}`);
+  }
+}
+
+async function cachedCinematicPaths(page) {
+  return page.evaluate(async (paths) => {
+    if (!('serviceWorker' in navigator) || !('caches' in window)) return [];
+    await navigator.serviceWorker.ready;
+    const matches = await Promise.all(paths.map(async (path) => {
+      const response = await caches.match(path);
+      return response ? path : null;
+    }));
+    return matches.filter(Boolean);
+  }, REQUIRED_CINEMATIC_MEDIA_PATHS);
+}
+
 async function run() {
   const publicUrl = env('BRICKBREAKER_PUBLIC_URL', DEFAULT_PUBLIC_URL);
   const parsed = new URL(publicUrl);
   assert(parsed.hostname.endsWith(PAGES_DEV_HOST_SUFFIX), `URL precisa ser Cloudflare Pages: ${publicUrl}`);
 
   const reportPath = env('BRICKBREAKER_CINEMATIC_QA_REPORT', DEFAULT_REPORT_PATH);
+  const countdownScreenshotPath = env(
+    'BRICKBREAKER_CINEMATIC_COUNTDOWN_SCREENSHOT',
+    DEFAULT_COUNTDOWN_SCREENSHOT_PATH,
+  );
   const levelUpScreenshotPath = env(
     'BRICKBREAKER_CINEMATIC_LEVEL_SCREENSHOT',
     DEFAULT_LEVEL_UP_SCREENSHOT_PATH,
@@ -109,10 +157,12 @@ async function run() {
     DEFAULT_RIP_SCREENSHOT_PATH,
   );
   ensureParentDirectory(reportPath);
+  ensureParentDirectory(countdownScreenshotPath);
   ensureParentDirectory(levelUpScreenshotPath);
   ensureParentDirectory(ripScreenshotPath);
 
   const externalAudioRequests = [];
+  const externalMediaRequests = [];
   const consoleProblems = [];
   const browser = await puppeteer.launch({
     headless: 'new',
@@ -127,6 +177,9 @@ async function run() {
       const requestUrl = new URL(request.url());
       if (requestUrl.pathname.endsWith('.mp3') && requestUrl.origin !== parsed.origin) {
         externalAudioRequests.push(request.url());
+      }
+      if (MEDIA_EXTENSION_PATTERN.test(requestUrl.pathname) && requestUrl.origin !== parsed.origin) {
+        externalMediaRequests.push(request.url());
       }
     });
     page.on('console', message => {
@@ -145,6 +198,7 @@ async function run() {
     await page.waitForSelector(COUNTDOWN_SELECTOR, { timeout: 5000 });
     const countdownStartedAt = Date.now();
     const countdownState = await overlaySnapshot(page, COUNTDOWN_SELECTOR);
+    await page.screenshot({ path: countdownScreenshotPath, fullPage: true });
     await page.waitForSelector(COUNTDOWN_SELECTOR, {
       hidden: true,
       timeout: COUNTDOWN_MAX_DURATION_MS + 900,
@@ -158,6 +212,7 @@ async function run() {
       timeout: 10000,
     });
     const levelAudioIds = await audioIds(page);
+    const cachedPaths = await cachedCinematicPaths(page);
     const countdownAfterLevel = await page.$(COUNTDOWN_SELECTOR);
 
     const ripPage = await browser.newPage();
@@ -166,6 +221,9 @@ async function run() {
       const requestUrl = new URL(request.url());
       if (requestUrl.pathname.endsWith('.mp3') && requestUrl.origin !== parsed.origin) {
         externalAudioRequests.push(request.url());
+      }
+      if (MEDIA_EXTENSION_PATTERN.test(requestUrl.pathname) && requestUrl.origin !== parsed.origin) {
+        externalMediaRequests.push(request.url());
       }
     });
     ripPage.on('console', message => {
@@ -203,6 +261,9 @@ async function run() {
     assertFullViewport(countdownState, 'countdown');
     assertFullViewport(levelUpState, 'level-up');
     assertFullViewport(ripState, 'rip');
+    assertMedia(countdownState, REQUIRED_COUNTDOWN_MEDIA, 'countdown');
+    assertMedia(levelUpState, REQUIRED_LEVEL_UP_MEDIA, 'level-up');
+    assertMedia(ripState, REQUIRED_RIP_MEDIA, 'rip');
     assert(countdownDurationMs <= COUNTDOWN_MAX_DURATION_MS + 900, `Countdown demorou demais: ${countdownDurationMs}ms.`);
     assert(ripDurationMs <= RIP_MAX_DURATION_MS + RIP_OBSERVATION_BUFFER_MS, `RIP demorou demais: ${ripDurationMs}ms.`);
     assert(/3|2|1/.test(countdownState.text), 'Countdown não mostrou 3, 2 ou 1.');
@@ -219,6 +280,10 @@ async function run() {
       assert(ripAudioIds.includes(id), `Áudio ausente no RIP: ${id}`);
     }
     assert(externalAudioRequests.length === 0, `Requests externos de áudio: ${externalAudioRequests.join(', ')}`);
+    assert(externalMediaRequests.length === 0, `Requests externos de mídia: ${externalMediaRequests.join(', ')}`);
+    for (const path of REQUIRED_CINEMATIC_MEDIA_PATHS) {
+      assert(cachedPaths.includes(path), `Mídia cinematográfica fora do cache PWA: ${path}`);
+    }
     assert(consoleProblems.length === 0, `Console publicou warnings/errors: ${JSON.stringify(consoleProblems.slice(0, 5))}`);
 
     const report = {
@@ -231,9 +296,12 @@ async function run() {
       ripState,
       levelAudioIds,
       ripAudioIds,
+      cachedPaths,
+      countdownScreenshotPath,
       levelUpScreenshotPath,
       ripScreenshotPath,
       externalAudioRequests,
+      externalMediaRequests,
       consoleProblems,
     };
     writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`);
