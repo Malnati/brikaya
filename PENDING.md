@@ -1,4 +1,5 @@
 <!-- PENDING.md -->
+
 - [ ] Executar `make cloudflare-mobile-qa`, `make cloudflare-no-score-reset`, `make cloudflare-phase-transition-qa`, `make cloudflare-dashboard-layout-qa` e `make cloudflare-theme-qa` contra `https://malnati-brickbreaker.pages.dev/` após merge da feature de controle de velocidade por fase.
 - [ ] Validar emissão do certificado TLS do Caddy após apontar o DNS de `brickbreacker.cranio.dev` para o host.
 - [ ] Monitorar o endpoint `/healthz` exposto pelo Caddy para integração com monitoramento externo.
@@ -16,3 +17,5 @@
 - [x] Validar modo paisagem imersivo mobile/tablet no Cloudflare publicado antes do merge, sem Fullscreen API obrigatória.
 
 - [x] Validar preview Cloudflare da feature com tema escuro padrão, versão no menu, quadro full-width e power-up Laser em leque.
+
+- [x] Revisar implementação pós-merge da versão no menu, tema escuro, canvas full-width e Laser em leque, removendo constantes obsoletas sem alterar gameplay.

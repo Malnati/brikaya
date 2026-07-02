@@ -2,7 +2,6 @@
 export const THEME_LIGHT = "light";
 export const THEME_DARK = "dark";
 export const THEME_STORAGE_KEY = "brickbreaker-theme";
-export const THEME_MEDIA_QUERY = "(prefers-color-scheme: dark)";
 
 export type ThemeMode = typeof THEME_LIGHT | typeof THEME_DARK;
 

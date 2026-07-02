@@ -5,10 +5,8 @@ export const CANVAS_HEIGHT = 320;
 // Responsividade
 export const MIN_CANVAS_WIDTH = 320;
 export const MIN_CANVAS_HEIGHT = 240;
-export const MAX_CANVAS_WIDTH = 800;
 export const MAX_CANVAS_HEIGHT = 600;
 export const CANVAS_CONTAINER_HORIZONTAL_INSET = 16;
-export const AVAILABLE_CANVAS_HEIGHT_RATIO = 0.42;
 export const IMMERSIVE_LANDSCAPE_ROOT_CLASS = "bb-landscape-immersive";
 export const IMMERSIVE_LANDSCAPE_MAX_VIEWPORT_HEIGHT = 820;
 export const IMMERSIVE_LANDSCAPE_MAX_VIEWPORT_WIDTH = 1400;
