@@ -17,8 +17,8 @@ describe("calculateResponsiveCanvasSize", () => {
     });
 
     expect(size.isImmersiveLandscape).toBe(true);
-    expect(size.width).toBeGreaterThanOrEqual(420);
-    expect(size.height).toBeGreaterThanOrEqual(280);
+    expect(size.width).toBeGreaterThanOrEqual(818);
+    expect(size.height).toBeGreaterThanOrEqual(320);
     expect(size.height).toBeLessThan(372);
   });
 

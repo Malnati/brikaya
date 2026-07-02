@@ -3,6 +3,16 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+
+## [1.18.3] - 2026-07-02
+### Corrigido
+- Canvas no modo paisagem imersivo mobile/tablet passa a usar a largura útil da viewport em vez de manter proporção 480:320 com margens laterais.
+- Som inicial passa a começar mudo quando não há preferência salva, com ícone e rótulo acessível refletindo `Sem som`.
+
+### Testado
+- Cobertura unitária valida canvas full-width em landscape imersivo e preferência inicial de áudio mudo.
+- QA publicado de dashboard/mobile/audio passa a validar largura do canvas, ausência de scroll/sobreposição e estado inicial mudo.
+
 ## [1.18.2] - 2026-07-02
 ### Corrigido
 - Quadro do jogo volta a ocupar toda a largura útil disponível, removendo o recuo responsivo que limitava o canvas.

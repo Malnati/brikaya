@@ -390,15 +390,19 @@ async function run() {
       layoutState.buttons.some((button) => MENU_BUTTON_NAME.test(button.text)),
       "Botão Menu não encontrado no HUD compacto.",
     );
-    const audioIcon = mainButtons.find(
-      (button) => button.ariaLabel === "Som" && button.text === "♪",
+    const audioIcon = mainButtons.find((button) =>
+      ["Som", "Sem som"].includes(button.ariaLabel),
     );
     const restartIcon = mainButtons.find(
       (button) =>
         /reiniciar|jogar de novo/i.test(button.ariaLabel) &&
         button.text === "↻",
     );
-    assert(audioIcon, "Ícone Som não encontrado no canto principal.");
+    assert(audioIcon, "Ícone de som não encontrado no canto principal.");
+    assert(
+      audioIcon.ariaLabel === "Sem som" && audioIcon.text === "×",
+      "Estado inicial do som não começou mudo.",
+    );
     assert(
       restartIcon,
       "Ícone Reiniciar/Jogar de novo não encontrado no canto principal.",

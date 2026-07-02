@@ -18,7 +18,7 @@ const MIN_SIDE_AD_DISTANCE_PX = 150;
 const MIN_BOTTOM_AD_DISTANCE_PX = 24;
 const LANDSCAPE_VIEWPORT_NAME = "iphone-15-landscape";
 const MIN_LANDSCAPE_CANVAS_HEIGHT_RATIO = 0.68;
-const MIN_LANDSCAPE_CANVAS_WIDTH_RATIO = 0.48;
+const MIN_LANDSCAPE_CANVAS_WIDTH_RATIO = 0.96;
 const MIN_IMMERSIVE_CANVAS_HEIGHT_RATIO = 0.68;
 const MIN_IMMERSIVE_BOARD_AREA_USAGE_RATIO = 0.9;
 const MIN_FULL_WIDTH_CANVAS_RATIO = 0.98;
@@ -389,8 +389,14 @@ async function waitForEventTypeSince(page, minTimestamp, eventType) {
 async function clickButtonByPattern(page, pattern) {
   const buttons = await page.$$("button");
   for (const button of buttons) {
-    const text = await button.evaluate((node) => node.textContent || "");
-    if (pattern.test(text)) {
+    const label = await button.evaluate(
+      (node) =>
+        node.getAttribute("aria-label") ||
+        node.getAttribute("title") ||
+        node.textContent ||
+        "",
+    );
+    if (pattern.test(label)) {
       await button.click();
       return true;
     }
@@ -543,8 +549,8 @@ async function run() {
         `${viewport.name}: menu inacessível.`,
       );
       const mainButtons = state.buttons.filter((button) => !button.inDrawer);
-      const audioIcon = mainButtons.find(
-        (button) => button.ariaLabel === "Som" && button.text === "♪",
+      const audioIcon = mainButtons.find((button) =>
+        ["Som", "Sem som"].includes(button.ariaLabel),
       );
       const restartIcon = mainButtons.find(
         (button) =>
@@ -553,7 +559,11 @@ async function run() {
       );
       assert(
         audioIcon,
-        `${viewport.name}: ícone Som ausente na tela principal.`,
+        `${viewport.name}: ícone de som ausente na tela principal.`,
+      );
+      assert(
+        audioIcon.ariaLabel === "Sem som" && audioIcon.text === "×",
+        `${viewport.name}: estado inicial do som não começou mudo.`,
       );
       assert(
         restartIcon,

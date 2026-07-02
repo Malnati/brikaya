@@ -4,6 +4,7 @@ import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import App from "./App";
+import { audioManager } from "./utils/audioManager";
 import type { LevelTransitionPayload } from "./constants/game";
 
 interface MockGameProps {
@@ -97,7 +98,7 @@ describe("App theme selector", () => {
     await renderApp();
 
     expect(screen.getByRole("button", { name: "Menu" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Som" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Sem som" })).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Reiniciar" }),
     ).toBeInTheDocument();
@@ -192,11 +193,11 @@ describe("App theme selector", () => {
 
     await renderApp();
 
-    const audioButton = screen.getByRole("button", { name: "Som" });
+    const audioButton = screen.getByRole("button", { name: "Sem som" });
     const restartButton = screen.getByRole("button", { name: "Reiniciar" });
 
-    expect(audioButton).toHaveTextContent("♪");
-    expect(audioButton).not.toHaveTextContent("Som");
+    expect(audioButton).toHaveTextContent("×");
+    expect(audioButton).not.toHaveTextContent("Sem som");
     expect(restartButton).toHaveTextContent("↻");
     expect(restartButton).not.toHaveTextContent("Reiniciar");
   });
@@ -217,8 +218,8 @@ describe("App theme selector", () => {
     expect(container.querySelectorAll(".score-chip")).toHaveLength(0);
     expect(container.querySelectorAll(".score-hud")).toHaveLength(1);
     expect(topControls).toHaveClass("dashboard-primary-controls");
-    expect(within(topControls).getByRole("button", { name: "Som" })).toBe(
-      screen.getByRole("button", { name: "Som" }),
+    expect(within(topControls).getByRole("button", { name: "Sem som" })).toBe(
+      screen.getByRole("button", { name: "Sem som" }),
     );
     expect(
       within(topControls).getByRole("button", { name: "Reiniciar" }),
@@ -230,16 +231,19 @@ describe("App theme selector", () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
 
+    jest.spyOn(audioManager, "unlock").mockResolvedValue(true);
+
     await renderApp();
-
-    const audioButton = screen.getByRole("button", { name: "Som" });
-    expect(audioButton).toHaveAttribute("aria-pressed", "true");
-
-    await user.click(audioButton);
 
     const mutedButton = screen.getByRole("button", { name: "Sem som" });
     expect(mutedButton).toHaveAttribute("aria-pressed", "false");
     expect(mutedButton).toHaveTextContent("×");
+
+    await user.click(mutedButton);
+
+    const audioButton = await screen.findByRole("button", { name: "Som" });
+    expect(audioButton).toHaveAttribute("aria-pressed", "true");
+    expect(audioButton).toHaveTextContent("♪");
   });
 
   it("fecha menu lateral com Escape", async () => {

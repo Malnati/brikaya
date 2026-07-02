@@ -72,6 +72,7 @@ export function calculateResponsiveCanvasSize(
   const containerWidth = isLandscapeImmersive
     ? Math.max(
         minCanvasWidth,
+        metrics.containerWidth,
         viewportWidth -
           metrics.rootPaddingInline -
           IMMERSIVE_LANDSCAPE_CANVAS_INSET,
@@ -80,30 +81,26 @@ export function calculateResponsiveCanvasSize(
   const containerHeight = isLandscapeImmersive
     ? Math.max(
         minCanvasHeight,
-        Math.max(
-          metrics.containerHeight - IMMERSIVE_LANDSCAPE_CANVAS_INSET,
-          viewportHeight -
-            metrics.rootPaddingBlock -
-            IMMERSIVE_LANDSCAPE_CANVAS_INSET -
-            immersiveUiReservedBlock,
-        ),
+        metrics.containerHeight,
+        viewportHeight -
+          metrics.rootPaddingBlock -
+          IMMERSIVE_LANDSCAPE_CANVAS_INSET -
+          immersiveUiReservedBlock,
       )
     : Number.POSITIVE_INFINITY;
 
   let newWidth = containerWidth;
-  let newHeight = containerWidth / ASPECT_RATIO;
+  let newHeight = isLandscapeImmersive
+    ? containerHeight
+    : containerWidth / ASPECT_RATIO;
 
-  if (newHeight > containerHeight) {
+  if (!isLandscapeImmersive && newHeight > containerHeight) {
     newHeight = containerHeight;
     newWidth = containerHeight * ASPECT_RATIO;
   }
 
-  newWidth = isLandscapeImmersive
-    ? newWidth
-    : Math.max(minCanvasWidth, newWidth);
-  newHeight = isLandscapeImmersive
-    ? newHeight
-    : Math.max(minCanvasHeight, newHeight);
+  newWidth = Math.max(minCanvasWidth, newWidth);
+  newHeight = Math.max(minCanvasHeight, newHeight);
 
   return {
     width: Math.floor(newWidth),
