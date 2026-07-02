@@ -3,6 +3,10 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.18.1] - 2026-07-02
+### Corrigido
+- Removidas constantes responsivas e de tema que ficaram obsoletas após o modo full-width e o tema escuro padrão, mantendo o contrato de código sem referências mortas.
+
 ## [1.18.0] - 2026-07-02
 ### Adicionado
 - Tema padrão escuro quando não há preferência salva, mantendo seletor Claro/Escuro e persistência local.
