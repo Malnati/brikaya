@@ -232,6 +232,9 @@ describe("App theme selector", () => {
     const user = userEvent.setup();
 
     jest.spyOn(audioManager, "unlock").mockResolvedValue(true);
+    const playMusic = jest
+      .spyOn(audioManager, "playMusic")
+      .mockResolvedValue(undefined);
 
     await renderApp();
 
@@ -244,6 +247,29 @@ describe("App theme selector", () => {
     const audioButton = await screen.findByRole("button", { name: "Som" });
     expect(audioButton).toHaveAttribute("aria-pressed", "true");
     expect(audioButton).toHaveTextContent("♪");
+    expect(playMusic).toHaveBeenCalled();
+  });
+
+  it("mantém ícone mudo quando o desbloqueio de áudio falha", async () => {
+    mockSystemTheme(true);
+    const user = userEvent.setup();
+
+    jest.spyOn(audioManager, "unlock").mockResolvedValue(false);
+    const playMusic = jest
+      .spyOn(audioManager, "playMusic")
+      .mockResolvedValue(undefined);
+
+    await renderApp();
+
+    const mutedButton = screen.getByRole("button", { name: "Sem som" });
+    await user.click(mutedButton);
+
+    expect(screen.getByRole("button", { name: "Sem som" })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
+    expect(screen.queryByRole("button", { name: "Som" })).not.toBeInTheDocument();
+    expect(playMusic).not.toHaveBeenCalled();
   });
 
   it("fecha menu lateral com Escape", async () => {

@@ -46,9 +46,10 @@ import { useAudioPreference } from "./hooks/useAudioPreference";
 LOG("🚦 App.tsx carregado");
 
 const FIRST_AUDIO_INTERACTION_EVENTS = [
-  "pointerdown",
+  "click",
+  "pointerup",
   "keydown",
-  "touchstart",
+  "touchend",
 ] as const;
 const OFFLINE_READY_VISIBLE_MS = 2400;
 const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
@@ -252,8 +253,11 @@ export default function App() {
 
   useEffect(() => {
     if (isAudioMuted) return undefined;
+    let didAttemptUnlock = false;
 
     const unlockAudio = () => {
+      if (didAttemptUnlock) return;
+      didAttemptUnlock = true;
       void audioManager.unlock().then((unlocked) => {
         if (unlocked) {
           void audioManager.playMusic(GAMEPLAY_MUSIC_AUDIO_ID);
@@ -264,7 +268,6 @@ export default function App() {
     for (const eventName of FIRST_AUDIO_INTERACTION_EVENTS) {
       window.addEventListener(eventName, unlockAudio, {
         once: true,
-        passive: true,
       });
     }
 
@@ -369,9 +372,12 @@ export default function App() {
   const handleAudioToggle = useCallback(async () => {
     if (!isAudioMuted) {
       audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+      await toggleAudio();
+      return;
     }
-    await toggleAudio();
-    if (isAudioMuted) {
+
+    const result = await toggleAudio();
+    if (result.changed && !result.muted && result.unlocked) {
       audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
       audioSink.startGameplayMusic();
     }

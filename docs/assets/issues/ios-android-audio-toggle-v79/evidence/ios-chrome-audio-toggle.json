@@ -1,0 +1,17 @@
+{
+  "status": "blocked",
+  "device": "iPhone real",
+  "system": "iOS",
+  "browser": "Chrome iOS",
+  "url": "https://fix-ios-android-audio-toggle.malnati-brickbreaker.pages.dev",
+  "timestampUtc": "2026-07-02T15:25:30Z",
+  "branch": "fix/ios-android-audio-toggle-v79",
+  "blockedReason": "Ambiente atual não expõe iPhone real, BrowserStack ou Sauce Labs sem custo/autorização.",
+  "expectedChecklist": {
+    "initial": "Sem som / × / aria-pressed=false / muted=true",
+    "afterFirstTap": "Som / ♪ / aria-pressed=true / unlocked=true / muted=false",
+    "afterSecondTap": "Sem som / × / muted=true"
+  },
+  "screenshots": [],
+  "notes": "Chrome iOS usa WebKit e precisa de validação separada em dispositivo real."
+}

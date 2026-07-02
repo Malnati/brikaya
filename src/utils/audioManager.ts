@@ -28,6 +28,15 @@ const AUDIO_EVENT_FAILED_STATUS = 'failed';
 const AUDIO_EVENT_TOUR_DELAY_MS = 24;
 const AUDIO_ERROR_MESSAGE = 'Falha recuperável de áudio.';
 const MUSIC_SWAP_AUDIO_IDS = new Set<AudioId>([MENU_MUSIC_AUDIO_ID, GAMEPLAY_MUSIC_AUDIO_ID]);
+const AUDIO_CONTEXT_MISSING_STATE = 'missing';
+const AUDIO_UNLOCK_NOT_STARTED_REASON = 'not_started';
+const AUDIO_UNLOCK_ALREADY_RUNNING_REASON = 'already_running';
+const AUDIO_UNLOCK_OK_REASON = 'ok';
+const AUDIO_UNLOCK_UNAVAILABLE_REASON = 'audio_context_unavailable';
+const AUDIO_UNLOCK_FAILED_REASON = 'audio_context_failed';
+const SILENT_UNLOCK_CHANNEL_COUNT = 1;
+const SILENT_UNLOCK_FRAME_COUNT = 1;
+const SILENT_UNLOCK_GAIN = 0;
 
 type AudioEventStatus =
   | typeof AUDIO_EVENT_PLAYED_STATUS
@@ -43,6 +52,12 @@ interface AudioQaEvent {
   timestamp: number;
 }
 
+interface AudioUnlockResult {
+  unlocked: boolean;
+  contextState: string;
+  reason: string;
+}
+
 interface ActiveMusicNode {
   source: AudioBufferSourceNode;
   gain: GainNode;
@@ -56,6 +71,8 @@ interface AudioWindow extends Window {
   __brickbreakerAudioState?: () => {
     muted: boolean;
     unlocked: boolean;
+    contextState: string;
+    lastUnlockResult: AudioUnlockResult;
     loaded: number;
     events: AudioQaEvent[];
   };
@@ -90,6 +107,11 @@ class BrickBreakerAudioManager {
   private unlocked = false;
   private activeSfxCount = 0;
   private duckingTimer: ReturnType<typeof setTimeout> | null = null;
+  private lastUnlockResult: AudioUnlockResult = {
+    unlocked: false,
+    contextState: AUDIO_CONTEXT_MISSING_STATE,
+    reason: AUDIO_UNLOCK_NOT_STARTED_REASON,
+  };
 
   setMuted(muted: boolean): void {
     this.muted = muted;
@@ -109,6 +131,7 @@ class BrickBreakerAudioManager {
 
   async unlock(): Promise<boolean> {
     if (this.unlocked && this.audioContext?.state === AUDIO_CONTEXT_RUNNING_STATE) {
+      this.recordUnlockResult(true, AUDIO_UNLOCK_ALREADY_RUNNING_REASON);
       return true;
     }
 
@@ -117,21 +140,25 @@ class BrickBreakerAudioManager {
 
     const AudioContextConstructor = getAudioContextConstructor(audioWindow);
     if (!AudioContextConstructor) {
+      this.recordUnlockResult(false, AUDIO_UNLOCK_UNAVAILABLE_REASON);
       this.recordEvent(SILENT_AUDIO_ID, AUDIO_EVENT_BLOCKED_STATUS, null);
       return false;
     }
 
     try {
       this.ensureAudioGraph(AudioContextConstructor);
+      this.playSilentUnlockPulse();
       if (this.audioContext?.state === AUDIO_CONTEXT_SUSPENDED_STATE) {
         await this.audioContext.resume();
       }
       this.unlocked = this.audioContext?.state === AUDIO_CONTEXT_RUNNING_STATE;
+      this.recordUnlockResult(this.unlocked, AUDIO_UNLOCK_OK_REASON);
       this.applyMasterVolume();
       void this.preloadAll();
       return this.unlocked;
     } catch (error) {
       WARN(AUDIO_ERROR_MESSAGE, error);
+      this.recordUnlockResult(false, AUDIO_UNLOCK_FAILED_REASON);
       this.recordEvent(SILENT_AUDIO_ID, AUDIO_EVENT_FAILED_STATUS, null);
       return false;
     }
@@ -292,6 +319,8 @@ class BrickBreakerAudioManager {
     audioWindow.__brickbreakerAudioState = () => ({
       muted: this.muted,
       unlocked: this.unlocked,
+      contextState: this.audioContext?.state || AUDIO_CONTEXT_MISSING_STATE,
+      lastUnlockResult: this.lastUnlockResult,
       loaded: this.buffers.size,
       events: [...(audioWindow.__brickbreakerAudioEvents || [])],
     });
@@ -315,9 +344,32 @@ class BrickBreakerAudioManager {
     this.applyMasterVolume();
   }
 
+  private playSilentUnlockPulse(): void {
+    if (!this.audioContext || !this.masterGain) return;
+    const source = this.audioContext.createBufferSource();
+    const gain = this.audioContext.createGain();
+    source.buffer = this.audioContext.createBuffer(
+      SILENT_UNLOCK_CHANNEL_COUNT,
+      SILENT_UNLOCK_FRAME_COUNT,
+      this.audioContext.sampleRate,
+    );
+    gain.gain.value = SILENT_UNLOCK_GAIN;
+    source.connect(gain);
+    gain.connect(this.masterGain);
+    source.start();
+  }
+
   private applyMasterVolume(): void {
     if (!this.masterGain) return;
     this.masterGain.gain.value = this.muted ? 0 : AUDIO_MASTER_VOLUME;
+  }
+
+  private recordUnlockResult(unlocked: boolean, reason: string): void {
+    this.lastUnlockResult = {
+      unlocked,
+      contextState: this.audioContext?.state || AUDIO_CONTEXT_MISSING_STATE,
+      reason,
+    };
   }
 
   private pickFile(id: AudioId): string | null {
