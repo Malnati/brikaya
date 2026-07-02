@@ -1,8 +1,8 @@
 {
-  "levelTargetUrl": "https://4361d93d.malnati-brickbreaker.pages.dev/?qaScenario=single-brick-phase-clear",
-  "ripTargetUrl": "https://4361d93d.malnati-brickbreaker.pages.dev/?qaScenario=cinematic-rip",
-  "countdownDurationMs": 1790,
-  "ripDurationMs": 1810,
+  "levelTargetUrl": "https://malnati-brickbreaker.pages.dev/?qaScenario=single-brick-phase-clear",
+  "ripTargetUrl": "https://malnati-brickbreaker.pages.dev/?qaScenario=cinematic-rip",
+  "countdownDurationMs": 1785,
+  "ripDurationMs": 1780,
   "countdownState": {
     "text": "3",
     "type": "countdown",
@@ -93,7 +93,7 @@
   "levelAudioIds": [
     "music_gameplay_loop",
     "sfx_ad_placeholder_none",
-    "sfx_brick_break_purple",
+    "sfx_brick_break_blue",
     "sfx_brick_hit",
     "sfx_game_start",
     "sfx_level_complete",
