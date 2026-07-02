@@ -22,6 +22,11 @@ const GAME_LOG_DB_NAME = "BrickBreakerGameLog";
 const GAME_LOG_STORE_NAME = "gameEvents";
 const GAME_LOG_DB_VERSION = 2;
 const MAX_WAIT_FOR_LASER_MS = 30000;
+const LASER_EFFECT_MIN_VISIBLE_MS = 2000;
+const LASER_EFFECT_SAMPLE_DELAY_MS = 1900;
+const LASER_EFFECT_CENTER_X_RATIO = 0.5;
+const LASER_EFFECT_CENTER_Y_RATIO = 0.78;
+const LASER_EFFECT_MIN_PIXEL_BRIGHTNESS = 180;
 const EXPECTED_QA_SCENARIO = "laser-fan";
 const EXPECTED_SCORE_REASON = "laser_fan";
 const EXPECTED_MIN_SCORE = 10;
@@ -219,7 +224,7 @@ async function collectLayoutState(page) {
 
     return {
       canvas: rectOf(document.querySelector("canvas")),
-      scoreText: document.querySelector(".score-strip")?.textContent || "",
+      scoreText: document.querySelector(".score-hud")?.textContent || "",
       levelToastText:
         document.querySelector('[data-testid="level-toast"]')?.textContent ||
         "",
@@ -232,6 +237,32 @@ async function collectLayoutState(page) {
         document.documentElement.scrollWidth > window.innerWidth,
     };
   });
+}
+
+async function sampleLaserEffectPixel(page) {
+  return page.evaluate(
+    ({ xRatio, yRatio }) => {
+      const canvas = document.querySelector("canvas");
+      if (!canvas) return null;
+      const context = canvas.getContext("2d");
+      if (!context) return null;
+      const x = Math.floor(canvas.width * xRatio);
+      const y = Math.floor(canvas.height * yRatio);
+      const [red, green, blue, alpha] = context.getImageData(x, y, 1, 1).data;
+
+      return {
+        red,
+        green,
+        blue,
+        alpha,
+        brightness: red + green + blue,
+      };
+    },
+    {
+      xRatio: LASER_EFFECT_CENTER_X_RATIO,
+      yRatio: LASER_EFFECT_CENTER_Y_RATIO,
+    },
+  );
 }
 
 async function run() {
@@ -289,6 +320,10 @@ async function run() {
     await page.screenshot({ path: outItemScreenshot, fullPage: true });
 
     await waitForLaserCompletion(page);
+    await new Promise((resolve) =>
+      setTimeout(resolve, LASER_EFFECT_SAMPLE_DELAY_MS),
+    );
+    const laserEffectPixel = await sampleLaserEffectPixel(page);
     await page.waitForFunction(
       async ({ dbName, storeName, dbVersion }) => {
         const events = await new Promise((resolve) => {
@@ -345,6 +380,11 @@ async function run() {
       laserScoreEvent: laserScoreEvent?.metadata || null,
       laserScoreEvents: laserScoreEvents.length,
       levelCompleteEvents: levelCompleteEvents.length,
+      laserEffect: {
+        minVisibleMs: LASER_EFFECT_MIN_VISIBLE_MS,
+        sampleDelayMs: LASER_EFFECT_SAMPLE_DELAY_MS,
+        pixel: laserEffectPixel,
+      },
       layoutState,
       externalRequests,
       consoleProblems,
@@ -373,6 +413,11 @@ async function run() {
     assert(
       levelCompleteEvents.length === 1,
       "Laser disparou level_complete duplicado ou ausente.",
+    );
+    assert(laserEffectPixel, "Laser não gerou amostra visual no canvas.");
+    assert(
+      laserEffectPixel.brightness >= LASER_EFFECT_MIN_PIXEL_BRIGHTNESS,
+      `Laser não permaneceu visualmente ativo por pelo menos ${LASER_EFFECT_MIN_VISIBLE_MS}ms.`,
     );
     assert((byType.restart_game || 0) === 0, "Laser registrou restart_game.");
     assert((byType.game_start || 0) === 1, "Laser gerou game_start extra.");

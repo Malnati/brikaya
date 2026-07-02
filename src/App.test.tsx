@@ -201,6 +201,31 @@ describe("App theme selector", () => {
     expect(restartButton).not.toHaveTextContent("Reiniciar");
   });
 
+  it("centraliza um único badge de pontuação no topo com controles principais", async () => {
+    mockSystemTheme(true);
+
+    const { container } = await renderApp();
+
+    const scoreHud = screen.getByLabelText("Painel de pontuação");
+    const topControls = screen.getByLabelText("Controles principais");
+
+    expect(scoreHud).toHaveClass("score-hud");
+    expect(scoreHud).toHaveTextContent("Fase 1");
+    expect(scoreHud).toHaveTextContent("Score 0");
+    expect(scoreHud).toHaveTextContent("Total 0");
+    expect(scoreHud).toHaveTextContent("Recorde 0");
+    expect(container.querySelectorAll(".score-chip")).toHaveLength(0);
+    expect(container.querySelectorAll(".score-hud")).toHaveLength(1);
+    expect(topControls).toHaveClass("dashboard-primary-controls");
+    expect(within(topControls).getByRole("button", { name: "Som" })).toBe(
+      screen.getByRole("button", { name: "Som" }),
+    );
+    expect(
+      within(topControls).getByRole("button", { name: "Reiniciar" }),
+    ).toBe(screen.getByRole("button", { name: "Reiniciar" }));
+    expect(mockLastGameProps?.boardControls).toBeUndefined();
+  });
+
   it("alterna som preservando estado acessível no ícone", async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();

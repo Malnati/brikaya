@@ -106,7 +106,8 @@ async function collectLayout(page) {
   return page.evaluate(() => {
     const canvas = document.querySelector('canvas');
     const rect = canvas?.getBoundingClientRect();
-    const chips = [...document.querySelectorAll('.score-chip')].map(chip => chip.textContent?.trim() || '');
+    const scoreHudText = document.querySelector('.score-hud')?.textContent || '';
+    const chips = scoreHudText.split('|').map(part => part.trim()).filter(Boolean);
     return {
       chips,
       canvas: rect ? {

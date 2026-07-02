@@ -1,6 +1,5 @@
 // src/utils/canvasSizing.ts
 import {
-  CANVAS_CONTAINER_HORIZONTAL_INSET,
   CANVAS_HEIGHT,
   CANVAS_WIDTH,
   IMMERSIVE_LANDSCAPE_CANVAS_INSET,
@@ -77,17 +76,17 @@ export function calculateResponsiveCanvasSize(
           metrics.rootPaddingInline -
           IMMERSIVE_LANDSCAPE_CANVAS_INSET,
       )
-    : Math.max(
-        minCanvasWidth,
-        metrics.containerWidth - CANVAS_CONTAINER_HORIZONTAL_INSET,
-      );
+    : Math.max(minCanvasWidth, metrics.containerWidth);
   const containerHeight = isLandscapeImmersive
     ? Math.max(
         minCanvasHeight,
-        viewportHeight -
-          metrics.rootPaddingBlock -
-          IMMERSIVE_LANDSCAPE_CANVAS_INSET -
-          immersiveUiReservedBlock,
+        Math.max(
+          metrics.containerHeight - IMMERSIVE_LANDSCAPE_CANVAS_INSET,
+          viewportHeight -
+            metrics.rootPaddingBlock -
+            IMMERSIVE_LANDSCAPE_CANVAS_INSET -
+            immersiveUiReservedBlock,
+        ),
       )
     : Number.POSITIVE_INFINITY;
 
