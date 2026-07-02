@@ -1,5 +1,5 @@
 {
-  "status": "blocked",
+  "status": "blocked_real_device",
   "device": "iPhone real",
   "system": "iOS",
   "browser": "Safari",
@@ -13,5 +13,6 @@
     "afterSecondTap": "Sem som / × / muted=true"
   },
   "screenshots": [],
-  "notes": "Não declarar corrigido em iPhone real até substituir este recibo por QA manual/device aprovado."
+  "notes": "Há evidência visual no iOS Safari Simulator, mas o aceite do bug continua exigindo iPhone real.",
+  "simulatorVisualEvidence": "ios-safari-simulator-audio-toggle.json"
 }
