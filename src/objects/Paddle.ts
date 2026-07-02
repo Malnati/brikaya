@@ -160,7 +160,7 @@ export class Paddle {
         maxSpeed,
         minSpeed,
         currentSpeed: initialSpawnSpeed,
-        reductionPerBrick: calculateSpeedReductionPerBrick(maxSpeed, initialBrickCount),
+        reductionPerBrick: calculateSpeedReductionPerBrick(maxSpeed, initialBrickCount, minSpeed),
         previousLevelMaxSpeed: calculateLevelPreviousMaxSpeed(this.canvasWidth, level),
         levelStartedAt: Date.now(),
         elapsedLevelMs: 0,

@@ -1,0 +1,100 @@
+{
+  "url": "https://fix-gradual-speed-reduction.malnati-brickbreaker.pages.dev/?qaScenario=late-phase-stability",
+  "screenshotPath": "tmp/screenshots/cloudflare-phase10-stability.png",
+  "byType": {
+    "game_start": 1,
+    "collision": 3,
+    "brick_destroyed": 16,
+    "score_update": 16
+  },
+  "eventTypes": [
+    "game_start",
+    "collision",
+    "brick_destroyed",
+    "score_update",
+    "score_update",
+    "brick_destroyed",
+    "brick_destroyed",
+    "score_update",
+    "brick_destroyed",
+    "score_update",
+    "brick_destroyed",
+    "score_update",
+    "score_update",
+    "brick_destroyed",
+    "brick_destroyed",
+    "score_update",
+    "brick_destroyed",
+    "score_update",
+    "score_update",
+    "brick_destroyed",
+    "brick_destroyed",
+    "score_update",
+    "brick_destroyed",
+    "score_update",
+    "brick_destroyed",
+    "score_update",
+    "brick_destroyed",
+    "score_update",
+    "brick_destroyed",
+    "collision",
+    "score_update",
+    "score_update",
+    "brick_destroyed",
+    "collision",
+    "brick_destroyed",
+    "score_update"
+  ],
+  "gameStart": {
+    "level": 11,
+    "ballsCount": 1,
+    "speedState": {
+      "level": 11,
+      "initialBrickCount": 40,
+      "successfulBrickHits": 0,
+      "initialSpawnSpeed": 7.26,
+      "maxSpeed": 7.26,
+      "minSpeed": 1.815,
+      "currentSpeed": 7.26,
+      "reductionPerBrick": 0.136,
+      "previousLevelMaxSpeed": 6.864,
+      "levelStartedAt": 1782951426470,
+      "elapsedLevelMs": 121,
+      "minReached": false
+    }
+  },
+  "wallCollision": {
+    "ballPosition": {
+      "x": 343,
+      "y": 84
+    },
+    "velocityAfter": {
+      "dx": -7.26,
+      "dy": -4.445467880904892e-16
+    }
+  },
+  "latestEvent": {
+    "type": "score_update",
+    "level": 11,
+    "ballsCount": 1,
+    "gameOver": false
+  },
+  "layout": {
+    "chips": [
+      "Fase 11",
+      "Score 160",
+      "Total 0",
+      "Recorde 0"
+    ],
+    "canvas": {
+      "x": 19,
+      "y": 145.84375,
+      "width": 355,
+      "height": 244,
+      "right": 374,
+      "bottom": 389.84375
+    },
+    "bodyText": "\n    Arcade clássicoBreakoutFase 11Score 160Total 0Recorde 0Menu♪↻PublicidadePublicidadePronto para jogar offline\n  \n\n"
+  },
+  "consoleProblems": []
+}

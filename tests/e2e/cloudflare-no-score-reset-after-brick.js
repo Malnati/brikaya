@@ -11,6 +11,7 @@ const VIEWPORT = { width: 393, height: 852, deviceScaleFactor: 3, isMobile: true
 const MAX_WAIT_FOR_SCORE_MS = 30000;
 const INITIAL_POSITION_TOLERANCE_PX = 1;
 const SPEED_TOLERANCE = 0.0001;
+const SPEED_PRECISION_FACTOR = 1000;
 const GAME_LOG_DB_NAME = 'BrickBreakerGameLog';
 const GAME_LOG_STORE_NAME = 'gameEvents';
 const GAME_LOG_DB_VERSION = 2;
@@ -33,6 +34,10 @@ function ensureParentDirectory(filePath) {
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+function roundSpeedValue(speed) {
+  return Math.round(speed * SPEED_PRECISION_FACTOR) / SPEED_PRECISION_FACTOR;
 }
 
 async function readGameEvents(page) {
@@ -159,9 +164,14 @@ async function run() {
     const events = await readGameEvents(page);
     const byType = summarizeEvents(events);
     const scoreEvents = events.filter(event => event.type === 'score_update');
-    const scoreSpeedReduction = scoreEvents.find(event => event.metadata?.speedReduction)?.metadata?.speedReduction || null;
+    const scoreEventWithSpeedReduction = scoreEvents.find(event => event.metadata?.speedReduction) || null;
+    const scoreSpeedReduction = scoreEventWithSpeedReduction?.metadata?.speedReduction || null;
+    const scoreSpeedState = scoreEventWithSpeedReduction?.metadata?.speedState || null;
     const expectedFirstLevelSpawnSpeed = scoreSpeedReduction
       ? scoreSpeedReduction.maxSpeed
+      : null;
+    const expectedReductionPerBrick = scoreSpeedState
+      ? roundSpeedValue((scoreSpeedState.maxSpeed - scoreSpeedState.minSpeed) / scoreSpeedState.initialBrickCount)
       : null;
     const lastBall = events[events.length - 1]?.ballPositions?.[0] || null;
     const restartedToInitialPosition = Boolean(lastBall)
@@ -178,6 +188,8 @@ async function run() {
       restartedToInitialPosition,
       scoreEvents: scoreEvents.length,
       scoreSpeedReduction,
+      scoreSpeedState,
+      expectedReductionPerBrick,
       expectedFirstLevelSpawnSpeed,
       consoleProblems,
       screenshotPath: outScreenshot
@@ -187,9 +199,15 @@ async function run() {
 
     assert(scoreEvents.length > 0, 'Nenhum score_update foi observado no app publicado.');
     assert(scoreSpeedReduction, 'score_update não registrou metadata.speedReduction.');
+    assert(scoreSpeedState, 'score_update não registrou metadata.speedState.');
     assert(Math.abs(scoreSpeedReduction.speedBefore - expectedFirstLevelSpawnSpeed) <= SPEED_TOLERANCE, `Fase 1 não começou na nova máxima inicial: speedBefore=${scoreSpeedReduction.speedBefore}, esperado=${expectedFirstLevelSpawnSpeed}.`);
     assert(Math.abs(scoreSpeedReduction.speedBefore - scoreSpeedReduction.maxSpeed) <= SPEED_TOLERANCE, 'Fase 1 não iniciou em currentSpeed === maxSpeed.');
     assert(scoreSpeedReduction.speedAfter + SPEED_TOLERANCE >= scoreSpeedReduction.minSpeed, 'speedAfter ficou abaixo do minSpeed.');
+    assert(Math.abs(scoreSpeedState.minSpeed - (scoreSpeedState.maxSpeed / 4)) <= SPEED_TOLERANCE, 'minSpeed da Fase 1 não usou maxSpeed / 4.');
+    assert(Math.abs(scoreSpeedReduction.reductionApplied - expectedReductionPerBrick) <= SPEED_TOLERANCE, 'Redução por bloco não distribuiu a faixa maxSpeed-minSpeed pela quantidade inicial de blocos.');
+    if (scoreSpeedState.initialBrickCount > 1) {
+      assert(scoreSpeedReduction.speedAfter > scoreSpeedReduction.minSpeed, 'Primeira colisão em fase normal chegou ao minSpeed de uma vez.');
+    }
     if (!scoreSpeedReduction.minReached) {
       assert(scoreSpeedReduction.speedBefore > scoreSpeedReduction.speedAfter, 'speedBefore não ficou acima de speedAfter antes do mínimo.');
     }

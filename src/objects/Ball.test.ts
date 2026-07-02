@@ -64,13 +64,14 @@ const INITIAL_BRICK_COUNT = DIMENSIONS.brickCols * DIMENSIONS.brickRows;
 
 function buildPhaseSpeedConfig(level: number): PhaseSpeedConfig {
   const maxSpeed = calculateLevelMaxSpeed(CANVAS_WIDTH, level);
+  const minSpeed = calculateLevelMinSpeed(CANVAS_WIDTH, level);
   return {
     level,
     initialBrickCount: INITIAL_BRICK_COUNT,
     initialSpawnSpeed: calculateLevelInitialSpawnSpeed(CANVAS_WIDTH, level),
     maxSpeed,
-    minSpeed: calculateLevelMinSpeed(CANVAS_WIDTH, level),
-    reductionPerBrick: calculateSpeedReductionPerBrick(maxSpeed, INITIAL_BRICK_COUNT),
+    minSpeed,
+    reductionPerBrick: calculateSpeedReductionPerBrick(maxSpeed, INITIAL_BRICK_COUNT, minSpeed),
     previousLevelMaxSpeed: calculateLevelPreviousMaxSpeed(CANVAS_WIDTH, level),
     levelStartedAt: Date.now() - 1000,
   };
@@ -144,6 +145,26 @@ describe('Ball', () => {
       config.reductionPerBrick,
       5
     );
+    expect(ball.getCurrentSpeedMagnitude()).toBeGreaterThan(config.minSpeed);
+  });
+
+  it('reduz gradualmente e só alcança o mínimo ao consumir todos os blocos iniciais', () => {
+    const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const config = buildPhaseSpeedConfig(PHASE_ONE);
+
+    ball.applyPhaseSpeedConfig(config);
+
+    for (let hit = 0; hit < INITIAL_BRICK_COUNT - 1; hit += 1) {
+      ball.registerBrickHit();
+    }
+
+    expect(ball.getCurrentSpeedMagnitude()).toBeGreaterThan(config.minSpeed);
+    expect(ball.getLastSpeedReduction()?.minReached).toBe(false);
+
+    ball.registerBrickHit();
+
+    expect(ball.getCurrentSpeedMagnitude()).toBe(config.minSpeed);
+    expect(ball.getLastSpeedReduction()?.minReached).toBe(true);
   });
 
   it('não deixa múltiplos hits passarem da velocidade mínima', () => {

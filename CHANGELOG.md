@@ -4,6 +4,15 @@
 - Resolvido conflitos para integrar mudancas da main
 
 
+## [1.16.5] - 2026-07-01
+### Alterado
+- Velocidade-base da progressão reduzida de `6x` para `3x`.
+- `minSpeed` passa a derivar da máxima da própria fase dividida por 4.
+- Redução por bloco passa a distribuir apenas a faixa entre `maxSpeed` e `minSpeed` pela quantidade inicial de blocos da fase.
+
+### Testado
+- Cobertura unitária e QA publicado validam redução gradual sem queda imediata ao mínimo em fases com múltiplos blocos.
+
 ## [1.16.4] - 2026-07-01
 ### Alterado
 - Mobile em orientação paisagem passa a usar modo imersivo: dashboard sem card, anúncios/status ocultos e canvas ocupando a maior área segura disponível.

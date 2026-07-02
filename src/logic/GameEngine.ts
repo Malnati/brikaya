@@ -411,6 +411,7 @@ export class GameEngine {
     const nextReductionPerBrick = calculateSpeedReductionPerBrick(
       nextMaxSpeed,
       nextInitialBrickCount,
+      nextMinSpeed,
     );
     const payload: LevelTransitionPayload = {
       currentLevel,
@@ -558,6 +559,7 @@ export class GameEngine {
     levelStartedAt: number,
   ): PhaseSpeedConfig {
     const maxSpeed = calculateLevelMaxSpeed(this.canvasSize.width, level);
+    const minSpeed = calculateLevelMinSpeed(this.canvasSize.width, level);
     return {
       level,
       initialBrickCount,
@@ -566,10 +568,11 @@ export class GameEngine {
         level,
       ),
       maxSpeed,
-      minSpeed: calculateLevelMinSpeed(this.canvasSize.width, level),
+      minSpeed,
       reductionPerBrick: calculateSpeedReductionPerBrick(
         maxSpeed,
         initialBrickCount,
+        minSpeed,
       ),
       previousLevelMaxSpeed: calculateLevelPreviousMaxSpeed(
         this.canvasSize.width,
