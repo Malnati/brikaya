@@ -17,8 +17,9 @@ describe("calculateResponsiveCanvasSize", () => {
     });
 
     expect(size.isImmersiveLandscape).toBe(true);
-    expect(size.width).toBeGreaterThanOrEqual(560);
-    expect(size.height).toBeGreaterThanOrEqual(372);
+    expect(size.width).toBeGreaterThanOrEqual(420);
+    expect(size.height).toBeGreaterThanOrEqual(280);
+    expect(size.height).toBeLessThan(372);
   });
 
   it("mantém portrait mobile limitado pela razão atual de altura", () => {
@@ -54,7 +55,8 @@ describe("calculateResponsiveCanvasSize", () => {
     });
 
     expect(size.isImmersiveLandscape).toBe(true);
-    expect(size.height).toBeGreaterThanOrEqual(398);
+    expect(size.height).toBeGreaterThanOrEqual(300);
+    expect(size.height).toBeLessThan(398);
   });
 
   it("ativa modo imersivo em tablet landscape com toque", () => {
@@ -72,7 +74,7 @@ describe("calculateResponsiveCanvasSize", () => {
     });
 
     expect(size.isImmersiveLandscape).toBe(true);
-    expect(size.height).toBeGreaterThanOrEqual(660);
+    expect(size.height).toBeGreaterThanOrEqual(640);
   });
 
   it("não ativa modo imersivo em desktop landscape sem toque", () => {

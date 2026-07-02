@@ -9,6 +9,7 @@ import {
   IMMERSIVE_LANDSCAPE_MAX_VIEWPORT_WIDTH,
   IMMERSIVE_LANDSCAPE_MIN_CANVAS_HEIGHT,
   IMMERSIVE_LANDSCAPE_MIN_CANVAS_WIDTH,
+  IMMERSIVE_LANDSCAPE_UI_RESERVED_BLOCK,
   MAX_CANVAS_HEIGHT,
   MAX_CANVAS_WIDTH,
   MIN_CANVAS_HEIGHT,
@@ -24,6 +25,7 @@ export interface ResponsiveCanvasMetrics {
   visualViewportHeight?: number;
   rootPaddingInline: number;
   rootPaddingBlock: number;
+  immersiveUiReservedBlock?: number;
   pointerCoarse: boolean;
   hoverNone: boolean;
 }
@@ -73,6 +75,8 @@ export function calculateResponsiveCanvasSize(
     : MIN_CANVAS_HEIGHT;
   const viewportWidth = resolveViewportWidth(metrics);
   const viewportHeight = resolveViewportHeight(metrics);
+  const immersiveUiReservedBlock =
+    metrics.immersiveUiReservedBlock ?? IMMERSIVE_LANDSCAPE_UI_RESERVED_BLOCK;
   const containerWidth = isLandscapeImmersive
     ? Math.max(
         minCanvasWidth,
@@ -89,7 +93,8 @@ export function calculateResponsiveCanvasSize(
         minCanvasHeight,
         viewportHeight -
           metrics.rootPaddingBlock -
-          IMMERSIVE_LANDSCAPE_CANVAS_INSET,
+          IMMERSIVE_LANDSCAPE_CANVAS_INSET -
+          immersiveUiReservedBlock,
       )
     : Math.max(
         minCanvasHeight,

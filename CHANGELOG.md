@@ -4,6 +4,14 @@
 - Resolvido conflitos para integrar mudancas da main
 
 
+## [1.16.7] - 2026-07-02
+### Corrigido
+- HUD, menu e controles principais deixam de sobrepor o canvas no modo paisagem imersivo mobile/tablet.
+- O canvas em paisagem passa a reservar área compacta para score/fase/recorde/menu e controles essenciais, preservando proporção e continuidade do jogo.
+
+### Testado
+- QA de dashboard passa a falhar quando qualquer botão, HUD ou controles principais cruzam a área do canvas em landscape.
+
 ## [1.16.6] - 2026-07-02
 ### Corrigido
 - Mobile/tablet em paisagem passa a ativar modo imersivo por `visualViewport`, ponteiro touch e classe raiz, evitando que o jogo fique preso ao card central quando o navegador altera a viewport.

@@ -800,19 +800,19 @@ canvas {
 
   .game-surface {
     position: relative;
+    gap: var(--space-1);
   }
 
   .game-board-frame {
+    flex: 0 1 auto;
     max-height: 100%;
   }
 
   .game-board-controls {
-    position: absolute;
-    left: 50%;
-    bottom: var(--space-2);
-    z-index: 4;
-    margin-top: 0;
-    transform: translateX(-50%);
+    position: static;
+    flex: 0 0 auto;
+    margin-top: var(--space-1);
+    transform: none;
   }
 
   .dashboard-button {
@@ -861,7 +861,6 @@ html.bb-landscape-immersive .game-dashboard {
 }
 
 html.bb-landscape-immersive .game-dashboard {
-  position: relative;
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -872,15 +871,13 @@ html.bb-landscape-immersive .game-dashboard {
 }
 
 html.bb-landscape-immersive .dashboard-header {
-  position: absolute;
-  top: max(4px, env(safe-area-inset-top));
-  left: max(6px, env(safe-area-inset-left));
-  right: max(6px, env(safe-area-inset-right));
-  z-index: 5;
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
   flex-direction: row;
   align-items: center;
   gap: var(--space-1);
-  margin-bottom: 0;
+  margin-bottom: var(--space-1);
 }
 
 html.bb-landscape-immersive .dashboard-title-group {
@@ -919,7 +916,7 @@ html.bb-landscape-immersive .dashboard-menu-button {
 html.bb-landscape-immersive .dashboard-layout {
   display: flex;
   flex: 1 1 auto;
-  height: 100%;
+  height: auto;
   min-height: 0;
   align-items: stretch;
   justify-content: center;
@@ -946,19 +943,19 @@ html.bb-landscape-immersive .game-surface {
 
 html.bb-landscape-immersive .game-surface {
   position: relative;
+  gap: var(--space-1);
 }
 
 html.bb-landscape-immersive .game-board-frame {
+  flex: 0 1 auto;
   max-height: 100%;
 }
 
 html.bb-landscape-immersive .game-board-controls {
-  position: absolute;
-  left: 50%;
-  bottom: max(4px, env(safe-area-inset-bottom));
-  z-index: 4;
-  margin-top: 0;
-  transform: translateX(-50%);
+  position: static;
+  flex: 0 0 auto;
+  margin-top: var(--space-1);
+  transform: none;
 }
 
 html.bb-landscape-immersive .dashboard-button {
