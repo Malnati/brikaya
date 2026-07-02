@@ -34,6 +34,7 @@ export const AUDIO_EVENT_IDS = [
   "sfx_powerup_activate_multiball",
   "sfx_powerup_activate_wide_paddle",
   "sfx_powerup_activate_slow_ball",
+  "sfx_powerup_activate_laser_fan",
   "sfx_powerup_expire",
   "sfx_highscore_new",
   "sfx_offline_ready",
@@ -670,7 +671,7 @@ export const AUDIO_CATALOG = {
     "trigger": "Power-up de múltiplas bolas é ativado",
     "priorityLabel": "Alta",
     "priorityWeight": 3,
-    "volume": 0,
+    "volume": 0.8,
     "fadeInMs": 0,
     "fadeOutMs": 200,
     "duckingMs": 450,
@@ -719,6 +720,24 @@ export const AUDIO_CATALOG = {
     "files": [
       "/assets/audio/sfx_powerup_activate_slow_ball-01.mp3",
       "/assets/audio/sfx_powerup_activate_slow_ball-02.mp3"
+    ]
+  },
+  "sfx_powerup_activate_laser_fan": {
+    "id": "sfx_powerup_activate_laser_fan",
+    "type": "future",
+    "trigger": "Power-up Laser em leque é ativado",
+    "priorityLabel": "Alta",
+    "priorityWeight": 3,
+    "volume": 0.78,
+    "fadeInMs": 0,
+    "fadeOutMs": 180,
+    "duckingMs": 350,
+    "targetDuration": "180 ms a 350 ms",
+    "variations": "1",
+    "uxNotes": "Disparo curto e brilhante; deve comunicar raios em leque sem parecer explosão ou conclusão de fase.",
+    "loop": false,
+    "files": [
+      "/assets/audio/sfx_powerup_activate_laser_fan-01.mp3"
     ]
   },
   "sfx_powerup_expire": {
@@ -872,6 +891,7 @@ export const AUDIO_PUBLIC_PATHS = [
   "/assets/audio/sfx_powerup_activate_multiball-02.mp3",
   "/assets/audio/sfx_powerup_activate_slow_ball-01.mp3",
   "/assets/audio/sfx_powerup_activate_slow_ball-02.mp3",
+  "/assets/audio/sfx_powerup_activate_laser_fan-01.mp3",
   "/assets/audio/sfx_powerup_activate_wide_paddle-01.mp3",
   "/assets/audio/sfx_powerup_activate_wide_paddle-02.mp3",
   "/assets/audio/sfx_powerup_collect-01.mp3",
@@ -950,6 +970,7 @@ export const GAME_AUDIO_IDS = {
   POWERUP_ACTIVATE_MULTIBALL: 'sfx_powerup_activate_multiball',
   POWERUP_ACTIVATE_WIDE_PADDLE: 'sfx_powerup_activate_wide_paddle',
   POWERUP_ACTIVATE_SLOW_BALL: 'sfx_powerup_activate_slow_ball',
+  POWERUP_ACTIVATE_LASER_FAN: 'sfx_powerup_activate_laser_fan',
   POWERUP_EXPIRE: 'sfx_powerup_expire',
   HIGHSCORE_NEW: 'sfx_highscore_new',
   OFFLINE_READY: 'sfx_offline_ready',

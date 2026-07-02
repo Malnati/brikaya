@@ -7,13 +7,13 @@ import {
   SILENT_AUDIO_ID,
 } from './audio';
 
-const EXPECTED_AUDIO_ID_COUNT = 38;
-const EXPECTED_AUDIO_FILE_COUNT = 90;
+const EXPECTED_AUDIO_ID_COUNT = 39;
+const EXPECTED_AUDIO_FILE_COUNT = 91;
 const LOCAL_AUDIO_PREFIX = '/assets/audio/';
 const MP3_EXTENSION = '.mp3';
 
 describe('catálogo de áudio', () => {
-  it('mantém 38 IDs lógicos com arquivos locais para todos exceto silêncio intencional', () => {
+  it('mantém 39 IDs lógicos com arquivos locais para todos exceto silêncio intencional', () => {
     expect(AUDIO_EVENT_IDS).toHaveLength(EXPECTED_AUDIO_ID_COUNT);
     expect(AUDIO_PUBLIC_PATHS).toHaveLength(EXPECTED_AUDIO_FILE_COUNT);
 

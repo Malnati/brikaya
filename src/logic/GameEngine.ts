@@ -2,7 +2,7 @@
 import { Paddle } from "../objects/Paddle";
 import { Ball } from "../objects/Ball";
 import { Bricks } from "../objects/Bricks";
-import { PowerUp, type PowerUpType } from "../objects/PowerUp";
+import { PowerUp } from "../objects/PowerUp";
 import {
   GAME_COLOR,
   CANVAS_HEIGHT,
@@ -30,6 +30,11 @@ import {
   type AudioId,
   type GameAudioSink,
 } from "../constants/audio";
+import {
+  ACTIVE_POWER_UP_TYPES,
+  getPowerUpActivationAudioId,
+  type PowerUpType,
+} from "../constants/powerUps";
 import { LOG, ERROR, WARN } from "../utils/logger";
 
 LOG("📦 GameEngine.ts carregado, gameLogger:", gameLogger);
@@ -51,7 +56,6 @@ const WIDE_PADDLE_SCALE = 1.45;
 const SLOW_BALL_MULTIPLIER = 0.75;
 const MULTIBALL_ANGLE_OFFSET = 0.42;
 const HIGH_INTENSITY_SPEED_MULTIPLIER = 1.6;
-const POWER_UP_TYPES: PowerUpType[] = ["multiball", "wide_paddle", "slow_ball"];
 const BRICK_COLOR_AUDIO_IDS: AudioId[] = [
   GAME_AUDIO_IDS.BRICK_BREAK_RED,
   GAME_AUDIO_IDS.BRICK_BREAK_BLUE,
@@ -686,7 +690,7 @@ export class GameEngine {
 
     this.destroyedBricksSincePowerUp = 0;
     const powerUpType =
-      POWER_UP_TYPES[this.nextPowerUpIndex % POWER_UP_TYPES.length];
+      ACTIVE_POWER_UP_TYPES[this.nextPowerUpIndex % ACTIVE_POWER_UP_TYPES.length];
     this.nextPowerUpIndex += 1;
     const ballPosition = this.balls[0]?.position;
     const spawnX = Math.max(
@@ -720,6 +724,7 @@ export class GameEngine {
 
   private activatePowerUp(powerUpType: PowerUpType) {
     this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_COLLECT);
+    const activationAudioId = getPowerUpActivationAudioId(powerUpType);
 
     if (powerUpType === "multiball") {
       const baseBall = this.balls[0];
@@ -742,26 +747,31 @@ export class GameEngine {
             );
         });
       }
-      this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_ACTIVATE_MULTIBALL);
+      this.audioSink.playAudio(activationAudioId);
       return;
     }
 
     if (powerUpType === "wide_paddle") {
       this.paddle.setWidthScale(WIDE_PADDLE_SCALE);
-      this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_ACTIVATE_WIDE_PADDLE);
+      this.audioSink.playAudio(activationAudioId);
       this.schedulePowerUpExpiration(() => {
         this.paddle.setWidthScale(1);
       });
       return;
     }
 
-    this.balls.forEach((ball) => ball.multiplyVelocity(SLOW_BALL_MULTIPLIER));
-    this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_ACTIVATE_SLOW_BALL);
-    this.schedulePowerUpExpiration(() => {
-      this.balls.forEach((ball) =>
-        ball.multiplyVelocity(1 / SLOW_BALL_MULTIPLIER),
-      );
-    });
+    if (powerUpType === "slow_ball") {
+      this.balls.forEach((ball) => ball.multiplyVelocity(SLOW_BALL_MULTIPLIER));
+      this.audioSink.playAudio(activationAudioId);
+      this.schedulePowerUpExpiration(() => {
+        this.balls.forEach((ball) =>
+          ball.multiplyVelocity(1 / SLOW_BALL_MULTIPLIER),
+        );
+      });
+      return;
+    }
+
+    this.audioSink.playAudio(activationAudioId);
   }
 
   private schedulePowerUpExpiration(onExpire: () => void) {

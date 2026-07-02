@@ -3,6 +3,19 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.16.8] - 2026-07-02
+### Adicionado
+- Registry obrigatório de power-ups com áudio específico de ativação, nome visível e visual lógico para `multiball`, `wide_paddle`, `slow_ball` e `laser_fan`.
+- SFX local/offline CC0 `sfx_powerup_activate_laser_fan` baseado em Kenney Sci-fi Sounds (`laserSmall_000.ogg`).
+
+### Corrigido
+- Ativação de power-ups passa a tocar o SFX específico via registry em vez de fallback por ramificação.
+- Volume do SFX de ativação do multiball volta ao nível audível documentado.
+
+### Testado
+- Cobertura unitária valida que todo item especial tem `activationAudioId` existente no catálogo e arquivo local.
+- `npm run test:audio-assets` valida licença, SHA-256, duração e precache do novo MP3.
+
 
 ## [1.16.7] - 2026-07-02
 ### Corrigido

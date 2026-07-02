@@ -8,7 +8,7 @@ const AUDIO_ASSETS_DOC_PATH = 'docs/audio-assets.md';
 const AUDIO_CONSTANTS_PATH = 'src/constants/audio.ts';
 const SERVICE_WORKER_PATH = 'public/sw.js';
 const AUDIO_DIR = 'public/assets/audio';
-const EXPECTED_AUDIO_ID_COUNT = 38;
+const EXPECTED_AUDIO_ID_COUNT = 39;
 const SILENT_AUDIO_ID = 'sfx_ad_placeholder_none';
 const MP3_EXTENSION = '.mp3';
 const AUDIO_FILE_PATTERN = /^(.*)-\d{2}\.mp3$/;
@@ -158,7 +158,7 @@ function validate() {
     }
   }
 
-  if (fileCount !== 90) fail(`Total de MP3 ${fileCount}, esperado 90`);
+  if (fileCount !== 91) fail(`Total de MP3 ${fileCount}, esperado 91`);
   console.log(`audio-assets ok: ids=${catalogIds.length} mp3=${fileCount}`);
 }
 
