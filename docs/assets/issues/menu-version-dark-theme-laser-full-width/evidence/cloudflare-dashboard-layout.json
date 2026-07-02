@@ -1,0 +1,1311 @@
+{
+  "url": "https://ca43721b.malnati-brickbreaker.pages.dev",
+  "screenshotPath": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/mobile-portrait-full-width.png",
+  "desktopScreenshotPath": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/desktop-full-width.png",
+  "landscapeScreenshotPath": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/mobile-landscape-immersive.png",
+  "results": [
+    {
+      "viewport": {
+        "name": "iphone-se",
+        "width": 375,
+        "height": 667,
+        "scrollWidth": 375,
+        "scrollHeight": 667,
+        "bodyScrollWidth": 375,
+        "bodyScrollHeight": 667
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 375,
+        "height": 667,
+        "right": 375,
+        "bottom": 667
+      },
+      "appShell": {
+        "x": 4,
+        "y": 4,
+        "width": 367,
+        "height": 528.84375,
+        "right": 371,
+        "bottom": 532.84375
+      },
+      "dashboard": {
+        "x": 4,
+        "y": 4,
+        "width": 367,
+        "height": 528.84375,
+        "right": 371,
+        "bottom": 532.84375
+      },
+      "dashboardLayout": {
+        "x": 13,
+        "y": 109.84375,
+        "width": 349,
+        "height": 372,
+        "right": 362,
+        "bottom": 481.84375
+      },
+      "playColumn": {
+        "x": 13,
+        "y": 109.84375,
+        "width": 349,
+        "height": 372,
+        "right": 362,
+        "bottom": 481.84375
+      },
+      "gameSurface": {
+        "x": 13,
+        "y": 109.84375,
+        "width": 349,
+        "height": 292,
+        "right": 362,
+        "bottom": 401.84375
+      },
+      "boardFrame": {
+        "x": 13,
+        "y": 109.84375,
+        "width": 349,
+        "height": 244,
+        "right": 362,
+        "bottom": 353.84375
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": false,
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 0",
+        "Total 0",
+        "Recorde 0"
+      ],
+      "canvas": {
+        "x": 19,
+        "y": 109.84375,
+        "width": 337,
+        "height": 244,
+        "right": 356,
+        "bottom": 353.84375
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 349,
+        "height": 88.84375,
+        "right": 362,
+        "bottom": 101.84375
+      },
+      "titleGroup": {
+        "x": 13,
+        "y": 13,
+        "width": 118.25,
+        "height": 36.84375,
+        "right": 131.25,
+        "bottom": 49.84375
+      },
+      "titleGroupVisible": true,
+      "scoreStrip": {
+        "x": 13,
+        "y": 60.84375,
+        "width": 277,
+        "height": 38,
+        "right": 290,
+        "bottom": 98.84375
+      },
+      "boardControls": {
+        "x": 21,
+        "y": 357.84375,
+        "width": 333,
+        "height": 44,
+        "right": 354,
+        "bottom": 401.84375
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "width": 68,
+          "height": 44,
+          "x": 294,
+          "y": 57.84375,
+          "right": 362,
+          "bottom": 101.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "width": 44,
+          "height": 44,
+          "x": 21,
+          "y": 357.84375,
+          "right": 65,
+          "bottom": 401.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "width": 44,
+          "height": 44,
+          "x": 310,
+          "y": 357.84375,
+          "right": 354,
+          "bottom": 401.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 13,
+        "y": 425.84375,
+        "width": 349,
+        "height": 56,
+        "right": 362,
+        "bottom": 481.84375
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 72,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-12-14",
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "scrollHeight": 844,
+        "bodyScrollWidth": 390,
+        "bodyScrollHeight": 844
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "right": 390,
+        "bottom": 844
+      },
+      "appShell": {
+        "x": 4,
+        "y": 4,
+        "width": 382,
+        "height": 528.84375,
+        "right": 386,
+        "bottom": 532.84375
+      },
+      "dashboard": {
+        "x": 4,
+        "y": 4,
+        "width": 382,
+        "height": 528.84375,
+        "right": 386,
+        "bottom": 532.84375
+      },
+      "dashboardLayout": {
+        "x": 13,
+        "y": 109.84375,
+        "width": 364,
+        "height": 372,
+        "right": 377,
+        "bottom": 481.84375
+      },
+      "playColumn": {
+        "x": 13,
+        "y": 109.84375,
+        "width": 364,
+        "height": 372,
+        "right": 377,
+        "bottom": 481.84375
+      },
+      "gameSurface": {
+        "x": 13,
+        "y": 109.84375,
+        "width": 364,
+        "height": 292,
+        "right": 377,
+        "bottom": 401.84375
+      },
+      "boardFrame": {
+        "x": 13,
+        "y": 109.84375,
+        "width": 364,
+        "height": 244,
+        "right": 377,
+        "bottom": 353.84375
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": false,
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 0",
+        "Total 0",
+        "Recorde 0"
+      ],
+      "canvas": {
+        "x": 19,
+        "y": 109.84375,
+        "width": 352,
+        "height": 244,
+        "right": 371,
+        "bottom": 353.84375
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 364,
+        "height": 88.84375,
+        "right": 377,
+        "bottom": 101.84375
+      },
+      "titleGroup": {
+        "x": 13,
+        "y": 13,
+        "width": 118.25,
+        "height": 36.84375,
+        "right": 131.25,
+        "bottom": 49.84375
+      },
+      "titleGroupVisible": true,
+      "scoreStrip": {
+        "x": 13,
+        "y": 60.84375,
+        "width": 292,
+        "height": 38,
+        "right": 305,
+        "bottom": 98.84375
+      },
+      "boardControls": {
+        "x": 21,
+        "y": 357.84375,
+        "width": 348,
+        "height": 44,
+        "right": 369,
+        "bottom": 401.84375
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "width": 68,
+          "height": 44,
+          "x": 309,
+          "y": 57.84375,
+          "right": 377,
+          "bottom": 101.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "width": 44,
+          "height": 44,
+          "x": 21,
+          "y": 357.84375,
+          "right": 65,
+          "bottom": 401.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "width": 44,
+          "height": 44,
+          "x": 325,
+          "y": 357.84375,
+          "right": 369,
+          "bottom": 401.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 13,
+        "y": 425.84375,
+        "width": 364,
+        "height": 56,
+        "right": 377,
+        "bottom": 481.84375
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 72,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-15",
+        "width": 393,
+        "height": 852,
+        "scrollWidth": 393,
+        "scrollHeight": 852,
+        "bodyScrollWidth": 393,
+        "bodyScrollHeight": 852
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 393,
+        "height": 852,
+        "right": 393,
+        "bottom": 852
+      },
+      "appShell": {
+        "x": 4,
+        "y": 4,
+        "width": 385,
+        "height": 528.84375,
+        "right": 389,
+        "bottom": 532.84375
+      },
+      "dashboard": {
+        "x": 4,
+        "y": 4,
+        "width": 385,
+        "height": 528.84375,
+        "right": 389,
+        "bottom": 532.84375
+      },
+      "dashboardLayout": {
+        "x": 13,
+        "y": 109.84375,
+        "width": 367,
+        "height": 372,
+        "right": 380,
+        "bottom": 481.84375
+      },
+      "playColumn": {
+        "x": 13,
+        "y": 109.84375,
+        "width": 367,
+        "height": 372,
+        "right": 380,
+        "bottom": 481.84375
+      },
+      "gameSurface": {
+        "x": 13,
+        "y": 109.84375,
+        "width": 367,
+        "height": 292,
+        "right": 380,
+        "bottom": 401.84375
+      },
+      "boardFrame": {
+        "x": 13,
+        "y": 109.84375,
+        "width": 367,
+        "height": 244,
+        "right": 380,
+        "bottom": 353.84375
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": false,
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 0",
+        "Total 0",
+        "Recorde 0"
+      ],
+      "canvas": {
+        "x": 19,
+        "y": 109.84375,
+        "width": 355,
+        "height": 244,
+        "right": 374,
+        "bottom": 353.84375
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 367,
+        "height": 88.84375,
+        "right": 380,
+        "bottom": 101.84375
+      },
+      "titleGroup": {
+        "x": 13,
+        "y": 13,
+        "width": 118.25,
+        "height": 36.84375,
+        "right": 131.25,
+        "bottom": 49.84375
+      },
+      "titleGroupVisible": true,
+      "scoreStrip": {
+        "x": 13,
+        "y": 60.84375,
+        "width": 295,
+        "height": 38,
+        "right": 308,
+        "bottom": 98.84375
+      },
+      "boardControls": {
+        "x": 21,
+        "y": 357.84375,
+        "width": 351,
+        "height": 44,
+        "right": 372,
+        "bottom": 401.84375
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "width": 68,
+          "height": 44,
+          "x": 312,
+          "y": 57.84375,
+          "right": 380,
+          "bottom": 101.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "width": 44,
+          "height": 44,
+          "x": 21,
+          "y": 357.84375,
+          "right": 65,
+          "bottom": 401.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "width": 44,
+          "height": 44,
+          "x": 328,
+          "y": 357.84375,
+          "right": 372,
+          "bottom": 401.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 13,
+        "y": 425.84375,
+        "width": 367,
+        "height": 56,
+        "right": 380,
+        "bottom": 481.84375
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 72,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-pro-max",
+        "width": 430,
+        "height": 932,
+        "scrollWidth": 430,
+        "scrollHeight": 932,
+        "bodyScrollWidth": 430,
+        "bodyScrollHeight": 932
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 430,
+        "height": 932,
+        "right": 430,
+        "bottom": 932
+      },
+      "appShell": {
+        "x": 4,
+        "y": 4,
+        "width": 422,
+        "height": 546.84375,
+        "right": 426,
+        "bottom": 550.84375
+      },
+      "dashboard": {
+        "x": 4,
+        "y": 4,
+        "width": 422,
+        "height": 546.84375,
+        "right": 426,
+        "bottom": 550.84375
+      },
+      "dashboardLayout": {
+        "x": 13,
+        "y": 109.84375,
+        "width": 404,
+        "height": 390,
+        "right": 417,
+        "bottom": 499.84375
+      },
+      "playColumn": {
+        "x": 13,
+        "y": 109.84375,
+        "width": 404,
+        "height": 390,
+        "right": 417,
+        "bottom": 499.84375
+      },
+      "gameSurface": {
+        "x": 13,
+        "y": 109.84375,
+        "width": 404,
+        "height": 310,
+        "right": 417,
+        "bottom": 419.84375
+      },
+      "boardFrame": {
+        "x": 13,
+        "y": 109.84375,
+        "width": 404,
+        "height": 262,
+        "right": 417,
+        "bottom": 371.84375
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": false,
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 0",
+        "Total 0",
+        "Recorde 0"
+      ],
+      "canvas": {
+        "x": 19,
+        "y": 109.84375,
+        "width": 392,
+        "height": 262,
+        "right": 411,
+        "bottom": 371.84375
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 404,
+        "height": 88.84375,
+        "right": 417,
+        "bottom": 101.84375
+      },
+      "titleGroup": {
+        "x": 13,
+        "y": 13,
+        "width": 118.25,
+        "height": 36.84375,
+        "right": 131.25,
+        "bottom": 49.84375
+      },
+      "titleGroupVisible": true,
+      "scoreStrip": {
+        "x": 13,
+        "y": 60.84375,
+        "width": 332,
+        "height": 38,
+        "right": 345,
+        "bottom": 98.84375
+      },
+      "boardControls": {
+        "x": 21,
+        "y": 375.84375,
+        "width": 388,
+        "height": 44,
+        "right": 409,
+        "bottom": 419.84375
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "width": 68,
+          "height": 44,
+          "x": 349,
+          "y": 57.84375,
+          "right": 417,
+          "bottom": 101.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "width": 44,
+          "height": 44,
+          "x": 21,
+          "y": 375.84375,
+          "right": 65,
+          "bottom": 419.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "width": 44,
+          "height": 44,
+          "x": 365,
+          "y": 375.84375,
+          "right": 409,
+          "bottom": 419.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 13,
+        "y": 443.84375,
+        "width": 404,
+        "height": 56,
+        "right": 417,
+        "bottom": 499.84375
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 72,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-15-landscape",
+        "width": 852,
+        "height": 393,
+        "scrollWidth": 852,
+        "scrollHeight": 393,
+        "bodyScrollWidth": 852,
+        "bodyScrollHeight": 393
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 852,
+        "height": 393,
+        "right": 852,
+        "bottom": 393
+      },
+      "appShell": {
+        "x": 6,
+        "y": 4,
+        "width": 840,
+        "height": 385,
+        "right": 846,
+        "bottom": 389
+      },
+      "dashboard": {
+        "x": 6,
+        "y": 4,
+        "width": 840,
+        "height": 385,
+        "right": 846,
+        "bottom": 389
+      },
+      "dashboardLayout": {
+        "x": 6,
+        "y": 52,
+        "width": 840,
+        "height": 337,
+        "right": 846,
+        "bottom": 389
+      },
+      "playColumn": {
+        "x": 6,
+        "y": 52,
+        "width": 840,
+        "height": 337,
+        "right": 846,
+        "bottom": 389
+      },
+      "gameSurface": {
+        "x": 6,
+        "y": 52,
+        "width": 840,
+        "height": 337,
+        "right": 846,
+        "bottom": 389
+      },
+      "boardFrame": {
+        "x": 6,
+        "y": 52,
+        "width": 840,
+        "height": 285,
+        "right": 846,
+        "bottom": 337
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": true,
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 0",
+        "Total 0",
+        "Recorde 0"
+      ],
+      "canvas": {
+        "x": 213.5,
+        "y": 52,
+        "width": 425,
+        "height": 285,
+        "right": 638.5,
+        "bottom": 337
+      },
+      "header": {
+        "x": 6,
+        "y": 4,
+        "width": 840,
+        "height": 44,
+        "right": 846,
+        "bottom": 48
+      },
+      "titleGroup": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "titleGroupVisible": false,
+      "scoreStrip": {
+        "x": 6,
+        "y": 10,
+        "width": 768,
+        "height": 32,
+        "right": 774,
+        "bottom": 42
+      },
+      "boardControls": {
+        "x": 215.5,
+        "y": 345,
+        "width": 421,
+        "height": 44,
+        "right": 636.5,
+        "bottom": 389
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "width": 68,
+          "height": 44,
+          "x": 778,
+          "y": 4,
+          "right": 846,
+          "bottom": 48,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "width": 44,
+          "height": 44,
+          "x": 215.5,
+          "y": 345,
+          "right": 259.5,
+          "bottom": 389,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "width": 44,
+          "height": 44,
+          "x": 592.5,
+          "y": 345,
+          "right": 636.5,
+          "bottom": 389,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": false,
+      "sideAdDistance": null,
+      "bottomAdDistance": null,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "tablet",
+        "width": 768,
+        "height": 1024,
+        "scrollWidth": 768,
+        "scrollHeight": 1024,
+        "bodyScrollWidth": 768,
+        "bodyScrollHeight": 1024
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 768,
+        "height": 1024,
+        "right": 768,
+        "bottom": 1024
+      },
+      "appShell": {
+        "x": 6,
+        "y": 6,
+        "width": 756,
+        "height": 822.203125,
+        "right": 762,
+        "bottom": 828.203125
+      },
+      "dashboard": {
+        "x": 6,
+        "y": 6,
+        "width": 756,
+        "height": 822.203125,
+        "right": 762,
+        "bottom": 828.203125
+      },
+      "dashboardLayout": {
+        "x": 19,
+        "y": 157.203125,
+        "width": 730,
+        "height": 616,
+        "right": 749,
+        "bottom": 773.203125
+      },
+      "playColumn": {
+        "x": 19,
+        "y": 157.203125,
+        "width": 730,
+        "height": 616,
+        "right": 749,
+        "bottom": 773.203125
+      },
+      "gameSurface": {
+        "x": 19,
+        "y": 157.203125,
+        "width": 730,
+        "height": 528,
+        "right": 749,
+        "bottom": 685.203125
+      },
+      "boardFrame": {
+        "x": 19,
+        "y": 157.203125,
+        "width": 730,
+        "height": 480,
+        "right": 749,
+        "bottom": 637.203125
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": false,
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 0",
+        "Total 0",
+        "Recorde 0"
+      ],
+      "canvas": {
+        "x": 25,
+        "y": 157.203125,
+        "width": 718,
+        "height": 480,
+        "right": 743,
+        "bottom": 637.203125
+      },
+      "header": {
+        "x": 19,
+        "y": 19,
+        "width": 730,
+        "height": 130.203125,
+        "right": 749,
+        "bottom": 149.203125
+      },
+      "titleGroup": {
+        "x": 19,
+        "y": 19,
+        "width": 118.25,
+        "height": 36.203125,
+        "right": 137.25,
+        "bottom": 55.203125
+      },
+      "titleGroupVisible": true,
+      "scoreStrip": {
+        "x": 19,
+        "y": 63.203125,
+        "width": 730,
+        "height": 38,
+        "right": 749,
+        "bottom": 101.203125
+      },
+      "boardControls": {
+        "x": 27,
+        "y": 641.203125,
+        "width": 714,
+        "height": 44,
+        "right": 741,
+        "bottom": 685.203125
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "width": 68,
+          "height": 44,
+          "x": 19,
+          "y": 105.203125,
+          "right": 87,
+          "bottom": 149.203125,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "width": 44,
+          "height": 44,
+          "x": 27,
+          "y": 641.203125,
+          "right": 71,
+          "bottom": 685.203125,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "width": 44,
+          "height": 44,
+          "x": 697,
+          "y": 641.203125,
+          "right": 741,
+          "bottom": 685.203125,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 124,
+        "y": 717.203125,
+        "width": 520,
+        "height": 56,
+        "right": 644,
+        "bottom": 773.203125
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 80,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "desktop",
+        "width": 1280,
+        "height": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 1099,
+        "bodyScrollWidth": 1280,
+        "bodyScrollHeight": 1099
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 1280,
+        "height": 1099.15625,
+        "right": 1280,
+        "bottom": 1099.15625
+      },
+      "appShell": {
+        "x": 8,
+        "y": 8,
+        "width": 1264,
+        "height": 1083.15625,
+        "right": 1272,
+        "bottom": 1091.15625
+      },
+      "dashboard": {
+        "x": 8,
+        "y": 8,
+        "width": 1264,
+        "height": 1083.15625,
+        "right": 1272,
+        "bottom": 1091.15625
+      },
+      "dashboardLayout": {
+        "x": 33,
+        "y": 86.15625,
+        "width": 1214,
+        "height": 938,
+        "right": 1247,
+        "bottom": 1024.15625
+      },
+      "playColumn": {
+        "x": 33,
+        "y": 86.15625,
+        "width": 1214,
+        "height": 938,
+        "right": 1247,
+        "bottom": 1024.15625
+      },
+      "gameSurface": {
+        "x": 33,
+        "y": 86.15625,
+        "width": 1214,
+        "height": 850,
+        "right": 1247,
+        "bottom": 936.15625
+      },
+      "boardFrame": {
+        "x": 33,
+        "y": 86.15625,
+        "width": 1214,
+        "height": 802,
+        "right": 1247,
+        "bottom": 888.15625
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": false,
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 0",
+        "Total 0",
+        "Recorde 0"
+      ],
+      "canvas": {
+        "x": 39,
+        "y": 86.15625,
+        "width": 1202,
+        "height": 802,
+        "right": 1241,
+        "bottom": 888.15625
+      },
+      "header": {
+        "x": 33,
+        "y": 33,
+        "width": 1214,
+        "height": 45.15625,
+        "right": 1247,
+        "bottom": 78.15625
+      },
+      "titleGroup": {
+        "x": 33,
+        "y": 33,
+        "width": 118.734375,
+        "height": 45.15625,
+        "right": 151.734375,
+        "bottom": 78.15625
+      },
+      "titleGroupVisible": true,
+      "scoreStrip": {
+        "x": 874.296875,
+        "y": 37,
+        "width": 300.703125,
+        "height": 36,
+        "right": 1175,
+        "bottom": 73
+      },
+      "boardControls": {
+        "x": 41,
+        "y": 892.15625,
+        "width": 1198,
+        "height": 44,
+        "right": 1239,
+        "bottom": 936.15625
+      },
+      "buttons": [
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "width": 68,
+          "height": 44,
+          "x": 1179,
+          "y": 33,
+          "right": 1247,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "width": 44,
+          "height": 44,
+          "x": 41,
+          "y": 892.15625,
+          "right": 85,
+          "bottom": 936.15625,
+          "visibleInViewport": false,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "width": 44,
+          "height": 44,
+          "x": 1195,
+          "y": 892.15625,
+          "right": 1239,
+          "bottom": 936.15625,
+          "visibleInViewport": false,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 380,
+        "y": 960.15625,
+        "width": 520,
+        "height": 64,
+        "right": 900,
+        "bottom": 1024.15625
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 72,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    }
+  ],
+  "orientationEvents": {
+    "before": {
+      "count": 1,
+      "byType": {
+        "game_start": 1
+      }
+    },
+    "after": {
+      "count": 1,
+      "byType": {
+        "game_start": 1
+      }
+    }
+  },
+  "consoleProblems": []
+}

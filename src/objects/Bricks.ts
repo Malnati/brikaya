@@ -1,10 +1,13 @@
 // src/objects/Bricks.ts
-import { BRICK_COLORS } from '../constants/assets';
-import { DynamicGameDimensions, SpeedReductionSnapshot } from '../constants/game';
-import { gameLogger, type LoggedGameState } from '../storage/gameLogger';
-import { AssetLoader } from '../utils/assetLoader';
-import { collisionTracker } from '../utils/collisionTracker';
-import { ERROR, LOG, WARN } from '../utils/logger';
+import { BRICK_COLORS } from "../constants/assets";
+import {
+  DynamicGameDimensions,
+  SpeedReductionSnapshot,
+} from "../constants/game";
+import { gameLogger, type LoggedGameState } from "../storage/gameLogger";
+import { AssetLoader } from "../utils/assetLoader";
+import { collisionTracker } from "../utils/collisionTracker";
+import { ERROR, LOG, WARN } from "../utils/logger";
 
 const BRICK_ACTIVE = 1;
 const BRICK_DESTROYED = 0;
@@ -14,6 +17,16 @@ interface Brick {
   y: number;
   status: number;
   colorIndex: number;
+}
+
+export interface DestroyedBrickSnapshot {
+  col: number;
+  row: number;
+  colorIndex: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }
 
 export class Bricks {
@@ -26,13 +39,15 @@ export class Bricks {
     dimensions: DynamicGameDimensions,
     private onBrickDestroyed?: (colorIndex: number) => void | Promise<void>,
     maxRows?: number,
-    private onMaxRowsReached?: () => void
+    private onMaxRowsReached?: () => void,
   ) {
     this.dimensions = dimensions;
     this.rows = dimensions.brickRows;
     this.maxRows = maxRows ?? this.rows;
 
-    LOG(`🏗️  Bricks: ${dimensions.brickCols}x${this.rows} = ${dimensions.brickCols * this.rows} blocos`);
+    LOG(
+      `🏗️  Bricks: ${dimensions.brickCols}x${this.rows} = ${dimensions.brickCols * this.rows} blocos`,
+    );
 
     for (let c = 0; c < dimensions.brickCols; c++) {
       this.bricks[c] = [];
@@ -41,15 +56,19 @@ export class Bricks {
           x: 0,
           y: 0,
           status: BRICK_ACTIVE,
-          colorIndex: Math.floor(Math.random() * BRICK_COLORS.length)
+          colorIndex: Math.floor(Math.random() * BRICK_COLORS.length),
         };
       }
     }
     // Atualizar as posições dos blocos imediatamente após a criação
     for (let c = 0; c < dimensions.brickCols; c++) {
       for (let r = 0; r < this.rows; r++) {
-        const brickX = c * (dimensions.brickWidth + dimensions.brickPadding) + dimensions.brickOffsetLeft;
-        const brickY = r * (dimensions.brickHeight + dimensions.brickPadding) + dimensions.brickOffsetTop;
+        const brickX =
+          c * (dimensions.brickWidth + dimensions.brickPadding) +
+          dimensions.brickOffsetLeft;
+        const brickY =
+          r * (dimensions.brickHeight + dimensions.brickPadding) +
+          dimensions.brickOffsetTop;
         this.bricks[c][r].x = brickX;
         this.bricks[c][r].y = brickY;
       }
@@ -67,7 +86,9 @@ export class Bricks {
         }
       }
     }
-    LOG(`🔍 isAllDestroyed: ${activeBricks} blocos ativos de ${this.dimensions.brickCols * this.rows} total`);
+    LOG(
+      `🔍 isAllDestroyed: ${activeBricks} blocos ativos de ${this.dimensions.brickCols * this.rows} total`,
+    );
     return activeBricks === 0;
   }
 
@@ -76,11 +97,15 @@ export class Bricks {
       for (let r = 0; r < this.rows; r++) {
         const b = this.bricks[c][r];
         if (b.status === BRICK_ACTIVE) {
-          const brickX = c * (this.dimensions.brickWidth + this.dimensions.brickPadding) + this.dimensions.brickOffsetLeft;
-          const brickY = r * (this.dimensions.brickHeight + this.dimensions.brickPadding) + this.dimensions.brickOffsetTop;
+          const brickX =
+            c * (this.dimensions.brickWidth + this.dimensions.brickPadding) +
+            this.dimensions.brickOffsetLeft;
+          const brickY =
+            r * (this.dimensions.brickHeight + this.dimensions.brickPadding) +
+            this.dimensions.brickOffsetTop;
           b.x = brickX;
           b.y = brickY;
-          
+
           // Desenhar a imagem do brick
           const brickImage = AssetLoader.getImage(BRICK_COLORS[b.colorIndex]);
           if (brickImage) {
@@ -89,22 +114,28 @@ export class Bricks {
               brickX,
               brickY,
               this.dimensions.brickWidth,
-              this.dimensions.brickHeight
+              this.dimensions.brickHeight,
             );
           } else {
             // Fallback para retângulo colorido se a imagem não carregou
-            ctx.fillStyle = '#00d4ff';
-            ctx.fillRect(brickX, brickY, this.dimensions.brickWidth, this.dimensions.brickHeight);
+            ctx.fillStyle = "#00d4ff";
+            ctx.fillRect(
+              brickX,
+              brickY,
+              this.dimensions.brickWidth,
+              this.dimensions.brickHeight,
+            );
           }
         }
       }
     }
   }
 
-
   addRow() {
     if (this.rows >= this.maxRows) {
-      WARN(`Maximum rows limit (${this.maxRows}) reached. Cannot add more rows.`);
+      WARN(
+        `Maximum rows limit (${this.maxRows}) reached. Cannot add more rows.`,
+      );
       if (this.onMaxRowsReached) {
         this.onMaxRowsReached();
       }
@@ -115,7 +146,7 @@ export class Bricks {
         x: 0,
         y: 0,
         status: BRICK_ACTIVE,
-        colorIndex: Math.floor(Math.random() * BRICK_COLORS.length)
+        colorIndex: Math.floor(Math.random() * BRICK_COLORS.length),
       });
     }
     this.rows += 1;
@@ -125,21 +156,21 @@ export class Bricks {
     this.dimensions = {
       ...dimensions,
       brickCols: this.bricks.length,
-      brickRows: this.rows
+      brickRows: this.rows,
     };
     this.maxRows = Math.max(this.rows, maxRows ?? this.maxRows);
   }
 
   async collide(
-    ball: { 
-      position: { x: number; y: number; radius: number }; 
-      bounceY: () => void; 
+    ball: {
+      position: { x: number; y: number; radius: number };
+      bounceY: () => void;
       registerBrickHit: () => void;
       getVelocity: () => { dx: number; dy: number };
-      getSpeedStateSnapshot: () => LoggedGameState['speedState'];
+      getSpeedStateSnapshot: () => LoggedGameState["speedState"];
       getLastSpeedReduction: () => SpeedReductionSnapshot | null;
     },
-    gameState?: LoggedGameState
+    gameState?: LoggedGameState,
   ): Promise<boolean> {
     let collided = false;
     let destroyedCount = 0;
@@ -152,12 +183,12 @@ export class Bricks {
           const ballRight = ball.position.x + ball.position.radius;
           const ballTop = ball.position.y - ball.position.radius;
           const ballBottom = ball.position.y + ball.position.radius;
-          
+
           const brickLeft = b.x;
           const brickRight = b.x + this.dimensions.brickWidth;
           const brickTop = b.y;
           const brickBottom = b.y + this.dimensions.brickHeight;
-          
+
           if (
             ballRight > brickLeft &&
             ballLeft < brickRight &&
@@ -177,32 +208,59 @@ export class Bricks {
               const updatedGameState: LoggedGameState = {
                 ...gameState,
                 bricksRemaining: Math.max(0, gameState.bricksRemaining - 1),
-                speedState
+                speedState,
               };
-              LOG(`🧱 Colisão com bloco detectada - Pos: (${Math.round(ball.position.x)}, ${Math.round(ball.position.y)}), Bloco: [${c}, ${r}], Cor: ${b.colorIndex}`);
-              
-              gameLogger.logBrickDestroyed(
-                updatedGameState,
-                [{ x: ball.position.x, y: ball.position.y, velocity: ballVelocityAfter, radius: ball.position.radius }],
-                { x: 0, y: 0, width: 0, height: 0 }, // Paddle position será atualizada pelo GameEngine
-                { x: b.x, y: b.y, width: this.dimensions.brickWidth, height: this.dimensions.brickHeight },
-                { col: c, row: r },
-                b.colorIndex,
-                ball.position,
-                ballVelocityBefore,
-                ballVelocityAfter,
-                speedReduction
-              ).catch((error) => ERROR('❌ Erro ao registrar destruição de bloco:', error));
-              
-              collisionTracker.logBrickCollision(
-                ball.position,
-                ballVelocityAfter,
-                updatedGameState,
-                { x: b.x, y: b.y, width: this.dimensions.brickWidth, height: this.dimensions.brickHeight },
-                { col: c, row: r },
-                b.colorIndex,
-                speedReduction
-              ).catch(error => ERROR('❌ Erro ao registrar colisão com bloco:', error));
+              LOG(
+                `🧱 Colisão com bloco detectada - Pos: (${Math.round(ball.position.x)}, ${Math.round(ball.position.y)}), Bloco: [${c}, ${r}], Cor: ${b.colorIndex}`,
+              );
+
+              gameLogger
+                .logBrickDestroyed(
+                  updatedGameState,
+                  [
+                    {
+                      x: ball.position.x,
+                      y: ball.position.y,
+                      velocity: ballVelocityAfter,
+                      radius: ball.position.radius,
+                    },
+                  ],
+                  { x: 0, y: 0, width: 0, height: 0 }, // Paddle position será atualizada pelo GameEngine
+                  {
+                    x: b.x,
+                    y: b.y,
+                    width: this.dimensions.brickWidth,
+                    height: this.dimensions.brickHeight,
+                  },
+                  { col: c, row: r },
+                  b.colorIndex,
+                  ball.position,
+                  ballVelocityBefore,
+                  ballVelocityAfter,
+                  speedReduction,
+                )
+                .catch((error) =>
+                  ERROR("❌ Erro ao registrar destruição de bloco:", error),
+                );
+
+              collisionTracker
+                .logBrickCollision(
+                  ball.position,
+                  ballVelocityAfter,
+                  updatedGameState,
+                  {
+                    x: b.x,
+                    y: b.y,
+                    width: this.dimensions.brickWidth,
+                    height: this.dimensions.brickHeight,
+                  },
+                  { col: c, row: r },
+                  b.colorIndex,
+                  speedReduction,
+                )
+                .catch((error) =>
+                  ERROR("❌ Erro ao registrar colisão com bloco:", error),
+                );
             }
             destroyedCount++;
             if (this.onBrickDestroyed) {
@@ -226,9 +284,45 @@ export class Bricks {
   }
 
   isBrickActive(col: number, row: number): boolean {
-    if (col < 0 || col >= this.dimensions.brickCols || row < 0 || row >= this.rows) {
+    if (
+      col < 0 ||
+      col >= this.dimensions.brickCols ||
+      row < 0 ||
+      row >= this.rows
+    ) {
       return false;
     }
     return this.bricks[col][row].status === BRICK_ACTIVE;
+  }
+
+  destroyAllActive(): DestroyedBrickSnapshot[] {
+    const destroyed: DestroyedBrickSnapshot[] = [];
+    for (let c = 0; c < this.dimensions.brickCols; c++) {
+      for (let r = 0; r < this.rows; r++) {
+        const brick = this.bricks[c][r];
+        if (brick.status !== BRICK_ACTIVE) continue;
+
+        const x =
+          c * (this.dimensions.brickWidth + this.dimensions.brickPadding) +
+          this.dimensions.brickOffsetLeft;
+        const y =
+          r * (this.dimensions.brickHeight + this.dimensions.brickPadding) +
+          this.dimensions.brickOffsetTop;
+        brick.x = x;
+        brick.y = y;
+        brick.status = BRICK_DESTROYED;
+        destroyed.push({
+          col: c,
+          row: r,
+          colorIndex: brick.colorIndex,
+          x,
+          y,
+          width: this.dimensions.brickWidth,
+          height: this.dimensions.brickHeight,
+        });
+      }
+    }
+
+    return destroyed;
   }
 }

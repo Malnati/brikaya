@@ -44,6 +44,7 @@ export const ACTIVE_POWER_UP_TYPES = [
   "multiball",
   "wide_paddle",
   "slow_ball",
+  "laser_fan",
 ] as const satisfies readonly PowerUpType[];
 
 export function getPowerUpDefinition(type: PowerUpType): PowerUpDefinition {

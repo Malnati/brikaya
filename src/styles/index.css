@@ -115,7 +115,7 @@ select {
 
 .app-shell {
   width: 100%;
-  max-width: 1280px;
+  max-width: none;
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -252,7 +252,7 @@ select {
 
 .dashboard-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(160px, 220px);
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
   align-items: stretch;
 }
@@ -278,7 +278,7 @@ select {
 
 .game-board-frame {
   position: relative;
-  width: fit-content;
+  width: 100%;
   max-width: 100%;
   padding: 0;
   box-sizing: border-box;
@@ -291,6 +291,7 @@ canvas {
   box-shadow: var(--bb-shadow-accent);
   box-sizing: border-box;
   display: block;
+  margin-inline: auto;
   max-width: 100%;
   touch-action: none;
   -webkit-touch-callout: none;
@@ -575,6 +576,7 @@ canvas {
 }
 
 .ad-slot--side {
+  display: none;
   min-height: 100%;
   margin-left: 0;
 }
@@ -588,18 +590,6 @@ canvas {
 .game-status-region {
   margin-top: var(--space-2);
   min-height: 0;
-}
-
-.build-version-badge {
-  display: block;
-  margin-top: var(--space-1);
-  color: color-mix(in srgb, var(--color-muted) 64%, transparent);
-  font-family: var(--bb-font-mono);
-  font-size: 0.55rem;
-  line-height: 1;
-  text-align: right;
-  pointer-events: none;
-  user-select: none;
 }
 
 .offline-ready-message,
@@ -680,6 +670,19 @@ canvas {
   margin-bottom: var(--space-3);
 }
 
+.settings-drawer__version {
+  margin: 0 0 var(--space-3);
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--bb-color-primary) 42%, transparent);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--bb-color-primary) 12%, transparent);
+  color: var(--color-text);
+  font-family: var(--bb-font-mono);
+  font-size: 0.92rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
 .settings-drawer__header h2,
 .settings-drawer__section h3 {
   margin: 0;
@@ -730,12 +733,6 @@ canvas {
 
   .ad-slot--side {
     display: none;
-  }
-}
-
-@media (min-width: 1121px) {
-  .dashboard-layout {
-    column-gap: 150px;
   }
 }
 

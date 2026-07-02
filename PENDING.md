@@ -14,3 +14,5 @@
 - [x] Design System adaptado apenas às superfícies existentes, com tema claro/escuro e QA publicado obrigatório.
 
 - [x] Validar modo paisagem imersivo mobile/tablet no Cloudflare publicado antes do merge, sem Fullscreen API obrigatória.
+
+- [x] Validar preview Cloudflare da feature com tema escuro padrão, versão no menu, quadro full-width e power-up Laser em leque.

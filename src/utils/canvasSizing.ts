@@ -1,6 +1,5 @@
 // src/utils/canvasSizing.ts
 import {
-  AVAILABLE_CANVAS_HEIGHT_RATIO,
   CANVAS_CONTAINER_HORIZONTAL_INSET,
   CANVAS_HEIGHT,
   CANVAS_WIDTH,
@@ -10,8 +9,6 @@ import {
   IMMERSIVE_LANDSCAPE_MIN_CANVAS_HEIGHT,
   IMMERSIVE_LANDSCAPE_MIN_CANVAS_WIDTH,
   IMMERSIVE_LANDSCAPE_UI_RESERVED_BLOCK,
-  MAX_CANVAS_HEIGHT,
-  MAX_CANVAS_WIDTH,
   MIN_CANVAS_HEIGHT,
   MIN_CANVAS_WIDTH,
 } from "../constants/game";
@@ -37,10 +34,6 @@ export interface ResponsiveCanvasSize {
 }
 
 const ASPECT_RATIO = CANVAS_WIDTH / CANVAS_HEIGHT;
-
-function clamp(value: number, minimum: number, maximum: number): number {
-  return Math.max(minimum, Math.min(maximum, value));
-}
 
 function resolveViewportWidth(metrics: ResponsiveCanvasMetrics): number {
   return metrics.visualViewportWidth || metrics.viewportWidth;
@@ -96,10 +89,7 @@ export function calculateResponsiveCanvasSize(
           IMMERSIVE_LANDSCAPE_CANVAS_INSET -
           immersiveUiReservedBlock,
       )
-    : Math.max(
-        minCanvasHeight,
-        viewportHeight * AVAILABLE_CANVAS_HEIGHT_RATIO,
-      );
+    : Number.POSITIVE_INFINITY;
 
   let newWidth = containerWidth;
   let newHeight = containerWidth / ASPECT_RATIO;
@@ -109,10 +99,12 @@ export function calculateResponsiveCanvasSize(
     newWidth = containerHeight * ASPECT_RATIO;
   }
 
-  if (!isLandscapeImmersive) {
-    newWidth = clamp(newWidth, minCanvasWidth, MAX_CANVAS_WIDTH);
-    newHeight = clamp(newHeight, minCanvasHeight, MAX_CANVAS_HEIGHT);
-  }
+  newWidth = isLandscapeImmersive
+    ? newWidth
+    : Math.max(minCanvasWidth, newWidth);
+  newHeight = isLandscapeImmersive
+    ? newHeight
+    : Math.max(minCanvasHeight, newHeight);
 
   return {
     width: Math.floor(newWidth),

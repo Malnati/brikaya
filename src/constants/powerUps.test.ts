@@ -18,6 +18,7 @@ const ACTIVE_POWER_UPS_WITH_CURRENT_MECHANICS: PowerUpType[] = [
   "multiball",
   "wide_paddle",
   "slow_ball",
+  "laser_fan",
 ];
 
 describe("registry de power-ups", () => {

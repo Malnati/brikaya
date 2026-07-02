@@ -1,12 +1,14 @@
 // src/logic/GameEngine.ts
 import { Paddle } from "../objects/Paddle";
 import { Ball } from "../objects/Ball";
-import { Bricks } from "../objects/Bricks";
+import { Bricks, type DestroyedBrickSnapshot } from "../objects/Bricks";
 import { PowerUp } from "../objects/PowerUp";
 import {
   GAME_COLOR,
   CANVAS_HEIGHT,
   CANVAS_WIDTH,
+  LASER_FAN_EFFECT_VISIBLE_MS,
+  LASER_FAN_MAX_SPAWNS_PER_LEVEL,
   LEVEL_CLEAR_PAUSE_MS,
   LevelTransitionPayload,
   PhaseSpeedConfig,
@@ -43,10 +45,12 @@ const ERROR_NO_2D_CONTEXT = "No 2D context";
 const SINGLE_BRICK_QA_SCENARIO = "single-brick-phase-clear";
 const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
 const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
+const LASER_FAN_QA_SCENARIO = "laser-fan";
 const LATE_PHASE_STABILITY_LEVEL = 11;
 const LATE_PHASE_STABILITY_Y_RATIO = 0.35;
 const CINEMATIC_RIP_X_RATIO = 0.12;
 const CINEMATIC_RIP_Y_OFFSET = 2;
+const LASER_FAN_QA_POWER_UP_Y_OFFSET = 32;
 const COMBO_WINDOW_MS = 1200;
 const COMBO_COOLDOWN_MS = 500;
 const COMBO_SMALL_THRESHOLD = 3;
@@ -59,6 +63,14 @@ const WIDE_PADDLE_SCALE = 1.45;
 const SLOW_BALL_MULTIPLIER = 0.75;
 const MULTIBALL_ANGLE_OFFSET = 0.42;
 const HIGH_INTENSITY_SPEED_MULTIPLIER = 1.6;
+const LASER_FAN_CENTER_X_RATIO = 0.5;
+const LASER_FAN_CENTER_Y_RATIO = 0.78;
+const LASER_FAN_RAY_ALPHA = 0.82;
+const LASER_FAN_RAY_LINE_WIDTH = 3;
+const LASER_FAN_RAY_COUNT = 9;
+const LASER_FAN_RAY_START_ANGLE = Math.PI * 1.12;
+const LASER_FAN_RAY_END_ANGLE = Math.PI * 1.88;
+const LASER_FAN_RAY_COLOR = "rgba(245, 247, 255, 0.82)";
 const BRICK_COLOR_AUDIO_IDS: AudioId[] = [
   GAME_AUDIO_IDS.BRICK_BREAK_RED,
   GAME_AUDIO_IDS.BRICK_BREAK_BLUE,
@@ -88,6 +100,7 @@ export type GameQaScenario =
   | typeof SINGLE_BRICK_QA_SCENARIO
   | typeof LATE_PHASE_STABILITY_QA_SCENARIO
   | typeof CINEMATIC_RIP_QA_SCENARIO
+  | typeof LASER_FAN_QA_SCENARIO
   | typeof AUDIO_QA_SCENARIO;
 
 export class GameEngine {
@@ -122,6 +135,9 @@ export class GameEngine {
   private activePowerUp: PowerUp | null = null;
   private nextPowerUpIndex = 0;
   private powerUpEffectTimers: ReturnType<typeof setTimeout>[] = [];
+  private laserFanSpawnsThisLevel = 0;
+  private laserFanEffectUntil = 0;
+  private laserFanEffectTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly handleKeyDown = (event: KeyboardEvent) =>
     this.paddle.onKeyDown(event);
   private readonly handleKeyUp = (event: KeyboardEvent) =>
@@ -204,6 +220,7 @@ export class GameEngine {
     LOG(`🏗️  Criando Bricks...`);
     this.configureBrickRows();
     this.bricks = this.createBricks();
+    this.prepareLaserFanQaPowerUp();
     this.startLevelSpeedTracking(this.level);
 
     LOG(`🎮 GameEngine constructor finalizado`);
@@ -282,7 +299,11 @@ export class GameEngine {
       this.dimensions,
     );
     this.balls.forEach((ball) =>
-      ball.resize(this.canvasSize.width, this.canvasSize.height, this.dimensions),
+      ball.resize(
+        this.canvasSize.width,
+        this.canvasSize.height,
+        this.dimensions,
+      ),
     );
     this.bricks.resize(this.dimensions, this.maxBrickRows);
   }
@@ -357,6 +378,18 @@ export class GameEngine {
     ball.setDirection(Math.PI);
   }
 
+  private prepareLaserFanQaPowerUp() {
+    if (this.qaScenario !== LASER_FAN_QA_SCENARIO || this.qaScenarioConsumed)
+      return;
+
+    this.activePowerUp = new PowerUp(
+      this.paddle.position.x + this.paddle.position.width / CENTER_DIVISOR,
+      this.paddle.position.y - LASER_FAN_QA_POWER_UP_Y_OFFSET,
+      "laser_fan",
+    );
+    this.laserFanSpawnsThisLevel = 1;
+  }
+
   private async preloadAssets() {
     try {
       LOG("🎮 Iniciando carregamento de assets...");
@@ -417,6 +450,7 @@ export class GameEngine {
   ) {
     this.isLevelTransitioning = true;
     this.clearPowerUpEffects();
+    this.clearLaserFanEffect();
     this.activePowerUp = null;
     this.audioSink.playAudio(GAME_AUDIO_IDS.LEVEL_COMPLETE);
     const currentLevel = this.level;
@@ -494,6 +528,7 @@ export class GameEngine {
     }
     this.paddle.reset();
     this.activePowerUp = null;
+    this.resetLaserFanSpawnCounterForLevel();
     this.destroyedBricksSincePowerUp = 0;
     this.balls = [
       new Ball(
@@ -709,9 +744,8 @@ export class GameEngine {
       return;
 
     this.destroyedBricksSincePowerUp = 0;
-    const powerUpType =
-      ACTIVE_POWER_UP_TYPES[this.nextPowerUpIndex % ACTIVE_POWER_UP_TYPES.length];
-    this.nextPowerUpIndex += 1;
+    const powerUpType = this.selectNextPowerUpType();
+    if (!powerUpType) return;
     const ballPosition = this.balls[0]?.position;
     const spawnX = Math.max(
       POWER_UP_EDGE_PADDING,
@@ -725,6 +759,35 @@ export class GameEngine {
     this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_SPAWN);
   }
 
+  private selectNextPowerUpType(): PowerUpType | null {
+    for (let attempt = 0; attempt < ACTIVE_POWER_UP_TYPES.length; attempt++) {
+      const powerUpType =
+        ACTIVE_POWER_UP_TYPES[
+          this.nextPowerUpIndex % ACTIVE_POWER_UP_TYPES.length
+        ];
+      this.nextPowerUpIndex += 1;
+
+      if (
+        powerUpType === "laser_fan" &&
+        this.laserFanSpawnsThisLevel >= LASER_FAN_MAX_SPAWNS_PER_LEVEL
+      ) {
+        continue;
+      }
+
+      if (powerUpType === "laser_fan") {
+        this.laserFanSpawnsThisLevel += 1;
+      }
+
+      return powerUpType;
+    }
+
+    return null;
+  }
+
+  private resetLaserFanSpawnCounterForLevel() {
+    this.laserFanSpawnsThisLevel = 0;
+  }
+
   private updatePowerUp() {
     if (!this.activePowerUp || this.isLevelTransitioning || this.gameOver)
       return;
@@ -733,7 +796,7 @@ export class GameEngine {
     if (this.activePowerUp.intersects(this.paddle.position)) {
       const powerUpType = this.activePowerUp.getType();
       this.activePowerUp = null;
-      this.activatePowerUp(powerUpType);
+      void this.activatePowerUp(powerUpType);
       return;
     }
 
@@ -742,9 +805,14 @@ export class GameEngine {
     }
   }
 
-  private activatePowerUp(powerUpType: PowerUpType) {
+  private async activatePowerUp(powerUpType: PowerUpType) {
     this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_COLLECT);
     const activationAudioId = getPowerUpActivationAudioId(powerUpType);
+
+    if (powerUpType === "laser_fan") {
+      await this.activateLaserFanPowerUp(activationAudioId);
+      return;
+    }
 
     if (powerUpType === "multiball") {
       const baseBall = this.balls[0];
@@ -792,6 +860,132 @@ export class GameEngine {
     }
 
     this.audioSink.playAudio(activationAudioId);
+  }
+
+  private async activateLaserFanPowerUp(activationAudioId: AudioId) {
+    this.audioSink.playAudio(activationAudioId);
+    this.showLaserFanEffect();
+    const destroyedBricks = this.bricks.destroyAllActive();
+    if (destroyedBricks.length === 0) return;
+
+    const scoreDelta = POINTS_PER_BRICK * destroyedBricks.length;
+    this.score += scoreDelta;
+    this.successfulBrickHitsThisLevel += destroyedBricks.length;
+    this.latestSpeedReduction = this.getLatestSpeedReductionFromBalls();
+    this.onScoreUpdate(this.score);
+
+    const gameState = this.getCurrentGameState();
+    const ballPositions = this.getBallPositions();
+    const paddlePosition = this.paddle.position;
+    const primaryBall = this.balls[0];
+    const ballVelocity = primaryBall?.getVelocity() ?? { dx: 0, dy: 0 };
+    const ballPosition = primaryBall?.position ?? {
+      x: this.canvasSize.width / CENTER_DIVISOR,
+      y: this.canvasSize.height / CENTER_DIVISOR,
+      radius: 0,
+    };
+
+    await Promise.all(
+      destroyedBricks.map((brick) =>
+        this.logLaserFanBrickDestroyed(
+          brick,
+          gameState,
+          ballPositions,
+          paddlePosition,
+          ballPosition,
+          ballVelocity,
+        ),
+      ),
+    );
+
+    await gameLogger
+      .logScoreUpdate(
+        gameState,
+        ballPositions,
+        paddlePosition,
+        scoreDelta,
+        "laser_fan",
+        this.latestSpeedReduction,
+      )
+      .catch((error) => ERROR("❌ Erro ao registrar pontuação:", error));
+
+    if (this.bricks.isAllDestroyed() && !this.isLevelTransitioning) {
+      await this.startLevelTransition(gameState, ballPositions, paddlePosition);
+    }
+  }
+
+  private async logLaserFanBrickDestroyed(
+    brick: DestroyedBrickSnapshot,
+    gameState: ReturnType<GameEngine["getCurrentGameState"]>,
+    ballPositions: ReturnType<GameEngine["getBallPositions"]>,
+    paddlePosition: { x: number; y: number; width: number; height: number },
+    ballPosition: { x: number; y: number; radius: number },
+    ballVelocity: { dx: number; dy: number },
+  ) {
+    await gameLogger
+      .logBrickDestroyed(
+        gameState,
+        ballPositions,
+        paddlePosition,
+        {
+          x: brick.x,
+          y: brick.y,
+          width: brick.width,
+          height: brick.height,
+        },
+        { col: brick.col, row: brick.row },
+        brick.colorIndex,
+        ballPosition,
+        ballVelocity,
+        ballVelocity,
+        this.latestSpeedReduction,
+      )
+      .catch((error) =>
+        ERROR("❌ Erro ao registrar destruição por laser:", error),
+      );
+  }
+
+  private showLaserFanEffect() {
+    this.laserFanEffectUntil = Date.now() + LASER_FAN_EFFECT_VISIBLE_MS;
+    if (this.laserFanEffectTimer) clearTimeout(this.laserFanEffectTimer);
+    this.laserFanEffectTimer = setTimeout(() => {
+      this.laserFanEffectUntil = 0;
+      this.laserFanEffectTimer = null;
+    }, LASER_FAN_EFFECT_VISIBLE_MS);
+  }
+
+  private clearLaserFanEffect() {
+    if (this.laserFanEffectTimer) clearTimeout(this.laserFanEffectTimer);
+    this.laserFanEffectTimer = null;
+    this.laserFanEffectUntil = 0;
+  }
+
+  private drawLaserFanEffect() {
+    if (Date.now() > this.laserFanEffectUntil) return;
+
+    const centerX = this.canvasSize.width * LASER_FAN_CENTER_X_RATIO;
+    const centerY = this.canvasSize.height * LASER_FAN_CENTER_Y_RATIO;
+    const radius = Math.hypot(this.canvasSize.width, this.canvasSize.height);
+    const step =
+      (LASER_FAN_RAY_END_ANGLE - LASER_FAN_RAY_START_ANGLE) /
+      Math.max(1, LASER_FAN_RAY_COUNT - 1);
+
+    this.ctx.save();
+    this.ctx.globalAlpha = LASER_FAN_RAY_ALPHA;
+    this.ctx.strokeStyle = LASER_FAN_RAY_COLOR;
+    this.ctx.lineWidth =
+      LASER_FAN_RAY_LINE_WIDTH * Math.min(this.scaleX, this.scaleY);
+    for (let index = 0; index < LASER_FAN_RAY_COUNT; index++) {
+      const angle = LASER_FAN_RAY_START_ANGLE + step * index;
+      this.ctx.beginPath();
+      this.ctx.moveTo(centerX, centerY);
+      this.ctx.lineTo(
+        centerX + Math.cos(angle) * radius,
+        centerY + Math.sin(angle) * radius,
+      );
+      this.ctx.stroke();
+    }
+    this.ctx.restore();
   }
 
   private schedulePowerUpExpiration(onExpire: () => void) {
@@ -951,6 +1145,7 @@ export class GameEngine {
     this.isStopped = true;
     this.isTouching = false;
     this.clearPowerUpEffects();
+    this.clearLaserFanEffect();
     if (this.levelTransitionTimer) {
       clearTimeout(this.levelTransitionTimer);
       this.levelTransitionTimer = null;
@@ -1002,6 +1197,7 @@ export class GameEngine {
         this.updatePowerUp();
         this.paddle.draw(this.ctx);
         this.activePowerUp?.draw(this.ctx);
+        this.drawLaserFanEffect();
         if (this.isLevelTransitioning) {
           this.balls.forEach((ball) => ball.draw(this.ctx));
         } else {
