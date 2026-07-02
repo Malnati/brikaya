@@ -10,6 +10,12 @@ import { audioManager } from '../utils/audioManager';
 
 const STORAGE_UNAVAILABLE_FALLBACK_MUTED = true;
 
+export interface AudioPreferenceToggleResult {
+  changed: boolean;
+  muted: boolean;
+  unlocked: boolean;
+}
+
 function readInitialMuted(): boolean {
   try {
     return window.localStorage.getItem(AUDIO_STORAGE_MUTED_KEY) !== AUDIO_STORAGE_ENABLED_VALUE;
@@ -41,11 +47,15 @@ export function useAudioPreference() {
       if (unlocked) {
         audioManager.setMuted(false);
         setIsAudioMuted(false);
+        return { changed: true, muted: false, unlocked };
       }
-      return;
+      audioManager.setMuted(true);
+      return { changed: false, muted: true, unlocked };
     }
 
+    audioManager.setMuted(true);
     setIsAudioMuted(true);
+    return { changed: true, muted: true, unlocked: audioManager.isUnlocked() };
   }, [isAudioMuted]);
 
   return { isAudioMuted, setIsAudioMuted, toggleAudio };

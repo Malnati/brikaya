@@ -4,6 +4,15 @@
 - Resolvido conflitos para integrar mudancas da main
 
 
+## [1.18.4] - 2026-07-02
+### Corrigido
+- Botão de som passa a destravar o Web Audio no próprio gesto do usuário, com pulso silencioso compatível com iOS/WebKit.
+- Toggle mantém `Sem som` quando o desbloqueio falha e só muda para `Som` quando o áudio realmente fica liberado.
+
+### Testado
+- Cobertura unitária valida unlock silencioso, persistência de preferência e ausência de música quando o unlock falha.
+- QA de áudio publicado passa a validar matriz automatizada Chrome desktop, Android emulado e iPhone emulado.
+
 ## [1.18.3] - 2026-07-02
 ### Corrigido
 - Canvas no modo paisagem imersivo mobile/tablet passa a usar a largura útil da viewport em vez de manter proporção 480:320 com margens laterais.

@@ -69,13 +69,45 @@ describe("useAudioPreference", () => {
   it("só ativa som depois de desbloquear áudio", async () => {
     mockGetItem(null);
     const { result } = renderHook(() => useAudioPreference());
+    let toggleResult:
+      | Awaited<ReturnType<typeof result.current.toggleAudio>>
+      | undefined;
 
     await act(async () => {
-      await result.current.toggleAudio();
+      toggleResult = await result.current.toggleAudio();
     });
 
     expect(audioManager.unlock).toHaveBeenCalledTimes(1);
+    expect(toggleResult).toEqual({
+      changed: true,
+      muted: false,
+      unlocked: true,
+    });
     expect(result.current.isAudioMuted).toBe(false);
     expect(audioManager.setMuted).toHaveBeenLastCalledWith(false);
+  });
+
+  it("mantém mudo quando o desbloqueio do áudio falha", async () => {
+    mockGetItem(null);
+    (audioManager.unlock as jest.Mock).mockResolvedValue(false);
+    const { result } = renderHook(() => useAudioPreference());
+    let toggleResult:
+      | Awaited<ReturnType<typeof result.current.toggleAudio>>
+      | undefined;
+
+    await act(async () => {
+      toggleResult = await result.current.toggleAudio();
+    });
+
+    expect(toggleResult).toEqual({
+      changed: false,
+      muted: true,
+      unlocked: false,
+    });
+    expect(result.current.isAudioMuted).toBe(true);
+    expect(window.localStorage.setItem).toHaveBeenLastCalledWith(
+      AUDIO_STORAGE_MUTED_KEY,
+      AUDIO_STORAGE_MUTED_VALUE,
+    );
   });
 });
