@@ -8,11 +8,11 @@ import {
 } from '../constants/audio';
 import { audioManager } from '../utils/audioManager';
 
-const STORAGE_UNAVAILABLE_FALLBACK_MUTED = false;
+const STORAGE_UNAVAILABLE_FALLBACK_MUTED = true;
 
 function readInitialMuted(): boolean {
   try {
-    return window.localStorage.getItem(AUDIO_STORAGE_MUTED_KEY) === AUDIO_STORAGE_MUTED_VALUE;
+    return window.localStorage.getItem(AUDIO_STORAGE_MUTED_KEY) !== AUDIO_STORAGE_ENABLED_VALUE;
   } catch {
     return STORAGE_UNAVAILABLE_FALLBACK_MUTED;
   }
