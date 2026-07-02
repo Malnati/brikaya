@@ -1,0 +1,95 @@
+{
+  "url": "https://feature-all-game-svg-assets.malnati-brickbreaker.pages.dev/?qaScenario=laser-fan",
+  "screenshotPath": "docs/assets/issues/all-game-svg-assets/evidence/preview-laser-powerup.png",
+  "itemScreenshotPath": "docs/assets/issues/all-game-svg-assets/evidence/preview-laser-powerup-item.png",
+  "byType": {
+    "game_start": 1,
+    "brick_destroyed": 24,
+    "score_update": 1,
+    "level_complete": 1,
+    "level_start": 1
+  },
+  "eventTypes": [
+    "game_start",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "score_update",
+    "level_complete",
+    "level_start"
+  ],
+  "laserScoreEvent": {
+    "pointsAdded": 240,
+    "reason": "laser_fan",
+    "newTotalScore": 240,
+    "bricksRemaining": 0,
+    "speedState": {
+      "level": 1,
+      "initialBrickCount": 24,
+      "successfulBrickHits": 24,
+      "initialSpawnSpeed": 3.3,
+      "maxSpeed": 3.3,
+      "minSpeed": 0.825,
+      "currentSpeed": 3.3,
+      "reductionPerBrick": 0.103,
+      "previousLevelMaxSpeed": 3.3,
+      "levelStartedAt": 1783034899827,
+      "elapsedLevelMs": 324,
+      "minReached": false
+    }
+  },
+  "laserScoreEvents": 1,
+  "levelCompleteEvents": 1,
+  "laserEffect": {
+    "minVisibleMs": 2000,
+    "sampleDelayMs": 1900,
+    "pixel": {
+      "red": 244,
+      "green": 246,
+      "blue": 255,
+      "alpha": 236,
+      "brightness": 745
+    }
+  },
+  "layoutState": {
+    "canvas": {
+      "x": 13.015625,
+      "y": 111,
+      "width": 366.96875,
+      "height": 245.328125,
+      "right": 379.984375,
+      "bottom": 356.328125
+    },
+    "scoreText": "Fase 2|Score 240|Total 0|Recorde 0",
+    "levelToastText": "",
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393
+    },
+    "hasHorizontalOverflow": false
+  },
+  "externalRequests": [],
+  "consoleProblems": []
+}

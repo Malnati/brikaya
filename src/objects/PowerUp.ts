@@ -1,6 +1,7 @@
 // src/objects/PowerUp.ts
 import { GAME_COLOR } from '../constants/game';
-import type { PowerUpType } from '../constants/powerUps';
+import { getPowerUpDefinition, type PowerUpType } from '../constants/powerUps';
+import { AssetLoader } from '../utils/assetLoader';
 
 const POWER_UP_SIZE = 18;
 const POWER_UP_FALL_SPEED = 1.2;
@@ -66,6 +67,14 @@ export class PowerUp {
   draw(ctx: CanvasRenderingContext2D): void {
     const left = this.x - POWER_UP_SIZE / 2;
     const top = this.y - POWER_UP_SIZE / 2;
+    const definition = getPowerUpDefinition(this.type);
+    const icon = AssetLoader.getImage(definition.iconPath);
+
+    if (icon) {
+      ctx.drawImage(icon, left, top, POWER_UP_SIZE, POWER_UP_SIZE);
+      return;
+    }
+
     drawRoundedRect(ctx, left, top, POWER_UP_SIZE, POWER_UP_CORNER_RADIUS);
     ctx.fillStyle = POWER_UP_COLORS[this.type] || POWER_UP_DEFAULT_COLOR;
     ctx.fill();

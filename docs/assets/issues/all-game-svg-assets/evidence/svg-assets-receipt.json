@@ -1,0 +1,99 @@
+{
+  "generatedAt": "2026-07-02T23:23:20.403Z",
+  "policy": "LOCAL_SVG_RUNTIME_ASSETS_ONLY",
+  "license": "Project-authored SVG assets for BrickBreaker runtime distribution",
+  "attributionRequired": false,
+  "runtimeAssetFormat": "image/svg+xml",
+  "assets": [
+    {
+      "runtimePath": "/favicon.svg",
+      "publicPath": "public/favicon.svg",
+      "sha256": "294a3b0872ab76b9e80f6872378ee0dd055fc4e05db73b3d1d162474e0127992"
+    },
+    {
+      "runtimePath": "/icons/icon.svg",
+      "publicPath": "public/icons/icon.svg",
+      "sha256": "294a3b0872ab76b9e80f6872378ee0dd055fc4e05db73b3d1d162474e0127992"
+    },
+    {
+      "runtimePath": "/assets/ball.svg",
+      "publicPath": "public/assets/ball.svg",
+      "sha256": "0671e38a025da18d4ec7cf967963bdbed60bb6e5a310d70e9329610592a097ac"
+    },
+    {
+      "runtimePath": "/assets/paddle.svg",
+      "publicPath": "public/assets/paddle.svg",
+      "sha256": "877cbb40e0538ed8aac5480926d9a75bfe2836e77b148e2c1212f9218b89ba31"
+    },
+    {
+      "runtimePath": "/assets/bricks/brick-red.svg",
+      "publicPath": "public/assets/bricks/brick-red.svg",
+      "sha256": "d7507699d3c6cec3df48f90aaa2e4ace472c70e8259db8060f3e97bc493cde73"
+    },
+    {
+      "runtimePath": "/assets/bricks/brick-blue.svg",
+      "publicPath": "public/assets/bricks/brick-blue.svg",
+      "sha256": "0646a2b6fc7e87c348a0d38c5019c66a56c9645c89986fc0ff3adc400329cbd9"
+    },
+    {
+      "runtimePath": "/assets/bricks/brick-green.svg",
+      "publicPath": "public/assets/bricks/brick-green.svg",
+      "sha256": "02d3cef805261dd87ddaa487945d6b05c342d5f51dd7d06698f80d876973fe05"
+    },
+    {
+      "runtimePath": "/assets/bricks/brick-yellow.svg",
+      "publicPath": "public/assets/bricks/brick-yellow.svg",
+      "sha256": "4a2214dc4dc9e0a522612397cb544880c167b88a9554dc26606e253c30ae1fff"
+    },
+    {
+      "runtimePath": "/assets/bricks/brick-purple.svg",
+      "publicPath": "public/assets/bricks/brick-purple.svg",
+      "sha256": "8cffff0ee1dd16807551b0a1af2e3eb2b65d863c44af886c5d5c7edee97eff1b"
+    },
+    {
+      "runtimePath": "/assets/cinematics/countdown-circle.svg",
+      "publicPath": "public/assets/cinematics/countdown-circle.svg",
+      "sha256": "311eb1b19637dfc64a245216e77471b92dbd6cc18138209a3eb55c5743bada5d"
+    },
+    {
+      "runtimePath": "/assets/cinematics/countdown-spark.svg",
+      "publicPath": "public/assets/cinematics/countdown-spark.svg",
+      "sha256": "33c0a9f369812c1b9ea06196ac18e5af6a947f8071796080b51d8f1baac8aa61"
+    },
+    {
+      "runtimePath": "/assets/cinematics/level-up-star.svg",
+      "publicPath": "public/assets/cinematics/level-up-star.svg",
+      "sha256": "3944d7861848ff9505d184f44d0d7918653fb7d8339772b1a3a0f06171158ef4"
+    },
+    {
+      "runtimePath": "/assets/cinematics/level-up-twirl.svg",
+      "publicPath": "public/assets/cinematics/level-up-twirl.svg",
+      "sha256": "ad8ae59c4d898cae18c29c17df6dbb744bb44371232ada8c2177c7b2bb29c7a9"
+    },
+    {
+      "runtimePath": "/assets/cinematics/rip-smoke.svg",
+      "publicPath": "public/assets/cinematics/rip-smoke.svg",
+      "sha256": "a28ab0eac81f3e7a27ec64b354d6c0aef60b45b840d53d0aeb07d15ab7f9fe37"
+    },
+    {
+      "runtimePath": "/assets/powerups/multiball.svg",
+      "publicPath": "public/assets/powerups/multiball.svg",
+      "sha256": "f80b6df99206051168997d2b9c248ca56c9f07af51c46b5d743cf3ba8a70ff18"
+    },
+    {
+      "runtimePath": "/assets/powerups/wide-paddle.svg",
+      "publicPath": "public/assets/powerups/wide-paddle.svg",
+      "sha256": "70af1b340c6d0ddc6e7e41efff24862a176362ecefd1322d26ccab58e42c3eec"
+    },
+    {
+      "runtimePath": "/assets/powerups/slow-ball.svg",
+      "publicPath": "public/assets/powerups/slow-ball.svg",
+      "sha256": "773e69704efbdc08826bd654475b3fdda5a05ee605254313bdf989f236a6260f"
+    },
+    {
+      "runtimePath": "/assets/powerups/laser-fan.svg",
+      "publicPath": "public/assets/powerups/laser-fan.svg",
+      "sha256": "b4b3eb8126f085c6bc4234c0b04d4dd4ab4293a5de8065b1e84f7cc9bf54a89c"
+    }
+  ]
+}

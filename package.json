@@ -20,7 +20,9 @@
     "test:cloudflare-runtime-update": "node tests/e2e/cloudflare-runtime-update-qa.js",
     "test:cloudflare-cinematic-effects": "node tests/e2e/cloudflare-cinematic-effects-qa.js",
     "test:cloudflare-laser-powerup": "node tests/e2e/cloudflare-laser-powerup-qa.js",
+    "test:cloudflare-svg-assets": "node tests/e2e/cloudflare-svg-assets-qa.js",
     "test:cinematic-media-assets": "node scripts/validate-cinematic-media-assets.mjs",
+    "test:svg-assets": "node scripts/validate-svg-assets.mjs",
     "test:audio-assets": "node scripts/validate-audio-assets.mjs",
     "test:cloudflare-audio": "node tests/e2e/cloudflare-audio-qa.js",
     "test:cloudflare-phase10-stability": "node tests/e2e/cloudflare-phase10-stability-qa.js"

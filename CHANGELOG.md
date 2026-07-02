@@ -3,6 +3,15 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.18.5] - 2026-07-02
+### Alterado
+- Imagens runtime do jogo passam a usar SVG local/offline para bola, raquete, tijolos, efeitos cinematográficos, power-ups, favicon e ícone PWA.
+- Power-ups deixam de depender visualmente das letras `M/W/S/L` quando o SVG está carregado, mantendo fallback local para falha de asset.
+
+### Testado
+- Novo validador `npm run test:svg-assets` garante SVGs locais com `viewBox`, sem scripts, raster embutido, data URI ou URLs externas fora do namespace SVG.
+- Validações cinematográficas e de manifesto passam a exigir SVGs cacheáveis no service worker.
+
 
 ## [1.18.4] - 2026-07-02
 ### Corrigido

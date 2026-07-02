@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Estrela de subida de fase">
+  <path d="M128 18l29 72 77 7-58 50 18 76-66-40-66 40 18-76-58-50 77-7z" fill="#ffe052" stroke="#fff6bd" stroke-width="8"/>
+  <path d="M128 64l16 40 43 4-33 28 10 43-36-23-36 23 10-43-33-28 43-4z" fill="#ffffff" opacity="0.55"/>
+</svg>

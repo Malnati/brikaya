@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Tijolo yellow">
+  <rect x="4" y="5" width="88" height="38" rx="8" fill="#ffe052" stroke="#fff4bd" stroke-width="4"/>
+  <path d="M12 15h72" stroke="#ffffff" stroke-width="5" stroke-linecap="round" opacity="0.38"/>
+  <path d="M13 36h70" stroke="#8a6710" stroke-width="5" stroke-linecap="round" opacity="0.36"/>
+  <path d="M34 7v34M62 7v34" stroke="#8a6710" stroke-width="3" opacity="0.22"/>
+</svg>

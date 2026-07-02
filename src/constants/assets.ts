@@ -1,14 +1,16 @@
 // src/constants/assets.ts
 
 export const ASSET_PATHS = {
-  BALL: '/assets/ballGrey.png',
-  PADDLE: '/assets/paddle.png',
-  BRICK_RED: '/assets/brick_red.png',
-  BRICK_BLUE: '/assets/brick_blue.png',
-  BRICK_GREEN: '/assets/brick_green.png',
-  BRICK_YELLOW: '/assets/brick_yellow.png',
-  BRICK_PURPLE: '/assets/brick_purple.png'
+  BALL: '/assets/ball.svg',
+  PADDLE: '/assets/paddle.svg',
+  BRICK_RED: '/assets/bricks/brick-red.svg',
+  BRICK_BLUE: '/assets/bricks/brick-blue.svg',
+  BRICK_GREEN: '/assets/bricks/brick-green.svg',
+  BRICK_YELLOW: '/assets/bricks/brick-yellow.svg',
+  BRICK_PURPLE: '/assets/bricks/brick-purple.svg'
 } as const;
+
+export const RUNTIME_IMAGE_ASSET_PATHS = Object.values(ASSET_PATHS);
 
 export const BALL_IMAGE_SIZE = {
   WIDTH: 16,

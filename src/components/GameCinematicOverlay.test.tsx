@@ -4,11 +4,11 @@ import { render, screen } from "@testing-library/react";
 
 import { GameCinematicOverlay } from "./GameCinematicOverlay";
 
-const COUNTDOWN_CIRCLE_PATH = "/assets/cinematics/countdown-circle.png";
-const COUNTDOWN_SPARK_PATH = "/assets/cinematics/countdown-spark.png";
-const LEVEL_UP_TWIRL_PATH = "/assets/cinematics/level-up-twirl.png";
-const LEVEL_UP_STAR_PATH = "/assets/cinematics/level-up-star.png";
-const RIP_SMOKE_PATH = "/assets/cinematics/rip-smoke.png";
+const COUNTDOWN_CIRCLE_PATH = "/assets/cinematics/countdown-circle.svg";
+const COUNTDOWN_SPARK_PATH = "/assets/cinematics/countdown-spark.svg";
+const LEVEL_UP_TWIRL_PATH = "/assets/cinematics/level-up-twirl.svg";
+const LEVEL_UP_STAR_PATH = "/assets/cinematics/level-up-star.svg";
+const RIP_SMOKE_PATH = "/assets/cinematics/rip-smoke.svg";
 
 function expectDecorativeMedia(container: HTMLElement, name: string, path: string) {
   const media = container.querySelector(
