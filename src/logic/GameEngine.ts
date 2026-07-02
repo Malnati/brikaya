@@ -450,7 +450,6 @@ export class GameEngine {
   ) {
     this.isLevelTransitioning = true;
     this.clearPowerUpEffects();
-    this.clearLaserFanEffect();
     this.activePowerUp = null;
     this.audioSink.playAudio(GAME_AUDIO_IDS.LEVEL_COMPLETE);
     const currentLevel = this.level;
@@ -1240,6 +1239,7 @@ export class GameEngine {
         if (this.balls.length === 0) {
           // Game over - no balls left
           this.gameOver = true;
+          this.clearLaserFanEffect();
           this.audioSink.playAudio(GAME_AUDIO_IDS.GAME_OVER);
           this.audioSink.startMenuMusic();
 
@@ -1271,6 +1271,7 @@ export class GameEngine {
       } catch (error) {
         if (error instanceof Error && error.message === "GAME_OVER") {
           this.gameOver = true;
+          this.clearLaserFanEffect();
           if (this.onGameOver) {
             this.onGameOver();
           }

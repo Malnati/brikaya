@@ -21,7 +21,7 @@ const MIN_LANDSCAPE_CANVAS_HEIGHT_RATIO = 0.68;
 const MIN_LANDSCAPE_CANVAS_WIDTH_RATIO = 0.48;
 const MIN_IMMERSIVE_CANVAS_HEIGHT_RATIO = 0.68;
 const MIN_IMMERSIVE_BOARD_AREA_USAGE_RATIO = 0.9;
-const MIN_FULL_WIDTH_CANVAS_RATIO = 0.96;
+const MIN_FULL_WIDTH_CANVAS_RATIO = 0.98;
 const MIN_FULL_WIDTH_BOARD_RATIO = 0.95;
 const MAX_CANVAS_OVERLAP_PX = 2;
 const IMMERSIVE_ROOT_CLASS = "bb-landscape-immersive";
@@ -200,7 +200,11 @@ async function collectLayoutState(page, viewportName) {
       const titleGroupDisplay = titleGroupElement
         ? getComputedStyle(titleGroupElement).display
         : "";
-      const scoreStrip = rectOf(document.querySelector(".score-strip"));
+      const scoreHudElement = document.querySelector(".score-hud");
+      const scoreHud = rectOf(scoreHudElement);
+      const topControls = rectOf(
+        document.querySelector(".dashboard-primary-controls"),
+      );
       const boardControls = rectOf(
         document.querySelector(".game-board-controls"),
       );
@@ -273,9 +277,7 @@ async function collectLayoutState(page, viewportName) {
         isLandscapeImmersive:
           document.documentElement.classList.contains(immersiveRootClass),
         heading: document.querySelector("h1")?.textContent || "",
-        chips: Array.from(document.querySelectorAll(".score-chip")).map(
-          (chip) => chip.textContent?.trim() || "",
-        ),
+        scoreHudText: scoreHudElement?.textContent?.trim() || "",
         canvas,
         header,
         titleGroup,
@@ -284,7 +286,8 @@ async function collectLayoutState(page, viewportName) {
           titleGroupDisplay !== "none" &&
           titleGroup.width > 0 &&
           titleGroup.height > 0,
-        scoreStrip,
+        scoreHud,
+        topControls,
         boardControls,
         buttons,
         sideSlot,
@@ -493,24 +496,32 @@ async function run() {
         );
       }
       assert(
-        state.header && state.scoreStrip,
-        `${viewport.name}: header/chips ausentes.`,
+        state.header && state.scoreHud && state.topControls,
+        `${viewport.name}: header/HUD/controles ausentes.`,
       );
       assert(
         state.header.height <= Math.max(96, state.viewport.height * 0.2),
         `${viewport.name}: header alto demais para HUD compacto.`,
       );
       assert(
-        state.chips.some((text) => text.includes("Fase")),
-        `${viewport.name}: chip de fase ausente.`,
+        state.scoreHudText.includes("Fase"),
+        `${viewport.name}: fase ausente no HUD único.`,
       );
       assert(
-        state.chips.some((text) => text.includes("Score")),
-        `${viewport.name}: chip de score ausente.`,
+        state.scoreHudText.includes("Score"),
+        `${viewport.name}: score ausente no HUD único.`,
       );
       assert(
-        state.chips.some((text) => text.includes("Total")),
-        `${viewport.name}: chip de total ausente.`,
+        state.scoreHudText.includes("Total"),
+        `${viewport.name}: total ausente no HUD único.`,
+      );
+      assert(
+        state.scoreHudText.includes("Recorde"),
+        `${viewport.name}: recorde ausente no HUD único.`,
+      );
+      assert(
+        state.scoreHudText.split("|").length === 4,
+        `${viewport.name}: HUD não usa badge único com quatro segmentos.`,
       );
       assert(
         state.buttons.every((button) => button.hasTouchTarget),
@@ -549,22 +560,10 @@ async function run() {
         `${viewport.name}: ícone Reiniciar/Jogar de novo ausente na tela principal.`,
       );
       for (const button of [audioIcon, restartIcon]) {
-        if (viewport.name !== LANDSCAPE_VIEWPORT_NAME) {
-          assert(
-            button.y >= state.canvas.bottom,
-            `${viewport.name}: ícone ${button.ariaLabel} ficou sobre o quadro do jogo.`,
-          );
-        }
         assert(
-          button.x >= state.canvas.x && button.right <= state.canvas.right,
-          `${viewport.name}: ícone ${button.ariaLabel} saiu da largura do quadro do jogo.`,
+          button.bottom <= state.canvas.y,
+          `${viewport.name}: ícone ${button.ariaLabel} não ficou no topo da tela.`,
         );
-        if (state.bottomSlotVisible) {
-          assert(
-            button.bottom <= state.bottomSlot.y,
-            `${viewport.name}: ícone ${button.ariaLabel} invadiu a publicidade.`,
-          );
-        }
       }
       assert(
         !state.buttons.some((button) => LOGS_BUTTON_NAME.test(button.text)),
@@ -637,9 +636,7 @@ async function run() {
           `${viewport.name}: canvas não usa largura suficiente em landscape.`,
         );
         const availableBoardHeight =
-          state.dashboardLayout && state.boardControls
-            ? state.dashboardLayout.height - state.boardControls.height
-            : 0;
+          state.dashboardLayout ? state.dashboardLayout.height : 0;
         assert(
           availableBoardHeight > 0 &&
             state.canvas.height / availableBoardHeight >=
@@ -653,18 +650,19 @@ async function run() {
         assert(
           !rectsIntersect(
             state.canvas,
-            state.scoreStrip,
+            state.scoreHud,
             MAX_CANVAS_OVERLAP_PX,
           ),
           `${viewport.name}: pontuação/fase sobrepôs o canvas.`,
         );
         assert(
-          !rectsIntersect(
-            state.canvas,
-            state.boardControls,
-            MAX_CANVAS_OVERLAP_PX,
-          ),
-          `${viewport.name}: controles principais sobrepuseram o canvas.`,
+          !state.boardControls ||
+            !rectsIntersect(
+              state.canvas,
+              state.boardControls,
+              MAX_CANVAS_OVERLAP_PX,
+            ),
+          `${viewport.name}: controles principais antigos sobrepuseram o canvas.`,
         );
         const canvasOverlappingButtons = state.buttons
           .filter((button) => !button.inDrawer)

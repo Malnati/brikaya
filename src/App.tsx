@@ -415,13 +415,44 @@ export default function App() {
             <p className="dashboard-eyebrow">Arcade clássico</p>
             <h1>Breakout</h1>
           </div>
+          <div
+            className="dashboard-primary-controls"
+            aria-label="Controles principais"
+          >
+            <AudioToggle
+              muted={isAudioMuted}
+              onToggle={handleAudioToggle}
+              iconOnly
+              className="game-icon-control game-icon-control--audio"
+            />
+            <button
+              type="button"
+              onClick={handleRestart}
+              className="dashboard-button dashboard-button--primary game-icon-control game-icon-control--restart"
+              aria-label={restartLabel}
+              title={restartLabel}
+            >
+              <span aria-hidden="true" className="button-icon">
+                ↻
+              </span>
+            </button>
+          </div>
+          <div className="score-hud" aria-label="Painel de pontuação">
+            <span className="score-hud__segment">Fase {level}</span>
+            <span className="score-hud__separator" aria-hidden="true">
+              |
+            </span>
+            <span className="score-hud__segment">Score {score}</span>
+            <span className="score-hud__separator" aria-hidden="true">
+              |
+            </span>
+            <span className="score-hud__segment">Total {totalScore}</span>
+            <span className="score-hud__separator" aria-hidden="true">
+              |
+            </span>
+            <span className="score-hud__segment">Recorde {highScore}</span>
+          </div>
           <div className="dashboard-header-controls">
-            <div className="score-strip" aria-label="Painel de pontuação">
-              <span className="score-chip">Fase {level}</span>
-              <span className="score-chip">Score {score}</span>
-              <span className="score-chip">Total {totalScore}</span>
-              <span className="score-chip">Recorde {highScore}</span>
-            </div>
             <button
               type="button"
               className="dashboard-menu-button"
@@ -518,30 +549,6 @@ export default function App() {
                 qaScenario={effectiveQaScenario}
                 audioSink={audioSink}
                 startBlocked={isInitialCountdownActive}
-                boardControls={
-                  <div
-                    className="game-corner-controls"
-                    aria-label="Controles principais"
-                  >
-                    <AudioToggle
-                      muted={isAudioMuted}
-                      onToggle={handleAudioToggle}
-                      iconOnly
-                      className="game-icon-control game-icon-control--audio"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleRestart}
-                      className="dashboard-button dashboard-button--primary game-icon-control game-icon-control--restart"
-                      aria-label={restartLabel}
-                      title={restartLabel}
-                    >
-                      <span aria-hidden="true" className="button-icon">
-                        ↻
-                      </span>
-                    </button>
-                  </div>
-                }
               />
             </div>
             <AdSlotPlaceholder variant="bottom" />

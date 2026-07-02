@@ -19,3 +19,5 @@
 - [x] Validar preview Cloudflare da feature com tema escuro padrão, versão no menu, quadro full-width e power-up Laser em leque.
 
 - [x] Revisar implementação pós-merge da versão no menu, tema escuro, canvas full-width e Laser em leque, removendo constantes obsoletas sem alterar gameplay.
+
+- [x] Corrigir full-width do tabuleiro, consolidar HUD superior em badge único, mover controles principais para o topo e manter efeito visual do Laser por pelo menos 2s.

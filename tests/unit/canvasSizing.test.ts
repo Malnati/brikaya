@@ -22,6 +22,24 @@ describe("calculateResponsiveCanvasSize", () => {
     expect(size.height).toBeLessThan(372);
   });
 
+  it("usa a altura real reservada ao tabuleiro no landscape imersivo", () => {
+    const size = calculateResponsiveCanvasSize({
+      containerWidth: 840,
+      containerHeight: 337,
+      viewportWidth: 852,
+      viewportHeight: 393,
+      visualViewportWidth: 852,
+      visualViewportHeight: 393,
+      rootPaddingInline: 12,
+      rootPaddingBlock: 8,
+      pointerCoarse: true,
+      hoverNone: true,
+    });
+
+    expect(size.isImmersiveLandscape).toBe(true);
+    expect(size.height / 337).toBeGreaterThanOrEqual(0.9);
+  });
+
   it("usa quase toda a largura útil no portrait mobile", () => {
     const size = calculateResponsiveCanvasSize({
       containerWidth: 390,
@@ -37,7 +55,7 @@ describe("calculateResponsiveCanvasSize", () => {
     });
 
     expect(size.isImmersiveLandscape).toBe(false);
-    expect(size.width).toBeGreaterThanOrEqual(359);
+    expect(size.width).toBe(390);
     expect(size.height).toBeGreaterThan(239);
   });
 
@@ -56,7 +74,7 @@ describe("calculateResponsiveCanvasSize", () => {
     });
 
     expect(size.isImmersiveLandscape).toBe(false);
-    expect(size.width).toBeGreaterThanOrEqual(1153);
+    expect(size.width).toBe(1214);
   });
 
   it("ativa modo imersivo por visualViewport quando barras do navegador mudam o tamanho interno", () => {

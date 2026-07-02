@@ -187,16 +187,20 @@ async function collectLayoutState(page) {
     const canvasRect = document
       .querySelector("canvas")
       ?.getBoundingClientRect();
+    const dashboardLayoutRect = document
+      .querySelector(".dashboard-layout")
+      ?.getBoundingClientRect();
+    const scoreHudRect = document
+      .querySelector(".score-hud")
+      ?.getBoundingClientRect();
+    const scoreHudText =
+      document.querySelector(".score-hud")?.textContent || "";
     const buildVersionElement = document.querySelector(".build-version-badge");
     const buildVersionRect = buildVersionElement?.getBoundingClientRect();
     const bottomSlotRect = document
       .querySelector(".ad-slot--bottom")
       ?.getBoundingClientRect();
-    const scoreText =
-      Array.from(document.querySelectorAll("p"))
-        .map((element) => element.textContent || "")
-        .find((text) => text.includes("Score")) || "";
-    const scoreValue = Number(scoreText.replace(/[^0-9]/g, "") || 0);
+    const scoreValue = Number(scoreHudText.match(/Score\s+(\d+)/)?.[1] || 0);
 
     return {
       title: document.title,
@@ -229,6 +233,27 @@ async function collectLayoutState(page) {
             bottom: canvasRect.bottom,
           }
         : null,
+      dashboardLayout: dashboardLayoutRect
+        ? {
+            x: dashboardLayoutRect.x,
+            y: dashboardLayoutRect.y,
+            width: dashboardLayoutRect.width,
+            height: dashboardLayoutRect.height,
+            right: dashboardLayoutRect.right,
+            bottom: dashboardLayoutRect.bottom,
+          }
+        : null,
+      scoreHud: scoreHudRect
+        ? {
+            x: scoreHudRect.x,
+            y: scoreHudRect.y,
+            width: scoreHudRect.width,
+            height: scoreHudRect.height,
+            right: scoreHudRect.right,
+            bottom: scoreHudRect.bottom,
+          }
+        : null,
+      scoreHudText,
       bottomSlot: bottomSlotRect
         ? {
             x: bottomSlotRect.x,
@@ -327,6 +352,20 @@ async function run() {
       "Canvas excede a largura do iPhone 15.",
     );
     assert(
+      layoutState.dashboardLayout &&
+        layoutState.canvas.width / layoutState.dashboardLayout.width >= 0.98,
+      "Canvas não ocupa largura full-width no iPhone 15.",
+    );
+    assert(layoutState.scoreHud, "HUD único de pontuação não encontrado.");
+    assert(
+      layoutState.scoreHudText.includes("Fase") &&
+        layoutState.scoreHudText.includes("Score") &&
+        layoutState.scoreHudText.includes("Total") &&
+        layoutState.scoreHudText.includes("Recorde") &&
+        layoutState.scoreHudText.split("|").length === 4,
+      "HUD de pontuação não contém Fase | Score | Total | Recorde.",
+    );
+    assert(
       layoutState.buttons.every((button) => button.visibleInViewport),
       `Botão fora da viewport: ${layoutState.buttons
         .filter((button) => !button.visibleInViewport)
@@ -370,13 +409,8 @@ async function run() {
     );
     for (const button of [audioIcon, restartIcon]) {
       assert(
-        button.rect.y >= layoutState.canvas.bottom,
-        `Ícone ${button.ariaLabel} ficou sobre o quadro do jogo.`,
-      );
-      assert(
-        button.rect.x >= layoutState.canvas.x &&
-          button.rect.right <= layoutState.canvas.right,
-        `Ícone ${button.ariaLabel} saiu da largura do quadro do jogo.`,
+        button.rect.bottom <= layoutState.canvas.y,
+        `Ícone ${button.ariaLabel} não ficou no topo da tela.`,
       );
       if (layoutState.bottomSlot) {
         assert(

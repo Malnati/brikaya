@@ -3,6 +3,16 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.18.2] - 2026-07-02
+### Corrigido
+- Quadro do jogo volta a ocupar toda a largura útil disponível, removendo o recuo responsivo que limitava o canvas.
+- Fase, score, total e recorde passam a aparecer em um único badge central no topo, com separadores, enquanto Som, Reiniciar/Jogar de novo e Menu ficam fora da área jogável.
+- Efeito visual do power-up Laser em leque passa a permanecer visível por 2s sem bloquear a transição de fase.
+
+### Testado
+- Cobertura unitária valida o HUD superior, o cálculo full-width do canvas e a duração mínima do efeito Laser.
+- QA publicado de dashboard/mobile/laser passa a validar badge único, controles superiores e ausência de sobreposição no canvas.
+
 ## [1.18.1] - 2026-07-02
 ### Corrigido
 - Removidas constantes responsivas e de tema que ficaram obsoletas após o modo full-width e o tema escuro padrão, mantendo o contrato de código sem referências mortas.

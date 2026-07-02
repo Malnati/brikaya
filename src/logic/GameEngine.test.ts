@@ -9,6 +9,7 @@ import {
 
 import {
   LEVEL_CLEAR_PAUSE_MS,
+  LASER_FAN_EFFECT_VISIBLE_MS,
   calculateLevelInitialSpawnSpeed,
   calculateLevelMaxSpeed,
   calculateLevelMinSpeed,
@@ -605,6 +606,14 @@ describe("GameEngine", () => {
     expect(playAudio).toHaveBeenCalledWith(
       GAME_AUDIO_IDS.POWERUP_ACTIVATE_LASER_FAN,
     );
+    expect(LASER_FAN_EFFECT_VISIBLE_MS).toBeGreaterThanOrEqual(2000);
+    expect((engine as any).laserFanEffectUntil - Date.now()).toBeGreaterThanOrEqual(
+      2000,
+    );
+    jest.advanceTimersByTime(1999);
+    expect((engine as any).laserFanEffectUntil).toBeGreaterThan(Date.now());
+    jest.advanceTimersByTime(1);
+    expect((engine as any).laserFanEffectUntil).toBe(0);
     expect(mockGameLogger.logRestartGame).not.toHaveBeenCalled();
     expect(mockGameLogger.logGameStart).not.toHaveBeenCalled();
   });

@@ -136,15 +136,29 @@ select {
 }
 
 .dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: minmax(96px, 1fr) minmax(0, auto) minmax(68px, 1fr);
+  align-items: center;
   gap: var(--space-2);
   margin-bottom: var(--space-2);
 }
 
 .dashboard-title-group {
-  text-align: left;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.dashboard-primary-controls {
+  display: flex;
+  align-items: center;
+  grid-column: 1;
+  justify-self: start;
+  gap: var(--space-1);
   min-width: 0;
 }
 
@@ -152,7 +166,9 @@ select {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  flex-wrap: wrap;
+  grid-column: 3;
+  justify-self: end;
+  flex-wrap: nowrap;
   gap: var(--space-1);
   min-width: 0;
 }
@@ -172,18 +188,16 @@ select {
   line-height: 1;
 }
 
-.score-strip {
-  display: flex;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  gap: var(--space-1);
-}
-
-.score-chip {
+.score-hud {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  grid-column: 2;
+  justify-self: center;
+  max-width: 100%;
+  min-width: 0;
   min-height: 28px;
-  padding: 3px 10px;
+  padding: 3px 12px;
   border: 1px solid color-mix(in srgb, var(--bb-color-primary) 44%, transparent);
   border-radius: 999px;
   background: color-mix(in srgb, var(--bb-color-primary) 12%, transparent);
@@ -191,6 +205,16 @@ select {
   font-size: 0.82rem;
   font-weight: 700;
   white-space: nowrap;
+}
+
+.score-hud__segment,
+.score-hud__separator {
+  min-width: 0;
+}
+
+.score-hud__separator {
+  padding-inline: 8px;
+  color: color-mix(in srgb, var(--color-muted) 78%, transparent);
 }
 
 .dashboard-menu-button {
@@ -749,22 +773,15 @@ canvas {
   }
 
   .dashboard-header {
-    align-items: flex-start;
-    flex-direction: column;
+    grid-template-columns: minmax(88px, 1fr) minmax(0, auto) minmax(68px, 1fr);
     gap: var(--space-2);
   }
 
   .dashboard-header-controls {
-    justify-content: flex-start;
-    width: 100%;
+    justify-content: flex-end;
   }
 
-  .score-strip {
-    justify-content: flex-start;
-    width: 100%;
-  }
-
-  .score-chip {
+  .score-hud {
     min-height: 28px;
     font-size: 0.86rem;
     padding: 4px 10px;
@@ -794,7 +811,25 @@ canvas {
   }
 
   .dashboard-header {
+    grid-template-areas:
+      "controls spacer menu"
+      "score score score";
+    grid-template-columns: auto minmax(0, 1fr) auto;
     margin-bottom: var(--space-2);
+  }
+
+  .dashboard-primary-controls {
+    grid-area: controls;
+  }
+
+  .score-hud {
+    grid-area: score;
+    justify-self: center;
+    overflow: visible;
+  }
+
+  .dashboard-header-controls {
+    grid-area: menu;
   }
 
   .dashboard-eyebrow {
@@ -805,7 +840,7 @@ canvas {
     font-size: 1.24rem;
   }
 
-  .score-strip {
+  .score-hud {
     gap: 4px;
   }
 
@@ -813,18 +848,12 @@ canvas {
     gap: var(--space-1);
     align-items: center;
     flex-wrap: nowrap;
-    justify-content: space-between;
-    width: 100%;
+    justify-content: flex-end;
   }
 
-  .score-chip {
+  .score-hud {
     font-size: 0.78rem;
     padding: 4px 8px;
-  }
-
-  .score-strip {
-    flex: 1 1 auto;
-    width: auto;
   }
 
   .dashboard-menu-button {
@@ -890,13 +919,14 @@ canvas {
   }
 
   .dashboard-header {
-    flex-direction: row;
+    grid-template-columns: minmax(88px, 1fr) minmax(0, auto) minmax(68px, 1fr);
     align-items: center;
     flex: 0 0 auto;
     gap: var(--space-1);
     margin-bottom: var(--space-1);
   }
 
+  .dashboard-primary-controls,
   .dashboard-title-group,
   .dashboard-header-controls {
     min-width: 0;
@@ -907,22 +937,13 @@ canvas {
   }
 
   .dashboard-header-controls {
-    justify-content: space-between;
+    justify-content: flex-end;
     flex-wrap: nowrap;
-    width: 100%;
   }
 
-  .score-strip {
-    flex: 1 1 auto;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    gap: 4px;
-    width: auto;
-    min-width: 0;
+  .score-hud {
+    max-width: 100%;
     overflow: hidden;
-  }
-
-  .score-chip {
     min-height: 24px;
     font-size: 0.72rem;
     padding: 3px 8px;
@@ -1034,35 +1055,27 @@ html.bb-landscape-immersive .game-dashboard {
 html.bb-landscape-immersive .dashboard-header {
   position: relative;
   z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(88px, 1fr) minmax(0, auto) minmax(68px, 1fr);
   flex: 0 0 auto;
-  flex-direction: row;
   align-items: center;
   gap: var(--space-1);
   margin-bottom: var(--space-1);
+}
+
+html.bb-landscape-immersive .dashboard-header-controls {
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  min-width: 0;
 }
 
 html.bb-landscape-immersive .dashboard-title-group {
   display: none;
 }
 
-html.bb-landscape-immersive .dashboard-header-controls {
-  justify-content: space-between;
-  flex-wrap: nowrap;
-  width: 100%;
-  min-width: 0;
-}
-
-html.bb-landscape-immersive .score-strip {
-  flex: 1 1 auto;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  gap: 4px;
-  width: auto;
-  min-width: 0;
+html.bb-landscape-immersive .score-hud {
+  max-width: 100%;
   overflow: hidden;
-}
-
-html.bb-landscape-immersive .score-chip {
   min-height: 24px;
   padding: 3px 8px;
   background: color-mix(in srgb, var(--bb-color-panel) 74%, transparent);
@@ -1144,6 +1157,7 @@ html.bb-landscape-immersive .game-status-region {
   width: 100%;
 }
 
+.dashboard-primary-controls .game-icon-control,
 .game-corner-controls .game-icon-control {
   flex: 0 0 44px;
   width: 44px;
@@ -1158,15 +1172,19 @@ html.bb-landscape-immersive .game-status-region {
     color-mix(in srgb, var(--bb-color-ink) 16%, transparent);
 }
 
+.dashboard-primary-controls .game-icon-control:hover,
+.dashboard-primary-controls .game-icon-control:focus-visible,
 .game-corner-controls .game-icon-control:hover,
 .game-corner-controls .game-icon-control:focus-visible {
   opacity: 1;
 }
 
+.dashboard-primary-controls .audio-toggle--icon,
 .game-corner-controls .audio-toggle--icon {
   min-width: 44px;
 }
 
+.dashboard-primary-controls .button-icon,
 .game-corner-controls .button-icon {
   width: 24px;
   height: 24px;
