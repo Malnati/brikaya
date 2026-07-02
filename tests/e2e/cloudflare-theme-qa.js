@@ -20,7 +20,7 @@ const BROWSER_CLOSE_TIMEOUT_MS = 5000;
 const LIGHT_THEME = "light";
 const DARK_THEME = "dark";
 const THEME_STORAGE_KEY = "brickbreaker-theme";
-const CINEMATIC_OVERLAY_SELECTOR = "[data-testid=\"game-cinematic-overlay\"]";
+const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
 const FORBIDDEN_VISIBLE_FEATURES = [
   /loja/i,
@@ -188,6 +188,7 @@ async function collectState(page) {
 }
 
 function assertBaseState(state, viewportName, expectMenuOpen = false) {
+  const allowsVerticalScroll = viewportName.startsWith("desktop");
   assert(
     state.heading.includes("Breakout"),
     `${viewportName}: heading Breakout ausente.`,
@@ -288,7 +289,8 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
       .join(", ")}.`,
   );
   assert(
-    state.buttons.every((button) => button.visibleInViewport),
+    allowsVerticalScroll ||
+      state.buttons.every((button) => button.visibleInViewport),
     `${viewportName}: botão cortado: ${state.buttons
       .filter((button) => !button.visibleInViewport)
       .map((button) => button.text)
@@ -301,8 +303,8 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
     `${viewportName}: canvas excede largura.`,
   );
   assert(
-    state.canvas.bottom <= state.viewport.height,
-    `${viewportName}: canvas excede altura.`,
+    allowsVerticalScroll || state.canvas.bottom <= state.viewport.height,
+    `${viewportName}: canvas excede altura sem scroll permitido.`,
   );
   for (const forbiddenFeature of FORBIDDEN_VISIBLE_FEATURES) {
     assert(
@@ -325,7 +327,7 @@ async function validateViewport(
 ) {
   await page.setViewport(viewport);
   await page.emulateMediaFeatures([
-    { name: "prefers-color-scheme", value: "dark" },
+    { name: "prefers-color-scheme", value: "light" },
   ]);
   await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
   await page.evaluate(
@@ -340,7 +342,7 @@ async function validateViewport(
   assertBaseState(initialState, `${viewportName}/inicial`);
   assert(
     initialState.theme === DARK_THEME,
-    `${viewportName}: tema inicial deveria seguir sistema escuro.`,
+    `${viewportName}: tema inicial sem preferência salva deveria ser escuro mesmo com sistema claro.`,
   );
 
   await openMenu(page);

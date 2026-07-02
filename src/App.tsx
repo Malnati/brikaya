@@ -35,7 +35,7 @@ import {
 import { BRICKBREAKER_OFFLINE_READY_EVENT } from "./registerServiceWorker";
 import {
   BUILD_VERSION_ARIA_LABEL,
-  BUILD_VERSION_LABEL,
+  BUILD_VERSION_MENU_LABEL,
 } from "./constants/buildVersion";
 import { LOG } from "./utils/logger";
 import { audioManager } from "./utils/audioManager";
@@ -53,6 +53,7 @@ const FIRST_AUDIO_INTERACTION_EVENTS = [
 const OFFLINE_READY_VISIBLE_MS = 2400;
 const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
 const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
+const LASER_FAN_QA_SCENARIO = "laser-fan";
 const COUNTDOWN_FIRST_STEP_INDEX = 0;
 const COUNTDOWN_NEXT_STEP_INDEX = 1;
 const COUNTDOWN_TIMER_OFFSET = 1;
@@ -100,6 +101,7 @@ export default function App() {
       return LATE_PHASE_STABILITY_QA_SCENARIO;
     if (scenario === CINEMATIC_RIP_QA_SCENARIO)
       return CINEMATIC_RIP_QA_SCENARIO;
+    if (scenario === LASER_FAN_QA_SCENARIO) return LASER_FAN_QA_SCENARIO;
     if (scenario === AUDIO_QA_SCENARIO) return AUDIO_QA_SCENARIO;
     return null;
   }, []);
@@ -456,6 +458,12 @@ export default function App() {
                   ×
                 </button>
               </div>
+              <p
+                className="settings-drawer__version"
+                aria-label={BUILD_VERSION_ARIA_LABEL}
+              >
+                {BUILD_VERSION_MENU_LABEL}
+              </p>
               <div className="settings-drawer__section">
                 <h3>Tema</h3>
                 <ThemeToggle theme={theme} onThemeChange={handleThemeChange} />
@@ -561,12 +569,6 @@ export default function App() {
           )}
         </div>
       </section>
-      <small
-        className="build-version-badge"
-        aria-label={BUILD_VERSION_ARIA_LABEL}
-      >
-        {BUILD_VERSION_LABEL}
-      </small>
       <CollisionStats
         isVisible={showCollisionStats}
         onClose={handleCloseCollisionStats}

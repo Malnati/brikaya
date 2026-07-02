@@ -1,0 +1,73 @@
+{
+  "url": "https://ca43721b.malnati-brickbreaker.pages.dev/?qaScenario=laser-fan",
+  "screenshotPath": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/laser-result.png",
+  "itemScreenshotPath": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/laser-item.png",
+  "byType": {
+    "game_start": 1,
+    "brick_destroyed": 15,
+    "score_update": 1,
+    "level_complete": 1
+  },
+  "eventTypes": [
+    "game_start",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "score_update",
+    "level_complete"
+  ],
+  "laserScoreEvent": {
+    "pointsAdded": 150,
+    "reason": "laser_fan",
+    "newTotalScore": 150,
+    "bricksRemaining": 0,
+    "speedState": {
+      "level": 1,
+      "initialBrickCount": 15,
+      "successfulBrickHits": 15,
+      "initialSpawnSpeed": 3.3,
+      "maxSpeed": 3.3,
+      "minSpeed": 0.825,
+      "currentSpeed": 3.3,
+      "reductionPerBrick": 0.165,
+      "previousLevelMaxSpeed": 3.3,
+      "levelStartedAt": 1782971756167,
+      "elapsedLevelMs": 329,
+      "minReached": false
+    }
+  },
+  "laserScoreEvents": 1,
+  "levelCompleteEvents": 1,
+  "layoutState": {
+    "canvas": {
+      "x": 19,
+      "y": 109.84375,
+      "width": 355,
+      "height": 244,
+      "right": 374,
+      "bottom": 353.84375
+    },
+    "scoreText": "Fase 1Score 150Total 0Recorde 0",
+    "levelToastText": "Subindo de nívelFase 2Velocidade 1.12×",
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393
+    },
+    "hasHorizontalOverflow": false
+  },
+  "externalRequests": [],
+  "consoleProblems": []
+}

@@ -22,7 +22,7 @@ describe("calculateResponsiveCanvasSize", () => {
     expect(size.height).toBeLessThan(372);
   });
 
-  it("mantém portrait mobile limitado pela razão atual de altura", () => {
+  it("usa quase toda a largura útil no portrait mobile", () => {
     const size = calculateResponsiveCanvasSize({
       containerWidth: 390,
       containerHeight: 760,
@@ -37,7 +37,26 @@ describe("calculateResponsiveCanvasSize", () => {
     });
 
     expect(size.isImmersiveLandscape).toBe(false);
-    expect(size.height).toBeLessThanOrEqual(358);
+    expect(size.width).toBeGreaterThanOrEqual(359);
+    expect(size.height).toBeGreaterThan(239);
+  });
+
+  it("usa quase toda a largura útil no desktop sem toque", () => {
+    const size = calculateResponsiveCanvasSize({
+      containerWidth: 1214,
+      containerHeight: 640,
+      viewportWidth: 1280,
+      viewportHeight: 720,
+      visualViewportWidth: 1280,
+      visualViewportHeight: 720,
+      rootPaddingInline: 16,
+      rootPaddingBlock: 16,
+      pointerCoarse: false,
+      hoverNone: false,
+    });
+
+    expect(size.isImmersiveLandscape).toBe(false);
+    expect(size.width).toBeGreaterThanOrEqual(1153);
   });
 
   it("ativa modo imersivo por visualViewport quando barras do navegador mudam o tamanho interno", () => {

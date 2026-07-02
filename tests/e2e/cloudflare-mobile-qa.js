@@ -429,6 +429,7 @@ async function run() {
       !/Reiniciar|Jogar de novo/.test(menuState.text),
       "Menu lateral ainda mostra ação Reiniciar/Jogar de novo.",
     );
+    assert(/Versão v\d+/.test(menuState.text), "Menu lateral sem versão vN.");
     assert(menuState.text.includes("Tema"), "Menu lateral sem seção Tema.");
     assert(
       menuState.text.includes("Claro") && menuState.text.includes("Escuro"),

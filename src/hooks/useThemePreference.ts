@@ -1,15 +1,12 @@
 // src/hooks/useThemePreference.ts
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
-  THEME_DARK,
-  THEME_LIGHT,
-  THEME_MEDIA_QUERY,
   THEME_STORAGE_KEY,
   ThemeMode,
   isThemeMode,
   resolveInitialTheme,
-} from '../constants/theme';
+} from "../constants/theme";
 
 function getStoredTheme(): ThemeMode | null {
   try {
@@ -18,10 +15,6 @@ function getStoredTheme(): ThemeMode | null {
   } catch {
     return null;
   }
-}
-
-function getSystemPrefersDark(): boolean {
-  return window.matchMedia?.(THEME_MEDIA_QUERY).matches ?? true;
 }
 
 function applyDocumentTheme(theme: ThemeMode) {
@@ -38,7 +31,7 @@ function persistTheme(theme: ThemeMode) {
 
 export function useThemePreference() {
   const initialTheme = useMemo(
-    () => resolveInitialTheme(getStoredTheme(), getSystemPrefersDark()),
+    () => resolveInitialTheme(getStoredTheme(), false),
     [],
   );
   const [theme, setTheme] = useState<ThemeMode>(initialTheme);
@@ -46,21 +39,6 @@ export function useThemePreference() {
   useEffect(() => {
     applyDocumentTheme(theme);
   }, [theme]);
-
-  useEffect(() => {
-    const storedTheme = getStoredTheme();
-    if (storedTheme) return;
-
-    const mediaQuery = window.matchMedia?.(THEME_MEDIA_QUERY);
-    if (!mediaQuery) return;
-
-    const handleSystemThemeChange = (event: MediaQueryListEvent) => {
-      setTheme(event.matches ? THEME_DARK : THEME_LIGHT);
-    };
-
-    mediaQuery.addEventListener?.('change', handleSystemThemeChange);
-    return () => mediaQuery.removeEventListener?.('change', handleSystemThemeChange);
-  }, []);
 
   const selectTheme = useCallback((nextTheme: ThemeMode) => {
     setTheme(nextTheme);

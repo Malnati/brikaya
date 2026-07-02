@@ -114,14 +114,21 @@ describe("App theme selector", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("exibe a versão de build discreta no shell", async () => {
+  it("mantém versão visível apenas dentro do menu", async () => {
     mockSystemTheme(true);
+    const user = userEvent.setup();
 
     await renderApp();
 
-    const version = screen.getByText(/^v\d+$/);
-    expect(version).toHaveClass("build-version-badge");
-    expect(version).toHaveAccessibleName("Versão do build v0");
+    expect(screen.queryByText(/^Versão v\d+$/)).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Menu" }));
+
+    const drawer = screen.getByRole("complementary", { name: "Menu do jogo" });
+    const version = within(drawer).getByText(/^Versão v\d+$/);
+    expect(version).toHaveClass("settings-drawer__version");
+    expect(version).toHaveAccessibleName("Versão do jogo v0");
+    expect(screen.queryByText(/^v\d+$/)).not.toBeInTheDocument();
   });
 
   it("abre menu lateral com tema, logs, colisões e zerar pontuação", async () => {

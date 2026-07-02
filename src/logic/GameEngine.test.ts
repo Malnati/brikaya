@@ -28,6 +28,15 @@ const mockBricksInstances: any[] = [];
 let mockBricksAllDestroyed = false;
 let mockBricksRows = 5;
 let mockBrickActiveValue = true;
+let mockDestroyedLaserBricks: Array<{
+  col: number;
+  row: number;
+  colorIndex: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}> = [];
 
 function buildSpeedStateFromConfig(
   config: PhaseSpeedConfig,
@@ -123,6 +132,7 @@ jest.mock("../objects/Bricks", () => ({
       isAllDestroyed: jest.fn(() => mockBricksAllDestroyed),
       isBrickActive: jest.fn(() => mockBrickActiveValue),
       getRows: jest.fn(() => mockBricksRows),
+      destroyAllActive: jest.fn(() => mockDestroyedLaserBricks),
       collide: jest.fn(),
       draw: jest.fn(),
     };
@@ -151,6 +161,7 @@ jest.mock("../storage/gameLogger", () => ({
     logGameStateChange: jest.fn().mockResolvedValue(undefined),
     logRestartGame: jest.fn().mockResolvedValue(undefined),
     logBallAdded: jest.fn().mockResolvedValue(undefined),
+    logBrickDestroyed: jest.fn().mockResolvedValue(undefined),
     logCollision: jest.fn().mockResolvedValue(undefined),
   },
 }));
@@ -176,6 +187,7 @@ describe("GameEngine", () => {
     mockBricksAllDestroyed = false;
     mockBricksRows = 5;
     mockBrickActiveValue = true;
+    mockDestroyedLaserBricks = [];
     jest.clearAllMocks();
 
     canvas = document.createElement("canvas");
@@ -190,7 +202,15 @@ describe("GameEngine", () => {
       arc: jest.fn(),
       fill: jest.fn(),
       closePath: jest.fn(),
+      moveTo: jest.fn(),
+      lineTo: jest.fn(),
+      stroke: jest.fn(),
+      save: jest.fn(),
+      restore: jest.fn(),
       fillStyle: "",
+      strokeStyle: "",
+      lineWidth: 1,
+      globalAlpha: 1,
       font: "",
       textAlign: "left",
     } as unknown as CanvasRenderingContext2D;
@@ -544,5 +564,71 @@ describe("GameEngine", () => {
     expect((engine as any).getCurrentGameState().ballsCount).toBe(3);
     expect(mockGameLogger.logBallAdded).toHaveBeenCalledTimes(2);
     expect(mockGameLogger.logBallAdded.mock.calls[1][0].ballsCount).toBe(3);
+  });
+
+  it("ativa laser em leque destruindo todos os blocos e iniciando transição uma vez", async () => {
+    jest.useFakeTimers();
+    mockDestroyedLaserBricks = [
+      { col: 0, row: 0, colorIndex: 0, x: 10, y: 20, width: 50, height: 20 },
+      { col: 1, row: 0, colorIndex: 1, x: 70, y: 20, width: 50, height: 20 },
+      { col: 2, row: 0, colorIndex: 2, x: 130, y: 20, width: 50, height: 20 },
+    ];
+    mockBricksAllDestroyed = true;
+    mockBrickActiveValue = false;
+    const playAudio = jest.fn();
+    const audioSink: GameAudioSink = {
+      playAudio,
+      startGameplayMusic: jest.fn(),
+      startMenuMusic: jest.fn(),
+      setHighIntensity: jest.fn(),
+    };
+    const engine = new GameEngine(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      onLevelTransition,
+      undefined,
+      audioSink,
+    );
+    const mockGameLogger = require("../storage/gameLogger").gameLogger;
+
+    await (engine as any).activatePowerUp("laser_fan");
+
+    expect(mockBricksInstances[0].destroyAllActive).toHaveBeenCalledTimes(1);
+    expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_BRICK * 3);
+    expect(mockGameLogger.logScoreUpdate).toHaveBeenCalledTimes(1);
+    expect(mockGameLogger.logLevelComplete).toHaveBeenCalledTimes(1);
+    expect(onLevelTransition).toHaveBeenCalledTimes(1);
+    expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.POWERUP_COLLECT);
+    expect(playAudio).toHaveBeenCalledWith(
+      GAME_AUDIO_IDS.POWERUP_ACTIVATE_LASER_FAN,
+    );
+    expect(mockGameLogger.logRestartGame).not.toHaveBeenCalled();
+    expect(mockGameLogger.logGameStart).not.toHaveBeenCalled();
+  });
+
+  it("limita laser em leque a dois spawns por fase e continua outros power-ups", () => {
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+
+    expect((engine as any).selectNextPowerUpType()).toBe("multiball");
+    expect((engine as any).selectNextPowerUpType()).toBe("wide_paddle");
+    expect((engine as any).selectNextPowerUpType()).toBe("slow_ball");
+    expect((engine as any).selectNextPowerUpType()).toBe("laser_fan");
+    expect((engine as any).selectNextPowerUpType()).toBe("multiball");
+    expect((engine as any).selectNextPowerUpType()).toBe("wide_paddle");
+    expect((engine as any).selectNextPowerUpType()).toBe("slow_ball");
+    expect((engine as any).selectNextPowerUpType()).toBe("laser_fan");
+    expect((engine as any).selectNextPowerUpType()).toBe("multiball");
+    expect((engine as any).selectNextPowerUpType()).toBe("wide_paddle");
+    expect((engine as any).selectNextPowerUpType()).toBe("slow_ball");
+    expect((engine as any).selectNextPowerUpType()).toBe("multiball");
+
+    (engine as any).resetLaserFanSpawnCounterForLevel();
+
+    expect((engine as any).selectNextPowerUpType()).toBe("wide_paddle");
+    expect((engine as any).selectNextPowerUpType()).toBe("slow_ball");
+    expect((engine as any).selectNextPowerUpType()).toBe("laser_fan");
   });
 });

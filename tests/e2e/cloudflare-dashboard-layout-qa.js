@@ -21,6 +21,8 @@ const MIN_LANDSCAPE_CANVAS_HEIGHT_RATIO = 0.68;
 const MIN_LANDSCAPE_CANVAS_WIDTH_RATIO = 0.48;
 const MIN_IMMERSIVE_CANVAS_HEIGHT_RATIO = 0.68;
 const MIN_IMMERSIVE_BOARD_AREA_USAGE_RATIO = 0.9;
+const MIN_FULL_WIDTH_CANVAS_RATIO = 0.96;
+const MIN_FULL_WIDTH_BOARD_RATIO = 0.95;
 const MAX_CANVAS_OVERLAP_PX = 2;
 const IMMERSIVE_ROOT_CLASS = "bb-landscape-immersive";
 const MAX_IMMERSIVE_SAFE_AREA_RESERVE_PX = 32;
@@ -186,6 +188,9 @@ async function collectLayoutState(page, viewportName) {
       const dashboardLayout = rectOf(
         document.querySelector(".dashboard-layout"),
       );
+      const playColumn = rectOf(document.querySelector(".play-column"));
+      const gameSurface = rectOf(document.querySelector(".game-surface"));
+      const boardFrame = rectOf(document.querySelector(".game-board-frame"));
       const canvas = rectOf(document.querySelector("canvas"));
       const header = rectOf(document.querySelector(".dashboard-header"));
       const titleGroupElement = document.querySelector(
@@ -255,6 +260,9 @@ async function collectLayoutState(page, viewportName) {
         appShell,
         dashboard,
         dashboardLayout,
+        playColumn,
+        gameSurface,
+        boardFrame,
         buildVersion: buildVersionElement
           ? {
               text: buildVersionElement.textContent?.trim() || "",
@@ -465,9 +473,25 @@ async function run() {
         `${viewport.name}: canvas excede viewport.`,
       );
       assert(
-        state.canvas.bottom <= state.viewport.height,
-        `${viewport.name}: canvas não fica inteiro visível.`,
+        viewport.name !== LANDSCAPE_VIEWPORT_NAME ||
+          state.canvas.bottom <= state.viewport.height,
+        `${viewport.name}: canvas não fica inteiro visível no modo imersivo.`,
       );
+      if (viewport.name !== LANDSCAPE_VIEWPORT_NAME) {
+        assert(
+          state.dashboardLayout &&
+            state.canvas.width / state.dashboardLayout.width >=
+              MIN_FULL_WIDTH_CANVAS_RATIO,
+          `${viewport.name}: canvas não ocupa 96% da largura útil do dashboard.`,
+        );
+        assert(
+          state.dashboardLayout &&
+            state.boardFrame &&
+            state.boardFrame.width / state.dashboardLayout.width >=
+              MIN_FULL_WIDTH_BOARD_RATIO,
+          `${viewport.name}: quadro do jogo não ocupa 95% da largura útil do dashboard.`,
+        );
+      }
       assert(
         state.header && state.scoreStrip,
         `${viewport.name}: header/chips ausentes.`,
@@ -496,8 +520,9 @@ async function run() {
           .join(", ")}.`,
       );
       assert(
-        state.buttons.every((button) => button.visibleInViewport),
-        `${viewport.name}: botão cortado: ${state.buttons
+        viewport.name !== LANDSCAPE_VIEWPORT_NAME ||
+          state.buttons.every((button) => button.visibleInViewport),
+        `${viewport.name}: botão cortado no modo imersivo: ${state.buttons
           .filter((button) => !button.visibleInViewport)
           .map((button) => button.text)
           .join(", ")}.`,

@@ -3,6 +3,16 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.18.0] - 2026-07-02
+### Adicionado
+- Tema padrão escuro quando não há preferência salva, mantendo seletor Claro/Escuro e persistência local.
+- Versão incremental visível dentro do menu do jogo com rótulo acessível.
+- Power-up `Laser em leque`, limitado a dois spawns por fase, destruindo todos os blocos ativos sem reiniciar a partida.
+- QA publicado `test:cloudflare-laser-powerup` para validar destruição total, pontuação, transição única de fase e ausência de requests externos.
+
+### Alterado
+- Quadro principal do jogo passa a ocupar praticamente toda a largura útil do dashboard, preservando proporção e mantendo o modo paisagem imersivo.
+
 ## [1.17.2] - 2026-07-02
 ### Adicionado
 - Número de versão incremental `vN` baseado na contagem de commits Git, exibido discretamente no canto inferior direito do shell do jogo.
