@@ -1,4 +1,6 @@
 // src/components/GameCinematicOverlay.tsx
+import { CINEMATIC_MEDIA_LAYERS } from "../constants/cinematicMedia";
+
 import type { ComponentPropsWithoutRef } from "react";
 
 export type GameCinematicOverlayState =
@@ -41,6 +43,22 @@ const LEVEL_UP_TITLE_PREFIX = "Fase";
 const LEVEL_UP_SPEED_PREFIX = "Velocidade";
 const RIP_TITLE = "RIP";
 const RIP_HINT = "Recomeçando...";
+const MEDIA_CLASS_NAME = `${BASE_CLASS_NAME}__media`;
+const MEDIA_ALT = "";
+
+function renderMediaLayers(state: Exclude<GameCinematicOverlayState, null>) {
+  return CINEMATIC_MEDIA_LAYERS[state.type].map((media) => (
+    <img
+      key={media.id}
+      className={`${MEDIA_CLASS_NAME} ${MEDIA_CLASS_NAME}--${media.id}`}
+      data-cinematic-media={media.id}
+      src={media.src}
+      alt={MEDIA_ALT}
+      aria-hidden="true"
+      draggable={false}
+    />
+  ));
+}
 
 function overlayProps(
   state: Exclude<GameCinematicOverlayState, null>,
@@ -77,6 +95,7 @@ export function GameCinematicOverlay({ state }: GameCinematicOverlayProps) {
   if (state.type === "countdown") {
     return (
       <div {...overlayProps(state)} role="status" aria-live="assertive">
+        {renderMediaLayers(state)}
         <span className={`${BASE_CLASS_NAME}__count`}>{state.value}</span>
       </div>
     );
@@ -85,6 +104,7 @@ export function GameCinematicOverlay({ state }: GameCinematicOverlayProps) {
   if (state.type === "levelUp") {
     return (
       <div {...overlayProps(state)} role="status" aria-live="polite">
+        {renderMediaLayers(state)}
         <span className={`${BASE_CLASS_NAME}__eyebrow`}>
           {LEVEL_UP_EYEBROW}
         </span>
@@ -100,6 +120,7 @@ export function GameCinematicOverlay({ state }: GameCinematicOverlayProps) {
 
   return (
     <div {...overlayProps(state)} role="status" aria-live="assertive">
+      {renderMediaLayers(state)}
       <span className={`${BASE_CLASS_NAME}__title`}>{RIP_TITLE}</span>
       <span className={`${BASE_CLASS_NAME}__detail`}>{RIP_HINT}</span>
     </div>

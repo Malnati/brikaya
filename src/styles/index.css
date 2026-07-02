@@ -320,6 +320,8 @@ canvas {
   pointer-events: auto;
   text-align: center;
   color: var(--color-text);
+  overflow: hidden;
+  isolation: isolate;
   background:
     radial-gradient(
       circle,
@@ -330,8 +332,54 @@ canvas {
   animation: cinematic-overlay-in 180ms ease-out;
 }
 
+.game-cinematic-overlay__media {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  width: min(84vw, 680px);
+  max-height: 80dvh;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  transform: translate(-50%, -50%);
+}
+
+.game-cinematic-overlay__media--countdown-circle {
+  width: min(92vw, 720px);
+  opacity: 0.42;
+  animation: cinematic-media-spin 1800ms linear both;
+}
+
+.game-cinematic-overlay__media--countdown-spark {
+  width: min(56vw, 360px);
+  opacity: 0.72;
+  animation: cinematic-media-pulse 600ms ease-out both;
+}
+
+.game-cinematic-overlay__media--level-up-twirl {
+  width: min(86vw, 640px);
+  opacity: 0.5;
+  animation: cinematic-media-spin 1200ms ease-out both;
+}
+
+.game-cinematic-overlay__media--level-up-star {
+  width: min(44vw, 320px);
+  opacity: 0.72;
+  animation: cinematic-media-pulse 1200ms ease-out both;
+}
+
+.game-cinematic-overlay__media--rip-smoke {
+  width: min(96vw, 760px);
+  opacity: 0.62;
+  filter: grayscale(1) sepia(0.25) hue-rotate(300deg);
+  animation: cinematic-media-drift 1800ms ease-out both;
+}
+
 .game-cinematic-overlay__count,
 .game-cinematic-overlay__title {
+  position: relative;
+  z-index: 1;
   font-family: var(--bb-font-display);
   font-weight: 900;
   line-height: 0.92;
@@ -351,6 +399,8 @@ canvas {
 
 .game-cinematic-overlay__eyebrow,
 .game-cinematic-overlay__detail {
+  position: relative;
+  z-index: 1;
   border: 1px solid color-mix(in srgb, var(--bb-color-outline) 36%, transparent);
   border-radius: 999px;
   padding: 8px 16px;
@@ -403,6 +453,44 @@ canvas {
   100% {
     opacity: 0.88;
     transform: scale(1);
+  }
+}
+
+@keyframes cinematic-media-spin {
+  from {
+    transform: translate(-50%, -50%) rotate(-18deg) scale(0.92);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(18deg) scale(1);
+  }
+}
+
+@keyframes cinematic-media-pulse {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.72);
+  }
+
+  42% {
+    opacity: 0.82;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes cinematic-media-drift {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -44%) scale(0.88);
+  }
+
+  to {
+    opacity: 0.62;
+    transform: translate(-50%, -50%) scale(1.06);
   }
 }
 
@@ -1083,6 +1171,7 @@ html.bb-landscape-immersive .game-status-region {
 
 @media (prefers-reduced-motion: reduce) {
   .game-cinematic-overlay,
+  .game-cinematic-overlay__media,
   .game-cinematic-overlay__count,
   .dashboard-button,
   .theme-toggle__button {

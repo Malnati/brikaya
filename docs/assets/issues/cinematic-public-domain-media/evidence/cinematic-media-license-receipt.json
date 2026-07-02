@@ -1,0 +1,95 @@
+{
+  "generatedAtUtc": "2026-07-02T05:05:00Z",
+  "licensePolicy": "CC0_OR_PUBLIC_DOMAIN_ONLY",
+  "licenseName": "Creative Commons Zero 1.0 Universal",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "author": "Kenney Vleugels (Kenney.nl)",
+  "notes": [
+    "Somente arquivos CC0/domínio público são aceitos para os efeitos cinematográficos.",
+    "Pexels, Unsplash, Pixabay e Magnific foram excluídos por usarem licenças/restrições próprias ou modelos com custo/atribuição.",
+    "Photopea pode ser usado apenas como editor manual; não é fonte de licença dos assets."
+  ],
+  "verificationSources": [
+    "https://www.kenney.nl/assets/particle-pack",
+    "https://kenney.nl/assets/smoke-particles",
+    "https://kenney.nl/support",
+    "https://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  ],
+  "assets": [
+    {
+      "id": "countdown-circle",
+      "pack": "Kenney Particle Pack",
+      "sourcePage": "https://www.kenney.nl/assets/particle-pack",
+      "sourceDownloadUrl": "https://kenney.nl/media/pages/assets/particle-pack/f8fe0f8cb8-1677578741/kenney_particle-pack.zip",
+      "sourceArchive": "kenney_particle-pack.zip",
+      "sourcePath": "PNG (Transparent)/circle_05.png",
+      "runtimePath": "/assets/cinematics/countdown-circle.png",
+      "license": "CC0",
+      "commercialUseAllowed": true,
+      "redistributionAllowed": true,
+      "attributionRequired": false,
+      "sha256": "925b8ac284436f74f9cadf0ecd058da1c08fba65c098e4e34fd220603022f02e",
+      "bytes": 65336
+    },
+    {
+      "id": "countdown-spark",
+      "pack": "Kenney Particle Pack",
+      "sourcePage": "https://www.kenney.nl/assets/particle-pack",
+      "sourceDownloadUrl": "https://kenney.nl/media/pages/assets/particle-pack/f8fe0f8cb8-1677578741/kenney_particle-pack.zip",
+      "sourceArchive": "kenney_particle-pack.zip",
+      "sourcePath": "PNG (Transparent)/spark_07.png",
+      "runtimePath": "/assets/cinematics/countdown-spark.png",
+      "license": "CC0",
+      "commercialUseAllowed": true,
+      "redistributionAllowed": true,
+      "attributionRequired": false,
+      "sha256": "216101e7b54c627b4aa780649a21f0ef9146d2566f52699284d091ef00825a26",
+      "bytes": 40968
+    },
+    {
+      "id": "level-up-twirl",
+      "pack": "Kenney Particle Pack",
+      "sourcePage": "https://www.kenney.nl/assets/particle-pack",
+      "sourceDownloadUrl": "https://kenney.nl/media/pages/assets/particle-pack/f8fe0f8cb8-1677578741/kenney_particle-pack.zip",
+      "sourceArchive": "kenney_particle-pack.zip",
+      "sourcePath": "PNG (Transparent)/twirl_02.png",
+      "runtimePath": "/assets/cinematics/level-up-twirl.png",
+      "license": "CC0",
+      "commercialUseAllowed": true,
+      "redistributionAllowed": true,
+      "attributionRequired": false,
+      "sha256": "3963633f6b2395a3fa95b9f4f65f22a4d38a2c561d9312dfff4646b71c7aa6e2",
+      "bytes": 76886
+    },
+    {
+      "id": "level-up-star",
+      "pack": "Kenney Particle Pack",
+      "sourcePage": "https://www.kenney.nl/assets/particle-pack",
+      "sourceDownloadUrl": "https://kenney.nl/media/pages/assets/particle-pack/f8fe0f8cb8-1677578741/kenney_particle-pack.zip",
+      "sourceArchive": "kenney_particle-pack.zip",
+      "sourcePath": "PNG (Transparent)/star_07.png",
+      "runtimePath": "/assets/cinematics/level-up-star.png",
+      "license": "CC0",
+      "commercialUseAllowed": true,
+      "redistributionAllowed": true,
+      "attributionRequired": false,
+      "sha256": "d3bc9b8f1960baab452e8a5e816b9edeee4420dbed5ddd7ebe174519860a451a",
+      "bytes": 32369
+    },
+    {
+      "id": "rip-smoke",
+      "pack": "Kenney Smoke Particles",
+      "sourcePage": "https://kenney.nl/assets/smoke-particles",
+      "sourceDownloadUrl": "https://kenney.nl/media/pages/assets/smoke-particles/23249a0d35-1677695171/kenney_smoke-particles.zip",
+      "sourceArchive": "kenney_smoke-particles.zip",
+      "sourcePath": "PNG/Black smoke/blackSmoke14.png",
+      "runtimePath": "/assets/cinematics/rip-smoke.png",
+      "license": "CC0",
+      "commercialUseAllowed": true,
+      "redistributionAllowed": true,
+      "attributionRequired": false,
+      "sha256": "2a33cf46e8e53f562321faf15b10e03c2fd0b1706d81960b439e9cdbdb1193d6",
+      "bytes": 62405
+    }
+  ]
+}
