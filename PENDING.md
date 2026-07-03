@@ -6,6 +6,8 @@
 
 - [x] Adicionar QA publicado para provar funcionamento offline da PWA após o primeiro carregamento.
 
+- [x] Adicionar QA publicado para gameplay básico com pontuação, controles e eventos mínimos.
+
 - [x] Padronizar nomenclatura semântica e exclusiva de assets runtime visuais e sonoros exibidos/usados pelo jogo.
 
 - [x] Corrigir sobreposição de HUD/menu/controles sobre o canvas no modo paisagem imersivo mobile/tablet.

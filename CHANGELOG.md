@@ -3,6 +3,14 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.20.2] - 2026-07-03
+### Adicionado
+- QA publicado `test:cloudflare-gameplay-basic` para validar carregamento, controles, pontuação e eventos básicos de gameplay no Cloudflare Pages.
+- Documento de qualidade para prova publicada do fluxo básico de jogo.
+
+### Testado
+- `npm run test:cloudflare-gameplay-basic`
+
 ## [1.20.1] - 2026-07-03
 ### Adicionado
 - QA publicado `test:cloudflare-offline-pwa` para validar recarregamento do jogo sem internet após o primeiro carregamento.
