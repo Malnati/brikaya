@@ -3,6 +3,10 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.27.3] - 2026-07-03
+### Adicionado
+- Documento PWA-only de distribuição internacional, monetização web e licenciamento em `docs/dist/projeto-pwa.md`.
+
 ## [1.27.2] - 2026-07-03
 ### Corrigido
 - QA runtime de update passa a tolerar navegação automática durante a leitura do aviso visual instalado.
