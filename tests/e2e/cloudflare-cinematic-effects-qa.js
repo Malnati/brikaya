@@ -4,6 +4,7 @@ import { dirname, resolve } from 'node:path';
 import puppeteer from 'puppeteer';
 
 import { buildChromeLaunchArgs } from './chromeLaunchArgs.js';
+import { seedPrivacyConsent } from './consentHelpers.js';
 
 const DEFAULT_PUBLIC_URL = 'https://brikaya.com/';
 const DEFAULT_REPORT_PATH =
@@ -306,6 +307,7 @@ async function run() {
     page.on('pageerror', error => consoleProblems.push({ type: 'pageerror', text: error.message }));
 
     await prepareControlledPage(page, publicUrl);
+    await seedPrivacyConsent(page);
     await page.goto(scenarioUrl(publicUrl, SINGLE_BRICK_QA_SCENARIO), {
       waitUntil: 'domcontentloaded',
       timeout: NAVIGATION_TIMEOUT_MS,

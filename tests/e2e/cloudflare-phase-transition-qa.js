@@ -4,6 +4,7 @@ import { dirname, resolve } from 'node:path';
 import puppeteer from 'puppeteer';
 
 import { buildChromeLaunchArgs } from './chromeLaunchArgs.js';
+import { acceptPrivacyConsentIfPresent } from './consentHelpers.js';
 
 const DEFAULT_PUBLIC_URL = 'https://brikaya.com/';
 const DEFAULT_REPORT_PATH = 'tmp/reports/cloudflare-phase-transition.json';
@@ -168,6 +169,7 @@ async function run() {
     await clearGameDatabases(page);
     await page.reload({ waitUntil: 'networkidle0', timeout: 60000 });
     await page.waitForSelector('canvas', { timeout: 30000 });
+    await acceptPrivacyConsentIfPresent(page);
     await page.waitForSelector('[data-testid="level-toast"]', { timeout: MAX_WAIT_FOR_LEVEL_MS });
     await page.waitForFunction(() => document.querySelector('[data-testid="level-toast"]')?.textContent?.includes('Fase 2'), { timeout: MAX_WAIT_FOR_LEVEL_MS });
 

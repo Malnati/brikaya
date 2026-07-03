@@ -4,6 +4,7 @@ import { dirname, resolve } from 'node:path';
 import puppeteer from 'puppeteer';
 
 import { buildChromeLaunchArgs } from './chromeLaunchArgs.js';
+import { acceptPrivacyConsentIfPresent } from './consentHelpers.js';
 
 const DEFAULT_PUBLIC_URL = 'https://brikaya.com/';
 const DEFAULT_REPORT_PATH = 'tmp/reports/cloudflare-phase10-stability.json';
@@ -157,6 +158,7 @@ async function run() {
     await clearGameDatabases(page);
     await page.reload({ waitUntil: 'networkidle0', timeout: 60000 });
     await page.waitForSelector('canvas', { timeout: MAX_WAIT_MS });
+    await acceptPrivacyConsentIfPresent(page);
     await page.waitForFunction(async ({ dbName, storeName, dbVersion, expectedLevel }) => {
       const events = await new Promise(resolve => {
         const request = indexedDB.open(dbName, dbVersion);

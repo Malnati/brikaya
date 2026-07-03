@@ -4,6 +4,7 @@ import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
 import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
+import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-laser-powerup-qa.json";
@@ -464,6 +465,7 @@ async function run() {
     await clearGameDatabases(page);
     await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
     await page.waitForSelector("canvas", { timeout: 30000 });
+    await acceptPrivacyConsentIfPresent(page);
     await waitForCinematicOverlayToClear(page);
     const firstPowerUpDraw = await waitForPowerUpDraw(page);
     const targetPowerUpSize = await expectedPowerUpSize(page);

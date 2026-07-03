@@ -4,6 +4,10 @@ import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
 import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
+import {
+  acceptPrivacyConsentIfPresent,
+  waitForInitialCountdownToFinish,
+} from "./consentHelpers.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_SCREENSHOT_PATH = "tmp/screenshots/cloudflare-mobile-qa.png";
@@ -20,6 +24,7 @@ const MIN_TOUCH_TARGET_SIZE = 44;
 const MAX_INITIAL_SCORE_AFTER_OBSERVATION = 260;
 const OBSERVATION_DURATION_MS = 1500;
 const MENU_PAUSE_OBSERVATION_MS = 1400;
+const BROWSER_CLOSE_SETTLE_MS = 250;
 const REQUIRED_EVENT_TYPES = ["game_start"];
 const REQUIRED_DATABASE_NAMES = ["BrickBreakerGameLog"];
 const MENU_BUTTON_NAME = /menu/i;
@@ -66,6 +71,13 @@ function assert(condition, message) {
   if (!condition) {
     throw new Error(message);
   }
+}
+
+async function closeBrowser(browser) {
+  const browserProcess = browser.process();
+  browser.disconnect();
+  browserProcess?.kill("SIGKILL");
+  await new Promise((resolve) => setTimeout(resolve, BROWSER_CLOSE_SETTLE_MS));
 }
 
 function viewportByScreenshotRole(screenshotRole) {
@@ -406,6 +418,7 @@ async function run() {
     await clearOfflineState(page);
     await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
     await page.waitForSelector("canvas", { timeout: 30000 });
+    await acceptPrivacyConsentIfPresent(page);
     await new Promise((resolve) =>
       setTimeout(resolve, OBSERVATION_DURATION_MS),
     );
@@ -525,6 +538,7 @@ async function run() {
       "Zerar pontuação aparece fora do menu lateral.",
     );
 
+    await waitForInitialCountdownToFinish(page);
     const openedMenuForScreenshot = await clickButtonByPattern(
       page,
       MENU_BUTTON_NAME,
@@ -622,6 +636,7 @@ async function run() {
     const closedLogs = await clickButtonByPattern(page, CLOSE_BUTTON_NAME);
     assert(closedLogs, "Não foi possível fechar o painel de logs.");
 
+    await waitForInitialCountdownToFinish(page);
     const openedMenuForCollisions = await clickButtonByPattern(
       page,
       MENU_BUTTON_NAME,
@@ -707,11 +722,11 @@ async function run() {
 
     console.log(JSON.stringify(report, null, 2));
   } finally {
-    await browser.close();
+    await closeBrowser(browser);
   }
 }
 
 run().catch((error) => {
-  console.error(error.message);
+  console.error(error.stack || error.message);
   process.exitCode = 1;
 });

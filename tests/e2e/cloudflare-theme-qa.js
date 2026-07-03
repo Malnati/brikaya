@@ -4,6 +4,7 @@ import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
 import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
+import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-theme-qa.json";
@@ -372,6 +373,7 @@ async function validateViewport(
   }, APPEARANCE_STORAGE_KEYS);
   await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
   await page.waitForSelector("canvas", { timeout: 30000 });
+  await acceptPrivacyConsentIfPresent(page);
   await waitForCinematicOverlayToClear(page);
 
   const initialState = await collectState(page);
@@ -430,6 +432,7 @@ async function validateViewport(
 
   await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
   await page.waitForSelector("canvas", { timeout: 30000 });
+  await acceptPrivacyConsentIfPresent(page);
   await waitForCinematicOverlayToClear(page);
   const reloadedContrastState = await collectState(page);
   assertBaseState(reloadedContrastState, `${viewportName}/crt-reload`);

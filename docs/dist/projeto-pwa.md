@@ -248,6 +248,8 @@ A primeira implementação de SEO deve ser pequena e testável:
 6. política contra cliques próprios e tráfego inválido;
 7. titularidade de pagamento definida: pessoa física ou pessoa jurídica.
 
+Estado atual da base de privacidade: Brikaya pode exigir aceite local para jogar offline, sem anúncios reais, sem CMP e sem chamadas externas. Essa base não autoriza monetização; ads reais continuam pendentes de aprovação, estados próprios e consentimento compatível com o país.
+
 ### 9.2. Formatos PWA permitidos no plano
 
 | Formato | PWA-only? | Decisão |
@@ -307,7 +309,7 @@ A rota PWA-only não reduz obrigações de licenciamento. Ela só remove loja/ap
 | 1 | SEO mínimo PWA | Planejar e implementar title/description/canonical/Open Graph/sitemap/robots/Search Console em PR próprio. | Sem ads reais, sem IDs sensíveis e sem URLs `.pages.dev` públicas. |
 | 2 | i18n P0 | `pt-BR`, `en`, `es-419`, fallback `en`, `html lang`, preferência local e catálogo offline. | QA publicado obrigatório; `en-IN` fica para metadado/variação futura por dados. |
 | 3 | Medição zero-custo permitida | Decidir métricas locais/privacidade sem serviço pago. | Não quebrar offline. |
-| 4 | Preparar ads PWA | Política offline+ads, consentimento, estados `ads_disabled`/`ads_test`/`ads_live`. | Aprovação explícita necessária. |
+| 4 | Preparar ads PWA | Base local de privacidade sem ads reais; política offline+ads, CMP quando exigida e estados `ads_disabled`/`ads_test`/`ads_live` em etapa futura. | Aprovação explícita necessária. |
 | 5 | Solicitar AdSense/H5 | Site maduro, conteúdo original, privacidade, titularidade PF/PJ definida. | Acesso não garantido. |
 | 6 | Ativar ads reais | Só após aprovação, consentimento e QA publicado. | Nunca como dependência para jogar. |
 | 7 | Expandir P1/P2 | Locales adicionais guiados por dados reais de acesso/retensão. | Sem tradução sem revisão. |

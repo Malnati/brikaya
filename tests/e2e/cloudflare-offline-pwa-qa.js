@@ -4,6 +4,7 @@ import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
 import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
+import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-offline-pwa-qa.json";
@@ -252,6 +253,7 @@ async function run() {
       timeout: MAX_NAVIGATION_MS,
     });
     await page.waitForSelector(CANVAS_SELECTOR, { timeout: MAX_NAVIGATION_MS });
+    await acceptPrivacyConsentIfPresent(page);
 
     const serviceWorkerState = await waitForServiceWorkerControl(page);
     const cacheNamesBeforeOffline = await readCacheNames(page);
@@ -271,6 +273,7 @@ async function run() {
     await page.setOfflineMode(true);
     await page.reload({ waitUntil: "domcontentloaded", timeout: MAX_NAVIGATION_MS });
     await page.waitForSelector(CANVAS_SELECTOR, { timeout: MAX_NAVIGATION_MS });
+    await acceptPrivacyConsentIfPresent(page);
 
     const offlineFetchChecks = await fetchOfflinePaths(page);
     const offlineState = await collectOfflineState(page);

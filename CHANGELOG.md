@@ -3,6 +3,27 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.29.0] - 2026-07-03
+### Adicionado
+- Tela inicial obrigatória de consentimento local para liberar a partida sem anúncios reais, CMP, scripts externos ou chamadas de rede.
+- Persistência mínima do aceite no aparelho com versão, data e escopo `offline_play_privacy_base`, sem PII ou dados remotos.
+- Ação “Revisar consentimento” no menu para revogar o aceite, pausar a partida e reapresentar a tela.
+- QA publicado específico em `tests/e2e/cloudflare-consent-screen-qa.js` com evidência visual em `docs/assets/issues/consent-screen/evidence/`.
+
+### Alterado
+- QAs publicados que limpam estado passam a aceitar ou semear consentimento antes de validar gameplay.
+- Plano PWA registra que a base atual é sem ads reais e que CMP/monetização continuam como etapa futura.
+
+### Testado
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version && npm --version && make help`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/hooks/usePrivacyConsent.test.ts src/components/ConsentScreen.test.tsx src/App.test.tsx --runInBand`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ node tests/e2e/cloudflare-consent-screen-qa.js`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-offline-pwa-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`
+
 ## [1.28.10] - 2026-07-03
 ### Corrigido
 - Efeitos cinematográficos passam a centralizar mídia e texto sobre o tabuleiro/canvas em vez da viewport inteira.
