@@ -8,6 +8,8 @@
 
 - [x] Adicionar QA publicado para gameplay básico com pontuação, controles e eventos mínimos.
 
+- [x] Implementar níveis progressivos com aumento de blocos por fase e QA publicado.
+
 - [x] Padronizar nomenclatura semântica e exclusiva de assets runtime visuais e sonoros exibidos/usados pelo jogo.
 
 - [x] Corrigir sobreposição de HUD/menu/controles sobre o canvas no modo paisagem imersivo mobile/tablet.

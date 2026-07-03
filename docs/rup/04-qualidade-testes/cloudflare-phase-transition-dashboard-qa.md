@@ -29,6 +29,7 @@ O teste deve usar `?qaScenario=single-brick-phase-clear` e validar:
 - o toast aparece acima da área dos tijolos e não cobre raquete/controles;
 - toast contém `Fase 2` e `1.12×` no cenário inicial;
 - nova fase registra `level_start`;
+- nova fase inicia com a quantidade de blocos prevista e mais linhas que a fase concluída;
 - não há `restart_game` sem ação humana;
 - não há `game_end` por vitória ao completar fase;
 - console não contém `error`/`warn`.

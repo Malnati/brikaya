@@ -11,6 +11,7 @@ import {
   LEVEL_CLEAR_PAUSE_MS,
   LASER_FAN_EFFECT_VISIBLE_MS,
   calculateLevelInitialSpawnSpeed,
+  calculateLevelBrickRows,
   calculateLevelMaxSpeed,
   calculateLevelMinSpeed,
   calculateLevelPreviousMaxSpeed,
@@ -405,7 +406,13 @@ describe("GameEngine", () => {
       canvas.width,
       expectedNextLevel,
     );
-    const expectedNextInitialBrickCount = beforeState.initialBrickCount;
+    const expectedNextBrickRows = calculateLevelBrickRows(
+      (engine as any).baseBrickRows,
+      (engine as any).maxBrickRows,
+      expectedNextLevel,
+    );
+    const expectedNextInitialBrickCount =
+      (engine as any).dimensions.brickCols * expectedNextBrickRows;
     const expectedNextReductionPerBrick = calculateSpeedReductionPerBrick(
       expectedNextMaxSpeed,
       expectedNextInitialBrickCount,
@@ -446,6 +453,10 @@ describe("GameEngine", () => {
     );
     expect(afterState.speedState.initialBrickCount).toBe(
       afterState.bricksRemaining,
+    );
+    expect(afterState.gameDimensions.brickRows).toBe(expectedNextBrickRows);
+    expect(afterState.gameDimensions.brickRows).toBeGreaterThan(
+      beforeState.initialBrickCount / (engine as any).dimensions.brickCols,
     );
     expect(afterState.speedState.levelStartedAt).toBeGreaterThan(
       beforeState.levelStartedAt,

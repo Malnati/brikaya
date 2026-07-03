@@ -248,6 +248,10 @@ async function run() {
     assert(Math.abs(levelCompleteSpeedState.minSpeed - (levelCompleteSpeedState.maxSpeed / 4)) <= SPEED_TOLERANCE, 'minSpeed da Fase 1 não usou maxSpeed / 4.');
     assert(levelStart?.metadata?.level === 2, 'level_start não registrou fase 2.');
     assert(levelStartSpeedState, 'level_start não registrou metadata.speedState.');
+    assert(levelComplete?.metadata?.nextInitialBrickCount === levelStartSpeedState.initialBrickCount, 'level_complete não antecipou a quantidade inicial de blocos da Fase 2.');
+    assert(levelStart?.gameState?.bricksRemaining === levelStartSpeedState.initialBrickCount, 'Fase 2 não iniciou com todos os blocos esperados.');
+    assert(levelStart?.gameState?.gameDimensions?.brickRows > levelComplete?.gameState?.gameDimensions?.brickRows, 'Fase 2 não aumentou as linhas de tijolos.');
+    assert(levelStartSpeedState.initialBrickCount > levelCompleteSpeedState.initialBrickCount, 'Fase 2 não aumentou a quantidade inicial de blocos.');
     assert(Math.abs(levelStartSpeedState.currentSpeed - levelStartSpeedState.maxSpeed) <= SPEED_TOLERANCE, 'Fase 2 não iniciou em currentSpeed === maxSpeed.');
     assert(Math.abs(levelStartSpeedState.initialSpawnSpeed - levelStartSpeedState.maxSpeed) <= SPEED_TOLERANCE, 'Fase 2 não iniciou em initialSpawnSpeed === maxSpeed.');
     assert(Math.abs(levelStartSpeedState.minSpeed - (levelStartSpeedState.maxSpeed / 4)) <= SPEED_TOLERANCE, 'minSpeed da Fase 2 não deriva da própria maxSpeed / 4.');

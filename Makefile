@@ -32,7 +32,7 @@ KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
 # Target padrão: mostrar help quando make é executado sem argumentos
 .DEFAULT_GOAL := help
 
-.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-deploy cloudflare-mobile-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa docker-build docker-up docker-down docker-logs docker-shell docker-create-caddy-network docker-logs-caddy docker-reload-caddy
+.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-deploy cloudflare-mobile-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa docker-build docker-up docker-down docker-logs docker-shell docker-create-caddy-network docker-logs-caddy docker-reload-caddy
 
 # Função para matar processos anteriores
 kill-processes:
@@ -87,6 +87,9 @@ cloudflare-no-score-reset:
 
 cloudflare-phase-transition-qa:
 	@npm run test:cloudflare-phase-transition
+
+cloudflare-level-progression-qa:
+	@npm run test:cloudflare-level-progression
 
 cloudflare-phase10-stability-qa:
 	@npm run test:cloudflare-phase10-stability
@@ -257,6 +260,7 @@ help:
 	@echo "  cloudflare-mobile-qa - Testar iPhone 15/logs contra Cloudflare publicado"
 	@echo "  cloudflare-no-score-reset - Validar continuidade após tijolo no Cloudflare publicado"
 	@echo "  cloudflare-phase-transition-qa - Validar pausa/toast de fase no Cloudflare publicado"
+	@echo "  cloudflare-level-progression-qa - Validar níveis progressivos no Cloudflare publicado"
 	@echo "  cloudflare-phase10-stability-qa - Validar estabilidade da bolinha após Fase 10 no Cloudflare publicado"
 	@echo "  cloudflare-dashboard-layout-qa - Validar dashboard responsivo no Cloudflare publicado"
 	@echo "  cloudflare-theme-qa - Validar aparência contra Cloudflare publicado"

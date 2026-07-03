@@ -3,6 +3,19 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.21.0] - 2026-07-03
+### Adicionado
+- Progressão de níveis com aumento de linhas de tijolos por fase, limitada ao espaço seguro do tabuleiro.
+- QA publicado `test:cloudflare-level-progression` para validar que a Fase 2 nasce com mais blocos, mantém pausa/toast e registra `level_complete`/`level_start`.
+- Documento de qualidade para prova publicada de níveis progressivos.
+
+### Alterado
+- A telemetria de transição de fase passa a antecipar a quantidade inicial de blocos da próxima fase.
+
+### Testado
+- `npm test -- src/constants/game.test.ts src/logic/GameEngine.test.ts --runInBand`
+- `npm run test:cloudflare-level-progression`
+
 ## [1.20.2] - 2026-07-03
 ### Adicionado
 - QA publicado `test:cloudflare-gameplay-basic` para validar carregamento, controles, pontuação e eventos básicos de gameplay no Cloudflare Pages.

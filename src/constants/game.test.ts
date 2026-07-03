@@ -7,6 +7,7 @@ import {
   calculateClampedSpeed,
   calculateInitialBallSpeed,
   calculateLevelInitialSpawnSpeed,
+  calculateLevelBrickRows,
   calculateLevelMaxSpeed,
   calculateLevelMinSpeed,
   calculateLevelPreviousMaxSpeed,
@@ -18,7 +19,10 @@ import {
 const CANVAS_WIDTH = 393;
 const PHASE_ONE = 1;
 const PHASE_TWO = 2;
+const PHASE_FIVE = 5;
 const INITIAL_BRICK_COUNT = 10;
+const BASE_BRICK_ROWS = 2;
+const MAX_BRICK_ROWS = 5;
 
 describe('game speed helpers', () => {
   it('calcula velocidade máxima da fase 1 a partir da nova base 3x', () => {
@@ -103,5 +107,11 @@ describe('game speed helpers', () => {
     expect(calculateClampedSpeed(0.25, minSpeed, maxSpeed)).toBe(minSpeed);
     expect(calculateClampedSpeed(1.0, minSpeed, maxSpeed)).toBe(1.0);
     expect(calculateClampedSpeed(2.0, minSpeed, maxSpeed)).toBe(maxSpeed);
+  });
+
+  it('aumenta linhas de tijolos por fase sem ultrapassar o limite do tabuleiro', () => {
+    expect(calculateLevelBrickRows(BASE_BRICK_ROWS, MAX_BRICK_ROWS, PHASE_ONE)).toBe(BASE_BRICK_ROWS);
+    expect(calculateLevelBrickRows(BASE_BRICK_ROWS, MAX_BRICK_ROWS, PHASE_TWO)).toBe(BASE_BRICK_ROWS + 1);
+    expect(calculateLevelBrickRows(BASE_BRICK_ROWS, MAX_BRICK_ROWS, PHASE_FIVE)).toBe(MAX_BRICK_ROWS);
   });
 });
