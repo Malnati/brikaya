@@ -28,9 +28,11 @@ Este é um projeto de jogo **Brikaya** (Breakout) implementado em TypeScript/Rea
 
 ⸻
 
-## Regra Obrigatória — Funcionamento 100% Offline
+## Regra Obrigatória — Funcionamento Offline do Jogo Principal
 
-- O projeto deve funcionar completamente offline após o primeiro carregamento.
+- O jogo principal deve funcionar completamente offline após o primeiro carregamento.
+- Exceção aprovada para PWA-only: anúncios reais são opcionais, online-only, consentidos quando exigido e nunca necessários para jogar.
+- Em modo offline, qualquer anúncio real futuro deve ficar oculto ou desativado sem bloquear menu, partida, pontuação, logs, assets locais, áudio local ou progressão.
 - O `sw.js` deve:
   - Realizar precache de todos os arquivos necessários.
   - Atender a todas as requisições subsequentes com cache-first.
@@ -41,7 +43,7 @@ Este é um projeto de jogo **Brikaya** (Breakout) implementado em TypeScript/Rea
 - É proibido o uso de:
   - Fontes externas
   - Imagens ou scripts por CDN
-  - Requisições de rede após o primeiro uso
+  - Requisições de rede após o primeiro uso para o jogo principal
 
 ⸻
 
@@ -562,7 +564,8 @@ src/
 - A adaptação ao Design System em `design-system/` deve mapear apenas superfícies e funcionalidades já existentes. Protótipos de loja, upgrades, ranking, leaderboard, settings, tutorial, multiplayer, créditos, vidas ou navegação inferior não autorizam implementação automática.
 - Tema claro/escuro é funcionalidade permitida quando houver seletor visível em tela, persistência local e QA publicado no Cloudflare Pages.
 - Arquivos `design-system/*/code.html` são referência visual, não fonte copiável para produto, pois podem conter CDN, fontes, ícones ou imagens remotas incompatíveis com PWA offline.
-- Slots de anúncio devem permanecer placeholders offline até autorização futura; não adicionar scripts externos, `adsbygoogle`, `ca-pub-*` nem `data-ad-slot`.
+- Slots de anúncio atuais devem permanecer placeholders offline; anúncios reais futuros só podem ser online-only, opcionais, consentidos quando exigido e nunca necessários para jogar.
+- Esta exceção aprovada não autoriza implementação imediata de script externo, SDK, `adsbygoogle`, `ca-pub-*`, `data-ad-slot`, ID real, credencial, campanha paga ou mudança de runtime.
 - Antes de iniciar branch de feature, reconsulte e resolva PRs pendentes de version bump/Dependabot no GitHub; se houver conflito, consolide em PR próprio, mergeie e supere os PRs abertos antes da feature.
 - O fluxo obrigatório é: analisar logs/estatísticas → corrigir → adicionar cobertura → testar contra Cloudflare publicado → corrigir novamente se falhar → validar evidência visual → abrir PR → aguardar checks → fazer merge sem intervenção humana quando CI e QA publicado passarem.
 - PRs de UI/gameplay devem incluir screenshot em `docs/assets/issues/.../evidence/` e recibo JSON do teste publicado.

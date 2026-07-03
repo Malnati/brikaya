@@ -9,6 +9,13 @@ description: |
   - Não usar shell que troque silenciosamente para Node x64/v22; preferir zsh/Homebrew arm64 ativo.
   - Se a versão não for v23.x, parar e corrigir o runtime antes de prosseguir.
 
+  # Regra obrigatória: funcionamento offline do jogo principal
+
+  - O jogo principal deve funcionar completamente offline após o primeiro carregamento.
+  - Exceção aprovada para PWA-only: anúncios reais são opcionais, online-only, consentidos quando exigido e nunca necessários para jogar.
+  - Em modo offline, qualquer anúncio real futuro deve ficar oculto ou desativado sem bloquear menu, partida, pontuação, logs, assets locais, áudio local ou progressão.
+  - A exceção aprovada não autoriza implementação imediata de script externo, SDK, `adsbygoogle`, `ca-pub-*`, `data-ad-slot`, ID real, credencial, campanha paga ou mudança de runtime.
+
   # Regra obrigatória: imagens SVG-only
 
   - Toda imagem visual runtime do jogo deve usar exclusivamente SVG local/offline.
@@ -288,7 +295,8 @@ description: |
     - Garantir que adaptação ao Design System só altere superfícies existentes e não crie loja, upgrades, ranking, leaderboard, settings, tutorial, multiplayer, créditos, vidas ou navegação inferior sem escopo explícito.
     - Garantir que tema claro/escuro tenha seletor visível em tela, persista a escolha localmente e passe em `make cloudflare-theme-qa` contra Cloudflare Pages publicado.
     - Não copiar `design-system/*/code.html` para o produto; esses arquivos podem conter CDN, fontes, ícones ou imagens remotas incompatíveis com PWA offline.
-    - Manter slots de anúncio como placeholders offline; não adicionar scripts externos, `adsbygoogle`, `ca-pub-*` ou `data-ad-slot`.
+    - Manter slots de anúncio atuais como placeholders offline; anúncios reais futuros devem ser online-only, opcionais, consentidos quando exigido e nunca necessários para jogar.
+    - Não adicionar scripts externos, SDK, `adsbygoogle`, `ca-pub-*`, `data-ad-slot`, ID real, credencial, campanha paga ou mudança de runtime sem PR próprio de ativação.
     - Antes de feature, reconsultar e resolver PRs pendentes de version bump/Dependabot no GitHub.
     - Após merge, executar `make cloudflare-mobile-qa`, `make cloudflare-no-score-reset`, `make cloudflare-phase-transition-qa`, `make cloudflare-dashboard-layout-qa` e `make cloudflare-theme-qa` contra `https://malnati-brickbreaker.pages.dev/`.
     - Bloquear merge se a validação publicada falhar ou se só houver evidência local.

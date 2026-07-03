@@ -86,7 +86,8 @@ Assertivas mínimas:
 
 - Esta entrega permite apenas placeholders offline com texto `Publicidade`.
 - É proibido adicionar script externo, `adsbygoogle`, `ca-pub-*` ou `data-ad-slot`.
-- AdSense real é entrega futura porque adiciona rede externa e conflita com PWA 100% offline.
+- A regra aprovada para PWA-only mantém o jogo principal offline após primeiro carregamento; anúncios reais futuros são opcionais, online-only, consentidos quando exigido e nunca necessários para jogar.
+- Em QA offline, anúncios reais futuros devem ficar ocultos ou desativados sem bloquear gameplay, logs, pontuação ou navegação.
 - O posicionamento deve evitar clique acidental, conforme orientação de política AdSense: <https://support.google.com/adsense/answer/1346295?hl=en>.
 - Uma unidade responsiva real futura deve considerar a largura disponível, conforme orientação oficial: <https://support.google.com/adsense/answer/9183363?hl=en>.
 
