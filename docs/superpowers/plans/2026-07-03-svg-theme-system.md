@@ -83,7 +83,7 @@
 - `src/constants/visualAssets.ts` — catalogar todos os SVGs novos com IDs únicos.
 - `src/constants/assetNaming.test.ts` — exigir SVG-only para runtime visual.
 - `scripts/validate-svg-assets.mjs` — bloquear raster e validar SVGs novos.
-- `public/sw.js` — precache de todos os novos SVGs runtime.
+- `public/sw.js` — cache lazy/versionado dos novos SVGs runtime.
 - `tests/e2e/cloudflare-theme-qa.js` — validar menu “Aparência”, persistência e troca de tema/imagens/fonte.
 - `tests/e2e/cloudflare-svg-assets-qa.js` — validar todos os SVGs esperados, sem raster runtime.
 - `docs/rup/02-design/retro-asset-system.md` — registrar `themeId`, `imageSetId`, `fontSetId` e SVG-only.
@@ -652,9 +652,9 @@ Example:
 <!-- public/assets/visual/sprites/spr-ball-player-high-contrast-default.svg -->
 ```
 
-- [ ] **Step 5: Add all new SVGs to `public/sw.js` precache**
+- [ ] **Step 5: Add all new SVGs to runtime asset manifest/cache**
 
-Add each new path to the precache array. No raster path may be added.
+Ensure each new path enters the runtime asset manifest/cache. No raster path may be added.
 
 - [ ] **Step 6: Run validators**
 
@@ -1345,7 +1345,7 @@ Add under the current top unreleased section:
 
 ```md
 - Sistema de aparência planejado/implementado com seleção de tema visual, conjunto de imagens SVG e fonte no menu.
-- Novos conjuntos `high-contrast` e `sunset-cabinet` mantêm assets visuais em SVG local e precache offline.
+- Novos conjuntos `high-contrast` e `sunset-cabinet` mantêm assets visuais em SVG local e cache lazy offline.
 ```
 
 - [ ] **Step 6: Run local verification**
@@ -1404,7 +1404,7 @@ git commit -m "test(theme): validar aparência SVG publicada"
 - [ ] No raster assets are added for visual theme runtime.
 - [ ] Every new SVG has semantic unique basename, 12–64 chars.
 - [ ] Every new SVG is in `VISUAL_ASSET_CATALOG`.
-- [ ] Every runtime SVG is in `public/sw.js` precache.
+- [ ] Every runtime SVG is covered by the runtime asset manifest/cache.
 - [ ] Menu shows user copy: `Aparência`, `Tema visual`, `Imagens`, `Fonte`.
 - [ ] UI does not show internal words like `SVG`, `asset`, `token`, `cache`, `runtime`, `dataset`, `localStorage`, `service worker`.
 - [ ] Changing `imageSetId` does not create a new `GameEngine` and does not reset score.

@@ -37,6 +37,8 @@ const REQUIRED_CINEMATIC_MEDIA_PATHS = [
   '/assets/visual/vfx/vfx-level-up-twirl-overlay.svg',
   '/assets/visual/vfx/vfx-game-over-rip-smoke.svg',
 ];
+const ASSET_MANIFEST_PATH = '/asset-cache-manifest.json';
+const ASSET_HASH_SEARCH_PARAM = 'bbAssetHash';
 const MEDIA_EXTENSION_PATTERN = /\.(gif|jpe?g|mp3|mp4|ogg|png|webm|webp|wav)(\?|$)/i;
 const CANONICAL_HOST = 'brikaya.com';
 
@@ -129,15 +131,39 @@ function assertMedia(snapshot, requiredIds, label) {
 }
 
 async function cachedCinematicPaths(page) {
-  return page.evaluate(async (paths) => {
+  return page.evaluate(async ({ paths, manifestPath, hashSearchParam }) => {
     if (!('serviceWorker' in navigator) || !('caches' in window)) return [];
     await navigator.serviceWorker.ready;
+
+    let manifest = { assetsByPath: {} };
+    try {
+      const manifestResponse = await fetch(manifestPath, { cache: 'no-store' });
+      manifest = await manifestResponse.json();
+    } catch {}
+
     const matches = await Promise.all(paths.map(async (path) => {
-      const response = await caches.match(path);
+      const hash = manifest.assetsByPath?.[path]?.hash || '';
+      const candidates = [new URL(path, location.origin).toString()];
+      if (hash) {
+        const versionedUrl = new URL(path, location.origin);
+        versionedUrl.searchParams.set(hashSearchParam, hash);
+        candidates.unshift(versionedUrl.toString());
+      }
+      const response = await Promise.any(
+        candidates.map(async (candidateUrl) => {
+          const cachedResponse = await caches.match(candidateUrl);
+          if (!cachedResponse) throw new Error('cache miss');
+          return cachedResponse;
+        }),
+      ).catch(() => null);
       return response ? path : null;
     }));
     return matches.filter(Boolean);
-  }, REQUIRED_CINEMATIC_MEDIA_PATHS);
+  }, {
+    paths: REQUIRED_CINEMATIC_MEDIA_PATHS,
+    manifestPath: ASSET_MANIFEST_PATH,
+    hashSearchParam: ASSET_HASH_SEARCH_PARAM,
+  });
 }
 
 async function run() {

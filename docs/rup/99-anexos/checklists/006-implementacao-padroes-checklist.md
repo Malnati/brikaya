@@ -13,7 +13,7 @@
 
 ## Build e Automação
 - [ ] Scripts de build/test são executados via `npm`/`Makefile` sem ferramentas externas não aprovadas.
-- [ ] `sw.js` atualizado quando assets ou rotas mudarem; precache validado.
+- [ ] `sw.js` e manifesto atualizados quando assets ou rotas mudarem; cache lazy validado.
 - [ ] Targets de Capacitor (`make build-all`, `make ios`, `make android`) sincronizados com o build do Vite.
 
 ## Testes e Qualidade

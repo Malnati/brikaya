@@ -7,7 +7,7 @@ Definir cobertura mínima e tipos de teste para validar engine, UI e infraestrut
 ## Escopo Prioritário (Fase 1)
 - **Engine**: colisões, multiplicação de bolinhas, penalidade de linha extra, limites de canvas.
 - **Persistência**: gravação e leitura de pontuações (`src/storage/score.ts`) e logs (`src/storage/gameLogger.ts`).
-- **PWA offline**: registro do service worker, precache de assets e fallback cache-first.
+- **PWA offline**: registro do service worker, precache do shell, manifesto de assets e fallback cache-first sob demanda.
 - **Interface**: renderização do canvas, HUD de pontuação/vidas e exibição de logs.
 
 ## Suites Recomendadas
@@ -19,7 +19,7 @@ Definir cobertura mínima e tipos de teste para validar engine, UI e infraestrut
 
 ### Testes de Integração
 - Simular partida completa com gravação de pontuação e logs no IndexedDB utilizando mocks de armazenamento.
-- Verificar interação entre `assetLoader`, service worker e componentes para carregamento offline.
+- Verificar interação entre `assetLoader`, service worker e componentes para carregamento offline sob demanda.
 
 ### Testes E2E (Puppeteer)
 - Fluxo completo de gameplay básico (start → destruição de tijolos → game over) com captura de evidências.

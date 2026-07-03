@@ -19,6 +19,8 @@ const MARKDOWN_ROW_AUDIO_ID_PATTERN = /^\| `([^`]+)` \|/gm;
 const LICENSE_ACCEPT_PATTERN = /(CC0|Public Domain|Silêncio lógico)/i;
 const RUNTIME_AUDIO_PATH_PREFIX = '/assets/audio/';
 const RUNTIME_AUDIO_DOC_PREFIX = 'public/assets/audio/';
+const ASSET_MANIFEST_RUNTIME_PATH = '/asset-cache-manifest.json';
+const ASSET_CACHE_NAME_TOKEN = 'ASSET_CACHE_NAME';
 
 function fail(message) {
   throw new Error(message);
@@ -109,6 +111,18 @@ function validateAudioAssetsDoc(markdown, ids) {
   }
 }
 
+function validateLazyAssetServiceWorker(serviceWorker) {
+  if (!serviceWorker.includes(ASSET_MANIFEST_RUNTIME_PATH)) {
+    fail(`Service worker não referencia ${ASSET_MANIFEST_RUNTIME_PATH}`);
+  }
+  if (!serviceWorker.includes(RUNTIME_AUDIO_PATH_PREFIX)) {
+    fail(`Service worker não trata ${RUNTIME_AUDIO_PATH_PREFIX} sob demanda`);
+  }
+  if (!serviceWorker.includes(ASSET_CACHE_NAME_TOKEN)) {
+    fail('Service worker não declara cache estável de assets');
+  }
+}
+
 function validate() {
   if (!existsSync(AUDIO_DOC_PATH)) fail('docs/audio.md ausente');
   if (!existsSync(AUDIO_ASSETS_DOC_PATH)) fail('docs/audio-assets.md ausente');
@@ -121,6 +135,7 @@ function validate() {
 
   if (!audioDoc.startsWith('<!-- docs/audio.md -->')) fail('docs/audio.md sem cabeçalho de caminho');
   if (HTTPS_URL_PATTERN.test(constantsSource)) fail('src/constants/audio.ts contém URL externa');
+  validateLazyAssetServiceWorker(serviceWorker);
 
   const catalogIds = parseCatalogIds(audioDoc);
   const constantsIds = parseAudioEventIds(constantsSource);
@@ -145,7 +160,6 @@ function validate() {
     for (const filePath of files) {
       fileCount += 1;
       const publicPath = filePath.replace('public', '');
-      if (!serviceWorker.includes(publicPath)) fail(`Service worker não precacheia ${publicPath}`);
       if (!publicPath.startsWith(RUNTIME_AUDIO_PATH_PREFIX)) fail(`Caminho runtime externo: ${publicPath}`);
       const durationSeconds = getDurationSeconds(filePath);
       if (!Number.isFinite(durationSeconds) || durationSeconds <= 0) fail(`Duração inválida: ${filePath}`);

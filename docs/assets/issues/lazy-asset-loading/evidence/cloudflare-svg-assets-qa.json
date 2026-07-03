@@ -1,0 +1,726 @@
+{
+  "ok": true,
+  "publicUrl": "https://brikaya.com/",
+  "checkedAt": "2026-07-03T13:41:41.056Z",
+  "expectedSvgPaths": [
+    "/assets/visual/bricks/spr-brick-basic-blue-high-contrast-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-blue-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-blue-sunset-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-green-high-contrast-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-green-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-green-sunset-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-purple-high-contrast-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-purple-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-purple-sunset-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-red-high-contrast-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-red-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-red-sunset-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-yellow-high-contrast-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-yellow-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-yellow-sunset-normal.svg",
+    "/assets/visual/powerups/spr-powerup-laser-fan-high-contrast.svg",
+    "/assets/visual/powerups/spr-powerup-laser-fan-sunset.svg",
+    "/assets/visual/powerups/spr-powerup-laser-fan.svg",
+    "/assets/visual/powerups/spr-powerup-multiball-orb-high-contrast.svg",
+    "/assets/visual/powerups/spr-powerup-multiball-orb-sunset.svg",
+    "/assets/visual/powerups/spr-powerup-multiball-orb.svg",
+    "/assets/visual/powerups/spr-powerup-slow-ball-high-contrast.svg",
+    "/assets/visual/powerups/spr-powerup-slow-ball-sunset.svg",
+    "/assets/visual/powerups/spr-powerup-slow-ball.svg",
+    "/assets/visual/powerups/spr-powerup-wide-paddle-high-contrast.svg",
+    "/assets/visual/powerups/spr-powerup-wide-paddle-sunset.svg",
+    "/assets/visual/powerups/spr-powerup-wide-paddle.svg",
+    "/assets/visual/sprites/spr-ball-player-default.svg",
+    "/assets/visual/sprites/spr-ball-player-high-contrast-default.svg",
+    "/assets/visual/sprites/spr-ball-player-sunset-default.svg",
+    "/assets/visual/sprites/spr-paddle-player-default.svg",
+    "/assets/visual/sprites/spr-paddle-player-high-contrast-default.svg",
+    "/assets/visual/sprites/spr-paddle-player-sunset-default.svg",
+    "/assets/visual/ui/ui-app-browser-favicon.svg",
+    "/assets/visual/ui/ui-pwa-app-icon.svg",
+    "/assets/visual/vfx/vfx-countdown-circle-high-contrast-overlay.svg",
+    "/assets/visual/vfx/vfx-countdown-circle-overlay.svg",
+    "/assets/visual/vfx/vfx-countdown-circle-sunset-overlay.svg",
+    "/assets/visual/vfx/vfx-countdown-spark-high-contrast-overlay.svg",
+    "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
+    "/assets/visual/vfx/vfx-countdown-spark-sunset-overlay.svg",
+    "/assets/visual/vfx/vfx-game-over-rip-high-contrast-smoke.svg",
+    "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+    "/assets/visual/vfx/vfx-game-over-rip-sunset-smoke.svg",
+    "/assets/visual/vfx/vfx-level-up-star-high-contrast-overlay.svg",
+    "/assets/visual/vfx/vfx-level-up-star-overlay.svg",
+    "/assets/visual/vfx/vfx-level-up-star-sunset-overlay.svg",
+    "/assets/visual/vfx/vfx-level-up-twirl-high-contrast-overlay.svg",
+    "/assets/visual/vfx/vfx-level-up-twirl-overlay.svg",
+    "/assets/visual/vfx/vfx-level-up-twirl-sunset-overlay.svg"
+  ],
+  "controlled": true,
+  "onlineResponseStatuses": [
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-blue-high-contrast-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-blue-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-blue-sunset-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-green-high-contrast-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-green-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-green-sunset-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-purple-high-contrast-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-purple-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-purple-sunset-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-red-high-contrast-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-red-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-red-sunset-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-yellow-high-contrast-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-yellow-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-yellow-sunset-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-laser-fan-high-contrast.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-laser-fan-sunset.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-laser-fan.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-multiball-orb-high-contrast.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-multiball-orb-sunset.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-multiball-orb.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-slow-ball-high-contrast.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-slow-ball-sunset.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-slow-ball.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-wide-paddle-high-contrast.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-wide-paddle-sunset.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-wide-paddle.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/sprites/spr-ball-player-default.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/sprites/spr-ball-player-high-contrast-default.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/sprites/spr-ball-player-sunset-default.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/sprites/spr-paddle-player-default.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/sprites/spr-paddle-player-high-contrast-default.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/sprites/spr-paddle-player-sunset-default.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/ui/ui-app-browser-favicon.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/ui/ui-pwa-app-icon.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-countdown-circle-high-contrast-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-countdown-circle-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-countdown-circle-sunset-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-countdown-spark-high-contrast-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-countdown-spark-sunset-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-game-over-rip-high-contrast-smoke.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-game-over-rip-sunset-smoke.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-level-up-star-high-contrast-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-level-up-star-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-level-up-star-sunset-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-level-up-twirl-high-contrast-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-level-up-twirl-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-level-up-twirl-sunset-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "miss"
+    }
+  ],
+  "offlineResponseStatuses": [
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-blue-high-contrast-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-blue-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-blue-sunset-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-green-high-contrast-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-green-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-green-sunset-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-purple-high-contrast-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-purple-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-purple-sunset-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-red-high-contrast-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-red-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-red-sunset-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-yellow-high-contrast-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-yellow-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-yellow-sunset-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-laser-fan-high-contrast.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-laser-fan-sunset.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-laser-fan.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-multiball-orb-high-contrast.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-multiball-orb-sunset.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-multiball-orb.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-slow-ball-high-contrast.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-slow-ball-sunset.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-slow-ball.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-wide-paddle-high-contrast.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-wide-paddle-sunset.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-wide-paddle.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/sprites/spr-ball-player-default.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/sprites/spr-ball-player-high-contrast-default.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/sprites/spr-ball-player-sunset-default.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/sprites/spr-paddle-player-default.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/sprites/spr-paddle-player-high-contrast-default.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/sprites/spr-paddle-player-sunset-default.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/ui/ui-app-browser-favicon.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/ui/ui-pwa-app-icon.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-countdown-circle-high-contrast-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-countdown-circle-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-countdown-circle-sunset-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-countdown-spark-high-contrast-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-countdown-spark-sunset-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-game-over-rip-high-contrast-smoke.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-game-over-rip-sunset-smoke.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-level-up-star-high-contrast-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-level-up-star-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-level-up-star-sunset-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-level-up-twirl-high-contrast-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-level-up-twirl-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-level-up-twirl-sunset-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    }
+  ],
+  "cacheState": {
+    "cacheNames": [
+      "breakout-cache-20260703133942",
+      "breakout-asset-cache-v1"
+    ],
+    "cachedExpected": [
+      "/assets/visual/bricks/spr-brick-basic-blue-high-contrast-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-blue-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-blue-sunset-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-green-high-contrast-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-green-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-green-sunset-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-purple-high-contrast-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-purple-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-purple-sunset-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-red-high-contrast-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-red-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-red-sunset-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-yellow-high-contrast-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-yellow-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-yellow-sunset-normal.svg",
+      "/assets/visual/powerups/spr-powerup-laser-fan-high-contrast.svg",
+      "/assets/visual/powerups/spr-powerup-laser-fan-sunset.svg",
+      "/assets/visual/powerups/spr-powerup-laser-fan.svg",
+      "/assets/visual/powerups/spr-powerup-multiball-orb-high-contrast.svg",
+      "/assets/visual/powerups/spr-powerup-multiball-orb-sunset.svg",
+      "/assets/visual/powerups/spr-powerup-multiball-orb.svg",
+      "/assets/visual/powerups/spr-powerup-slow-ball-high-contrast.svg",
+      "/assets/visual/powerups/spr-powerup-slow-ball-sunset.svg",
+      "/assets/visual/powerups/spr-powerup-slow-ball.svg",
+      "/assets/visual/powerups/spr-powerup-wide-paddle-high-contrast.svg",
+      "/assets/visual/powerups/spr-powerup-wide-paddle-sunset.svg",
+      "/assets/visual/powerups/spr-powerup-wide-paddle.svg",
+      "/assets/visual/sprites/spr-ball-player-default.svg",
+      "/assets/visual/sprites/spr-ball-player-high-contrast-default.svg",
+      "/assets/visual/sprites/spr-ball-player-sunset-default.svg",
+      "/assets/visual/sprites/spr-paddle-player-default.svg",
+      "/assets/visual/sprites/spr-paddle-player-high-contrast-default.svg",
+      "/assets/visual/sprites/spr-paddle-player-sunset-default.svg",
+      "/assets/visual/ui/ui-app-browser-favicon.svg",
+      "/assets/visual/ui/ui-pwa-app-icon.svg",
+      "/assets/visual/vfx/vfx-countdown-circle-high-contrast-overlay.svg",
+      "/assets/visual/vfx/vfx-countdown-circle-overlay.svg",
+      "/assets/visual/vfx/vfx-countdown-circle-sunset-overlay.svg",
+      "/assets/visual/vfx/vfx-countdown-spark-high-contrast-overlay.svg",
+      "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
+      "/assets/visual/vfx/vfx-countdown-spark-sunset-overlay.svg",
+      "/assets/visual/vfx/vfx-game-over-rip-high-contrast-smoke.svg",
+      "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+      "/assets/visual/vfx/vfx-game-over-rip-sunset-smoke.svg",
+      "/assets/visual/vfx/vfx-level-up-star-high-contrast-overlay.svg",
+      "/assets/visual/vfx/vfx-level-up-star-overlay.svg",
+      "/assets/visual/vfx/vfx-level-up-star-sunset-overlay.svg",
+      "/assets/visual/vfx/vfx-level-up-twirl-high-contrast-overlay.svg",
+      "/assets/visual/vfx/vfx-level-up-twirl-overlay.svg",
+      "/assets/visual/vfx/vfx-level-up-twirl-sunset-overlay.svg"
+    ],
+    "missingExpected": [],
+    "manifestAssets": 141
+  },
+  "externalRequests": [],
+  "runtimeRasterRequests": [],
+  "failedRequests": [],
+  "screenshotPath": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-svg-assets-qa.png"
+}

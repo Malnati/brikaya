@@ -8,7 +8,7 @@
 | Escopo runtime | Apenas imagens, ícones, VFX e áudios exibidos/usados pelo jogo, HUD, menus e overlays. |
 | SVG-only visual | Toda imagem visual runtime deve ser SVG local/offline; raster é proibido em `public/assets/visual/`. |
 | Fora de escopo | Evidências, screenshots técnicos, imagens de issues/PRs fora de `public/assets/visual/` e áudio. |
-| Offline | Todo asset runtime deve existir em `public/` e ser listado no precache do service worker. |
+| Offline | Todo asset runtime deve existir em `public/`, constar no manifesto de assets e usar cache lazy/versionado do service worker. |
 | Paridade | O stem do arquivo físico é o ID único e deve converter exatamente para a constante camelCase. |
 | Exclusividade | Nenhum basename runtime pode repetir no catálogo nem no disco. |
 | Tamanho do ID | 12 a 64 caracteres. |
@@ -186,10 +186,10 @@
 | Teste/validador | Deve validar |
 | --- | --- |
 | `src/constants/assetNaming.test.ts` | Regex, 12-64 chars, basename único, paridade kebab/camel e cobertura disco/código. |
-| `npm run test:asset-naming` | Catálogos visuais/áudio, existência física e precache. |
+| `npm run test:asset-naming` | Catálogos visuais/áudio, existência física e cobertura no manifesto/cache lazy. |
 | `npm run test:svg-assets` | SVG local, `viewBox`, ausência de script, raster embutido, data URI, URL externa, raster runtime e artefato Codex visual fora de SVG. |
-| `npm run test:cinematic-media-assets` | VFX de overlay existem, são locais e entram no service worker. |
-| `npm run test:audio-assets` | Catálogo sonoro, arquivos MP3, duração, SHA, licença e precache. |
+| `npm run test:cinematic-media-assets` | VFX de overlay existem, são locais e entram no manifesto/cache lazy do service worker. |
+| `npm run test:audio-assets` | Catálogo sonoro, arquivos MP3, duração, SHA, licença e cache lazy. |
 | `npm test -- --runInBand` | Regressão unitária completa. |
 | `npm run build` | SVG-only guard, TypeScript, Vite build e carimbo do service worker. |
 
@@ -200,7 +200,7 @@
 | Nome físico | Kebab-case, prefixo obrigatório, sem acento/espaço/caractere especial e extensão `.svg` para visual runtime. |
 | Constante | camelCase derivada exatamente do stem. |
 | Catálogo | Adicionar em `src/constants/visualAssets.ts` ou `src/constants/audio.ts`. |
-| Service worker | Adicionar no precache runtime. |
+| Service worker | Garantir inclusão no manifesto runtime de assets. |
 | Documento | Atualizar esta especificação quando o asset criar novo grupo/estado. |
 | Testes | Rodar `test:asset-naming`, validador específico e build. |
 
