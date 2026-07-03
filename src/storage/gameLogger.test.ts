@@ -339,6 +339,33 @@ describe('GameLogger', () => {
     }, 10000);
   });
 
+  describe('logPowerUp', () => {
+    it('deve registrar power-up com tipo, ação e speedState', async () => {
+      (gameLogger as any).db = mockIndexedDB.mockDB;
+      const gameState = buildGameState();
+      const ballPositions = buildBallPositions();
+      const paddlePosition = buildPaddlePosition();
+
+      await gameLogger.logPowerUp(
+        gameState,
+        ballPositions,
+        paddlePosition,
+        'laser_fan',
+        'activate'
+      );
+
+      expect(mockIndexedDB.mockStore.add).toHaveBeenCalled();
+      expect(mockIndexedDB.mockStore.add.mock.calls[0][0]).toMatchObject({
+        type: 'power_up',
+        metadata: {
+          powerUpType: 'laser_fan',
+          action: 'activate',
+          speedState: gameState.speedState,
+        },
+      });
+    }, 10000);
+  });
+
   describe('getGameStats', () => {
     it('agrega speed reductions, média de redução, mínimo atingido e duração média de fase', async () => {
       const events = [

@@ -3,6 +3,19 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.22.0] - 2026-07-03
+### Adicionado
+- Telemetria `power_up` para aparição, coleta, ativação, expiração e perda de power-ups/especiais.
+- QA publicado `test:cloudflare-powerups` e target `make cloudflare-powerups-qa` para validar o especial Laser em leque no Cloudflare Pages.
+- Documento de qualidade para prova publicada de power-ups e especiais.
+
+### Alterado
+- O QA do Laser em leque passa a exigir ativação registrada em IndexedDB antes de aceitar a conclusão da fase.
+
+### Testado
+- `npm test -- src/logic/GameEngine.test.ts --runInBand`
+- `npm run test:cloudflare-powerups`
+
 ## [1.21.0] - 2026-07-03
 ### Adicionado
 - Progressão de níveis com aumento de linhas de tijolos por fase, limitada ao espaço seguro do tabuleiro.

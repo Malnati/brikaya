@@ -166,6 +166,7 @@ jest.mock("../storage/gameLogger", () => ({
     logBallAdded: jest.fn().mockResolvedValue(undefined),
     logBrickDestroyed: jest.fn().mockResolvedValue(undefined),
     logCollision: jest.fn().mockResolvedValue(undefined),
+    logPowerUp: jest.fn().mockResolvedValue(undefined),
   },
 }));
 
@@ -540,8 +541,8 @@ describe("GameEngine", () => {
     ["slow_ball", GAME_AUDIO_IDS.POWERUP_ACTIVATE_SLOW_BALL],
     ["laser_fan", GAME_AUDIO_IDS.POWERUP_ACTIVATE_LASER_FAN],
   ] as const)(
-    "toca SFX específico ao ativar %s",
-    (powerUpType, expectedAudioId) => {
+    "toca SFX específico e registra power_up ao ativar %s",
+    async (powerUpType, expectedAudioId) => {
       const playAudio = jest.fn();
       const audioSink: GameAudioSink = {
         playAudio,
@@ -559,20 +560,28 @@ describe("GameEngine", () => {
         undefined,
         audioSink,
       );
+      const mockGameLogger = require("../storage/gameLogger").gameLogger;
 
-      (engine as any).activatePowerUp(powerUpType);
+      await (engine as any).activatePowerUp(powerUpType);
 
       expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.POWERUP_COLLECT);
       expect(playAudio).toHaveBeenCalledWith(expectedAudioId);
+      expect(mockGameLogger.logPowerUp).toHaveBeenCalledWith(
+        expect.any(Object),
+        expect.any(Array),
+        expect.any(Object),
+        powerUpType,
+        "activate",
+      );
       engine.stop();
     },
   );
 
-  it("registra bolas adicionadas ao ativar multiball", () => {
+  it("registra bolas adicionadas ao ativar multiball", async () => {
     const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
     const mockGameLogger = require("../storage/gameLogger").gameLogger;
 
-    (engine as any).activatePowerUp("multiball");
+    await (engine as any).activatePowerUp("multiball");
 
     expect((engine as any).getCurrentGameState().ballsCount).toBe(3);
     expect(mockGameLogger.logBallAdded).toHaveBeenCalledTimes(2);

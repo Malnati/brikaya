@@ -26,7 +26,7 @@ import {
 } from "../constants/game";
 import { POINTS_PER_BRICK } from "../constants/gameState";
 import { AssetLoader } from "../utils/assetLoader";
-import { gameLogger } from "../storage/gameLogger";
+import { gameLogger, type LoggedPowerUpAction } from "../storage/gameLogger";
 import {
   AUDIO_QA_SCENARIO,
   GAME_AUDIO_IDS,
@@ -68,6 +68,11 @@ const POWER_UP_SPAWN_INTERVAL = 5;
 const POWER_UP_DURATION_MS = 8000;
 const POWER_UP_START_Y_OFFSET = 16;
 const POWER_UP_EDGE_PADDING = 24;
+const POWER_UP_ACTION_SPAWN: LoggedPowerUpAction = "spawn";
+const POWER_UP_ACTION_COLLECT: LoggedPowerUpAction = "collect";
+const POWER_UP_ACTION_ACTIVATE: LoggedPowerUpAction = "activate";
+const POWER_UP_ACTION_EXPIRE: LoggedPowerUpAction = "expire";
+const POWER_UP_ACTION_MISS: LoggedPowerUpAction = "miss";
 const WIDE_PADDLE_SCALE = 1.45;
 const SLOW_BALL_MULTIPLIER = 0.75;
 const MULTIBALL_ANGLE_OFFSET = 0.42;
@@ -806,6 +811,7 @@ export class GameEngine {
       this.resolveAssetPath,
     );
     this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_SPAWN);
+    void this.logPowerUpEvent(powerUpType, POWER_UP_ACTION_SPAWN);
   }
 
   private selectNextPowerUpType(): PowerUpType | null {
@@ -845,17 +851,23 @@ export class GameEngine {
     if (this.activePowerUp.intersects(this.paddle.position)) {
       const powerUpType = this.activePowerUp.getType();
       this.activePowerUp = null;
+      void this.logPowerUpEvent(powerUpType, POWER_UP_ACTION_COLLECT);
       void this.activatePowerUp(powerUpType);
       return;
     }
 
     if (this.activePowerUp.isOutOfBounds(this.canvasSize.height)) {
+      void this.logPowerUpEvent(
+        this.activePowerUp.getType(),
+        POWER_UP_ACTION_MISS,
+      );
       this.activePowerUp = null;
     }
   }
 
   private async activatePowerUp(powerUpType: PowerUpType) {
     this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_COLLECT);
+    await this.logPowerUpEvent(powerUpType, POWER_UP_ACTION_ACTIVATE);
     const activationAudioId = getPowerUpActivationAudioId(powerUpType);
 
     if (powerUpType === "laser_fan") {
@@ -891,7 +903,7 @@ export class GameEngine {
     if (powerUpType === "wide_paddle") {
       this.paddle.setWidthScale(WIDE_PADDLE_SCALE);
       this.audioSink.playAudio(activationAudioId);
-      this.schedulePowerUpExpiration(() => {
+      this.schedulePowerUpExpiration(powerUpType, () => {
         this.paddle.setWidthScale(1);
       });
       return;
@@ -900,7 +912,7 @@ export class GameEngine {
     if (powerUpType === "slow_ball") {
       this.balls.forEach((ball) => ball.multiplyVelocity(SLOW_BALL_MULTIPLIER));
       this.audioSink.playAudio(activationAudioId);
-      this.schedulePowerUpExpiration(() => {
+      this.schedulePowerUpExpiration(powerUpType, () => {
         this.balls.forEach((ball) =>
           ball.multiplyVelocity(1 / SLOW_BALL_MULTIPLIER),
         );
@@ -1037,10 +1049,29 @@ export class GameEngine {
     this.ctx.restore();
   }
 
-  private schedulePowerUpExpiration(onExpire: () => void) {
+  private async logPowerUpEvent(
+    powerUpType: PowerUpType,
+    action: LoggedPowerUpAction,
+  ) {
+    await gameLogger
+      .logPowerUp(
+        this.getCurrentGameState(),
+        this.getBallPositions(),
+        this.paddle.position,
+        powerUpType,
+        action,
+      )
+      .catch((error) => ERROR("❌ Erro ao registrar power-up:", error));
+  }
+
+  private schedulePowerUpExpiration(
+    powerUpType: PowerUpType,
+    onExpire: () => void,
+  ) {
     const timer = setTimeout(() => {
       onExpire();
       this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_EXPIRE);
+      void this.logPowerUpEvent(powerUpType, POWER_UP_ACTION_EXPIRE);
       this.powerUpEffectTimers = this.powerUpEffectTimers.filter(
         (activeTimer) => activeTimer !== timer,
       );
