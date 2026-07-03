@@ -32,6 +32,8 @@ const MENU_BUTTON_NAME = /menu/i;
 const MENU_OPEN_ATTEMPTS = 3;
 const MENU_OPEN_RETRY_DELAY_MS = 500;
 const MENU_OPEN_WAIT_TIMEOUT_MS = 4000;
+const BUTTON_FIND_TIMEOUT_MS = 10000;
+const BUTTON_FIND_RETRY_DELAY_MS = 100;
 const THEME_NEON_ARCADE = "neon-arcade";
 const THEME_CRT_HIGH_CONTRAST = "crt-high-contrast";
 const THEME_PIXEL_SUNSET = "pixel-sunset";
@@ -129,49 +131,85 @@ async function closeBrowser(browser) {
   await new Promise((resolve) => setTimeout(resolve, BROWSER_CLOSE_SETTLE_MS));
 }
 
-async function clickButtonByText(page, label) {
-  const buttons = await page.$$("button");
-  for (const button of buttons) {
-    const text = await button.evaluate(
-      (node) => node.textContent?.trim() || "",
-    );
-    if (text === label) {
-      await button.evaluate((node) => {
-        node.scrollIntoView({ block: "center", inline: "center" });
-        node.click();
+function waitForRetryDelay() {
+  return new Promise((resolve) =>
+    setTimeout(resolve, BUTTON_FIND_RETRY_DELAY_MS),
+  );
+}
+
+async function clickButton(page, matcher, missingMessage) {
+  const startedAt = Date.now();
+
+  while (Date.now() - startedAt < BUTTON_FIND_TIMEOUT_MS) {
+    const buttons = await page.$$("button");
+    const candidates = [];
+    for (const button of buttons) {
+      const labels = await button.evaluate((node) => {
+        const rect = node.getBoundingClientRect();
+        const style = window.getComputedStyle(node);
+        return {
+          text: node.textContent?.trim() || "",
+          ariaLabel: node.getAttribute("aria-label") || "",
+          title: node.getAttribute("title") || "",
+          visible:
+            rect.width > 0 &&
+            rect.height > 0 &&
+            rect.bottom >= 0 &&
+            rect.right >= 0 &&
+            rect.top <= window.innerHeight &&
+            rect.left <= window.innerWidth &&
+            style.visibility !== "hidden" &&
+            style.display !== "none",
+        };
       });
-      return;
+      candidates.push({ button, labels });
     }
+
+    const visibleMatch = candidates.find(
+      (candidate) => candidate.labels.visible && matcher(candidate.labels),
+    );
+    const fallbackMatch = candidates.find((candidate) =>
+      matcher(candidate.labels),
+    );
+    const match = visibleMatch || fallbackMatch;
+
+    if (match) {
+      try {
+        await match.button.evaluate((node) => {
+          node.scrollIntoView({ block: "center", inline: "center" });
+          node.click();
+        });
+        return;
+      } catch {
+        await waitForRetryDelay();
+        continue;
+      }
+    }
+
+    await waitForRetryDelay();
   }
-  throw new Error(`Botão não encontrado: ${label}`);
+
+  throw new Error(missingMessage);
+}
+
+async function clickButtonByText(page, label) {
+  await clickButton(
+    page,
+    (labels) => labels.text === label,
+    `Botão não encontrado: ${label}`,
+  );
 }
 
 async function clickButtonByPattern(page, pattern) {
-  const buttons = await page.$$("button");
-  const candidates = [];
-  for (const button of buttons) {
-    const labels = await button.evaluate((node) => ({
-      text: node.textContent || "",
-      ariaLabel: node.getAttribute("aria-label") || "",
-      title: node.getAttribute("title") || "",
-    }));
-    candidates.push({ button, labels });
-  }
-
-  const accessibleMatch = candidates.find(
-    ({ labels }) =>
-      pattern.test(labels.ariaLabel) || pattern.test(labels.title),
+  await clickButton(
+    page,
+    (labels) =>
+      pattern.test(labels.text) ||
+      pattern.test(labels.ariaLabel) ||
+      pattern.test(labels.title),
+    `Botão não encontrado: ${pattern}`,
   );
-  const textMatch = candidates.find(({ labels }) => pattern.test(labels.text));
-  const match = accessibleMatch || textMatch;
-  if (!match) throw new Error(`Botão não encontrado: ${pattern}`);
-
-  await match.button.evaluate((node) => {
-    node.scrollIntoView({ block: "center", inline: "center" });
-    node.click();
-  });
 }
-
 async function openMenu(page) {
   for (let attempt = 1; attempt <= MENU_OPEN_ATTEMPTS; attempt += 1) {
     if (await page.$(".settings-drawer")) return;
@@ -747,7 +785,19 @@ async function run() {
       consoleProblems,
     };
     writeFileSync(reportPath, JSON.stringify(report, null, 2));
-    console.log(JSON.stringify(report, null, 2));
+    console.log(
+      JSON.stringify(
+        {
+          url: report.url,
+          screenshotPaths: report.screenshotPaths,
+          externalRequests: report.externalRequests,
+          consoleProblems: report.consoleProblems,
+          validatedViewports: Object.keys(report.results),
+        },
+        null,
+        2,
+      ),
+    );
   } finally {
     await closeBrowser(browser);
   }
