@@ -627,6 +627,16 @@ canvas {
   animation: cinematic-media-drift 1800ms ease-out both;
 }
 
+.game-cinematic-overlay__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
 .game-cinematic-overlay__count,
 .game-cinematic-overlay__title {
   position: relative;

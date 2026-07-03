@@ -63,10 +63,12 @@ const RIP_TITLE = "RIP";
 const RIP_HINT = "Recomeçando...";
 const MEDIA_CLASS_NAME = `${BASE_CLASS_NAME}__media`;
 const STAGE_CLASS_NAME = `${BASE_CLASS_NAME}__stage`;
+const CONTENT_CLASS_NAME = `${BASE_CLASS_NAME}__content`;
 const MEDIA_ALT = "";
 const MEDIA_LOADING = "lazy";
 const MEDIA_DECODING = "async";
 const STAGE_TEST_ID = "game-cinematic-stage";
+const CONTENT_TEST_ID = "game-cinematic-content";
 const CINEMATIC_MEDIA_ROLES = {
   "countdown-circle": GAME_VISUAL_ASSET_ROLES.countdownCircleOverlay,
   "countdown-spark": GAME_VISUAL_ASSET_ROLES.countdownSparkOverlay,
@@ -129,6 +131,14 @@ function renderStage(
       data-testid={STAGE_TEST_ID}
       style={stageStyle(boardRect)}
     >
+      {children}
+    </div>
+  );
+}
+
+function renderContent(children: ReactNode) {
+  return (
+    <div className={CONTENT_CLASS_NAME} data-testid={CONTENT_TEST_ID}>
       {children}
     </div>
   );
@@ -211,10 +221,14 @@ export function GameCinematicOverlay({
       {renderStage(
         <>
           {renderMediaLayers(state, imageSetId)}
-          <span className={`${BASE_CLASS_NAME}__title`}>{RIP_TITLE}</span>
-          <span className={`${BASE_CLASS_NAME}__detail`}>{RIP_HINT}</span>
+          {renderContent(
+            <>
+              <span className={`${BASE_CLASS_NAME}__title`}>{RIP_TITLE}</span>
+              <span className={`${BASE_CLASS_NAME}__detail`}>{RIP_HINT}</span>
+            </>,
+          )}
         </>,
-        boardRect,
+        null,
       )}
     </div>
   );

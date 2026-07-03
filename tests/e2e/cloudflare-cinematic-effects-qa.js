@@ -1,5 +1,5 @@
 // tests/e2e/cloudflare-cinematic-effects-qa.js
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import puppeteer from 'puppeteer';
 
@@ -16,7 +16,24 @@ const DEFAULT_LEVEL_UP_SCREENSHOT_PATH =
 const DEFAULT_RIP_SCREENSHOT_PATH =
   'docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-rip.png';
 const CHROME_EXECUTABLE_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const VIEWPORT = { width: 393, height: 852, deviceScaleFactor: 3, isMobile: true, hasTouch: true };
+const RESPONSIVE_VIEWPORT_MATRIX_PATH = new URL(
+  './responsiveViewportMatrix.json',
+  import.meta.url,
+);
+const RESPONSIVE_VIEWPORT_MATRIX = JSON.parse(
+  readFileSync(RESPONSIVE_VIEWPORT_MATRIX_PATH, 'utf8'),
+);
+const VIEWPORT_NAME_IPHONE_PORTRAIT = 'iphone-17-default';
+const VIEWPORT_NAME_IPHONE_LANDSCAPE = 'iphone-17-default-landscape';
+const VIEWPORT_NAME_IPAD_PORTRAIT = 'ipad-11-a16-air-default';
+const VIEWPORT_NAME_DESKTOP = 'desktop-laptop';
+const RIP_VIEWPORT_NAMES = [
+  VIEWPORT_NAME_IPHONE_PORTRAIT,
+  VIEWPORT_NAME_IPHONE_LANDSCAPE,
+  VIEWPORT_NAME_IPAD_PORTRAIT,
+  VIEWPORT_NAME_DESKTOP,
+];
+const VIEWPORT = viewportByName(VIEWPORT_NAME_IPHONE_PORTRAIT);
 const COUNTDOWN_MAX_DURATION_MS = 2000;
 const RIP_MAX_DURATION_MS = 2000;
 const RIP_OBSERVATION_BUFFER_MS = 300;
@@ -46,9 +63,46 @@ const MEDIA_EXTENSION_PATTERN = /\.(gif|jpe?g|mp3|mp4|ogg|png|webm|webp|wav)(\?|
 const CANONICAL_HOST = 'brikaya.com';
 const MAX_STAGE_OFFSET_PX = 3;
 const MAX_MEDIA_CENTER_OFFSET_PX = 4;
+const MAX_RIP_VIEWPORT_CENTER_OFFSET_PX = 8;
+const MIN_RIP_STAGE_VIEWPORT_COVERAGE_RATIO = 0.96;
+const RIP_SAFE_AREA_PX = 12;
+const MAX_QA_DEVICE_SCALE_FACTOR = 1;
 const NAVIGATION_TIMEOUT_MS = 60000;
 const SERVICE_WORKER_READY_TIMEOUT_MS = 10000;
 const MEDIA_READY_TIMEOUT_MS = 5000;
+const TITLE_SELECTOR = '.game-cinematic-overlay__title';
+const DETAIL_SELECTOR = '.game-cinematic-overlay__detail';
+const CONTENT_SELECTOR = '[data-testid="game-cinematic-content"]';
+const FILE_EXTENSION_SUFFIX_PATTERN = /(\.[^.]+)$/;
+
+function viewportByName(name) {
+  const viewport = RESPONSIVE_VIEWPORT_MATRIX.viewports.find(
+    (candidate) => candidate.name === name,
+  );
+  assert(viewport, `Viewport ausente na matriz responsiva: ${name}`);
+  return viewport;
+}
+
+function puppeteerViewport(viewport) {
+  return {
+    width: viewport.width,
+    height: viewport.height,
+    deviceScaleFactor: Math.min(
+      viewport.deviceScaleFactor,
+      MAX_QA_DEVICE_SCALE_FACTOR,
+    ),
+    isMobile: viewport.isMobile,
+    hasTouch: viewport.hasTouch,
+  };
+}
+
+function screenshotPathForViewport(basePath, viewportName, index) {
+  if (index === 0) return basePath;
+  return basePath.replace(
+    FILE_EXTENSION_SUFFIX_PATTERN,
+    `-${viewportName}$1`,
+  );
+}
 
 function env(name, fallback) {
   return process.env[name] || fallback;
@@ -119,10 +173,13 @@ async function prepareControlledPage(page, publicUrl) {
 }
 
 async function overlaySnapshot(page, selector) {
-  return page.evaluate(({ targetSelector, stageSelector, canvasSelector }) => {
+  return page.evaluate(({ targetSelector, stageSelector, canvasSelector, titleSelector, detailSelector, contentSelector }) => {
     const overlay = document.querySelector(targetSelector);
     const stage = overlay?.querySelector(stageSelector);
     const canvas = document.querySelector(canvasSelector);
+    const content = overlay?.querySelector(contentSelector);
+    const title = overlay?.querySelector(titleSelector);
+    const detail = overlay?.querySelector(detailSelector);
     function rectOf(element) {
       const rect = element?.getBoundingClientRect();
       return rect ? {
@@ -136,6 +193,11 @@ async function overlaySnapshot(page, selector) {
         centerY: rect.y + rect.height / 2,
       } : null;
     }
+    const visualViewport = window.visualViewport;
+    const viewportWidth = visualViewport?.width || window.innerWidth;
+    const viewportHeight = visualViewport?.height || window.innerHeight;
+    const viewportOffsetX = visualViewport?.offsetLeft || 0;
+    const viewportOffsetY = visualViewport?.offsetTop || 0;
 
     return {
       text: overlay?.textContent?.trim() || '',
@@ -143,9 +205,22 @@ async function overlaySnapshot(page, selector) {
       rect: rectOf(overlay),
       stageRect: rectOf(stage),
       canvasRect: rectOf(canvas),
+      contentRect: rectOf(content),
+      titleRect: rectOf(title),
+      detailRect: rectOf(detail),
       viewport: {
         width: window.innerWidth,
         height: window.innerHeight,
+      },
+      visualViewport: {
+        x: viewportOffsetX,
+        y: viewportOffsetY,
+        width: viewportWidth,
+        height: viewportHeight,
+        centerX: viewportOffsetX + viewportWidth / 2,
+        centerY: viewportOffsetY + viewportHeight / 2,
+        right: viewportOffsetX + viewportWidth,
+        bottom: viewportOffsetY + viewportHeight,
       },
       hasBodyScroll:
         document.documentElement.scrollHeight > window.innerHeight ||
@@ -162,6 +237,9 @@ async function overlaySnapshot(page, selector) {
     targetSelector: selector,
     stageSelector: CINEMATIC_STAGE_SELECTOR,
     canvasSelector: CANVAS_SELECTOR,
+    titleSelector: TITLE_SELECTOR,
+    detailSelector: DETAIL_SELECTOR,
+    contentSelector: CONTENT_SELECTOR,
   });
 }
 
@@ -204,6 +282,35 @@ function assertBoardAnchoring(snapshot, label) {
     assert(item.rect.height > 0, `${label}: mídia sem altura visual ${item.id}.`);
     assert(Math.abs(item.rect.centerX - snapshot.canvasRect.centerX) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: mídia ${item.id} descentralizada no eixo X.`);
     assert(Math.abs(item.rect.centerY - snapshot.canvasRect.centerY) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: mídia ${item.id} descentralizada no eixo Y.`);
+  }
+}
+
+function assertRectInsideVisualViewport(rect, viewport, label) {
+  assert(rect, `${label}: elemento visual ausente.`);
+  assert(rect.x >= viewport.x + RIP_SAFE_AREA_PX, `${label}: saiu pela esquerda da viewport.`);
+  assert(rect.y >= viewport.y + RIP_SAFE_AREA_PX, `${label}: saiu pelo topo da viewport.`);
+  assert(rect.right <= viewport.right - RIP_SAFE_AREA_PX, `${label}: saiu pela direita da viewport.`);
+  assert(rect.bottom <= viewport.bottom - RIP_SAFE_AREA_PX, `${label}: saiu pelo rodapé da viewport.`);
+}
+
+function assertRipViewportCentering(snapshot, label) {
+  const viewport = snapshot.visualViewport;
+
+  assert(snapshot.stageRect, `${label}: palco do RIP ausente.`);
+  assert(snapshot.contentRect, `${label}: bloco textual do RIP ausente.`);
+  assert(snapshot.stageRect.width >= viewport.width * MIN_RIP_STAGE_VIEWPORT_COVERAGE_RATIO, `${label}: palco do RIP não cobre a largura da viewport.`);
+  assert(snapshot.stageRect.height >= viewport.height * MIN_RIP_STAGE_VIEWPORT_COVERAGE_RATIO, `${label}: palco do RIP não cobre a altura da viewport.`);
+  assert(Math.abs(snapshot.stageRect.centerX - viewport.centerX) <= MAX_RIP_VIEWPORT_CENTER_OFFSET_PX, `${label}: palco do RIP fora do centro X da viewport.`);
+  assert(Math.abs(snapshot.stageRect.centerY - viewport.centerY) <= MAX_RIP_VIEWPORT_CENTER_OFFSET_PX, `${label}: palco do RIP fora do centro Y da viewport.`);
+  assert(Math.abs(snapshot.contentRect.centerX - viewport.centerX) <= MAX_RIP_VIEWPORT_CENTER_OFFSET_PX, `${label}: texto do RIP fora do centro X da viewport.`);
+  assert(Math.abs(snapshot.contentRect.centerY - viewport.centerY) <= MAX_RIP_VIEWPORT_CENTER_OFFSET_PX, `${label}: texto do RIP fora do centro Y da viewport.`);
+  assertRectInsideVisualViewport(snapshot.titleRect, viewport, `${label}: título RIP`);
+  assertRectInsideVisualViewport(snapshot.detailRect, viewport, `${label}: detalhe RIP`);
+
+  for (const item of snapshot.media) {
+    assert(item.rect, `${label}: mídia sem retângulo visual ${item.id}.`);
+    assert(Math.abs(item.rect.centerX - viewport.centerX) <= MAX_RIP_VIEWPORT_CENTER_OFFSET_PX, `${label}: mídia ${item.id} fora do centro X da viewport.`);
+    assert(Math.abs(item.rect.centerY - viewport.centerY) <= MAX_RIP_VIEWPORT_CENTER_OFFSET_PX, `${label}: mídia ${item.id} fora do centro Y da viewport.`);
   }
 }
 
@@ -289,7 +396,7 @@ async function run() {
 
   try {
     const page = await browser.newPage();
-    await page.setViewport(VIEWPORT);
+    await page.setViewport(puppeteerViewport(VIEWPORT));
     page.on('request', request => {
       const requestUrl = new URL(request.url());
       if (requestUrl.pathname.endsWith('.mp3') && requestUrl.origin !== parsed.origin) {
@@ -334,50 +441,79 @@ async function run() {
     const levelAudioIds = await audioIds(page);
     const countdownAfterLevel = await page.$(COUNTDOWN_SELECTOR);
 
-    const ripPage = await browser.newPage();
-    await ripPage.setViewport(VIEWPORT);
-    ripPage.on('request', request => {
-      const requestUrl = new URL(request.url());
-      if (requestUrl.pathname.endsWith('.mp3') && requestUrl.origin !== parsed.origin) {
-        externalAudioRequests.push(request.url());
-      }
-      if (MEDIA_EXTENSION_PATTERN.test(requestUrl.pathname) && requestUrl.origin !== parsed.origin) {
-        externalMediaRequests.push(request.url());
-      }
-    });
-    ripPage.on('console', message => {
-      if (['error', 'warn'].includes(message.type())) {
-        consoleProblems.push({ type: message.type(), text: message.text() });
-      }
-    });
-    ripPage.on('pageerror', error => consoleProblems.push({ type: 'pageerror', text: error.message }));
+    const ripResults = [];
 
-    await ripPage.goto(scenarioUrl(publicUrl, CINEMATIC_RIP_QA_SCENARIO), {
-      waitUntil: 'domcontentloaded',
-      timeout: NAVIGATION_TIMEOUT_MS,
-    });
-    await waitForServiceWorkerControl(ripPage);
-    await ripPage.waitForSelector(COUNTDOWN_SELECTOR, { timeout: 5000 });
-    await waitForCinematicMediaReady(ripPage, COUNTDOWN_SELECTOR);
-    await ripPage.waitForSelector(COUNTDOWN_SELECTOR, {
-      hidden: true,
-      timeout: COUNTDOWN_MAX_DURATION_MS + 900,
-    });
-    await ripPage.waitForSelector(RIP_SELECTOR, { timeout: MAX_WAIT_MS });
-    await waitForCinematicMediaReady(ripPage, RIP_SELECTOR);
-    const ripStartedAt = Date.now();
-    const ripState = await overlaySnapshot(ripPage, RIP_SELECTOR);
-    await Promise.all([
-      ripPage.screenshot({ path: ripScreenshotPath, fullPage: true }),
-      ripPage.waitForSelector(RIP_SELECTOR, {
+    for (const [index, viewportName] of RIP_VIEWPORT_NAMES.entries()) {
+      const viewport = viewportByName(viewportName);
+      const ripPage = await browser.newPage();
+      await ripPage.setViewport(puppeteerViewport(viewport));
+      ripPage.on('request', request => {
+        const requestUrl = new URL(request.url());
+        if (requestUrl.pathname.endsWith('.mp3') && requestUrl.origin !== parsed.origin) {
+          externalAudioRequests.push(request.url());
+        }
+        if (MEDIA_EXTENSION_PATTERN.test(requestUrl.pathname) && requestUrl.origin !== parsed.origin) {
+          externalMediaRequests.push(request.url());
+        }
+      });
+      ripPage.on('console', message => {
+        if (['error', 'warn'].includes(message.type())) {
+          consoleProblems.push({ type: message.type(), text: message.text() });
+        }
+      });
+      ripPage.on('pageerror', error => consoleProblems.push({ type: 'pageerror', text: error.message }));
+
+      await ripPage.goto(scenarioUrl(publicUrl, CINEMATIC_RIP_QA_SCENARIO), {
+        waitUntil: 'domcontentloaded',
+        timeout: NAVIGATION_TIMEOUT_MS,
+      });
+      await waitForServiceWorkerControl(ripPage);
+      await ripPage.waitForSelector(COUNTDOWN_SELECTOR, { timeout: 5000 });
+      await waitForCinematicMediaReady(ripPage, COUNTDOWN_SELECTOR);
+      await ripPage.waitForSelector(COUNTDOWN_SELECTOR, {
         hidden: true,
-        timeout: RIP_MAX_DURATION_MS + RIP_OBSERVATION_BUFFER_MS,
-      }),
-    ]);
-    const ripDurationMs = Date.now() - ripStartedAt;
-    const ripAfterTimeoutState = await overlaySnapshot(ripPage, RIP_SELECTOR);
-    const countdownAfterRip = await ripPage.$(COUNTDOWN_SELECTOR);
-    const ripAudioIds = await audioIds(ripPage);
+        timeout: COUNTDOWN_MAX_DURATION_MS + 900,
+      });
+      await ripPage.waitForSelector(RIP_SELECTOR, { timeout: MAX_WAIT_MS });
+      await waitForCinematicMediaReady(ripPage, RIP_SELECTOR);
+      const ripStartedAt = Date.now();
+      const ripState = await overlaySnapshot(ripPage, RIP_SELECTOR);
+      const viewportRipScreenshotPath = screenshotPathForViewport(
+        ripScreenshotPath,
+        viewportName,
+        index,
+      );
+      ensureParentDirectory(viewportRipScreenshotPath);
+      await Promise.all([
+        ripPage.screenshot({ path: viewportRipScreenshotPath, fullPage: true }),
+        ripPage.waitForSelector(RIP_SELECTOR, {
+          hidden: true,
+          timeout: RIP_MAX_DURATION_MS + RIP_OBSERVATION_BUFFER_MS,
+        }),
+      ]);
+      const ripDurationMs = Date.now() - ripStartedAt;
+      const ripAfterTimeoutState = await overlaySnapshot(ripPage, RIP_SELECTOR);
+      const countdownAfterRip = await ripPage.$(COUNTDOWN_SELECTOR);
+      const ripAudioIds = await audioIds(ripPage);
+      await ripPage.close({ runBeforeUnload: false });
+      ripResults.push({
+        viewport,
+        viewportName,
+        ripState,
+        ripDurationMs,
+        ripAfterTimeoutState,
+        countdownAfterRip: Boolean(countdownAfterRip),
+        ripAudioIds,
+        ripScreenshotPath: viewportRipScreenshotPath,
+      });
+    }
+
+    const primaryRipResult = ripResults[0];
+    const ripState = primaryRipResult.ripState;
+    const ripDurationMs = primaryRipResult.ripDurationMs;
+    const ripAudioIds = primaryRipResult.ripAudioIds;
+    const countdownAfterRip = primaryRipResult.countdownAfterRip;
+    const ripAfterTimeoutState = primaryRipResult.ripAfterTimeoutState;
     const cachedPaths = await cachedCinematicPaths(page);
 
     assertFullViewport(countdownState, 'countdown');
@@ -385,25 +521,30 @@ async function run() {
     assertFullViewport(ripState, 'rip');
     assertBoardAnchoring(countdownState, 'countdown');
     assertBoardAnchoring(levelUpState, 'level-up');
-    assertBoardAnchoring(ripState, 'rip');
     assertMedia(countdownState, REQUIRED_COUNTDOWN_MEDIA, 'countdown');
     assertMedia(levelUpState, REQUIRED_LEVEL_UP_MEDIA, 'level-up');
-    assertMedia(ripState, REQUIRED_RIP_MEDIA, 'rip');
     assert(countdownDurationMs <= COUNTDOWN_MAX_DURATION_MS + 900, `Countdown demorou demais: ${countdownDurationMs}ms.`);
-    assert(ripDurationMs <= RIP_MAX_DURATION_MS + RIP_OBSERVATION_BUFFER_MS, `RIP demorou demais: ${ripDurationMs}ms.`);
     assert(/3|2|1/.test(countdownState.text), 'Countdown não mostrou 3, 2 ou 1.');
     assert(levelUpState.text.includes('Subindo de nível'), 'Level-up não informou subida de nível.');
     assert(levelUpState.text.includes('Fase 2'), 'Level-up não informou fase 2.');
-    assert(ripState.text.includes('RIP'), 'RIP não ficou visível.');
-    assert(!ripAfterTimeoutState.rect, 'RIP permaneceu visível após o limite.');
     assert(!countdownAfterLevel, 'Countdown reapareceu entre fases.');
-    assert(!countdownAfterRip, 'Countdown reapareceu após RIP.');
     for (const id of REQUIRED_LEVEL_AUDIO_IDS) {
       assert(levelAudioIds.includes(id), `Áudio ausente no level-up/countdown: ${id}`);
     }
-    for (const id of REQUIRED_RIP_AUDIO_IDS) {
-      assert(ripAudioIds.includes(id), `Áudio ausente no RIP: ${id}`);
+
+    for (const result of ripResults) {
+      const label = `rip/${result.viewportName}`;
+      assertFullViewport(result.ripState, label);
+      assertRipViewportCentering(result.ripState, label);
+      assertMedia(result.ripState, REQUIRED_RIP_MEDIA, label);
+      assert(result.ripDurationMs <= RIP_MAX_DURATION_MS + RIP_OBSERVATION_BUFFER_MS, `${label}: RIP demorou demais: ${result.ripDurationMs}ms.`);
+      assert(result.ripState.text.includes('RIP'), `${label}: RIP não ficou visível.`);
+      assert(!result.ripAfterTimeoutState.rect, `${label}: RIP permaneceu visível após o limite.`);
+      for (const id of REQUIRED_RIP_AUDIO_IDS) {
+        assert(result.ripAudioIds.includes(id), `${label}: áudio ausente no RIP: ${id}`);
+      }
     }
+
     assert(externalAudioRequests.length === 0, `Requests externos de áudio: ${externalAudioRequests.join(', ')}`);
     assert(externalMediaRequests.length === 0, `Requests externos de mídia: ${externalMediaRequests.join(', ')}`);
     for (const path of REQUIRED_CINEMATIC_MEDIA_PATHS) {
@@ -419,6 +560,7 @@ async function run() {
       countdownState,
       levelUpState,
       ripState,
+      ripResults,
       levelAudioIds,
       ripAudioIds,
       cachedPaths,

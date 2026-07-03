@@ -1,0 +1,64 @@
+{
+  "url": "https://brikaya.com/",
+  "byType": {
+    "game_start": 1,
+    "brick_destroyed": 1,
+    "score_update": 1,
+    "collision": 1
+  },
+  "eventTypes": [
+    "game_start",
+    "brick_destroyed",
+    "score_update",
+    "collision"
+  ],
+  "startBall": {
+    "x": 183.5,
+    "y": 214,
+    "velocity": {
+      "dx": 2.3334523779156067,
+      "dy": -2.3334523779156067
+    },
+    "radius": 8
+  },
+  "lastBall": {
+    "x": 359,
+    "y": 158.3641313494608,
+    "velocity": {
+      "dx": -2.2606203794533926,
+      "dy": 2.260620379453392
+    },
+    "radius": 8
+  },
+  "restartedToInitialPosition": false,
+  "scoreEvents": 1,
+  "scoreSpeedReduction": {
+    "level": 1,
+    "hitNumber": 1,
+    "speedBefore": 3.3,
+    "speedAfter": 3.197,
+    "reductionApplied": 0.103,
+    "minSpeed": 0.825,
+    "maxSpeed": 3.3,
+    "minReached": false,
+    "elapsedLevelMs": 817
+  },
+  "scoreSpeedState": {
+    "level": 1,
+    "initialBrickCount": 24,
+    "successfulBrickHits": 1,
+    "initialSpawnSpeed": 3.3,
+    "maxSpeed": 3.3,
+    "minSpeed": 0.825,
+    "currentSpeed": 3.197,
+    "reductionPerBrick": 0.103,
+    "previousLevelMaxSpeed": 3.3,
+    "levelStartedAt": 1783123157505,
+    "elapsedLevelMs": 819,
+    "minReached": false
+  },
+  "expectedReductionPerBrick": 0.103,
+  "expectedFirstLevelSpawnSpeed": 3.3,
+  "consoleProblems": [],
+  "screenshotPath": "docs/assets/issues/mobile-cinematic-overlay-alignment/evidence/evi-rip-center-no-score-reset-shot.png"
+}

@@ -3,6 +3,25 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.31.3] - 2026-07-03
+### Corrigido
+- RIP de fim de jogo passa a centralizar texto e fumaça na viewport em mobile, tablet e desktop, sem herdar o retângulo do tabuleiro.
+
+### Alterado
+- QA publicado de efeitos cinematográficos valida RIP em matriz mínima responsiva: iPhone retrato, iPhone paisagem, iPad retrato e desktop.
+- QA publicado de efeitos cinematográficos passa a tratar a nova contagem pós-RIP como diagnóstico, evitando falha intermitente no reinício automático.
+- QA publicado de dashboard passa a validar a abertura do painel de colisões pelo título, sem depender de métricas opcionais em execuções sem colisões.
+- QA publicado de dashboard passa a tolerar slots opcionais ausentes ao coletar estilos, evitando falha de coleta antes das asserções de layout.
+
+### Testado
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version && node --check tests/e2e/cloudflare-mobile-qa.js && node --check tests/e2e/cloudflare-cinematic-effects-qa.js && npm test -- --runInBand && npm run test:semantic-file-names && npm run test:svg-assets && npm run build`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make cloudflare-deploy`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-cinematic-effects-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-no-score-reset`
+
 ## [1.31.2] - 2026-07-03
 ### Adicionado
 - Plano e recibo operacional zero-custo para registros multilíngues de Brikaya, cobrindo Google, Bing, Yandex, Naver, Baidu, CLASSIND e buscas gratuitas de marca sem ativar serviço pago.
