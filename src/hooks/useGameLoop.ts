@@ -4,6 +4,10 @@ import { useEffect, RefObject, useRef } from 'react';
 import { GameEngine, GameQaScenario } from '../logic/GameEngine';
 import { LOG, ERROR } from '../utils/logger';
 import { LevelTransitionPayload } from '../constants/game';
+import {
+  IMAGE_SET_RETRO_DEFAULT,
+  type ImageSetId,
+} from '../constants/appearance';
 import type { GameAudioSink } from '../constants/audio';
 
 interface CanvasSize {
@@ -29,7 +33,8 @@ export function useGameLoop(
   qaScenario?: GameQaScenario | null,
   audioSink?: GameAudioSink,
   onLevelChange?: (level: number) => void,
-  startBlocked = false
+  startBlocked = false,
+  imageSetId: ImageSetId = IMAGE_SET_RETRO_DEFAULT
 ) {
   const engineRef = useRef<GameEngine | null>(null);
   const callbacksRef = useRef<GameLoopCallbacks>({ onScoreUpdate, onGameWon, onGameOver, onLevelTransition, onLevelChange });
@@ -63,7 +68,8 @@ export function useGameLoop(
         payload => callbacksRef.current.onLevelTransition?.(payload),
         qaScenario,
         audioSink,
-        level => callbacksRef.current.onLevelChange?.(level)
+        level => callbacksRef.current.onLevelChange?.(level),
+        imageSetId
       );
       engineRef.current = engine;
       LOG(`🎮 GameEngine criado com sucesso, chamando start()...`);
@@ -79,6 +85,10 @@ export function useGameLoop(
       engineRef.current = null;
     };
   }, [audioSink, canvasRef, qaScenario, startBlocked]);
+
+  useEffect(() => {
+    engineRef.current?.setImageSet(imageSetId);
+  }, [imageSetId]);
 
   useEffect(() => {
     if (!canvasSize) return;

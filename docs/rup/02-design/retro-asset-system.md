@@ -6,7 +6,8 @@
 | Item | Regra |
 | --- | --- |
 | Escopo runtime | Apenas imagens, ícones, VFX e áudios exibidos/usados pelo jogo, HUD, menus e overlays. |
-| Fora de escopo | Evidências, screenshots, imagens de documentação, referências de design e fontes remotas. |
+| SVG-only visual | Toda imagem visual runtime deve ser SVG local/offline; raster é proibido em `public/assets/visual/`. |
+| Fora de escopo | Evidências, screenshots técnicos, imagens de issues/PRs fora de `public/assets/visual/` e áudio. |
 | Offline | Todo asset runtime deve existir em `public/` e ser listado no precache do service worker. |
 | Paridade | O stem do arquivo físico é o ID único e deve converter exatamente para a constante camelCase. |
 | Exclusividade | Nenhum basename runtime pode repetir no catálogo nem no disco. |
@@ -16,15 +17,27 @@
 
 | Tipo | Prefixo | Diretório runtime | Regex de arquivo | Exemplo arquivo | Exemplo constante |
 | --- | --- | --- | --- | --- | --- |
-| Sprite de jogo | `spr-` | `public/assets/visual/sprites/` | `^(spr)-[a-z0-9]+(-[a-z0-9]+)*\.(svg\|png\|webp)$` | `spr-paddle-player-default.svg` | `sprPaddlePlayerDefault` |
-| Brick | `spr-` | `public/assets/visual/bricks/` | `^(spr)-[a-z0-9]+(-[a-z0-9]+)*\.(svg\|png\|webp)$` | `spr-brick-basic-red-normal.svg` | `sprBrickBasicRedNormal` |
-| Power-up | `spr-` | `public/assets/visual/powerups/` | `^(spr)-[a-z0-9]+(-[a-z0-9]+)*\.(svg\|png\|webp)$` | `spr-powerup-wide-paddle.svg` | `sprPowerupWidePaddle` |
-| UI/ícone | `ui-` | `public/assets/visual/ui/` | `^(ui)-[a-z0-9]+(-[a-z0-9]+)*\.(svg\|png\|webp)$` | `ui-pwa-app-icon.svg` | `uiPwaAppIcon` |
-| VFX | `vfx-` | `public/assets/visual/vfx/` | `^(vfx)-[a-z0-9]+(-[a-z0-9]+)*\.(svg\|png\|webp)$` | `vfx-level-up-star-overlay.svg` | `vfxLevelUpStarOverlay` |
+| Sprite de jogo | `spr-` | `public/assets/visual/sprites/` | `^(spr)-[a-z0-9]+(-[a-z0-9]+)*\.svg$` | `spr-paddle-player-default.svg` | `sprPaddlePlayerDefault` |
+| Brick | `spr-` | `public/assets/visual/bricks/` | `^(spr)-[a-z0-9]+(-[a-z0-9]+)*\.svg$` | `spr-brick-basic-red-normal.svg` | `sprBrickBasicRedNormal` |
+| Power-up | `spr-` | `public/assets/visual/powerups/` | `^(spr)-[a-z0-9]+(-[a-z0-9]+)*\.svg$` | `spr-powerup-wide-paddle.svg` | `sprPowerupWidePaddle` |
+| UI/ícone | `ui-` | `public/assets/visual/ui/` | `^(ui)-[a-z0-9]+(-[a-z0-9]+)*\.svg$` | `ui-pwa-app-icon.svg` | `uiPwaAppIcon` |
+| VFX | `vfx-` | `public/assets/visual/vfx/` | `^(vfx)-[a-z0-9]+(-[a-z0-9]+)*\.svg$` | `vfx-level-up-star-overlay.svg` | `vfxLevelUpStarOverlay` |
 | SFX | `sfx-` | `public/assets/audio/` | `^(sfx)-[a-z0-9]+(-[a-z0-9]+)*-[0-9]{2}\.(mp3\|ogg)$` | `sfx-paddle-hit-center-01.mp3` | `sfxPaddleHitCenter01` |
 | BGM | `bgm-` | `public/assets/audio/` | `^(bgm)-[a-z0-9]+(-[a-z0-9]+)*-[0-9]{2}\.(mp3\|ogg)$` | `bgm-gameplay-loop-main-01.mp3` | `bgmGameplayLoopMain01` |
 | Cor | `clr-` | Código/CSS | `^(clr)-[a-z0-9]+(-[a-z0-9]+)*$` | `clr-neon-cyan-primary` | `clrNeonCyanPrimary` |
 | Tipografia | `typ-` | CSS/fonte local futura | `^(typ)-[a-z0-9]+(-[a-z0-9]+)*$` | `typ-arcade-score-pixel` | `typArcadeScorePixel` |
+
+## 2.1 Regra SVG-only para imagens
+
+| Item | Regra |
+| --- | --- |
+| Runtime visual | Usar somente `.svg` em `public/assets/visual/**`. |
+| Artefatos Codex | Planejamento visual em `docs/assets/theme-planning/**` deve usar somente `.svg`. |
+| Conteúdo SVG | Proibido `<script>`, `<image>`, `data:`, URL externa e raster embutido. |
+| Referências runtime | `src/`, `public/sw.js`, `public/manifest.webmanifest` e `index.html` não podem apontar para PNG, JPG, JPEG, WebP, GIF ou ICO. |
+| Exceções | Screenshots/evidências de QA e issues/PRs podem usar PNG fora dos diretórios acima. Áudio segue regras próprias. |
+| Bloqueio | `npm run test:svg-assets` e `npm run build` devem falhar quando a regra for violada. |
+
 
 ## 3. Função normativa de conversão
 
@@ -174,19 +187,35 @@
 | --- | --- |
 | `src/constants/assetNaming.test.ts` | Regex, 12-64 chars, basename único, paridade kebab/camel e cobertura disco/código. |
 | `npm run test:asset-naming` | Catálogos visuais/áudio, existência física e precache. |
-| `npm run test:svg-assets` | SVG local, `viewBox`, ausência de script, raster embutido, data URI e URL externa. |
+| `npm run test:svg-assets` | SVG local, `viewBox`, ausência de script, raster embutido, data URI, URL externa, raster runtime e artefato Codex visual fora de SVG. |
 | `npm run test:cinematic-media-assets` | VFX de overlay existem, são locais e entram no service worker. |
 | `npm run test:audio-assets` | Catálogo sonoro, arquivos MP3, duração, SHA, licença e precache. |
 | `npm test -- --runInBand` | Regressão unitária completa. |
-| `npm run build` | TypeScript, Vite build e carimbo do service worker. |
+| `npm run build` | SVG-only guard, TypeScript, Vite build e carimbo do service worker. |
 
 ## 11. Critérios de aceite para novos assets
 
 | Critério | Regra |
 | --- | --- |
-| Nome físico | Kebab-case, prefixo obrigatório, sem acento/espaço/caractere especial. |
+| Nome físico | Kebab-case, prefixo obrigatório, sem acento/espaço/caractere especial e extensão `.svg` para visual runtime. |
 | Constante | camelCase derivada exatamente do stem. |
 | Catálogo | Adicionar em `src/constants/visualAssets.ts` ou `src/constants/audio.ts`. |
 | Service worker | Adicionar no precache runtime. |
 | Documento | Atualizar esta especificação quando o asset criar novo grupo/estado. |
 | Testes | Rodar `test:asset-naming`, validador específico e build. |
+
+## 12. Temas e conjuntos SVG
+
+| Campo | Função | Storage key | Valores iniciais |
+| --- | --- | --- | --- |
+| `themeId` | Cores e superfícies | `brickbreaker-theme` | `neon-arcade`, `crt-high-contrast`, `pixel-sunset` |
+| `imageSetId` | Sprites, UI e VFX SVG | `brickbreaker-image-set` | `retro-default`, `high-contrast`, `sunset-cabinet` |
+| `fontSetId` | Tipografia local via CSS tokens | `brickbreaker-font-set` | `arcade-ui`, `crt-mono`, `block-pixel` |
+
+Regra: todo asset visual runtime de tema deve ser SVG local/offline. PNG, JPG, WebP e GIF ficam proibidos para novos temas sem autorização explícita.
+
+| Conjunto humano | `themeId` | `imageSetId` | `fontSetId` | Uso |
+| --- | --- | --- | --- | --- |
+| Neon Arcade | `neon-arcade` | `retro-default` | `arcade-ui` | Padrão recomendado. |
+| CRT alto contraste | `crt-high-contrast` | `high-contrast` | `crt-mono` | Acessibilidade e leitura forte. |
+| Pixel Sunset | `pixel-sunset` | `sunset-cabinet` | `block-pixel` | Alternativa cromática sem mudar mecânica. |

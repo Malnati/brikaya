@@ -5,21 +5,46 @@ import puppeteer from "puppeteer";
 
 const DEFAULT_PUBLIC_URL = "https://malnati-brickbreaker.pages.dev/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-theme-qa.json";
-const DEFAULT_IPHONE15_LIGHT_SCREENSHOT =
-  "tmp/screenshots/cloudflare-theme-iphone15-light.png";
-const DEFAULT_IPHONE15_DARK_SCREENSHOT =
-  "tmp/screenshots/cloudflare-theme-iphone15-dark.png";
-const DEFAULT_DESKTOP_LIGHT_SCREENSHOT =
-  "tmp/screenshots/cloudflare-theme-desktop-light.png";
-const DEFAULT_DESKTOP_DARK_SCREENSHOT =
-  "tmp/screenshots/cloudflare-theme-desktop-dark.png";
+const DEFAULT_IPHONE15_CONTRAST_SCREENSHOT =
+  "tmp/screenshots/cloudflare-theme-iphone15-contrast.png";
+const DEFAULT_IPHONE15_SUNSET_SCREENSHOT =
+  "tmp/screenshots/cloudflare-theme-iphone15-sunset.png";
+const DEFAULT_DESKTOP_CONTRAST_SCREENSHOT =
+  "tmp/screenshots/cloudflare-theme-desktop-contrast.png";
+const DEFAULT_DESKTOP_SUNSET_SCREENSHOT =
+  "tmp/screenshots/cloudflare-theme-desktop-sunset.png";
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const MIN_TOUCH_TARGET_SIZE = 44;
 const BROWSER_CLOSE_TIMEOUT_MS = 5000;
-const LIGHT_THEME = "light";
-const DARK_THEME = "dark";
+const THEME_NEON_ARCADE = "neon-arcade";
+const THEME_CRT_HIGH_CONTRAST = "crt-high-contrast";
+const THEME_PIXEL_SUNSET = "pixel-sunset";
+const IMAGE_SET_RETRO_DEFAULT = "retro-default";
+const IMAGE_SET_HIGH_CONTRAST = "high-contrast";
+const IMAGE_SET_SUNSET_CABINET = "sunset-cabinet";
+const FONT_SET_ARCADE_UI = "arcade-ui";
+const FONT_SET_CRT_MONO = "crt-mono";
+const FONT_SET_BLOCK_PIXEL = "block-pixel";
 const THEME_STORAGE_KEY = "brickbreaker-theme";
+const IMAGE_SET_STORAGE_KEY = "brickbreaker-image-set";
+const FONT_SET_STORAGE_KEY = "brickbreaker-font-set";
+const APPEARANCE_STORAGE_KEYS = [
+  THEME_STORAGE_KEY,
+  IMAGE_SET_STORAGE_KEY,
+  FONT_SET_STORAGE_KEY,
+];
+const APPEARANCE_BUTTON_LABELS = [
+  "Neon Arcade",
+  "CRT alto contraste",
+  "Pixel Sunset",
+  "Retro padrão",
+  "Alto contraste",
+  "Cabine Sunset",
+  "Arcade",
+  "CRT mono",
+  "Blocos pixel",
+];
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
 const FORBIDDEN_VISIBLE_FEATURES = [
@@ -161,8 +186,12 @@ async function collectState(page) {
         theme: document.documentElement.dataset.theme || "",
         storedTheme: window.localStorage.getItem("brickbreaker-theme"),
         heading: document.querySelector("h1")?.textContent || "",
-        themeToggle: Boolean(
-          document.querySelector('[aria-label="Tema da interface"]'),
+        imageSet: document.documentElement.dataset.imageSet || "",
+        fontSet: document.documentElement.dataset.fontSet || "",
+        storedImageSet: window.localStorage.getItem("brickbreaker-image-set"),
+        storedFontSet: window.localStorage.getItem("brickbreaker-font-set"),
+        appearanceSelector: Boolean(
+          document.querySelector('[aria-label="Aparência do jogo"]'),
         ),
         menuOpen: Boolean(document.querySelector(".settings-drawer")),
         buttons,
@@ -189,6 +218,10 @@ async function collectState(page) {
 
 function assertBaseState(state, viewportName, expectMenuOpen = false) {
   const allowsVerticalScroll = viewportName.startsWith("desktop");
+  const buttonsThatMustBeVisible =
+    expectMenuOpen && !allowsVerticalScroll
+      ? state.buttons.filter((button) => !button.inDrawer)
+      : state.buttons;
   assert(
     state.heading.includes("Breakout"),
     `${viewportName}: heading Breakout ausente.`,
@@ -217,15 +250,19 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
   );
   if (expectMenuOpen) {
     assert(state.menuOpen, `${viewportName}: menu lateral fechado.`);
-    assert(state.themeToggle, `${viewportName}: seletor de tema ausente.`);
-    assert(
-      state.buttons.some((button) => button.text === "Claro"),
-      `${viewportName}: botão Claro ausente.`,
-    );
-    assert(
-      state.buttons.some((button) => button.text === "Escuro"),
-      `${viewportName}: botão Escuro ausente.`,
-    );
+    assert(state.appearanceSelector, `${viewportName}: seletor de aparência ausente.`);
+    for (const label of APPEARANCE_BUTTON_LABELS) {
+      assert(
+        state.buttons.some((button) => button.text === label),
+        `${viewportName}: botão ${label} ausente.`,
+      );
+    }
+    for (const heading of ["Aparência", "Tema visual", "Imagens", "Fonte"]) {
+      assert(
+        state.bodyText.includes(heading),
+        `${viewportName}: seção ${heading} ausente.`,
+      );
+    }
     assert(
       !state.buttons.some(
         (button) =>
@@ -251,17 +288,15 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
     );
   } else {
     assert(
-      !state.themeToggle,
-      `${viewportName}: seletor de tema apareceu fora do menu.`,
+      !state.appearanceSelector,
+      `${viewportName}: seletor de aparência apareceu fora do menu.`,
     );
-    assert(
-      !state.buttons.some((button) => button.text === "Claro"),
-      `${viewportName}: botão Claro apareceu fora do menu.`,
-    );
-    assert(
-      !state.buttons.some((button) => button.text === "Escuro"),
-      `${viewportName}: botão Escuro apareceu fora do menu.`,
-    );
+    for (const label of APPEARANCE_BUTTON_LABELS) {
+      assert(
+        !state.buttons.some((button) => button.text === label),
+        `${viewportName}: botão ${label} apareceu fora do menu.`,
+      );
+    }
     assert(
       !state.buttons.some((button) =>
         /reiniciar|jogar de novo/i.test(button.text),
@@ -290,7 +325,7 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
   );
   assert(
     allowsVerticalScroll ||
-      state.buttons.every((button) => button.visibleInViewport),
+      buttonsThatMustBeVisible.every((button) => button.visibleInViewport),
     `${viewportName}: botão cortado: ${state.buttons
       .filter((button) => !button.visibleInViewport)
       .map((button) => button.text)
@@ -330,10 +365,9 @@ async function validateViewport(
     { name: "prefers-color-scheme", value: "light" },
   ]);
   await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
-  await page.evaluate(
-    (storageKey) => window.localStorage.removeItem(storageKey),
-    THEME_STORAGE_KEY,
-  );
+  await page.evaluate((storageKeys) => {
+    for (const storageKey of storageKeys) window.localStorage.removeItem(storageKey);
+  }, APPEARANCE_STORAGE_KEYS);
   await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
   await page.waitForSelector("canvas", { timeout: 30000 });
   await waitForCinematicOverlayToClear(page);
@@ -341,59 +375,108 @@ async function validateViewport(
   const initialState = await collectState(page);
   assertBaseState(initialState, `${viewportName}/inicial`);
   assert(
-    initialState.theme === DARK_THEME,
-    `${viewportName}: tema inicial sem preferência salva deveria ser escuro mesmo com sistema claro.`,
+    initialState.theme === THEME_NEON_ARCADE,
+    `${viewportName}: tema inicial sem preferência salva deveria ser Neon Arcade.`,
+  );
+
+  assert(
+    initialState.imageSet === IMAGE_SET_RETRO_DEFAULT,
+    `${viewportName}: conjunto visual inicial não é Retro padrão.`,
+  );
+  assert(
+    initialState.fontSet === FONT_SET_ARCADE_UI,
+    `${viewportName}: fonte inicial não é Arcade.`,
   );
 
   await openMenu(page);
-  await clickButtonByText(page, "Claro");
+  await clickButtonByText(page, "CRT alto contraste");
+  await clickButtonByText(page, "Alto contraste");
+  await clickButtonByText(page, "CRT mono");
   await page.waitForFunction(
-    (theme) => document.documentElement.dataset.theme === theme,
+    ({ theme, imageSet, fontSet }) =>
+      document.documentElement.dataset.theme === theme &&
+      document.documentElement.dataset.imageSet === imageSet &&
+      document.documentElement.dataset.fontSet === fontSet,
     {},
-    LIGHT_THEME,
+    {
+      theme: THEME_CRT_HIGH_CONTRAST,
+      imageSet: IMAGE_SET_HIGH_CONTRAST,
+      fontSet: FONT_SET_CRT_MONO,
+    },
   );
-  const lightState = await collectState(page);
-  assertBaseState(lightState, `${viewportName}/claro`, true);
+  const contrastState = await collectState(page);
+  assertBaseState(contrastState, `${viewportName}/crt-alto-contraste`, true);
   assert(
-    lightState.theme === LIGHT_THEME,
-    `${viewportName}: tema claro não aplicado.`,
+    contrastState.theme === THEME_CRT_HIGH_CONTRAST,
+    `${viewportName}: tema CRT alto contraste não aplicado.`,
   );
   assert(
-    lightState.storedTheme === LIGHT_THEME,
-    `${viewportName}: tema claro não persistido.`,
+    contrastState.imageSet === IMAGE_SET_HIGH_CONTRAST,
+    `${viewportName}: imagens de alto contraste não aplicadas.`,
   );
-  await page.screenshot({ path: screenshots.light, fullPage: true });
+  assert(
+    contrastState.fontSet === FONT_SET_CRT_MONO,
+    `${viewportName}: fonte CRT mono não aplicada.`,
+  );
+  assert(
+    contrastState.storedTheme === THEME_CRT_HIGH_CONTRAST &&
+      contrastState.storedImageSet === IMAGE_SET_HIGH_CONTRAST &&
+      contrastState.storedFontSet === FONT_SET_CRT_MONO,
+    `${viewportName}: aparência CRT alto contraste não persistida.`,
+  );
+  await page.screenshot({ path: screenshots.contrast, fullPage: true });
 
   await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
   await page.waitForSelector("canvas", { timeout: 30000 });
   await waitForCinematicOverlayToClear(page);
-  const reloadedLightState = await collectState(page);
-  assertBaseState(reloadedLightState, `${viewportName}/claro-reload`);
+  const reloadedContrastState = await collectState(page);
+  assertBaseState(reloadedContrastState, `${viewportName}/crt-reload`);
   assert(
-    reloadedLightState.theme === LIGHT_THEME,
-    `${viewportName}: tema claro não persistiu após reload.`,
+    reloadedContrastState.theme === THEME_CRT_HIGH_CONTRAST &&
+      reloadedContrastState.imageSet === IMAGE_SET_HIGH_CONTRAST &&
+      reloadedContrastState.fontSet === FONT_SET_CRT_MONO,
+    `${viewportName}: aparência CRT alto contraste não persistiu após reload.`,
   );
 
   await openMenu(page);
-  await clickButtonByText(page, "Escuro");
+  await clickButtonByText(page, "Pixel Sunset");
+  await clickButtonByText(page, "Cabine Sunset");
+  await clickButtonByText(page, "Blocos pixel");
   await page.waitForFunction(
-    (theme) => document.documentElement.dataset.theme === theme,
+    ({ theme, imageSet, fontSet }) =>
+      document.documentElement.dataset.theme === theme &&
+      document.documentElement.dataset.imageSet === imageSet &&
+      document.documentElement.dataset.fontSet === fontSet,
     {},
-    DARK_THEME,
+    {
+      theme: THEME_PIXEL_SUNSET,
+      imageSet: IMAGE_SET_SUNSET_CABINET,
+      fontSet: FONT_SET_BLOCK_PIXEL,
+    },
   );
-  const darkState = await collectState(page);
-  assertBaseState(darkState, `${viewportName}/escuro`, true);
+  const sunsetState = await collectState(page);
+  assertBaseState(sunsetState, `${viewportName}/pixel-sunset`, true);
   assert(
-    darkState.theme === DARK_THEME,
-    `${viewportName}: tema escuro não aplicado.`,
+    sunsetState.theme === THEME_PIXEL_SUNSET,
+    `${viewportName}: tema Pixel Sunset não aplicado.`,
   );
   assert(
-    darkState.storedTheme === DARK_THEME,
-    `${viewportName}: tema escuro não persistido.`,
+    sunsetState.imageSet === IMAGE_SET_SUNSET_CABINET,
+    `${viewportName}: imagens Cabine Sunset não aplicadas.`,
   );
-  await page.screenshot({ path: screenshots.dark, fullPage: true });
+  assert(
+    sunsetState.fontSet === FONT_SET_BLOCK_PIXEL,
+    `${viewportName}: fonte Blocos pixel não aplicada.`,
+  );
+  assert(
+    sunsetState.storedTheme === THEME_PIXEL_SUNSET &&
+      sunsetState.storedImageSet === IMAGE_SET_SUNSET_CABINET &&
+      sunsetState.storedFontSet === FONT_SET_BLOCK_PIXEL,
+    `${viewportName}: aparência Pixel Sunset não persistida.`,
+  );
+  await page.screenshot({ path: screenshots.sunset, fullPage: true });
 
-  return { initialState, lightState, reloadedLightState, darkState };
+  return { initialState, contrastState, reloadedContrastState, sunsetState };
 }
 
 async function run() {
@@ -407,32 +490,29 @@ async function run() {
   const reportPath = env("BRICKBREAKER_THEME_QA_REPORT", DEFAULT_REPORT_PATH);
   const screenshotPaths = {
     iphone15: {
-      light: env(
-        "BRICKBREAKER_THEME_QA_IPHONE15_LIGHT_SCREENSHOT",
-        DEFAULT_IPHONE15_LIGHT_SCREENSHOT,
+      contrast: env(
+        "BRICKBREAKER_THEME_QA_IPHONE15_CONTRAST_SCREENSHOT",
+        DEFAULT_IPHONE15_CONTRAST_SCREENSHOT,
       ),
-      dark: env(
-        "BRICKBREAKER_THEME_QA_IPHONE15_DARK_SCREENSHOT",
-        DEFAULT_IPHONE15_DARK_SCREENSHOT,
+      sunset: env(
+        "BRICKBREAKER_THEME_QA_IPHONE15_SUNSET_SCREENSHOT",
+        DEFAULT_IPHONE15_SUNSET_SCREENSHOT,
       ),
     },
     desktop: {
-      light: env(
-        "BRICKBREAKER_THEME_QA_DESKTOP_LIGHT_SCREENSHOT",
-        DEFAULT_DESKTOP_LIGHT_SCREENSHOT,
+      contrast: env(
+        "BRICKBREAKER_THEME_QA_DESKTOP_CONTRAST_SCREENSHOT",
+        DEFAULT_DESKTOP_CONTRAST_SCREENSHOT,
       ),
-      dark: env(
-        "BRICKBREAKER_THEME_QA_DESKTOP_DARK_SCREENSHOT",
-        DEFAULT_DESKTOP_DARK_SCREENSHOT,
+      sunset: env(
+        "BRICKBREAKER_THEME_QA_DESKTOP_SUNSET_SCREENSHOT",
+        DEFAULT_DESKTOP_SUNSET_SCREENSHOT,
       ),
     },
   };
   [
     reportPath,
-    ...Object.values(screenshotPaths).flatMap((paths) => [
-      paths.light,
-      paths.dark,
-    ]),
+    ...Object.values(screenshotPaths).flatMap((paths) => Object.values(paths)),
   ].forEach(ensureParentDirectory);
 
   const consoleProblems = [];

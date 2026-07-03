@@ -58,6 +58,7 @@ describe("Game", () => {
       undefined,
       undefined,
       true,
+      "retro-default",
     );
   });
 });

@@ -1,0 +1,259 @@
+<!-- docs/assets/theme-planning/svg-theme-system/brickbreaker-theme-options.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="2140" viewBox="0 0 1600 2140" role="img" aria-labelledby="title desc">
+  <title id="title">BrickBreaker — opções visuais para temas e conjuntos de imagens</title>
+  <desc id="desc">Mockups de três opções visuais, vocabulário de nomes e fluxo técnico de seleção em menu.</desc>
+  <defs>
+    <radialGradient id="pageBg" cx="18%" cy="0%" r="70%"><stop offset="0" stop-color="#163b5b"/><stop offset="0.42" stop-color="#080816"/><stop offset="1" stop-color="#05050d"/></radialGradient>
+    <linearGradient id="paddleNeon"><stop offset="0" stop-color="#ff2bd6"/><stop offset="1" stop-color="#00e5ff"/></linearGradient>
+    <linearGradient id="paddleCrt"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#7df9ff"/></linearGradient>
+    <linearGradient id="paddleSunset"><stop offset="0" stop-color="#ff2bd6"/><stop offset="1" stop-color="#ff8a00"/></linearGradient>
+    <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <style><![CDATA[
+      .title { font: 800 42px ui-monospace, Menlo, Consolas, monospace; fill: #f8f7ff; }
+      .subtitle { font: 18px system-ui, sans-serif; fill: #9cb7d8; }
+      .eyebrow { font: 800 13px ui-monospace, Menlo, Consolas, monospace; fill: #00e5ff; letter-spacing: 3px; }
+      .panel-title { font: 800 24px ui-monospace, Menlo, Consolas, monospace; fill: #f8f7ff; }
+      .card-title { font: 800 22px ui-monospace, Menlo, Consolas, monospace; fill: #f8f7ff; }
+      .muted { font: 17px system-ui, sans-serif; fill: #9cb7d8; }
+      .mini { font: 800 13px ui-monospace, Menlo, Consolas, monospace; fill: #f8f7ff; }
+      .asset-label { font: 700 12px ui-monospace, Menlo, Consolas, monospace; fill: #f8f7ff; opacity: .75; }
+      .code { font: 14px ui-monospace, Menlo, Consolas, monospace; fill: #f8f7ff; }
+      .code-cyan { font: 13px ui-monospace, Menlo, Consolas, monospace; fill: #00e5ff; }
+      .code-yellow { font: 13px ui-monospace, Menlo, Consolas, monospace; fill: #ffe45e; }
+      .small-label { font: 800 13px ui-monospace, Menlo, Consolas, monospace; fill: #9cb7d8; }
+      .badge { font: 800 12px ui-monospace, Menlo, Consolas, monospace; fill: #ffe45e; }
+      .pill { fill: transparent; stroke: #244c7a; }
+      .pill-active { fill: #00e5ff; stroke: #00e5ff; }
+      .pill-text { font: 700 14px system-ui, sans-serif; fill: #9cb7d8; }
+      .pill-active-text { font: 800 14px system-ui, sans-serif; fill: #080816; }
+      .table-head { font: 800 13px ui-monospace, Menlo, Consolas, monospace; fill: #00e5ff; }
+      .table-text { font: 16px system-ui, sans-serif; fill: #f8f7ff; }
+      .table-code { font: 15px ui-monospace, Menlo, Consolas, monospace; fill: #ffe45e; }
+      .flow-title { font: 800 20px ui-monospace, Menlo, Consolas, monospace; fill: #f8f7ff; }
+      .flow-sub { font: 15px system-ui, sans-serif; fill: #9cb7d8; }
+      .arrow { stroke: #f8f7ff; stroke-width: 4; stroke-linecap: round; fill: none; }
+    ]]></style>
+  </defs>
+  <rect width="1600" height="2140" fill="url(#pageBg)"/>
+  <rect x="40" y="40" width="1520" height="2060" rx="34" fill="#080816" opacity=".74" stroke="#244c7a" stroke-width="2"/>
+
+  <text x="70" y="108" class="eyebrow" >PLANEJAMENTO VISUAL • BRICKBREAKER</text>
+  <text x="70" y="162" class="title" >Temas + imagens no menu</text>
+  <text x="70" y="202" class="subtitle" >Thread-base: kebab-case no disco, camelCase no código e prefixos semânticos.</text>
+<text x="70" y="230" class="subtitle" >Objetivo: alinhar humanos antes de codar a feature.</text>
+
+  <rect x="930" y="82" width="560" height="238" rx="26" fill="#12122a" stroke="#244c7a"/>
+  <text x="960" y="126" class="panel-title" >Mockup de menu: Aparência</text>
+  <text x="960" y="168" class="muted" >Tema visual</text><rect x="1108" y="144" width="130" height="34" rx="17" class="pill-active"/><text x="1124" y="167" class="pill-active-text" >Neon</text><rect x="1250" y="144" width="176" height="34" rx="17" class="pill"/><text x="1266" y="167" class="pill-text" >Alto contraste</text>
+  <text x="960" y="220" class="muted" >Imagens</text><rect x="1108" y="196" width="176" height="34" rx="17" class="pill-active"/><text x="1124" y="219" class="pill-active-text" >Retro Default</text><rect x="1298" y="196" width="118" height="34" rx="17" class="pill"/><text x="1314" y="219" class="pill-text" >Sunset</text>
+  <text x="960" y="272" class="muted" >Fonte</text><rect x="1108" y="248" width="148" height="34" rx="17" class="pill-active"/><text x="1124" y="271" class="pill-active-text" >Arcade UI</text><rect x="1270" y="248" width="128" height="34" rx="17" class="pill"/><text x="1286" y="271" class="pill-text" >CRT Mono</text>
+
+  
+  <g>
+    <rect x="70" y="380" width="450" height="590" rx="30" fill="#12122a" stroke="#00e5ff" stroke-width="2"/>
+    <text x="98" y="424" class="card-title" >A. Neon Arcade</text>
+    <text x="98" y="454" class="code-cyan" >themeId: neon-arcade</text>
+    <text x="98" y="480" class="code-yellow" >assetSetId: retro-default</text>
+    <rect x="370" y="406" width="112" height="30" rx="15" fill="transparent" stroke="#ffe45e"/>
+    <text x="388" y="427" class="badge" >recomendado</text>
+    
+    <rect x="100" y="502" width="390" height="286" rx="24" fill="#080816" stroke="#244c7a" stroke-width="3"/>
+    <text x="122" y="536" class="mini" >FASE 03</text>
+    <text x="398" y="536" class="mini" >12.450</text>
+    <rect x="134" y="564" width="56" height="22" rx="5" fill="#ff3b5f" filter="url(#softGlow)"/>
+<rect x="200" y="564" width="56" height="22" rx="5" fill="#00e5ff" filter="url(#softGlow)"/>
+<rect x="266" y="564" width="56" height="22" rx="5" fill="#39ff88" filter="url(#softGlow)"/>
+<rect x="332" y="564" width="56" height="22" rx="5" fill="#ffe45e" filter="url(#softGlow)"/>
+<rect x="398" y="564" width="56" height="22" rx="5" fill="#9b5cff" filter="url(#softGlow)"/>
+<rect x="134" y="598" width="56" height="22" rx="5" fill="#9b5cff" filter="url(#softGlow)"/>
+<rect x="200" y="598" width="56" height="22" rx="5" fill="#ffe45e" filter="url(#softGlow)"/>
+<rect x="266" y="598" width="56" height="22" rx="5" fill="#39ff88" filter="url(#softGlow)"/>
+<rect x="332" y="598" width="56" height="22" rx="5" fill="#00e5ff" filter="url(#softGlow)"/>
+<rect x="398" y="598" width="56" height="22" rx="5" fill="#ff3b5f" filter="url(#softGlow)"/>
+<rect x="134" y="632" width="56" height="22" rx="5" fill="#39ff88" filter="url(#softGlow)"/>
+<rect x="200" y="632" width="56" height="22" rx="5" fill="#ff3b5f" filter="url(#softGlow)"/>
+<rect x="266" y="632" width="56" height="22" rx="5" fill="#9b5cff" filter="url(#softGlow)"/>
+<rect x="332" y="632" width="56" height="22" rx="5" fill="#ffe45e" filter="url(#softGlow)"/>
+<rect x="398" y="632" width="56" height="22" rx="5" fill="#00e5ff" filter="url(#softGlow)"/>
+    <rect x="232" y="740" width="126" height="16" rx="8" fill="url(#paddleNeon)" filter="url(#softGlow)"/>
+    <circle cx="338" cy="694" r="11" fill="#00e5ff" filter="url(#softGlow)"/>
+    <circle cx="230" cy="674" r="14" fill="#39ff88" filter="url(#softGlow)"/>
+    <text x="168" y="650" class="asset-label" >spr-brick-basic-{color}-normal</text>
+  
+    <text x="100" y="832" class="small-label" >Cores 60-30-10</text>
+    <rect x="100" y="848" width="50" height="26" rx="7" fill="#080816" stroke="#ffffff44"/>
+    <rect x="158" y="848" width="50" height="26" rx="7" fill="#12122a" stroke="#ffffff44"/>
+    <rect x="216" y="848" width="50" height="26" rx="7" fill="#00e5ff" stroke="#ffffff44"/>
+    <rect x="274" y="848" width="50" height="26" rx="7" fill="#ff2bd6" stroke="#ffffff44"/>
+    <rect x="332" y="848" width="50" height="26" rx="7" fill="#ffe45e" stroke="#ffffff44"/>
+    <text x="100" y="910" class="code" >typ-arcade-headline / typ-arcade-body</text>
+    <text x="100" y="938" class="code" >sprBallPlayerDefault + sprPaddlePlayerDefault</text>
+  </g>
+  
+  <g>
+    <rect x="575" y="380" width="450" height="590" rx="30" fill="#0d1625" stroke="#7df9ff" stroke-width="2"/>
+    <text x="603" y="424" class="card-title" >B. CRT Alto Contraste</text>
+    <text x="603" y="454" class="code-cyan" >themeId: crt-high-contrast</text>
+    <text x="603" y="480" class="code-yellow" >assetSetId: high-contrast</text>
+    <rect x="875" y="406" width="112" height="30" rx="15" fill="transparent" stroke="#ffd000"/>
+    <text x="893" y="427" class="badge" >acessível</text>
+    
+    <rect x="605" y="502" width="390" height="286" rx="24" fill="#02040a" stroke="#f8f7ff" stroke-width="3"/>
+    <text x="627" y="536" class="mini" >FASE 03</text>
+    <text x="903" y="536" class="mini" >12.450</text>
+    <rect x="639" y="564" width="56" height="22" rx="5" fill="#ff5c7a" filter="url(#softGlow)"/>
+<rect x="705" y="564" width="56" height="22" rx="5" fill="#7df9ff" filter="url(#softGlow)"/>
+<rect x="771" y="564" width="56" height="22" rx="5" fill="#7cff6b" filter="url(#softGlow)"/>
+<rect x="837" y="564" width="56" height="22" rx="5" fill="#ffd000" filter="url(#softGlow)"/>
+<rect x="903" y="564" width="56" height="22" rx="5" fill="#b89cff" filter="url(#softGlow)"/>
+<rect x="639" y="598" width="56" height="22" rx="5" fill="#b89cff" filter="url(#softGlow)"/>
+<rect x="705" y="598" width="56" height="22" rx="5" fill="#ffd000" filter="url(#softGlow)"/>
+<rect x="771" y="598" width="56" height="22" rx="5" fill="#7cff6b" filter="url(#softGlow)"/>
+<rect x="837" y="598" width="56" height="22" rx="5" fill="#7df9ff" filter="url(#softGlow)"/>
+<rect x="903" y="598" width="56" height="22" rx="5" fill="#ff5c7a" filter="url(#softGlow)"/>
+<rect x="639" y="632" width="56" height="22" rx="5" fill="#7cff6b" filter="url(#softGlow)"/>
+<rect x="705" y="632" width="56" height="22" rx="5" fill="#ff5c7a" filter="url(#softGlow)"/>
+<rect x="771" y="632" width="56" height="22" rx="5" fill="#b89cff" filter="url(#softGlow)"/>
+<rect x="837" y="632" width="56" height="22" rx="5" fill="#ffd000" filter="url(#softGlow)"/>
+<rect x="903" y="632" width="56" height="22" rx="5" fill="#7df9ff" filter="url(#softGlow)"/>
+    <rect x="737" y="740" width="126" height="16" rx="8" fill="url(#paddleCrt)" filter="url(#softGlow)"/>
+    <circle cx="843" cy="694" r="11" fill="#7df9ff" filter="url(#softGlow)"/>
+    <circle cx="735" cy="674" r="14" fill="#7cff6b" filter="url(#softGlow)"/>
+    <text x="673" y="650" class="asset-label" >spr-brick-basic-blue-high-contrast-normal</text>
+  
+    <text x="605" y="832" class="small-label" >Cores 60-30-10</text>
+    <rect x="605" y="848" width="50" height="26" rx="7" fill="#02040a" stroke="#ffffff44"/>
+    <rect x="663" y="848" width="50" height="26" rx="7" fill="#0d1625" stroke="#ffffff44"/>
+    <rect x="721" y="848" width="50" height="26" rx="7" fill="#7df9ff" stroke="#ffffff44"/>
+    <rect x="779" y="848" width="50" height="26" rx="7" fill="#ffffff" stroke="#ffffff44"/>
+    <rect x="837" y="848" width="50" height="26" rx="7" fill="#ffd000" stroke="#ffffff44"/>
+    <text x="605" y="910" class="code" >typ-crt-headline-mono / typ-crt-body-mono</text>
+    <text x="605" y="938" class="code" >sprBallPlayerHighContrastDefault</text>
+  </g>
+  
+  <g>
+    <rect x="1080" y="380" width="450" height="590" rx="30" fill="#2a1038" stroke="#ff8a00" stroke-width="2"/>
+    <text x="1108" y="424" class="card-title" >C. Pixel Sunset</text>
+    <text x="1108" y="454" class="code-cyan" >themeId: pixel-sunset</text>
+    <text x="1108" y="480" class="code-yellow" >assetSetId: sunset-cabinet</text>
+    <rect x="1380" y="406" width="112" height="30" rx="15" fill="transparent" stroke="#ffe45e"/>
+    <text x="1398" y="427" class="badge" >alternativo</text>
+    
+    <rect x="1110" y="502" width="390" height="286" rx="24" fill="#16071f" stroke="#6b2d8d" stroke-width="3"/>
+    <text x="1132" y="536" class="mini" >FASE 03</text>
+    <text x="1408" y="536" class="mini" >12.450</text>
+    <rect x="1144" y="564" width="56" height="22" rx="5" fill="#ff365e" filter="url(#softGlow)"/>
+<rect x="1210" y="564" width="56" height="22" rx="5" fill="#ff8a00" filter="url(#softGlow)"/>
+<rect x="1276" y="564" width="56" height="22" rx="5" fill="#2cff9a" filter="url(#softGlow)"/>
+<rect x="1342" y="564" width="56" height="22" rx="5" fill="#ffe45e" filter="url(#softGlow)"/>
+<rect x="1408" y="564" width="56" height="22" rx="5" fill="#9b5cff" filter="url(#softGlow)"/>
+<rect x="1144" y="598" width="56" height="22" rx="5" fill="#9b5cff" filter="url(#softGlow)"/>
+<rect x="1210" y="598" width="56" height="22" rx="5" fill="#ffe45e" filter="url(#softGlow)"/>
+<rect x="1276" y="598" width="56" height="22" rx="5" fill="#2cff9a" filter="url(#softGlow)"/>
+<rect x="1342" y="598" width="56" height="22" rx="5" fill="#ff8a00" filter="url(#softGlow)"/>
+<rect x="1408" y="598" width="56" height="22" rx="5" fill="#ff365e" filter="url(#softGlow)"/>
+<rect x="1144" y="632" width="56" height="22" rx="5" fill="#2cff9a" filter="url(#softGlow)"/>
+<rect x="1210" y="632" width="56" height="22" rx="5" fill="#ff365e" filter="url(#softGlow)"/>
+<rect x="1276" y="632" width="56" height="22" rx="5" fill="#9b5cff" filter="url(#softGlow)"/>
+<rect x="1342" y="632" width="56" height="22" rx="5" fill="#ffe45e" filter="url(#softGlow)"/>
+<rect x="1408" y="632" width="56" height="22" rx="5" fill="#ff8a00" filter="url(#softGlow)"/>
+    <rect x="1242" y="740" width="126" height="16" rx="8" fill="url(#paddleSunset)" filter="url(#softGlow)"/>
+    <circle cx="1348" cy="694" r="11" fill="#ff8a00" filter="url(#softGlow)"/>
+    <circle cx="1240" cy="674" r="14" fill="#2cff9a" filter="url(#softGlow)"/>
+    <text x="1178" y="650" class="asset-label" >spr-paddle-player-sunset-default</text>
+  
+    <text x="1110" y="832" class="small-label" >Cores 60-30-10</text>
+    <rect x="1110" y="848" width="50" height="26" rx="7" fill="#16071f" stroke="#ffffff44"/>
+    <rect x="1168" y="848" width="50" height="26" rx="7" fill="#2a1038" stroke="#ffffff44"/>
+    <rect x="1226" y="848" width="50" height="26" rx="7" fill="#ff8a00" stroke="#ffffff44"/>
+    <rect x="1284" y="848" width="50" height="26" rx="7" fill="#ff2bd6" stroke="#ffffff44"/>
+    <rect x="1342" y="848" width="50" height="26" rx="7" fill="#ffe45e" stroke="#ffffff44"/>
+    <text x="1110" y="910" class="code" >typ-sunset-title-block / typ-arcade-body</text>
+    <text x="1110" y="938" class="code" >sprPaddlePlayerSunsetDefault</text>
+  </g>
+
+  <rect x="70" y="1030" width="1460" height="250" rx="28" fill="#12122a" stroke="#244c7a"/>
+  <text x="100" y="1080" class="panel-title" >Recomendação rápida</text>
+  <text x="100" y="1124" class="muted" >1. Começar por Neon Arcade como padrão, pois já usa os tokens atuais e evita retrabalho.</text>
+<text x="100" y="1156" class="muted" >2. Implementar CRT Alto Contraste como primeiro extra: é melhoria de acessibilidade, não só estética.</text>
+<text x="100" y="1188" class="muted" >3. Manter Pixel Sunset como opção visual posterior, sem criar mecânicas novas.</text>
+<text x="100" y="1220" class="muted" >4. Separar themeId, assetSetId e fontSetId: combinações independentes, menu simples e testes menores.</text>
+<text x="100" y="1252" class="muted" >5. Toda imagem nova segue prefixo, ID único 12–64 chars, catálogo runtime e precache offline.</text>
+
+  <rect x="70" y="1320" width="1460" height="486" rx="28" fill="#12122a" stroke="#244c7a"/>
+  <text x="100" y="1364" class="panel-title" >Vocabulário técnico para conversar com humanos</text>
+  <text x="92" y="1338" class="" ></text>
+  <text x="92" y="1350" class="" ></text>
+  <rect x="70" y="1380" width="1460" height="44" fill="#0a1830"/>
+  <text x="92" y="1408" class="table-head" >ASSUNTO</text>
+  <text x="362" y="1408" class="table-head" >PREFIXO</text>
+  <text x="540" y="1408" class="table-head" >EXEMPLO NO DISCO</text>
+  <text x="1054" y="1408" class="table-head" >EXEMPLO NO CÓDIGO</text>
+  
+  <rect x="70" y="1438" width="1460" height="54" fill="#0b1228"/>
+  <text x="92" y="1470" class="table-text" >Sprite de jogo</text>
+  <text x="362" y="1470" class="table-code" >spr-*</text>
+  <text x="540" y="1470" class="table-code" >spr-paddle-player-default.svg</text>
+  <text x="1054" y="1470" class="table-code" >sprPaddlePlayerDefault</text>
+
+  <rect x="70" y="1492" width="1460" height="54" fill="#101b32"/>
+  <text x="92" y="1524" class="table-text" >UI/HUD/menu</text>
+  <text x="362" y="1524" class="table-code" >ui-*</text>
+  <text x="540" y="1524" class="table-code" >ui-pwa-app-icon.svg</text>
+  <text x="1054" y="1524" class="table-code" >uiPwaAppIcon</text>
+
+  <rect x="70" y="1546" width="1460" height="54" fill="#0b1228"/>
+  <text x="92" y="1578" class="table-text" >Efeito visual</text>
+  <text x="362" y="1578" class="table-code" >vfx-*</text>
+  <text x="540" y="1578" class="table-code" >vfx-level-up-star-overlay.svg</text>
+  <text x="1054" y="1578" class="table-code" >vfxLevelUpStarOverlay</text>
+
+  <rect x="70" y="1600" width="1460" height="54" fill="#101b32"/>
+  <text x="92" y="1632" class="table-text" >Cor</text>
+  <text x="362" y="1632" class="table-code" >clr-*</text>
+  <text x="540" y="1632" class="table-code" >clr-neon-cyan-primary</text>
+  <text x="1054" y="1632" class="table-code" >--bb-clr-neon-cyan-primary</text>
+
+  <rect x="70" y="1654" width="1460" height="54" fill="#0b1228"/>
+  <text x="92" y="1686" class="table-text" >Tipografia</text>
+  <text x="362" y="1686" class="table-code" >typ-*</text>
+  <text x="540" y="1686" class="table-code" >typ-arcade-headline</text>
+  <text x="1054" y="1686" class="table-code" >--bb-font-size-headline</text>
+
+  <rect x="70" y="1708" width="1460" height="54" fill="#101b32"/>
+  <text x="92" y="1740" class="table-text" >Som curto</text>
+  <text x="362" y="1740" class="table-code" >sfx-*</text>
+  <text x="540" y="1740" class="table-code" >sfx-paddle-hit-center-01.mp3</text>
+  <text x="1054" y="1740" class="table-code" >sfxPaddleHitCenter01</text>
+
+  <rect x="70" y="1762" width="1460" height="54" fill="#0b1228"/>
+  <text x="92" y="1794" class="table-text" >Música</text>
+  <text x="362" y="1794" class="table-code" >bgm-*</text>
+  <text x="540" y="1794" class="table-code" >bgm-gameplay-loop-main-01.mp3</text>
+  <text x="1054" y="1794" class="table-code" >bgmGameplayLoopMain01</text>
+
+  <rect x="70" y="1818" width="1460" height="214" rx="28" fill="#12122a" stroke="#244c7a"/>
+  <text x="100" y="1862" class="panel-title" >Diagrama de fluxo da feature</text>
+  
+  <rect x="86" y="1840" width="210" height="116" rx="22" fill="#12122a" stroke="#00e5ff" stroke-width="3"/>
+  <text x="108" y="1884" class="flow-title" >Menu</text>
+  <text x="108" y="1916" class="flow-sub" >Tema + imagens</text>
+
+  <rect x="354" y="1840" width="210" height="116" rx="22" fill="#12122a" stroke="#ff2bd6" stroke-width="3"/>
+  <text x="376" y="1884" class="flow-title" >Preferência</text>
+  <text x="376" y="1916" class="flow-sub" >Escolha local</text>
+
+  <rect x="622" y="1840" width="210" height="116" rx="22" fill="#12122a" stroke="#ffe45e" stroke-width="3"/>
+  <text x="644" y="1884" class="flow-title" >Tema</text>
+  <text x="644" y="1916" class="flow-sub" >clr-* + typ-*</text>
+
+  <rect x="890" y="1840" width="210" height="116" rx="22" fill="#12122a" stroke="#39ff88" stroke-width="3"/>
+  <text x="912" y="1884" class="flow-title" >Imagens</text>
+  <text x="912" y="1916" class="flow-sub" >spr-* + ui-* + vfx-*</text>
+
+  <rect x="1158" y="1840" width="210" height="116" rx="22" fill="#12122a" stroke="#9b5cff" stroke-width="3"/>
+  <text x="1180" y="1884" class="flow-title" >Tela</text>
+  <text x="1180" y="1916" class="flow-sub" >HUD + canvas</text>
+  <path d="M 296 1898 L 342 1898" class="arrow"/><path d="M 342 1898 L 328 1888 M 342 1898 L 328 1908" class="arrow"/><path d="M 564 1898 L 610 1898" class="arrow"/><path d="M 610 1898 L 596 1888 M 610 1898 L 596 1908" class="arrow"/><path d="M 832 1898 L 878 1898" class="arrow"/><path d="M 878 1898 L 864 1888 M 878 1898 L 864 1908" class="arrow"/><path d="M 1100 1898 L 1146 1898" class="arrow"/><path d="M 1146 1898 L 1132 1888 M 1146 1898 L 1132 1908" class="arrow"/>
+  <text x="100" y="2078" class="subtitle" >Artefato de planejamento em tmp/: não altera runtime, não substitui QA publicado, não cria assets finais.</text>
+</svg>

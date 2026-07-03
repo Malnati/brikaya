@@ -65,6 +65,61 @@
   --bb-visual-viewport-height: 100dvh;
 }
 
+
+:root[data-theme="neon-arcade"] {
+  color-scheme: dark;
+}
+
+:root[data-theme="crt-high-contrast"] {
+  color-scheme: dark;
+  --bb-color-background: #02040a;
+  --bb-color-surface: #0d1625;
+  --bb-color-panel: #101b32;
+  --bb-color-panel-soft: #17233d;
+  --bb-color-text: #f8f7ff;
+  --bb-color-muted: #c8d7e8;
+  --bb-color-primary: #7df9ff;
+  --bb-color-primary-strong: #ffffff;
+  --bb-color-secondary: #ffd000;
+  --bb-color-tertiary: #b89cff;
+  --bb-color-outline: #f8f7ff;
+  --bb-color-outline-soft: #7df9ff;
+  --bb-color-danger: #ff5c7a;
+  --bb-color-danger-strong: #ff9aad;
+  --bb-color-board: #02040a;
+  --bb-color-on-primary: #02040a;
+}
+
+:root[data-theme="pixel-sunset"] {
+  color-scheme: dark;
+  --bb-color-background: #16071f;
+  --bb-color-surface: #2a1038;
+  --bb-color-panel: #321247;
+  --bb-color-panel-soft: #3c1856;
+  --bb-color-text: #fff5f7;
+  --bb-color-muted: #ffc4df;
+  --bb-color-primary: #ff8a00;
+  --bb-color-primary-strong: #ffe45e;
+  --bb-color-secondary: #ff2bd6;
+  --bb-color-tertiary: #9b5cff;
+  --bb-color-outline: #6b2d8d;
+  --bb-color-outline-soft: #ff8a00;
+  --bb-color-danger: #ff365e;
+  --bb-color-danger-strong: #ff7b95;
+  --bb-color-board: #100517;
+  --bb-color-on-primary: #16071f;
+}
+
+:root[data-font-set="crt-mono"] {
+  --bb-font-display: ui-monospace, Menlo, Consolas, monospace;
+  --bb-font-body: ui-monospace, Menlo, Consolas, monospace;
+}
+
+:root[data-font-set="block-pixel"] {
+  --bb-font-display: ui-monospace, Menlo, Consolas, monospace;
+  --bb-font-body: system-ui, sans-serif;
+}
+
 :root[data-theme="light"] {
   color-scheme: light;
   --bb-color-background: #fcf8fb;
@@ -249,44 +304,6 @@ select {
 }
 
 .dashboard-menu-button:focus-visible {
-  outline: 2px solid var(--bb-color-primary-strong);
-  outline-offset: 2px;
-}
-
-.theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  min-height: 44px;
-  padding: 4px;
-  border: 1px solid color-mix(in srgb, var(--bb-color-outline) 34%, transparent);
-  border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--bb-color-surface) 82%, transparent);
-  box-sizing: border-box;
-}
-
-.theme-toggle__button {
-  min-width: 64px;
-  min-height: 44px;
-  padding: 8px 12px;
-  border: 1px solid transparent;
-  border-radius: var(--space-1);
-  color: var(--bb-color-muted);
-  background: transparent;
-  cursor: pointer;
-  font-size: 0.86rem;
-  font-weight: 800;
-  line-height: 1;
-}
-
-.theme-toggle__button--active {
-  color: var(--bb-color-on-primary);
-  background: var(--bb-color-primary);
-  border-color: var(--bb-color-primary-strong);
-  box-shadow: var(--bb-shadow-accent);
-}
-
-.theme-toggle__button:focus-visible {
   outline: 2px solid var(--bb-color-primary-strong);
   outline-offset: 2px;
 }
@@ -758,7 +775,54 @@ canvas {
   color: var(--color-muted);
 }
 
-.settings-drawer .theme-toggle,
+
+.appearance-selector {
+  display: grid;
+  gap: 16px;
+}
+
+.appearance-selector__group {
+  display: grid;
+  gap: 8px;
+}
+
+.appearance-selector__group h4 {
+  margin: 0;
+  color: var(--bb-color-muted);
+  font-size: var(--bb-font-size-caption);
+  font-family: var(--bb-font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.appearance-selector__options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.appearance-selector__button {
+  min-height: 44px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--bb-color-outline) 34%, transparent);
+  color: var(--bb-color-text);
+  background: color-mix(in srgb, var(--bb-color-surface) 82%, transparent);
+  font: inherit;
+  cursor: pointer;
+}
+
+.appearance-selector__button--active {
+  color: var(--bb-color-on-primary);
+  background: var(--bb-color-primary);
+  border-color: var(--bb-color-primary-strong);
+  box-shadow: var(--bb-shadow-accent);
+}
+
+.appearance-selector__button:focus-visible {
+  outline: 2px solid var(--bb-color-primary-strong);
+  outline-offset: 2px;
+}
+
 .settings-drawer .dashboard-button {
   width: 100%;
 }
@@ -877,14 +941,6 @@ canvas {
     flex: 0 0 auto;
   }
 
-  .theme-toggle {
-    width: 100%;
-  }
-
-  .theme-toggle__button {
-    flex: 1 1 0;
-    min-width: 0;
-  }
 
   .play-column {
     gap: var(--space-2);
@@ -1213,8 +1269,7 @@ html.bb-landscape-immersive .game-status-region {
   .game-cinematic-overlay,
   .game-cinematic-overlay__media,
   .game-cinematic-overlay__count,
-  .dashboard-button,
-  .theme-toggle__button {
+  .dashboard-button {
     animation: none;
     transition-property: opacity, background, border-color;
   }

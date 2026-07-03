@@ -1,88 +1,209 @@
 // scripts/validate-svg-assets.mjs
-import { existsSync, readFileSync } from 'node:fs';
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
+import { dirname, extname, join, relative, resolve } from 'node:path';
 
-const EXPECTED_FAVICON_RUNTIME_PATHS = ['/assets/visual/ui/ui-app-browser-favicon.svg'];
-const EXPECTED_CORE_RUNTIME_PATHS = [
-  '/assets/visual/sprites/spr-ball-player-default.svg',
-  '/assets/visual/sprites/spr-paddle-player-default.svg',
-  '/assets/visual/bricks/spr-brick-basic-red-normal.svg',
-  '/assets/visual/bricks/spr-brick-basic-blue-normal.svg',
-  '/assets/visual/bricks/spr-brick-basic-green-normal.svg',
-  '/assets/visual/bricks/spr-brick-basic-yellow-normal.svg',
-  '/assets/visual/bricks/spr-brick-basic-purple-normal.svg',
-];
-const EXPECTED_CINEMATIC_RUNTIME_PATHS = [
-  '/assets/visual/vfx/vfx-countdown-circle-overlay.svg',
-  '/assets/visual/vfx/vfx-countdown-spark-overlay.svg',
-  '/assets/visual/vfx/vfx-level-up-star-overlay.svg',
-  '/assets/visual/vfx/vfx-level-up-twirl-overlay.svg',
-  '/assets/visual/vfx/vfx-game-over-rip-smoke.svg',
-];
-const EXPECTED_POWER_UP_RUNTIME_PATHS = [
-  '/assets/visual/powerups/spr-powerup-multiball-orb.svg',
-  '/assets/visual/powerups/spr-powerup-wide-paddle.svg',
-  '/assets/visual/powerups/spr-powerup-slow-ball.svg',
-  '/assets/visual/powerups/spr-powerup-laser-fan.svg',
-];
-const EXPECTED_ICON_RUNTIME_PATHS = ['/assets/visual/ui/ui-pwa-app-icon.svg'];
+const VISUAL_ASSET_SOURCE_PATH = 'src/constants/visualAssets.ts';
+const VISUAL_RUNTIME_ROOT = 'public/assets/visual';
+const CODEX_VISUAL_ARTIFACT_ROOT = 'docs/assets/theme-planning';
+const REPORT_PATH = process.env.BRICKBREAKER_SVG_GUARD_REPORT || 'tmp/reports/svg-assets-guard.json';
+const FAVICON_RUNTIME_PATH = '/assets/visual/ui/ui-app-browser-favicon.svg';
+const PWA_ICON_RUNTIME_PATH = '/assets/visual/ui/ui-pwa-app-icon.svg';
+const RUNTIME_SVG_PATTERN = /['"`]((?:\/assets\/visual\/)[^'"`]+\.svg)['"`]/g;
+const ALLOWED_VISUAL_EXTENSION = '.svg';
+const SOURCE_SCAN_ENTRIES = ['src', 'public/sw.js', 'public/manifest.webmanifest', 'index.html'];
 const EXPECTED_REFERENCES = {
-  'index.html': EXPECTED_FAVICON_RUNTIME_PATHS,
-  'src/constants/visualAssets.ts': [
-    ...EXPECTED_CORE_RUNTIME_PATHS,
-    ...EXPECTED_CINEMATIC_RUNTIME_PATHS,
-    ...EXPECTED_POWER_UP_RUNTIME_PATHS,
-  ],
-  'public/sw.js': [
-    ...EXPECTED_FAVICON_RUNTIME_PATHS,
-    ...EXPECTED_ICON_RUNTIME_PATHS,
-    ...EXPECTED_CORE_RUNTIME_PATHS,
-    ...EXPECTED_CINEMATIC_RUNTIME_PATHS,
-    ...EXPECTED_POWER_UP_RUNTIME_PATHS,
-  ],
-  'public/manifest.webmanifest': EXPECTED_ICON_RUNTIME_PATHS,
+  'index.html': [FAVICON_RUNTIME_PATH],
+  [VISUAL_ASSET_SOURCE_PATH]: [],
+  'public/sw.js': [],
+  'public/manifest.webmanifest': [PWA_ICON_RUNTIME_PATH],
 };
-const EXPECTED_SVG_ASSETS = Object.values(EXPECTED_REFERENCES)
-  .flat()
-  .filter((path, index, paths) => paths.indexOf(path) === index)
-  .map((path) => `public${path}`);
 const DISALLOWED_SVG_PATTERNS = [
   { pattern: /<script\b/i, label: '<script>' },
   { pattern: /<image\b/i, label: '<image>' },
-  { pattern: /https?:\/\/(?!www\.w3\.org\/2000\/svg)/i, label: 'external url' },
+  { pattern: /https?:\/\/(?!(?:www\.w3\.org\/2000\/svg|www\.w3\.org\/1999\/xhtml|www\.w3\.org\/1999\/xlink)\b)/i, label: 'external url' },
   { pattern: /data:/i, label: 'data uri' },
   { pattern: /@font-face/i, label: 'external font hook' },
 ];
-const DISALLOWED_RUNTIME_RASTER_PATTERN = /\/assets\/(?!visual\/vfx\/)[^"'`\s)]*\.(?:png|jpe?g|webp|gif)|\/favicon\.ico/i;
+const DISALLOWED_RUNTIME_RASTER_REFERENCE_PATTERN =
+  /(?:\/assets\/visual\/|public\/assets\/visual\/)[^'"`\s)]*\.(?:png|jpe?g|webp|gif|ico)\b|(?:\/|public\/)favicon\.ico\b/i;
+
+const report = {
+  ok: false,
+  checkedAt: new Date().toISOString(),
+  reportPath: REPORT_PATH,
+  visualRuntimeRoot: VISUAL_RUNTIME_ROOT,
+  codexVisualArtifactRoot: CODEX_VISUAL_ARTIFACT_ROOT,
+  expectedRuntimeSvgPaths: [],
+  visualRuntimeSvgAssets: [],
+  codexVisualSvgArtifacts: [],
+  scannedReferenceFiles: [],
+  checks: [],
+};
+
+function ensureParentDirectory(filePath) {
+  mkdirSync(dirname(resolve(filePath)), { recursive: true });
+}
+
+function writeReport() {
+  ensureParentDirectory(REPORT_PATH);
+  writeFileSync(REPORT_PATH, `${JSON.stringify(report, null, 2)}\n`);
+}
 
 function fail(message) {
   throw new Error(message);
+}
+
+function addCheck(name, failures, metadata = {}) {
+  const check = {
+    name,
+    ok: failures.length === 0,
+    failures,
+    ...metadata,
+  };
+  report.checks.push(check);
+  if (failures.length > 0) {
+    fail(`${name}: ${failures.join('; ')}`);
+  }
 }
 
 function read(path) {
   return readFileSync(path, 'utf8');
 }
 
-for (const assetPath of EXPECTED_SVG_ASSETS) {
-  if (!existsSync(assetPath)) fail(`${assetPath} ausente`);
-  const source = read(assetPath);
-  if (!source.includes('<svg')) fail(`${assetPath} não contém <svg`);
-  if (!/viewBox=["'][^"']+["']/.test(source)) {
-    fail(`${assetPath} não contém viewBox`);
-  }
-  for (const rule of DISALLOWED_SVG_PATTERNS) {
-    if (rule.pattern.test(source)) fail(`${assetPath} contém ${rule.label}`);
-  }
+function collectFiles(path) {
+  if (!existsSync(path)) return [];
+  const stat = statSync(path);
+  if (stat.isFile()) return [path];
+  return readdirSync(path)
+    .flatMap((entry) => collectFiles(join(path, entry)))
+    .sort();
 }
 
-for (const [sourceFile, expectedPaths] of Object.entries(EXPECTED_REFERENCES)) {
-  if (!existsSync(sourceFile)) fail(`${sourceFile} ausente`);
-  const source = read(sourceFile);
-  if (DISALLOWED_RUNTIME_RASTER_PATTERN.test(source)) {
-    fail(`${sourceFile} referencia imagem raster runtime`);
-  }
-  for (const runtimePath of expectedPaths) {
-    if (!source.includes(runtimePath)) fail(`${sourceFile} não referencia ${runtimePath}`);
-  }
+function relativePath(path) {
+  return relative(process.cwd(), resolve(path));
 }
 
-console.log(`svg-assets ok: svg=${EXPECTED_SVG_ASSETS.length}`);
+function runtimePathForPublicAsset(path) {
+  return `/${relativePath(path).replace(/^public\//, '')}`;
+}
+
+function matchRuntimeSvgPaths(sourcePath) {
+  return [...read(sourcePath).matchAll(RUNTIME_SVG_PATTERN)].map((match) => match[1]);
+}
+
+function validateSvgContent(svgFiles) {
+  const failures = [];
+  for (const svgFile of svgFiles) {
+    const source = read(svgFile);
+    if (!/<svg[\s>]/i.test(source)) failures.push(`${svgFile} não contém <svg`);
+    if (!/viewBox=["'][^"']+["']/.test(source)) failures.push(`${svgFile} não contém viewBox`);
+    for (const rule of DISALLOWED_SVG_PATTERNS) {
+      if (rule.pattern.test(source)) failures.push(`${svgFile} contém ${rule.label}`);
+    }
+  }
+  return failures;
+}
+
+function validateDirectorySvgOnly(directory, label) {
+  const files = collectFiles(directory);
+  const invalidFiles = files.filter((file) => extname(file).toLowerCase() !== ALLOWED_VISUAL_EXTENSION);
+  addCheck(`${label} usa apenas SVG`, invalidFiles.map((file) => `${file} não é .svg`), {
+    scannedFiles: files.length,
+  });
+  return files.filter((file) => extname(file).toLowerCase() === ALLOWED_VISUAL_EXTENSION);
+}
+
+function validateExpectedReferences(expectedRuntimeSvgPaths) {
+  const expectedReferences = {
+    ...EXPECTED_REFERENCES,
+    [VISUAL_ASSET_SOURCE_PATH]: expectedRuntimeSvgPaths,
+    'public/sw.js': expectedRuntimeSvgPaths,
+  };
+  const failures = [];
+  for (const [sourceFile, expectedPaths] of Object.entries(expectedReferences)) {
+    if (!existsSync(sourceFile)) {
+      failures.push(`${sourceFile} ausente`);
+      continue;
+    }
+    const source = read(sourceFile);
+    for (const runtimePath of expectedPaths) {
+      if (!source.includes(runtimePath)) failures.push(`${sourceFile} não referencia ${runtimePath}`);
+    }
+  }
+  addCheck('referências obrigatórias de SVG runtime existem', failures, {
+    sourceFiles: Object.keys(expectedReferences),
+  });
+}
+
+function validateRuntimeRasterReferences() {
+  const scannedReferenceFiles = SOURCE_SCAN_ENTRIES.flatMap((entry) => collectFiles(entry));
+  report.scannedReferenceFiles = scannedReferenceFiles;
+  const failures = [];
+  for (const sourceFile of scannedReferenceFiles) {
+    const source = read(sourceFile);
+    const matches = source.match(DISALLOWED_RUNTIME_RASTER_REFERENCE_PATTERN) || [];
+    for (const match of matches) failures.push(`${sourceFile} referencia ${match}`);
+  }
+  addCheck('referências runtime não usam raster visual', failures, {
+    scannedFiles: scannedReferenceFiles.length,
+  });
+}
+
+function validateExpectedSvgFiles(expectedRuntimeSvgPaths) {
+  const failures = [];
+  for (const runtimePath of expectedRuntimeSvgPaths) {
+    const assetPath = `public${runtimePath}`;
+    if (!existsSync(assetPath)) failures.push(`${assetPath} ausente`);
+  }
+  addCheck('SVGs catalogados existem no disco', failures, {
+    expectedFiles: expectedRuntimeSvgPaths.length,
+  });
+}
+
+try {
+  if (!existsSync(VISUAL_ASSET_SOURCE_PATH)) fail(`${VISUAL_ASSET_SOURCE_PATH} ausente`);
+
+  const expectedRuntimeSvgPaths = [...new Set(matchRuntimeSvgPaths(VISUAL_ASSET_SOURCE_PATH))].sort();
+  report.expectedRuntimeSvgPaths = expectedRuntimeSvgPaths;
+
+  const visualRuntimeSvgAssets = validateDirectorySvgOnly(
+    VISUAL_RUNTIME_ROOT,
+    'assets visuais runtime',
+  );
+  const codexVisualSvgArtifacts = validateDirectorySvgOnly(
+    CODEX_VISUAL_ARTIFACT_ROOT,
+    'artefatos visuais Codex',
+  );
+  report.visualRuntimeSvgAssets = visualRuntimeSvgAssets.map(runtimePathForPublicAsset);
+  report.codexVisualSvgArtifacts = codexVisualSvgArtifacts;
+
+  validateExpectedSvgFiles(expectedRuntimeSvgPaths);
+  validateExpectedReferences(expectedRuntimeSvgPaths);
+  validateRuntimeRasterReferences();
+
+  addCheck(
+    'conteúdo SVG é local e seguro',
+    validateSvgContent([...visualRuntimeSvgAssets, ...codexVisualSvgArtifacts]),
+    {
+      svgFiles: visualRuntimeSvgAssets.length + codexVisualSvgArtifacts.length,
+    },
+  );
+
+  report.ok = true;
+  writeReport();
+  console.log(
+    `svg-assets ok: runtime=${visualRuntimeSvgAssets.length}, codex=${codexVisualSvgArtifacts.length}, report=${REPORT_PATH}`,
+  );
+} catch (error) {
+  report.error = error.message;
+  writeReport();
+  console.error(error);
+  process.exit(1);
+}

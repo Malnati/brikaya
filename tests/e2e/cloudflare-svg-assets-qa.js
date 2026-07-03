@@ -1,5 +1,5 @@
 // tests/e2e/cloudflare-svg-assets-qa.js
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import puppeteer from 'puppeteer';
 
@@ -8,26 +8,15 @@ const DEFAULT_REPORT_PATH = 'tmp/reports/cloudflare-svg-assets-qa.json';
 const DEFAULT_SCREENSHOT_PATH = 'tmp/screenshots/cloudflare-svg-assets-qa.png';
 const CHROME_EXECUTABLE_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const VIEWPORT = { width: 393, height: 852, deviceScaleFactor: 3, isMobile: true, hasTouch: true };
+const VISUAL_ASSET_SOURCE_PATH = 'src/constants/visualAssets.ts';
+const RUNTIME_SVG_PATTERN = /['"`]((?:\/assets\/visual\/)[^'"`]+\.svg)['"`]/g;
 const EXPECTED_SVG_PATHS = [
-  '/assets/visual/ui/ui-app-browser-favicon.svg',
-  '/assets/visual/sprites/spr-ball-player-default.svg',
-  '/assets/visual/sprites/spr-paddle-player-default.svg',
-  '/assets/visual/bricks/spr-brick-basic-red-normal.svg',
-  '/assets/visual/bricks/spr-brick-basic-blue-normal.svg',
-  '/assets/visual/bricks/spr-brick-basic-green-normal.svg',
-  '/assets/visual/bricks/spr-brick-basic-yellow-normal.svg',
-  '/assets/visual/bricks/spr-brick-basic-purple-normal.svg',
-  '/assets/visual/vfx/vfx-countdown-circle-overlay.svg',
-  '/assets/visual/vfx/vfx-countdown-spark-overlay.svg',
-  '/assets/visual/vfx/vfx-level-up-star-overlay.svg',
-  '/assets/visual/vfx/vfx-level-up-twirl-overlay.svg',
-  '/assets/visual/vfx/vfx-game-over-rip-smoke.svg',
-  '/assets/visual/powerups/spr-powerup-multiball-orb.svg',
-  '/assets/visual/powerups/spr-powerup-wide-paddle.svg',
-  '/assets/visual/powerups/spr-powerup-slow-ball.svg',
-  '/assets/visual/powerups/spr-powerup-laser-fan.svg',
-  '/assets/visual/ui/ui-pwa-app-icon.svg',
-];
+  ...new Set(
+    [...readFileSync(VISUAL_ASSET_SOURCE_PATH, 'utf8').matchAll(RUNTIME_SVG_PATTERN)].map(
+      (match) => match[1],
+    ),
+  ),
+].sort();
 const FORBIDDEN_RUNTIME_RASTER = /\/assets\/[^\s?]+\.(?:png|jpe?g|webp|gif)(?:\?|$)/i;
 const MAX_NAVIGATION_MS = 30000;
 const SERVICE_WORKER_READY_MS = 10000;
@@ -116,7 +105,7 @@ async function readCacheState(page) {
 
 async function run() {
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: 'new',
     executablePath: CHROME_EXECUTABLE_PATH,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });

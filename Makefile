@@ -32,7 +32,7 @@ KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
 # Target padrão: mostrar help quando make é executado sem argumentos
 .DEFAULT_GOAL := help
 
-.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-deploy cloudflare-mobile-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-runtime-update-qa cloudflare-audio-qa docker-build docker-up docker-down docker-logs docker-shell docker-create-caddy-network docker-logs-caddy docker-reload-caddy
+.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-deploy cloudflare-mobile-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa docker-build docker-up docker-down docker-logs docker-shell docker-create-caddy-network docker-logs-caddy docker-reload-caddy
 
 # Função para matar processos anteriores
 kill-processes:
@@ -96,6 +96,9 @@ cloudflare-dashboard-layout-qa:
 
 cloudflare-theme-qa:
 	@npm run test:cloudflare-theme
+
+cloudflare-svg-assets-qa:
+	@npm run test:cloudflare-svg-assets
 
 cloudflare-runtime-update-qa:
 	@npm run test:cloudflare-runtime-update
@@ -256,7 +259,8 @@ help:
 	@echo "  cloudflare-phase-transition-qa - Validar pausa/toast de fase no Cloudflare publicado"
 	@echo "  cloudflare-phase10-stability-qa - Validar estabilidade da bolinha após Fase 10 no Cloudflare publicado"
 	@echo "  cloudflare-dashboard-layout-qa - Validar dashboard responsivo no Cloudflare publicado"
-	@echo "  cloudflare-theme-qa - Validar tema claro/escuro contra Cloudflare publicado"
+	@echo "  cloudflare-theme-qa - Validar aparência contra Cloudflare publicado"
+	@echo "  cloudflare-svg-assets-qa - Validar SVGs runtime/cache contra Cloudflare publicado"
 	@echo "  cloudflare-runtime-update-qa - Validar atualização automática contra Cloudflare publicado"
 	@echo "  cloudflare-audio-qa - Validar áudio/cache contra Cloudflare publicado"
 	@echo ""

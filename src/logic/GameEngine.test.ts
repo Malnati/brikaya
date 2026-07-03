@@ -146,6 +146,7 @@ jest.mock("../objects/Bricks", () => ({
 jest.mock("../utils/assetLoader", () => ({
   AssetLoader: {
     preloadAllAssets: jest.fn().mockResolvedValue(undefined),
+    preloadImageSet: jest.fn().mockResolvedValue(undefined),
     getImage: jest.fn(() => null),
   },
 }));

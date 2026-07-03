@@ -470,11 +470,26 @@ async function run() {
       "Menu lateral ainda mostra ação Reiniciar/Jogar de novo.",
     );
     assert(/Versão v\d+/.test(menuState.text), "Menu lateral sem versão vN.");
-    assert(menuState.text.includes("Tema"), "Menu lateral sem seção Tema.");
     assert(
-      menuState.text.includes("Claro") && menuState.text.includes("Escuro"),
-      "Menu lateral sem controles de tema.",
+      menuState.text.includes("Aparência"),
+      "Menu lateral sem seção Aparência.",
     );
+    for (const label of [
+      "Tema visual",
+      "Imagens",
+      "Fonte",
+      "Neon Arcade",
+      "CRT alto contraste",
+      "Pixel Sunset",
+      "Retro padrão",
+      "Alto contraste",
+      "Cabine Sunset",
+      "Arcade",
+      "CRT mono",
+      "Blocos pixel",
+    ]) {
+      assert(menuState.text.includes(label), `Menu lateral sem ${label}.`);
+    }
     assert(menuState.text.includes("Logs"), "Menu lateral sem opção Logs.");
     assert(
       menuState.text.includes("Colisões"),
