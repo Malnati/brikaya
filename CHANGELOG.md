@@ -3,6 +3,20 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.30.3] - 2026-07-03
+### Corrigido
+- Harnesses publicados mobile e dashboard reduzem uso gráfico do Chrome, encerram navegador/páginas de forma determinística e evitam handles pendentes em execuções longas.
+- QA publicado de dashboard recicla o navegador em blocos da matriz responsiva para evitar queda por recurso no Chrome durante validações completas.
+- QA publicado de power-ups reduz escala e captura apenas a viewport para evitar queda do alvo durante screenshots de evidência.
+
+### Testado
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version && npm --version && make help`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --check tests/e2e/cloudflare-mobile-qa.js tests/e2e/cloudflare-dashboard-layout-qa.js tests/e2e/cloudflare-laser-powerup-qa.js`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-powerups-qa`
+
 ## [1.30.2] - 2026-07-03
 ### Corrigido
 - QA publicado de power-ups limpa o estado do domínio antes de abrir o app, evitando logs antigos quando IndexedDB já estava bloqueado por sessão anterior.
