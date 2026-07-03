@@ -2,16 +2,16 @@
   "url": "https://brikaya.com/",
   "screenshotPaths": {
     "iphone15": {
-      "contrast": "docs/assets/issues/dez-temas-visuais/evidence/evi-dez-temas-visuais-iphone15-contrast-20260703-1832.png",
-      "sunset": "docs/assets/issues/dez-temas-visuais/evidence/evi-dez-temas-visuais-iphone15-sunset-20260703-1832.png",
-      "ocean": "docs/assets/issues/dez-temas-visuais/evidence/evi-dez-temas-visuais-iphone15-ocean-20260703-1832.png",
-      "ruby": "docs/assets/issues/dez-temas-visuais/evidence/evi-dez-temas-visuais-iphone15-ruby-20260703-1832.png"
+      "contrast": "docs/assets/issues/dez-temas-visuais/evidence/evi-dez-temas-visuais-iphone15-contrast-20260703-1850.png",
+      "sunset": "docs/assets/issues/dez-temas-visuais/evidence/evi-dez-temas-visuais-iphone15-sunset-20260703-1850.png",
+      "ocean": "docs/assets/issues/dez-temas-visuais/evidence/evi-dez-temas-visuais-iphone15-ocean-20260703-1850.png",
+      "ruby": "docs/assets/issues/dez-temas-visuais/evidence/evi-dez-temas-visuais-iphone15-ruby-20260703-1850.png"
     },
     "desktop": {
-      "contrast": "docs/assets/issues/dez-temas-visuais/evidence/evi-dez-temas-visuais-desktop-contrast-20260703-1832.png",
-      "sunset": "docs/assets/issues/dez-temas-visuais/evidence/evi-dez-temas-visuais-desktop-sunset-20260703-1832.png",
-      "ocean": "docs/assets/issues/dez-temas-visuais/evidence/evi-dez-temas-visuais-desktop-ocean-20260703-1832.png",
-      "ruby": "docs/assets/issues/dez-temas-visuais/evidence/evi-dez-temas-visuais-desktop-ruby-20260703-1832.png"
+      "contrast": "docs/assets/issues/dez-temas-visuais/evidence/evi-dez-temas-visuais-desktop-contrast-20260703-1850.png",
+      "sunset": "docs/assets/issues/dez-temas-visuais/evidence/evi-dez-temas-visuais-desktop-sunset-20260703-1850.png",
+      "ocean": "docs/assets/issues/dez-temas-visuais/evidence/evi-dez-temas-visuais-desktop-ocean-20260703-1850.png",
+      "ruby": "docs/assets/issues/dez-temas-visuais/evidence/evi-dez-temas-visuais-desktop-ruby-20260703-1850.png"
     }
   },
   "results": {
@@ -173,7 +173,7 @@
             "title": "",
             "width": 44,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": null,
             "inDrawer": true
@@ -184,7 +184,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -195,7 +195,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "true",
             "inDrawer": true
@@ -206,7 +206,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -217,7 +217,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -228,7 +228,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -239,7 +239,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -360,7 +360,7 @@
             "title": "",
             "width": 287,
             "height": 44,
-            "visibleInViewport": false,
+            "visibleInViewport": true,
             "hasTouchTarget": true,
             "ariaPressed": null,
             "inDrawer": true
@@ -371,7 +371,7 @@
             "title": "",
             "width": 287,
             "height": 44,
-            "visibleInViewport": false,
+            "visibleInViewport": true,
             "hasTouchTarget": true,
             "ariaPressed": null,
             "inDrawer": true
@@ -382,13 +382,13 @@
             "title": "",
             "width": 287,
             "height": 44,
-            "visibleInViewport": false,
+            "visibleInViewport": true,
             "hasTouchTarget": true,
             "ariaPressed": null,
             "inDrawer": true
           }
         ],
-        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v114AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidadePronto para jogar offline\n  \n\n",
+        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v121AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidade\n  \n\n",
         "forbiddenResources": [],
         "canvas": {
           "x": 13.015625,
@@ -562,7 +562,7 @@
             "title": "",
             "width": 44,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": null,
             "inDrawer": true
@@ -573,7 +573,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -584,7 +584,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -595,7 +595,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "true",
             "inDrawer": true
@@ -606,7 +606,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -617,7 +617,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -628,7 +628,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -749,7 +749,7 @@
             "title": "",
             "width": 287,
             "height": 44,
-            "visibleInViewport": false,
+            "visibleInViewport": true,
             "hasTouchTarget": true,
             "ariaPressed": null,
             "inDrawer": true
@@ -760,7 +760,7 @@
             "title": "",
             "width": 287,
             "height": 44,
-            "visibleInViewport": false,
+            "visibleInViewport": true,
             "hasTouchTarget": true,
             "ariaPressed": null,
             "inDrawer": true
@@ -771,13 +771,13 @@
             "title": "",
             "width": 287,
             "height": 44,
-            "visibleInViewport": false,
+            "visibleInViewport": true,
             "hasTouchTarget": true,
             "ariaPressed": null,
             "inDrawer": true
           }
         ],
-        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v114AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidadePronto para jogar offline\n  \n\n",
+        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v121AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidadePronto para jogar offline\n  \n\n",
         "forbiddenResources": [],
         "canvas": {
           "x": 13.015625,
@@ -1103,7 +1103,7 @@
             "inDrawer": true
           }
         ],
-        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v114AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidadePronto para jogar offline\n  \n\n",
+        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v121AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidadePronto para jogar offline\n  \n\n",
         "forbiddenResources": [],
         "canvas": {
           "x": 13.015625,
@@ -1429,7 +1429,7 @@
             "inDrawer": true
           }
         ],
-        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v114AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidade\n  \n\n",
+        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v121AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidade\n  \n\n",
         "forbiddenResources": [],
         "canvas": {
           "x": 13.015625,
@@ -1616,7 +1616,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -1627,7 +1627,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "true",
             "inDrawer": true
@@ -1638,7 +1638,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -1649,7 +1649,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -1660,7 +1660,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -1671,7 +1671,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -1682,7 +1682,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -1693,7 +1693,7 @@
             "title": "",
             "width": 139.5,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -1781,7 +1781,7 @@
             "title": "",
             "width": 287,
             "height": 44,
-            "visibleInViewport": false,
+            "visibleInViewport": true,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -1792,7 +1792,7 @@
             "title": "",
             "width": 287,
             "height": 44,
-            "visibleInViewport": false,
+            "visibleInViewport": true,
             "hasTouchTarget": true,
             "ariaPressed": null,
             "inDrawer": true
@@ -1803,7 +1803,7 @@
             "title": "",
             "width": 287,
             "height": 44,
-            "visibleInViewport": false,
+            "visibleInViewport": true,
             "hasTouchTarget": true,
             "ariaPressed": null,
             "inDrawer": true
@@ -1820,7 +1820,7 @@
             "inDrawer": true
           }
         ],
-        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v114AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidade\n  \n\n",
+        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v121AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidade\n  \n\n",
         "forbiddenResources": [],
         "canvas": {
           "x": 245,
@@ -2209,7 +2209,7 @@
             "inDrawer": true
           }
         ],
-        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v114AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidadePronto para jogar offline\n  \n\n",
+        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v121AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidade\n  \n\n",
         "forbiddenResources": [],
         "canvas": {
           "x": 245,
@@ -2535,7 +2535,7 @@
             "inDrawer": true
           }
         ],
-        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v114AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidadePronto para jogar offline\n  \n\n",
+        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v121AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidade\n  \n\n",
         "forbiddenResources": [],
         "canvas": {
           "x": 245,
@@ -2646,7 +2646,7 @@
             "title": "",
             "width": 44,
             "height": 44,
-            "visibleInViewport": true,
+            "visibleInViewport": false,
             "hasTouchTarget": true,
             "ariaPressed": null,
             "inDrawer": true
@@ -2811,7 +2811,7 @@
             "title": "",
             "width": 287,
             "height": 44,
-            "visibleInViewport": false,
+            "visibleInViewport": true,
             "hasTouchTarget": true,
             "ariaPressed": "false",
             "inDrawer": true
@@ -2861,7 +2861,7 @@
             "inDrawer": true
           }
         ],
-        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v114AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidadePronto para jogar offline\n  \n\n",
+        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v121AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidade\n  \n\n",
         "forbiddenResources": [],
         "canvas": {
           "x": 245,

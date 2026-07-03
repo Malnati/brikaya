@@ -12,17 +12,31 @@ const DEFAULT_IPHONE15_CONTRAST_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-iphone15-contrast.png";
 const DEFAULT_IPHONE15_SUNSET_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-iphone15-sunset.png";
+const DEFAULT_IPHONE15_OCEAN_SCREENSHOT =
+  "tmp/screenshots/cloudflare-theme-iphone15-ocean.png";
+const DEFAULT_IPHONE15_RUBY_SCREENSHOT =
+  "tmp/screenshots/cloudflare-theme-iphone15-ruby.png";
 const DEFAULT_DESKTOP_CONTRAST_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-desktop-contrast.png";
 const DEFAULT_DESKTOP_SUNSET_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-desktop-sunset.png";
+const DEFAULT_DESKTOP_OCEAN_SCREENSHOT =
+  "tmp/screenshots/cloudflare-theme-desktop-ocean.png";
+const DEFAULT_DESKTOP_RUBY_SCREENSHOT =
+  "tmp/screenshots/cloudflare-theme-desktop-ruby.png";
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const MIN_TOUCH_TARGET_SIZE = 44;
 const BROWSER_CLOSE_TIMEOUT_MS = 5000;
+const MENU_BUTTON_NAME = /menu/i;
+const MENU_OPEN_ATTEMPTS = 3;
+const MENU_OPEN_RETRY_DELAY_MS = 500;
+const MENU_OPEN_WAIT_TIMEOUT_MS = 4000;
 const THEME_NEON_ARCADE = "neon-arcade";
 const THEME_CRT_HIGH_CONTRAST = "crt-high-contrast";
 const THEME_PIXEL_SUNSET = "pixel-sunset";
+const THEME_OCEAN_NIGHT = "ocean-night";
+const THEME_RUBY_DEPTH = "ruby-depth";
 const IMAGE_SET_RETRO_DEFAULT = "retro-default";
 const IMAGE_SET_HIGH_CONTRAST = "high-contrast";
 const IMAGE_SET_SUNSET_CABINET = "sunset-cabinet";
@@ -37,10 +51,20 @@ const APPEARANCE_STORAGE_KEYS = [
   IMAGE_SET_STORAGE_KEY,
   FONT_SET_STORAGE_KEY,
 ];
-const APPEARANCE_BUTTON_LABELS = [
+const THEME_BUTTON_LABELS = [
   "Neon Arcade",
   "CRT alto contraste",
   "Pixel Sunset",
+  "Oceano noturno",
+  "Selva laser",
+  "Âmbar retrô",
+  "Gelo cósmico",
+  "Ameixa elétrica",
+  "Lima grafite",
+  "Rubi profundo",
+];
+const APPEARANCE_BUTTON_LABELS = [
+  ...THEME_BUTTON_LABELS,
   "Retro padrão",
   "Alto contraste",
   "Cabine Sunset",
@@ -120,6 +144,9 @@ async function clickButtonByText(page, label) {
       (node) => node.textContent?.trim() || "",
     );
     if (text === label) {
+      await button.evaluate((node) =>
+        node.scrollIntoView({ block: "center", inline: "center" }),
+      );
       await button.click();
       return;
     }
@@ -127,9 +154,47 @@ async function clickButtonByText(page, label) {
   throw new Error(`Botão não encontrado: ${label}`);
 }
 
+async function clickButtonByPattern(page, pattern) {
+  const buttons = await page.$$("button");
+  const candidates = [];
+  for (const button of buttons) {
+    const labels = await button.evaluate((node) => ({
+      text: node.textContent || "",
+      ariaLabel: node.getAttribute("aria-label") || "",
+      title: node.getAttribute("title") || "",
+    }));
+    candidates.push({ button, labels });
+  }
+
+  const accessibleMatch = candidates.find(
+    ({ labels }) => pattern.test(labels.ariaLabel) || pattern.test(labels.title),
+  );
+  const textMatch = candidates.find(({ labels }) => pattern.test(labels.text));
+  const match = accessibleMatch || textMatch;
+  if (!match) throw new Error(`Botão não encontrado: ${pattern}`);
+
+  await match.button.evaluate((node) => {
+    node.scrollIntoView({ block: "center", inline: "center" });
+    node.click();
+  });
+}
+
 async function openMenu(page) {
-  await clickButtonByText(page, "Menu");
-  await page.waitForSelector(".settings-drawer", { timeout: 10000 });
+  for (let attempt = 1; attempt <= MENU_OPEN_ATTEMPTS; attempt += 1) {
+    if (await page.$(".settings-drawer")) return;
+    await clickButtonByPattern(page, MENU_BUTTON_NAME);
+    try {
+      await page.waitForSelector(".settings-drawer", {
+        timeout: MENU_OPEN_WAIT_TIMEOUT_MS,
+      });
+      return;
+    } catch (error) {
+      if (attempt === MENU_OPEN_ATTEMPTS) throw error;
+      await new Promise((resolve) =>
+        setTimeout(resolve, MENU_OPEN_RETRY_DELAY_MS),
+      );
+    }
+  }
 }
 
 async function waitForCinematicOverlayToClear(page) {
@@ -196,6 +261,14 @@ async function collectState(page) {
         appearanceSelector: Boolean(
           document.querySelector('[aria-label="Aparência do jogo"]'),
         ),
+        appearanceGroups: Array.from(
+          document.querySelectorAll(".appearance-selector__group"),
+        ).map((group) => ({
+          title: group.querySelector("h4")?.textContent?.trim() || "",
+          buttons: Array.from(group.querySelectorAll("button")).map(
+            (button) => button.textContent?.trim() || "",
+          ),
+        })),
         menuOpen: Boolean(document.querySelector(".settings-drawer")),
         buttons,
         bodyText,
@@ -258,6 +331,20 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
       assert(
         state.buttons.some((button) => button.text === label),
         `${viewportName}: botão ${label} ausente.`,
+      );
+    }
+    const themeGroup = state.appearanceGroups.find(
+      (group) => group.title === "Tema visual",
+    );
+    assert(themeGroup, `${viewportName}: grupo Tema visual ausente.`);
+    assert(
+      themeGroup.buttons.length === THEME_BUTTON_LABELS.length,
+      `${viewportName}: Tema visual deveria ter ${THEME_BUTTON_LABELS.length} botões, recebeu ${themeGroup.buttons.length}.`,
+    );
+    for (const label of THEME_BUTTON_LABELS) {
+      assert(
+        themeGroup.buttons.includes(label),
+        `${viewportName}: tema ${label} ausente no grupo Tema visual.`,
       );
     }
     for (const heading of ["Aparência", "Tema visual", "Imagens", "Fonte"]) {
@@ -481,7 +568,44 @@ async function validateViewport(
   );
   await page.screenshot({ path: screenshots.sunset, fullPage: true });
 
-  return { initialState, contrastState, reloadedContrastState, sunsetState };
+  await clickButtonByText(page, "Oceano noturno");
+  await page.waitForFunction(
+    (theme) => document.documentElement.dataset.theme === theme,
+    {},
+    THEME_OCEAN_NIGHT,
+  );
+  const oceanState = await collectState(page);
+  assertBaseState(oceanState, `${viewportName}/oceano-noturno`, true);
+  assert(
+    oceanState.theme === THEME_OCEAN_NIGHT &&
+      oceanState.storedTheme === THEME_OCEAN_NIGHT,
+    `${viewportName}: tema Oceano noturno não aplicado/persistido.`,
+  );
+  await page.screenshot({ path: screenshots.ocean, fullPage: true });
+
+  await clickButtonByText(page, "Rubi profundo");
+  await page.waitForFunction(
+    (theme) => document.documentElement.dataset.theme === theme,
+    {},
+    THEME_RUBY_DEPTH,
+  );
+  const rubyState = await collectState(page);
+  assertBaseState(rubyState, `${viewportName}/rubi-profundo`, true);
+  assert(
+    rubyState.theme === THEME_RUBY_DEPTH &&
+      rubyState.storedTheme === THEME_RUBY_DEPTH,
+    `${viewportName}: tema Rubi profundo não aplicado/persistido.`,
+  );
+  await page.screenshot({ path: screenshots.ruby, fullPage: true });
+
+  return {
+    initialState,
+    contrastState,
+    reloadedContrastState,
+    sunsetState,
+    oceanState,
+    rubyState,
+  };
 }
 
 async function run() {
@@ -503,6 +627,14 @@ async function run() {
         "BRICKBREAKER_THEME_QA_IPHONE15_SUNSET_SCREENSHOT",
         DEFAULT_IPHONE15_SUNSET_SCREENSHOT,
       ),
+      ocean: env(
+        "BRICKBREAKER_THEME_QA_IPHONE15_OCEAN_SCREENSHOT",
+        DEFAULT_IPHONE15_OCEAN_SCREENSHOT,
+      ),
+      ruby: env(
+        "BRICKBREAKER_THEME_QA_IPHONE15_RUBY_SCREENSHOT",
+        DEFAULT_IPHONE15_RUBY_SCREENSHOT,
+      ),
     },
     desktop: {
       contrast: env(
@@ -512,6 +644,14 @@ async function run() {
       sunset: env(
         "BRICKBREAKER_THEME_QA_DESKTOP_SUNSET_SCREENSHOT",
         DEFAULT_DESKTOP_SUNSET_SCREENSHOT,
+      ),
+      ocean: env(
+        "BRICKBREAKER_THEME_QA_DESKTOP_OCEAN_SCREENSHOT",
+        DEFAULT_DESKTOP_OCEAN_SCREENSHOT,
+      ),
+      ruby: env(
+        "BRICKBREAKER_THEME_QA_DESKTOP_RUBY_SCREENSHOT",
+        DEFAULT_DESKTOP_RUBY_SCREENSHOT,
       ),
     },
   };

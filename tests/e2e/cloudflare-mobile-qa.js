@@ -31,6 +31,7 @@ const MENU_BUTTON_NAME = /menu/i;
 const LOGS_BUTTON_NAME = /logs/i;
 const COLLISIONS_BUTTON_NAME = /colisões/i;
 const CLOSE_BUTTON_NAME = /fechar|×|✕/i;
+const PRE_GAME_ACCEPT_BUTTON_LABEL = "Aceitar e jogar";
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
 const SPEED_CURRENT_LABEL = "Velocidade atual";
@@ -276,6 +277,25 @@ async function waitForCinematicOverlayToClear(page) {
   });
 }
 
+async function acceptPreGamePromptIfVisible(page) {
+  const accepted = await page.evaluate((acceptLabel) => {
+    const button = Array.from(document.querySelectorAll("button")).find(
+      (candidate) => candidate.textContent?.trim() === acceptLabel,
+    );
+    if (!button) return false;
+    button.click();
+    return true;
+  }, PRE_GAME_ACCEPT_BUTTON_LABEL);
+
+  if (accepted) {
+    await page.waitForFunction(
+      (acceptLabel) => !(document.body.textContent || "").includes(acceptLabel),
+      { timeout: 10000 },
+      PRE_GAME_ACCEPT_BUTTON_LABEL,
+    );
+  }
+}
+
 async function collectLayoutState(page) {
   return page.evaluate((minTouchTargetSize, scoreValuePatternSource) => {
     const scoreValuePattern = new RegExp(scoreValuePatternSource);
@@ -511,6 +531,7 @@ async function run() {
       setTimeout(resolve, OBSERVATION_DURATION_MS),
     );
     await waitForCinematicOverlayToClear(page);
+    await acceptPreGamePromptIfVisible(page);
 
     const layoutState = await collectLayoutState(page);
     await page.screenshot({ path: screenshotPath, fullPage: true });
@@ -694,10 +715,11 @@ async function run() {
       { timeout: 10000 },
     );
     await new Promise((resolve) => setTimeout(resolve, 500));
-    await openFirstEventDetails(
+await openFirstEventDetails(
       page,
       "Painel de logs abriu sem botão Atualizar disponível.",
       "Nenhum evento disponível no painel de logs.",
+    );
     );
     await waitForLogDetailLabels(page, SPEED_CURRENT_LABEL, LEVEL_TIME_LABEL);
     const indexedDbSummary = await readIndexedDbSummary(page);
