@@ -14,6 +14,8 @@
 
 - [x] Adicionar recordes gerais locais com ranking no menu e QA publicado.
 
+- [x] Formalizar efeitos visuais e sonoros com overlays SVG, áudio local e QA publicado.
+
 - [x] Padronizar nomenclatura semântica e exclusiva de assets runtime visuais e sonoros exibidos/usados pelo jogo.
 
 - [x] Corrigir sobreposição de HUD/menu/controles sobre o canvas no modo paisagem imersivo mobile/tablet.
