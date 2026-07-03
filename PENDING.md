@@ -12,6 +12,8 @@
 
 - [x] Formalizar power-ups e especiais com telemetria `power_up` e QA publicado.
 
+- [x] Adicionar recordes gerais locais com ranking no menu e QA publicado.
+
 - [x] Padronizar nomenclatura semântica e exclusiva de assets runtime visuais e sonoros exibidos/usados pelo jogo.
 
 - [x] Corrigir sobreposição de HUD/menu/controles sobre o canvas no modo paisagem imersivo mobile/tablet.

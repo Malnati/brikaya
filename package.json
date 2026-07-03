@@ -21,6 +21,7 @@
     "test:cloudflare-cinematic-effects": "node tests/e2e/cloudflare-cinematic-effects-qa.js",
     "test:cloudflare-laser-powerup": "node tests/e2e/cloudflare-laser-powerup-qa.js",
     "test:cloudflare-powerups": "node tests/e2e/cloudflare-laser-powerup-qa.js",
+    "test:cloudflare-high-scores": "node tests/e2e/cloudflare-high-scores-qa.js",
     "test:cloudflare-svg-assets": "node tests/e2e/cloudflare-svg-assets-qa.js",
     "test:cinematic-media-assets": "node scripts/validate-cinematic-media-assets.mjs",
     "test:svg-assets": "node scripts/validate-svg-assets.mjs",

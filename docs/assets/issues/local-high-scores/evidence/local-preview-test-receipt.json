@@ -1,0 +1,82 @@
+{
+  "createdAtUtc": "2026-07-03T07:06:13.113Z",
+  "branch": "feature/local-high-scores-qa",
+  "previewUrl": "https://27715075.malnati-brickbreaker.pages.dev",
+  "node": "v23.5.0",
+  "localChecks": [
+    {
+      "command": "node --version",
+      "result": "v23.5.0"
+    },
+    {
+      "command": "npm test -- --runInBand",
+      "result": "29 suites passed, 131 tests passed"
+    },
+    {
+      "command": "npm run test:asset-naming",
+      "result": "5 tests passed"
+    },
+    {
+      "command": "npm run test:svg-assets",
+      "result": "runtime=50, codex=2"
+    },
+    {
+      "command": "npm run build",
+      "result": "tsc + vite + service worker stamp passed"
+    },
+    {
+      "command": "npm test -- src/App.test.tsx src/storage/score.test.ts --runInBand",
+      "result": "2 suites passed, 14 tests passed"
+    }
+  ],
+  "previewChecks": [
+    {
+      "command": "make cloudflare-high-scores-qa",
+      "result": "passed",
+      "report": "preview-cloudflare-high-scores.json",
+      "screenshot": "preview-cloudflare-high-scores.png"
+    },
+    {
+      "command": "make cloudflare-powerups-qa",
+      "result": "passed"
+    },
+    {
+      "command": "make cloudflare-level-progression-qa",
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:cloudflare-gameplay-basic",
+      "result": "passed"
+    },
+    {
+      "command": "npm run test:cloudflare-offline-pwa",
+      "result": "passed"
+    },
+    {
+      "command": "make cloudflare-mobile-qa",
+      "result": "passed"
+    },
+    {
+      "command": "make cloudflare-no-score-reset",
+      "result": "passed"
+    },
+    {
+      "command": "make cloudflare-phase-transition-qa",
+      "result": "passed"
+    },
+    {
+      "command": "make cloudflare-dashboard-layout-qa",
+      "result": "passed"
+    },
+    {
+      "command": "make cloudflare-theme-qa",
+      "result": "passed"
+    },
+    {
+      "command": "make cloudflare-svg-assets-qa",
+      "result": "passed"
+    }
+  ],
+  "scope": "recordes gerais locais no menu, sem ranking remoto para preservar funcionamento offline",
+  "updatedAtUtc": "2026-07-03T07:07:04.565Z"
+}
