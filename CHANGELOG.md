@@ -3,6 +3,20 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.28.8] - 2026-07-03
+### Adicionado
+- Documento P0 de monetização PWA-only em `docs/dist/monetizacao.md`, mantendo ads reais fora do lançamento inicial.
+
+### Testado
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" node --version`
+- `make help`
+- `head -n 1 docs/dist/monetizacao.md`
+- `grep -n "P0" docs/dist/monetizacao.md`
+- `grep -n "ads_disabled\|ads_readiness\|ads_test\|ads_live" docs/dist/monetizacao.md`
+- `grep -n "AdSense\|H5\|AdMob\|offline\|PF\|PJ\|EAS" docs/dist/monetizacao.md`
+- `rg -n 'ca-pub-[0-9]{8,}|data-ad-slot="[0-9]+|AIza[0-9A-Za-z_-]{20,}|sk-[A-Za-z0-9_-]{20,}|refresh_token|client_secret' docs/dist/monetizacao.md`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm run build`
+
 ## [1.28.7] - 2026-07-03
 ### Alterado
 - Política offline passa a declarar a exceção PWA-only aprovada: jogo principal offline após primeiro carregamento; anúncios reais futuros opcionais, online-only, consentidos quando exigido e nunca necessários para jogar.
