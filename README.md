@@ -73,19 +73,6 @@ make cloudflare-deploy
 - Credenciais Cloudflare/Google devem vir de `/Users/mal/GitHub/malnati/.env`; variáveis específicas do BrickBreaker também ficam no `.env` local e são espelhadas no `.env` de `/Users/mal/GitHub/malnati/`.
 - Guia completo: [`docs/rup/03-implementacao/publicacao-cloudflare-pages-zero-custo.md`](docs/rup/03-implementacao/publicacao-cloudflare-pages-zero-custo.md).
 
-### Docker + Caddy (HTTPS)
-```bash
-# Garantir que a rede externa do Caddy exista (necessário apenas uma vez)
-make docker-create-caddy-network
-
-# Construir e subir os containers do jogo e do proxy
-make docker-build
-make docker-up
-```
-
-- O Caddy escuta em `https://brickbreacker.cranio.dev` por padrão e encaminha para o serviço `brickbreaker` na porta 7979.
-- Configure o DNS do domínio apontando para o host para permitir a emissão automática de certificados TLS (variáveis: `CADDY_DOMAIN`, `CADDY_UPSTREAM`, `ACME_EMAIL`).
-- Logs do proxy podem ser acompanhados com `make docker-logs-caddy` e a configuração pode ser recarregada via `make docker-reload-caddy`.
 
 ## 📊 Sistema de Logging
 

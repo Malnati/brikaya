@@ -1,8 +1,6 @@
 <!-- PENDING.md -->
 
 - [x] Executar `make cloudflare-mobile-qa`, `make cloudflare-no-score-reset`, `make cloudflare-phase-transition-qa`, `make cloudflare-dashboard-layout-qa` e `make cloudflare-theme-qa` contra `https://malnati-brickbreaker.pages.dev/` após merge da feature de controle de velocidade por fase. Evidência: `docs/rup/04-qualidade-testes/final-pending-production-qa.md`.
-- [ ] Validar emissão do certificado TLS do Caddy após apontar o DNS de `brickbreacker.cranio.dev` para o host. Bloqueio atual: prova remota em 2026-07-03 retornou DNS `NXDOMAIN`; ver `docs/assets/issues/final-pending-qa/evidence/caddy-public-proof-blocked-receipt.json`.
-- [ ] Monitorar o endpoint `/healthz` exposto pelo Caddy para integração com monitoramento externo. Bloqueio atual: `/healthz` não é validável enquanto `brickbreacker.cranio.dev` não resolver em DNS público.
 
 - [x] Adicionar QA publicado para provar funcionamento offline da PWA após o primeiro carregamento.
 

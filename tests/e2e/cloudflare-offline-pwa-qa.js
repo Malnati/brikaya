@@ -8,6 +8,9 @@ const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-offline-pwa-qa.json";
 const DEFAULT_SCREENSHOT_PATH = "tmp/screenshots/cloudflare-offline-pwa-qa.png";
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const CHROME_HOST_RESOLVER_RULES_ENV_NAME =
+  "BRICKBREAKER_CHROME_HOST_RESOLVER_RULES";
+const HOST_RESOLVER_RULES_ARG_PREFIX = "--host-resolver-rules=";
 const VIEWPORT = {
   width: 393,
   height: 852,
@@ -47,6 +50,17 @@ function screenshotPath() {
     process.env.BRICKBREAKER_OFFLINE_PWA_QA_SCREENSHOT ||
     DEFAULT_SCREENSHOT_PATH
   );
+}
+
+function browserArgs() {
+  const args = ["--no-sandbox", "--disable-setuid-sandbox"];
+  const hostResolverRules = process.env[CHROME_HOST_RESOLVER_RULES_ENV_NAME];
+
+  if (hostResolverRules) {
+    args.push(`${HOST_RESOLVER_RULES_ARG_PREFIX}${hostResolverRules}`);
+  }
+
+  return args;
 }
 
 function ensureParentDirectory(filePath) {
@@ -220,7 +234,7 @@ async function run() {
   const browser = await puppeteer.launch({
     headless: "new",
     executablePath: CHROME_EXECUTABLE_PATH,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: browserArgs(),
   });
   const page = await browser.newPage();
   const allRequests = [];
@@ -273,12 +287,14 @@ async function run() {
     const offlineFetchChecks = await fetchOfflinePaths(page);
     const offlineState = await collectOfflineState(page);
     const cacheNamesAfterOffline = await readCacheNames(page);
+    ensureParentDirectory(screenshotPath());
     await page.screenshot({ path: screenshotPath(), fullPage: true });
 
     const failedOfflineFetches = offlineFetchChecks.filter((item) => !item.ok);
     const offlineRequestFailures = failedRequests.filter((request) => request.offline);
     const externalRequests = allRequests.filter(
-      (request) => new URL(request.url).origin !== new URL(targetUrl).origin,
+      (request) =>
+        request.offline && new URL(request.url).origin !== new URL(targetUrl).origin,
     );
 
     assert(offlineState.hasCanvas, "Canvas ausente após recarregar sem internet.");
