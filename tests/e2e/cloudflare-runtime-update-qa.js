@@ -31,6 +31,8 @@ const VERSION_MESSAGE = "VERSION";
 const SKIP_WAITING_MESSAGE = "SKIP_WAITING";
 const WAIT_TIMEOUT_MS = 60000;
 const VERSION_MESSAGE_TIMEOUT_MS = 1500;
+const UPDATE_UI_SETTLE_TIMEOUT_MS = 8000;
+const UPDATE_UI_SETTLE_STEP_MS = 250;
 const WAIT_STEP_MS = 500;
 const UPDATE_TRIGGER_INTERVAL_MS = 3000;
 const RETRY_ATTEMPTS = 6;
@@ -234,6 +236,22 @@ async function collectUpdateUiState(page) {
   );
 }
 
+async function waitForUpdateUiState(page, shouldExpectInstalled) {
+  const startedAt = Date.now();
+  let lastState = await collectUpdateUiState(page);
+
+  while (
+    shouldExpectInstalled &&
+    !lastState.hasInstalledMessage &&
+    Date.now() - startedAt < UPDATE_UI_SETTLE_TIMEOUT_MS
+  ) {
+    await page.waitForTimeout(UPDATE_UI_SETTLE_STEP_MS);
+    lastState = await collectUpdateUiState(page);
+  }
+
+  return lastState;
+}
+
 async function readCacheNames(page) {
   return page.evaluate(async () => {
     if (typeof caches === "undefined") {
@@ -429,7 +447,13 @@ async function run() {
     }
 
     const cacheNamesAfterWait = await readCacheNames(page);
-    const updateUiState = await collectUpdateUiState(page);
+    const shouldExpectInstalledMessage =
+      Boolean(activeBeforeWait?.buildId) &&
+      activeBeforeWait?.buildId !== latest.buildId;
+    const updateUiState = await waitForUpdateUiState(
+      page,
+      shouldExpectInstalledMessage,
+    );
     const staleCacheNamesBefore = cacheNamesBeforeWait.filter((cacheName) => {
       return (
         cacheName.startsWith("breakout-cache") &&
@@ -500,7 +524,7 @@ async function run() {
           `Assets cacheados foram baixados novamente após update: ${JSON.stringify(missedProbeAssets)}`,
         );
       }
-      if (activeBeforeWait?.buildId && activeBeforeWait.buildId !== latest.buildId) {
+      if (shouldExpectInstalledMessage) {
         assert(
           updateUiState.hasInstalledMessage,
           `Confirmação visual de versão instalada ausente: ${JSON.stringify(updateUiState)}`,
