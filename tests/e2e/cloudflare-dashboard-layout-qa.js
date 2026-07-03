@@ -1,5 +1,5 @@
 // tests/e2e/cloudflare-dashboard-layout-qa.js
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
@@ -13,12 +13,17 @@ const DEFAULT_DESKTOP_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-dashboard-layout-desktop.png";
 const DEFAULT_LANDSCAPE_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-dashboard-layout-landscape.png";
+const DEFAULT_TABLET_SCREENSHOT_PATH =
+  "tmp/screenshots/cloudflare-dashboard-layout-tablet.png";
+const RESPONSIVE_VIEWPORT_MATRIX_PATH = new URL(
+  "./responsiveViewportMatrix.json",
+  import.meta.url,
+);
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const MIN_TOUCH_TARGET_SIZE = 44;
 const MIN_SIDE_AD_DISTANCE_PX = 150;
 const MIN_BOTTOM_AD_DISTANCE_PX = 24;
-const LANDSCAPE_VIEWPORT_NAME = "iphone-15-landscape";
 const MIN_LANDSCAPE_CANVAS_HEIGHT_RATIO = 0.68;
 const MIN_LANDSCAPE_CANVAS_WIDTH_RATIO = 0.96;
 const MIN_IMMERSIVE_CANVAS_HEIGHT_RATIO = 0.68;
@@ -37,65 +42,15 @@ const LEVEL_TIME_LABEL = "Tempo da fase";
 const SPEED_REDUCTIONS_LABEL = "Reduções aplicadas";
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
-const OVERLAY_TARGET_VIEWPORTS = ["iphone-15", "desktop"];
-const VIEWPORTS = [
-  {
-    name: "iphone-se",
-    width: 375,
-    height: 667,
-    deviceScaleFactor: 2,
-    isMobile: true,
-    hasTouch: true,
-  },
-  {
-    name: "iphone-12-14",
-    width: 390,
-    height: 844,
-    deviceScaleFactor: 3,
-    isMobile: true,
-    hasTouch: true,
-  },
-  {
-    name: "iphone-15",
-    width: 393,
-    height: 852,
-    deviceScaleFactor: 3,
-    isMobile: true,
-    hasTouch: true,
-  },
-  {
-    name: "iphone-pro-max",
-    width: 430,
-    height: 932,
-    deviceScaleFactor: 3,
-    isMobile: true,
-    hasTouch: true,
-  },
-  {
-    name: "iphone-15-landscape",
-    width: 852,
-    height: 393,
-    deviceScaleFactor: 3,
-    isMobile: true,
-    hasTouch: true,
-  },
-  {
-    name: "tablet",
-    width: 768,
-    height: 1024,
-    deviceScaleFactor: 2,
-    isMobile: true,
-    hasTouch: true,
-  },
-  {
-    name: "desktop",
-    width: 1280,
-    height: 720,
-    deviceScaleFactor: 1,
-    isMobile: false,
-    hasTouch: false,
-  },
-];
+const RESPONSIVE_VIEWPORT_MATRIX = JSON.parse(
+  readFileSync(RESPONSIVE_VIEWPORT_MATRIX_PATH, "utf8"),
+);
+const VIEWPORTS = RESPONSIVE_VIEWPORT_MATRIX.viewports;
+const OVERLAY_TARGET_VIEWPORTS = VIEWPORTS.filter(
+  (viewport) => viewport.smokeOverlays,
+).map((viewport) => viewport.name);
+const LANDSCAPE_VIEWPORT_NAME = viewportByScreenshotRole("landscape-default")
+  .name;
 
 function publicUrl() {
   return process.env.BRICKBREAKER_PUBLIC_URL || DEFAULT_PUBLIC_URL;
@@ -125,12 +80,41 @@ function landscapeScreenshotPath() {
   );
 }
 
+function tabletScreenshotPath() {
+  return (
+    process.env.BRICKBREAKER_DASHBOARD_TABLET_SCREENSHOT ||
+    DEFAULT_TABLET_SCREENSHOT_PATH
+  );
+}
+
 function ensureParentDirectory(filePath) {
   mkdirSync(dirname(resolve(filePath)), { recursive: true });
 }
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+function viewportByScreenshotRole(screenshotRole) {
+  const viewport = VIEWPORTS.find(
+    (candidate) => candidate.screenshotRole === screenshotRole,
+  );
+  assert(viewport, `Viewport com screenshotRole ${screenshotRole} ausente.`);
+  return viewport;
+}
+
+function puppeteerViewport(viewport) {
+  return {
+    width: viewport.width,
+    height: viewport.height,
+    deviceScaleFactor: viewport.deviceScaleFactor,
+    isMobile: viewport.isMobile,
+    hasTouch: viewport.hasTouch,
+  };
+}
+
+async function setQaViewport(page, viewport) {
+  await page.setViewport(puppeteerViewport(viewport));
 }
 
 function rectsIntersect(firstRect, secondRect, tolerancePx = 0) {
@@ -437,10 +421,12 @@ async function run() {
   const outScreenshot = screenshotPath();
   const outDesktopScreenshot = desktopScreenshotPath();
   const outLandscapeScreenshot = landscapeScreenshotPath();
+  const outTabletScreenshot = tabletScreenshotPath();
   ensureParentDirectory(outReport);
   ensureParentDirectory(outScreenshot);
   ensureParentDirectory(outDesktopScreenshot);
   ensureParentDirectory(outLandscapeScreenshot);
+  ensureParentDirectory(outTabletScreenshot);
 
   const consoleProblems = [];
   const browser = await puppeteer.launch({
@@ -462,7 +448,7 @@ async function run() {
 
     const results = [];
     for (const viewport of VIEWPORTS) {
-      await page.setViewport(viewport);
+      await setQaViewport(page, viewport);
       await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
       await clearOfflineState(page);
       await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
@@ -486,11 +472,15 @@ async function run() {
         `${viewport.name}: canvas excede viewport.`,
       );
       assert(
-        viewport.name !== LANDSCAPE_VIEWPORT_NAME ||
-          state.canvas.bottom <= state.viewport.height,
+        state.canvas.y >= 0 && state.canvas.bottom <= state.viewport.height,
+        `${viewport.name}: canvas excede altura visível.`,
+      );
+      const isImmersiveLandscape = state.isLandscapeImmersive;
+      assert(
+        !isImmersiveLandscape || state.canvas.bottom <= state.viewport.height,
         `${viewport.name}: canvas não fica inteiro visível no modo imersivo.`,
       );
-      if (viewport.name !== LANDSCAPE_VIEWPORT_NAME) {
+      if (!isImmersiveLandscape) {
         assert(
           state.dashboardLayout &&
             state.canvas.width / state.dashboardLayout.width >=
@@ -541,7 +531,7 @@ async function run() {
           .join(", ")}.`,
       );
       assert(
-        viewport.name !== LANDSCAPE_VIEWPORT_NAME ||
+        !isImmersiveLandscape ||
           state.buttons.every((button) => button.visibleInViewport),
         `${viewport.name}: botão cortado no modo imersivo: ${state.buttons
           .filter((button) => !button.visibleInViewport)
@@ -618,7 +608,7 @@ async function run() {
           `${viewport.name}: slot inferior perto demais do tabuleiro.`,
         );
       }
-      if (viewport.name === LANDSCAPE_VIEWPORT_NAME) {
+      if (isImmersiveLandscape) {
         assert(
           state.isLandscapeImmersive,
           `${viewport.name}: classe imersiva não foi aplicada.`,
@@ -797,27 +787,29 @@ async function run() {
       }
     }
 
-    const portraitViewport = VIEWPORTS.find(
-      (viewport) => viewport.name === "iphone-15",
-    );
-    const landscapeViewport = VIEWPORTS.find(
-      (viewport) => viewport.name === LANDSCAPE_VIEWPORT_NAME,
-    );
-    await page.setViewport(portraitViewport);
+    const portraitViewport = viewportByScreenshotRole("mobile-default");
+    const desktopViewport = viewportByScreenshotRole("desktop-default");
+    const tabletViewport = viewportByScreenshotRole("tablet-default");
+    const landscapeViewport = viewportByScreenshotRole("landscape-default");
+    await setQaViewport(page, portraitViewport);
     await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
     await clearOfflineState(page);
     await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
     await waitForCinematicOverlayToClear(page);
     await page.screenshot({ path: outScreenshot, fullPage: true });
-    await page.setViewport(
-      VIEWPORTS.find((viewport) => viewport.name === "desktop"),
-    );
+    await setQaViewport(page, tabletViewport);
+    await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
+    await clearOfflineState(page);
+    await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
+    await waitForCinematicOverlayToClear(page);
+    await page.screenshot({ path: outTabletScreenshot, fullPage: true });
+    await setQaViewport(page, desktopViewport);
     await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
     await clearOfflineState(page);
     await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
     await waitForCinematicOverlayToClear(page);
     await page.screenshot({ path: outDesktopScreenshot, fullPage: true });
-    await page.setViewport(landscapeViewport);
+    await setQaViewport(page, landscapeViewport);
     await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
     await clearOfflineState(page);
     await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
@@ -825,7 +817,7 @@ async function run() {
     await waitForCinematicOverlayToClear(page);
     await new Promise((resolve) => setTimeout(resolve, 300));
     await page.screenshot({ path: outLandscapeScreenshot, fullPage: true });
-    await page.setViewport(portraitViewport);
+    await setQaViewport(page, portraitViewport);
     await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
     await clearOfflineState(page);
     const orientationStartedAt = Date.now();
@@ -837,7 +829,7 @@ async function run() {
       orientationStartedAt,
       "game_start",
     );
-    await page.setViewport(landscapeViewport);
+    await setQaViewport(page, landscapeViewport);
     await page.waitForFunction(
       ({ minHeightRatio, minWidthRatio, immersiveRootClass }) => {
         const canvas = document.querySelector("canvas");
@@ -874,7 +866,9 @@ async function run() {
 
     const report = {
       url: targetUrl,
+      viewportMatrixPath: "tests/e2e/responsiveViewportMatrix.json",
       screenshotPath: outScreenshot,
+      tabletScreenshotPath: outTabletScreenshot,
       desktopScreenshotPath: outDesktopScreenshot,
       landscapeScreenshotPath: outLandscapeScreenshot,
       results,

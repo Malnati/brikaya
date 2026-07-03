@@ -3,6 +3,28 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.28.0] - 2026-07-03
+### Adicionado
+- Matriz responsiva obrigatória em `tests/e2e/responsiveViewportMatrix.json` cobrindo iPhone default 2023-2026, iPad 11/default 2023-2026 e desktop 1366/1440/1920.
+- Documento `docs/rup/04-qualidade-testes/responsive-viewport-matrix.md` com critérios de viewport, prioridade gameplay e referências revisadas.
+- Teste unitário para travar nomes, dimensões, DPR, toque e papéis mínimos de evidência da matriz responsiva.
+
+### Alterado
+- QA publicado de dashboard passa a usar a matriz responsiva centralizada, captura evidências mobile/tablet/desktop/landscape e executa smoke de overlays apenas nos viewports principais.
+- QA mobile passa a usar o papel `mobile-default` da matriz responsiva, não um viewport fixo antigo.
+- Ajuda do `Makefile` passa a descrever QA mobile default e matriz responsiva.
+
+### Corrigido
+- Canvas responsivo fora do modo landscape imersivo agora respeita a altura útil da viewport, evitando scroll obrigatório para jogar em iPad Pro 11 landscape e desktops.
+
+### Testado
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version && make help`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --check tests/e2e/cloudflare-mobile-qa.js`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --check tests/e2e/cloudflare-dashboard-layout-qa.js`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand tests/unit/canvasSizing.test.ts tests/unit/responsiveViewportMatrix.test.ts`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`
+
 ## [1.27.2] - 2026-07-03
 ### Corrigido
 - QA runtime de update passa a tolerar navegação automática durante a leitura do aviso visual instalado.
