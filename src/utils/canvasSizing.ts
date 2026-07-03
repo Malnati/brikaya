@@ -72,12 +72,9 @@ export function calculateResponsiveCanvasSize(
     metrics.immersiveUiReservedBlock ?? IMMERSIVE_LANDSCAPE_UI_RESERVED_BLOCK;
   const responsiveContainerHeight = Math.max(
     minCanvasHeight,
-    Math.min(
-      metrics.containerHeight,
-      viewportHeight -
-        metrics.rootPaddingBlock -
-        RESPONSIVE_CANVAS_UI_RESERVED_BLOCK,
-    ),
+    viewportHeight -
+      metrics.rootPaddingBlock -
+      RESPONSIVE_CANVAS_UI_RESERVED_BLOCK,
   );
   const containerWidth = isLandscapeImmersive
     ? Math.max(
