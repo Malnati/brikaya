@@ -8,12 +8,17 @@ const VISIBILITY_CHANGE_EVENT_NAME = "visibilitychange";
 const UPDATE_FOUND_EVENT_NAME = "updatefound";
 const STATE_CHANGE_EVENT_NAME = "statechange";
 const CONTROLLER_CHANGE_EVENT_NAME = "controllerchange";
+const MESSAGE_EVENT_NAME = "message";
 const INSTALLED_STATE = "installed";
 const SKIP_WAITING_MESSAGE_TYPE = "SKIP_WAITING";
+const RELOAD_CLIENT_MESSAGE_TYPE = "RELOAD_CLIENT";
+const UPDATE_PROGRESS_EVENT_NAME = "brickbreaker-update-progress";
+const UPDATE_INSTALLED_KEY = "brickbreaker-update-installed-version";
 const SERVICE_WORKER_PATH = "/sw.js";
 const SERVICE_WORKER_SCOPE = "/";
 const SERVICE_WORKER_UPDATE_VIA_CACHE = "none";
 const POST_REGISTRATION_UPDATE_DELAYS_MS = [1000, 3000, 10000];
+const UPDATE_RELOAD_DELAY_MS = 900;
 const FLUSH_PROMISES_COUNT = 3;
 
 type Listener = (event?: Event | MessageEvent) => void;
@@ -57,6 +62,7 @@ function createWindowMock(readyState = "complete") {
         listener,
       ];
     }),
+    dispatchEvent: jest.fn(),
     setTimeout: jest.fn(() => 1),
     sessionStorage: {
       getItem: jest.fn((key: string) => storage.get(key) || null),
@@ -248,6 +254,12 @@ describe("registerServiceWorker", () => {
       UPDATE_FOUND_EVENT_NAME,
       new Event(UPDATE_FOUND_EVENT_NAME),
     );
+    expect(windowRef.dispatchEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: UPDATE_PROGRESS_EVENT_NAME,
+        detail: expect.objectContaining({ progress: 32 }),
+      }),
+    );
     newWorker.setState(INSTALLED_STATE);
     emit(
       newWorker.workerListeners,
@@ -258,6 +270,12 @@ describe("registerServiceWorker", () => {
     expect(newWorker.postMessage).toHaveBeenCalledWith({
       type: SKIP_WAITING_MESSAGE_TYPE,
     });
+    expect(windowRef.dispatchEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: UPDATE_PROGRESS_EVENT_NAME,
+        detail: expect.objectContaining({ progress: 84 }),
+      }),
+    );
   });
 
   it("acompanha worker já instalando quando o registro resolve", async () => {
@@ -348,6 +366,56 @@ describe("registerServiceWorker", () => {
       new Event(CONTROLLER_CHANGE_EVENT_NAME),
     );
 
+    expect(windowRef.sessionStorage.setItem).toHaveBeenCalledWith(
+      UPDATE_INSTALLED_KEY,
+      "pending",
+    );
+    expect(windowRef.dispatchEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: UPDATE_PROGRESS_EVENT_NAME,
+        detail: expect.objectContaining({ progress: 100 }),
+      }),
+    );
+    const delayedReload = jest
+      .mocked(windowRef.setTimeout)
+      .mock.calls.find((call) => call[1] === UPDATE_RELOAD_DELAY_MS)?.[0] as
+      | (() => void)
+      | undefined;
+
+    delayedReload?.();
+    expect(reloadPage).toHaveBeenCalledTimes(1);
+  });
+
+  it("recarrega com progresso quando o Service Worker pede reload", async () => {
+    const reloadPage = jest.fn();
+    const { windowRef } = createWindowMock();
+    const activeController = createWorkerMock().worker;
+    const { navigatorRef, containerListeners } =
+      createServiceWorkerMock(activeController);
+
+    registerServiceWorker({
+      windowRef,
+      navigatorRef,
+      log: jest.fn(),
+      reloadPage,
+    });
+    await flushPromises();
+
+    emit(
+      containerListeners,
+      MESSAGE_EVENT_NAME,
+      new MessageEvent(MESSAGE_EVENT_NAME, {
+        data: { type: RELOAD_CLIENT_MESSAGE_TYPE },
+      }),
+    );
+
+    const delayedReload = jest
+      .mocked(windowRef.setTimeout)
+      .mock.calls.find((call) => call[1] === UPDATE_RELOAD_DELAY_MS)?.[0] as
+      | (() => void)
+      | undefined;
+
+    delayedReload?.();
     expect(reloadPage).toHaveBeenCalledTimes(1);
   });
 

@@ -5,7 +5,7 @@ import { PowerUp } from './PowerUp';
 
 jest.mock('../utils/assetLoader', () => ({
   AssetLoader: {
-    getImage: jest.fn(),
+    getOrLoadImage: jest.fn(),
   },
 }));
 
@@ -48,13 +48,13 @@ describe('PowerUp', () => {
   it.each(Object.keys(POWER_UP_DEFINITIONS) as Array<keyof typeof POWER_UP_DEFINITIONS>)(
     'desenha SVG local para %s quando asset está carregado',
     (powerUpType) => {
-      jest.mocked(AssetLoader.getImage).mockReturnValue(CANVAS_IMAGE_SOURCE as HTMLImageElement);
+      jest.mocked(AssetLoader.getOrLoadImage).mockReturnValue(CANVAS_IMAGE_SOURCE as HTMLImageElement);
       const context = createContext();
       const powerUp = new PowerUp(POWER_UP_CENTER, POWER_UP_TOP, powerUpType);
 
       powerUp.draw(context);
 
-      expect(AssetLoader.getImage).toHaveBeenCalledWith(
+      expect(AssetLoader.getOrLoadImage).toHaveBeenCalledWith(
         POWER_UP_DEFINITIONS[powerUpType].iconPath,
       );
       expect(context.drawImage).toHaveBeenCalledWith(
@@ -69,7 +69,7 @@ describe('PowerUp', () => {
   );
 
   it('mantém fallback sem SVG quando imagem não está no cache', () => {
-    jest.mocked(AssetLoader.getImage).mockReturnValue(null);
+    jest.mocked(AssetLoader.getOrLoadImage).mockReturnValue(null);
     const context = createContext();
     const powerUp = new PowerUp(POWER_UP_CENTER, POWER_UP_TOP, 'multiball');
 

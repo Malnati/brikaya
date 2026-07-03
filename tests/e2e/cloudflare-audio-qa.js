@@ -23,6 +23,7 @@ const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const WAIT_FOR_OVERLAY_TIMEOUT_MS = 5000;
 const AUDIO_TOGGLE_TIMEOUT_MS = 10000;
 const AUDIO_TOUR_SETTLE_MS = 1200;
+const MIN_CACHED_AUDIO_PATHS = 1;
 const IOS_CHROME_USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/126.0.0.0 Mobile/15E148 Safari/604.1';
 const ANDROID_CHROME_USER_AGENT = 'Mozilla/5.0 (Linux; Android 15; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36';
 const VIEWPORTS = [
@@ -206,6 +207,7 @@ async function runViewportQa(page, targetUrl, config, audioPaths) {
   assert(enabled.audioState.muted === false, `${config.name}: áudio não ficou ativo.`);
   assert(enabled.audioState.contextState === 'running', `${config.name}: AudioContext não está running.`);
   assert(enabled.audioState.lastUnlockResult?.unlocked === true, `${config.name}: último unlock não marcou sucesso.`);
+  assert(enabled.audioState.loaded < audioPaths.length, `${config.name}: unlock carregou áudio demais para fluxo lazy.`);
 
   await activateSoundButton(page, AUDIO_ON_LABEL, config.touch);
   await page.waitForFunction(() => {
@@ -286,13 +288,15 @@ async function run() {
     const cachedAudioPaths = [...new Set(viewportResults.flatMap(result => result.reenabled.cachedAudioPaths))].sort();
     const cacheNames = [...new Set(viewportResults.flatMap(result => result.reenabled.cacheNames))].sort();
     const missingIds = ids.filter(id => !emittedIds.has(id));
-    const uncachedAudioPaths = audioPaths.filter(path => !cachedAudioPaths.includes(path));
+    const requestedAudioPaths = [...new Set(sameOriginAudioRequests)].sort();
+    const uncachedRequestedAudioPaths = requestedAudioPaths.filter(path => !cachedAudioPaths.includes(path));
     const unknownSameOriginAudioRequests = sameOriginAudioRequests.filter(path => !audioPathSet.has(path));
 
     assert(missingIds.length === 0, `IDs de áudio não emitidos: ${missingIds.join(', ')}`);
     assert(externalAudioRequests.length === 0, `Requests externos de áudio: ${externalAudioRequests.join(', ')}`);
     assert(unknownSameOriginAudioRequests.length === 0, `Requests de áudio fora do manifesto: ${unknownSameOriginAudioRequests.join(', ')}`);
-    assert(uncachedAudioPaths.length === 0, `Áudios não encontrados no cache: ${uncachedAudioPaths.join(', ')}`);
+    assert(cachedAudioPaths.length >= MIN_CACHED_AUDIO_PATHS, 'Nenhum áudio foi cacheado após primeiro uso.');
+    assert(uncachedRequestedAudioPaths.length === 0, `Áudios usados não encontrados no cache: ${uncachedRequestedAudioPaths.join(', ')}`);
 
     const report = {
       publicUrl,
@@ -303,7 +307,7 @@ async function run() {
       expectedAudioIds: ids,
       emittedAudioIds: [...emittedIds].sort(),
       localAudioPaths: audioPaths,
-      sameOriginAudioRequests: [...new Set(sameOriginAudioRequests)].sort(),
+      sameOriginAudioRequests: requestedAudioPaths,
       externalAudioRequests,
       cachedAudioPaths,
       cacheNames,

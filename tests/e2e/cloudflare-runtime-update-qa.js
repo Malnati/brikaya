@@ -21,12 +21,18 @@ const PUBLIC_URL_ENV_KEY = "BRICKBREAKER_PUBLIC_URL";
 const SEED_MODE = "seed";
 const VERIFY_MODE = "verify";
 const SW_PATH = "/sw.js";
+const SERVICE_WORKER_SCOPE = "/";
+const SERVICE_WORKER_UPDATE_VIA_CACHE = "none";
+const SERVICE_WORKER_UPDATE_CACHE_BUST_PARAM = "qaRuntimeUpdate";
 const BUILD_ID_PATTERN = /const\s+BUILD_ID\s*=\s*['"]([^'"]+)['"]/;
 const BUILD_ID_PLACEHOLDER = "__BRICKBREAKER_BUILD_ID__";
 const GET_VERSION_MESSAGE = "GET_VERSION";
 const VERSION_MESSAGE = "VERSION";
+const SKIP_WAITING_MESSAGE = "SKIP_WAITING";
 const WAIT_TIMEOUT_MS = 60000;
 const VERSION_MESSAGE_TIMEOUT_MS = 1500;
+const UPDATE_UI_SETTLE_TIMEOUT_MS = 8000;
+const UPDATE_UI_SETTLE_STEP_MS = 250;
 const WAIT_STEP_MS = 500;
 const UPDATE_TRIGGER_INTERVAL_MS = 3000;
 const RETRY_ATTEMPTS = 6;
@@ -39,6 +45,16 @@ const VIEWPORT = {
   isMobile: true,
   hasTouch: true,
 };
+const LAZY_ASSET_PROBE_PATHS = [
+  "/assets/visual/sprites/spr-ball-player-default.svg",
+  "/assets/visual/bricks/spr-brick-basic-red-normal.svg",
+  "/assets/audio/sfx-offline-ready-01.mp3",
+];
+const ASSET_CACHE_STATUS_HEADER = "x-brickbreaker-asset-cache";
+const ASSET_CACHE_MISS_STATUS = "miss";
+const CANONICAL_HOSTNAME = "brikaya.com";
+const UPDATE_PROGRESS_TEXT = "Atualizando jogo";
+const UPDATE_INSTALLED_PATTERN = /Versão v\d+ instalada/;
 
 function env(name, fallback) {
   return process.env[name] || fallback;
@@ -54,6 +70,14 @@ function assert(condition, message) {
 
 function publicUrl() {
   return env(PUBLIC_URL_ENV_KEY, DEFAULT_PUBLIC_URL);
+}
+
+function assertCanonicalUrl(targetUrl) {
+  const parsedUrl = new URL(targetUrl);
+  assert(
+    parsedUrl.hostname === CANONICAL_HOSTNAME,
+    `QA runtime update deve usar somente https://${CANONICAL_HOSTNAME}/.`,
+  );
 }
 
 function mode() {
@@ -190,6 +214,44 @@ async function collectRuntimeState(page) {
   });
 }
 
+async function collectUpdateUiState(page) {
+  return page.evaluate(
+    ({ progressText, installedPatternSource }) => {
+      const bodyText = document.body.textContent || "";
+      const progressBar = document.querySelector(
+        '[role="progressbar"][aria-label="Progresso da atualização"]',
+      );
+      const installedPattern = new RegExp(installedPatternSource);
+
+      return {
+        hasProgressMessage: bodyText.includes(progressText),
+        hasInstalledMessage: installedPattern.test(bodyText),
+        progressValue: progressBar?.getAttribute("aria-valuenow") || null,
+      };
+    },
+    {
+      progressText: UPDATE_PROGRESS_TEXT,
+      installedPatternSource: UPDATE_INSTALLED_PATTERN.source,
+    },
+  );
+}
+
+async function waitForUpdateUiState(page, shouldExpectInstalled) {
+  const startedAt = Date.now();
+  let lastState = await collectUpdateUiState(page);
+
+  while (
+    shouldExpectInstalled &&
+    !lastState.hasInstalledMessage &&
+    Date.now() - startedAt < UPDATE_UI_SETTLE_TIMEOUT_MS
+  ) {
+    await page.waitForTimeout(UPDATE_UI_SETTLE_STEP_MS);
+    lastState = await collectUpdateUiState(page);
+  }
+
+  return lastState;
+}
+
 async function readCacheNames(page) {
   return page.evaluate(async () => {
     if (typeof caches === "undefined") {
@@ -198,6 +260,29 @@ async function readCacheNames(page) {
 
     return caches.keys();
   });
+}
+
+async function fetchLazyAssetProbe(page) {
+  return page.evaluate(
+    async ({ paths, cacheStatusHeader }) =>
+      Promise.all(
+        paths.map(async (path) => {
+          const response = await fetch(path, { cache: "no-store" });
+
+          return {
+            path,
+            status: response.status,
+            ok: response.ok,
+            contentType: response.headers.get("content-type") || "",
+            assetCacheStatus: response.headers.get(cacheStatusHeader) || "",
+          };
+        }),
+      ),
+    {
+      paths: LAZY_ASSET_PROBE_PATHS,
+      cacheStatusHeader: ASSET_CACHE_STATUS_HEADER,
+    },
+  );
 }
 
 async function openGame(page, targetUrl) {
@@ -212,11 +297,54 @@ async function openGame(page, targetUrl) {
 
 async function triggerRuntimeUpdateCheck(page) {
   try {
-    await page.evaluate(() => {
-      window.dispatchEvent(new Event("focus"));
-      window.dispatchEvent(new PageTransitionEvent("pageshow"));
-      document.dispatchEvent(new Event("visibilitychange"));
-    });
+    await page.evaluate(
+      async ({
+        cacheBustParam,
+        scope,
+        skipWaitingMessage,
+        swPath,
+        updateViaCache,
+      }) => {
+        try {
+          window.dispatchEvent(new Event("focus"));
+        } catch {}
+        try {
+          const pageShowEvent =
+            typeof PageTransitionEvent === "function"
+              ? new PageTransitionEvent("pageshow")
+              : new Event("pageshow");
+          window.dispatchEvent(pageShowEvent);
+        } catch {}
+        try {
+          document.dispatchEvent(new Event("visibilitychange"));
+        } catch {}
+
+        const registration = await navigator.serviceWorker?.getRegistration(
+          scope,
+        );
+        await registration?.update().catch(() => {});
+        registration?.waiting?.postMessage({ type: skipWaitingMessage });
+
+        if (!registration?.installing && !registration?.waiting) {
+          const cacheBustUrl = new URL(swPath, window.location.origin);
+          cacheBustUrl.searchParams.set(cacheBustParam, String(Date.now()));
+          const refreshedRegistration = await navigator.serviceWorker.register(
+            `${cacheBustUrl.pathname}${cacheBustUrl.search}`,
+            { scope, updateViaCache },
+          ).catch(() => null);
+          const pendingWorker =
+            refreshedRegistration?.waiting || refreshedRegistration?.installing;
+          pendingWorker?.postMessage({ type: skipWaitingMessage });
+        }
+      },
+      {
+        cacheBustParam: SERVICE_WORKER_UPDATE_CACHE_BUST_PARAM,
+        scope: SERVICE_WORKER_SCOPE,
+        skipWaitingMessage: SKIP_WAITING_MESSAGE,
+        swPath: SW_PATH,
+        updateViaCache: SERVICE_WORKER_UPDATE_VIA_CACHE,
+      },
+    );
   } catch {}
 }
 
@@ -246,6 +374,22 @@ async function waitForActiveBuild(page, expectedBuildId) {
     await new Promise((resolve) => setTimeout(resolve, WAIT_STEP_MS));
   }
 
+  try {
+    await page.reload({
+      waitUntil: "domcontentloaded",
+      timeout: NAVIGATION_TIMEOUT_MS,
+    });
+    await page.waitForSelector("canvas", {
+      timeout: NAVIGATION_TIMEOUT_MS,
+    });
+    lastVersion = await readActiveServiceWorkerVersion(page);
+    lastState = await collectRuntimeState(page);
+
+    if (lastVersion?.buildId === expectedBuildId) {
+      return { version: lastVersion, state: lastState };
+    }
+  } catch {}
+
   throw new Error(
     `Service Worker ativo não chegou ao BUILD_ID esperado. esperado=${expectedBuildId} último=${JSON.stringify(lastVersion)} estado=${JSON.stringify(lastState)}`,
   );
@@ -259,6 +403,7 @@ async function run() {
   );
 
   const targetUrl = publicUrl();
+  assertCanonicalUrl(targetUrl);
   const browser = await puppeteer.launch({
     headless: "new",
     executablePath: CHROME_EXECUTABLE_PATH,
@@ -302,6 +447,13 @@ async function run() {
     }
 
     const cacheNamesAfterWait = await readCacheNames(page);
+    const shouldExpectInstalledMessage =
+      Boolean(activeBeforeWait?.buildId) &&
+      activeBeforeWait?.buildId !== latest.buildId;
+    const updateUiState = await waitForUpdateUiState(
+      page,
+      shouldExpectInstalledMessage,
+    );
     const staleCacheNamesBefore = cacheNamesBeforeWait.filter((cacheName) => {
       return (
         cacheName.startsWith("breakout-cache") &&
@@ -314,6 +466,11 @@ async function run() {
         cacheName !== activeAfterWait?.cacheName
       );
     });
+    const lazyAssetProbe = await fetchLazyAssetProbe(page);
+    const shouldRequireLazyAssetCacheHit =
+      selectedMode === VERIFY_MODE &&
+      staleCacheNamesBefore.length > 0 &&
+      activeBeforeWait?.buildId !== latest.buildId;
     const result = {
       mode: selectedMode,
       url: targetUrl,
@@ -327,6 +484,9 @@ async function run() {
       cacheNamesAfterWait,
       staleCacheNamesBefore,
       staleCacheNamesAfter,
+      lazyAssetProbe,
+      updateUiState,
+      shouldRequireLazyAssetCacheHit,
       navigationEvents,
       consoleProblems,
       screenshotPath: screenshotPath(),
@@ -351,6 +511,25 @@ async function run() {
         );
       }
 
+      assert(
+        lazyAssetProbe.every((item) => item.ok),
+        `Probe lazy de assets falhou: ${JSON.stringify(lazyAssetProbe)}`,
+      );
+      if (shouldRequireLazyAssetCacheHit) {
+        const missedProbeAssets = lazyAssetProbe.filter(
+          (item) => item.assetCacheStatus === ASSET_CACHE_MISS_STATUS,
+        );
+        assert(
+          missedProbeAssets.length === 0,
+          `Assets cacheados foram baixados novamente após update: ${JSON.stringify(missedProbeAssets)}`,
+        );
+      }
+      if (shouldExpectInstalledMessage) {
+        assert(
+          updateUiState.hasInstalledMessage,
+          `Confirmação visual de versão instalada ausente: ${JSON.stringify(updateUiState)}`,
+        );
+      }
       assert(
         verifyState.hasCanvas,
         "Canvas não renderizou após atualização automática.",

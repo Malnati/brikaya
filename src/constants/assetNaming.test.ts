@@ -29,6 +29,11 @@ const CSS_PATH = 'src/styles/index.css';
 const SERVICE_WORKER_PATH = 'public/sw.js';
 const VISUAL_ASSET_DIR = 'public/assets/visual';
 const AUDIO_ASSET_DIR = 'public/assets/audio';
+const ASSET_MANIFEST_RUNTIME_PATH = '/asset-cache-manifest.json';
+const VISUAL_RUNTIME_PATH_PREFIX = '/assets/visual/';
+const AUDIO_RUNTIME_PATH_PREFIX = '/assets/audio/';
+const ASSET_CACHE_NAME_TOKEN = 'ASSET_CACHE_NAME';
+const PRECACHE_ARRAY_PATTERN = /const\s+PRECACHE_URLS\s*=\s*\[([\s\S]*?)\];/;
 
 function kebabToCamel(value: string): string {
   return value.replace(/-([a-z0-9])/g, (_, character: string) => character.toUpperCase());
@@ -90,11 +95,20 @@ describe('nomenclatura semântica de assets visuais exibidos', () => {
     }
   });
 
-  it('precacheia todos os assets visuais exibidos para uso offline', () => {
+  it('mantém assets visuais fora do precache e cobertos pelo cache lazy versionado', () => {
     const serviceWorker = readFileSync(resolve(process.cwd(), SERVICE_WORKER_PATH), 'utf8');
+    const precacheMatch = serviceWorker.match(PRECACHE_ARRAY_PATTERN);
+    expect(precacheMatch).toBeTruthy();
+    const precacheSource = precacheMatch?.[1] || '';
 
+    expect(serviceWorker).toContain(ASSET_MANIFEST_RUNTIME_PATH);
+    expect(serviceWorker).toContain(VISUAL_RUNTIME_PATH_PREFIX);
+    expect(serviceWorker).toContain(AUDIO_RUNTIME_PATH_PREFIX);
+    expect(serviceWorker).toContain(ASSET_CACHE_NAME_TOKEN);
+    expect(precacheSource).not.toContain(VISUAL_RUNTIME_PATH_PREFIX);
+    expect(precacheSource).not.toContain(AUDIO_RUNTIME_PATH_PREFIX);
     for (const assetPath of Object.values(VISUAL_ASSET_PATHS)) {
-      expect(serviceWorker).toContain(assetPath);
+      expect(precacheSource).not.toContain(assetPath);
     }
   });
 });

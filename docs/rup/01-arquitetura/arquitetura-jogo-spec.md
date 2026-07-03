@@ -8,13 +8,13 @@ O jogo é uma PWA React/TypeScript que roda totalmente offline após o primeiro 
 - **Engine e Objetos** — `GameEngine` orquestra atualização de física, colisões e multiplicação de bolinhas, utilizando objetos `Ball`, `Bricks` e `Paddle`.
 - **Interface** — Componentes React exibem HUD de pontuação, vidas e controles, renderizando o canvas principal do jogo.
 - **Persistência e Logs** — IndexedDB armazena pontuações (`src/storage/score.ts`) e eventos (`src/storage/gameLogger.ts`) para análise posterior.
-- **Offline e Assets** — Service Worker realiza precache do bundle, manifest e assets locais; `src/utils/assetLoader.ts` gerencia carregamento no primeiro acesso.
+- **Offline e Assets** — Service Worker realiza precache do shell e do manifesto de assets; imagens e áudios locais usam cache-first sob demanda com hash, e `src/utils/assetLoader.ts` gerencia carregamento no primeiro acesso.
 - **Builds Nativos** — Capacitor empacota a PWA para iOS e Android com base nos artefatos gerados pelo Vite.
 
 ## Fluxos Críticos
 1. **Loop de jogo**: `GameEngine` atualiza estado com base no delta de tempo, calcula colisões, multiplica bolinhas quando necessário e sinaliza eventos de penalidade de linha extra.
 2. **Persistência**: callbacks de eventos enviam pontuações e logs para IndexedDB; reidratação ocorre ao iniciar nova sessão para manter histórico.
-3. **Offline-first**: service worker intercepta requisições e retorna assets do cache; queda de rede não afeta gameplay nem carregamento de sons/imagens.
+3. **Offline-first**: service worker intercepta requisições e retorna shell ou assets sob demanda do cache; queda de rede não afeta gameplay nem carregamento de sons/imagens.
 
 ## Qualidade e Observabilidade
 - Métricas prioritárias: FPS médio, tempo de frame, tempo de carregamento inicial e tamanho do bundle.
@@ -23,7 +23,7 @@ O jogo é uma PWA React/TypeScript que roda totalmente offline após o primeiro 
 
 ## Riscos e Mitigações
 - **Performance em dispositivos modestos**: manter cálculo de colisão O(n) otimizado e limitar partículas/efeitos durante Fase 1.
-- **Divergência de cache**: revisar `sw.js` a cada alteração de asset e garantir invalidation via versionamento no Vite.
+- **Divergência de cache**: revisar `sw.js` e o manifesto de assets a cada alteração, garantindo invalidação por hash/versionamento.
 - **Perda de estado**: validar que writes no IndexedDB são idempotentes e que falhas não travam o loop principal.
 
 ## Rastreabilidade

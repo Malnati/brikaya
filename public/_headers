@@ -1,3 +1,18 @@
 # public/_headers
-/*
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate, no-transform
+
+/asset-cache-manifest.json
+  Cache-Control: no-cache, no-store, must-revalidate, no-transform
+
+/manifest.webmanifest
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+
+/
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+
+/assets/*
   Cache-Control: public, max-age=0, must-revalidate, no-transform

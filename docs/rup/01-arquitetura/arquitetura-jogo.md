@@ -11,7 +11,7 @@ Inclua diagramas de camadas, fluxo de eventos e ciclo de vida offline/online.
 - GameEngine (física, colisão, atualização de estado)
 - Componentes React (HUD, controles, lista de logs)
 - Persistência (IndexedDB para pontuação e eventos)
-- Service Worker (precache e cache-first)
+- Service Worker (shell precache e cache-first lazy para assets)
 
 ## 4. Fluxos Críticos
 - Ciclo de renderização e controle de input

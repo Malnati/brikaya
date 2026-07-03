@@ -3,7 +3,7 @@
 
 ## Objetivo
 
-Registrar os arquivos de áudio locais integrados ao PWA BrickBreaker, com fonte, licença e hash para auditoria futura. Todos os arquivos runtime ficam em `public/assets/audio/` e são precacheáveis para uso offline.
+Registrar os arquivos de áudio locais integrados ao PWA BrickBreaker, com fonte, licença e hash para auditoria futura. Todos os arquivos runtime ficam em `public/assets/audio/` e são cacheáveis sob demanda para uso offline.
 
 ## Critério de licença aplicado
 
@@ -119,6 +119,6 @@ Registrar os arquivos de áudio locais integrados ao PWA BrickBreaker, com fonte
 ## Observações de uso offline
 
 - Os caminhos runtime são locais e começam por `/assets/audio/`.
-- O service worker precacheia todos os arquivos listados, preservando o funcionamento offline após o primeiro carregamento.
+- O service worker registra os arquivos usados no cache lazy/versionado, preservando o funcionamento offline após o primeiro carregamento.
 - Nenhum arquivo de placeholder de publicidade foi criado.
 - A música fica abaixo dos efeitos de gameplay pelo mix definido em `src/constants/audio.ts`.

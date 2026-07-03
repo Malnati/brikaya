@@ -3,6 +3,74 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.27.1] - 2026-07-03
+### Corrigido
+- Removida regra fallback duplicada de headers para evitar `Cache-Control` repetido no domínio canônico.
+
+### Testado
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm test -- --runInBand`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm run build`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" make cloudflare-deploy`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-runtime-update-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-svg-assets-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-audio-qa`
+
+## [1.27.0] - 2026-07-03
+### Adicionado
+- Efeito visual de atualização com barra de progresso e confirmação `Versão vN instalada` após o reload seguro.
+- Teste unitário para carregamento lazy de imagens via `AssetLoader`.
+- Validação runtime publicada para rejeitar URLs não canônicas no QA de update.
+
+### Alterado
+- Service Worker avisa o app antes do reload para permitir progresso visual.
+- Assets SVG do canvas passam a carregar sob demanda no primeiro desenho, sem preload total do conjunto visual.
+- Áudios MP3 passam a carregar no primeiro uso, sem preload total no desbloqueio de áudio.
+- Requisições de assets runtime usam URL versionada por hash para evitar cache HTTP obsoleto quando o arquivo muda.
+- Headers publicados revalidam shell, manifesto e Service Worker de forma explícita.
+
+### Testado
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm test -- --runInBand`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm run test:audio-assets`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm run test:cinematic-media-assets`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm run build`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" make cloudflare-deploy`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ BRICKBREAKER_RUNTIME_UPDATE_PROFILE=tmp/browser-profiles/cloudflare-runtime-update-cycle2 make cloudflare-runtime-update-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-svg-assets-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-audio-qa`
+
+## [1.26.0] - 2026-07-03
+### Adicionado
+- Manifesto runtime `asset-cache-manifest.json` com hash SHA-256 para imagens SVG e áudios MP3/OGG.
+- Gerador `scripts/generate-runtime-asset-manifest.mjs` integrado ao build após o Vite.
+
+### Alterado
+- Service Worker passa a pré-cachear apenas shell essencial e manifesto leve.
+- Assets visuais e sonoros passam a usar cache lazy/versionado, com migração de cache legado quando o hash local bate com o remoto.
+- Validadores e QAs publicados aceitam assets no cache após uso, não no install.
+- Headers de `/sw.js` e `/asset-cache-manifest.json` passam a impedir cache HTTP persistente para acelerar updates.
+
+### Testado
+- `node --version && npm --version && make help`
+- `npm test -- --runInBand --no-cache`
+- `npm run test:svg-assets`
+- `npm run test:audio-assets`
+- `npm run test:cinematic-media-assets`
+- `npm run build`
+- `make cloudflare-env-check`
+- `make cloudflare-deploy`
+- `make cloudflare-runtime-update-qa`
+- `make cloudflare-svg-assets-qa`
+- `make cloudflare-offline-pwa-qa`
+- `make cloudflare-audio-qa`
+- `make cloudflare-cinematic-effects-qa`
+- `make cloudflare-mobile-qa`
+- `make cloudflare-no-score-reset`
+- `make cloudflare-phase-transition-qa`
+- `make cloudflare-dashboard-layout-qa`
+- `make cloudflare-theme-qa`
+
 ## [1.25.2] - 2026-07-03
 ### Adicionado
 - Análise documental sobre recebimento de anúncios como pessoa física, pessoa física paraguaia/brasileira e EAS paraguaia em `docs/dist/projeto.md`.
@@ -164,7 +232,7 @@
 ### Adicionado
 - Catálogo técnico `src/constants/visualAssets.ts` com IDs únicos, constantes camelCase e paths físicos padronizados para imagens exibidas em tela.
 - Tokens retro/arcade em `src/constants/visualDesign.ts`, sincronizados com variáveis CSS de cor e tipografia.
-- Cobertura `npm run test:asset-naming` para validar regex, tamanho 12-64, paridade código/disco, basenames exclusivos, existência física, CSS tokens e precache.
+- Cobertura `npm run test:asset-naming` para validar regex, tamanho 12-64, paridade código/disco, basenames exclusivos, existência física, CSS tokens e cache lazy/versionado.
 - Especificação técnica em `docs/rup/02-design/retro-asset-system.md` para orientar próximos pedidos de sprites, VFX, UI, SFX e BGM.
 
 ### Alterado
@@ -185,7 +253,7 @@
 
 ### Testado
 - Novo validador `npm run test:svg-assets` garante SVGs locais com `viewBox`, sem scripts, raster embutido, data URI ou URLs externas fora do namespace SVG.
-- Validações cinematográficas e de manifesto passam a exigir SVGs cacheáveis no service worker.
+- Validações cinematográficas e de manifesto passam a exigir SVGs cobertos pelo cache lazy do service worker.
 
 
 ## [1.18.4] - 2026-07-02
@@ -244,7 +312,7 @@
 
 ### Adicionado
 - Recibo de licença e SHA-256 dos assets cinematográficos em `docs/assets/issues/cinematic-public-domain-media/evidence/`.
-- Validação `npm run test:cinematic-media-assets` para garantir paths locais, precache no service worker e política CC0/domínio público.
+- Validação `npm run test:cinematic-media-assets` para garantir paths locais, cache lazy no service worker e política CC0/domínio público.
 
 ### Testado
 - QA cinematográfico publicado passa a validar mídia local, cache PWA e ausência de requests externos de mídia.
@@ -274,7 +342,7 @@
 
 ### Testado
 - Cobertura unitária valida que todo item especial tem `activationAudioId` existente no catálogo e arquivo local.
-- `npm run test:audio-assets` valida licença, SHA-256, duração e precache do novo MP3.
+- `npm run test:audio-assets` valida licença, SHA-256, duração e cache lazy do novo MP3.
 
 
 ## [1.16.7] - 2026-07-02
@@ -351,7 +419,7 @@
 - Validação `npm run test:audio-assets` e target `make cloudflare-audio-qa` para QA publicado de eventos lógicos, cache e ausência de requests externos de áudio.
 
 ### Alterado
-- Service Worker passa a precachear todos os áudios locais para manter o PWA jogável offline após o primeiro carregamento.
+- Service Worker passa a cachear áudios locais sob demanda para manter o PWA jogável offline após o primeiro uso.
 - Pontuação local passa a manter recorde para acionar feedback de novo high-score.
 
 ## [1.14.2] - 2026-07-01

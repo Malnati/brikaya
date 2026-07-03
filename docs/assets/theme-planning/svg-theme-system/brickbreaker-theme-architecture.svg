@@ -79,5 +79,5 @@
   <rect x="976" y="396" width="360" height="118" rx="18" fill="#080816" stroke="#244c7a"/>
   <text x="1000" y="434" fill="#39ff88" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="19" font-weight="700">Offline primeiro</text>
   <text x="1000" y="468" fill="#f8f7ff" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="16">Sem CDN. Sem fontes remotas.</text>
-  <text x="1000" y="496" fill="#f8f7ff" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="16">Todos os novos assets no precache.</text>
+  <text x="1000" y="496" fill="#f8f7ff" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="16">Novos assets no cache lazy.</text>
 </svg>

@@ -19,7 +19,7 @@ Consolidar visão, público e objetivos do Brikaya como PWA offline-first, garan
 - Gameplay básico implementado (bola, tijolos, raquete, multiplicação de bolinhas)
 - Penalidade de linha extra ao errar blocos
 - Pontuação persistente e sistema de logging reativado
-- Service Worker registrando assets essenciais para operação offline
+- Service Worker registrando shell essencial e manifesto de assets para operação offline sob demanda
 
 ## Escopo Planejado (Fases 2 e 3)
 - Níveis progressivos e power-ups (#005, #006)
@@ -28,7 +28,7 @@ Consolidar visão, público e objetivos do Brikaya como PWA offline-first, garan
 
 ## Métricas de Sucesso
 - FPS médio ≥ 55 em dispositivos de entrada
-- Tempo de carregamento inicial ≤ 3s com precache completo
+- Tempo de carregamento inicial ≤ 3s com shell pré-cacheado e assets sob demanda
 - Cobertura mínima de testes: 60% (curto prazo), 80% (fase de release)
 - Zero falhas críticas em sessões de 10 minutos registradas nos logs
 
