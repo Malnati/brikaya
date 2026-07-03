@@ -144,10 +144,10 @@ async function clickButtonByText(page, label) {
       (node) => node.textContent?.trim() || "",
     );
     if (text === label) {
-      await button.evaluate((node) =>
-        node.scrollIntoView({ block: "center", inline: "center" }),
-      );
-      await button.click();
+      await button.evaluate((node) => {
+        node.scrollIntoView({ block: "center", inline: "center" });
+        node.click();
+      });
       return;
     }
   }
@@ -733,6 +733,6 @@ async function run() {
 }
 
 run().catch((error) => {
-  console.error(error.message);
+  console.error(error.stack || error.message);
   process.exitCode = 1;
 });
