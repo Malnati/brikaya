@@ -3,6 +3,17 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.28.4] - 2026-07-03
+### Adicionado
+- Atualização PWA passa a emitir feedback sonoro de início e conclusão reutilizando sons locais já catalogados.
+- Barra de progresso de atualização recebe varredura visual, e a confirmação de versão instalada recebe pulso discreto com suporte a movimento reduzido.
+
+### Testado
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm test -- --runInBand`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm run build`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-runtime-update-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-audio-qa`
+
 ## [1.28.3] - 2026-07-03
 ### Corrigido
 - Abrir o menu lateral agora pausa o jogo sem recriar a partida; ao fechar o menu, o loop do jogo retoma do mesmo estado.

@@ -978,5 +978,7 @@ export const GAME_AUDIO_IDS = {
   POWERUP_EXPIRE: 'sfx-powerup-expire',
   HIGHSCORE_NEW: 'sfx-highscore-new',
   OFFLINE_READY: 'sfx-offline-ready',
+  UPDATE_PROGRESS: 'sfx-level-toast-in',
+  UPDATE_INSTALLED: 'sfx-level-start',
   ERROR_SOFT: 'sfx-error-soft',
 } as const satisfies Record<string, AudioId>;

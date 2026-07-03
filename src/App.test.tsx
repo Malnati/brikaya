@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 
 import App from "./App";
 import { audioManager } from "./utils/audioManager";
+import { GAME_AUDIO_IDS } from "./constants/audio";
 import type { LevelTransitionPayload } from "./constants/game";
 import {
   BRICKBREAKER_UPDATE_INSTALLED_KEY,
@@ -181,10 +182,84 @@ describe("App theme selector", () => {
     expect(
       screen.getByRole("progressbar", { name: "Progresso da atualização" }),
     ).toHaveAttribute("aria-valuenow", String(UPDATE_TEST_PROGRESS));
+    expect(
+      document.querySelector(".app-update-message__bar"),
+    ).toBeInTheDocument();
+  });
+
+  it("toca som de início da atualização uma vez por ciclo", async () => {
+    mockSystemTheme(true);
+    const playAudio = jest
+      .spyOn(audioManager, "play")
+      .mockResolvedValue(undefined);
+
+    await renderApp();
+
+    act(() => {
+      window.dispatchEvent(
+        new CustomEvent(BRICKBREAKER_UPDATE_PROGRESS_EVENT, {
+          detail: { progress: UPDATE_TEST_PROGRESS },
+        }),
+      );
+      window.dispatchEvent(
+        new CustomEvent(BRICKBREAKER_UPDATE_PROGRESS_EVENT, {
+          detail: { progress: UPDATE_TEST_PROGRESS + 1 },
+        }),
+      );
+    });
+
+    expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.UPDATE_PROGRESS);
+    expect(
+      playAudio.mock.calls.filter(
+        ([audioId]) => audioId === GAME_AUDIO_IDS.UPDATE_PROGRESS,
+      ),
+    ).toHaveLength(1);
+    expect(playAudio).not.toHaveBeenCalledWith(GAME_AUDIO_IDS.UPDATE_INSTALLED);
+  });
+
+  it("toca som de conclusão quando update chega ao reload", async () => {
+    mockSystemTheme(true);
+    const playAudio = jest
+      .spyOn(audioManager, "play")
+      .mockResolvedValue(undefined);
+
+    await renderApp();
+
+    act(() => {
+      window.dispatchEvent(
+        new CustomEvent(BRICKBREAKER_UPDATE_PROGRESS_EVENT, {
+          detail: { progress: UPDATE_TEST_PROGRESS },
+        }),
+      );
+      window.dispatchEvent(
+        new CustomEvent(BRICKBREAKER_UPDATE_PROGRESS_EVENT, {
+          detail: { progress: 100, stage: "reloading" },
+        }),
+      );
+      window.dispatchEvent(
+        new CustomEvent(BRICKBREAKER_UPDATE_PROGRESS_EVENT, {
+          detail: { progress: 100, stage: "reloading" },
+        }),
+      );
+    });
+
+    expect(
+      playAudio.mock.calls.filter(
+        ([audioId]) => audioId === GAME_AUDIO_IDS.UPDATE_PROGRESS,
+      ),
+    ).toHaveLength(1);
+    expect(
+      playAudio.mock.calls.filter(
+        ([audioId]) => audioId === GAME_AUDIO_IDS.UPDATE_INSTALLED,
+      ),
+    ).toHaveLength(1);
   });
 
   it("confirma a versão instalada após atualização", async () => {
     mockSystemTheme(true);
+    const playAudio = jest
+      .spyOn(audioManager, "play")
+      .mockResolvedValue(undefined);
     window.sessionStorage.setItem(BRICKBREAKER_UPDATE_INSTALLED_KEY, "pending");
 
     await renderApp();
@@ -193,6 +268,7 @@ describe("App theme selector", () => {
     expect(
       window.sessionStorage.getItem(BRICKBREAKER_UPDATE_INSTALLED_KEY),
     ).toBeNull();
+    expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.UPDATE_INSTALLED);
   });
 
   it("abre menu lateral com aparência, logs, colisões e zerar pontuação", async () => {

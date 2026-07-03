@@ -35,4 +35,16 @@ describe('catálogo de áudio', () => {
     expect(Object.values(GAME_AUDIO_IDS).every(audioId => AUDIO_EVENT_IDS.includes(audioId))).toBe(true);
     expect(AUDIO_PUBLIC_PATHS.every(path => path.startsWith(LOCAL_AUDIO_PREFIX))).toBe(true);
   });
+
+  it('reutiliza sons existentes para o feedback de atualização', () => {
+    expect(AUDIO_EVENT_IDS).toContain(GAME_AUDIO_IDS.UPDATE_PROGRESS);
+    expect(AUDIO_EVENT_IDS).toContain(GAME_AUDIO_IDS.UPDATE_INSTALLED);
+    expect(
+      AUDIO_CATALOG[GAME_AUDIO_IDS.UPDATE_PROGRESS].files.length,
+    ).toBeGreaterThan(0);
+    expect(
+      AUDIO_CATALOG[GAME_AUDIO_IDS.UPDATE_INSTALLED].files.length,
+    ).toBeGreaterThan(0);
+    expect(AUDIO_PUBLIC_PATHS).toHaveLength(EXPECTED_AUDIO_FILE_COUNT);
+  });
 });
