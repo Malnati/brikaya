@@ -3,6 +3,30 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.31.1] - 2026-07-03
+### Corrigido
+- Deploy Cloudflare agora valida que `brikaya.com` serve o `index.html` local recém-gerado, bloqueando domínio canônico defasado após merge.
+- QA publicado de dashboard agora trata `ERR_CERT_VERIFIER_CHANGED` como falha transitória recuperável, reciclando o navegador antes de repetir o viewport.
+- QA publicado mobile agora compara o título público com o `index.html` local, preservando validação quando o título SEO muda.
+
+### Adicionado
+- Target `make cloudflare-public-check` para checar título e bundles JS/CSS publicados contra `dist/index.html`.
+
+### Testado
+- `node --version && npm --version && make help`
+- `node --check scripts/cloudflare-pages.js`
+- `node --check tests/e2e/cloudflare-mobile-qa.js`
+- `node --check tests/e2e/cloudflare-dashboard-layout-qa.js`
+- `npm test -- --runInBand`
+- `npm run build`
+- `make cloudflare-deploy`
+- `make cloudflare-public-check`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-no-score-reset`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-phase-transition-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa`
+
 ## [1.31.0] - 2026-07-03
 ### Adicionado
 - Metadados públicos de descoberta para `brikaya.com`, com idioma `pt-BR`, descrição, URL canônica, Open Graph e Twitter summary.

@@ -63,6 +63,7 @@ const PAGE_CLOSE_TIMEOUT_MESSAGE = "page close timeout";
 const MAX_VIEWPORT_ATTEMPTS = 2;
 const VIEWPORT_BROWSER_RECYCLE_INTERVAL = 4;
 const RECOVERABLE_BROWSER_ERROR_PATTERNS = [
+  "ERR_CERT_VERIFIER_CHANGED",
   "Navigating frame was detached",
   "Protocol error",
   "Target closed",
