@@ -4,6 +4,7 @@ import { dirname, resolve } from 'node:path';
 import puppeteer from 'puppeteer';
 
 import { buildChromeLaunchArgs } from './chromeLaunchArgs.js';
+import { acceptPrivacyConsentIfPresent } from './consentHelpers.js';
 
 const DEFAULT_PUBLIC_URL = 'https://brikaya.com/';
 const DEFAULT_REPORT_PATH = 'tmp/reports/cloudflare-audio-qa.json';
@@ -181,6 +182,7 @@ async function runViewportQa(page, targetUrl, config, audioPaths) {
   await clearOfflineState(page);
   await page.reload({ waitUntil: 'networkidle0', timeout: 60000 });
   await page.waitForSelector('canvas', { timeout: 30000 });
+  await acceptPrivacyConsentIfPresent(page);
   await page.waitForFunction(() => Boolean(window.__brickbreakerRunAudioTour), { timeout: 30000 });
   await waitForCinematicOverlayToClear(page);
 

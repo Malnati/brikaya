@@ -11,6 +11,11 @@ import {
   BRICKBREAKER_UPDATE_INSTALLED_KEY,
   BRICKBREAKER_UPDATE_PROGRESS_EVENT,
 } from "./registerServiceWorker";
+import {
+  PRIVACY_CONSENT_SCOPE,
+  PRIVACY_CONSENT_STORAGE_KEY,
+  PRIVACY_CONSENT_VERSION,
+} from "./constants/privacyConsent";
 
 interface MockGameProps {
   boardControls?: React.ReactNode;
@@ -54,6 +59,11 @@ const TEST_BOARD_RECT = {
   height: 245,
 };
 const STAGE_TEST_ID = "game-cinematic-stage";
+const VALID_PRIVACY_CONSENT_RECORD = JSON.stringify({
+  version: PRIVACY_CONSENT_VERSION,
+  acceptedAt: "2026-07-03T00:00:00.000Z",
+  scope: PRIVACY_CONSENT_SCOPE,
+});
 
 let mockLastGameProps: MockGameProps | null = null;
 
@@ -90,6 +100,12 @@ jest.mock("./utils/logger", () => ({
   ERROR: jest.fn(),
   WARN: jest.fn(),
 }));
+
+function mockPrivacyConsent(value: string | null) {
+  (window.localStorage.getItem as jest.Mock).mockImplementation((key: string) =>
+    key === PRIVACY_CONSENT_STORAGE_KEY ? value : null,
+  );
+}
 
 function mockSystemTheme(prefersDark: boolean) {
   Object.defineProperty(window, "matchMedia", {
@@ -134,6 +150,7 @@ describe("App theme selector", () => {
     document.documentElement.removeAttribute("data-theme");
     window.localStorage.clear();
     window.sessionStorage.clear();
+    mockPrivacyConsent(VALID_PRIVACY_CONSENT_RECORD);
   });
 
   afterEach(() => {
@@ -161,6 +178,82 @@ describe("App theme selector", () => {
         /loja|ranking|upgrades|tutorial|multiplayer|settings/i,
       ),
     ).not.toBeInTheDocument();
+  });
+
+  it("exige consentimento antes da primeira contagem", async () => {
+    jest.useFakeTimers();
+    mockSystemTheme(true);
+    mockPrivacyConsent(null);
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+
+    await renderApp();
+
+    expect(
+      screen.getByRole("dialog", { name: "Antes de jogar" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByTestId("game-cinematic-overlay")).not.toBeInTheDocument();
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      "data-start-blocked",
+      "true",
+    );
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      DATA_PAUSED_ATTRIBUTE,
+      PAUSED_TRUE_ATTRIBUTE_VALUE,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Aceitar e jogar" }));
+
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(
+      PRIVACY_CONSENT_STORAGE_KEY,
+      expect.stringContaining(PRIVACY_CONSENT_SCOPE),
+    );
+    expect(screen.queryByRole("dialog", { name: "Antes de jogar" })).not.toBeInTheDocument();
+    expect(screen.getByTestId("game-cinematic-overlay")).toHaveTextContent("3");
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      DATA_PAUSED_ATTRIBUTE,
+      PAUSED_FALSE_ATTRIBUTE_VALUE,
+    );
+  });
+
+  it("não reapresenta consentimento quando existe aceite salvo", async () => {
+    mockSystemTheme(true);
+
+    await renderApp();
+
+    expect(screen.queryByRole("dialog", { name: "Antes de jogar" })).not.toBeInTheDocument();
+    expect(screen.getByTestId("game-cinematic-overlay")).toHaveTextContent("3");
+  });
+
+  it("revoga consentimento pelo menu e pausa o jogo", async () => {
+    mockSystemTheme(true);
+    const user = userEvent.setup();
+
+    await renderApp();
+
+    await user.click(screen.getByRole("button", { name: "Menu" }));
+
+    const drawer = screen.getByRole("complementary", { name: "Menu do jogo" });
+    expect(within(drawer).getByRole("heading", { name: "Privacidade" })).toBeInTheDocument();
+
+    await user.click(
+      within(drawer).getByRole("button", { name: "Revisar consentimento" }),
+    );
+
+    expect(window.localStorage.removeItem).toHaveBeenCalledWith(
+      PRIVACY_CONSENT_STORAGE_KEY,
+    );
+    expect(screen.queryByRole("complementary", { name: "Menu do jogo" })).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("dialog", { name: "Antes de jogar" }),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      DATA_PAUSED_ATTRIBUTE,
+      PAUSED_TRUE_ATTRIBUTE_VALUE,
+    );
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      "data-start-blocked",
+      "true",
+    );
   });
 
   it("mantém versão visível apenas dentro do menu", async () => {

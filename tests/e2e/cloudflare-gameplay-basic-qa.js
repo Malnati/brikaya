@@ -4,6 +4,7 @@ import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
 import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
+import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-gameplay-basic-qa.json";
@@ -273,6 +274,7 @@ async function run() {
       timeout: MAX_NAVIGATION_MS,
     });
     await page.waitForSelector(CANVAS_SELECTOR, { timeout: MAX_NAVIGATION_MS });
+    await acceptPrivacyConsentIfPresent(page);
 
     const { state, events } = await waitForGameplayProgress(page);
     const eventSummary = summarizeEvents(events);

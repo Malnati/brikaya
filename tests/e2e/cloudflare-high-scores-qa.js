@@ -4,6 +4,7 @@ import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
 import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
+import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-high-scores-qa.json";
@@ -253,6 +254,7 @@ async function run() {
       waitUntil: "networkidle2",
       timeout: MAX_NAVIGATION_MS,
     });
+    await acceptPrivacyConsentIfPresent(page);
     await waitForCinematicOverlayToClear(page);
     await clickMenu(page);
     const state = await collectHighScoreState(page);

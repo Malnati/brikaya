@@ -1,5 +1,7 @@
 <!-- PENDING.md -->
 
+- [ ] Implementar etapa futura de CMP certificada, estados `ads_disabled`/`ads_test`/`ads_live` e aprovação explícita antes de qualquer anúncio real.
+
 - [x] Executar `make cloudflare-mobile-qa`, `make cloudflare-no-score-reset`, `make cloudflare-phase-transition-qa`, `make cloudflare-dashboard-layout-qa` e `make cloudflare-theme-qa` contra `https://malnati-brickbreaker.pages.dev/` após merge da feature de controle de velocidade por fase. Evidência: `docs/rup/04-qualidade-testes/final-pending-production-qa.md`.
 
 - [x] Adicionar QA publicado para provar funcionamento offline da PWA após o primeiro carregamento.

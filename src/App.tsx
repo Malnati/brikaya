@@ -4,6 +4,7 @@ import Game, { type GameBoardRect } from "./components/Game";
 import { AdSlotPlaceholder } from "./components/AdSlotPlaceholder";
 import { AppearanceSelector } from "./components/AppearanceSelector";
 import { AudioToggle } from "./components/AudioToggle";
+import { ConsentScreen } from "./components/ConsentScreen";
 import { CollisionStats } from "./components/CollisionStats";
 import GameLogViewer from "./components/GameLogViewer";
 import {
@@ -50,6 +51,7 @@ import { audioManager } from "./utils/audioManager";
 import { GameQaScenario } from "./logic/GameEngine";
 import { useAppearancePreference } from "./hooks/useAppearancePreference";
 import { useAudioPreference } from "./hooks/useAudioPreference";
+import { usePrivacyConsent } from "./hooks/usePrivacyConsent";
 
 LOG("🚦 App.tsx carregado");
 
@@ -109,11 +111,15 @@ export default function App() {
   const [gameWon, setGameWon] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [level, setLevel] = useState(1);
+  const { hasPrivacyConsent, acceptPrivacyConsent, revokePrivacyConsent } =
+    usePrivacyConsent();
   const [cinematicOverlay, setCinematicOverlay] =
-    useState<GameCinematicOverlayState>(INITIAL_COUNTDOWN_OVERLAY);
+    useState<GameCinematicOverlayState>(
+      hasPrivacyConsent ? INITIAL_COUNTDOWN_OVERLAY : null,
+    );
   const [boardRect, setBoardRect] = useState<GameBoardRect | null>(null);
   const [isInitialCountdownActive, setIsInitialCountdownActive] =
-    useState(true);
+    useState(hasPrivacyConsent);
   const [isCinematicRipScenarioConsumed, setIsCinematicRipScenarioConsumed] =
     useState(false);
   const [isOfflineReadyVisible, setIsOfflineReadyVisible] = useState(false);
@@ -476,6 +482,22 @@ export default function App() {
     setIsMenuOpen(false);
   }, [audioSink]);
 
+  const handleAcceptPrivacyConsent = useCallback(() => {
+    audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+    acceptPrivacyConsent();
+    setCinematicOverlay(INITIAL_COUNTDOWN_OVERLAY);
+    setIsInitialCountdownActive(true);
+    setIsMenuOpen(false);
+  }, [acceptPrivacyConsent, audioSink]);
+
+  const handleReviewPrivacyConsent = useCallback(() => {
+    audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+    revokePrivacyConsent();
+    setCinematicOverlay(null);
+    setIsInitialCountdownActive(false);
+    setIsMenuOpen(false);
+  }, [audioSink, revokePrivacyConsent]);
+
   const handleOpenLogs = useCallback(() => {
     audioSink.playAudio(GAME_AUDIO_IDS.PANEL_OPEN);
     setShowGameLogs(true);
@@ -688,6 +710,19 @@ export default function App() {
                 )}
               </div>
               <div className="settings-drawer__section">
+                <h3>Privacidade</h3>
+                <button
+                  type="button"
+                  onClick={handleReviewPrivacyConsent}
+                  className="dashboard-button dashboard-button--secondary"
+                >
+                  <span aria-hidden="true" className="button-icon">
+                    ✓
+                  </span>
+                  Revisar consentimento
+                </button>
+              </div>
+              <div className="settings-drawer__section">
                 <h3>Ferramentas</h3>
                 <button
                   type="button"
@@ -736,9 +771,9 @@ export default function App() {
                 onLevelChange={handleLevelChange}
                 qaScenario={effectiveQaScenario}
                 audioSink={audioSink}
-                startBlocked={isInitialCountdownActive}
+                startBlocked={!hasPrivacyConsent || isInitialCountdownActive}
                 imageSetId={selection.imageSetId}
-                paused={isMenuOpen}
+                paused={isMenuOpen || !hasPrivacyConsent}
                 onBoardRectChange={handleBoardRectChange}
               />
             </div>
@@ -803,6 +838,9 @@ export default function App() {
         imageSetId={selection.imageSetId}
         boardRect={boardRect}
       />
+      {!hasPrivacyConsent && (
+        <ConsentScreen onAccept={handleAcceptPrivacyConsent} />
+      )}
     </main>
   );
 }

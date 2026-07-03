@@ -4,6 +4,7 @@ import { dirname, resolve } from 'node:path';
 import puppeteer from 'puppeteer';
 
 import { buildChromeLaunchArgs } from './chromeLaunchArgs.js';
+import { acceptPrivacyConsentIfPresent } from './consentHelpers.js';
 
 const DEFAULT_PUBLIC_URL = 'https://brikaya.com/';
 const DEFAULT_REPORT_PATH = 'tmp/reports/cloudflare-svg-assets-qa.json';
@@ -178,6 +179,7 @@ async function run() {
     await page.goto(publicUrl(), { waitUntil: 'networkidle0', timeout: MAX_NAVIGATION_MS });
     await clearOfflineState(page);
     await page.reload({ waitUntil: 'networkidle0', timeout: MAX_NAVIGATION_MS });
+    await acceptPrivacyConsentIfPresent(page);
     const controlled = await waitForControlledServiceWorker(page);
     const onlineResponseStatuses = await fetchExpectedSvgs(page);
     const cacheState = await readCacheState(page);

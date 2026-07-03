@@ -4,6 +4,7 @@ import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
 import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
+import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_MODE = "verify";
@@ -328,6 +329,7 @@ async function openGame(page, targetUrl) {
     timeout: NAVIGATION_TIMEOUT_MS,
   });
   await page.waitForSelector("canvas", { timeout: NAVIGATION_TIMEOUT_MS });
+  await acceptPrivacyConsentIfPresent(page);
   await page.evaluate(() => navigator.serviceWorker?.ready || null);
 }
 
@@ -418,6 +420,7 @@ async function waitForActiveBuild(page, expectedBuildId) {
     await page.waitForSelector("canvas", {
       timeout: NAVIGATION_TIMEOUT_MS,
     });
+    await acceptPrivacyConsentIfPresent(page);
     lastVersion = await readActiveServiceWorkerVersion(page);
     lastState = await collectRuntimeState(page);
 
