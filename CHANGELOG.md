@@ -3,6 +3,10 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.28.1] - 2026-07-03
+### Adicionado
+- Política Codex para resolver conflitos e fazer PR+merge automático em entregas documentação-only.
+
 ## [1.28.0] - 2026-07-03
 ### Adicionado
 - Matriz responsiva obrigatória em `tests/e2e/responsiveViewportMatrix.json` cobrindo iPhone default 2023-2026, iPad 11/default 2023-2026 e desktop 1366/1440/1920.

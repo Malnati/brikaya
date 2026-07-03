@@ -80,6 +80,29 @@ Cada arquivo gerado deve conter seu caminho completo como primeira linha comenta
 
 ⸻
 
+## Fluxo obrigatório — documentação-only e auto-merge Codex
+
+Quando a tarefa for exclusivamente documental, o agente deve concluir PR e merge sem nova interferência humana.
+
+Escopo considerado documentação-only:
+- arquivos `.md` em `docs/`, `.prj/` ou raiz permitida (`README.md`, `CHANGELOG.md`, `AGENTS.md`, `PENDING.md`);
+- imagens/evidências já exigidas por issue/PR quando a própria entrega documental as exigir;
+- nenhum arquivo runtime, teste, configuração, dependência, `.env`, Makefile, Cloudflare, código TypeScript/JavaScript, asset runtime, service worker ou manifesto deve entrar no diff.
+
+Regras obrigatórias:
+1. Se houver conflitos apenas em arquivos documentais, resolva automaticamente, preservando as entradas/conteúdo mais recentes de `main` e reaplicando a alteração documental da branch.
+2. Não peça autorização humana para resolver conflito documental, rebase/merge da branch, rerodar validações, abrir PR, marcar PR como pronto ou fazer merge.
+3. Se o repositório bloquear merge commit/rebase e permitir apenas squash, use squash merge com título Conventional Commits.
+4. Se checks passarem e o PR for documentação-only, faça merge sem aguardar aprovação manual.
+5. Se uma execução de CI pós-merge falhar apenas por checkout de branch já deletada, confirme o artefato no `main` e não trate como bloqueio da entrega.
+6. Pare e reporte blocker somente se o conflito ou diff atingir arquivo fora do escopo documentação-only.
+7. Não exigir screenshot para documentação-only sem alteração de UI/tela; usar evidência textual, links e validação de arquivo.
+8. Quando a worktree atual estiver suja com trabalho não relacionado, crie worktree limpa baseada em `origin/main` e preserve integralmente o trabalho existente.
+9. Antes de commit/PR/merge, rode validação mínima: `node --version` com `v23.`, `make help`, verificações textuais relevantes, varredura de segredos/IDs reais e `npm run build` quando o repositório exigir.
+10. Registre a mudança em `CHANGELOG.md` quando a documentação adiciona decisão, governança, política ou plano operacional.
+
+⸻
+
 ## Política de Documentação
 
 - A documentação principal do projeto está no `README.md`.
