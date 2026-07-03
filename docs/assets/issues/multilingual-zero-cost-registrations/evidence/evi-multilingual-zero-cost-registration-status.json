@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "validatedAtUtc": "2026-07-03T23:30:00Z",
+  "canonicalUrl": "https://brikaya.com/",
+  "zeroCostPolicy": {
+    "paidActionsAttempted": false,
+    "adsOrCampaignsActivated": false,
+    "paymentMethodRequestedOrSaved": false,
+    "destructiveActionsPerformed": false,
+    "thirdPartyRuntimeScriptsAdded": false
+  },
+  "publishedSeoState": {
+    "homeHttpStatus": 200,
+    "robotsHttpStatus": 200,
+    "sitemapHttpStatus": 200,
+    "canonicalDomain": "brikaya.com",
+    "sitemapUrl": "https://brikaya.com/sitemap.xml",
+    "sitemapUrlsSubmitted": 1,
+    "localizedRoutesChecked": [
+      "pt-BR",
+      "en",
+      "es-419",
+      "en-IN",
+      "hi-IN",
+      "de",
+      "fr",
+      "it",
+      "ja",
+      "ko",
+      "id",
+      "vi",
+      "fil",
+      "th",
+      "zh-CN"
+    ],
+    "localizedRoutesServeHtml": true,
+    "localizedRoutesHaveLocalizedHtmlMetadata": false,
+    "hreflangPublished": false,
+    "hreflangReason": "Rotas localizadas ainda servem HTML pt-BR/canonical raiz; publicar hreflang agora seria sinal SEO incorreto."
+  },
+  "registrations": {
+    "googleSearchConsole": {
+      "status": "done",
+      "property": "sc-domain:brikaya.com",
+      "verificationMethod": "DNS TXT",
+      "sitemapSubmitted": "https://brikaya.com/sitemap.xml",
+      "sitemapStatus": "Processado",
+      "pagesFound": 1,
+      "homeUrlInspected": true,
+      "domainCoversAllFutureLocalizedPaths": true,
+      "tokenRedacted": true
+    },
+    "bingWebmasterTools": {
+      "status": "blocked",
+      "reason": "Chrome abriu login Microsoft corporativo e o aplicativo BingWebmasterTools pediu aprovação de administrador; Request approval não foi acionado.",
+      "costBlock": false,
+      "nextSafeAction": "Entrar com conta Microsoft pessoal/autorizada ou Google em fluxo que não peça aprovação administrativa nem custo; então importar do Search Console ou verificar por DNS/meta/arquivo."
+    },
+    "yandexWebmaster": {
+      "status": "blocked",
+      "reason": "Página pública confirma serviço gratuito, mas fluxo de adicionar site exigiu login; automação Chrome foi interrompida por UI de extensão antes de autenticar.",
+      "costBlock": false,
+      "nextSafeAction": "Retomar com conta Yandex autorizada; adicionar brikaya.com e sitemap.xml sem Metrica/tag externo."
+    },
+    "naverSearchAdvisor": {
+      "status": "not_executed_account_required",
+      "reason": "Fonte oficial indica uso de Webmaster Tools com login/posse do site; não havia conta Naver autorizada disponível.",
+      "costBlock": false,
+      "nextSafeAction": "Usar conta Naver autorizada, adicionar brikaya.com, verificar posse e submeter sitemap.xml sem script runtime."
+    },
+    "baiduSearchResourcePlatform": {
+      "status": "not_executed_account_required",
+      "reason": "Fonte oficial indica login para adicionar site. Sem conta Baidu/local autorizada; Cloudflare China/ICP fica fora por custo/obrigações.",
+      "costBlock": true,
+      "nextSafeAction": "Apenas conta Baidu gratuita para domínio global; não ativar China Network, ICP, hospedagem China, app store, monetização ou serviço pago."
+    },
+    "classindBrasil": {
+      "status": "prepared_not_submitted",
+      "reason": "Dossiê de conteúdo preparado; submissão exige gov.br/CLASSIND e possível transmissão de dados do requerente/titular não disponível nos acessos autorizados deste run.",
+      "costBlock": false,
+      "nextSafeAction": "Submeter pelo gov.br/CLASSIND quando conta autorizada estiver disponível; manter taxa zero e parar se houver custo."
+    }
+  },
+  "freeTrademarkSearch": {
+    "status": "documented_for_execution",
+    "exactWebSearchBrikaya": "Nenhuma colisão oficial evidente encontrada em busca web geral; risco fonético observado com Brekiya em resultado público, exigindo busca oficial antes de depósito pago futuro.",
+    "officialDatabasesQueued": [
+      "INPI",
+      "DINAPI",
+      "USPTO",
+      "WIPO",
+      "EUIPO",
+      "UK IPO",
+      "CIPO",
+      "IMPI",
+      "IP India",
+      "Naver/Baidu local web"
+    ],
+    "paidDepositsCreated": false
+  },
+  "sources": [
+    "https://support.google.com/webmasters/answer/9008080",
+    "https://developers.google.com/search/docs/specialty/international/localized-versions",
+    "https://www.bing.com/webmasters/help/add-and-verify-site-12184f8b",
+    "https://yandex.com/support/webmaster/en/indexing-options/sitemap",
+    "https://searchadvisor.naver.com/start",
+    "https://searchadvisor.naver.com/guide/request-feed",
+    "https://ziyuan.baidu.com/site/index",
+    "https://developers.cloudflare.com/china-network/faq/",
+    "https://www.gov.br/mj/pt-br/assuntos/seus-direitos/classificacao-1/paginas-classificacao-indicativa/jogos-e-apps"
+  ],
+  "secrets": {
+    "verificationTokensPrinted": false,
+    "personalEmailsRecorded": false,
+    "credentialsStored": false
+  }
+}

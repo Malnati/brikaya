@@ -3,6 +3,22 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.31.2] - 2026-07-03
+### Adicionado
+- Plano e recibo operacional zero-custo para registros multilíngues de Brikaya, cobrindo Google, Bing, Yandex, Naver, Baidu, CLASSIND e buscas gratuitas de marca sem ativar serviço pago.
+
+### Alterado
+- `docs/dist/registros.md` passa a considerar todos os idiomas planejados, incluindo `zh-CN`, mantendo bloqueio explícito para ICP, China Network, hospedagem China, anúncios, depósitos pagos e aprovações administrativas.
+
+### Testado
+- `node --version && npm --version && make help`
+- `make cloudflare-env-check`
+- `curl -L https://brikaya.com/`
+- `curl -L https://brikaya.com/robots.txt`
+- `curl -L https://brikaya.com/sitemap.xml`
+- `npm run build`
+- Search Console: propriedade de domínio e sitemap conferidos no Chrome logado.
+
 ## [1.31.1] - 2026-07-03
 ### Corrigido
 - Deploy Cloudflare agora valida que `brikaya.com` serve o `index.html` local recém-gerado, bloqueando domínio canônico defasado após merge.
