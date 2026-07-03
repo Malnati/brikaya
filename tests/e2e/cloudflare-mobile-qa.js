@@ -79,6 +79,16 @@ const SCORE_VALUE_PATTERN = /Score\s+(\d+)/;
 const EVENT_HEADER_SELECTOR = ".event-header";
 const EVENT_DETAILS_SELECTOR = ".event-details";
 const EVENT_DETAILS_WAIT_TIMEOUT_MS = 10000;
+const PADDLE_TOUCH_ZONE_SELECTOR = '[data-testid="paddle-touch-zone"]';
+const MIN_PADDLE_TOUCH_ZONE_HEIGHT = 192;
+const TOUCH_DRAG_START_RATIO = 0.2;
+const TOUCH_DRAG_END_RATIO = 0.8;
+const TOUCH_DRAG_SETTLE_MS = 120;
+const TOUCH_DRAG_EXPECTED_MOVE_COUNT = 2;
+const PADDLE_MOVE_WAIT_TIMEOUT_MS = 10000;
+const PADDLE_MOVE_POLL_MS = 250;
+const LOWER_CANVAS_BAND_RATIO = 0.85;
+const RECT_TOLERANCE_PX = 2;
 
 function getPublicUrl() {
   return process.env.BRICKBREAKER_PUBLIC_URL || DEFAULT_PUBLIC_URL;
@@ -272,10 +282,32 @@ async function readIndexedDbSummary(page) {
           eventTypes.includes(type),
         ),
         eventCount: events.length,
+        paddleMoveCount: events.filter((event) => event?.type === "paddle_move")
+          .length,
+        latestPaddleMove:
+          events
+            .filter((event) => event?.type === "paddle_move")
+            .sort((left, right) => right.timestamp - left.timestamp)[0] ||
+          null,
       };
     },
     REQUIRED_DATABASE_NAMES,
     REQUIRED_EVENT_TYPES,
+  );
+}
+
+async function waitForPaddleMoveCount(page, minimumCount) {
+  const deadline = Date.now() + PADDLE_MOVE_WAIT_TIMEOUT_MS;
+  let summary = await readIndexedDbSummary(page);
+
+  while (Date.now() < deadline) {
+    if (summary.paddleMoveCount >= minimumCount) return summary;
+    await new Promise((resolve) => setTimeout(resolve, PADDLE_MOVE_POLL_MS));
+    summary = await readIndexedDbSummary(page);
+  }
+
+  throw new Error(
+    `Movimentos touch da raquete insuficientes: ${summary.paddleMoveCount} < ${minimumCount}.`,
   );
 }
 
@@ -529,6 +561,82 @@ async function collectMenuPauseState(page) {
   };
 }
 
+async function collectPaddleTouchZoneState(page) {
+  return page.evaluate((selector) => {
+    const touchZone = document.querySelector(selector);
+    const canvas = document.querySelector("canvas");
+    const touchZoneRect = touchZone?.getBoundingClientRect();
+    const canvasRect = canvas?.getBoundingClientRect();
+    const touchZoneStyle =
+      touchZone instanceof HTMLElement ? getComputedStyle(touchZone) : null;
+
+    return {
+      exists: Boolean(touchZone),
+      rect: touchZoneRect
+        ? {
+            x: touchZoneRect.x,
+            y: touchZoneRect.y,
+            width: touchZoneRect.width,
+            height: touchZoneRect.height,
+            right: touchZoneRect.right,
+            bottom: touchZoneRect.bottom,
+          }
+        : null,
+      canvas: canvasRect
+        ? {
+            x: canvasRect.x,
+            y: canvasRect.y,
+            width: canvasRect.width,
+            height: canvasRect.height,
+            right: canvasRect.right,
+            bottom: canvasRect.bottom,
+          }
+        : null,
+      display: touchZoneStyle?.display || "",
+      pointerEvents: touchZoneStyle?.pointerEvents || "",
+      touchAction: touchZoneStyle?.touchAction || "",
+      viewport: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+      },
+    };
+  }, PADDLE_TOUCH_ZONE_SELECTOR);
+}
+
+async function dispatchPaddleTouchDrag(page, touchZoneState) {
+  const rect = touchZoneState.rect;
+  const viewport = touchZoneState.viewport;
+  const startX = rect.x + rect.width * TOUCH_DRAG_START_RATIO;
+  const endX = rect.x + rect.width * TOUCH_DRAG_END_RATIO;
+  const rawY = rect.y + rect.height / 2;
+  const y = Math.max(
+    RECT_TOLERANCE_PX,
+    Math.min(rawY, viewport.height - RECT_TOLERANCE_PX),
+  );
+  const client = await page.target().createCDPSession();
+
+  try {
+    await client.send("Input.dispatchTouchEvent", {
+      type: "touchStart",
+      touchPoints: [{ x: startX, y }],
+    });
+    await new Promise((resolve) => setTimeout(resolve, TOUCH_DRAG_SETTLE_MS));
+    await client.send("Input.dispatchTouchEvent", {
+      type: "touchMove",
+      touchPoints: [{ x: endX, y }],
+    });
+    await new Promise((resolve) => setTimeout(resolve, TOUCH_DRAG_SETTLE_MS));
+    await client.send("Input.dispatchTouchEvent", {
+      type: "touchEnd",
+      touchPoints: [],
+    });
+  } finally {
+    await client.detach();
+  }
+
+  return { startX, endX, y };
+}
+
 async function run() {
   const publicUrl = getPublicUrl();
   const parsed = new URL(publicUrl);
@@ -687,6 +795,54 @@ async function run() {
     );
 
     await waitForInitialCountdownToFinish(page);
+    const paddleTouchZoneState = await collectPaddleTouchZoneState(page);
+    assert(paddleTouchZoneState.exists, "Faixa touch da raquete ausente.");
+    assert(paddleTouchZoneState.rect, "Faixa touch da raquete sem retângulo.");
+    assert(paddleTouchZoneState.canvas, "Canvas ausente na validação touch.");
+    assert(
+      paddleTouchZoneState.display !== "none",
+      "Faixa touch da raquete não ficou ativa em mobile.",
+    );
+    assert(
+      paddleTouchZoneState.pointerEvents !== "none",
+      "Faixa touch da raquete não recebe eventos em mobile.",
+    );
+    assert(
+      paddleTouchZoneState.rect.height >= MIN_PADDLE_TOUCH_ZONE_HEIGHT,
+      `Faixa touch menor que 2in: ${paddleTouchZoneState.rect.height}px.`,
+    );
+    assert(
+      Math.abs(
+        paddleTouchZoneState.rect.width - paddleTouchZoneState.canvas.width,
+      ) <= RECT_TOLERANCE_PX,
+      "Faixa touch não acompanha a largura inteira do tabuleiro.",
+    );
+    assert(
+      paddleTouchZoneState.rect.y + paddleTouchZoneState.rect.height / 2 >=
+        paddleTouchZoneState.canvas.y +
+          paddleTouchZoneState.canvas.height * LOWER_CANVAS_BAND_RATIO,
+      "Faixa touch não está alinhada à região inferior da raquete.",
+    );
+    const beforeTouchSummary = await readIndexedDbSummary(page);
+    const touchDragState = await dispatchPaddleTouchDrag(
+      page,
+      paddleTouchZoneState,
+    );
+    const afterTouchSummary = await waitForPaddleMoveCount(
+      page,
+      beforeTouchSummary.paddleMoveCount + TOUCH_DRAG_EXPECTED_MOVE_COUNT,
+    );
+    assert(
+      afterTouchSummary.latestPaddleMove?.metadata?.direction === "touch",
+      "Último movimento de raquete não foi registrado como touch.",
+    );
+    assert(
+      afterTouchSummary.latestPaddleMove?.metadata?.paddleCenter >
+        afterTouchSummary.latestPaddleMove?.gameState?.canvasSize?.width *
+          TOUCH_DRAG_END_RATIO -
+          RECT_TOLERANCE_PX,
+      "Arraste na faixa touch não levou a raquete para a direita.",
+    );
     const openedMenuForScreenshot = await clickButtonByPattern(
       page,
       MENU_BUTTON_NAME,
@@ -801,6 +957,10 @@ async function run() {
       screenshotPath,
       menuScreenshotPath,
       layoutState,
+      paddleTouchZoneState,
+      touchDragState,
+      beforeTouchSummary,
+      afterTouchSummary,
       menuState,
       menuPauseState,
       logsState,

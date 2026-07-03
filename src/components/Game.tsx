@@ -1,5 +1,5 @@
 // src/components/Game.tsx
-import { useRef, useLayoutEffect, useState, useCallback } from "react";
+import { useRef, useLayoutEffect, useState, useCallback, useMemo } from "react";
 
 import { useGameLoop } from "../hooks/useGameLoop";
 import { useColorDebug } from "../hooks/useColorDebug";
@@ -8,6 +8,7 @@ import {
   CANVAS_HEIGHT,
   IMMERSIVE_LANDSCAPE_ROOT_CLASS,
   ROOT_ELEMENT_ID,
+  calculateDynamicDimensions,
 } from "../constants/game";
 import { GameQaScenario } from "../logic/GameEngine";
 import { calculateResponsiveCanvasSize } from "../utils/canvasSizing";
@@ -50,9 +51,15 @@ const HOVER_NONE_MEDIA_QUERY = "(hover: none)";
 const VISUAL_VIEWPORT_WIDTH_CSS_VAR = "--bb-visual-viewport-width";
 const VISUAL_VIEWPORT_HEIGHT_CSS_VAR = "--bb-visual-viewport-height";
 const PIXEL_UNIT = "px";
+const PERCENT_UNIT = "%";
+const PERCENT_FACTOR = 100;
+const PADDLE_TOUCH_ZONE_HEIGHT = "2in";
+const PADDLE_TOUCH_ZONE_TEST_ID = "paddle-touch-zone";
 const GAME_SURFACE_CLASS_NAME = "game-surface";
 const GAME_SURFACE_IMMERSIVE_CLASS_NAME =
   "game-surface game-surface--immersive-landscape";
+const GAME_BOARD_PLAYFIELD_CLASS_NAME = "game-board-playfield";
+const PADDLE_TOUCH_ZONE_CLASS_NAME = "game-paddle-touch-zone";
 
 function readPixelValue(value: string): number {
   const parsedValue = Number.parseFloat(value);
@@ -117,11 +124,21 @@ export default function Game({
 }: GameProps) {
   const surfaceRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const paddleTouchZoneRef = useRef<HTMLDivElement>(null);
   const [canvasSize, setCanvasSize] = useState({
     width: CANVAS_WIDTH,
     height: CANVAS_HEIGHT,
   });
   const [isLandscapeImmersive, setIsLandscapeImmersive] = useState(false);
+  const paddleTouchZoneCenterPercent = useMemo(() => {
+    const dimensions = calculateDynamicDimensions(
+      canvasSize.width,
+      canvasSize.height,
+    );
+    const paddleCenterY = canvasSize.height - dimensions.paddleHeight / 2;
+
+    return (paddleCenterY / canvasSize.height) * PERCENT_FACTOR;
+  }, [canvasSize.height, canvasSize.width]);
   const publishBoardRect = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas || !onBoardRectChange) return;
@@ -221,6 +238,7 @@ export default function Game({
     startBlocked,
     imageSetId,
     paused,
+    paddleTouchZoneRef,
   );
   useColorDebug(canvasRef);
 
@@ -234,16 +252,34 @@ export default function Game({
       ref={surfaceRef}
     >
       <div className="game-board-frame">
-        <canvas
-          ref={canvasRef}
-          width={canvasSize.width}
-          height={canvasSize.height}
+        <div
+          className={GAME_BOARD_PLAYFIELD_CLASS_NAME}
           style={{
+            width: `${canvasSize.width}px`,
             maxWidth: "100%",
-            height: "auto",
-            touchAction: TOUCH_ACTION_NONE,
           }}
-        />
+        >
+          <canvas
+            ref={canvasRef}
+            width={canvasSize.width}
+            height={canvasSize.height}
+            style={{
+              width: "100%",
+              height: "auto",
+              touchAction: TOUCH_ACTION_NONE,
+            }}
+          />
+          <div
+            ref={paddleTouchZoneRef}
+            className={PADDLE_TOUCH_ZONE_CLASS_NAME}
+            data-testid={PADDLE_TOUCH_ZONE_TEST_ID}
+            aria-hidden="true"
+            style={{
+              top: `${paddleTouchZoneCenterPercent}${PERCENT_UNIT}`,
+              height: PADDLE_TOUCH_ZONE_HEIGHT,
+            }}
+          />
+        </div>
       </div>
       {boardControls && (
         <div

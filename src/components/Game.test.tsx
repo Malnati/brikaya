@@ -82,6 +82,7 @@ describe("Game", () => {
       true,
       "retro-default",
       false,
+      expect.anything(),
     );
   });
 
@@ -106,7 +107,19 @@ describe("Game", () => {
       false,
       "retro-default",
       true,
+      expect.anything(),
     );
+  });
+
+  it("renderiza faixa sensível invisível sobre a linha da raquete", () => {
+    render(<Game onScoreUpdate={jest.fn()} />);
+
+    const touchZone = screen.getByTestId("paddle-touch-zone");
+
+    expect(touchZone).toBeInTheDocument();
+    expect(touchZone).toHaveAttribute("aria-hidden", "true");
+    expect(touchZone).toHaveStyle({ height: "2in" });
+    expect(touchZone).toHaveClass("game-paddle-touch-zone");
   });
 
   it("publica o retângulo real do canvas para efeitos visuais", () => {
