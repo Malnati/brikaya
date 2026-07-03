@@ -81,6 +81,13 @@ export interface GameEvent {
   metadata?: Record<string, unknown>;
 }
 
+export type LoggedPowerUpAction =
+  | 'spawn'
+  | 'collect'
+  | 'activate'
+  | 'expire'
+  | 'miss';
+
 export interface GameStatsSummary {
   totalGames: number;
   totalEvents: number;
@@ -447,6 +454,26 @@ class GameLogger {
       paddlePosition,
       collisionInfo,
       metadata: {
+        speedState: gameState.speedState
+      }
+    });
+  }
+
+  async logPowerUp(
+    gameState: GameEvent['gameState'],
+    ballPositions: GameEvent['ballPositions'],
+    paddlePosition: GameEvent['paddlePosition'],
+    powerUpType: string,
+    action: LoggedPowerUpAction
+  ): Promise<void> {
+    await this.logEvent({
+      type: 'power_up',
+      gameState,
+      ballPositions,
+      paddlePosition,
+      metadata: {
+        powerUpType,
+        action,
         speedState: gameState.speedState
       }
     });

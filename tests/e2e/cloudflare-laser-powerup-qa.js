@@ -32,6 +32,7 @@ const EXPECTED_SCORE_REASON = "laser_fan";
 const EXPECTED_MIN_SCORE = 10;
 const REQUIRED_EVENT_TYPES = [
   "game_start",
+  "power_up",
   "brick_destroyed",
   "score_update",
   "level_complete",
@@ -368,6 +369,12 @@ async function run() {
       (event) => event.metadata?.reason === EXPECTED_SCORE_REASON,
     );
     const laserScoreEvent = laserScoreEvents[0] || null;
+    const activatedPowerUpEvents = events.filter(
+      (event) =>
+        event.type === "power_up" &&
+        event.metadata?.powerUpType === "laser_fan" &&
+        event.metadata?.action === "activate",
+    );
     const levelCompleteEvents = events.filter(
       (event) => event.type === "level_complete",
     );
@@ -379,6 +386,7 @@ async function run() {
       eventTypes: events.map((event) => event.type),
       laserScoreEvent: laserScoreEvent?.metadata || null,
       laserScoreEvents: laserScoreEvents.length,
+      activatedPowerUpEvents: activatedPowerUpEvents.length,
       levelCompleteEvents: levelCompleteEvents.length,
       laserEffect: {
         minVisibleMs: LASER_EFFECT_MIN_VISIBLE_MS,
@@ -401,6 +409,10 @@ async function run() {
     assert(
       laserScoreEvents.length === 1,
       "Laser gerou score_update duplicado ou ausente.",
+    );
+    assert(
+      activatedPowerUpEvents.length === 1,
+      "Laser não registrou ativação de power_up.",
     );
     assert(
       (laserScoreEvent?.metadata?.pointsAdded || 0) >= EXPECTED_MIN_SCORE,

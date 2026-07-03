@@ -14,7 +14,8 @@
 
 ## Progressão e Futuro
 - **Níveis progressivos (#005)**: cada nova fase aumenta a velocidade-alvo e adiciona linhas de tijolos até o limite seguro do tabuleiro.
-- **Planejado**: power-ups (#006) e high-scores (#007) armazenados localmente.
+- **Power-ups e especiais (#006)**: itens coletáveis locais ativam multiball, paddle amplo, bola lenta e Laser em leque; cada ciclo registra `power_up` no IndexedDB.
+- **Planejado**: high-scores (#007) armazenados localmente.
 
 ## Interface e HUD
 - Elementos obrigatórios: pontuação atual, vidas restantes, contagem de bolinhas ativas e indicador de linha penalizada.
