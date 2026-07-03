@@ -12,7 +12,29 @@ jest.mock("../hooks/useColorDebug", () => ({
   useColorDebug: jest.fn(),
 }));
 
+const TEST_BOARD_RECT = {
+  x: 13,
+  y: 111,
+  width: 367,
+  height: 245,
+  bottom: 356,
+  left: 13,
+  right: 380,
+  top: 111,
+  toJSON: jest.fn(),
+} as unknown as DOMRect;
+
 describe("Game", () => {
+  beforeEach(() => {
+    jest.spyOn(HTMLCanvasElement.prototype, "getBoundingClientRect").mockReturnValue(
+      TEST_BOARD_RECT,
+    );
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it("renderiza controles principais fora do quadro do jogo", () => {
     const { container } = render(
       <Game
@@ -85,5 +107,23 @@ describe("Game", () => {
       "retro-default",
       true,
     );
+  });
+
+  it("publica o retângulo real do canvas para efeitos visuais", () => {
+    const onBoardRectChange = jest.fn();
+
+    render(
+      <Game
+        onScoreUpdate={jest.fn()}
+        onBoardRectChange={onBoardRectChange}
+      />,
+    );
+
+    expect(onBoardRectChange).toHaveBeenCalledWith({
+      x: TEST_BOARD_RECT.x,
+      y: TEST_BOARD_RECT.y,
+      width: TEST_BOARD_RECT.width,
+      height: TEST_BOARD_RECT.height,
+    });
   });
 });

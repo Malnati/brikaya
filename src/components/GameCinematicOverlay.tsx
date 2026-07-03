@@ -10,7 +10,7 @@ import {
   type GameVisualAssetRole,
 } from "../utils/visualAssetResolver";
 
-import type { ComponentPropsWithoutRef } from "react";
+import type { ComponentPropsWithoutRef, CSSProperties, ReactNode } from "react";
 
 export type GameCinematicOverlayState =
   | {
@@ -30,6 +30,14 @@ export type GameCinematicOverlayState =
 interface GameCinematicOverlayProps {
   state: GameCinematicOverlayState;
   imageSetId?: ImageSetId;
+  boardRect?: GameCinematicBoardRect | null;
+}
+
+export interface GameCinematicBoardRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }
 
 type OverlayAttributes = ComponentPropsWithoutRef<"div"> & {
@@ -54,9 +62,11 @@ const LEVEL_UP_SPEED_PREFIX = "Velocidade";
 const RIP_TITLE = "RIP";
 const RIP_HINT = "Recomeçando...";
 const MEDIA_CLASS_NAME = `${BASE_CLASS_NAME}__media`;
+const STAGE_CLASS_NAME = `${BASE_CLASS_NAME}__stage`;
 const MEDIA_ALT = "";
 const MEDIA_LOADING = "lazy";
 const MEDIA_DECODING = "async";
+const STAGE_TEST_ID = "game-cinematic-stage";
 const CINEMATIC_MEDIA_ROLES = {
   "countdown-circle": GAME_VISUAL_ASSET_ROLES.countdownCircleOverlay,
   "countdown-spark": GAME_VISUAL_ASSET_ROLES.countdownSparkOverlay,
@@ -96,6 +106,34 @@ function renderMediaLayers(
   });
 }
 
+function stageStyle(
+  boardRect: GameCinematicBoardRect | null | undefined,
+): CSSProperties | undefined {
+  if (!boardRect) return undefined;
+
+  return {
+    left: boardRect.x,
+    top: boardRect.y,
+    width: boardRect.width,
+    height: boardRect.height,
+  };
+}
+
+function renderStage(
+  children: ReactNode,
+  boardRect: GameCinematicBoardRect | null | undefined,
+) {
+  return (
+    <div
+      className={STAGE_CLASS_NAME}
+      data-testid={STAGE_TEST_ID}
+      style={stageStyle(boardRect)}
+    >
+      {children}
+    </div>
+  );
+}
+
 function overlayProps(
   state: Exclude<GameCinematicOverlayState, null>,
 ): OverlayAttributes {
@@ -128,14 +166,20 @@ function overlayProps(
 export function GameCinematicOverlay({
   state,
   imageSetId = IMAGE_SET_RETRO_DEFAULT,
+  boardRect = null,
 }: GameCinematicOverlayProps) {
   if (!state) return null;
 
   if (state.type === "countdown") {
     return (
       <div {...overlayProps(state)} role="status" aria-live="assertive">
-        {renderMediaLayers(state, imageSetId)}
-        <span className={`${BASE_CLASS_NAME}__count`}>{state.value}</span>
+        {renderStage(
+          <>
+            {renderMediaLayers(state, imageSetId)}
+            <span className={`${BASE_CLASS_NAME}__count`}>{state.value}</span>
+          </>,
+          boardRect,
+        )}
       </div>
     );
   }
@@ -143,25 +187,35 @@ export function GameCinematicOverlay({
   if (state.type === "levelUp") {
     return (
       <div {...overlayProps(state)} role="status" aria-live="polite">
-        {renderMediaLayers(state, imageSetId)}
-        <span className={`${BASE_CLASS_NAME}__eyebrow`}>
-          {LEVEL_UP_EYEBROW}
-        </span>
-        <span className={`${BASE_CLASS_NAME}__title`}>
-          {LEVEL_UP_TITLE_PREFIX} {state.nextLevel}
-        </span>
-        <span className={`${BASE_CLASS_NAME}__detail`}>
-          {LEVEL_UP_SPEED_PREFIX} {state.speedLabel}
-        </span>
+        {renderStage(
+          <>
+            {renderMediaLayers(state, imageSetId)}
+            <span className={`${BASE_CLASS_NAME}__eyebrow`}>
+              {LEVEL_UP_EYEBROW}
+            </span>
+            <span className={`${BASE_CLASS_NAME}__title`}>
+              {LEVEL_UP_TITLE_PREFIX} {state.nextLevel}
+            </span>
+            <span className={`${BASE_CLASS_NAME}__detail`}>
+              {LEVEL_UP_SPEED_PREFIX} {state.speedLabel}
+            </span>
+          </>,
+          boardRect,
+        )}
       </div>
     );
   }
 
   return (
     <div {...overlayProps(state)} role="status" aria-live="assertive">
-      {renderMediaLayers(state, imageSetId)}
-      <span className={`${BASE_CLASS_NAME}__title`}>{RIP_TITLE}</span>
-      <span className={`${BASE_CLASS_NAME}__detail`}>{RIP_HINT}</span>
+      {renderStage(
+        <>
+          {renderMediaLayers(state, imageSetId)}
+          <span className={`${BASE_CLASS_NAME}__title`}>{RIP_TITLE}</span>
+          <span className={`${BASE_CLASS_NAME}__detail`}>{RIP_HINT}</span>
+        </>,
+        boardRect,
+      )}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 // src/App.tsx
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
-import Game from "./components/Game";
+import Game, { type GameBoardRect } from "./components/Game";
 import { AdSlotPlaceholder } from "./components/AdSlotPlaceholder";
 import { AppearanceSelector } from "./components/AppearanceSelector";
 import { AudioToggle } from "./components/AudioToggle";
@@ -111,6 +111,7 @@ export default function App() {
   const [level, setLevel] = useState(1);
   const [cinematicOverlay, setCinematicOverlay] =
     useState<GameCinematicOverlayState>(INITIAL_COUNTDOWN_OVERLAY);
+  const [boardRect, setBoardRect] = useState<GameBoardRect | null>(null);
   const [isInitialCountdownActive, setIsInitialCountdownActive] =
     useState(true);
   const [isCinematicRipScenarioConsumed, setIsCinematicRipScenarioConsumed] =
@@ -167,6 +168,21 @@ export default function App() {
     }),
     [],
   );
+  const handleBoardRectChange = useCallback((nextRect: GameBoardRect) => {
+    setBoardRect((currentRect) => {
+      if (
+        currentRect &&
+        currentRect.x === nextRect.x &&
+        currentRect.y === nextRect.y &&
+        currentRect.width === nextRect.width &&
+        currentRect.height === nextRect.height
+      ) {
+        return currentRect;
+      }
+
+      return nextRect;
+    });
+  }, []);
   const effectiveQaScenario = useMemo<GameQaScenario | null>(() => {
     if (
       qaScenario === CINEMATIC_RIP_QA_SCENARIO &&
@@ -723,6 +739,7 @@ export default function App() {
                 startBlocked={isInitialCountdownActive}
                 imageSetId={selection.imageSetId}
                 paused={isMenuOpen}
+                onBoardRectChange={handleBoardRectChange}
               />
             </div>
             <AdSlotPlaceholder variant="bottom" />
@@ -784,6 +801,7 @@ export default function App() {
       <GameCinematicOverlay
         state={cinematicOverlay}
         imageSetId={selection.imageSetId}
+        boardRect={boardRect}
       />
     </main>
   );

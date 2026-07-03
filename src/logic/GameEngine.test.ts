@@ -23,6 +23,7 @@ import {
 } from "../constants/game";
 import { POINTS_PER_BRICK } from "../constants/gameState";
 import { GAME_AUDIO_IDS, type GameAudioSink } from "../constants/audio";
+import { calculatePowerUpSize } from "../constants/powerUps";
 import { GameEngine } from "./GameEngine";
 
 const mockBallInstances: any[] = [];
@@ -683,5 +684,22 @@ describe("GameEngine", () => {
     expect((engine as any).selectNextPowerUpType()).toBe("wide_paddle");
     expect((engine as any).selectNextPowerUpType()).toBe("slow_ball");
     expect((engine as any).selectNextPowerUpType()).toBe("laser_fan");
+  });
+
+  it("cria power-up de QA com tamanho proporcional ao bloco atual", () => {
+    const engine = new GameEngine(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      onLevelTransition,
+      "laser-fan",
+    );
+    const dimensions = (engine as any).dimensions;
+
+    expect((engine as any).activePowerUp.size).toBe(
+      calculatePowerUpSize(dimensions),
+    );
   });
 });

@@ -16,9 +16,17 @@ interface MockGameProps {
   boardControls?: React.ReactNode;
   startBlocked?: boolean;
   paused?: boolean;
+  onBoardRectChange?: (rect: TestBoardRect) => void;
   onLevelTransition?: (payload: LevelTransitionPayload) => void;
   onGameOver?: () => Promise<void> | void;
   imageSetId?: string;
+}
+
+interface TestBoardRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }
 
 const TEST_LEVEL_TRANSITION_PAYLOAD: LevelTransitionPayload = {
@@ -39,6 +47,13 @@ const UPDATE_TEST_PROGRESS = 64;
 const DATA_PAUSED_ATTRIBUTE = "data-paused";
 const PAUSED_TRUE_ATTRIBUTE_VALUE = "true";
 const PAUSED_FALSE_ATTRIBUTE_VALUE = "false";
+const TEST_BOARD_RECT = {
+  x: 13,
+  y: 111,
+  width: 367,
+  height: 245,
+};
+const STAGE_TEST_ID = "game-cinematic-stage";
 
 let mockLastGameProps: MockGameProps | null = null;
 
@@ -560,6 +575,26 @@ describe("App theme selector", () => {
       jest.advanceTimersByTime(LEVEL_UP_OVERLAY_VISIBLE_MS);
     });
     expect(screen.queryByTestId("level-toast")).not.toBeInTheDocument();
+  });
+
+  it("ancora mensagem de subida de fase no tabuleiro informado pelo jogo", async () => {
+    jest.useFakeTimers();
+    mockSystemTheme(true);
+
+    await renderApp();
+
+    act(() => {
+      mockLastGameProps?.onBoardRectChange?.(TEST_BOARD_RECT);
+      jest.advanceTimersByTime(COUNTDOWN_TOTAL_MS);
+      mockLastGameProps?.onLevelTransition?.(TEST_LEVEL_TRANSITION_PAYLOAD);
+    });
+
+    expect(screen.getByTestId(STAGE_TEST_ID)).toHaveStyle({
+      left: `${TEST_BOARD_RECT.x}px`,
+      top: `${TEST_BOARD_RECT.y}px`,
+      width: `${TEST_BOARD_RECT.width}px`,
+      height: `${TEST_BOARD_RECT.height}px`,
+    });
   });
 
   it("mostra RIP por tempo curto e reinicia sem nova contagem", async () => {

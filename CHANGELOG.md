@@ -3,6 +3,24 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.28.10] - 2026-07-03
+### Corrigido
+- Efeitos cinematográficos passam a centralizar mídia e texto sobre o tabuleiro/canvas em vez da viewport inteira.
+- Itens especiais passam a usar tamanho proporcional à largura dos blocos, com limites mínimos e máximos para manter leitura em mobile e desktop.
+
+### Adicionado
+- Cobertura unitária e QA publicado validam ancoragem visual dos efeitos e tamanho renderizado dos itens especiais.
+
+### Testado
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version && make help`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/objects/PowerUp.test.ts src/components/GameCinematicOverlay.test.tsx src/components/Game.test.tsx src/App.test.tsx src/logic/GameEngine.test.ts --runInBand`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:semantic-file-names`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:svg-assets`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make cloudflare-deploy`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-cinematic-effects-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-powerups-qa`
+
 ## [1.28.9] - 2026-07-03
 ### Adicionado
 - Plano documental PWA-only de i18n e SEO em `docs/dist/projeto-pwa.md`, com auditoria atual, canonical, `hreflang`, sitemap, robots e Search Console como implementação futura.
@@ -40,6 +58,7 @@
 - `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version`
 - `make help`
 - `npm run build`
+
 
 ## [1.28.5] - 2026-07-03
 ### Adicionado

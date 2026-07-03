@@ -11,6 +11,13 @@ const LEVEL_UP_STAR_PATH = "/assets/visual/vfx/vfx-level-up-star-overlay.svg";
 const RIP_SMOKE_PATH = "/assets/visual/vfx/vfx-game-over-rip-smoke.svg";
 const HIGH_CONTRAST_LEVEL_UP_STAR_PATH =
   "/assets/visual/vfx/vfx-level-up-star-high-contrast-overlay.svg";
+const TEST_BOARD_RECT = {
+  x: 13,
+  y: 111,
+  width: 367,
+  height: 245,
+};
+const STAGE_TEST_ID = "game-cinematic-stage";
 
 function expectDecorativeMedia(container: HTMLElement, name: string, path: string) {
   const media = container.querySelector(
@@ -23,6 +30,22 @@ function expectDecorativeMedia(container: HTMLElement, name: string, path: strin
 }
 
 describe("GameCinematicOverlay media", () => {
+  it("centraliza o palco visual no retângulo do tabuleiro quando informado", () => {
+    render(
+      <GameCinematicOverlay
+        state={{ type: "countdown", value: "3" }}
+        boardRect={TEST_BOARD_RECT}
+      />,
+    );
+
+    expect(screen.getByTestId(STAGE_TEST_ID)).toHaveStyle({
+      left: `${TEST_BOARD_RECT.x}px`,
+      top: `${TEST_BOARD_RECT.y}px`,
+      width: `${TEST_BOARD_RECT.width}px`,
+      height: `${TEST_BOARD_RECT.height}px`,
+    });
+  });
+
   it("renderiza mídias locais CC0 no countdown sem remover a contagem textual", () => {
     const { container } = render(
       <GameCinematicOverlay state={{ type: "countdown", value: "3" }} />,

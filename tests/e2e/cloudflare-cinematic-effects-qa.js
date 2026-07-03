@@ -23,6 +23,8 @@ const MAX_WAIT_MS = 30000;
 const COUNTDOWN_SELECTOR = '[data-cinematic-type="countdown"]';
 const LEVEL_UP_SELECTOR = '[data-cinematic-type="levelUp"]';
 const RIP_SELECTOR = '[data-cinematic-type="rip"]';
+const CINEMATIC_STAGE_SELECTOR = '[data-testid="game-cinematic-stage"]';
+const CANVAS_SELECTOR = 'canvas';
 const SINGLE_BRICK_QA_SCENARIO = 'single-brick-phase-clear';
 const CINEMATIC_RIP_QA_SCENARIO = 'cinematic-rip';
 const REQUIRED_LEVEL_AUDIO_IDS = ['sfx-score-tick', 'sfx-level-toast-in'];
@@ -41,6 +43,11 @@ const ASSET_MANIFEST_PATH = '/asset-cache-manifest.json';
 const ASSET_HASH_SEARCH_PARAM = 'bbAssetHash';
 const MEDIA_EXTENSION_PATTERN = /\.(gif|jpe?g|mp3|mp4|ogg|png|webm|webp|wav)(\?|$)/i;
 const CANONICAL_HOST = 'brikaya.com';
+const MAX_STAGE_OFFSET_PX = 3;
+const MAX_MEDIA_CENTER_OFFSET_PX = 4;
+const NAVIGATION_TIMEOUT_MS = 60000;
+const SERVICE_WORKER_READY_TIMEOUT_MS = 10000;
+const MEDIA_READY_TIMEOUT_MS = 5000;
 
 function env(name, fallback) {
   return process.env[name] || fallback;
@@ -73,21 +80,68 @@ async function clearOfflineState(page) {
   });
 }
 
+async function waitForServiceWorkerControl(page) {
+  await page.evaluate(async (timeoutMs) => {
+    if (!('serviceWorker' in navigator)) return;
+
+    await navigator.serviceWorker.ready;
+
+    if (navigator.serviceWorker.controller) return;
+
+    await new Promise((resolve) => {
+      const timeout = window.setTimeout(resolve, timeoutMs);
+      navigator.serviceWorker.addEventListener(
+        'controllerchange',
+        () => {
+          window.clearTimeout(timeout);
+          resolve();
+        },
+        { once: true },
+      );
+    });
+  }, SERVICE_WORKER_READY_TIMEOUT_MS);
+}
+
+async function prepareControlledPage(page, publicUrl) {
+  await page.goto(publicUrl, {
+    waitUntil: 'domcontentloaded',
+    timeout: NAVIGATION_TIMEOUT_MS,
+  });
+  await clearOfflineState(page);
+  await page.goto(publicUrl, {
+    waitUntil: 'domcontentloaded',
+    timeout: NAVIGATION_TIMEOUT_MS,
+  });
+  await waitForServiceWorkerControl(page);
+  await page.reload({ waitUntil: 'domcontentloaded', timeout: NAVIGATION_TIMEOUT_MS });
+  await waitForServiceWorkerControl(page);
+}
+
 async function overlaySnapshot(page, selector) {
-  return page.evaluate((targetSelector) => {
+  return page.evaluate(({ targetSelector, stageSelector, canvasSelector }) => {
     const overlay = document.querySelector(targetSelector);
-    const rect = overlay?.getBoundingClientRect();
-    return {
-      text: overlay?.textContent?.trim() || '',
-      type: overlay?.getAttribute('data-cinematic-type') || '',
-      rect: rect ? {
+    const stage = overlay?.querySelector(stageSelector);
+    const canvas = document.querySelector(canvasSelector);
+    function rectOf(element) {
+      const rect = element?.getBoundingClientRect();
+      return rect ? {
         x: rect.x,
         y: rect.y,
         width: rect.width,
         height: rect.height,
         right: rect.right,
         bottom: rect.bottom,
-      } : null,
+        centerX: rect.x + rect.width / 2,
+        centerY: rect.y + rect.height / 2,
+      } : null;
+    }
+
+    return {
+      text: overlay?.textContent?.trim() || '',
+      type: overlay?.getAttribute('data-cinematic-type') || '',
+      rect: rectOf(overlay),
+      stageRect: rectOf(stage),
+      canvasRect: rectOf(canvas),
       viewport: {
         width: window.innerWidth,
         height: window.innerHeight,
@@ -100,9 +154,26 @@ async function overlaySnapshot(page, selector) {
         src: item.getAttribute('src') || '',
         ariaHidden: item.getAttribute('aria-hidden') || '',
         alt: item.getAttribute('alt') || '',
+        rect: rectOf(item),
       })),
     };
-  }, selector);
+  }, {
+    targetSelector: selector,
+    stageSelector: CINEMATIC_STAGE_SELECTOR,
+    canvasSelector: CANVAS_SELECTOR,
+  });
+}
+
+async function waitForCinematicMediaReady(page, selector) {
+  await page.waitForFunction(
+    (targetSelector) =>
+      [...document.querySelectorAll(`${targetSelector} img[data-cinematic-media]`)].every((image) => {
+        const rect = image.getBoundingClientRect();
+        return image.complete && image.naturalWidth > 0 && rect.width > 0 && rect.height > 0;
+      }),
+    { timeout: MEDIA_READY_TIMEOUT_MS },
+    selector,
+  );
 }
 
 async function audioIds(page) {
@@ -116,6 +187,23 @@ function assertFullViewport(snapshot, label) {
   assert(snapshot.rect, `${label}: overlay ausente.`);
   assert(snapshot.rect.width >= snapshot.viewport.width * 0.96, `${label}: largura não cobre viewport.`);
   assert(snapshot.rect.height >= snapshot.viewport.height * 0.96, `${label}: altura não cobre viewport.`);
+}
+
+function assertBoardAnchoring(snapshot, label) {
+  assert(snapshot.stageRect, `${label}: palco cinematográfico ausente.`);
+  assert(snapshot.canvasRect, `${label}: canvas ausente para comparar ancoragem.`);
+  assert(Math.abs(snapshot.stageRect.x - snapshot.canvasRect.x) <= MAX_STAGE_OFFSET_PX, `${label}: palco desalinhado no eixo X.`);
+  assert(Math.abs(snapshot.stageRect.y - snapshot.canvasRect.y) <= MAX_STAGE_OFFSET_PX, `${label}: palco desalinhado no eixo Y.`);
+  assert(Math.abs(snapshot.stageRect.width - snapshot.canvasRect.width) <= MAX_STAGE_OFFSET_PX, `${label}: largura do palco difere do canvas.`);
+  assert(Math.abs(snapshot.stageRect.height - snapshot.canvasRect.height) <= MAX_STAGE_OFFSET_PX, `${label}: altura do palco difere do canvas.`);
+
+  for (const item of snapshot.media) {
+    assert(item.rect, `${label}: mídia sem retângulo visual ${item.id}.`);
+    assert(item.rect.width > 0, `${label}: mídia sem largura visual ${item.id}.`);
+    assert(item.rect.height > 0, `${label}: mídia sem altura visual ${item.id}.`);
+    assert(Math.abs(item.rect.centerX - snapshot.canvasRect.centerX) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: mídia ${item.id} descentralizada no eixo X.`);
+    assert(Math.abs(item.rect.centerY - snapshot.canvasRect.centerY) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: mídia ${item.id} descentralizada no eixo Y.`);
+  }
 }
 
 function assertMedia(snapshot, requiredIds, label) {
@@ -217,13 +305,14 @@ async function run() {
     });
     page.on('pageerror', error => consoleProblems.push({ type: 'pageerror', text: error.message }));
 
+    await prepareControlledPage(page, publicUrl);
     await page.goto(scenarioUrl(publicUrl, SINGLE_BRICK_QA_SCENARIO), {
       waitUntil: 'domcontentloaded',
-      timeout: 60000,
+      timeout: NAVIGATION_TIMEOUT_MS,
     });
-    await clearOfflineState(page);
-    await page.reload({ waitUntil: 'domcontentloaded', timeout: 60000 });
+    await waitForServiceWorkerControl(page);
     await page.waitForSelector(COUNTDOWN_SELECTOR, { timeout: 5000 });
+    await waitForCinematicMediaReady(page, COUNTDOWN_SELECTOR);
     const countdownStartedAt = Date.now();
     const countdownState = await overlaySnapshot(page, COUNTDOWN_SELECTOR);
     await page.screenshot({ path: countdownScreenshotPath, fullPage: true });
@@ -233,6 +322,7 @@ async function run() {
     });
     const countdownDurationMs = Date.now() - countdownStartedAt;
     await page.waitForSelector(LEVEL_UP_SELECTOR, { timeout: MAX_WAIT_MS });
+    await waitForCinematicMediaReady(page, LEVEL_UP_SELECTOR);
     const levelUpState = await overlaySnapshot(page, LEVEL_UP_SELECTOR);
     await page.screenshot({ path: levelUpScreenshotPath, fullPage: true });
     await page.waitForSelector(LEVEL_UP_SELECTOR, {
@@ -240,7 +330,6 @@ async function run() {
       timeout: 10000,
     });
     const levelAudioIds = await audioIds(page);
-    const cachedPaths = await cachedCinematicPaths(page);
     const countdownAfterLevel = await page.$(COUNTDOWN_SELECTOR);
 
     const ripPage = await browser.newPage();
@@ -263,15 +352,17 @@ async function run() {
 
     await ripPage.goto(scenarioUrl(publicUrl, CINEMATIC_RIP_QA_SCENARIO), {
       waitUntil: 'domcontentloaded',
-      timeout: 60000,
+      timeout: NAVIGATION_TIMEOUT_MS,
     });
-    await ripPage.reload({ waitUntil: 'domcontentloaded', timeout: 60000 });
+    await waitForServiceWorkerControl(ripPage);
     await ripPage.waitForSelector(COUNTDOWN_SELECTOR, { timeout: 5000 });
+    await waitForCinematicMediaReady(ripPage, COUNTDOWN_SELECTOR);
     await ripPage.waitForSelector(COUNTDOWN_SELECTOR, {
       hidden: true,
       timeout: COUNTDOWN_MAX_DURATION_MS + 900,
     });
     await ripPage.waitForSelector(RIP_SELECTOR, { timeout: MAX_WAIT_MS });
+    await waitForCinematicMediaReady(ripPage, RIP_SELECTOR);
     const ripStartedAt = Date.now();
     const ripState = await overlaySnapshot(ripPage, RIP_SELECTOR);
     await Promise.all([
@@ -285,10 +376,14 @@ async function run() {
     const ripAfterTimeoutState = await overlaySnapshot(ripPage, RIP_SELECTOR);
     const countdownAfterRip = await ripPage.$(COUNTDOWN_SELECTOR);
     const ripAudioIds = await audioIds(ripPage);
+    const cachedPaths = await cachedCinematicPaths(page);
 
     assertFullViewport(countdownState, 'countdown');
     assertFullViewport(levelUpState, 'level-up');
     assertFullViewport(ripState, 'rip');
+    assertBoardAnchoring(countdownState, 'countdown');
+    assertBoardAnchoring(levelUpState, 'level-up');
+    assertBoardAnchoring(ripState, 'rip');
     assertMedia(countdownState, REQUIRED_COUNTDOWN_MEDIA, 'countdown');
     assertMedia(levelUpState, REQUIRED_LEVEL_UP_MEDIA, 'level-up');
     assertMedia(ripState, REQUIRED_RIP_MEDIA, 'rip');

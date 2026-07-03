@@ -9,7 +9,7 @@ import {
   type VisualAssetPathResolver,
 } from '../utils/visualAssetResolver';
 
-const POWER_UP_SIZE = 18;
+const DEFAULT_POWER_UP_SIZE = 24;
 const POWER_UP_FALL_SPEED = 1.2;
 const POWER_UP_CORNER_RADIUS = 5;
 const POWER_UP_LABEL_FONT = 'bold 11px Arial';
@@ -45,6 +45,8 @@ interface PaddleBounds {
   height: number;
 }
 
+type PowerUpSizeOrResolver = number | VisualAssetPathResolver;
+
 function drawRoundedRect(
   ctx: CanvasRenderingContext2D,
   x: number,
@@ -67,14 +69,29 @@ function drawRoundedRect(
 
 export class PowerUp {
   private y: number;
+  private resolveAssetPath: VisualAssetPathResolver;
+  public size: number;
 
   constructor(
     private x: number,
     startY: number,
     private type: PowerUpType,
-    private resolveAssetPath: VisualAssetPathResolver = DEFAULT_GAME_VISUAL_ASSET_RESOLVER,
+    sizeOrResolveAssetPath: PowerUpSizeOrResolver = DEFAULT_POWER_UP_SIZE,
+    resolveAssetPath: VisualAssetPathResolver = DEFAULT_GAME_VISUAL_ASSET_RESOLVER,
   ) {
     this.y = startY;
+    this.size =
+      typeof sizeOrResolveAssetPath === 'number'
+        ? sizeOrResolveAssetPath
+        : DEFAULT_POWER_UP_SIZE;
+    this.resolveAssetPath =
+      typeof sizeOrResolveAssetPath === 'function'
+        ? sizeOrResolveAssetPath
+        : resolveAssetPath;
+  }
+
+  setSize(size: number): void {
+    this.size = size;
   }
 
   update(): void {
@@ -82,18 +99,18 @@ export class PowerUp {
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
-    const left = this.x - POWER_UP_SIZE / 2;
-    const top = this.y - POWER_UP_SIZE / 2;
+    const left = this.x - this.size / 2;
+    const top = this.y - this.size / 2;
     const icon = AssetLoader.getOrLoadImage(
       this.resolveAssetPath(POWER_UP_ASSET_ROLES[this.type]),
     );
 
     if (icon) {
-      ctx.drawImage(icon, left, top, POWER_UP_SIZE, POWER_UP_SIZE);
+      ctx.drawImage(icon, left, top, this.size, this.size);
       return;
     }
 
-    drawRoundedRect(ctx, left, top, POWER_UP_SIZE, POWER_UP_CORNER_RADIUS);
+    drawRoundedRect(ctx, left, top, this.size, POWER_UP_CORNER_RADIUS);
     ctx.fillStyle = POWER_UP_COLORS[this.type] || POWER_UP_DEFAULT_COLOR;
     ctx.fill();
     ctx.fillStyle = POWER_UP_TEXT_COLOR;
@@ -104,15 +121,15 @@ export class PowerUp {
   }
 
   intersects(paddle: PaddleBounds): boolean {
-    const left = this.x - POWER_UP_SIZE / 2;
-    const right = this.x + POWER_UP_SIZE / 2;
-    const top = this.y - POWER_UP_SIZE / 2;
-    const bottom = this.y + POWER_UP_SIZE / 2;
+    const left = this.x - this.size / 2;
+    const right = this.x + this.size / 2;
+    const top = this.y - this.size / 2;
+    const bottom = this.y + this.size / 2;
     return right >= paddle.x && left <= paddle.x + paddle.width && bottom >= paddle.y && top <= paddle.y + paddle.height;
   }
 
   isOutOfBounds(canvasHeight: number): boolean {
-    return this.y - POWER_UP_SIZE / 2 > canvasHeight;
+    return this.y - this.size / 2 > canvasHeight;
   }
 
   getType(): PowerUpType {
