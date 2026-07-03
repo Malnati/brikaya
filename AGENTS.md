@@ -37,11 +37,23 @@ Este é um projeto de jogo **BrickBreaker** (Breakout) implementado em TypeScrip
   - Ser registrado via `registerServiceWorker.ts`.
 - O `manifest.webmanifest` deve conter:
   - `display: standalone`, `start_url: '.'`, `theme_color`, `background_color`
-  - Ícones locais (ex: `/icons/icon-192.png`)
+  - Ícones locais em SVG local/offline (ex: `/assets/visual/ui/ui-pwa-app-icon.svg`)
 - É proibido o uso de:
   - Fontes externas
   - Imagens ou scripts por CDN
   - Requisições de rede após o primeiro uso
+
+⸻
+
+## Regra Obrigatória — Imagens SVG-only
+
+- Toda imagem visual runtime do jogo deve usar exclusivamente SVG local/offline.
+- A regra cobre sprites, tijolos, power-ups, VFX, favicon, ícone PWA, HUD, menus e qualquer novo asset em `public/assets/visual/`.
+- Artefatos visuais criados pelo Codex para planejamento do sistema visual devem usar SVG em `docs/assets/theme-planning/`.
+- É proibido adicionar PNG, JPG, JPEG, WebP, GIF, ICO, data URI, raster embutido, URL externa, CDN ou script dentro de SVG runtime.
+- Screenshots, evidências de QA e imagens de issues/PRs podem continuar em PNG quando forem captura técnica, desde que fiquem fora de `public/assets/visual/` e fora de `docs/assets/theme-planning/`.
+- Áudio não faz parte desta regra e segue o catálogo sonoro próprio.
+- `npm run test:svg-assets` é bloqueio obrigatório, e `npm run build` deve falhar quando a regra SVG-only for violada.
 
 ⸻
 
