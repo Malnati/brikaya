@@ -159,7 +159,8 @@ async function clickButtonByPattern(page, pattern) {
   }
 
   const accessibleMatch = candidates.find(
-    ({ labels }) => pattern.test(labels.ariaLabel) || pattern.test(labels.title),
+    ({ labels }) =>
+      pattern.test(labels.ariaLabel) || pattern.test(labels.title),
   );
   const textMatch = candidates.find(({ labels }) => pattern.test(labels.text));
   const match = accessibleMatch || textMatch;
@@ -193,6 +194,25 @@ async function waitForCinematicOverlayToClear(page) {
   await page.waitForSelector(CINEMATIC_OVERLAY_SELECTOR, {
     hidden: true,
     timeout: CINEMATIC_OVERLAY_TIMEOUT_MS,
+  });
+}
+
+async function clearOfflineState(page) {
+  await page.evaluate(async () => {
+    if ("serviceWorker" in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(
+        registrations.map((registration) => registration.unregister()),
+      );
+    }
+    if ("caches" in window) {
+      const cacheNames = await caches.keys();
+      await Promise.all(
+        cacheNames.map((cacheName) => caches.delete(cacheName)),
+      );
+    }
+    window.localStorage.clear();
+    window.sessionStorage.clear();
   });
 }
 
@@ -318,7 +338,10 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
   );
   if (expectMenuOpen) {
     assert(state.menuOpen, `${viewportName}: menu lateral fechado.`);
-    assert(state.appearanceSelector, `${viewportName}: seletor de aparência ausente.`);
+    assert(
+      state.appearanceSelector,
+      `${viewportName}: seletor de aparência ausente.`,
+    );
     for (const label of APPEARANCE_BUTTON_LABELS) {
       assert(
         state.buttons.some((button) => button.text === label),
@@ -447,8 +470,11 @@ async function validateViewport(
     { name: "prefers-color-scheme", value: "light" },
   ]);
   await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
+  await clearOfflineState(page);
+  await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
   await page.evaluate((storageKeys) => {
-    for (const storageKey of storageKeys) window.localStorage.removeItem(storageKey);
+    for (const storageKey of storageKeys)
+      window.localStorage.removeItem(storageKey);
   }, APPEARANCE_STORAGE_KEYS);
   await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
   await page.waitForSelector("canvas", { timeout: 30000 });
@@ -657,7 +683,10 @@ async function run() {
   const browser = await puppeteer.launch({
     headless: "new",
     executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs(["--no-first-run", "--no-default-browser-check"]),
+    args: buildChromeLaunchArgs([
+      "--no-first-run",
+      "--no-default-browser-check",
+    ]),
   });
 
   try {
