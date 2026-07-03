@@ -3,16 +3,16 @@
   "url": "https://brikaya.com/",
   "profileDir": "tmp/browser-profiles/update-sound-feedback",
   "latest": {
-    "buildId": "20260703173350",
+    "buildId": "20260703173848",
     "hasPlaceholder": false
   },
   "activeBeforeWait": {
-    "buildId": "20260703153319",
-    "cacheName": "breakout-cache-20260703153319"
-  },
-  "activeAfterWait": {
     "buildId": "20260703173350",
     "cacheName": "breakout-cache-20260703173350"
+  },
+  "activeAfterWait": {
+    "buildId": "20260703173848",
+    "cacheName": "breakout-cache-20260703173848"
   },
   "seedState": {
     "title": "Brikaya",
@@ -53,15 +53,15 @@
     }
   },
   "cacheNamesBeforeWait": [
-    "breakout-cache-20260703153319",
-    "breakout-asset-cache-v1"
-  ],
-  "cacheNamesAfterWait": [
     "breakout-asset-cache-v1",
     "breakout-cache-20260703173350"
   ],
+  "cacheNamesAfterWait": [
+    "breakout-asset-cache-v1",
+    "breakout-cache-20260703173848"
+  ],
   "staleCacheNamesBefore": [
-    "breakout-cache-20260703153319"
+    "breakout-cache-20260703173350"
   ],
   "staleCacheNamesAfter": [],
   "lazyAssetProbe": [
