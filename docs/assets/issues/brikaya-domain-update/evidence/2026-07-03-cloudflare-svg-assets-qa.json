@@ -1,7 +1,7 @@
 {
   "ok": true,
   "publicUrl": "https://brikaya.com/",
-  "checkedAt": "2026-07-03T14:14:56.901Z",
+  "checkedAt": "2026-07-03T14:23:11.018Z",
   "expectedSvgPaths": [
     "/assets/visual/bricks/spr-brick-basic-blue-high-contrast-normal.svg",
     "/assets/visual/bricks/spr-brick-basic-blue-normal.svg",
@@ -661,7 +661,7 @@
   ],
   "cacheState": {
     "cacheNames": [
-      "breakout-cache-20260703141133",
+      "breakout-cache-20260703142051",
       "breakout-asset-cache-v1"
     ],
     "cachedExpected": [
