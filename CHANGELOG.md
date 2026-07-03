@@ -3,6 +3,14 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.20.1] - 2026-07-03
+### Adicionado
+- QA publicado `test:cloudflare-offline-pwa` para validar recarregamento do jogo sem internet após o primeiro carregamento.
+- Documento de qualidade para prova offline da PWA em Cloudflare Pages.
+
+### Testado
+- `npm run test:cloudflare-offline-pwa`
+
 ## [1.20.0] - 2026-07-03
 ### Adicionado
 - Sistema de aparência com seleção de tema visual, conjunto de imagens SVG e fonte no menu.

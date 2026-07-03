@@ -1,0 +1,501 @@
+{
+  "publicUrl": "https://ccc6ed91.malnati-brickbreaker.pages.dev",
+  "screenshotPath": "tmp/screenshots/cloudflare-mobile-qa.png",
+  "menuScreenshotPath": "tmp/screenshots/cloudflare-mobile-menu.png",
+  "layoutState": {
+    "title": "Breakout",
+    "heading": "Breakout",
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393,
+      "scrollHeight": 852
+    },
+    "buttons": [
+      {
+        "text": "×",
+        "ariaLabel": "Sem som",
+        "title": "Sem som",
+        "rect": {
+          "x": 13,
+          "y": 13,
+          "width": 44,
+          "height": 44,
+          "right": 57,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "↻",
+        "ariaLabel": "Reiniciar",
+        "title": "Reiniciar",
+        "rect": {
+          "x": 61,
+          "y": 13,
+          "width": 44,
+          "height": 44,
+          "right": 105,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "Menu",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 312,
+          "y": 13,
+          "width": 68,
+          "height": 44,
+          "right": 380,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      }
+    ],
+    "buildVersion": null,
+    "canvas": {
+      "x": 13.015625,
+      "y": 111,
+      "width": 366.96875,
+      "height": 245.328125,
+      "right": 379.984375,
+      "bottom": 356.328125
+    },
+    "dashboardLayout": {
+      "x": 13,
+      "y": 111,
+      "width": 367,
+      "height": 325.328125,
+      "right": 380,
+      "bottom": 436.328125
+    },
+    "scoreHud": {
+      "x": 49.828125,
+      "y": 65,
+      "width": 293.328125,
+      "height": 38,
+      "right": 343.15625,
+      "bottom": 103
+    },
+    "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+    "bottomSlot": {
+      "x": 13,
+      "y": 380.328125,
+      "width": 367,
+      "height": 56,
+      "right": 380,
+      "bottom": 436.328125
+    },
+    "scoreValue": 0,
+    "hasHorizontalOverflow": false,
+    "bodyOverflow": "hidden auto"
+  },
+  "menuState": {
+    "text": "Menu×Versão v85AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelFerramentas≡Logs◈Colisões0Zerar pontuação",
+    "drawer": {
+      "x": 73,
+      "y": 0,
+      "width": 320,
+      "height": 852,
+      "right": 393,
+      "bottom": 852
+    },
+    "hasHorizontalOverflow": false
+  },
+  "logsState": {
+    "title": "Breakout",
+    "heading": "Breakout",
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393,
+      "scrollHeight": 1335
+    },
+    "buttons": [
+      {
+        "text": "×",
+        "ariaLabel": "Sem som",
+        "title": "Sem som",
+        "rect": {
+          "x": 13,
+          "y": -470,
+          "width": 44,
+          "height": 44,
+          "right": 57,
+          "bottom": -426
+        },
+        "visibleInViewport": false,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "↻",
+        "ariaLabel": "Reiniciar",
+        "title": "Reiniciar",
+        "rect": {
+          "x": 61,
+          "y": -470,
+          "width": 44,
+          "height": 44,
+          "right": 105,
+          "bottom": -426
+        },
+        "visibleInViewport": false,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "Menu",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 312,
+          "y": -470,
+          "width": 68,
+          "height": 44,
+          "right": 380,
+          "bottom": -426
+        },
+        "visibleInViewport": false,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "✕ Fechar",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 20,
+          "y": -454.671875,
+          "width": 92.09375,
+          "height": 44,
+          "right": 112.09375,
+          "bottom": -410.671875
+        },
+        "visibleInViewport": false,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "🔄 Atualizar",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 20,
+          "y": -246.859375,
+          "width": 171.5,
+          "height": 44,
+          "right": 191.5,
+          "bottom": -202.859375
+        },
+        "visibleInViewport": false,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "📤 Exportar",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 201.5,
+          "y": -246.859375,
+          "width": 171.5,
+          "height": 44,
+          "right": 373,
+          "bottom": -202.859375
+        },
+        "visibleInViewport": false,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "🗑️ Limpar",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 20,
+          "y": -192.859375,
+          "width": 353,
+          "height": 44,
+          "right": 373,
+          "bottom": -148.859375
+        },
+        "visibleInViewport": false,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      }
+    ],
+    "buildVersion": null,
+    "canvas": {
+      "x": 13.015625,
+      "y": -372,
+      "width": 366.96875,
+      "height": 245.328125,
+      "right": 379.984375,
+      "bottom": -126.671875
+    },
+    "dashboardLayout": {
+      "x": 13,
+      "y": -372,
+      "width": 367,
+      "height": 325.328125,
+      "right": 380,
+      "bottom": -46.671875
+    },
+    "scoreHud": {
+      "x": 46.65625,
+      "y": -418,
+      "width": 299.6875,
+      "height": 38,
+      "right": 346.34375,
+      "bottom": -380
+    },
+    "scoreHudText": "Fase 1|Score 10|Total 0|Recorde 0",
+    "bottomSlot": {
+      "x": 13,
+      "y": -102.671875,
+      "width": 367,
+      "height": 56,
+      "right": 380,
+      "bottom": -46.671875
+    },
+    "scoreValue": 10,
+    "hasHorizontalOverflow": false,
+    "bodyOverflow": "hidden auto"
+  },
+  "statsState": {
+    "title": "Breakout",
+    "heading": "Breakout",
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393,
+      "scrollHeight": 1301
+    },
+    "buttons": [
+      {
+        "text": "♪",
+        "ariaLabel": "Som",
+        "title": "Som",
+        "rect": {
+          "x": 13,
+          "y": 13,
+          "width": 44,
+          "height": 44,
+          "right": 57,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "↻",
+        "ariaLabel": "Reiniciar",
+        "title": "Reiniciar",
+        "rect": {
+          "x": 61,
+          "y": 13,
+          "width": 44,
+          "height": 44,
+          "right": 105,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "Menu",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 312,
+          "y": 13,
+          "width": 68,
+          "height": 44,
+          "right": 380,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "✕",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 315,
+          "y": 93.5,
+          "width": 44,
+          "height": 44,
+          "right": 359,
+          "bottom": 137.5
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "Mostrar Colisões Recentes",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 34,
+          "y": 648.5,
+          "width": 274.828125,
+          "height": 44,
+          "right": 308.828125,
+          "bottom": 692.5
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "Limpar Todas as Colisões",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 34,
+          "y": 702.5,
+          "width": 265.1875,
+          "height": 44,
+          "right": 299.1875,
+          "bottom": 746.5
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "✕ Fechar",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 20,
+          "y": -5.671875,
+          "width": 92.09375,
+          "height": 44,
+          "right": 112.09375,
+          "bottom": 38.328125
+        },
+        "visibleInViewport": false,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "🔄 Atualizar",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 20,
+          "y": 202.140625,
+          "width": 171.5,
+          "height": 44,
+          "right": 191.5,
+          "bottom": 246.140625
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "📤 Exportar",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 201.5,
+          "y": 202.140625,
+          "width": 171.5,
+          "height": 44,
+          "right": 373,
+          "bottom": 246.140625
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "🗑️ Limpar",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 20,
+          "y": 256.140625,
+          "width": 353,
+          "height": 44,
+          "right": 373,
+          "bottom": 300.140625
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      }
+    ],
+    "buildVersion": null,
+    "canvas": {
+      "x": 13.015625,
+      "y": 111,
+      "width": 366.96875,
+      "height": 245.328125,
+      "right": 379.984375,
+      "bottom": 356.328125
+    },
+    "dashboardLayout": {
+      "x": 13,
+      "y": 111,
+      "width": 367,
+      "height": 325.328125,
+      "right": 380,
+      "bottom": 436.328125
+    },
+    "scoreHud": {
+      "x": 46.65625,
+      "y": 65,
+      "width": 299.6875,
+      "height": 38,
+      "right": 346.34375,
+      "bottom": 103
+    },
+    "scoreHudText": "Fase 1|Score 10|Total 0|Recorde 0",
+    "bottomSlot": {
+      "x": 13,
+      "y": 380.328125,
+      "width": 367,
+      "height": 56,
+      "right": 380,
+      "bottom": 436.328125
+    },
+    "scoreValue": 10,
+    "hasHorizontalOverflow": false,
+    "bodyOverflow": "hidden auto"
+  },
+  "indexedDbSummary": {
+    "databaseNames": [
+      "BrickBreakerCollisions",
+      "BrickBreakerGameLog",
+      "SystemDebugLog",
+      "breakout"
+    ],
+    "eventTypes": [
+      "game_start",
+      "brick_destroyed",
+      "score_update"
+    ],
+    "hasRequiredDatabases": true,
+    "hasRequiredEvents": true,
+    "eventCount": 3
+  },
+  "consoleProblems": []
+}
