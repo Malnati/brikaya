@@ -1,35 +1,37 @@
 // scripts/validate-svg-assets.mjs
 import { existsSync, readFileSync } from 'node:fs';
 
-const EXPECTED_FAVICON_RUNTIME_PATHS = ['/favicon.svg'];
+const EXPECTED_FAVICON_RUNTIME_PATHS = ['/assets/visual/ui/ui-app-browser-favicon.svg'];
 const EXPECTED_CORE_RUNTIME_PATHS = [
-  '/assets/ball.svg',
-  '/assets/paddle.svg',
-  '/assets/bricks/brick-red.svg',
-  '/assets/bricks/brick-blue.svg',
-  '/assets/bricks/brick-green.svg',
-  '/assets/bricks/brick-yellow.svg',
-  '/assets/bricks/brick-purple.svg',
+  '/assets/visual/sprites/spr-ball-player-default.svg',
+  '/assets/visual/sprites/spr-paddle-player-default.svg',
+  '/assets/visual/bricks/spr-brick-basic-red-normal.svg',
+  '/assets/visual/bricks/spr-brick-basic-blue-normal.svg',
+  '/assets/visual/bricks/spr-brick-basic-green-normal.svg',
+  '/assets/visual/bricks/spr-brick-basic-yellow-normal.svg',
+  '/assets/visual/bricks/spr-brick-basic-purple-normal.svg',
 ];
 const EXPECTED_CINEMATIC_RUNTIME_PATHS = [
-  '/assets/cinematics/countdown-circle.svg',
-  '/assets/cinematics/countdown-spark.svg',
-  '/assets/cinematics/level-up-star.svg',
-  '/assets/cinematics/level-up-twirl.svg',
-  '/assets/cinematics/rip-smoke.svg',
+  '/assets/visual/vfx/vfx-countdown-circle-overlay.svg',
+  '/assets/visual/vfx/vfx-countdown-spark-overlay.svg',
+  '/assets/visual/vfx/vfx-level-up-star-overlay.svg',
+  '/assets/visual/vfx/vfx-level-up-twirl-overlay.svg',
+  '/assets/visual/vfx/vfx-game-over-rip-smoke.svg',
 ];
 const EXPECTED_POWER_UP_RUNTIME_PATHS = [
-  '/assets/powerups/multiball.svg',
-  '/assets/powerups/wide-paddle.svg',
-  '/assets/powerups/slow-ball.svg',
-  '/assets/powerups/laser-fan.svg',
+  '/assets/visual/powerups/spr-powerup-multiball-orb.svg',
+  '/assets/visual/powerups/spr-powerup-wide-paddle.svg',
+  '/assets/visual/powerups/spr-powerup-slow-ball.svg',
+  '/assets/visual/powerups/spr-powerup-laser-fan.svg',
 ];
-const EXPECTED_ICON_RUNTIME_PATHS = ['/icons/icon.svg'];
+const EXPECTED_ICON_RUNTIME_PATHS = ['/assets/visual/ui/ui-pwa-app-icon.svg'];
 const EXPECTED_REFERENCES = {
   'index.html': EXPECTED_FAVICON_RUNTIME_PATHS,
-  'src/constants/assets.ts': EXPECTED_CORE_RUNTIME_PATHS,
-  'src/constants/cinematicMedia.ts': EXPECTED_CINEMATIC_RUNTIME_PATHS,
-  'src/constants/powerUps.ts': EXPECTED_POWER_UP_RUNTIME_PATHS,
+  'src/constants/visualAssets.ts': [
+    ...EXPECTED_CORE_RUNTIME_PATHS,
+    ...EXPECTED_CINEMATIC_RUNTIME_PATHS,
+    ...EXPECTED_POWER_UP_RUNTIME_PATHS,
+  ],
   'public/sw.js': [
     ...EXPECTED_FAVICON_RUNTIME_PATHS,
     ...EXPECTED_ICON_RUNTIME_PATHS,
@@ -50,7 +52,7 @@ const DISALLOWED_SVG_PATTERNS = [
   { pattern: /data:/i, label: 'data uri' },
   { pattern: /@font-face/i, label: 'external font hook' },
 ];
-const DISALLOWED_RUNTIME_RASTER_PATTERN = /\/(?:assets|icons)\/(?!issues\/)[^"'`\s)]*\.(?:png|jpe?g|webp|gif)|\/favicon\.ico/i;
+const DISALLOWED_RUNTIME_RASTER_PATTERN = /\/assets\/(?!visual\/vfx\/)[^"'`\s)]*\.(?:png|jpe?g|webp|gif)|\/favicon\.ico/i;
 
 function fail(message) {
   throw new Error(message);

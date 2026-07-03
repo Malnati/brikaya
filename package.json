@@ -24,6 +24,7 @@
     "test:cinematic-media-assets": "node scripts/validate-cinematic-media-assets.mjs",
     "test:svg-assets": "node scripts/validate-svg-assets.mjs",
     "test:audio-assets": "node scripts/validate-audio-assets.mjs",
+    "test:asset-naming": "jest src/constants/assetNaming.test.ts --runInBand",
     "test:cloudflare-audio": "node tests/e2e/cloudflare-audio-qa.js",
     "test:cloudflare-phase10-stability": "node tests/e2e/cloudflare-phase10-stability-qa.js"
   },

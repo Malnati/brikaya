@@ -23,17 +23,17 @@ const LEVEL_UP_SELECTOR = '[data-cinematic-type="levelUp"]';
 const RIP_SELECTOR = '[data-cinematic-type="rip"]';
 const SINGLE_BRICK_QA_SCENARIO = 'single-brick-phase-clear';
 const CINEMATIC_RIP_QA_SCENARIO = 'cinematic-rip';
-const REQUIRED_LEVEL_AUDIO_IDS = ['sfx_score_tick', 'sfx_level_toast_in'];
-const REQUIRED_RIP_AUDIO_IDS = ['sfx_game_over'];
+const REQUIRED_LEVEL_AUDIO_IDS = ['sfx-score-tick', 'sfx-level-toast-in'];
+const REQUIRED_RIP_AUDIO_IDS = ['sfx-game-over'];
 const REQUIRED_COUNTDOWN_MEDIA = ['countdown-circle', 'countdown-spark'];
 const REQUIRED_LEVEL_UP_MEDIA = ['level-up-twirl', 'level-up-star'];
 const REQUIRED_RIP_MEDIA = ['rip-smoke'];
 const REQUIRED_CINEMATIC_MEDIA_PATHS = [
-  '/assets/cinematics/countdown-circle.svg',
-  '/assets/cinematics/countdown-spark.svg',
-  '/assets/cinematics/level-up-star.svg',
-  '/assets/cinematics/level-up-twirl.svg',
-  '/assets/cinematics/rip-smoke.svg',
+  '/assets/visual/vfx/vfx-countdown-circle-overlay.svg',
+  '/assets/visual/vfx/vfx-countdown-spark-overlay.svg',
+  '/assets/visual/vfx/vfx-level-up-star-overlay.svg',
+  '/assets/visual/vfx/vfx-level-up-twirl-overlay.svg',
+  '/assets/visual/vfx/vfx-game-over-rip-smoke.svg',
 ];
 const MEDIA_EXTENSION_PATTERN = /\.(gif|jpe?g|mp3|mp4|ogg|png|webm|webp|wav)(\?|$)/i;
 const PAGES_DEV_HOST_SUFFIX = '.pages.dev';
@@ -120,7 +120,7 @@ function assertMedia(snapshot, requiredIds, label) {
     assert(mediaIds.includes(requiredId), `${label}: mídia ausente ${requiredId}.`);
   }
   for (const item of snapshot.media) {
-    assert(item.src.startsWith('/assets/cinematics/'), `${label}: mídia fora de /assets/cinematics/: ${item.src}`);
+    assert(item.src.startsWith('/assets/visual/vfx/'), `${label}: mídia fora de /assets/visual/vfx/: ${item.src}`);
     assert(item.ariaHidden === 'true', `${label}: mídia decorativa sem aria-hidden=true: ${item.id}`);
     assert(item.alt === '', `${label}: mídia decorativa sem alt vazio: ${item.id}`);
   }

@@ -1,36 +1,44 @@
 // src/constants/cinematicMedia.ts
+import {
+  vfxCountdownCircleOverlay,
+  vfxCountdownSparkOverlay,
+  vfxGameOverRipSmoke,
+  vfxLevelUpStarOverlay,
+  vfxLevelUpTwirlOverlay,
+} from './visualAssets';
+
 export const CINEMATIC_MEDIA_PATHS = {
-  COUNTDOWN_CIRCLE: "/assets/cinematics/countdown-circle.svg",
-  COUNTDOWN_SPARK: "/assets/cinematics/countdown-spark.svg",
-  LEVEL_UP_TWIRL: "/assets/cinematics/level-up-twirl.svg",
-  LEVEL_UP_STAR: "/assets/cinematics/level-up-star.svg",
-  RIP_SMOKE: "/assets/cinematics/rip-smoke.svg",
+  COUNTDOWN_CIRCLE: vfxCountdownCircleOverlay,
+  COUNTDOWN_SPARK: vfxCountdownSparkOverlay,
+  LEVEL_UP_TWIRL: vfxLevelUpTwirlOverlay,
+  LEVEL_UP_STAR: vfxLevelUpStarOverlay,
+  RIP_SMOKE: vfxGameOverRipSmoke,
 } as const;
 
 export const CINEMATIC_MEDIA_LAYERS = {
   countdown: [
     {
-      id: "countdown-circle",
+      id: 'countdown-circle',
       src: CINEMATIC_MEDIA_PATHS.COUNTDOWN_CIRCLE,
     },
     {
-      id: "countdown-spark",
+      id: 'countdown-spark',
       src: CINEMATIC_MEDIA_PATHS.COUNTDOWN_SPARK,
     },
   ],
   levelUp: [
     {
-      id: "level-up-twirl",
+      id: 'level-up-twirl',
       src: CINEMATIC_MEDIA_PATHS.LEVEL_UP_TWIRL,
     },
     {
-      id: "level-up-star",
+      id: 'level-up-star',
       src: CINEMATIC_MEDIA_PATHS.LEVEL_UP_STAR,
     },
   ],
   rip: [
     {
-      id: "rip-smoke",
+      id: 'rip-smoke',
       src: CINEMATIC_MEDIA_PATHS.RIP_SMOKE,
     },
   ],

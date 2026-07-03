@@ -1,0 +1,147 @@
+{
+  "ok": true,
+  "publicUrl": "http://127.0.0.1:4173/",
+  "checkedAt": "2026-07-03T04:55:59.184Z",
+  "expectedSvgPaths": [
+    "/assets/visual/ui/ui-app-browser-favicon.svg",
+    "/assets/visual/sprites/spr-ball-player-default.svg",
+    "/assets/visual/sprites/spr-paddle-player-default.svg",
+    "/assets/visual/bricks/spr-brick-basic-red-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-blue-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-green-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-yellow-normal.svg",
+    "/assets/visual/bricks/spr-brick-basic-purple-normal.svg",
+    "/assets/visual/vfx/vfx-countdown-circle-overlay.svg",
+    "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
+    "/assets/visual/vfx/vfx-level-up-star-overlay.svg",
+    "/assets/visual/vfx/vfx-level-up-twirl-overlay.svg",
+    "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+    "/assets/visual/powerups/spr-powerup-multiball-orb.svg",
+    "/assets/visual/powerups/spr-powerup-wide-paddle.svg",
+    "/assets/visual/powerups/spr-powerup-slow-ball.svg",
+    "/assets/visual/powerups/spr-powerup-laser-fan.svg",
+    "/assets/visual/ui/ui-pwa-app-icon.svg"
+  ],
+  "responseStatuses": [
+    {
+      "assetPath": "/assets/visual/ui/ui-app-browser-favicon.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "assetPath": "/assets/visual/sprites/spr-ball-player-default.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "assetPath": "/assets/visual/sprites/spr-paddle-player-default.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-red-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-blue-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-green-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-yellow-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "assetPath": "/assets/visual/bricks/spr-brick-basic-purple-normal.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-countdown-circle-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-level-up-star-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-level-up-twirl-overlay.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "assetPath": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-multiball-orb.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-wide-paddle.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-slow-ball.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "assetPath": "/assets/visual/powerups/spr-powerup-laser-fan.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "assetPath": "/assets/visual/ui/ui-pwa-app-icon.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    }
+  ],
+  "cacheState": {
+    "cacheNames": [
+      "breakout-cache-20260703045328"
+    ],
+    "cachedExpected": [
+      "/assets/visual/ui/ui-app-browser-favicon.svg",
+      "/assets/visual/sprites/spr-ball-player-default.svg",
+      "/assets/visual/sprites/spr-paddle-player-default.svg",
+      "/assets/visual/bricks/spr-brick-basic-red-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-blue-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-green-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-yellow-normal.svg",
+      "/assets/visual/bricks/spr-brick-basic-purple-normal.svg",
+      "/assets/visual/vfx/vfx-countdown-circle-overlay.svg",
+      "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
+      "/assets/visual/vfx/vfx-level-up-star-overlay.svg",
+      "/assets/visual/vfx/vfx-level-up-twirl-overlay.svg",
+      "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+      "/assets/visual/powerups/spr-powerup-multiball-orb.svg",
+      "/assets/visual/powerups/spr-powerup-wide-paddle.svg",
+      "/assets/visual/powerups/spr-powerup-slow-ball.svg",
+      "/assets/visual/powerups/spr-powerup-laser-fan.svg",
+      "/assets/visual/ui/ui-pwa-app-icon.svg"
+    ],
+    "missingExpected": []
+  },
+  "externalRequests": [],
+  "runtimeRasterRequests": [],
+  "failedRequests": [],
+  "screenshotPath": "docs/assets/issues/retro-asset-standardization/evidence/20260703-local-svg-assets-qa.png"
+}
