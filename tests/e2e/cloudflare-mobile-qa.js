@@ -19,6 +19,7 @@ const CHROME_EXECUTABLE_PATH =
 const MIN_TOUCH_TARGET_SIZE = 44;
 const MAX_INITIAL_SCORE_AFTER_OBSERVATION = 260;
 const OBSERVATION_DURATION_MS = 1500;
+const MENU_PAUSE_OBSERVATION_MS = 1400;
 const REQUIRED_EVENT_TYPES = ["game_start"];
 const REQUIRED_DATABASE_NAMES = ["BrickBreakerGameLog"];
 const MENU_BUTTON_NAME = /menu/i;
@@ -33,6 +34,8 @@ const RESPONSIVE_VIEWPORT_MATRIX = JSON.parse(
 );
 const VIEWPORTS = RESPONSIVE_VIEWPORT_MATRIX.viewports;
 const MOBILE_DEFAULT_VIEWPORT = viewportByScreenshotRole("mobile-default");
+const CANVAS_IMAGE_MIME_TYPE = "image/png";
+const SCORE_VALUE_PATTERN = /Score\s+(\d+)/;
 
 function getPublicUrl() {
   return process.env.BRICKBREAKER_PUBLIC_URL || DEFAULT_PUBLIC_URL;
@@ -174,7 +177,8 @@ async function clearOfflineState(page) {
 }
 
 async function collectLayoutState(page) {
-  return page.evaluate((minTouchTargetSize) => {
+  return page.evaluate((minTouchTargetSize, scoreValuePatternSource) => {
+    const scoreValuePattern = new RegExp(scoreValuePatternSource);
     const viewport = {
       width: window.innerWidth,
       height: window.innerHeight,
@@ -224,7 +228,7 @@ async function collectLayoutState(page) {
     const bottomSlotRect = document
       .querySelector(".ad-slot--bottom")
       ?.getBoundingClientRect();
-    const scoreValue = Number(scoreHudText.match(/Score\s+(\d+)/)?.[1] || 0);
+    const scoreValue = Number(scoreHudText.match(scoreValuePattern)?.[1] || 0);
 
     return {
       title: document.title,
@@ -293,7 +297,7 @@ async function collectLayoutState(page) {
         document.documentElement.scrollWidth > window.innerWidth,
       bodyOverflow: getComputedStyle(document.body).overflow,
     };
-  }, MIN_TOUCH_TARGET_SIZE);
+  }, MIN_TOUCH_TARGET_SIZE, SCORE_VALUE_PATTERN.source);
 }
 
 async function collectDrawerState(page) {
@@ -317,6 +321,57 @@ async function collectDrawerState(page) {
         document.documentElement.scrollWidth > window.innerWidth,
     };
   });
+}
+
+async function collectMenuPauseState(page) {
+  const before = await page.evaluate(
+    (canvasImageMimeType, scoreValuePatternSource) => {
+      const scoreValuePattern = new RegExp(scoreValuePatternSource);
+      const scoreHudText =
+        document.querySelector(".score-hud")?.textContent || "";
+      const canvas = document.querySelector("canvas");
+
+      return {
+        scoreHudText,
+        scoreValue: Number(scoreHudText.match(scoreValuePattern)?.[1] || 0),
+        canvasFrame: canvas?.toDataURL(canvasImageMimeType) || "",
+      };
+    },
+    CANVAS_IMAGE_MIME_TYPE,
+    SCORE_VALUE_PATTERN.source,
+  );
+
+  await new Promise((resolve) =>
+    setTimeout(resolve, MENU_PAUSE_OBSERVATION_MS),
+  );
+
+  const after = await page.evaluate(
+    (canvasImageMimeType, scoreValuePatternSource) => {
+      const scoreValuePattern = new RegExp(scoreValuePatternSource);
+      const scoreHudText =
+        document.querySelector(".score-hud")?.textContent || "";
+      const canvas = document.querySelector("canvas");
+
+      return {
+        scoreHudText,
+        scoreValue: Number(scoreHudText.match(scoreValuePattern)?.[1] || 0),
+        canvasFrame: canvas?.toDataURL(canvasImageMimeType) || "",
+      };
+    },
+    CANVAS_IMAGE_MIME_TYPE,
+    SCORE_VALUE_PATTERN.source,
+  );
+
+  return {
+    beforeScoreHudText: before.scoreHudText,
+    afterScoreHudText: after.scoreHudText,
+    beforeScoreValue: before.scoreValue,
+    afterScoreValue: after.scoreValue,
+    beforeFrameLength: before.canvasFrame.length,
+    afterFrameLength: after.canvasFrame.length,
+    scoreStable: before.scoreValue === after.scoreValue,
+    canvasFrameStable: before.canvasFrame === after.canvasFrame,
+  };
 }
 
 async function run() {
@@ -477,6 +532,7 @@ async function run() {
     assert(openedMenuForScreenshot, "Menu lateral não abriu.");
     await page.waitForSelector(".settings-drawer", { timeout: 10000 });
     const menuState = await collectDrawerState(page);
+    const menuPauseState = await collectMenuPauseState(page);
     await page.screenshot({ path: menuScreenshotPath, fullPage: true });
     assert(menuState.drawer, "Drawer do menu não encontrado.");
     assert(
@@ -520,6 +576,15 @@ async function run() {
     assert(
       menuState.text.includes("Zerar pontuação"),
       "Menu lateral sem opção Zerar pontuação.",
+    );
+    assert(
+      menuPauseState.scoreStable,
+      `Score mudou com menu aberto: ${menuPauseState.beforeScoreHudText} ` +
+        `-> ${menuPauseState.afterScoreHudText}.`,
+    );
+    assert(
+      menuPauseState.canvasFrameStable,
+      "Canvas continuou renderizando com menu aberto.",
     );
     const openedLogs = await clickButtonByPattern(page, LOGS_BUTTON_NAME);
     assert(openedLogs, "Botão de logs não encontrado.");
@@ -593,6 +658,7 @@ async function run() {
       menuScreenshotPath,
       layoutState,
       menuState,
+      menuPauseState,
       logsState,
       statsState,
       indexedDbSummary,

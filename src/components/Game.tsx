@@ -30,6 +30,7 @@ interface GameProps {
   boardControls?: ReactNode;
   startBlocked?: boolean;
   imageSetId?: ImageSetId;
+  paused?: boolean;
 }
 
 const RESIZE_EVENT_NAME = "resize";
@@ -93,6 +94,7 @@ export default function Game({
   boardControls,
   startBlocked = false,
   imageSetId = IMAGE_SET_RETRO_DEFAULT,
+  paused = false,
 }: GameProps) {
   const surfaceRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -188,6 +190,7 @@ export default function Game({
     onLevelChange,
     startBlocked,
     imageSetId,
+    paused,
   );
   useColorDebug(canvasRef);
 

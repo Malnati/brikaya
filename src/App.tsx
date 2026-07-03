@@ -703,6 +703,7 @@ export default function App() {
                 audioSink={audioSink}
                 startBlocked={isInitialCountdownActive}
                 imageSetId={selection.imageSetId}
+                paused={isMenuOpen}
               />
             </div>
             <AdSlotPlaceholder variant="bottom" />

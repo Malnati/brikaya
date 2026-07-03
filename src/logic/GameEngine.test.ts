@@ -313,6 +313,29 @@ describe("GameEngine", () => {
     expect(cancelAnimationFrameSpy).toHaveBeenCalled();
   });
 
+  it("pausa o loop sem avançar física e retoma animação", async () => {
+    const requestAnimationFrameSpy = jest
+      .spyOn(window, "requestAnimationFrame")
+      .mockReturnValue(0);
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+
+    expect(typeof (engine as any).setPaused).toBe("function");
+
+    (engine as any).assetsLoaded = true;
+    (engine as any).isStopped = false;
+    (engine as any).setPaused(true);
+
+    await (engine as any).loop();
+
+    expect(mockContext.clearRect).not.toHaveBeenCalled();
+    expect(mockBallInstances[0].update).not.toHaveBeenCalled();
+
+    (engine as any).setPaused(false);
+
+    expect(requestAnimationFrameSpy).toHaveBeenCalledWith(expect.any(Function));
+    requestAnimationFrameSpy.mockRestore();
+  });
+
   it("instrui reinício pelo ícone da tela principal no fim de jogo", async () => {
     const requestAnimationFrameSpy = jest
       .spyOn(window, "requestAnimationFrame")

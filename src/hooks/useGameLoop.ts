@@ -34,7 +34,8 @@ export function useGameLoop(
   audioSink?: GameAudioSink,
   onLevelChange?: (level: number) => void,
   startBlocked = false,
-  imageSetId: ImageSetId = IMAGE_SET_RETRO_DEFAULT
+  imageSetId: ImageSetId = IMAGE_SET_RETRO_DEFAULT,
+  paused = false
 ) {
   const engineRef = useRef<GameEngine | null>(null);
   const callbacksRef = useRef<GameLoopCallbacks>({ onScoreUpdate, onGameWon, onGameOver, onLevelTransition, onLevelChange });
@@ -89,6 +90,10 @@ export function useGameLoop(
   useEffect(() => {
     engineRef.current?.setImageSet(imageSetId);
   }, [imageSetId]);
+
+  useEffect(() => {
+    engineRef.current?.setPaused(paused);
+  }, [paused, startBlocked]);
 
   useEffect(() => {
     if (!canvasSize) return;

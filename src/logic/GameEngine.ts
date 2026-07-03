@@ -131,6 +131,7 @@ export class GameEngine {
   private scaleX = 1;
   private scaleY = 1;
   private isStopped = true;
+  private isPaused = false;
   private isTouching = false;
   private isLevelTransitioning = false;
   private levelTransitionTimer: ReturnType<typeof setTimeout> | null = null;
@@ -1224,6 +1225,7 @@ export class GameEngine {
 
   public stop() {
     this.isStopped = true;
+    this.isPaused = false;
     this.isTouching = false;
     this.clearPowerUpEffects();
     this.clearLaserFanEffect();
@@ -1235,8 +1237,23 @@ export class GameEngine {
     this.removeListeners();
   }
 
+  public setPaused(paused: boolean) {
+    const wasPaused = this.isPaused;
+    this.isPaused = paused;
+
+    if (paused) {
+      this.isTouching = false;
+      cancelAnimationFrame(this.animationFrame);
+      return;
+    }
+
+    if (wasPaused && !this.isStopped) {
+      this.animationFrame = requestAnimationFrame(this.loop);
+    }
+  }
+
   private loop = async () => {
-    if (this.isStopped) return;
+    if (this.isStopped || this.isPaused) return;
     this.ctx.clearRect(0, 0, this.canvasSize.width, this.canvasSize.height);
 
     if (!this.assetsLoaded) {
@@ -1364,7 +1381,7 @@ export class GameEngine {
       }
     }
 
-    if (!this.isStopped) {
+    if (!this.isStopped && !this.isPaused) {
       this.animationFrame = requestAnimationFrame(this.loop);
     }
   };

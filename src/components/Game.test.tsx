@@ -59,6 +59,31 @@ describe("Game", () => {
       undefined,
       true,
       "retro-default",
+      false,
+    );
+  });
+
+  it("propaga pausa para o loop do jogo", () => {
+    render(
+      <Game
+        onScoreUpdate={jest.fn()}
+        {...({ paused: true } as { paused: boolean })}
+      />,
+    );
+
+    expect(useGameLoop).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.any(Function),
+      undefined,
+      undefined,
+      expect.any(Object),
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      false,
+      "retro-default",
+      true,
     );
   });
 });

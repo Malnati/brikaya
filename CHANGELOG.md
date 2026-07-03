@@ -3,6 +3,25 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.28.3] - 2026-07-03
+### Corrigido
+- Abrir o menu lateral agora pausa o jogo sem recriar a partida; ao fechar o menu, o loop do jogo retoma do mesmo estado.
+
+### Adicionado
+- Cobertura unitária em `App`, `Game`, `useGameLoop` e `GameEngine` para garantir a propagação da pausa.
+- QA publicado mobile passa a verificar que score e canvas ficam estáveis enquanto o menu lateral está aberto.
+
+### Reproduzido
+- `npm run test:cloudflare-mobile` contra `https://brikaya.com/` falhou antes da publicação da correção com `Score mudou com menu aberto`.
+
+### Testado
+- `npm test -- src/App.test.tsx src/components/Game.test.tsx src/logic/GameEngine.test.ts --runInBand`
+- `npm test -- --runInBand`
+- `npm run build`
+- `make cloudflare-env-check`
+- `make cloudflare-deploy`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`
+
 ## [1.28.2] - 2026-07-03
 ### Adicionado
 - Política Codex para resolver conflitos e fazer PR+merge automático em entregas documentação-only.

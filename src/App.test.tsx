@@ -14,6 +14,7 @@ import {
 interface MockGameProps {
   boardControls?: React.ReactNode;
   startBlocked?: boolean;
+  paused?: boolean;
   onLevelTransition?: (payload: LevelTransitionPayload) => void;
   onGameOver?: () => Promise<void> | void;
   imageSetId?: string;
@@ -34,6 +35,9 @@ const COUNTDOWN_TOTAL_MS = 1800;
 const LEVEL_UP_OVERLAY_VISIBLE_MS = 1200;
 const RIP_VISIBLE_MS = 1800;
 const UPDATE_TEST_PROGRESS = 64;
+const DATA_PAUSED_ATTRIBUTE = "data-paused";
+const PAUSED_TRUE_ATTRIBUTE_VALUE = "true";
+const PAUSED_FALSE_ATTRIBUTE_VALUE = "false";
 
 let mockLastGameProps: MockGameProps | null = null;
 
@@ -42,7 +46,13 @@ jest.mock("./components/Game", () => ({
   default: function MockGame(props: MockGameProps) {
     mockLastGameProps = props;
     return (
-      <div data-testid="mock-game" data-start-blocked={props.startBlocked}>
+      <div
+        data-testid="mock-game"
+        data-start-blocked={props.startBlocked}
+        data-paused={
+          props.paused ? PAUSED_TRUE_ATTRIBUTE_VALUE : PAUSED_FALSE_ATTRIBUTE_VALUE
+        }
+      >
         <canvas aria-label="Tabuleiro do jogo" />
         {props.boardControls}
       </div>
@@ -219,6 +229,35 @@ describe("App theme selector", () => {
     expect(
       screen.getByRole("button", { name: /zerar pontuação/i }),
     ).toBeInTheDocument();
+  });
+
+  it("pausa a partida enquanto o menu lateral está aberto", async () => {
+    mockSystemTheme(true);
+    const user = userEvent.setup();
+
+    await renderApp();
+
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      DATA_PAUSED_ATTRIBUTE,
+      PAUSED_FALSE_ATTRIBUTE_VALUE,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Menu" }));
+
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      DATA_PAUSED_ATTRIBUTE,
+      PAUSED_TRUE_ATTRIBUTE_VALUE,
+    );
+
+    const drawer = screen.getByRole("complementary", { name: "Menu do jogo" });
+    await user.click(
+      within(drawer).getByRole("button", { name: "Fechar menu" }),
+    );
+
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      DATA_PAUSED_ATTRIBUTE,
+      PAUSED_FALSE_ATTRIBUTE_VALUE,
+    );
   });
 
 
