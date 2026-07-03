@@ -55,6 +55,16 @@ const ASSET_CACHE_MISS_STATUS = "miss";
 const CANONICAL_HOSTNAME = "brikaya.com";
 const UPDATE_PROGRESS_TEXT = "Atualizando jogo";
 const UPDATE_INSTALLED_PATTERN = /Versão v\d+ instalada/;
+const DEFAULT_UPDATE_UI_STATE = Object.freeze({
+  hasProgressMessage: false,
+  hasInstalledMessage: false,
+  progressValue: null,
+});
+const TRANSIENT_NAVIGATION_ERROR_TEXTS = [
+  "Execution context was destroyed",
+  "Cannot find context with specified id",
+  "Most likely the page has been closed",
+];
 
 function env(name, fallback) {
   return process.env[name] || fallback;
@@ -66,6 +76,14 @@ function ensureParentDirectory(filePath) {
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+function isTransientNavigationError(error) {
+  const message = String(error?.message || error || "");
+
+  return TRANSIENT_NAVIGATION_ERROR_TEXTS.some((text) =>
+    message.includes(text),
+  );
 }
 
 function publicUrl() {
@@ -238,7 +256,7 @@ async function collectUpdateUiState(page) {
 
 async function waitForUpdateUiState(page, shouldExpectInstalled) {
   const startedAt = Date.now();
-  let lastState = await collectUpdateUiState(page);
+  let lastState = await collectUpdateUiStateSafely(page);
 
   while (
     shouldExpectInstalled &&
@@ -246,10 +264,28 @@ async function waitForUpdateUiState(page, shouldExpectInstalled) {
     Date.now() - startedAt < UPDATE_UI_SETTLE_TIMEOUT_MS
   ) {
     await page.waitForTimeout(UPDATE_UI_SETTLE_STEP_MS);
-    lastState = await collectUpdateUiState(page);
+    lastState = await collectUpdateUiStateSafely(page, lastState);
   }
 
   return lastState;
+}
+
+async function collectUpdateUiStateSafely(
+  page,
+  fallbackState = DEFAULT_UPDATE_UI_STATE,
+) {
+  try {
+    await page.waitForSelector("body", {
+      timeout: VERSION_MESSAGE_TIMEOUT_MS,
+    });
+    return await collectUpdateUiState(page);
+  } catch (error) {
+    if (!isTransientNavigationError(error)) {
+      throw error;
+    }
+
+    return fallbackState;
+  }
 }
 
 async function readCacheNames(page) {

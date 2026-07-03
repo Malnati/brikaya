@@ -3,6 +3,15 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.27.2] - 2026-07-03
+### Corrigido
+- QA runtime de update passa a tolerar navegação automática durante a leitura do aviso visual instalado.
+
+### Testado
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm test -- --runInBand`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm run build`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ BRICKBREAKER_RUNTIME_UPDATE_PROFILE=tmp/browser-profiles/cloudflare-runtime-update-final2 make cloudflare-runtime-update-qa`
+
 ## [1.27.1] - 2026-07-03
 ### Corrigido
 - Removida regra fallback duplicada de headers para evitar `Cache-Control` repetido no domínio canônico.
