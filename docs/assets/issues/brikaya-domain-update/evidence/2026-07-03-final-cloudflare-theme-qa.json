@@ -1,0 +1,1133 @@
+{
+  "url": "https://brikaya.com/",
+  "screenshotPaths": {
+    "iphone15": {
+      "contrast": "tmp/screenshots/cloudflare-theme-iphone15-contrast.png",
+      "sunset": "tmp/screenshots/cloudflare-theme-iphone15-sunset.png"
+    },
+    "desktop": {
+      "contrast": "tmp/screenshots/cloudflare-theme-desktop-contrast.png",
+      "sunset": "tmp/screenshots/cloudflare-theme-desktop-sunset.png"
+    }
+  },
+  "results": {
+    "iphone15": {
+      "initialState": {
+        "theme": "neon-arcade",
+        "storedTheme": null,
+        "heading": "Brikaya",
+        "imageSet": "retro-default",
+        "fontSet": "arcade-ui",
+        "storedImageSet": null,
+        "storedFontSet": null,
+        "appearanceSelector": false,
+        "menuOpen": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "title": "Sem som",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": false
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "title": "Reiniciar",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "title": "",
+            "width": 68,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          }
+        ],
+        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuPublicidadePublicidadePronto para jogar offline\n  \n\n",
+        "forbiddenResources": [],
+        "canvas": {
+          "x": 13.015625,
+          "y": 111,
+          "width": 366.96875,
+          "height": 245.328125,
+          "right": 379.984375,
+          "bottom": 356.328125
+        },
+        "viewport": {
+          "width": 393,
+          "height": 852,
+          "scrollWidth": 393
+        },
+        "hasHorizontalOverflow": false
+      },
+      "contrastState": {
+        "theme": "crt-high-contrast",
+        "storedTheme": "crt-high-contrast",
+        "heading": "Brikaya",
+        "imageSet": "high-contrast",
+        "fontSet": "crt-mono",
+        "storedImageSet": "high-contrast",
+        "storedFontSet": "crt-mono",
+        "appearanceSelector": true,
+        "menuOpen": true,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "title": "Sem som",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": false
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "title": "Reiniciar",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "title": "",
+            "width": 68,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "title": "",
+            "width": 393,
+            "height": 852,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "title": "",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "Neon Arcade",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "CRT alto contraste",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": true
+          },
+          {
+            "text": "Pixel Sunset",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "Retro padrão",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "Alto contraste",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": true
+          },
+          {
+            "text": "Cabine Sunset",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "Arcade",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "CRT mono",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": true
+          },
+          {
+            "text": "Blocos pixel",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "≡Logs",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": false,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "◈Colisões",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": false,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": false,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          }
+        ],
+        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v103AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidadePronto para jogar offline\n  \n\n",
+        "forbiddenResources": [],
+        "canvas": {
+          "x": 13.015625,
+          "y": 111,
+          "width": 366.96875,
+          "height": 245.328125,
+          "right": 379.984375,
+          "bottom": 356.328125
+        },
+        "viewport": {
+          "width": 393,
+          "height": 852,
+          "scrollWidth": 393
+        },
+        "hasHorizontalOverflow": false
+      },
+      "reloadedContrastState": {
+        "theme": "crt-high-contrast",
+        "storedTheme": "crt-high-contrast",
+        "heading": "Brikaya",
+        "imageSet": "high-contrast",
+        "fontSet": "crt-mono",
+        "storedImageSet": "high-contrast",
+        "storedFontSet": "crt-mono",
+        "appearanceSelector": false,
+        "menuOpen": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "title": "Sem som",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": false
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "title": "Reiniciar",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "title": "",
+            "width": 68,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          }
+        ],
+        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuPublicidadePublicidadePronto para jogar offline\n  \n\n",
+        "forbiddenResources": [],
+        "canvas": {
+          "x": 13.015625,
+          "y": 111,
+          "width": 366.96875,
+          "height": 245.328125,
+          "right": 379.984375,
+          "bottom": 356.328125
+        },
+        "viewport": {
+          "width": 393,
+          "height": 852,
+          "scrollWidth": 393
+        },
+        "hasHorizontalOverflow": false
+      },
+      "sunsetState": {
+        "theme": "pixel-sunset",
+        "storedTheme": "pixel-sunset",
+        "heading": "Brikaya",
+        "imageSet": "sunset-cabinet",
+        "fontSet": "block-pixel",
+        "storedImageSet": "sunset-cabinet",
+        "storedFontSet": "block-pixel",
+        "appearanceSelector": true,
+        "menuOpen": true,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "title": "Sem som",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": false
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "title": "Reiniciar",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "title": "",
+            "width": 68,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "title": "",
+            "width": 393,
+            "height": 852,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "title": "",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "Neon Arcade",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "CRT alto contraste",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "Pixel Sunset",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": true
+          },
+          {
+            "text": "Retro padrão",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "Alto contraste",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "Cabine Sunset",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": true
+          },
+          {
+            "text": "Arcade",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "CRT mono",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "Blocos pixel",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": true
+          },
+          {
+            "text": "≡Logs",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": false,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "◈Colisões",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": false,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": false,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          }
+        ],
+        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v103AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidadePronto para jogar offline\n  \n\n",
+        "forbiddenResources": [],
+        "canvas": {
+          "x": 13.015625,
+          "y": 111,
+          "width": 366.96875,
+          "height": 245.328125,
+          "right": 379.984375,
+          "bottom": 356.328125
+        },
+        "viewport": {
+          "width": 393,
+          "height": 852,
+          "scrollWidth": 393
+        },
+        "hasHorizontalOverflow": false
+      }
+    },
+    "desktop": {
+      "initialState": {
+        "theme": "neon-arcade",
+        "storedTheme": null,
+        "heading": "Brikaya",
+        "imageSet": "retro-default",
+        "fontSet": "arcade-ui",
+        "storedImageSet": null,
+        "storedFontSet": null,
+        "appearanceSelector": false,
+        "menuOpen": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "title": "Sem som",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": false
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "title": "Reiniciar",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "title": "",
+            "width": 68,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          }
+        ],
+        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuPublicidadePublicidadePronto para jogar offline\n  \n\n",
+        "forbiddenResources": [],
+        "canvas": {
+          "x": 33,
+          "y": 85,
+          "width": 1213.984375,
+          "height": 810.328125,
+          "right": 1246.984375,
+          "bottom": 895.328125
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280
+        },
+        "hasHorizontalOverflow": false
+      },
+      "contrastState": {
+        "theme": "crt-high-contrast",
+        "storedTheme": "crt-high-contrast",
+        "heading": "Brikaya",
+        "imageSet": "high-contrast",
+        "fontSet": "crt-mono",
+        "storedImageSet": "high-contrast",
+        "storedFontSet": "crt-mono",
+        "appearanceSelector": true,
+        "menuOpen": true,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "title": "Sem som",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": false
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "title": "Reiniciar",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "title": "",
+            "width": 68,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "title": "",
+            "width": 1280,
+            "height": 720,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "title": "",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "Neon Arcade",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "CRT alto contraste",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": true
+          },
+          {
+            "text": "Pixel Sunset",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "Retro padrão",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "Alto contraste",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": true
+          },
+          {
+            "text": "Cabine Sunset",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "Arcade",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "CRT mono",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": true
+          },
+          {
+            "text": "Blocos pixel",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "≡Logs",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": false,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "◈Colisões",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": false,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": false,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          }
+        ],
+        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v103AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidadePronto para jogar offline\n  \n\n",
+        "forbiddenResources": [],
+        "canvas": {
+          "x": 33,
+          "y": 85,
+          "width": 1213.984375,
+          "height": 810.328125,
+          "right": 1246.984375,
+          "bottom": 895.328125
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280
+        },
+        "hasHorizontalOverflow": false
+      },
+      "reloadedContrastState": {
+        "theme": "crt-high-contrast",
+        "storedTheme": "crt-high-contrast",
+        "heading": "Brikaya",
+        "imageSet": "high-contrast",
+        "fontSet": "crt-mono",
+        "storedImageSet": "high-contrast",
+        "storedFontSet": "crt-mono",
+        "appearanceSelector": false,
+        "menuOpen": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "title": "Sem som",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": false
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "title": "Reiniciar",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "title": "",
+            "width": 68,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          }
+        ],
+        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuPublicidadePublicidadePronto para jogar offline\n  \n\n",
+        "forbiddenResources": [],
+        "canvas": {
+          "x": 33,
+          "y": 85,
+          "width": 1213.984375,
+          "height": 810.328125,
+          "right": 1246.984375,
+          "bottom": 895.328125
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280
+        },
+        "hasHorizontalOverflow": false
+      },
+      "sunsetState": {
+        "theme": "pixel-sunset",
+        "storedTheme": "pixel-sunset",
+        "heading": "Brikaya",
+        "imageSet": "sunset-cabinet",
+        "fontSet": "block-pixel",
+        "storedImageSet": "sunset-cabinet",
+        "storedFontSet": "block-pixel",
+        "appearanceSelector": true,
+        "menuOpen": true,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "title": "Sem som",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": false
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "title": "Reiniciar",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "title": "",
+            "width": 68,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "title": "",
+            "width": 1280,
+            "height": 720,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": false
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "title": "",
+            "width": 44,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "Neon Arcade",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "CRT alto contraste",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "Pixel Sunset",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": true
+          },
+          {
+            "text": "Retro padrão",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "Alto contraste",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "Cabine Sunset",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": true
+          },
+          {
+            "text": "Arcade",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "CRT mono",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "false",
+            "inDrawer": true
+          },
+          {
+            "text": "Blocos pixel",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": true,
+            "hasTouchTarget": true,
+            "ariaPressed": "true",
+            "inDrawer": true
+          },
+          {
+            "text": "≡Logs",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": false,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "◈Colisões",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": false,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "title": "",
+            "width": 287,
+            "height": 44,
+            "visibleInViewport": false,
+            "hasTouchTarget": true,
+            "ariaPressed": null,
+            "inDrawer": true
+          }
+        ],
+        "bodyText": "\n    Arcade clássicoBrikaya×↻Fase 1|Score 0|Total 0|Recorde 0MenuMenu×Versão v103AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 0Ainda sem recordesFerramentas≡Logs◈Colisões0Zerar pontuaçãoPublicidadePublicidadePronto para jogar offline\n  \n\n",
+        "forbiddenResources": [],
+        "canvas": {
+          "x": 33,
+          "y": 85,
+          "width": 1213.984375,
+          "height": 810.328125,
+          "right": 1246.984375,
+          "bottom": 895.328125
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 720,
+          "scrollWidth": 1280
+        },
+        "hasHorizontalOverflow": false
+      }
+    }
+  },
+  "externalRequests": [],
+  "consoleProblems": []
+}

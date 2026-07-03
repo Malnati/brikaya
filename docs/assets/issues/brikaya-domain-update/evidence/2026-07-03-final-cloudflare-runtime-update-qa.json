@@ -1,0 +1,104 @@
+{
+  "mode": "verify",
+  "url": "https://brikaya.com/",
+  "profileDir": "tmp/browser-profiles/cloudflare-runtime-update-final4",
+  "latest": {
+    "buildId": "20260703144233",
+    "hasPlaceholder": false
+  },
+  "activeBeforeWait": {
+    "buildId": "20260703143458",
+    "cacheName": "breakout-cache-20260703143458"
+  },
+  "activeAfterWait": {
+    "buildId": "20260703144233",
+    "cacheName": "breakout-cache-20260703144233"
+  },
+  "seedState": {
+    "title": "Brikaya",
+    "hasCanvas": true,
+    "canvas": {
+      "x": 13.015625,
+      "y": 111,
+      "width": 366.96875,
+      "height": 245.328125,
+      "right": 379.984375,
+      "bottom": 356.328125
+    },
+    "hasController": true,
+    "cacheNames": [],
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393
+    }
+  },
+  "verifyState": {
+    "title": "Brikaya",
+    "hasCanvas": true,
+    "canvas": {
+      "x": 13.015625,
+      "y": 111,
+      "width": 366.96875,
+      "height": 245.328125,
+      "right": 379.984375,
+      "bottom": 356.328125
+    },
+    "hasController": true,
+    "cacheNames": [],
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393
+    }
+  },
+  "cacheNamesBeforeWait": [
+    "breakout-cache-20260703143458",
+    "breakout-asset-cache-v1",
+    "breakout-cache-20260703144233"
+  ],
+  "cacheNamesAfterWait": [
+    "breakout-asset-cache-v1",
+    "breakout-cache-20260703144233"
+  ],
+  "staleCacheNamesBefore": [
+    "breakout-cache-20260703143458"
+  ],
+  "staleCacheNamesAfter": [],
+  "lazyAssetProbe": [
+    {
+      "path": "/assets/visual/sprites/spr-ball-player-default.svg",
+      "status": 200,
+      "ok": true,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "path": "/assets/visual/bricks/spr-brick-basic-red-normal.svg",
+      "status": 200,
+      "ok": true,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": "hit"
+    },
+    {
+      "path": "/assets/audio/sfx-offline-ready-01.mp3",
+      "status": 200,
+      "ok": true,
+      "contentType": "audio/mpeg",
+      "assetCacheStatus": "hit"
+    }
+  ],
+  "updateUiState": {
+    "hasProgressMessage": false,
+    "hasInstalledMessage": true,
+    "progressValue": null
+  },
+  "shouldRequireLazyAssetCacheHit": true,
+  "navigationEvents": [
+    "about:blank",
+    "https://brikaya.com/",
+    "https://brikaya.com/"
+  ],
+  "consoleProblems": [],
+  "screenshotPath": "tmp/screenshots/cloudflare-runtime-update-qa.png"
+}
