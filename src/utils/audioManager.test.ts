@@ -80,6 +80,7 @@ describe('audioManager', () => {
 
     await expect(audioManager.unlock()).resolves.toBe(true);
 
+    expect(global.fetch).not.toHaveBeenCalled();
     expect(createBuffer).toHaveBeenCalledWith(1, 1, 44100);
     expect(createBufferSource).toHaveBeenCalledTimes(1);
     expect(start).toHaveBeenCalledTimes(1);

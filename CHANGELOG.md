@@ -3,6 +3,30 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.27.0] - 2026-07-03
+### Adicionado
+- Efeito visual de atualização com barra de progresso e confirmação `Versão vN instalada` após o reload seguro.
+- Teste unitário para carregamento lazy de imagens via `AssetLoader`.
+- Validação runtime publicada para rejeitar URLs não canônicas no QA de update.
+
+### Alterado
+- Service Worker avisa o app antes do reload para permitir progresso visual.
+- Assets SVG do canvas passam a carregar sob demanda no primeiro desenho, sem preload total do conjunto visual.
+- Áudios MP3 passam a carregar no primeiro uso, sem preload total no desbloqueio de áudio.
+- Requisições de assets runtime usam URL versionada por hash para evitar cache HTTP obsoleto quando o arquivo muda.
+- Headers publicados revalidam shell, manifesto e Service Worker de forma explícita.
+
+### Testado
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm test -- --runInBand`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm run test:audio-assets`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm run test:cinematic-media-assets`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm run build`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" make cloudflare-deploy`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ BRICKBREAKER_RUNTIME_UPDATE_PROFILE=tmp/browser-profiles/cloudflare-runtime-update-cycle2 make cloudflare-runtime-update-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-svg-assets-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-audio-qa`
+
 ## [1.26.0] - 2026-07-03
 ### Adicionado
 - Manifesto runtime `asset-cache-manifest.json` com hash SHA-256 para imagens SVG e áudios MP3/OGG.

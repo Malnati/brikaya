@@ -24,6 +24,7 @@ describe('service worker lazy asset cache', () => {
     const source = readServiceWorker();
     const precacheSource = readPrecacheSource();
 
+    expect(source).toContain('CORE_PRECACHE_URLS');
     expect(source).toContain(ASSET_MANIFEST_PATH);
     expect(precacheSource).not.toContain(VISUAL_ASSET_PREFIX);
     expect(precacheSource).not.toContain(AUDIO_ASSET_PREFIX);
@@ -47,5 +48,13 @@ describe('service worker lazy asset cache', () => {
     expect(migrateIndex).toBeGreaterThan(-1);
     expect(deleteIndex).toBeGreaterThan(-1);
     expect(migrateIndex).toBeLessThan(deleteIndex);
+  });
+
+  it('solicita reload pelo app para permitir progresso visual', () => {
+    const source = readServiceWorker();
+
+    expect(source).toContain('RELOAD_CLIENT_MESSAGE');
+    expect(source).toContain('client.postMessage');
+    expect(source).not.toContain('client.navigate');
   });
 });

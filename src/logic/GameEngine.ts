@@ -25,7 +25,6 @@ import {
   DynamicGameDimensions,
 } from "../constants/game";
 import { POINTS_PER_BRICK } from "../constants/gameState";
-import { AssetLoader } from "../utils/assetLoader";
 import { gameLogger, type LoggedPowerUpAction } from "../storage/gameLogger";
 import {
   AUDIO_QA_SCENARIO,
@@ -335,7 +334,6 @@ export class GameEngine {
     if (this.imageSetId === imageSetId) return;
 
     this.imageSetId = imageSetId;
-    void AssetLoader.preloadImageSet(imageSetId);
   }
 
   private configureBrickRows() {
@@ -438,15 +436,8 @@ export class GameEngine {
   }
 
   private async preloadAssets() {
-    try {
-      LOG("🎮 Iniciando carregamento de assets...");
-      await AssetLoader.preloadAllAssets(this.imageSetId);
-      this.assetsLoaded = true;
-      LOG("✅ Assets carregados com sucesso!");
-    } catch (error) {
-      WARN("⚠️  Alguns assets falharam ao carregar, usando fallback:", error);
-      this.assetsLoaded = true; // Continue with fallback rendering
-    }
+    LOG("🎮 Assets serão carregados sob demanda.");
+    this.assetsLoaded = true;
   }
 
   private async onBrickDestroyed(colorIndex: number) {

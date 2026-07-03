@@ -650,6 +650,8 @@ canvas {
   min-height: 0;
 }
 
+.app-update-message,
+.update-installed-message,
 .offline-ready-message,
 .victory-message,
 .game-over-message {
@@ -664,6 +666,8 @@ canvas {
   gap: var(--space-2);
 }
 
+.app-update-message,
+.update-installed-message,
 .offline-ready-message,
 .victory-message {
   background: color-mix(in srgb, var(--bb-color-primary) 12%, transparent);
@@ -675,6 +679,8 @@ canvas {
   border: 1px solid color-mix(in srgb, var(--bb-color-danger) 48%, transparent);
 }
 
+.app-update-message p,
+.update-installed-message p,
 .offline-ready-message p,
 .victory-message h2,
 .game-over-message h2,
@@ -688,11 +694,43 @@ canvas {
   font-size: 0.95rem;
 }
 
+.app-update-message p,
+.update-installed-message p,
 .offline-ready-message p,
 .victory-message p,
 .game-over-message p {
   font-size: 0.84rem;
   color: var(--color-muted);
+}
+
+.app-update-message {
+  align-items: stretch;
+  flex-direction: column;
+}
+
+.app-update-message__track {
+  position: relative;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bb-color-surface) 54%, transparent);
+}
+
+.app-update-message__bar {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--bb-color-primary);
+  transition: width 220ms ease;
+}
+
+.update-installed-message {
+  justify-content: center;
+}
+
+.update-installed-message p {
+  color: var(--color-text);
+  font-weight: 800;
 }
 
 .settings-drawer-backdrop {

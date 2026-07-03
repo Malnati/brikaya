@@ -33,8 +33,15 @@ import {
   MENU_MUSIC_AUDIO_ID,
   type GameAudioSink,
 } from "./constants/audio";
-import { BRICKBREAKER_OFFLINE_READY_EVENT } from "./registerServiceWorker";
 import {
+  BRICKBREAKER_OFFLINE_READY_EVENT,
+  BRICKBREAKER_RELOAD_GUARD_KEY,
+  BRICKBREAKER_UPDATE_INSTALLED_KEY,
+  BRICKBREAKER_UPDATE_PROGRESS_EVENT,
+  type BrickbreakerUpdateProgressDetail,
+} from "./registerServiceWorker";
+import {
+  BUILD_VERSION_LABEL,
   BUILD_VERSION_ARIA_LABEL,
   BUILD_VERSION_MENU_LABEL,
 } from "./constants/buildVersion";
@@ -53,6 +60,13 @@ const FIRST_AUDIO_INTERACTION_EVENTS = [
   "touchend",
 ] as const;
 const OFFLINE_READY_VISIBLE_MS = 2400;
+const UPDATE_INSTALLED_VISIBLE_MS = 5200;
+const UPDATE_PROGRESS_MIN = 0;
+const UPDATE_PROGRESS_MAX = 100;
+const UPDATE_PROGRESS_TITLE = "Atualizando jogo";
+const UPDATE_PROGRESS_LABEL = "Progresso da atualização";
+const UPDATE_INSTALLED_PREFIX = "Versão";
+const UPDATE_INSTALLED_SUFFIX = "instalada";
 const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
 const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
 const LASER_FAN_QA_SCENARIO = "laser-fan";
@@ -70,6 +84,10 @@ const INITIAL_COUNTDOWN_OVERLAY: GameCinematicOverlayState = {
   type: "countdown",
   value: CINEMATIC_COUNTDOWN_STEPS[COUNTDOWN_FIRST_STEP_INDEX],
 };
+
+interface UpdateProgressState {
+  progress: number;
+}
 
 function formatHighScoreBest(scoreValue: number) {
   return `${HIGH_SCORE_BEST_LABEL} ${scoreValue}`;
@@ -96,6 +114,10 @@ export default function App() {
   const [isCinematicRipScenarioConsumed, setIsCinematicRipScenarioConsumed] =
     useState(false);
   const [isOfflineReadyVisible, setIsOfflineReadyVisible] = useState(false);
+  const [updateProgress, setUpdateProgress] =
+    useState<UpdateProgressState | null>(null);
+  const [isUpdateInstalledVisible, setIsUpdateInstalledVisible] =
+    useState(false);
   const { selection, selectTheme, selectImageSet, selectFontSet } = useAppearancePreference();
   const { isAudioMuted, toggleAudio } = useAudioPreference();
   const levelTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -103,6 +125,9 @@ export default function App() {
   const countdownTimerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
   const ripTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const offlineReadyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+  const updateInstalledTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -220,6 +245,8 @@ export default function App() {
       }
       if (offlineReadyTimerRef.current)
         clearTimeout(offlineReadyTimerRef.current);
+      if (updateInstalledTimerRef.current)
+        clearTimeout(updateInstalledTimerRef.current);
     },
     [],
   );
@@ -332,6 +359,58 @@ export default function App() {
         showOfflineReady,
       );
   }, [audioSink]);
+
+  useEffect(() => {
+    const handleUpdateProgress = (event: Event) => {
+      const detail = (event as CustomEvent<BrickbreakerUpdateProgressDetail>)
+        .detail;
+      const progress = Math.min(
+        UPDATE_PROGRESS_MAX,
+        Math.max(UPDATE_PROGRESS_MIN, detail?.progress ?? UPDATE_PROGRESS_MIN),
+      );
+
+      setIsUpdateInstalledVisible(false);
+      setUpdateProgress({ progress });
+    };
+
+    window.addEventListener(
+      BRICKBREAKER_UPDATE_PROGRESS_EVENT,
+      handleUpdateProgress,
+    );
+    return () =>
+      window.removeEventListener(
+        BRICKBREAKER_UPDATE_PROGRESS_EVENT,
+        handleUpdateProgress,
+      );
+  }, []);
+
+  useEffect(() => {
+    let shouldShowInstalledVersion = false;
+
+    try {
+      shouldShowInstalledVersion =
+        window.sessionStorage.getItem(BRICKBREAKER_UPDATE_INSTALLED_KEY) !==
+          null ||
+        window.sessionStorage.getItem(BRICKBREAKER_RELOAD_GUARD_KEY) !== null;
+
+      if (shouldShowInstalledVersion) {
+        window.sessionStorage.removeItem(BRICKBREAKER_UPDATE_INSTALLED_KEY);
+        window.sessionStorage.removeItem(BRICKBREAKER_RELOAD_GUARD_KEY);
+      }
+    } catch {
+      return;
+    }
+
+    if (!shouldShowInstalledVersion) return;
+
+    setUpdateProgress(null);
+    setIsUpdateInstalledVisible(true);
+    if (updateInstalledTimerRef.current)
+      clearTimeout(updateInstalledTimerRef.current);
+    updateInstalledTimerRef.current = setTimeout(() => {
+      setIsUpdateInstalledVisible(false);
+    }, UPDATE_INSTALLED_VISIBLE_MS);
+  }, []);
 
   const handleRestart = useCallback(() => {
     audioSink.playAudio(GAME_AUDIO_IDS.RESTART);
@@ -632,6 +711,32 @@ export default function App() {
         </div>
 
         <div className="game-status-region" aria-live="polite">
+          {updateProgress && (
+            <div className="app-update-message">
+              <p>{UPDATE_PROGRESS_TITLE}</p>
+              <div
+                className="app-update-message__track"
+                role="progressbar"
+                aria-label={UPDATE_PROGRESS_LABEL}
+                aria-valuemin={UPDATE_PROGRESS_MIN}
+                aria-valuemax={UPDATE_PROGRESS_MAX}
+                aria-valuenow={updateProgress.progress}
+              >
+                <span
+                  className="app-update-message__bar"
+                  style={{ width: `${updateProgress.progress}%` }}
+                />
+              </div>
+            </div>
+          )}
+          {isUpdateInstalledVisible && (
+            <div className="update-installed-message">
+              <p>
+                {UPDATE_INSTALLED_PREFIX} {BUILD_VERSION_LABEL}{" "}
+                {UPDATE_INSTALLED_SUFFIX}
+              </p>
+            </div>
+          )}
           {isOfflineReadyVisible && (
             <div className="offline-ready-message">
               <p>Pronto para jogar offline</p>

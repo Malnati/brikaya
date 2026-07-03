@@ -4,12 +4,13 @@ const CACHE_PREFIX = "breakout-cache";
 const CACHE_NAME = `${CACHE_PREFIX}-${BUILD_ID}`;
 const ASSET_CACHE_NAME = "breakout-asset-cache-v1";
 const ASSET_MANIFEST_URL = "/asset-cache-manifest.json";
-const PRECACHE_URLS = [
+const CORE_PRECACHE_URLS = [
   "/",
   "/index.html",
   "/manifest.webmanifest",
   ASSET_MANIFEST_URL,
 ];
+const PRECACHE_URLS = [...CORE_PRECACHE_URLS];
 const GET_METHOD = "GET";
 const DOCUMENT_DESTINATION = "document";
 const INDEX_URL = "/index.html";
@@ -184,10 +185,6 @@ async function reloadSameOriginClients() {
         return undefined;
       }
 
-      if (typeof client.navigate === "function") {
-        return client.navigate(client.url);
-      }
-
       client.postMessage({ type: RELOAD_CLIENT_MESSAGE, buildId: BUILD_ID });
       return undefined;
     }),
@@ -230,9 +227,12 @@ async function findMatchingCachedAsset(path, versionedRequest, expectedHash) {
   return null;
 }
 
-async function fetchAndCacheAsset(request, versionedRequest) {
-  const networkResponse = await fetch(request);
-  if (networkResponse.ok) {
+async function fetchAndCacheAsset(versionedRequest, expectedHash) {
+  const networkResponse = await fetch(versionedRequest);
+  if (
+    networkResponse.ok &&
+    (await responseMatchesHash(networkResponse.clone(), expectedHash))
+  ) {
     const assetCache = await caches.open(ASSET_CACHE_NAME);
     await assetCache.put(versionedRequest, networkResponse.clone());
   }
@@ -257,7 +257,7 @@ async function handleRuntimeAssetRequest(request) {
 
   if (cachedAsset) return cachedAsset;
 
-  return fetchAndCacheAsset(request, versionedRequest);
+  return fetchAndCacheAsset(versionedRequest, expectedHash);
 }
 
 self.addEventListener("install", (event) => {

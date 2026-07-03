@@ -154,7 +154,6 @@ class BrickBreakerAudioManager {
       this.unlocked = this.audioContext?.state === AUDIO_CONTEXT_RUNNING_STATE;
       this.recordUnlockResult(this.unlocked, AUDIO_UNLOCK_OK_REASON);
       this.applyMasterVolume();
-      void this.preloadAll();
       return this.unlocked;
     } catch (error) {
       WARN(AUDIO_ERROR_MESSAGE, error);

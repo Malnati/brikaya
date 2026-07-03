@@ -28,6 +28,7 @@ const BUILD_ID_PATTERN = /const\s+BUILD_ID\s*=\s*['"]([^'"]+)['"]/;
 const BUILD_ID_PLACEHOLDER = "__BRICKBREAKER_BUILD_ID__";
 const GET_VERSION_MESSAGE = "GET_VERSION";
 const VERSION_MESSAGE = "VERSION";
+const SKIP_WAITING_MESSAGE = "SKIP_WAITING";
 const WAIT_TIMEOUT_MS = 60000;
 const VERSION_MESSAGE_TIMEOUT_MS = 1500;
 const WAIT_STEP_MS = 500;
@@ -49,6 +50,9 @@ const LAZY_ASSET_PROBE_PATHS = [
 ];
 const ASSET_CACHE_STATUS_HEADER = "x-brickbreaker-asset-cache";
 const ASSET_CACHE_MISS_STATUS = "miss";
+const CANONICAL_HOSTNAME = "brikaya.com";
+const UPDATE_PROGRESS_TEXT = "Atualizando jogo";
+const UPDATE_INSTALLED_PATTERN = /Versão v\d+ instalada/;
 
 function env(name, fallback) {
   return process.env[name] || fallback;
@@ -64,6 +68,14 @@ function assert(condition, message) {
 
 function publicUrl() {
   return env(PUBLIC_URL_ENV_KEY, DEFAULT_PUBLIC_URL);
+}
+
+function assertCanonicalUrl(targetUrl) {
+  const parsedUrl = new URL(targetUrl);
+  assert(
+    parsedUrl.hostname === CANONICAL_HOSTNAME,
+    `QA runtime update deve usar somente https://${CANONICAL_HOSTNAME}/.`,
+  );
 }
 
 function mode() {
@@ -198,6 +210,28 @@ async function collectRuntimeState(page) {
       },
     };
   });
+}
+
+async function collectUpdateUiState(page) {
+  return page.evaluate(
+    ({ progressText, installedPatternSource }) => {
+      const bodyText = document.body.textContent || "";
+      const progressBar = document.querySelector(
+        '[role="progressbar"][aria-label="Progresso da atualização"]',
+      );
+      const installedPattern = new RegExp(installedPatternSource);
+
+      return {
+        hasProgressMessage: bodyText.includes(progressText),
+        hasInstalledMessage: installedPattern.test(bodyText),
+        progressValue: progressBar?.getAttribute("aria-valuenow") || null,
+      };
+    },
+    {
+      progressText: UPDATE_PROGRESS_TEXT,
+      installedPatternSource: UPDATE_INSTALLED_PATTERN.source,
+    },
+  );
 }
 
 async function readCacheNames(page) {
@@ -351,6 +385,7 @@ async function run() {
   );
 
   const targetUrl = publicUrl();
+  assertCanonicalUrl(targetUrl);
   const browser = await puppeteer.launch({
     headless: "new",
     executablePath: CHROME_EXECUTABLE_PATH,
@@ -394,6 +429,7 @@ async function run() {
     }
 
     const cacheNamesAfterWait = await readCacheNames(page);
+    const updateUiState = await collectUpdateUiState(page);
     const staleCacheNamesBefore = cacheNamesBeforeWait.filter((cacheName) => {
       return (
         cacheName.startsWith("breakout-cache") &&
@@ -425,6 +461,7 @@ async function run() {
       staleCacheNamesBefore,
       staleCacheNamesAfter,
       lazyAssetProbe,
+      updateUiState,
       shouldRequireLazyAssetCacheHit,
       navigationEvents,
       consoleProblems,
@@ -461,6 +498,12 @@ async function run() {
         assert(
           missedProbeAssets.length === 0,
           `Assets cacheados foram baixados novamente após update: ${JSON.stringify(missedProbeAssets)}`,
+        );
+      }
+      if (activeBeforeWait?.buildId && activeBeforeWait.buildId !== latest.buildId) {
+        assert(
+          updateUiState.hasInstalledMessage,
+          `Confirmação visual de versão instalada ausente: ${JSON.stringify(updateUiState)}`,
         );
       }
       assert(
