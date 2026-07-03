@@ -27,7 +27,7 @@ const DEFAULT_DESKTOP_RUBY_SCREENSHOT =
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const MIN_TOUCH_TARGET_SIZE = 44;
-const BROWSER_CLOSE_TIMEOUT_MS = 5000;
+const BROWSER_CLOSE_SETTLE_MS = 250;
 const MENU_BUTTON_NAME = /menu/i;
 const MENU_OPEN_ATTEMPTS = 3;
 const MENU_OPEN_RETRY_DELAY_MS = 500;
@@ -124,17 +124,9 @@ function assert(condition, message) {
 
 async function closeBrowser(browser) {
   const browserProcess = browser.process();
-  let closed = false;
-  await Promise.race([
-    browser.close().then(() => {
-      closed = true;
-    }),
-    new Promise((resolve) => setTimeout(resolve, BROWSER_CLOSE_TIMEOUT_MS)),
-  ]);
-
-  if (!closed && browserProcess) {
-    browserProcess.kill("SIGKILL");
-  }
+  browser.disconnect();
+  browserProcess?.kill("SIGKILL");
+  await new Promise((resolve) => setTimeout(resolve, BROWSER_CLOSE_SETTLE_MS));
 }
 
 async function clickButtonByText(page, label) {
