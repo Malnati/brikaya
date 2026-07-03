@@ -14,6 +14,10 @@ const DEFAULT_ITEM_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-laser-powerup-item.png";
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const CHROME_LOW_RESOURCE_ARGS = [
+  "--disable-gpu",
+  "--disable-software-rasterizer",
+];
 const VIEWPORT = {
   width: 393,
   height: 852,
@@ -53,6 +57,12 @@ const REQUIRED_EVENT_TYPES = [
 ];
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
+const BROWSER_CLOSE_SETTLE_MS = 500;
+const BROWSER_CLOSE_TIMEOUT_MS = 3000;
+const BROWSER_CLOSE_TIMEOUT_MESSAGE = "browser close timeout";
+const BROWSER_KILL_SIGNAL = "SIGKILL";
+const BLANK_PAGE_URL = "about:blank";
+const BLANK_PAGE_WAIT_UNTIL = "domcontentloaded";
 
 function env(name, fallback) {
   return process.env[name] || fallback;
@@ -91,43 +101,42 @@ function withQaScenario(url) {
   return pageUrl.toString();
 }
 
-async function clearGameDatabases(page) {
-  await page.evaluate(async () => {
-    const names = [
-      "BrickBreakerGameLog",
-      "BrickBreakerCollisions",
-      "SystemDebugLog",
-      "breakout",
-    ];
-    await Promise.all(
-      names.map(
-        (name) =>
-          new Promise((resolve) => {
-            const request = indexedDB.deleteDatabase(name);
-            request.onsuccess = () => resolve();
-            request.onerror = () => resolve();
-            request.onblocked = () => resolve();
-          }),
-      ),
-    );
-  });
+async function clearOriginState(page, origin) {
+  await page.goto(BLANK_PAGE_URL, { waitUntil: BLANK_PAGE_WAIT_UNTIL });
+  const client = await page.target().createCDPSession();
+  try {
+    await client.send("Storage.clearDataForOrigin", {
+      origin,
+      storageTypes: "all",
+    });
+  } finally {
+    await client.detach();
+  }
 }
 
-async function clearOfflineState(page) {
-  await page.evaluate(async () => {
-    if ("serviceWorker" in navigator) {
-      const registrations = await navigator.serviceWorker.getRegistrations();
-      await Promise.all(
-        registrations.map((registration) => registration.unregister()),
-      );
-    }
-    if ("caches" in window) {
-      const cacheNames = await caches.keys();
-      await Promise.all(
-        cacheNames.map((cacheName) => caches.delete(cacheName)),
-      );
-    }
-  });
+async function closeBrowser(browser) {
+  const browserProcess = browser.process();
+  try {
+    await Promise.race([
+      browser.close(),
+      new Promise((_, reject) =>
+        setTimeout(
+          () => reject(new Error(BROWSER_CLOSE_TIMEOUT_MESSAGE)),
+          BROWSER_CLOSE_TIMEOUT_MS,
+        ),
+      ),
+    ]);
+  } catch {
+    browser.disconnect();
+  }
+  if (
+    browserProcess &&
+    browserProcess.exitCode === null &&
+    !browserProcess.killed
+  ) {
+    browserProcess.kill(BROWSER_KILL_SIGNAL);
+  }
+  await new Promise((resolve) => setTimeout(resolve, BROWSER_CLOSE_SETTLE_MS));
 }
 
 async function readGameEvents(page) {
@@ -449,6 +458,7 @@ async function run() {
     args: buildChromeLaunchArgs([
       "--no-first-run",
       "--no-default-browser-check",
+      ...CHROME_LOW_RESOURCE_ARGS,
     ]),
   });
 
@@ -476,10 +486,8 @@ async function run() {
       }
     });
 
+    await clearOriginState(page, parsed.origin);
     await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
-    await clearOfflineState(page);
-    await clearGameDatabases(page);
-    await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
     await page.waitForSelector("canvas", { timeout: 30000 });
     await acceptPrivacyConsentIfPresent(page);
     await waitForCinematicOverlayToClear(page);
@@ -640,11 +648,15 @@ async function run() {
       `Console publicou warnings/errors: ${JSON.stringify(consoleProblems.slice(0, 5))}`,
     );
   } finally {
-    await browser.close();
+    await closeBrowser(browser);
   }
 }
 
-run().catch((error) => {
-  console.error(error.message);
-  process.exitCode = 1;
-});
+run()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error(error.message);
+    process.exit(1);
+  });
