@@ -715,11 +715,10 @@ async function run() {
       { timeout: 10000 },
     );
     await new Promise((resolve) => setTimeout(resolve, 500));
-await openFirstEventDetails(
+    await openFirstEventDetails(
       page,
       "Painel de logs abriu sem botão Atualizar disponível.",
       "Nenhum evento disponível no painel de logs.",
-    );
     );
     await waitForLogDetailLabels(page, SPEED_CURRENT_LABEL, LEVEL_TIME_LABEL);
     const indexedDbSummary = await readIndexedDbSummary(page);
