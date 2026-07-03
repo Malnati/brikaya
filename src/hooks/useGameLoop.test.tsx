@@ -14,6 +14,7 @@ const mockStart = jest.fn();
 const mockStop = jest.fn();
 const mockResize = jest.fn();
 const mockSetImageSet = jest.fn();
+const mockSetPaused = jest.fn();
 
 jest.mock('../logic/GameEngine', () => ({
   GameEngine: jest.fn().mockImplementation(() => ({
@@ -21,6 +22,7 @@ jest.mock('../logic/GameEngine', () => ({
     stop: mockStop,
     resize: mockResize,
     setImageSet: mockSetImageSet,
+    setPaused: mockSetPaused,
   })),
 }));
 
@@ -29,7 +31,13 @@ jest.mock('../utils/logger', () => ({
   ERROR: jest.fn(),
 }));
 
-function Harness({ imageSetId }: { imageSetId: ImageSetId }) {
+function Harness({
+  imageSetId,
+  paused = false,
+}: {
+  imageSetId: ImageSetId;
+  paused?: boolean;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useGameLoop(
@@ -44,6 +52,7 @@ function Harness({ imageSetId }: { imageSetId: ImageSetId }) {
     undefined,
     false,
     imageSetId,
+    paused,
   );
 
   return <canvas ref={canvasRef} />;
@@ -65,6 +74,22 @@ describe('useGameLoop', () => {
 
     await waitFor(() => {
       expect(mockSetImageSet).toHaveBeenCalledWith(IMAGE_SET_HIGH_CONTRAST);
+    });
+    expect(GameEngine).toHaveBeenCalledTimes(1);
+    expect(mockStart).toHaveBeenCalledTimes(1);
+  });
+
+  it('pausa o motor atual sem recriar a partida', async () => {
+    const { rerender } = render(
+      <Harness imageSetId={IMAGE_SET_RETRO_DEFAULT} />,
+    );
+
+    expect(GameEngine).toHaveBeenCalledTimes(1);
+
+    rerender(<Harness imageSetId={IMAGE_SET_RETRO_DEFAULT} paused />);
+
+    await waitFor(() => {
+      expect(mockSetPaused).toHaveBeenCalledWith(true);
     });
     expect(GameEngine).toHaveBeenCalledTimes(1);
     expect(mockStart).toHaveBeenCalledTimes(1);
