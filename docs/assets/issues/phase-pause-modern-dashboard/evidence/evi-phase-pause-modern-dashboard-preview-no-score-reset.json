@@ -1,0 +1,35 @@
+{
+  "url": "https://feature-phase-pause-modern-d.malnati-brickbreaker.pages.dev/",
+  "byType": {
+    "game_start": 1,
+    "brick_destroyed": 1,
+    "score_update": 1
+  },
+  "eventTypes": [
+    "game_start",
+    "brick_destroyed",
+    "score_update"
+  ],
+  "startBall": {
+    "x": 175.5,
+    "y": 210,
+    "velocity": {
+      "dx": 1.1,
+      "dy": -1.1
+    },
+    "radius": 8
+  },
+  "lastBall": {
+    "x": 298.70000000000044,
+    "y": 86.80000000000064,
+    "velocity": {
+      "dx": 1.1,
+      "dy": 1.1
+    },
+    "radius": 8
+  },
+  "restartedToInitialPosition": false,
+  "scoreEvents": 1,
+  "consoleProblems": [],
+  "screenshotPath": "docs/assets/issues/phase-pause-modern-dashboard/evidence/evi-phase-pause-modern-dashboard-preview-no-score-reset-d453c3.png"
+}

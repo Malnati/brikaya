@@ -1,0 +1,100 @@
+{
+  "generatedAtUtc": "2026-07-03T12:40:46.970Z",
+  "brand": "Brikaya",
+  "canonicalUrl": "https://brikaya.com/",
+  "zeroCost": {
+    "required": true,
+    "acceptedPaidPrompts": false,
+    "domainPurchaseOrTransferPerformed": false,
+    "cloudflarePlanObservedInChrome": "free",
+    "productsUsed": [
+      "Cloudflare Pages static Direct Upload",
+      "Cloudflare DNS CNAME for brikaya.com",
+      "Cloudflare Bulk Redirect from Pages-generated domain to canonical domain"
+    ],
+    "productsNotUsed": [
+      "Workers",
+      "Pages Functions",
+      "KV",
+      "D1",
+      "R2",
+      "Access/Zero Trust",
+      "AI",
+      "Images",
+      "Browser Rendering",
+      "Web Analytics beacon"
+    ]
+  },
+  "cloudflare": {
+    "project": "malnati-brickbreaker",
+    "customDomain": {
+      "host": "brikaya.com",
+      "status": "active"
+    },
+    "dns": {
+      "zone": "brikaya.com",
+      "status": "active",
+      "publicResolver": "1.1.1.1",
+      "publicARecordsObserved": [
+        "172.67.223.126",
+        "104.21.78.156"
+      ],
+      "note": "DNS Records API token did not expose record write/list permission; authenticated Chrome configured the proxied CNAME and public DNS resolution was verified."
+    },
+    "redirects": {
+      "pagesGeneratedDomainRedirectsToCanonical": true,
+      "statusCode": 301,
+      "target": "https://brikaya.com/"
+    },
+    "headers": {
+      "cacheControl": "public, max-age=0, must-revalidate, no-transform",
+      "htmlHasCloudflareInsightsBeacon": false,
+      "externalRequestsObserved": []
+    }
+  },
+  "validation": {
+    "nodeVersion": "v23.5.0",
+    "localDnsCacheNote": "Local macOS resolver retained an old NXDOMAIN result during QA. Browser tests kept the URL as https://brikaya.com/ and used Chrome host resolver rules only to bypass that local resolver cache.",
+    "commandsPassed": [
+      "make help",
+      "npm test -- --runInBand",
+      "npm run build",
+      "make cloudflare-deploy",
+      "make cloudflare-mobile-qa",
+      "make cloudflare-no-score-reset",
+      "make cloudflare-phase-transition-qa",
+      "make cloudflare-dashboard-layout-qa",
+      "make cloudflare-theme-qa",
+      "make cloudflare-svg-assets-qa",
+      "make cloudflare-runtime-update-qa",
+      "npm run test:cloudflare-offline-pwa"
+    ],
+    "publishedQaUrl": "https://brikaya.com/",
+    "pageTitle": "Brikaya",
+    "pageHeading": "Brikaya",
+    "runtimeBuildId": "20260703123505",
+    "runtimeUpdateRetryNote": "Logo após o deploy, uma execução do QA de atualização ainda recebeu Service Worker antigo em um edge/local profile; a repetição após propagação ativou o BUILD_ID publicado sem alteração de código."
+  },
+  "evidenceFiles": [
+    "evi-brikaya-brand-domain-brikaya-canonical-home.png",
+    "evi-brikaya-brand-domain-brikaya-mobile-home.png",
+    "evi-brikaya-brand-domain-brikaya-mobile-menu.png",
+    "evi-brikaya-brand-domain-brikaya-dashboard-mobile.png",
+    "evi-brikaya-brand-domain-brikaya-dashboard-desktop.png",
+    "evi-brikaya-brand-domain-brikaya-theme-contrast.png",
+    "evi-brikaya-brand-domain-brikaya-theme-sunset.png",
+    "evi-brikaya-brand-domain-brikaya-offline-pwa.png",
+    "evi-brikaya-brand-domain-brikaya-runtime-update.png",
+    "evi-brikaya-brand-domain-brikaya-svg-assets.png",
+    "evi-brikaya-brand-domain-brikaya-phase-transition.png",
+    "evi-brikaya-brand-domain-brikaya-no-score-reset.png",
+    "evi-brikaya-brand-domain-cloudflare-mobile-qa.json",
+    "evi-brikaya-brand-domain-cloudflare-no-score-reset-after-brick.json",
+    "evi-brikaya-brand-domain-cloudflare-phase-transition.json",
+    "evi-brikaya-brand-domain-cloudflare-dashboard-layout.json",
+    "evi-brikaya-brand-domain-cloudflare-theme-qa.json",
+    "evi-brikaya-brand-domain-cloudflare-svg-assets-qa.json",
+    "evi-brikaya-brand-domain-cloudflare-runtime-update-qa.json",
+    "evi-brikaya-brand-domain-cloudflare-offline-pwa-qa.json"
+  ]
+}

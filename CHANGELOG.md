@@ -3,6 +3,25 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.28.5] - 2026-07-03
+### Adicionado
+- Guard `test:semantic-file-names` para bloquear arquivos governados com nomes genéricos, duplicados ou fora do padrão semântico.
+- Normalizador `normalize:semantic-file-names` com `git mv`, atualização de referências e mapa versionado de renomes.
+- Agente de governança para nomes semânticos de assets e evidências Codex.
+
+### Alterado
+- Evidências Codex em `docs/assets/issues/**/(evidence|orientation)/**` passam a usar prefixo `evi-` e basename/stem globalmente únicos.
+- Artefatos visuais de planejamento em `docs/assets/theme-planning/**` passam a usar prefixo `codex-`.
+- Build passa a executar `test:semantic-file-names` antes dos demais guards.
+
+### Testado
+- `PATH=/opt/homebrew/bin:$PATH npm run test:semantic-file-names`
+- `PATH=/opt/homebrew/bin:$PATH npm run test:asset-naming`
+- `PATH=/opt/homebrew/bin:$PATH npm run test:svg-assets`
+- `PATH=/opt/homebrew/bin:$PATH npm run test:audio-assets`
+- `PATH=/opt/homebrew/bin:$PATH npm test -- --runInBand`
+- `PATH=/opt/homebrew/bin:$PATH npm run build`
+
 ## [1.28.4] - 2026-07-03
 ### Adicionado
 - Atualização PWA passa a emitir feedback sonoro de início e conclusão reutilizando sons locais já catalogados.

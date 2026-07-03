@@ -33,8 +33,8 @@
 
 ## Artefatos visuais SVG do planejamento
 
-- [Opções visuais SVG](../../assets/theme-planning/svg-theme-system/brickbreaker-theme-options.svg)
-- [Arquitetura SVG](../../assets/theme-planning/svg-theme-system/brickbreaker-theme-architecture.svg)
+- [Opções visuais SVG](../../assets/theme-planning/svg-theme-system/codex-brickbreaker-theme-options.svg)
+- [Arquitetura SVG](../../assets/theme-planning/svg-theme-system/codex-brickbreaker-theme-architecture.svg)
 
 ## Vocabulário técnico adotado
 

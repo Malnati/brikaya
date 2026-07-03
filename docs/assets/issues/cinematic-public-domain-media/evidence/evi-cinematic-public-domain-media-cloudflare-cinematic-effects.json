@@ -1,0 +1,127 @@
+{
+  "levelTargetUrl": "https://malnati-brickbreaker.pages.dev/?qaScenario=single-brick-phase-clear",
+  "ripTargetUrl": "https://malnati-brickbreaker.pages.dev/?qaScenario=cinematic-rip",
+  "countdownDurationMs": 1785,
+  "ripDurationMs": 1780,
+  "countdownState": {
+    "text": "3",
+    "type": "countdown",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 393,
+      "height": 852,
+      "right": 393,
+      "bottom": 852
+    },
+    "viewport": {
+      "width": 393,
+      "height": 852
+    },
+    "hasBodyScroll": false,
+    "media": [
+      {
+        "id": "countdown-circle",
+        "src": "/assets/cinematics/countdown-circle.png",
+        "ariaHidden": "true",
+        "alt": ""
+      },
+      {
+        "id": "countdown-spark",
+        "src": "/assets/cinematics/countdown-spark.png",
+        "ariaHidden": "true",
+        "alt": ""
+      }
+    ]
+  },
+  "levelUpState": {
+    "text": "Subindo de nívelFase 2Velocidade 1.12×",
+    "type": "levelUp",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 393,
+      "height": 852,
+      "right": 393,
+      "bottom": 852
+    },
+    "viewport": {
+      "width": 393,
+      "height": 852
+    },
+    "hasBodyScroll": false,
+    "media": [
+      {
+        "id": "level-up-twirl",
+        "src": "/assets/cinematics/level-up-twirl.png",
+        "ariaHidden": "true",
+        "alt": ""
+      },
+      {
+        "id": "level-up-star",
+        "src": "/assets/cinematics/level-up-star.png",
+        "ariaHidden": "true",
+        "alt": ""
+      }
+    ]
+  },
+  "ripState": {
+    "text": "RIPRecomeçando...",
+    "type": "rip",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 393,
+      "height": 852,
+      "right": 393,
+      "bottom": 852
+    },
+    "viewport": {
+      "width": 393,
+      "height": 852
+    },
+    "hasBodyScroll": false,
+    "media": [
+      {
+        "id": "rip-smoke",
+        "src": "/assets/cinematics/rip-smoke.png",
+        "ariaHidden": "true",
+        "alt": ""
+      }
+    ]
+  },
+  "levelAudioIds": [
+    "music_gameplay_loop",
+    "sfx_ad_placeholder_none",
+    "sfx_brick_break_blue",
+    "sfx_brick_hit",
+    "sfx_game_start",
+    "sfx_level_complete",
+    "sfx_level_toast_in",
+    "sfx_offline_ready",
+    "sfx_score_tick"
+  ],
+  "ripAudioIds": [
+    "music_gameplay_loop",
+    "music_menu_loop",
+    "sfx_ad_placeholder_none",
+    "sfx_ball_lost",
+    "sfx_game_over",
+    "sfx_game_start",
+    "sfx_offline_ready",
+    "sfx_score_tick"
+  ],
+  "cachedPaths": [
+    "/assets/cinematics/countdown-circle.png",
+    "/assets/cinematics/countdown-spark.png",
+    "/assets/cinematics/level-up-star.png",
+    "/assets/cinematics/level-up-twirl.png",
+    "/assets/cinematics/rip-smoke.png"
+  ],
+  "countdownScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-evi-cinematic-public-domain-media-cloudflare-cinematic-countdown.png",
+  "levelUpScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-evi-cinematic-public-domain-media-cloudflare-cinematic-level-up.png",
+  "ripScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-evi-cinematic-public-domain-media-cloudflare-cinematic-rip.png",
+  "externalAudioRequests": [],
+  "externalMediaRequests": [],
+  "consoleProblems": []
+}

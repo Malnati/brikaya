@@ -1,0 +1,1895 @@
+{
+  "ok": true,
+  "governedFileCount": 615,
+  "renameCount": 472,
+  "renames": [
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/cloudflare-preview-deploy.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-cloudflare-preview-deploy.json"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-audio.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-audio.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-cinematic-countdown.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-cinematic-countdown.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-cinematic-level-up.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-cinematic-level-up.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-cinematic-rip.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-cinematic-rip.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-cloudflare-audio-qa.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-cloudflare-audio-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-cloudflare-cinematic-effects.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-cloudflare-cinematic-effects.json"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-cloudflare-dashboard-layout.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-cloudflare-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-cloudflare-laser-powerup.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-cloudflare-laser-powerup.json"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-cloudflare-mobile-qa.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-cloudflare-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-cloudflare-no-score-reset.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-cloudflare-no-score-reset.json"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-cloudflare-svg-assets.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-cloudflare-svg-assets.json"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-cloudflare-theme-qa.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-cloudflare-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-dashboard-desktop.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-dashboard-desktop.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-dashboard-landscape.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-dashboard-landscape.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-dashboard-mobile.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-dashboard-mobile.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-laser-powerup-item.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-laser-powerup-item.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-laser-powerup.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-laser-powerup.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-mobile-menu.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-mobile-menu.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-mobile.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-mobile.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-no-score-reset.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-no-score-reset.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-svg-assets.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-svg-assets.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-theme-desktop-dark.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-theme-desktop-dark.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-theme-desktop-light.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-theme-desktop-light.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-theme-iphone-dark.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-theme-iphone-dark.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/preview-theme-iphone-light.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-preview-theme-iphone-light.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-audio.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-audio.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-cinematic-countdown.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-cinematic-countdown.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-cinematic-level-up.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-cinematic-level-up.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-cinematic-rip.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-cinematic-rip.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-cloudflare-audio-qa.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-cloudflare-audio-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-cloudflare-cinematic-effects.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-cloudflare-cinematic-effects.json"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-cloudflare-dashboard-layout.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-cloudflare-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-cloudflare-laser-powerup.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-cloudflare-laser-powerup.json"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-cloudflare-mobile-qa.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-cloudflare-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-cloudflare-no-score-reset.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-cloudflare-no-score-reset.json"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-cloudflare-svg-assets.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-cloudflare-svg-assets.json"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-dashboard-desktop.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-dashboard-desktop.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-dashboard-landscape.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-dashboard-landscape.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-dashboard-mobile.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-dashboard-mobile.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-laser-powerup-item.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-laser-powerup-item.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-laser-powerup.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-laser-powerup.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-mobile-menu.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-mobile-menu.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-mobile.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-mobile.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-no-score-reset.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-no-score-reset.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/production-svg-assets.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-production-svg-assets.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/svg-asset-sheet.png",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-svg-asset-sheet.png"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/svg-assets-receipt.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-svg-assets-receipt.json"
+    },
+    {
+      "from": "docs/assets/issues/all-game-svg-assets/evidence/svg-assets-validation.json",
+      "to": "docs/assets/issues/all-game-svg-assets/evidence/evi-all-game-svg-assets-svg-assets-validation.json"
+    },
+    {
+      "from": "docs/assets/issues/audio-cc0-integration/evidence/cloudflare-audio-control.png",
+      "to": "docs/assets/issues/audio-cc0-integration/evidence/evi-audio-cc0-integration-cloudflare-audio-control.png"
+    },
+    {
+      "from": "docs/assets/issues/audio-cc0-integration/evidence/cloudflare-audio-qa.json",
+      "to": "docs/assets/issues/audio-cc0-integration/evidence/evi-audio-cc0-integration-cloudflare-audio-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-brikaya-canonical-home.png",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-brikaya-canonical-home.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-brikaya-dashboard-desktop.png",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-brikaya-dashboard-desktop.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-brikaya-dashboard-mobile.png",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-brikaya-dashboard-mobile.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-brikaya-mobile-home.png",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-brikaya-mobile-home.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-brikaya-mobile-menu.png",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-brikaya-mobile-menu.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-brikaya-no-score-reset.png",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-brikaya-no-score-reset.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-brikaya-offline-pwa.png",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-brikaya-offline-pwa.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-brikaya-phase-transition.png",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-brikaya-phase-transition.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-brikaya-public-validation.json",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-brikaya-public-validation.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-brikaya-runtime-update.png",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-brikaya-runtime-update.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-brikaya-svg-assets.png",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-brikaya-svg-assets.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-brikaya-theme-contrast.png",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-brikaya-theme-contrast.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-brikaya-theme-sunset.png",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-brikaya-theme-sunset.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-cloudflare-dashboard-layout.json",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-cloudflare-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-cloudflare-mobile-qa.json",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-cloudflare-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-cloudflare-no-score-reset-after-brick.json",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-cloudflare-no-score-reset-after-brick.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-cloudflare-offline-pwa-qa.json",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-cloudflare-offline-pwa-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-cloudflare-phase-transition.json",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-cloudflare-phase-transition.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-cloudflare-runtime-update-qa.json",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-cloudflare-runtime-update-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-cloudflare-svg-assets-qa.json",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-cloudflare-svg-assets-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-brand-domain/evidence/2026-07-03-cloudflare-theme-qa.json",
+      "to": "docs/assets/issues/brikaya-brand-domain/evidence/evi-brikaya-brand-domain-cloudflare-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-cloudflare-audio-qa.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-cloudflare-audio-qa-501af8.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-cloudflare-audio-qa.json",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-cloudflare-audio-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-cloudflare-mobile-menu.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-cloudflare-mobile-menu.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-cloudflare-mobile-qa.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-cloudflare-mobile-qa-2cd9ed.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-cloudflare-mobile-qa.json",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-cloudflare-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-cloudflare-runtime-update-qa.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-cloudflare-runtime-update-qa-3984c2.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-cloudflare-runtime-update-qa.json",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-cloudflare-runtime-update-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-cloudflare-svg-assets-qa.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-cloudflare-svg-assets-qa-a057ae.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-cloudflare-svg-assets-qa.json",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-cloudflare-svg-assets-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-audio-qa.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-audio-qa-9d7b00.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-audio-qa.json",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-audio-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-dashboard-layout.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-dashboard-layo-4cc682.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-dashboard-layout-landscape.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-dashboard-layo-97d53d.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-dashboard-layout.json",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-dashboard-layo-b9765c.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-dashboard-layout-desktop.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-dashboard-layout.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-mobile-menu.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-mobile-menu.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-mobile-qa.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-mobile-qa-675818.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-mobile-qa.json",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-no-score-reset-after-brick.json",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-no-score-reset-after.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-no-score-reset-after-brick.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-no-score-reset-f8a1f0.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-phase-transition.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-phase-transiti-6230f9.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-phase-transition.json",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-phase-transition.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-runtime-update-qa.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-runtime-update-b0cd21.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-runtime-update-qa.json",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-runtime-update-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-svg-assets-qa.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-svg-assets-qa-aa647f.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-svg-assets-qa.json",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-svg-assets-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-theme-desktop-sunset.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-theme-desktop-sunset.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-theme-desktop-contrast.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-theme-desktop.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-theme-iphone15-sunset.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-theme-iphone15-sunset.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-theme-iphone15-contrast.png",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-theme-iphone15.png"
+    },
+    {
+      "from": "docs/assets/issues/brikaya-domain-update/evidence/2026-07-03-final-cloudflare-theme-qa.json",
+      "to": "docs/assets/issues/brikaya-domain-update/evidence/evi-brikaya-domain-update-final-cloudflare-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/build-version-badge/evidence/cloudflare-dashboard-layout.json",
+      "to": "docs/assets/issues/build-version-badge/evidence/evi-build-version-badge-cloudflare-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/build-version-badge/evidence/cloudflare-mobile-qa.json",
+      "to": "docs/assets/issues/build-version-badge/evidence/evi-build-version-badge-cloudflare-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/build-version-badge/evidence/cloudflare-theme-qa.json",
+      "to": "docs/assets/issues/build-version-badge/evidence/evi-build-version-badge-cloudflare-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/build-version-badge/evidence/desktop-build-version.png",
+      "to": "docs/assets/issues/build-version-badge/evidence/evi-build-version-badge-desktop-build-version.png"
+    },
+    {
+      "from": "docs/assets/issues/build-version-badge/evidence/desktop-theme-dark-build-version.png",
+      "to": "docs/assets/issues/build-version-badge/evidence/evi-build-version-badge-desktop-theme-dark-build-version.png"
+    },
+    {
+      "from": "docs/assets/issues/build-version-badge/evidence/desktop-theme-light-build-version.png",
+      "to": "docs/assets/issues/build-version-badge/evidence/evi-build-version-badge-desktop-theme-light-build-version.png"
+    },
+    {
+      "from": "docs/assets/issues/build-version-badge/evidence/iphone15-theme-dark-build-version.png",
+      "to": "docs/assets/issues/build-version-badge/evidence/evi-build-version-badge-iphone15-theme-dark-build-version.png"
+    },
+    {
+      "from": "docs/assets/issues/build-version-badge/evidence/iphone15-theme-light-build-version.png",
+      "to": "docs/assets/issues/build-version-badge/evidence/evi-build-version-badge-iphone15-theme-light-build-version.png"
+    },
+    {
+      "from": "docs/assets/issues/build-version-badge/evidence/landscape-build-version.png",
+      "to": "docs/assets/issues/build-version-badge/evidence/evi-build-version-badge-landscape-build-version.png"
+    },
+    {
+      "from": "docs/assets/issues/build-version-badge/evidence/mobile-build-version-menu.png",
+      "to": "docs/assets/issues/build-version-badge/evidence/evi-build-version-badge-mobile-build-version-menu.png"
+    },
+    {
+      "from": "docs/assets/issues/build-version-badge/evidence/mobile-build-version-qa.png",
+      "to": "docs/assets/issues/build-version-badge/evidence/evi-build-version-badge-mobile-build-version-qa.png"
+    },
+    {
+      "from": "docs/assets/issues/build-version-badge/evidence/mobile-build-version.png",
+      "to": "docs/assets/issues/build-version-badge/evidence/evi-build-version-badge-mobile-build-version.png"
+    },
+    {
+      "from": "docs/assets/issues/cinematic-public-domain-media/evidence/cinematic-media-license-receipt.json",
+      "to": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cinematic-media-license.json"
+    },
+    {
+      "from": "docs/assets/issues/cinematic-public-domain-media/evidence/cloudflare-cinematic-countdown.png",
+      "to": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-countdown.png"
+    },
+    {
+      "from": "docs/assets/issues/cinematic-public-domain-media/evidence/cloudflare-cinematic-effects.json",
+      "to": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-effects.json"
+    },
+    {
+      "from": "docs/assets/issues/cinematic-public-domain-media/evidence/cloudflare-cinematic-level-up.png",
+      "to": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-level-up.png"
+    },
+    {
+      "from": "docs/assets/issues/cinematic-public-domain-media/evidence/cloudflare-cinematic-rip.png",
+      "to": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-rip.png"
+    },
+    {
+      "from": "docs/assets/issues/cinematic-round-effects/evidence/cloudflare-cinematic-effects.json",
+      "to": "docs/assets/issues/cinematic-round-effects/evidence/evi-cinematic-round-effects-cloudflare-cinematic-effects.json"
+    },
+    {
+      "from": "docs/assets/issues/cinematic-round-effects/evidence/cloudflare-cinematic-level-up.png",
+      "to": "docs/assets/issues/cinematic-round-effects/evidence/evi-cinematic-round-effects-cloudflare-cinematic-level-up.png"
+    },
+    {
+      "from": "docs/assets/issues/cinematic-round-effects/evidence/cloudflare-cinematic-rip.png",
+      "to": "docs/assets/issues/cinematic-round-effects/evidence/evi-cinematic-round-effects-cloudflare-cinematic-rip.png"
+    },
+    {
+      "from": "docs/assets/issues/cloudflare-pages-zero-cost/evidence/2026-06-30-public-desktop.png",
+      "to": "docs/assets/issues/cloudflare-pages-zero-cost/evidence/evi-cloudflare-pages-zero-cost-public-desktop.png"
+    },
+    {
+      "from": "docs/assets/issues/cloudflare-pages-zero-cost/evidence/2026-06-30-public-validation.json",
+      "to": "docs/assets/issues/cloudflare-pages-zero-cost/evidence/evi-cloudflare-pages-zero-cost-public-validation.json"
+    },
+    {
+      "from": "docs/assets/issues/design-system-theme/evidence/preview-dashboard-desktop.png",
+      "to": "docs/assets/issues/design-system-theme/evidence/evi-design-system-theme-preview-dashboard-desktop.png"
+    },
+    {
+      "from": "docs/assets/issues/design-system-theme/evidence/preview-dashboard-iphone15.png",
+      "to": "docs/assets/issues/design-system-theme/evidence/evi-design-system-theme-preview-dashboard-iphone15.png"
+    },
+    {
+      "from": "docs/assets/issues/design-system-theme/evidence/preview-dashboard-layout.json",
+      "to": "docs/assets/issues/design-system-theme/evidence/evi-design-system-theme-preview-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/design-system-theme/evidence/preview-mobile-iphone15.png",
+      "to": "docs/assets/issues/design-system-theme/evidence/evi-design-system-theme-preview-mobile-iphone15.png"
+    },
+    {
+      "from": "docs/assets/issues/design-system-theme/evidence/preview-mobile-qa.json",
+      "to": "docs/assets/issues/design-system-theme/evidence/evi-design-system-theme-preview-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/design-system-theme/evidence/preview-no-score-reset.png",
+      "to": "docs/assets/issues/design-system-theme/evidence/evi-design-system-theme-preview-no-score-reset-6329cf.png"
+    },
+    {
+      "from": "docs/assets/issues/design-system-theme/evidence/preview-no-score-reset.json",
+      "to": "docs/assets/issues/design-system-theme/evidence/evi-design-system-theme-preview-no-score-reset.json"
+    },
+    {
+      "from": "docs/assets/issues/design-system-theme/evidence/preview-phase-transition.png",
+      "to": "docs/assets/issues/design-system-theme/evidence/evi-design-system-theme-preview-phase-transition-c6ebd1.png"
+    },
+    {
+      "from": "docs/assets/issues/design-system-theme/evidence/preview-phase-transition.json",
+      "to": "docs/assets/issues/design-system-theme/evidence/evi-design-system-theme-preview-phase-transition.json"
+    },
+    {
+      "from": "docs/assets/issues/design-system-theme/evidence/preview-theme-desktop-dark.png",
+      "to": "docs/assets/issues/design-system-theme/evidence/evi-design-system-theme-preview-theme-desktop-dark.png"
+    },
+    {
+      "from": "docs/assets/issues/design-system-theme/evidence/preview-theme-desktop-light.png",
+      "to": "docs/assets/issues/design-system-theme/evidence/evi-design-system-theme-preview-theme-desktop-light.png"
+    },
+    {
+      "from": "docs/assets/issues/design-system-theme/evidence/preview-theme-iphone15-dark.png",
+      "to": "docs/assets/issues/design-system-theme/evidence/evi-design-system-theme-preview-theme-iphone15-dark.png"
+    },
+    {
+      "from": "docs/assets/issues/design-system-theme/evidence/preview-theme-iphone15-light.png",
+      "to": "docs/assets/issues/design-system-theme/evidence/evi-design-system-theme-preview-theme-iphone15-light.png"
+    },
+    {
+      "from": "docs/assets/issues/design-system-theme/evidence/preview-theme-qa.json",
+      "to": "docs/assets/issues/design-system-theme/evidence/evi-design-system-theme-preview-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/effects-audio/evidence/effects-audio-test-receipt.json",
+      "to": "docs/assets/issues/effects-audio/evidence/evi-effects-audio-effects-audio-test-receipt.json"
+    },
+    {
+      "from": "docs/assets/issues/effects-audio/evidence/production-cloudflare-audio.png",
+      "to": "docs/assets/issues/effects-audio/evidence/evi-effects-audio-production-cloudflare-audio-643712.png"
+    },
+    {
+      "from": "docs/assets/issues/effects-audio/evidence/production-cloudflare-audio.json",
+      "to": "docs/assets/issues/effects-audio/evidence/evi-effects-audio-production-cloudflare-audio.json"
+    },
+    {
+      "from": "docs/assets/issues/effects-audio/evidence/production-cloudflare-cinematic-countdown.png",
+      "to": "docs/assets/issues/effects-audio/evidence/evi-effects-audio-production-cloudflare-cinematic-countdown.png"
+    },
+    {
+      "from": "docs/assets/issues/effects-audio/evidence/production-cloudflare-cinematic-effects.json",
+      "to": "docs/assets/issues/effects-audio/evidence/evi-effects-audio-production-cloudflare-cinematic-effects.json"
+    },
+    {
+      "from": "docs/assets/issues/effects-audio/evidence/production-cloudflare-cinematic-level-up.png",
+      "to": "docs/assets/issues/effects-audio/evidence/evi-effects-audio-production-cloudflare-cinematic-level-up.png"
+    },
+    {
+      "from": "docs/assets/issues/effects-audio/evidence/production-cloudflare-cinematic-rip.png",
+      "to": "docs/assets/issues/effects-audio/evidence/evi-effects-audio-production-cloudflare-cinematic-rip.png"
+    },
+    {
+      "from": "docs/assets/issues/final-pending-qa/evidence/final-pending-qa-receipt.json",
+      "to": "docs/assets/issues/final-pending-qa/evidence/evi-final-pending-qa-final-pending-qa-receipt.json"
+    },
+    {
+      "from": "docs/assets/issues/final-pending-qa/evidence/production-cloudflare-dashboard-layout.png",
+      "to": "docs/assets/issues/final-pending-qa/evidence/evi-final-pending-qa-production-cloudflare-dashboard-layo-2018ba.png"
+    },
+    {
+      "from": "docs/assets/issues/final-pending-qa/evidence/production-cloudflare-dashboard-layout-landscape.png",
+      "to": "docs/assets/issues/final-pending-qa/evidence/evi-final-pending-qa-production-cloudflare-dashboard-layo-cf3037.png"
+    },
+    {
+      "from": "docs/assets/issues/final-pending-qa/evidence/production-cloudflare-dashboard-layout.json",
+      "to": "docs/assets/issues/final-pending-qa/evidence/evi-final-pending-qa-production-cloudflare-dashboard-layo-d4a1a9.json"
+    },
+    {
+      "from": "docs/assets/issues/final-pending-qa/evidence/production-cloudflare-dashboard-layout-desktop.png",
+      "to": "docs/assets/issues/final-pending-qa/evidence/evi-final-pending-qa-production-cloudflare-dashboard-layout.png"
+    },
+    {
+      "from": "docs/assets/issues/final-pending-qa/evidence/production-cloudflare-mobile-menu.png",
+      "to": "docs/assets/issues/final-pending-qa/evidence/evi-final-pending-qa-production-cloudflare-mobile-menu.png"
+    },
+    {
+      "from": "docs/assets/issues/final-pending-qa/evidence/production-cloudflare-mobile-qa.png",
+      "to": "docs/assets/issues/final-pending-qa/evidence/evi-final-pending-qa-production-cloudflare-mobile-qa-cd9293.png"
+    },
+    {
+      "from": "docs/assets/issues/final-pending-qa/evidence/production-cloudflare-mobile-qa.json",
+      "to": "docs/assets/issues/final-pending-qa/evidence/evi-final-pending-qa-production-cloudflare-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/final-pending-qa/evidence/production-cloudflare-no-score-reset-after-brick.json",
+      "to": "docs/assets/issues/final-pending-qa/evidence/evi-final-pending-qa-production-cloudflare-no-score-reset-after.json"
+    },
+    {
+      "from": "docs/assets/issues/final-pending-qa/evidence/production-cloudflare-no-score-reset-after-brick.png",
+      "to": "docs/assets/issues/final-pending-qa/evidence/evi-final-pending-qa-production-cloudflare-no-score-reset-d9c4f6.png"
+    },
+    {
+      "from": "docs/assets/issues/final-pending-qa/evidence/production-cloudflare-phase-transition.png",
+      "to": "docs/assets/issues/final-pending-qa/evidence/evi-final-pending-qa-production-cloudflare-phase-transiti-9b4546.png"
+    },
+    {
+      "from": "docs/assets/issues/final-pending-qa/evidence/production-cloudflare-phase-transition.json",
+      "to": "docs/assets/issues/final-pending-qa/evidence/evi-final-pending-qa-production-cloudflare-phase-transition.json"
+    },
+    {
+      "from": "docs/assets/issues/final-pending-qa/evidence/production-cloudflare-theme-desktop-sunset.png",
+      "to": "docs/assets/issues/final-pending-qa/evidence/evi-final-pending-qa-production-cloudflare-theme-desktop-sunset.png"
+    },
+    {
+      "from": "docs/assets/issues/final-pending-qa/evidence/production-cloudflare-theme-desktop-contrast.png",
+      "to": "docs/assets/issues/final-pending-qa/evidence/evi-final-pending-qa-production-cloudflare-theme-desktop.png"
+    },
+    {
+      "from": "docs/assets/issues/final-pending-qa/evidence/production-cloudflare-theme-iphone15-sunset.png",
+      "to": "docs/assets/issues/final-pending-qa/evidence/evi-final-pending-qa-production-cloudflare-theme-iphone15-sunset.png"
+    },
+    {
+      "from": "docs/assets/issues/final-pending-qa/evidence/production-cloudflare-theme-iphone15-contrast.png",
+      "to": "docs/assets/issues/final-pending-qa/evidence/evi-final-pending-qa-production-cloudflare-theme-iphone15.png"
+    },
+    {
+      "from": "docs/assets/issues/final-pending-qa/evidence/production-cloudflare-theme-qa.json",
+      "to": "docs/assets/issues/final-pending-qa/evidence/evi-final-pending-qa-production-cloudflare-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/game-speed-menu/evidence/cloudflare-dashboard-layout.json",
+      "to": "docs/assets/issues/game-speed-menu/evidence/evi-game-speed-menu-cloudflare-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/game-speed-menu/evidence/cloudflare-mobile-qa.json",
+      "to": "docs/assets/issues/game-speed-menu/evidence/evi-game-speed-menu-cloudflare-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/game-speed-menu/evidence/cloudflare-no-score-reset.json",
+      "to": "docs/assets/issues/game-speed-menu/evidence/evi-game-speed-menu-cloudflare-no-score-reset.json"
+    },
+    {
+      "from": "docs/assets/issues/game-speed-menu/evidence/cloudflare-phase-transition.json",
+      "to": "docs/assets/issues/game-speed-menu/evidence/evi-game-speed-menu-cloudflare-phase-transition.json"
+    },
+    {
+      "from": "docs/assets/issues/game-speed-menu/evidence/cloudflare-theme-qa.json",
+      "to": "docs/assets/issues/game-speed-menu/evidence/evi-game-speed-menu-cloudflare-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/game-speed-menu/evidence/dashboard-desktop.png",
+      "to": "docs/assets/issues/game-speed-menu/evidence/evi-game-speed-menu-dashboard-desktop.png"
+    },
+    {
+      "from": "docs/assets/issues/game-speed-menu/evidence/menu-reiniciar-mobile.png",
+      "to": "docs/assets/issues/game-speed-menu/evidence/evi-game-speed-menu-menu-reiniciar-mobile.png"
+    },
+    {
+      "from": "docs/assets/issues/game-speed-menu/evidence/mobile-hud-compacto.png",
+      "to": "docs/assets/issues/game-speed-menu/evidence/evi-game-speed-menu-mobile-hud-compacto.png"
+    },
+    {
+      "from": "docs/assets/issues/gameplay-basic-qa/evidence/preview-cloudflare-dashboard-layout.png",
+      "to": "docs/assets/issues/gameplay-basic-qa/evidence/evi-gameplay-basic-qa-preview-cloudflare-dashboard-layout-50d3bb.png"
+    },
+    {
+      "from": "docs/assets/issues/gameplay-basic-qa/evidence/preview-cloudflare-dashboard-layout.json",
+      "to": "docs/assets/issues/gameplay-basic-qa/evidence/evi-gameplay-basic-qa-preview-cloudflare-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/gameplay-basic-qa/evidence/preview-cloudflare-gameplay-basic-qa.png",
+      "to": "docs/assets/issues/gameplay-basic-qa/evidence/evi-gameplay-basic-qa-preview-cloudflare-gameplay-basic-q-5d2d9e.png"
+    },
+    {
+      "from": "docs/assets/issues/gameplay-basic-qa/evidence/preview-cloudflare-gameplay-basic-qa.json",
+      "to": "docs/assets/issues/gameplay-basic-qa/evidence/evi-gameplay-basic-qa-preview-cloudflare-gameplay-basic-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/gameplay-basic-qa/evidence/preview-cloudflare-mobile-qa.png",
+      "to": "docs/assets/issues/gameplay-basic-qa/evidence/evi-gameplay-basic-qa-preview-cloudflare-mobile-qa-0ffb68.png"
+    },
+    {
+      "from": "docs/assets/issues/gameplay-basic-qa/evidence/preview-cloudflare-mobile-qa.json",
+      "to": "docs/assets/issues/gameplay-basic-qa/evidence/evi-gameplay-basic-qa-preview-cloudflare-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/gameplay-basic-qa/evidence/preview-cloudflare-no-score-reset-after-brick.json",
+      "to": "docs/assets/issues/gameplay-basic-qa/evidence/evi-gameplay-basic-qa-preview-cloudflare-no-score-reset-after.json"
+    },
+    {
+      "from": "docs/assets/issues/gameplay-basic-qa/evidence/preview-cloudflare-offline-pwa-qa.png",
+      "to": "docs/assets/issues/gameplay-basic-qa/evidence/evi-gameplay-basic-qa-preview-cloudflare-offline-pwa-qa-b7ac3b.png"
+    },
+    {
+      "from": "docs/assets/issues/gameplay-basic-qa/evidence/preview-cloudflare-offline-pwa-qa.json",
+      "to": "docs/assets/issues/gameplay-basic-qa/evidence/evi-gameplay-basic-qa-preview-cloudflare-offline-pwa-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/gameplay-basic-qa/evidence/preview-cloudflare-phase-transition.png",
+      "to": "docs/assets/issues/gameplay-basic-qa/evidence/evi-gameplay-basic-qa-preview-cloudflare-phase-transition-3a66fd.png"
+    },
+    {
+      "from": "docs/assets/issues/gameplay-basic-qa/evidence/preview-cloudflare-phase-transition.json",
+      "to": "docs/assets/issues/gameplay-basic-qa/evidence/evi-gameplay-basic-qa-preview-cloudflare-phase-transition.json"
+    },
+    {
+      "from": "docs/assets/issues/gameplay-basic-qa/evidence/preview-cloudflare-svg-assets-qa.json",
+      "to": "docs/assets/issues/gameplay-basic-qa/evidence/evi-gameplay-basic-qa-preview-cloudflare-svg-assets-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/gameplay-basic-qa/evidence/preview-cloudflare-theme-qa.json",
+      "to": "docs/assets/issues/gameplay-basic-qa/evidence/evi-gameplay-basic-qa-preview-cloudflare-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/gradual-speed-reduction/evidence/preview-dashboard-layout.png",
+      "to": "docs/assets/issues/gradual-speed-reduction/evidence/evi-gradual-speed-reduction-preview-dashboard-layout-bf7eb5.png"
+    },
+    {
+      "from": "docs/assets/issues/gradual-speed-reduction/evidence/preview-dashboard-layout.json",
+      "to": "docs/assets/issues/gradual-speed-reduction/evidence/evi-gradual-speed-reduction-preview-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/gradual-speed-reduction/evidence/preview-mobile-qa.png",
+      "to": "docs/assets/issues/gradual-speed-reduction/evidence/evi-gradual-speed-reduction-preview-mobile-qa-13440f.png"
+    },
+    {
+      "from": "docs/assets/issues/gradual-speed-reduction/evidence/preview-mobile-qa.json",
+      "to": "docs/assets/issues/gradual-speed-reduction/evidence/evi-gradual-speed-reduction-preview-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/gradual-speed-reduction/evidence/preview-no-score-reset.png",
+      "to": "docs/assets/issues/gradual-speed-reduction/evidence/evi-gradual-speed-reduction-preview-no-score-reset-2da358.png"
+    },
+    {
+      "from": "docs/assets/issues/gradual-speed-reduction/evidence/preview-no-score-reset.json",
+      "to": "docs/assets/issues/gradual-speed-reduction/evidence/evi-gradual-speed-reduction-preview-no-score-reset.json"
+    },
+    {
+      "from": "docs/assets/issues/gradual-speed-reduction/evidence/preview-phase-transition.png",
+      "to": "docs/assets/issues/gradual-speed-reduction/evidence/evi-gradual-speed-reduction-preview-phase-transition-9a82f6.png"
+    },
+    {
+      "from": "docs/assets/issues/gradual-speed-reduction/evidence/preview-phase-transition.json",
+      "to": "docs/assets/issues/gradual-speed-reduction/evidence/evi-gradual-speed-reduction-preview-phase-transition.json"
+    },
+    {
+      "from": "docs/assets/issues/gradual-speed-reduction/evidence/preview-phase10-stability.png",
+      "to": "docs/assets/issues/gradual-speed-reduction/evidence/evi-gradual-speed-reduction-preview-phase10-stability-deaba1.png"
+    },
+    {
+      "from": "docs/assets/issues/gradual-speed-reduction/evidence/preview-phase10-stability.json",
+      "to": "docs/assets/issues/gradual-speed-reduction/evidence/evi-gradual-speed-reduction-preview-phase10-stability.json"
+    },
+    {
+      "from": "docs/assets/issues/gradual-speed-reduction/evidence/preview-theme-iphone15-dark.png",
+      "to": "docs/assets/issues/gradual-speed-reduction/evidence/evi-gradual-speed-reduction-preview-theme-iphone15-dark.png"
+    },
+    {
+      "from": "docs/assets/issues/gradual-speed-reduction/evidence/preview-theme-iphone15-light.png",
+      "to": "docs/assets/issues/gradual-speed-reduction/evidence/evi-gradual-speed-reduction-preview-theme-iphone15-light.png"
+    },
+    {
+      "from": "docs/assets/issues/gradual-speed-reduction/evidence/preview-theme-qa.json",
+      "to": "docs/assets/issues/gradual-speed-reduction/evidence/evi-gradual-speed-reduction-preview-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-main-screen/evidence/preview-dashboard-layout.json",
+      "to": "docs/assets/issues/icon-controls-main-screen/evidence/evi-icon-controls-main-screen-preview-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-main-screen/evidence/preview-main-icons-desktop.png",
+      "to": "docs/assets/issues/icon-controls-main-screen/evidence/evi-icon-controls-main-screen-preview-main-icons-desktop.png"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-main-screen/evidence/preview-main-icons-mobile.png",
+      "to": "docs/assets/issues/icon-controls-main-screen/evidence/evi-icon-controls-main-screen-preview-main-icons-mobile.png"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-main-screen/evidence/preview-menu-without-restart.png",
+      "to": "docs/assets/issues/icon-controls-main-screen/evidence/evi-icon-controls-main-screen-preview-menu-without-restart.png"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-main-screen/evidence/preview-mobile-qa.json",
+      "to": "docs/assets/issues/icon-controls-main-screen/evidence/evi-icon-controls-main-screen-preview-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-main-screen/evidence/preview-no-score-reset.json",
+      "to": "docs/assets/issues/icon-controls-main-screen/evidence/evi-icon-controls-main-screen-preview-no-score-reset.json"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-main-screen/evidence/preview-phase-transition.json",
+      "to": "docs/assets/issues/icon-controls-main-screen/evidence/evi-icon-controls-main-screen-preview-phase-transition.json"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-main-screen/evidence/preview-phase10-stability.json",
+      "to": "docs/assets/issues/icon-controls-main-screen/evidence/evi-icon-controls-main-screen-preview-phase10-stability.json"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-main-screen/evidence/preview-theme-qa.json",
+      "to": "docs/assets/issues/icon-controls-main-screen/evidence/evi-icon-controls-main-screen-preview-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-outside-board/evidence/preview-dashboard-layout.json",
+      "to": "docs/assets/issues/icon-controls-outside-board/evidence/evi-icon-controls-outside-board-preview-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-outside-board/evidence/preview-icons-outside-desktop.png",
+      "to": "docs/assets/issues/icon-controls-outside-board/evidence/evi-icon-controls-outside-board-preview-icons-outside-desktop.png"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-outside-board/evidence/preview-icons-outside-mobile.png",
+      "to": "docs/assets/issues/icon-controls-outside-board/evidence/evi-icon-controls-outside-board-preview-icons-outside-mobile.png"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-outside-board/evidence/preview-menu.png",
+      "to": "docs/assets/issues/icon-controls-outside-board/evidence/evi-icon-controls-outside-board-preview-menu.png"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-outside-board/evidence/preview-mobile-qa.json",
+      "to": "docs/assets/issues/icon-controls-outside-board/evidence/evi-icon-controls-outside-board-preview-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-outside-board/evidence/preview-no-score-reset.json",
+      "to": "docs/assets/issues/icon-controls-outside-board/evidence/evi-icon-controls-outside-board-preview-no-score-reset.json"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-outside-board/evidence/preview-phase-transition.json",
+      "to": "docs/assets/issues/icon-controls-outside-board/evidence/evi-icon-controls-outside-board-preview-phase-transition.json"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-outside-board/evidence/preview-phase10-stability.json",
+      "to": "docs/assets/issues/icon-controls-outside-board/evidence/evi-icon-controls-outside-board-preview-phase10-stability.json"
+    },
+    {
+      "from": "docs/assets/issues/icon-controls-outside-board/evidence/preview-theme-qa.json",
+      "to": "docs/assets/issues/icon-controls-outside-board/evidence/evi-icon-controls-outside-board-preview-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/android-chrome-audio-toggle.json",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-android-chrome-audio-toggle.json"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/audio-toggle-matrix-preview.png",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-audio-toggle-matrix-preview.png"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/audio-toggle-matrix-production.png",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-audio-toggle-matrix-production.png"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/cloudflare-audio-qa-preview.json",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-cloudflare-audio-qa-preview.json"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/cloudflare-audio-qa-production.json",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-cloudflare-audio-qa-production.json"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/cloudflare-dashboard-layout-production.json",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-cloudflare-dashboard-lay-064fce.json"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/cloudflare-dashboard-layout-preview.json",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-cloudflare-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/cloudflare-mobile-qa-preview.json",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-cloudflare-mobile-qa-preview.json"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/cloudflare-mobile-qa-production.json",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-cloudflare-mobile-qa-production.json"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/cloudflare-no-score-reset-production.json",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-cloudflare-no-score-rese-35a2b3.json"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/cloudflare-no-score-reset-preview.json",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-cloudflare-no-score-reset.json"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/desktop-preview.png",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-desktop-preview.png"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/desktop-production.png",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-desktop-production.png"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/ios-chrome-audio-toggle.json",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-ios-chrome-audio-toggle.json"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/ios-safari-audio-toggle.json",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-ios-safari-audio-toggle.json"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/ios-safari-simulator-after-off.png",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-ios-safari-simulator-after-off.png"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/ios-safari-simulator-after-on.png",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-ios-safari-simulator-after-on.png"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/ios-safari-simulator-audio-toggle.json",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-ios-safari-simulator-audio.json"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/ios-safari-simulator-initial.png",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-ios-safari-simulator-initial.png"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/mobile-landscape-preview.png",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-mobile-landscape-preview.png"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/mobile-landscape-production.png",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-mobile-landscape-production.png"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/mobile-menu-preview.png",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-mobile-menu-preview.png"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/mobile-menu-production.png",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-mobile-menu-production.png"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/mobile-portrait-preview.png",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-mobile-portrait-preview.png"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/mobile-portrait-production.png",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-mobile-portrait-production.png"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/mobile-qa-preview.png",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-mobile-qa-preview.png"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/mobile-qa-production.png",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-mobile-qa-production.png"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/no-score-reset-preview.png",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-no-score-reset-preview.png"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/no-score-reset-production.png",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-no-score-reset-production.png"
+    },
+    {
+      "from": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/preview-url.txt",
+      "to": "docs/assets/issues/ios-android-audio-toggle-v79/evidence/evi-ios-android-audio-toggle-v79-preview-url.json"
+    },
+    {
+      "from": "docs/assets/issues/iphone15-mobile-playability/evidence/2026-06-30-cloudflare-preview-iphone15.png",
+      "to": "docs/assets/issues/iphone15-mobile-playability/evidence/evi-iphone15-mobile-playability-cloudflare-preview-iphone-614767.png"
+    },
+    {
+      "from": "docs/assets/issues/iphone15-mobile-playability/evidence/2026-06-30-cloudflare-preview-iphone15.json",
+      "to": "docs/assets/issues/iphone15-mobile-playability/evidence/evi-iphone15-mobile-playability-cloudflare-preview-iphone-d5e2f1.json"
+    },
+    {
+      "from": "docs/assets/issues/iphone15-mobile-playability/evidence/2026-06-30-cloudflare-preview-iphone15-logs.png",
+      "to": "docs/assets/issues/iphone15-mobile-playability/evidence/evi-iphone15-mobile-playability-cloudflare-preview-iphone15-logs.png"
+    },
+    {
+      "from": "docs/assets/issues/iphone15-mobile-playability/evidence/2026-06-30-cloudflare-preview-iphone15-stats.png",
+      "to": "docs/assets/issues/iphone15-mobile-playability/evidence/evi-iphone15-mobile-playability-cloudflare-preview-iphone15.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-audio-qa.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-audio-qa-b667ad.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-audio-qa.json",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-audio-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-cinematic-countdown.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-cinematic-countdown.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-cinematic-effects-qa.json",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-cinematic-effects-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-cinematic-level-up.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-cinematic-level-up.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-cinematic-rip.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-cinematic-rip.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-dashboard-desktop.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-dashboard-desktop.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-dashboard-iphone.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-dashboard-iphone.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-dashboard-landscape.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-dashboard-landscape.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-dashboard-layout-qa.json",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-dashboard-layout-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-mobile-menu.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-mobile-menu.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-mobile-qa.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-mobile-qa-5f313e.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-mobile-qa.json",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-no-score-reset-qa.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-no-score-reset-qa-e9520f.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-no-score-reset-qa.json",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-no-score-reset-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-offline-pwa-qa.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-offline-pwa-qa-d28b1e.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-offline-pwa-qa.json",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-offline-pwa-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-phase-transition-qa.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-phase-transition-qa-efdd09.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-phase-transition-qa.json",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-phase-transition-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-runtime-update-seed.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-runtime-update-seed-47e2e6.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-runtime-update-seed.json",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-runtime-update-seed.json"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-runtime-update-verify.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-runtime-update-verify-033713.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-runtime-update-verify.json",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-runtime-update-verify.json"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-svg-assets-qa.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-svg-assets-qa-ddbd94.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-svg-assets-qa.json",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-svg-assets-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-theme-desktop-contrast.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-theme-desktop-contrast.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-theme-desktop-sunset.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-theme-desktop-sunset.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-theme-iphone-contrast.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-theme-iphone-contrast.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-theme-iphone-sunset.png",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-theme-iphone-sunset.png"
+    },
+    {
+      "from": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-theme-qa.json",
+      "to": "docs/assets/issues/lazy-asset-loading/evidence/evi-lazy-asset-loading-cloudflare-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/level-progression/evidence/local-test-receipt.json",
+      "to": "docs/assets/issues/level-progression/evidence/evi-level-progression-local-test-receipt.json"
+    },
+    {
+      "from": "docs/assets/issues/level-progression/evidence/preview-cloudflare-level-progression.png",
+      "to": "docs/assets/issues/level-progression/evidence/evi-level-progression-preview-cloudflare-level-progressio-ccc0e4.png"
+    },
+    {
+      "from": "docs/assets/issues/level-progression/evidence/preview-cloudflare-level-progression.json",
+      "to": "docs/assets/issues/level-progression/evidence/evi-level-progression-preview-cloudflare-level-progression.json"
+    },
+    {
+      "from": "docs/assets/issues/local-high-scores/evidence/local-preview-test-receipt.json",
+      "to": "docs/assets/issues/local-high-scores/evidence/evi-local-high-scores-local-preview-test-receipt.json"
+    },
+    {
+      "from": "docs/assets/issues/local-high-scores/evidence/preview-cloudflare-high-scores.png",
+      "to": "docs/assets/issues/local-high-scores/evidence/evi-local-high-scores-preview-cloudflare-high-scores-adc22e.png"
+    },
+    {
+      "from": "docs/assets/issues/local-high-scores/evidence/preview-cloudflare-high-scores.json",
+      "to": "docs/assets/issues/local-high-scores/evidence/evi-local-high-scores-preview-cloudflare-high-scores.json"
+    },
+    {
+      "from": "docs/assets/issues/menu-pauses-game/evidence/cloudflare-mobile-menu.png",
+      "to": "docs/assets/issues/menu-pauses-game/evidence/evi-menu-pauses-game-cloudflare-mobile-menu.png"
+    },
+    {
+      "from": "docs/assets/issues/menu-pauses-game/evidence/cloudflare-mobile-qa.json",
+      "to": "docs/assets/issues/menu-pauses-game/evidence/evi-menu-pauses-game-cloudflare-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/audio-control.png",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-audio-control.png"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/cloudflare-audio-qa.json",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-cloudflare-audio-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/cloudflare-dashboard-layout.json",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-cloudflare-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/cloudflare-laser-powerup-qa.json",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-cloudflare-laser-powerup-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/cloudflare-mobile-qa.json",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-cloudflare-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/cloudflare-no-score-reset.json",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-cloudflare-no-score-reset.json"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/cloudflare-phase-transition.json",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-cloudflare-phase-transition.json"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/cloudflare-theme-qa.json",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-cloudflare-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/desktop-full-width.png",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-desktop-full-width.png"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/laser-item.png",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-laser-item.png"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/laser-result.png",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-laser-result.png"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/menu-version-desktop-dark.png",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-menu-version-desktop-dark.png"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/menu-version-desktop-light.png",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-menu-version-desktop-light.png"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/menu-version-mobile-dark.png",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-menu-version-mobile-dark.png"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/menu-version-mobile-light.png",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-menu-version-mobile-light.png"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/mobile-landscape-immersive.png",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-mobile-landscape-immersive.png"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/mobile-menu-version.png",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-mobile-menu-version.png"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/mobile-portrait-full-width.png",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-mobile-portrait-full-width.png"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/mobile-qa.png",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-mobile-qa.png"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/no-score-reset.png",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-no-score-reset.png"
+    },
+    {
+      "from": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/phase-transition.png",
+      "to": "docs/assets/issues/menu-version-dark-theme-laser-full-width/evidence/evi-menu-version-dark-theme-laser-phase-transition.png"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-controls-outside-board/evidence/20260702T032150Z-preview-dashboard-layout.json",
+      "to": "docs/assets/issues/mobile-landscape-controls-outside-board/evidence/evi-mobile-landscape-controls-preview-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-controls-outside-board/evidence/20260702T032150Z-preview-landscape.png",
+      "to": "docs/assets/issues/mobile-landscape-controls-outside-board/evidence/evi-mobile-landscape-controls-preview-landscape.png"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/audio-control-preview.png",
+      "to": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/evi-mobile-landscape-full-width-audio-control-preview.png"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/cloudflare-audio-qa-preview.json",
+      "to": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/evi-mobile-landscape-full-width-cloudflare-audio-qa-preview.json"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/cloudflare-dashboard-layout-preview.json",
+      "to": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/evi-mobile-landscape-full-width-cloudflare-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/cloudflare-mobile-qa-preview.json",
+      "to": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/evi-mobile-landscape-full-width-cloudflare-mobile-qa-preview.json"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/cloudflare-no-score-reset-preview.json",
+      "to": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/evi-mobile-landscape-full-width-cloudflare-no-score-reset.json"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/desktop-preview.png",
+      "to": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/evi-mobile-landscape-full-width-desktop-preview.png"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/mobile-landscape-full-width-preview.png",
+      "to": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/evi-mobile-landscape-full-width-mobile-landscape-full-width.png"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/mobile-menu-preview.png",
+      "to": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/evi-mobile-landscape-full-width-mobile-menu-preview.png"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/mobile-portrait-preview.png",
+      "to": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/evi-mobile-landscape-full-width-mobile-portrait-preview.png"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/mobile-qa-preview.png",
+      "to": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/evi-mobile-landscape-full-width-mobile-qa-preview.png"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/preview-url.txt",
+      "to": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/evi-mobile-landscape-full-width-muted-audio-preview-url.json"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/no-score-reset-preview.png",
+      "to": "docs/assets/issues/mobile-landscape-full-width-muted-audio/evidence/evi-mobile-landscape-full-width-no-score-reset-preview.png"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-immersive-fix/evidence/2026-07-02-cloudflare-dashboard-layout-qa.json",
+      "to": "docs/assets/issues/mobile-landscape-immersive-fix/evidence/evi-mobile-landscape-immersive-fix-cloudflare-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-immersive-fix/evidence/2026-07-02-landscape-immersive.png",
+      "to": "docs/assets/issues/mobile-landscape-immersive-fix/evidence/evi-mobile-landscape-immersive-fix-landscape-immersive.png"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-immersive/evidence/2026-07-01-dashboard-layout-qa.json",
+      "to": "docs/assets/issues/mobile-landscape-immersive/evidence/evi-mobile-landscape-immersive-dashboard-layout-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-immersive/evidence/2026-07-01-landscape-immersive.png",
+      "to": "docs/assets/issues/mobile-landscape-immersive/evidence/evi-mobile-landscape-immersive-landscape-immersive.png"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-immersive/evidence/2026-07-01-mobile-menu-qa.png",
+      "to": "docs/assets/issues/mobile-landscape-immersive/evidence/evi-mobile-landscape-immersive-mobile-menu-qa.png"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-immersive/evidence/2026-07-01-mobile-qa.png",
+      "to": "docs/assets/issues/mobile-landscape-immersive/evidence/evi-mobile-landscape-immersive-mobile-qa-821eed.png"
+    },
+    {
+      "from": "docs/assets/issues/mobile-landscape-immersive/evidence/2026-07-01-mobile-qa.json",
+      "to": "docs/assets/issues/mobile-landscape-immersive/evidence/evi-mobile-landscape-immersive-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/no-score-reset-after-brick/evidence/2026-06-30-cloudflare-preview-mobile.png",
+      "to": "docs/assets/issues/no-score-reset-after-brick/evidence/evi-no-score-reset-after-brick-cloudflare-preview-mobile-0f8bc2.png"
+    },
+    {
+      "from": "docs/assets/issues/no-score-reset-after-brick/evidence/2026-06-30-cloudflare-preview-mobile.json",
+      "to": "docs/assets/issues/no-score-reset-after-brick/evidence/evi-no-score-reset-after-brick-cloudflare-preview-mobile.json"
+    },
+    {
+      "from": "docs/assets/issues/no-score-reset-after-brick/evidence/2026-06-30-cloudflare-preview-no-score-reset.png",
+      "to": "docs/assets/issues/no-score-reset-after-brick/evidence/evi-no-score-reset-after-brick-cloudflare-preview-no-scor-6b2883.png"
+    },
+    {
+      "from": "docs/assets/issues/no-score-reset-after-brick/evidence/2026-06-30-cloudflare-preview-no-score-reset.json",
+      "to": "docs/assets/issues/no-score-reset-after-brick/evidence/evi-no-score-reset-after-brick-cloudflare-preview-no-score-reset.json"
+    },
+    {
+      "from": "docs/assets/issues/phase-pause-modern-dashboard/evidence/2026-06-30-preview-dashboard-iphone15.png",
+      "to": "docs/assets/issues/phase-pause-modern-dashboard/evidence/evi-phase-pause-modern-dashboard-preview-dashboard-iphone15.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-pause-modern-dashboard/evidence/2026-06-30-preview-dashboard-layout.json",
+      "to": "docs/assets/issues/phase-pause-modern-dashboard/evidence/evi-phase-pause-modern-dashboard-preview-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/phase-pause-modern-dashboard/evidence/2026-06-30-preview-desktop-ad-slots.png",
+      "to": "docs/assets/issues/phase-pause-modern-dashboard/evidence/evi-phase-pause-modern-dashboard-preview-desktop-ad-slots.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-pause-modern-dashboard/evidence/2026-06-30-preview-iphone15-normal.png",
+      "to": "docs/assets/issues/phase-pause-modern-dashboard/evidence/evi-phase-pause-modern-dashboard-preview-iphone15-normal.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-pause-modern-dashboard/evidence/2026-06-30-preview-iphone15-toast.png",
+      "to": "docs/assets/issues/phase-pause-modern-dashboard/evidence/evi-phase-pause-modern-dashboard-preview-iphone15-toast.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-pause-modern-dashboard/evidence/2026-06-30-preview-mobile-qa.json",
+      "to": "docs/assets/issues/phase-pause-modern-dashboard/evidence/evi-phase-pause-modern-dashboard-preview-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/phase-pause-modern-dashboard/evidence/2026-06-30-preview-no-score-reset.png",
+      "to": "docs/assets/issues/phase-pause-modern-dashboard/evidence/evi-phase-pause-modern-dashboard-preview-no-score-reset-d453c3.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-pause-modern-dashboard/evidence/2026-06-30-preview-no-score-reset.json",
+      "to": "docs/assets/issues/phase-pause-modern-dashboard/evidence/evi-phase-pause-modern-dashboard-preview-no-score-reset.json"
+    },
+    {
+      "from": "docs/assets/issues/phase-pause-modern-dashboard/evidence/2026-06-30-preview-phase-transition.json",
+      "to": "docs/assets/issues/phase-pause-modern-dashboard/evidence/evi-phase-pause-modern-dashboard-preview-phase-transition.json"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-07-01-preview-dashboard-layout-desktop.png",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-dashboard-layou-3325e0.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-07-01-preview-dashboard-layout.png",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-dashboard-layou-3b87a8.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-07-01-preview-dashboard-layout.json",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-dashboard-layou-e38f05.json"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-06-30-preview-dashboard-layout.json",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-07-01-preview-mobile-menu.png",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-mobile-menu.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-07-01-preview-mobile-qa.json",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-mobile-qa-79c3aa.json"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-06-30-preview-mobile-qa.png",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-mobile-qa-a4391b.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-07-01-preview-mobile-qa.png",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-mobile-qa-c66978.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-06-30-preview-mobile-qa.json",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-06-30-preview-no-score-reset.png",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-no-score-reset-3585f4.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-07-01-preview-no-score-reset.json",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-no-score-reset-a5f284.json"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-07-01-preview-no-score-reset.png",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-no-score-reset-c9f81f.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-06-30-preview-no-score-reset.json",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-no-score-reset.json"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-06-30-preview-phase-transition.png",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-phase-transitio-36a2f6.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-07-01-preview-phase-transition.png",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-phase-transitio-7a35c6.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-07-01-preview-phase-transition.json",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-phase-transitio-7adfdc.json"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-06-30-preview-phase-transition.json",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-phase-transition.json"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-07-01-preview-theme-desktop-dark.png",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-theme-desktop-dark.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-07-01-preview-theme-desktop-light.png",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-theme-desktop-light.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-07-01-preview-theme-iphone15-dark.png",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-theme-iphone15-dark.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-07-01-preview-theme-iphone15-light.png",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-theme-iphone15-light.png"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-07-01-preview-theme-qa.json",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-theme-qa-d1a000.json"
+    },
+    {
+      "from": "docs/assets/issues/phase-speed-control-telemetry/evidence/2026-06-30-preview-theme-qa.json",
+      "to": "docs/assets/issues/phase-speed-control-telemetry/evidence/evi-phase-speed-control-telemetry-preview-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/phase10-ball-counters/evidence/cloudflare-dashboard-layout-desktop.png",
+      "to": "docs/assets/issues/phase10-ball-counters/evidence/evi-phase10-ball-counters-cloudflare-dashboard-layout-desktop.png"
+    },
+    {
+      "from": "docs/assets/issues/phase10-ball-counters/evidence/cloudflare-dashboard-layout.png",
+      "to": "docs/assets/issues/phase10-ball-counters/evidence/evi-phase10-ball-counters-cloudflare-dashboard-layout-ec5ec6.png"
+    },
+    {
+      "from": "docs/assets/issues/phase10-ball-counters/evidence/cloudflare-dashboard-layout.json",
+      "to": "docs/assets/issues/phase10-ball-counters/evidence/evi-phase10-ball-counters-cloudflare-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/phase10-ball-counters/evidence/cloudflare-mobile-qa.png",
+      "to": "docs/assets/issues/phase10-ball-counters/evidence/evi-phase10-ball-counters-cloudflare-mobile-qa-908e78.png"
+    },
+    {
+      "from": "docs/assets/issues/phase10-ball-counters/evidence/cloudflare-mobile-qa.json",
+      "to": "docs/assets/issues/phase10-ball-counters/evidence/evi-phase10-ball-counters-cloudflare-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/phase10-ball-counters/evidence/cloudflare-no-score-reset-after-brick.json",
+      "to": "docs/assets/issues/phase10-ball-counters/evidence/evi-phase10-ball-counters-cloudflare-no-score-reset-after-brick.json"
+    },
+    {
+      "from": "docs/assets/issues/phase10-ball-counters/evidence/cloudflare-phase-transition.json",
+      "to": "docs/assets/issues/phase10-ball-counters/evidence/evi-phase10-ball-counters-cloudflare-phase-transition.json"
+    },
+    {
+      "from": "docs/assets/issues/phase10-ball-counters/evidence/cloudflare-phase10-stability.png",
+      "to": "docs/assets/issues/phase10-ball-counters/evidence/evi-phase10-ball-counters-cloudflare-phase10-stability-58aa05.png"
+    },
+    {
+      "from": "docs/assets/issues/phase10-ball-counters/evidence/cloudflare-phase10-stability.json",
+      "to": "docs/assets/issues/phase10-ball-counters/evidence/evi-phase10-ball-counters-cloudflare-phase10-stability.json"
+    },
+    {
+      "from": "docs/assets/issues/phase10-ball-counters/evidence/cloudflare-theme-qa.json",
+      "to": "docs/assets/issues/phase10-ball-counters/evidence/evi-phase10-ball-counters-cloudflare-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/phase10-ball-counters/evidence/local-validation.txt",
+      "to": "docs/assets/issues/phase10-ball-counters/evidence/evi-phase10-ball-counters-local-validation.json"
+    },
+    {
+      "from": "docs/assets/issues/powerups-specials/evidence/local-test-receipt.json",
+      "to": "docs/assets/issues/powerups-specials/evidence/evi-powerups-specials-local-test-receipt.json"
+    },
+    {
+      "from": "docs/assets/issues/powerups-specials/evidence/preview-cloudflare-powerups.png",
+      "to": "docs/assets/issues/powerups-specials/evidence/evi-powerups-specials-preview-cloudflare-powerups-f731d4.png"
+    },
+    {
+      "from": "docs/assets/issues/powerups-specials/evidence/preview-cloudflare-powerups-item.png",
+      "to": "docs/assets/issues/powerups-specials/evidence/evi-powerups-specials-preview-cloudflare-powerups-item.png"
+    },
+    {
+      "from": "docs/assets/issues/powerups-specials/evidence/preview-cloudflare-powerups.json",
+      "to": "docs/assets/issues/powerups-specials/evidence/evi-powerups-specials-preview-cloudflare-powerups.json"
+    },
+    {
+      "from": "docs/assets/issues/pwa-offline-qa/evidence/preview-cloudflare-dashboard-layout.png",
+      "to": "docs/assets/issues/pwa-offline-qa/evidence/evi-pwa-offline-qa-preview-cloudflare-dashboard-layout-ed9f27.png"
+    },
+    {
+      "from": "docs/assets/issues/pwa-offline-qa/evidence/preview-cloudflare-dashboard-layout.json",
+      "to": "docs/assets/issues/pwa-offline-qa/evidence/evi-pwa-offline-qa-preview-cloudflare-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/pwa-offline-qa/evidence/preview-cloudflare-mobile-qa.png",
+      "to": "docs/assets/issues/pwa-offline-qa/evidence/evi-pwa-offline-qa-preview-cloudflare-mobile-qa-8507ae.png"
+    },
+    {
+      "from": "docs/assets/issues/pwa-offline-qa/evidence/preview-cloudflare-mobile-qa.json",
+      "to": "docs/assets/issues/pwa-offline-qa/evidence/evi-pwa-offline-qa-preview-cloudflare-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/pwa-offline-qa/evidence/preview-cloudflare-no-score-reset-after-brick.json",
+      "to": "docs/assets/issues/pwa-offline-qa/evidence/evi-pwa-offline-qa-preview-cloudflare-no-score-reset-after-brick.json"
+    },
+    {
+      "from": "docs/assets/issues/pwa-offline-qa/evidence/preview-cloudflare-offline-pwa-qa.png",
+      "to": "docs/assets/issues/pwa-offline-qa/evidence/evi-pwa-offline-qa-preview-cloudflare-offline-pwa-qa-c78bc7.png"
+    },
+    {
+      "from": "docs/assets/issues/pwa-offline-qa/evidence/preview-cloudflare-offline-pwa-qa.json",
+      "to": "docs/assets/issues/pwa-offline-qa/evidence/evi-pwa-offline-qa-preview-cloudflare-offline-pwa-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/pwa-offline-qa/evidence/preview-cloudflare-phase-transition.png",
+      "to": "docs/assets/issues/pwa-offline-qa/evidence/evi-pwa-offline-qa-preview-cloudflare-phase-transition-ddcf1e.png"
+    },
+    {
+      "from": "docs/assets/issues/pwa-offline-qa/evidence/preview-cloudflare-phase-transition.json",
+      "to": "docs/assets/issues/pwa-offline-qa/evidence/evi-pwa-offline-qa-preview-cloudflare-phase-transition.json"
+    },
+    {
+      "from": "docs/assets/issues/pwa-offline-qa/evidence/preview-cloudflare-svg-assets-qa.json",
+      "to": "docs/assets/issues/pwa-offline-qa/evidence/evi-pwa-offline-qa-preview-cloudflare-svg-assets-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/pwa-offline-qa/evidence/preview-cloudflare-theme-qa.json",
+      "to": "docs/assets/issues/pwa-offline-qa/evidence/evi-pwa-offline-qa-preview-cloudflare-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/responsive-viewport-qa/evidence/2026-07-03-cloudflare-dashboard-layout.json",
+      "to": "docs/assets/issues/responsive-viewport-qa/evidence/evi-responsive-viewport-qa-cloudflare-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/responsive-viewport-qa/evidence/2026-07-03-cloudflare-mobile-qa.json",
+      "to": "docs/assets/issues/responsive-viewport-qa/evidence/evi-responsive-viewport-qa-cloudflare-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/responsive-viewport-qa/evidence/2026-07-03-cloudflare-no-score-reset-after-brick.json",
+      "to": "docs/assets/issues/responsive-viewport-qa/evidence/evi-responsive-viewport-qa-cloudflare-no-score-reset-after-brick.json"
+    },
+    {
+      "from": "docs/assets/issues/responsive-viewport-qa/evidence/2026-07-03-cloudflare-offline-pwa-qa.json",
+      "to": "docs/assets/issues/responsive-viewport-qa/evidence/evi-responsive-viewport-qa-cloudflare-offline-pwa-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/responsive-viewport-qa/evidence/2026-07-03-cloudflare-phase-transition.json",
+      "to": "docs/assets/issues/responsive-viewport-qa/evidence/evi-responsive-viewport-qa-cloudflare-phase-transition.json"
+    },
+    {
+      "from": "docs/assets/issues/responsive-viewport-qa/evidence/2026-07-03-cloudflare-theme-qa.json",
+      "to": "docs/assets/issues/responsive-viewport-qa/evidence/evi-responsive-viewport-qa-cloudflare-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/responsive-viewport-qa/evidence/2026-07-03-dashboard-desktop.png",
+      "to": "docs/assets/issues/responsive-viewport-qa/evidence/evi-responsive-viewport-qa-dashboard-desktop.png"
+    },
+    {
+      "from": "docs/assets/issues/responsive-viewport-qa/evidence/2026-07-03-dashboard-landscape.png",
+      "to": "docs/assets/issues/responsive-viewport-qa/evidence/evi-responsive-viewport-qa-dashboard-landscape.png"
+    },
+    {
+      "from": "docs/assets/issues/responsive-viewport-qa/evidence/2026-07-03-dashboard-mobile.png",
+      "to": "docs/assets/issues/responsive-viewport-qa/evidence/evi-responsive-viewport-qa-dashboard-mobile.png"
+    },
+    {
+      "from": "docs/assets/issues/responsive-viewport-qa/evidence/2026-07-03-dashboard-tablet.png",
+      "to": "docs/assets/issues/responsive-viewport-qa/evidence/evi-responsive-viewport-qa-dashboard-tablet.png"
+    },
+    {
+      "from": "docs/assets/issues/responsive-viewport-qa/evidence/2026-07-03-mobile-default.png",
+      "to": "docs/assets/issues/responsive-viewport-qa/evidence/evi-responsive-viewport-qa-mobile-default.png"
+    },
+    {
+      "from": "docs/assets/issues/responsive-viewport-qa/evidence/2026-07-03-mobile-menu.png",
+      "to": "docs/assets/issues/responsive-viewport-qa/evidence/evi-responsive-viewport-qa-mobile-menu.png"
+    },
+    {
+      "from": "docs/assets/issues/responsive-viewport-qa/evidence/README.md",
+      "to": "docs/assets/issues/responsive-viewport-qa/evidence/evi-responsive-viewport-qa-published-evidence.json"
+    },
+    {
+      "from": "docs/assets/issues/retro-asset-standardization/evidence/20260703-final-local-svg-assets-qa.png",
+      "to": "docs/assets/issues/retro-asset-standardization/evidence/evi-retro-asset-standardization-final-local-svg-assets-qa-2f5b52.png"
+    },
+    {
+      "from": "docs/assets/issues/retro-asset-standardization/evidence/20260703-final-local-svg-assets-qa.json",
+      "to": "docs/assets/issues/retro-asset-standardization/evidence/evi-retro-asset-standardization-final-local-svg-assets-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/retro-asset-standardization/evidence/20260703-local-svg-assets-qa.png",
+      "to": "docs/assets/issues/retro-asset-standardization/evidence/evi-retro-asset-standardization-local-svg-assets-qa-9b6f88.png"
+    },
+    {
+      "from": "docs/assets/issues/retro-asset-standardization/evidence/20260703-local-svg-assets-qa.json",
+      "to": "docs/assets/issues/retro-asset-standardization/evidence/evi-retro-asset-standardization-local-svg-assets-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/runtime-update-qa-warnings/evidence/preview-cloudflare-dashboard-layout.json",
+      "to": "docs/assets/issues/runtime-update-qa-warnings/evidence/evi-runtime-update-qa-warnings-preview-cloudflare-dashboard.json"
+    },
+    {
+      "from": "docs/assets/issues/runtime-update-qa-warnings/evidence/preview-cloudflare-mobile-qa.json",
+      "to": "docs/assets/issues/runtime-update-qa-warnings/evidence/evi-runtime-update-qa-warnings-preview-cloudflare-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/runtime-update-qa-warnings/evidence/preview-cloudflare-no-score-reset-after-brick.json",
+      "to": "docs/assets/issues/runtime-update-qa-warnings/evidence/evi-runtime-update-qa-warnings-preview-cloudflare-no-score-reset.json"
+    },
+    {
+      "from": "docs/assets/issues/runtime-update-qa-warnings/evidence/preview-cloudflare-phase-transition.json",
+      "to": "docs/assets/issues/runtime-update-qa-warnings/evidence/evi-runtime-update-qa-warnings-preview-cloudflare-phase.json"
+    },
+    {
+      "from": "docs/assets/issues/runtime-update-qa-warnings/evidence/preview-cloudflare-runtime-update-qa.json",
+      "to": "docs/assets/issues/runtime-update-qa-warnings/evidence/evi-runtime-update-qa-warnings-preview-cloudflare-runtime-update.json"
+    },
+    {
+      "from": "docs/assets/issues/runtime-update-qa-warnings/evidence/preview-cloudflare-theme-qa.json",
+      "to": "docs/assets/issues/runtime-update-qa-warnings/evidence/evi-runtime-update-qa-warnings-preview-cloudflare-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/runtime-update-reload/evidence/preview-runtime-update-qa.png",
+      "to": "docs/assets/issues/runtime-update-reload/evidence/evi-runtime-update-reload-preview-runtime-update-qa-1c3984.png"
+    },
+    {
+      "from": "docs/assets/issues/runtime-update-reload/evidence/preview-runtime-update-qa.json",
+      "to": "docs/assets/issues/runtime-update-reload/evidence/evi-runtime-update-reload-preview-runtime-update-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/runtime-update-reload/evidence/production-seed-runtime-update-qa.json",
+      "to": "docs/assets/issues/runtime-update-reload/evidence/evi-runtime-update-reload-production-seed-runtime-update-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/svg-theme-system/evidence/cloudflare-mobile-qa.json",
+      "to": "docs/assets/issues/svg-theme-system/evidence/evi-svg-theme-system-cloudflare-mobile-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/svg-theme-system/evidence/cloudflare-no-score-reset-after-brick.json",
+      "to": "docs/assets/issues/svg-theme-system/evidence/evi-svg-theme-system-cloudflare-no-score-reset-after-brick.json"
+    },
+    {
+      "from": "docs/assets/issues/svg-theme-system/evidence/cloudflare-phase-transition.json",
+      "to": "docs/assets/issues/svg-theme-system/evidence/evi-svg-theme-system-cloudflare-phase-transition.json"
+    },
+    {
+      "from": "docs/assets/issues/svg-theme-system/evidence/cloudflare-preview-deploy.json",
+      "to": "docs/assets/issues/svg-theme-system/evidence/evi-svg-theme-system-cloudflare-preview-deploy.json"
+    },
+    {
+      "from": "docs/assets/issues/svg-theme-system/evidence/cloudflare-svg-assets-qa.json",
+      "to": "docs/assets/issues/svg-theme-system/evidence/evi-svg-theme-system-cloudflare-svg-assets-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/svg-theme-system/evidence/cloudflare-theme-qa.json",
+      "to": "docs/assets/issues/svg-theme-system/evidence/evi-svg-theme-system-cloudflare-theme-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/svg-theme-system/evidence/mobile-menu-appearance.png",
+      "to": "docs/assets/issues/svg-theme-system/evidence/evi-svg-theme-system-mobile-menu-appearance.png"
+    },
+    {
+      "from": "docs/assets/issues/svg-theme-system/evidence/no-score-reset-after-brick.png",
+      "to": "docs/assets/issues/svg-theme-system/evidence/evi-svg-theme-system-no-score-reset-after-brick.png"
+    },
+    {
+      "from": "docs/assets/issues/svg-theme-system/evidence/phase-transition.png",
+      "to": "docs/assets/issues/svg-theme-system/evidence/evi-svg-theme-system-phase-transition.png"
+    },
+    {
+      "from": "docs/assets/issues/svg-theme-system/evidence/svg-assets-guard.json",
+      "to": "docs/assets/issues/svg-theme-system/evidence/evi-svg-theme-system-svg-assets-guard.json"
+    },
+    {
+      "from": "docs/assets/issues/svg-theme-system/evidence/svg-assets-qa.png",
+      "to": "docs/assets/issues/svg-theme-system/evidence/evi-svg-theme-system-svg-assets-qa.png"
+    },
+    {
+      "from": "docs/assets/issues/svg-theme-system/evidence/theme-desktop-contrast.png",
+      "to": "docs/assets/issues/svg-theme-system/evidence/evi-svg-theme-system-theme-desktop-contrast.png"
+    },
+    {
+      "from": "docs/assets/issues/svg-theme-system/evidence/theme-desktop-sunset.png",
+      "to": "docs/assets/issues/svg-theme-system/evidence/evi-svg-theme-system-theme-desktop-sunset.png"
+    },
+    {
+      "from": "docs/assets/issues/svg-theme-system/evidence/theme-iphone15-contrast.png",
+      "to": "docs/assets/issues/svg-theme-system/evidence/evi-svg-theme-system-theme-iphone15-contrast.png"
+    },
+    {
+      "from": "docs/assets/issues/svg-theme-system/evidence/theme-iphone15-sunset.png",
+      "to": "docs/assets/issues/svg-theme-system/evidence/evi-svg-theme-system-theme-iphone15-sunset.png"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/audio-control.png",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-audio-control.png"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/cloudflare-audio-qa-preview.json",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-cloudflare-audio-qa-preview.json"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/cloudflare-audio-qa-production.json",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-cloudflare-audio-qa-production.json"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/cloudflare-dashboard-layout-preview.json",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-cloudflare-dashboard-layout-preview.json"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/cloudflare-dashboard-layout-production.json",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-cloudflare-dashboard-layout.json"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/cloudflare-laser-powerup-preview.json",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-cloudflare-laser-powerup-preview.json"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/cloudflare-laser-powerup-production.json",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-cloudflare-laser-powerup-production.json"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/cloudflare-mobile-qa-preview.json",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-cloudflare-mobile-qa-preview.json"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/cloudflare-mobile-qa-production.json",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-cloudflare-mobile-qa-production.json"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/cloudflare-no-score-reset-preview.json",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-cloudflare-no-score-reset-preview.json"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/cloudflare-no-score-reset-production.json",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-cloudflare-no-score-reset-production.json"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/cloudflare-phase-transition-preview.json",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-cloudflare-phase-transition-preview.json"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/cloudflare-phase-transition-production.json",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-cloudflare-phase-transition.json"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/cloudflare-phase10-stability-preview.json",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-cloudflare-phase10-stability-preview.json"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/cloudflare-phase10-stability-production.json",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-cloudflare-phase10-stability.json"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/cloudflare-theme-qa-preview.json",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-cloudflare-theme-qa-preview.json"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/cloudflare-theme-qa-production.json",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-cloudflare-theme-qa-production.json"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/desktop-full-width.png",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-desktop-full-width.png"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/laser-item.png",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-laser-item.png"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/laser-result.png",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-laser-result.png"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/mobile-landscape-immersive.png",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-mobile-landscape-immersive.png"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/mobile-menu-version.png",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-mobile-menu-version.png"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/mobile-portrait-full-width.png",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-mobile-portrait-full-width.png"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/mobile-qa.png",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-mobile-qa.png"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/no-score-reset.png",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-no-score-reset.png"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/phase-transition.png",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-phase-transition.png"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/phase10-stability.png",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-phase10-stability.png"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/theme-desktop-dark.png",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-theme-desktop-dark.png"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/theme-desktop-light.png",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-theme-desktop-light.png"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/theme-iphone15-dark.png",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-theme-iphone15-dark.png"
+    },
+    {
+      "from": "docs/assets/issues/top-hud-full-width-fix/evidence/theme-iphone15-light.png",
+      "to": "docs/assets/issues/top-hud-full-width-fix/evidence/evi-top-hud-full-width-fix-theme-iphone15-light.png"
+    },
+    {
+      "from": "docs/assets/issues/update-visual-sound-feedback/evidence/2026-07-03-cloudflare-audio-qa.png",
+      "to": "docs/assets/issues/update-visual-sound-feedback/evidence/evi-update-visual-sound-feedback-cloudflare-audio-qa-1bc7b4.png"
+    },
+    {
+      "from": "docs/assets/issues/update-visual-sound-feedback/evidence/2026-07-03-cloudflare-audio-qa.json",
+      "to": "docs/assets/issues/update-visual-sound-feedback/evidence/evi-update-visual-sound-feedback-cloudflare-audio-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/update-visual-sound-feedback/evidence/2026-07-03-cloudflare-runtime-update-qa.png",
+      "to": "docs/assets/issues/update-visual-sound-feedback/evidence/evi-update-visual-sound-feedback-cloudflare-runtime-updat-05554c.png"
+    },
+    {
+      "from": "docs/assets/issues/update-visual-sound-feedback/evidence/2026-07-03-cloudflare-runtime-update-qa.json",
+      "to": "docs/assets/issues/update-visual-sound-feedback/evidence/evi-update-visual-sound-feedback-cloudflare-runtime-update-qa.json"
+    },
+    {
+      "from": "docs/assets/issues/update-visual-sound-feedback/evidence/local-update-feedback-report.json",
+      "to": "docs/assets/issues/update-visual-sound-feedback/evidence/evi-update-visual-sound-feedback-local-update-feedback-report.json"
+    },
+    {
+      "from": "docs/assets/issues/update-visual-sound-feedback/evidence/local-update-progress.png",
+      "to": "docs/assets/issues/update-visual-sound-feedback/evidence/evi-update-visual-sound-feedback-local-update-progress.png"
+    },
+    {
+      "from": "docs/assets/issues/update-visual-sound-feedback/evidence/local-version-installed.png",
+      "to": "docs/assets/issues/update-visual-sound-feedback/evidence/evi-update-visual-sound-feedback-local-version-installed.png"
+    },
+    {
+      "from": "docs/assets/theme-planning/svg-theme-system/brickbreaker-theme-architecture.svg",
+      "to": "docs/assets/theme-planning/svg-theme-system/codex-brickbreaker-theme-architecture.svg"
+    },
+    {
+      "from": "docs/assets/theme-planning/svg-theme-system/brickbreaker-theme-options.svg",
+      "to": "docs/assets/theme-planning/svg-theme-system/codex-brickbreaker-theme-options.svg"
+    }
+  ]
+}

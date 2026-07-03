@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run test:svg-assets && tsc -p tsconfig.app.json && vite build && node scripts/generate-runtime-asset-manifest.mjs && node scripts/stamp-service-worker-version.mjs",
+    "build": "npm run test:semantic-file-names && npm run test:svg-assets && tsc -p tsconfig.app.json && vite build && node scripts/generate-runtime-asset-manifest.mjs && node scripts/stamp-service-worker-version.mjs",
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -31,7 +31,9 @@
     "test:cloudflare-phase10-stability": "node tests/e2e/cloudflare-phase10-stability-qa.js",
     "test:cloudflare-offline-pwa": "node tests/e2e/cloudflare-offline-pwa-qa.js",
     "test:cloudflare-gameplay-basic": "node tests/e2e/cloudflare-gameplay-basic-qa.js",
-    "test:cloudflare-level-progression": "node tests/e2e/cloudflare-phase-transition-qa.js"
+    "test:cloudflare-level-progression": "node tests/e2e/cloudflare-phase-transition-qa.js",
+    "test:semantic-file-names": "node scripts/normalize-semantic-file-names.mjs --check",
+    "normalize:semantic-file-names": "node scripts/normalize-semantic-file-names.mjs --write"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.4",
