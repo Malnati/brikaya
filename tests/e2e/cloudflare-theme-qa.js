@@ -1,6 +1,7 @@
 // tests/e2e/cloudflare-theme-qa.js
-import { mkdirSync, writeFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
 import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
@@ -8,9 +9,6 @@ import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-theme-qa.json";
-const CAPTURE_SCREENSHOTS_ENV_KEY = "BRICKBREAKER_THEME_QA_CAPTURE_SCREENSHOTS";
-const DISABLED_ENV_VALUE = "false";
-const ENABLED_ENV_VALUE = "true";
 const DEFAULT_IPHONE15_CONTRAST_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-iphone15-contrast.png";
 const DEFAULT_IPHONE15_SUNSET_SCREENSHOT =
@@ -27,20 +25,18 @@ const DEFAULT_DESKTOP_OCEAN_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-desktop-ocean.png";
 const DEFAULT_DESKTOP_RUBY_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-desktop-ruby.png";
-const SCREENSHOT_ENV_KEYS = [
-  "BRICKBREAKER_THEME_QA_IPHONE15_CONTRAST_SCREENSHOT",
-  "BRICKBREAKER_THEME_QA_IPHONE15_SUNSET_SCREENSHOT",
-  "BRICKBREAKER_THEME_QA_IPHONE15_OCEAN_SCREENSHOT",
-  "BRICKBREAKER_THEME_QA_IPHONE15_RUBY_SCREENSHOT",
-  "BRICKBREAKER_THEME_QA_DESKTOP_CONTRAST_SCREENSHOT",
-  "BRICKBREAKER_THEME_QA_DESKTOP_SUNSET_SCREENSHOT",
-  "BRICKBREAKER_THEME_QA_DESKTOP_OCEAN_SCREENSHOT",
-  "BRICKBREAKER_THEME_QA_DESKTOP_RUBY_SCREENSHOT",
-];
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const CAPTURE_SCREENSHOTS_ENV_KEY = "BRICKBREAKER_THEME_QA_CAPTURE_SCREENSHOTS";
+const USER_DATA_DIR_PREFIX = "brickbreaker-theme-qa-";
+const RELOAD_GUARD_STORAGE_KEY = "brickbreaker-sw-controller-reload";
+const RELOAD_GUARD_VALUE = "pending";
+const RELOAD_GUARD_INTERVAL_MS = 100;
+const RELOAD_GUARD_DURATION_MS = 8000;
+const RESET_FLAG_PREFIX = "brickbreaker-theme-qa-reset";
+const RESET_DONE_VALUE = "done";
 const MIN_TOUCH_TARGET_SIZE = 44;
-const BROWSER_CLOSE_SETTLE_MS = 250;
+const BROWSER_CLOSE_TIMEOUT_MS = 5000;
 const MENU_BUTTON_NAME = /menu/i;
 const MENU_OPEN_ATTEMPTS = 3;
 const MENU_OPEN_RETRY_DELAY_MS = 500;
@@ -129,18 +125,6 @@ function publicUrl() {
   return env("BRICKBREAKER_PUBLIC_URL", DEFAULT_PUBLIC_URL);
 }
 
-function shouldCaptureScreenshots() {
-  const configured = process.env[CAPTURE_SCREENSHOTS_ENV_KEY];
-  if (configured === DISABLED_ENV_VALUE) return false;
-  if (configured === ENABLED_ENV_VALUE) return true;
-  return SCREENSHOT_ENV_KEYS.some((key) => Boolean(process.env[key]));
-}
-
-async function captureScreenshot(page, path) {
-  if (!shouldCaptureScreenshots()) return;
-  await page.screenshot({ path, fullPage: true });
-}
-
 function ensureParentDirectory(filePath) {
   mkdirSync(dirname(resolve(filePath)), { recursive: true });
 }
@@ -149,11 +133,71 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+function shouldCaptureScreenshots() {
+  return ["1", "true", "yes"].includes(
+    (process.env[CAPTURE_SCREENSHOTS_ENV_KEY] || "").toLowerCase(),
+  );
+}
+
+function logProgress(message) {
+  console.log(`cloudflare-theme-qa: ${message}`);
+}
+
+async function installInitialPageState(page, resetFlag) {
+  await page.evaluateOnNewDocument(
+    ({
+      storageKeys,
+      resetFlagKey,
+      resetDoneValue,
+      reloadGuardKey,
+      reloadGuardValue,
+      intervalMs,
+      durationMs,
+    }) => {
+      try {
+        if (sessionStorage.getItem(resetFlagKey) !== resetDoneValue) {
+          for (const storageKey of storageKeys) {
+            localStorage.removeItem(storageKey);
+          }
+          sessionStorage.setItem(resetFlagKey, resetDoneValue);
+        }
+
+        sessionStorage.setItem(reloadGuardKey, reloadGuardValue);
+        const intervalId = window.setInterval(
+          () => sessionStorage.setItem(reloadGuardKey, reloadGuardValue),
+          intervalMs,
+        );
+        window.setTimeout(() => window.clearInterval(intervalId), durationMs);
+      } catch {}
+    },
+    {
+      storageKeys: APPEARANCE_STORAGE_KEYS,
+      resetFlagKey: `${RESET_FLAG_PREFIX}-${resetFlag}`,
+      resetDoneValue: RESET_DONE_VALUE,
+      reloadGuardKey: RELOAD_GUARD_STORAGE_KEY,
+      reloadGuardValue: RELOAD_GUARD_VALUE,
+      intervalMs: RELOAD_GUARD_INTERVAL_MS,
+      durationMs: RELOAD_GUARD_DURATION_MS,
+    },
+  );
+}
+
 async function closeBrowser(browser) {
-  const browserProcess = browser.process();
-  browser.disconnect();
-  browserProcess?.kill("SIGKILL");
-  await new Promise((resolve) => setTimeout(resolve, BROWSER_CLOSE_SETTLE_MS));
+  let timedOut = false;
+  await Promise.race([
+    browser.close(),
+    new Promise((resolve) =>
+      setTimeout(() => {
+        timedOut = true;
+        resolve();
+      }, BROWSER_CLOSE_TIMEOUT_MS),
+    ),
+  ]);
+  if (timedOut) {
+    const browserProcess = browser.process();
+    browser.disconnect();
+    browserProcess?.kill("SIGTERM");
+  }
 }
 
 function waitForRetryDelay() {
@@ -257,25 +301,6 @@ async function waitForCinematicOverlayToClear(page) {
   await page.waitForSelector(CINEMATIC_OVERLAY_SELECTOR, {
     hidden: true,
     timeout: CINEMATIC_OVERLAY_TIMEOUT_MS,
-  });
-}
-
-async function clearOfflineState(page) {
-  await page.evaluate(async () => {
-    if ("serviceWorker" in navigator) {
-      const registrations = await navigator.serviceWorker.getRegistrations();
-      await Promise.all(
-        registrations.map((registration) => registration.unregister()),
-      );
-    }
-    if ("caches" in window) {
-      const cacheNames = await caches.keys();
-      await Promise.all(
-        cacheNames.map((cacheName) => caches.delete(cacheName)),
-      );
-    }
-    window.localStorage.clear();
-    window.sessionStorage.clear();
   });
 }
 
@@ -527,23 +552,20 @@ async function validateViewport(
   viewportName,
   viewport,
   screenshots,
+  captureScreenshots,
 ) {
+  await installInitialPageState(page, viewportName);
+  logProgress(`${viewportName}: carregar página com aparência limpa`);
   await page.setViewport(viewport);
   await page.emulateMediaFeatures([
     { name: "prefers-color-scheme", value: "light" },
   ]);
   await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
-  await clearOfflineState(page);
-  await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
-  await page.evaluate((storageKeys) => {
-    for (const storageKey of storageKeys)
-      window.localStorage.removeItem(storageKey);
-  }, APPEARANCE_STORAGE_KEYS);
-  await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
   await page.waitForSelector("canvas", { timeout: 30000 });
   await acceptPrivacyConsentIfPresent(page);
   await waitForCinematicOverlayToClear(page);
 
+  logProgress(`${viewportName}: validar estado inicial`);
   const initialState = await collectState(page);
   assertBaseState(initialState, `${viewportName}/inicial`);
   assert(
@@ -561,6 +583,7 @@ async function validateViewport(
   );
 
   await openMenu(page);
+  logProgress(`${viewportName}: aplicar CRT alto contraste`);
   await clickButtonByText(page, "CRT alto contraste");
   await clickButtonByText(page, "Alto contraste");
   await clickButtonByText(page, "CRT mono");
@@ -596,8 +619,11 @@ async function validateViewport(
       contrastState.storedFontSet === FONT_SET_CRT_MONO,
     `${viewportName}: aparência CRT alto contraste não persistida.`,
   );
-  await captureScreenshot(page, screenshots.contrast);
+  if (captureScreenshots) {
+    await page.screenshot({ path: screenshots.contrast, fullPage: true });
+  }
 
+  logProgress(`${viewportName}: validar persistência CRT`);
   await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
   await page.waitForSelector("canvas", { timeout: 30000 });
   await acceptPrivacyConsentIfPresent(page);
@@ -612,6 +638,7 @@ async function validateViewport(
   );
 
   await openMenu(page);
+  logProgress(`${viewportName}: aplicar Pixel Sunset`);
   await clickButtonByText(page, "Pixel Sunset");
   await clickButtonByText(page, "Cabine Sunset");
   await clickButtonByText(page, "Blocos pixel");
@@ -647,8 +674,11 @@ async function validateViewport(
       sunsetState.storedFontSet === FONT_SET_BLOCK_PIXEL,
     `${viewportName}: aparência Pixel Sunset não persistida.`,
   );
-  await captureScreenshot(page, screenshots.sunset);
+  if (captureScreenshots) {
+    await page.screenshot({ path: screenshots.sunset, fullPage: true });
+  }
 
+  logProgress(`${viewportName}: aplicar Oceano noturno`);
   await clickButtonByText(page, "Oceano noturno");
   await page.waitForFunction(
     (theme) => document.documentElement.dataset.theme === theme,
@@ -662,8 +692,11 @@ async function validateViewport(
       oceanState.storedTheme === THEME_OCEAN_NIGHT,
     `${viewportName}: tema Oceano noturno não aplicado/persistido.`,
   );
-  await captureScreenshot(page, screenshots.ocean);
+  if (captureScreenshots) {
+    await page.screenshot({ path: screenshots.ocean, fullPage: true });
+  }
 
+  logProgress(`${viewportName}: aplicar Rubi profundo`);
   await clickButtonByText(page, "Rubi profundo");
   await page.waitForFunction(
     (theme) => document.documentElement.dataset.theme === theme,
@@ -677,7 +710,9 @@ async function validateViewport(
       rubyState.storedTheme === THEME_RUBY_DEPTH,
     `${viewportName}: tema Rubi profundo não aplicado/persistido.`,
   );
-  await captureScreenshot(page, screenshots.ruby);
+  if (captureScreenshots) {
+    await page.screenshot({ path: screenshots.ruby, fullPage: true });
+  }
 
   return {
     initialState,
@@ -698,6 +733,7 @@ async function run() {
   );
 
   const reportPath = env("BRICKBREAKER_THEME_QA_REPORT", DEFAULT_REPORT_PATH);
+  const captureScreenshots = shouldCaptureScreenshots();
   const screenshotPaths = {
     iphone15: {
       contrast: env(
@@ -738,14 +774,18 @@ async function run() {
   };
   [
     reportPath,
-    ...Object.values(screenshotPaths).flatMap((paths) => Object.values(paths)),
+    ...(captureScreenshots
+      ? Object.values(screenshotPaths).flatMap((paths) => Object.values(paths))
+      : []),
   ].forEach(ensureParentDirectory);
 
   const consoleProblems = [];
   const externalRequests = [];
+  const userDataDir = mkdtempSync(join(tmpdir(), USER_DATA_DIR_PREFIX));
   const browser = await puppeteer.launch({
     headless: "new",
     executablePath: CHROME_EXECUTABLE_PATH,
+    userDataDir,
     args: buildChromeLaunchArgs([
       "--no-first-run",
       "--no-default-browser-check",
@@ -776,6 +816,7 @@ async function run() {
         "iphone15",
         VIEWPORTS.iphone15,
         screenshotPaths.iphone15,
+        captureScreenshots,
       ),
       desktop: await validateViewport(
         page,
@@ -783,6 +824,7 @@ async function run() {
         "desktop",
         VIEWPORTS.desktop,
         screenshotPaths.desktop,
+        captureScreenshots,
       ),
     };
 
@@ -804,17 +846,18 @@ async function run() {
 
     const report = {
       url: targetUrl,
+      captureScreenshots,
       screenshotPaths,
       results,
       externalRequests: [...new Set(externalRequests)],
       consoleProblems,
-      screenshotCaptureEnabled: shouldCaptureScreenshots(),
     };
     writeFileSync(reportPath, JSON.stringify(report, null, 2));
     console.log(
       JSON.stringify(
         {
           url: report.url,
+          captureScreenshots: report.captureScreenshots,
           screenshotPaths: report.screenshotPaths,
           externalRequests: report.externalRequests,
           consoleProblems: report.consoleProblems,
@@ -826,14 +869,11 @@ async function run() {
     );
   } finally {
     await closeBrowser(browser);
+    rmSync(userDataDir, { recursive: true, force: true });
   }
 }
 
-run()
-  .then(() => {
-    process.exit(0);
-  })
-  .catch((error) => {
-    console.error(error.stack || error.message);
-    process.exit(1);
-  });
+run().catch((error) => {
+  console.error(error.stack || error.message);
+  process.exitCode = 1;
+});
