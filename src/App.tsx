@@ -15,6 +15,7 @@ import {
   getTotalScore,
   resetScores,
   getHighScore,
+  getHighScores,
   saveHighScore,
 } from "./storage/score";
 import {
@@ -60,16 +61,30 @@ const COUNTDOWN_NEXT_STEP_INDEX = 1;
 const COUNTDOWN_TIMER_OFFSET = 1;
 const SPEED_LABEL_FRACTION_DIGITS = 2;
 const SPEED_LABEL_SUFFIX = "×";
+const HIGH_SCORE_PANEL_ARIA_LABEL = "Recordes gerais";
+const HIGH_SCORE_BEST_LABEL = "Melhor partida";
+const HIGH_SCORE_EMPTY_TEXT = "Ainda sem recordes";
+const HIGH_SCORE_RANK_SUFFIX = "º";
+const HIGH_SCORE_KEY_SEPARATOR = "-";
 const INITIAL_COUNTDOWN_OVERLAY: GameCinematicOverlayState = {
   type: "countdown",
   value: CINEMATIC_COUNTDOWN_STEPS[COUNTDOWN_FIRST_STEP_INDEX],
 };
+
+function formatHighScoreBest(scoreValue: number) {
+  return `${HIGH_SCORE_BEST_LABEL} ${scoreValue}`;
+}
+
+function formatHighScoreRank(index: number, scoreValue: number) {
+  return `${index + 1}${HIGH_SCORE_RANK_SUFFIX} ${scoreValue}`;
+}
 
 export default function App() {
   const [score, setScore] = useState(0);
   const scoreRef = useRef(0);
   const [totalScore, setTotalScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
+  const [highScores, setHighScores] = useState<number[]>([]);
   const [gameKey, setGameKey] = useState(0);
   const [gameWon, setGameWon] = useState(false);
   const [gameOver, setGameOver] = useState(false);
@@ -138,6 +153,17 @@ export default function App() {
     setScore(newScore);
   }, []);
 
+  const refreshScoreSummary = useCallback(async () => {
+    const [total, best, rankedScores] = await Promise.all([
+      getTotalScore(),
+      getHighScore(),
+      getHighScores(),
+    ]);
+    setTotalScore(total);
+    setHighScore(best);
+    setHighScores(rankedScores);
+  }, []);
+
   const persistFinalScore = useCallback(async () => {
     try {
       const finalScore = scoreRef.current;
@@ -148,12 +174,11 @@ export default function App() {
         setHighScore(finalScore);
         audioSink.playAudio(GAME_AUDIO_IDS.HIGHSCORE_NEW);
       }
-      const total = await getTotalScore();
-      setTotalScore(total);
+      await refreshScoreSummary();
     } catch {
       audioSink.playAudio(GAME_AUDIO_IDS.ERROR_SOFT);
     }
-  }, [audioSink]);
+  }, [audioSink, refreshScoreSummary]);
 
   const resetGameState = useCallback(() => {
     scoreRef.current = 0;
@@ -200,13 +225,10 @@ export default function App() {
   );
 
   useEffect(() => {
-    getTotalScore()
-      .then(setTotalScore)
-      .catch(() => audioSink.playAudio(GAME_AUDIO_IDS.ERROR_SOFT));
-    getHighScore()
-      .then(setHighScore)
-      .catch(() => audioSink.playAudio(GAME_AUDIO_IDS.ERROR_SOFT));
-  }, [audioSink]);
+    void refreshScoreSummary().catch(() =>
+      audioSink.playAudio(GAME_AUDIO_IDS.ERROR_SOFT),
+    );
+  }, [audioSink, refreshScoreSummary]);
 
   useEffect(() => {
     audioManager.exposeQaApi();
@@ -323,6 +345,7 @@ export default function App() {
       await resetScores();
       setTotalScore(0);
       setHighScore(0);
+      setHighScores([]);
       setIsMenuOpen(false);
     } catch {
       audioSink.playAudio(GAME_AUDIO_IDS.ERROR_SOFT);
@@ -525,6 +548,30 @@ export default function App() {
                   onImageSetChange={handleImageSetChange}
                   onFontSetChange={handleFontSetChange}
                 />
+              </div>
+              <div
+                className="settings-drawer__section high-scores-panel"
+                aria-label={HIGH_SCORE_PANEL_ARIA_LABEL}
+              >
+                <h3>Recordes</h3>
+                <p className="high-scores-panel__best">
+                  {formatHighScoreBest(highScore)}
+                </p>
+                {highScores.length > 0 ? (
+                  <ol className="high-scores-panel__list">
+                    {highScores.map((scoreValue, index) => (
+                      <li
+                        key={`${scoreValue}${HIGH_SCORE_KEY_SEPARATOR}${index}`}
+                      >
+                        {formatHighScoreRank(index, scoreValue)}
+                      </li>
+                    ))}
+                  </ol>
+                ) : (
+                  <p className="high-scores-panel__empty">
+                    {HIGH_SCORE_EMPTY_TEXT}
+                  </p>
+                )}
               </div>
               <div className="settings-drawer__section">
                 <h3>Ferramentas</h3>

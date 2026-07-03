@@ -49,6 +49,7 @@ jest.mock("./storage/score", () => ({
   saveScore: jest.fn().mockResolvedValue(undefined),
   getTotalScore: jest.fn().mockResolvedValue(0),
   getHighScore: jest.fn().mockResolvedValue(0),
+  getHighScores: jest.fn().mockResolvedValue([]),
   saveHighScore: jest.fn().mockResolvedValue(undefined),
   resetScores: jest.fn().mockResolvedValue(undefined),
 }));
@@ -84,6 +85,20 @@ async function renderApp() {
 describe("App theme selector", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    const scoreStorage = jest.requireMock("./storage/score") as {
+      getTotalScore: jest.Mock;
+      getHighScore: jest.Mock;
+      getHighScores: jest.Mock;
+      saveScore: jest.Mock;
+      saveHighScore: jest.Mock;
+      resetScores: jest.Mock;
+    };
+    scoreStorage.saveScore.mockResolvedValue(undefined);
+    scoreStorage.getTotalScore.mockResolvedValue(0);
+    scoreStorage.getHighScore.mockResolvedValue(0);
+    scoreStorage.getHighScores.mockResolvedValue([]);
+    scoreStorage.saveHighScore.mockResolvedValue(undefined);
+    scoreStorage.resetScores.mockResolvedValue(undefined);
     mockLastGameProps = null;
     document.documentElement.removeAttribute("data-theme");
     window.localStorage.clear();
@@ -167,6 +182,29 @@ describe("App theme selector", () => {
     expect(
       screen.getByRole("button", { name: /zerar pontuação/i }),
     ).toBeInTheDocument();
+  });
+
+
+  it("mostra recordes gerais locais no menu", async () => {
+    mockSystemTheme(true);
+    const user = userEvent.setup();
+    const scoreStorage = jest.requireMock("./storage/score") as {
+      getHighScore: jest.Mock;
+      getHighScores: jest.Mock;
+    };
+    scoreStorage.getHighScore.mockResolvedValue(120);
+    scoreStorage.getHighScores.mockResolvedValue([120, 80, 40]);
+
+    await renderApp();
+
+    await user.click(screen.getByRole("button", { name: "Menu" }));
+
+    const drawer = screen.getByRole("complementary", { name: "Menu do jogo" });
+    expect(within(drawer).getByRole("heading", { name: "Recordes" })).toBeInTheDocument();
+    expect(within(drawer).getByText("Melhor partida 120")).toBeInTheDocument();
+    expect(within(drawer).getByText("1º 120")).toBeInTheDocument();
+    expect(within(drawer).getByText("2º 80")).toBeInTheDocument();
+    expect(within(drawer).getByText("3º 40")).toBeInTheDocument();
   });
 
   it("alterna aparência, aplica no documento e persiste escolha", async () => {

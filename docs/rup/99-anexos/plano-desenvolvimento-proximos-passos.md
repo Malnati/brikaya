@@ -86,7 +86,7 @@ Este documento estabelece o roadmap completo para o desenvolvimento do BrickBrea
 **Issues GitHub:**
 - `#005`: ✅ Implementar sistema de níveis progressivos - **CONCLUÍDO** (linhas/blocos aumentam por fase e QA publicado `test:cloudflare-level-progression`)
 - `#006`: ✅ Adicionar power-ups e especiais - **CONCLUÍDO** (telemetria `power_up`, Laser em leque e QA publicado `test:cloudflare-powerups`)
-- `#007`: Criar sistema de high-scores global
+- `#007`: ✅ Criar sistema de high-scores global - **CONCLUÍDO como recordes gerais locais** (ranking no dispositivo, sem rede externa, QA publicado `test:cloudflare-high-scores`)
 - `#008`: Implementar efeitos visuais e sonoros
 
 #### 2.2 Otimização e Performance

@@ -3,6 +3,24 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.23.0] - 2026-07-03
+### Adicionado
+- Recordes gerais locais no menu do jogo, com melhor partida e ranking ordenado dos maiores scores salvos no dispositivo.
+- Função `getHighScores` para consultar os melhores scores positivos armazenados localmente.
+- QA publicado `test:cloudflare-high-scores` e target `make cloudflare-high-scores-qa` para validar recordes no Cloudflare Pages.
+- Documento de qualidade para prova publicada dos recordes gerais locais.
+
+### Alterado
+- A atualização de pontuação final passa a recarregar total, recorde e ranking local no mesmo fluxo.
+
+### Testado
+- `npm test -- --runInBand`
+- `npm run test:asset-naming`
+- `npm run test:svg-assets`
+- `npm run build`
+- `make cloudflare-high-scores-qa`
+- QAs publicados de regressão: power-ups, níveis, gameplay básico, PWA offline, mobile, no-score-reset, fase, dashboard, tema e SVG.
+
 ## [1.22.0] - 2026-07-03
 ### Adicionado
 - Telemetria `power_up` para aparição, coleta, ativação, expiração e perda de power-ups/especiais.

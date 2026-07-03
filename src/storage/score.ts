@@ -7,6 +7,9 @@ const STORE_NAME = 'scores';
 const HIGH_SCORE_STORE_NAME = 'highScore';
 const HIGH_SCORE_KEY = 'best';
 const EMPTY_SCORE = 0;
+const DEFAULT_HIGH_SCORE_LIMIT = 5;
+const MINIMUM_RANKED_SCORE = 0;
+const SCORE_SORT_DESCENDING = (left: number, right: number) => right - left;
 
 async function initializeDatabase() {
   return openDB(DB_NAME, DB_VERSION, {
@@ -40,6 +43,19 @@ export async function getHighScore(): Promise<number> {
   const tx = db.transaction(HIGH_SCORE_STORE_NAME, 'readonly');
   const highScore = await tx.store.get(HIGH_SCORE_KEY);
   return typeof highScore === 'number' ? highScore : EMPTY_SCORE;
+}
+
+export async function getHighScores(
+  limit = DEFAULT_HIGH_SCORE_LIMIT
+): Promise<number[]> {
+  const db = await initializeDatabase();
+  const tx = db.transaction(STORE_NAME, 'readonly');
+  const scores = await tx.store.getAll();
+  return scores
+    .filter((score): score is number => typeof score === 'number')
+    .filter(score => score > MINIMUM_RANKED_SCORE)
+    .sort(SCORE_SORT_DESCENDING)
+    .slice(EMPTY_SCORE, limit);
 }
 
 export async function saveHighScore(score: number): Promise<void> {
