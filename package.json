@@ -27,7 +27,8 @@
     "test:asset-naming": "jest src/constants/assetNaming.test.ts --runInBand",
     "test:cloudflare-audio": "node tests/e2e/cloudflare-audio-qa.js",
     "test:cloudflare-phase10-stability": "node tests/e2e/cloudflare-phase10-stability-qa.js",
-    "test:cloudflare-offline-pwa": "node tests/e2e/cloudflare-offline-pwa-qa.js"
+    "test:cloudflare-offline-pwa": "node tests/e2e/cloudflare-offline-pwa-qa.js",
+    "test:cloudflare-gameplay-basic": "node tests/e2e/cloudflare-gameplay-basic-qa.js"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.4",
