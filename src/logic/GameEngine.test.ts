@@ -702,4 +702,22 @@ describe("GameEngine", () => {
       calculatePowerUpSize(dimensions),
     );
   });
+
+  it("mantém power-up de QA visível antes da coleta para captura publicada", () => {
+    const engine = new GameEngine(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      onLevelTransition,
+      "laser-fan",
+    );
+
+    for (let frame = 0; frame < 20; frame += 1) {
+      (engine as any).updatePowerUp();
+    }
+
+    expect((engine as any).activePowerUp).not.toBeNull();
+  });
 });
