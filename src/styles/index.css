@@ -706,6 +706,8 @@ canvas {
 .app-update-message {
   align-items: stretch;
   flex-direction: column;
+  box-shadow: 0 0 18px
+    color-mix(in srgb, var(--bb-color-primary) 20%, transparent);
 }
 
 .app-update-message__track {
@@ -717,20 +719,73 @@ canvas {
 }
 
 .app-update-message__bar {
+  position: relative;
   display: block;
   height: 100%;
   border-radius: inherit;
   background: var(--bb-color-primary);
+  overflow: hidden;
   transition: width 220ms ease;
+}
+
+.app-update-message__bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--bb-color-surface) 62%, transparent),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: update-progress-sweep 1200ms ease-in-out infinite;
 }
 
 .update-installed-message {
   justify-content: center;
+  animation: update-installed-pulse 720ms ease-out both;
 }
 
 .update-installed-message p {
   color: var(--color-text);
   font-weight: 800;
+}
+
+@keyframes update-progress-sweep {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes update-installed-pulse {
+  0% {
+    transform: scale(0.97);
+    box-shadow: 0 0 0 color-mix(in srgb, var(--bb-color-primary) 0%, transparent);
+  }
+
+  45% {
+    transform: scale(1.02);
+    box-shadow: 0 0 24px color-mix(in srgb, var(--bb-color-primary) 30%, transparent);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 color-mix(in srgb, var(--bb-color-primary) 0%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-update-message__bar,
+  .update-installed-message {
+    animation: none;
+    transition: none;
+  }
+
+  .app-update-message__bar::after {
+    animation: none;
+    content: none;
+  }
 }
 
 .settings-drawer-backdrop {

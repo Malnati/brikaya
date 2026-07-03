@@ -63,6 +63,8 @@ const OFFLINE_READY_VISIBLE_MS = 2400;
 const UPDATE_INSTALLED_VISIBLE_MS = 5200;
 const UPDATE_PROGRESS_MIN = 0;
 const UPDATE_PROGRESS_MAX = 100;
+const UPDATE_PROGRESS_COMPLETE = 100;
+const UPDATE_PROGRESS_COMPLETE_STAGE = "reloading";
 const UPDATE_PROGRESS_TITLE = "Atualizando jogo";
 const UPDATE_PROGRESS_LABEL = "Progresso da atualização";
 const UPDATE_INSTALLED_PREFIX = "Versão";
@@ -130,6 +132,8 @@ export default function App() {
   const updateInstalledTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
+  const updateProgressSoundPlayedRef = useRef(false);
+  const updateInstalledSoundPlayedRef = useRef(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showCollisionStats, setShowCollisionStats] = useState(false);
   const [showGameLogs, setShowGameLogs] = useState(false);
@@ -371,6 +375,18 @@ export default function App() {
 
       setIsUpdateInstalledVisible(false);
       setUpdateProgress({ progress });
+      if (!updateProgressSoundPlayedRef.current) {
+        updateProgressSoundPlayedRef.current = true;
+        audioSink.playAudio(GAME_AUDIO_IDS.UPDATE_PROGRESS);
+      }
+      if (
+        !updateInstalledSoundPlayedRef.current &&
+        (progress >= UPDATE_PROGRESS_COMPLETE ||
+          detail?.stage === UPDATE_PROGRESS_COMPLETE_STAGE)
+      ) {
+        updateInstalledSoundPlayedRef.current = true;
+        audioSink.playAudio(GAME_AUDIO_IDS.UPDATE_INSTALLED);
+      }
     };
 
     window.addEventListener(
@@ -382,7 +398,7 @@ export default function App() {
         BRICKBREAKER_UPDATE_PROGRESS_EVENT,
         handleUpdateProgress,
       );
-  }, []);
+  }, [audioSink]);
 
   useEffect(() => {
     let shouldShowInstalledVersion = false;
@@ -405,12 +421,15 @@ export default function App() {
 
     setUpdateProgress(null);
     setIsUpdateInstalledVisible(true);
+    audioSink.playAudio(GAME_AUDIO_IDS.UPDATE_INSTALLED);
     if (updateInstalledTimerRef.current)
       clearTimeout(updateInstalledTimerRef.current);
     updateInstalledTimerRef.current = setTimeout(() => {
       setIsUpdateInstalledVisible(false);
+      updateProgressSoundPlayedRef.current = false;
+      updateInstalledSoundPlayedRef.current = false;
     }, UPDATE_INSTALLED_VISIBLE_MS);
-  }, []);
+  }, [audioSink]);
 
   const handleRestart = useCallback(() => {
     audioSink.playAudio(GAME_AUDIO_IDS.RESTART);
