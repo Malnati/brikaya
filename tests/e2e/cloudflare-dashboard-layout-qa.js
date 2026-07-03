@@ -38,7 +38,7 @@ const MIN_HEIGHT_CONSTRAINED_CANVAS_VIEWPORT_WIDTH_RATIO = 0.6;
 const MAX_CANVAS_OVERLAP_PX = 2;
 const IMMERSIVE_ROOT_CLASS = "bb-landscape-immersive";
 const MAX_IMMERSIVE_SAFE_AREA_RESERVE_PX = 32;
-const BROWSER_CLOSE_SETTLE_MS = 250;
+const BROWSER_CLOSE_TIMEOUT_MS = 5000;
 const MENU_BUTTON_NAME = /menu/i;
 const LOGS_BUTTON_NAME = /logs/i;
 const COLLISIONS_BUTTON_NAME = /colisões/i;
@@ -58,8 +58,8 @@ const VIEWPORTS = RESPONSIVE_VIEWPORT_MATRIX.viewports;
 const OVERLAY_TARGET_VIEWPORTS = VIEWPORTS.filter(
   (viewport) => viewport.smokeOverlays,
 ).map((viewport) => viewport.name);
-const LANDSCAPE_VIEWPORT_NAME = viewportByScreenshotRole("landscape-default")
-  .name;
+const LANDSCAPE_VIEWPORT_NAME =
+  viewportByScreenshotRole("landscape-default").name;
 
 function publicUrl() {
   return process.env.BRICKBREAKER_PUBLIC_URL || DEFAULT_PUBLIC_URL;
@@ -105,10 +105,21 @@ function assert(condition, message) {
 }
 
 async function closeBrowser(browser) {
-  const browserProcess = browser.process();
-  browser.disconnect();
-  browserProcess?.kill("SIGKILL");
-  await new Promise((resolve) => setTimeout(resolve, BROWSER_CLOSE_SETTLE_MS));
+  let timedOut = false;
+  await Promise.race([
+    browser.close(),
+    new Promise((resolve) =>
+      setTimeout(() => {
+        timedOut = true;
+        resolve();
+      }, BROWSER_CLOSE_TIMEOUT_MS),
+    ),
+  ]);
+  if (timedOut) {
+    const browserProcess = browser.process();
+    browser.disconnect();
+    browserProcess?.kill("SIGTERM");
+  }
 }
 
 function viewportByScreenshotRole(screenshotRole) {
@@ -490,7 +501,10 @@ async function run() {
   const browser = await puppeteer.launch({
     headless: "new",
     executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs(["--no-first-run", "--no-default-browser-check"]),
+    args: buildChromeLaunchArgs([
+      "--no-first-run",
+      "--no-default-browser-check",
+    ]),
   });
 
   try {
@@ -703,8 +717,9 @@ async function run() {
             MIN_LANDSCAPE_CANVAS_WIDTH_RATIO,
           `${viewport.name}: canvas não usa largura suficiente em landscape.`,
         );
-        const availableBoardHeight =
-          state.dashboardLayout ? state.dashboardLayout.height : 0;
+        const availableBoardHeight = state.dashboardLayout
+          ? state.dashboardLayout.height
+          : 0;
         assert(
           availableBoardHeight > 0 &&
             state.canvas.height / availableBoardHeight >=
@@ -716,11 +731,7 @@ async function run() {
           `${viewport.name}: HUD sobrepôs o canvas.`,
         );
         assert(
-          !rectsIntersect(
-            state.canvas,
-            state.scoreHud,
-            MAX_CANVAS_OVERLAP_PX,
-          ),
+          !rectsIntersect(state.canvas, state.scoreHud, MAX_CANVAS_OVERLAP_PX),
           `${viewport.name}: pontuação/fase sobrepôs o canvas.`,
         );
         assert(
