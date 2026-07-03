@@ -3,7 +3,9 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import puppeteer from 'puppeteer';
 
-const DEFAULT_PUBLIC_URL = 'https://malnati-brickbreaker.pages.dev/';
+import { buildChromeLaunchArgs } from './chromeLaunchArgs.js';
+
+const DEFAULT_PUBLIC_URL = 'https://brikaya.com/';
 const DEFAULT_REPORT_PATH =
   'docs/assets/issues/cinematic-public-domain-media/evidence/cloudflare-cinematic-effects.json';
 const DEFAULT_COUNTDOWN_SCREENSHOT_PATH =
@@ -36,7 +38,7 @@ const REQUIRED_CINEMATIC_MEDIA_PATHS = [
   '/assets/visual/vfx/vfx-game-over-rip-smoke.svg',
 ];
 const MEDIA_EXTENSION_PATTERN = /\.(gif|jpe?g|mp3|mp4|ogg|png|webm|webp|wav)(\?|$)/i;
-const PAGES_DEV_HOST_SUFFIX = '.pages.dev';
+const CANONICAL_HOST = 'brikaya.com';
 
 function env(name, fallback) {
   return process.env[name] || fallback;
@@ -141,7 +143,7 @@ async function cachedCinematicPaths(page) {
 async function run() {
   const publicUrl = env('BRICKBREAKER_PUBLIC_URL', DEFAULT_PUBLIC_URL);
   const parsed = new URL(publicUrl);
-  assert(parsed.hostname.endsWith(PAGES_DEV_HOST_SUFFIX), `URL precisa ser Cloudflare Pages: ${publicUrl}`);
+  assert(parsed.hostname === CANONICAL_HOST, `URL precisa ser brikaya.com: ${publicUrl}`);
 
   const reportPath = env('BRICKBREAKER_CINEMATIC_QA_REPORT', DEFAULT_REPORT_PATH);
   const countdownScreenshotPath = env(
@@ -167,7 +169,7 @@ async function run() {
   const browser = await puppeteer.launch({
     headless: 'new',
     executablePath: CHROME_EXECUTABLE_PATH,
-    args: ['--no-first-run', '--no-default-browser-check'],
+    args: buildChromeLaunchArgs(['--no-first-run', '--no-default-browser-check']),
   });
 
   try {

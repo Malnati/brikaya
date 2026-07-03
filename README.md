@@ -1,7 +1,7 @@
 <!-- README.md -->
-# 🎮 BrickBreaker - Jogo Offline com Logging Robusto
+# 🎮 Brikaya - Jogo Offline com Logging Robusto
 
-Um jogo clássico de Breakout implementado em TypeScript/React com um sistema robusto de logging que registra todas as condições e eventos do jogo no IndexedDB.
+Um jogo arcade clássico de quebrar blocos implementado em TypeScript/React com um sistema robusto de logging que registra todas as condições e eventos do jogo no IndexedDB.
 
 ## ✨ Características Principais
 
@@ -31,14 +31,14 @@ Um jogo clássico de Breakout implementado em TypeScript/React com um sistema ro
 ## 🚀 Como Executar
 
 ### Pré-requisitos
-- Node.js 16+ 
+- Node.js v23.x
 - npm ou yarn
 
 ### Instalação
 ```bash
 # Clonar o repositório
-git clone https://github.com/Malnati/gm-offline-brickbreaker.git
-cd gm-offline-brickbreaker
+git clone https://github.com/Malnati/brickbreaker.git
+cd brickbreaker
 
 # Instalar dependências
 npm install
@@ -68,9 +68,9 @@ make cloudflare-build
 make cloudflare-deploy
 ```
 
-- O fluxo publica apenas arquivos estáticos em `dist/`, usando o projeto `malnati-brickbreaker` e o domínio gratuito `https://malnati-brickbreaker.pages.dev/`.
+- O fluxo publica apenas arquivos estáticos em `dist/`, usando o domínio canônico `https://brikaya.com/`; o domínio gerado pelo Cloudflare Pages deve redirecionar para esse endereço e não é endpoint público do jogo.
 - O fluxo não usa Workers, Pages Functions, KV, D1, R2, Access, AI, Images, Browser Rendering, domínio pago ou qualquer recurso que gere custo.
-- Credenciais Cloudflare/Google devem vir de `/Users/mal/GitHub/malnati/.env`; variáveis específicas do BrickBreaker também ficam no `.env` local e são espelhadas no `.env` de `/Users/mal/GitHub/malnati/`.
+- Credenciais Cloudflare/Google devem vir de `/Users/mal/GitHub/malnati/.env`; variáveis específicas do Brikaya também ficam no `.env` local e são espelhadas no `.env` de `/Users/mal/GitHub/malnati/`.
 - Guia completo: [`docs/rup/03-implementacao/publicacao-cloudflare-pages-zero-custo.md`](docs/rup/03-implementacao/publicacao-cloudflare-pages-zero-custo.md).
 
 

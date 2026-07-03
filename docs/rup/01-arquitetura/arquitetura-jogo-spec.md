@@ -1,5 +1,5 @@
 <!-- docs/rup/01-arquitetura/arquitetura-jogo-spec.md -->
-# Arquitetura do BrickBreaker
+# Arquitetura do Brikaya
 
 ## Visão Geral
 O jogo é uma PWA React/TypeScript que roda totalmente offline após o primeiro carregamento. A arquitetura separa lógica de jogo (`src/logic/GameEngine.ts`), objetos (`src/objects/*.ts`), UI (`src/components/*.tsx`), persistência (`src/storage`) e infraestrutura offline (`sw.js`, `registerServiceWorker.ts`).

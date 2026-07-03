@@ -1,7 +1,7 @@
 <!-- docs/rup/99-anexos/checklists/README.md -->
 # Checklists de Qualidade e Processos
 
-Este diretório reúne os checklists temáticos utilizados para orientar revisões de qualidade, implementação e operação do projeto BrickBreaker. Cada arquivo é numerado para facilitar o rastreamento e cobre uma dimensão específica do ciclo de vida do jogo.
+Este diretório reúne os checklists temáticos utilizados para orientar revisões de qualidade, implementação e operação do projeto Brikaya. Cada arquivo é numerado para facilitar o rastreamento e cobre uma dimensão específica do ciclo de vida do jogo.
 
 ## Arquivos disponíveis
 

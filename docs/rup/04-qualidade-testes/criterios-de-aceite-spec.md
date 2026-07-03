@@ -1,5 +1,5 @@
 <!-- docs/rup/04-qualidade-testes/criterios-de-aceite-spec.md -->
-# Critérios de Aceite — BrickBreaker
+# Critérios de Aceite — Brikaya
 
 ## Finalidade
 Definir critérios mínimos para aprovar entregas do jogo em cada sprint, mantendo rastreabilidade com o plano e evitando regressões no modo offline.

@@ -3,7 +3,9 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
-const DEFAULT_PUBLIC_URL = "https://malnati-brickbreaker.pages.dev/";
+import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
+
+const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-theme-qa.json";
 const DEFAULT_IPHONE15_CONTRAST_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-iphone15-contrast.png";
@@ -223,8 +225,8 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
       ? state.buttons.filter((button) => !button.inDrawer)
       : state.buttons;
   assert(
-    state.heading.includes("Breakout"),
-    `${viewportName}: heading Breakout ausente.`,
+    state.heading.includes("Brikaya"),
+    `${viewportName}: heading Brikaya ausente.`,
   );
   assert(
     state.buttons.some((button) => button.text === "Menu"),
@@ -483,8 +485,8 @@ async function run() {
   const targetUrl = publicUrl();
   const parsed = new URL(targetUrl);
   assert(
-    parsed.hostname.endsWith(".pages.dev"),
-    `URL precisa ser Cloudflare Pages: ${targetUrl}`,
+    parsed.hostname === "brikaya.com",
+    `URL precisa ser brikaya.com: ${targetUrl}`,
   );
 
   const reportPath = env("BRICKBREAKER_THEME_QA_REPORT", DEFAULT_REPORT_PATH);
@@ -520,7 +522,7 @@ async function run() {
   const browser = await puppeteer.launch({
     headless: "new",
     executablePath: CHROME_EXECUTABLE_PATH,
-    args: ["--no-first-run", "--no-default-browser-check"],
+    args: buildChromeLaunchArgs(["--no-first-run", "--no-default-browser-check"]),
   });
 
   try {

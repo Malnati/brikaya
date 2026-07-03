@@ -18,7 +18,7 @@ Provar que o jogo publicado no Cloudflare Pages carrega a tela principal, manté
 ## Comando
 
 ```bash
-BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ npm run test:cloudflare-gameplay-basic
+BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ npm run test:cloudflare-gameplay-basic
 ```
 
 Para preview de branch, substitua `BRICKBREAKER_PUBLIC_URL` pela URL publicada da branch.

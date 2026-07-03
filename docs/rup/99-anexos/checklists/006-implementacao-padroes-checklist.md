@@ -1,5 +1,5 @@
 <!-- docs/rup/99-anexos/checklists/006-implementacao-padroes-checklist.md -->
-# Checklist de Implementação e Padrões de Código — BrickBreaker
+# Checklist de Implementação e Padrões de Código — Brikaya
 
 ## Estrutura de Projeto
 - [ ] Confirmar que a divisão `src/components/`, `src/logic/`, `src/objects/`, `src/storage/`, `src/utils/`, `src/constants/` e `docs/` segue a estrutura documentada.

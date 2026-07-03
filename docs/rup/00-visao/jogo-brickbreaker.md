@@ -1,8 +1,8 @@
 <!-- docs/rup/00-visao/jogo-brickbreaker.md -->
-# Template de Visão do Produto — BrickBreaker
+# Template de Visão do Produto — Brikaya
 
 ## 1. Contexto e Objetivo
-Descreva o motivo da existência do BrickBreaker, quem se beneficia e por que a experiência offline é obrigatória.
+Descreva o motivo da existência do Brikaya, quem se beneficia e por que a experiência offline é obrigatória.
 
 ## 2. Personas e Cenários
 - Jogadores casuais em mobile (PWA/Capacitor)
@@ -12,7 +12,7 @@ Descreva o motivo da existência do BrickBreaker, quem se beneficia e por que a 
 Para cada persona, documente motivação, dores e expectativas de sessão de jogo.
 
 ## 3. Proposta de Valor
-Explique como o jogo difere de clones do Breakout e como garante jogabilidade fluida sem rede.
+Explique como o jogo difere de clones de jogos de quebrar blocos e como garante jogabilidade fluida sem rede.
 
 ## 4. Requisitos Essenciais
 - Gameplay básico (bola, tijolos, raquete, vidas)

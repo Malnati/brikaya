@@ -3,7 +3,7 @@
 
 ## Regra
 
-Testes locais são pré-checks técnicos. A prova da verdade do BrickBreaker é sempre o aplicativo publicado no Cloudflare Pages.
+Testes locais são pré-checks técnicos. A prova da verdade do Brikaya é sempre o aplicativo publicado no Cloudflare Pages.
 
 ## Runtime obrigatório
 
@@ -20,16 +20,16 @@ Antes de qualquer build, deploy ou QA publicado, execute `node --version` e conf
 7. Executar `make cloudflare-theme-qa` para provar seletor claro/escuro, persistência, ausência de features fora de escopo e ausência de recursos externos.
 8. Salvar evidências em `docs/assets/issues/<slug>/evidence/` quando houver PR de UI/gameplay.
 9. Mesclar apenas após CI e QA publicado passarem.
-10. Após merge, repetir QA contra `https://malnati-brickbreaker.pages.dev/`.
+10. Após merge, repetir QA contra `https://brikaya.com/`.
 
 ## Comando
 
 ```bash
-BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-mobile-qa
-BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-no-score-reset
-BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-phase-transition-qa
-BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-dashboard-layout-qa
-BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-theme-qa
+BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa
+BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-no-score-reset
+BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-phase-transition-qa
+BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa
+BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa
 ```
 
 ## Evidência esperada

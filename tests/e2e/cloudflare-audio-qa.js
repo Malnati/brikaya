@@ -3,7 +3,9 @@ import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import puppeteer from 'puppeteer';
 
-const DEFAULT_PUBLIC_URL = 'https://malnati-brickbreaker.pages.dev/';
+import { buildChromeLaunchArgs } from './chromeLaunchArgs.js';
+
+const DEFAULT_PUBLIC_URL = 'https://brikaya.com/';
 const DEFAULT_REPORT_PATH = 'tmp/reports/cloudflare-audio-qa.json';
 const DEFAULT_SCREENSHOT_PATH = 'docs/assets/issues/audio-cc0-integration/evidence/cloudflare-audio-control.png';
 const CHROME_EXECUTABLE_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
@@ -182,7 +184,7 @@ async function runViewportQa(page, targetUrl, config, audioPaths) {
   await waitForCinematicOverlayToClear(page);
 
   const initial = await readAudioToggleState(page, audioPaths);
-  assert(initial.heading.includes('Breakout'), `${config.name}: tela Breakout não carregou.`);
+  assert(initial.heading.includes('Brikaya'), `${config.name}: tela Brikaya não carregou.`);
   assert(initial.soundButton, `${config.name}: controle de som não visível.`);
   assert(initial.soundButton.ariaLabel === AUDIO_OFF_LABEL, `${config.name}: estado inicial não é Sem som.`);
   assert(initial.soundButton.text === AUDIO_OFF_ICON, `${config.name}: ícone inicial não é ×.`);
@@ -238,7 +240,7 @@ async function run() {
   const publicUrl = env('BRICKBREAKER_PUBLIC_URL', DEFAULT_PUBLIC_URL);
   const targetUrl = scenarioUrl(publicUrl);
   const parsed = new URL(publicUrl);
-  assert(parsed.hostname.endsWith('.pages.dev'), `URL precisa ser Cloudflare Pages: ${publicUrl}`);
+  assert(parsed.hostname === 'brikaya.com', `URL precisa ser brikaya.com: ${publicUrl}`);
 
   const reportPath = env('BRICKBREAKER_AUDIO_QA_REPORT', DEFAULT_REPORT_PATH);
   const screenshotPath = env('BRICKBREAKER_AUDIO_QA_SCREENSHOT', DEFAULT_SCREENSHOT_PATH);
@@ -254,7 +256,7 @@ async function run() {
   const browser = await puppeteer.launch({
     headless: 'new',
     executablePath: CHROME_EXECUTABLE_PATH,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: buildChromeLaunchArgs(['--no-sandbox', '--disable-setuid-sandbox']),
   });
 
   try {

@@ -1,0 +1,69 @@
+{
+  "mode": "verify",
+  "url": "https://brikaya.com/",
+  "profileDir": "tmp/browser-profiles/cloudflare-runtime-update",
+  "latest": {
+    "buildId": "20260703123505",
+    "hasPlaceholder": false
+  },
+  "activeBeforeWait": {
+    "buildId": "20260703123505",
+    "cacheName": "breakout-cache-20260703123505"
+  },
+  "activeAfterWait": {
+    "buildId": "20260703123505",
+    "cacheName": "breakout-cache-20260703123505"
+  },
+  "seedState": {
+    "title": "Brikaya",
+    "hasCanvas": true,
+    "canvas": {
+      "x": 13.015625,
+      "y": 111,
+      "width": 366.96875,
+      "height": 245.328125,
+      "right": 379.984375,
+      "bottom": 356.328125
+    },
+    "hasController": true,
+    "cacheNames": [],
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393
+    }
+  },
+  "verifyState": {
+    "title": "Brikaya",
+    "hasCanvas": true,
+    "canvas": {
+      "x": 13.015625,
+      "y": 111,
+      "width": 366.96875,
+      "height": 245.328125,
+      "right": 379.984375,
+      "bottom": 356.328125
+    },
+    "hasController": true,
+    "cacheNames": [],
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393
+    }
+  },
+  "cacheNamesBeforeWait": [
+    "breakout-cache-20260703123505"
+  ],
+  "cacheNamesAfterWait": [
+    "breakout-cache-20260703123505"
+  ],
+  "staleCacheNamesBefore": [],
+  "staleCacheNamesAfter": [],
+  "navigationEvents": [
+    "about:blank",
+    "https://brikaya.com/"
+  ],
+  "consoleProblems": [],
+  "screenshotPath": "tmp/screenshots/cloudflare-runtime-update-qa.png"
+}

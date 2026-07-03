@@ -1,7 +1,7 @@
 <!-- branding/assets/README.md -->
-# BrickBreaker Brand Assets Directory
+# Brikaya Brand Assets Directory
 
-Este diretório contém os ativos visuais e tokens de identidade para o jogo BrickBreaker.
+Este diretório contém os ativos visuais e tokens de identidade para o jogo Brikaya.
 
 ## Logos e ícones
 
@@ -10,7 +10,7 @@ Este diretório contém os ativos visuais e tokens de identidade para o jogo Bri
 
 ## Tokens de identidade
 
-- **Nome do jogo:** BrickBreaker / Breakout
+- **Nome do jogo:** Brikaya
 - **Paleta principal:** 
   - Primária: `#1a1a1a` (fundo escuro)
   - Secundária: `#2d2d2d` (container)

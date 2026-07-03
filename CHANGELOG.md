@@ -3,6 +3,18 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.25.0] - 2026-07-03
+### Adicionado
+- Configuração de domínio customizado `brikaya.com` no helper de Cloudflare Pages.
+- DNS apex `brikaya.com` configurável por API para o projeto Pages, sem compra nem produto pago.
+- Header `no-transform` para impedir injeção automática de beacon externo e preservar PWA offline.
+- Redirect canônico do domínio gerado pelo Cloudflare Pages para `https://brikaya.com/`, sem uso público de domínio alternativo.
+- Variável `BRICKBREAKER_CLOUDFLARE_PAGES_CUSTOM_DOMAIN` documentada e espelhada nos `.env` locais.
+
+### Alterado
+- Marca pública do jogo atualizada para Brikaya no app, manifesto PWA, favicon/ícone, Capacitor e documentação principal.
+- QA publicado passa a usar exclusivamente `https://brikaya.com/` como URL padrão pública.
+
 ## [1.24.2] - 2026-07-03
 ### Adicionado
 - Target `make cloudflare-offline-pwa-qa` para executar o QA offline publicado já existente.

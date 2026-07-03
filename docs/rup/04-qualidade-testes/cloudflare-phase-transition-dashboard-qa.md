@@ -113,4 +113,4 @@ O PR só pode ser mergeado se:
 - preview Cloudflare passar nos cinco comandos de QA;
 - PR incluir evidência visual e JSON publicados;
 - produção for publicada após merge;
-- produção passar nos cinco comandos de QA contra `https://malnati-brickbreaker.pages.dev/`.
+- produção passar nos cinco comandos de QA contra `https://brikaya.com/`.

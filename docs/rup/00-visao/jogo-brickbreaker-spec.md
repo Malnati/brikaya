@@ -1,8 +1,8 @@
 <!-- docs/rup/00-visao/jogo-brickbreaker-spec.md -->
-# Visão do Produto — BrickBreaker
+# Visão do Produto — Brikaya
 
 ## Propósito
-Consolidar visão, público e objetivos do BrickBreaker como PWA offline-first, garantindo alinhamento entre gameplay, arquitetura e testes descritos no plano de próximos passos.
+Consolidar visão, público e objetivos do Brikaya como PWA offline-first, garantindo alinhamento entre gameplay, arquitetura e testes descritos no plano de próximos passos.
 
 ## Público-Alvo
 - Jogadores casuais em navegadores desktop e mobile

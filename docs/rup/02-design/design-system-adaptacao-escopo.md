@@ -1,5 +1,5 @@
 <!-- docs/rup/02-design/design-system-adaptacao-escopo.md -->
-# Adaptação do Design System ao BrickBreaker atual
+# Adaptação do Design System ao Brikaya atual
 
 ## Objetivo
 

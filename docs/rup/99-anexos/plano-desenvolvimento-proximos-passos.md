@@ -2,12 +2,12 @@
 # Plano de Desenvolvimento - Próximos Passos
 
 ## Propósito
-Este documento estabelece o roadmap completo para o desenvolvimento do BrickBreaker, baseado na análise do estado atual do projeto, histórico de commits e pendências identificadas.
+Este documento estabelece o roadmap completo para o desenvolvimento do Brikaya, baseado na análise do estado atual do projeto, histórico de commits e pendências identificadas.
 
 ## Análise do Estado Atual
 
 ### ✅ O que está funcionando
-- Jogo BrickBreaker básico implementado
+- Jogo Brikaya básico implementado
 - Sistema de logging com IndexedDB funcional
 - Estrutura de componentes React/TypeScript organizada
 - Sistema de pontuação persistente
@@ -255,8 +255,8 @@ Detalhamento completo da tarefa
 - **Referências:** AGENTS.md, PENDING.md, CHANGELOG.md
 - **Atualização:** 2026-07-03
 - **Última revisão:** 2026-07-03 - QA publicado de gameplay básico e offline da PWA implementados
-- **Responsável:** Equipe de desenvolvimento BrickBreaker
+- **Responsável:** Equipe de desenvolvimento Brikaya
 
 ---
 
-Este plano proporciona uma roadmap clara para estabilizar, melhorar e preparar o BrickBreaker para release, seguindo as diretrizes do AGENTS.md e mantendo a qualidade e documentação adequadas.
+Este plano proporciona uma roadmap clara para estabilizar, melhorar e preparar o Brikaya para release, seguindo as diretrizes do AGENTS.md e mantendo a qualidade e documentação adequadas.

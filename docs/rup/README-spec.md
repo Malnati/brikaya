@@ -1,17 +1,17 @@
 <!-- docs/rup/README.md -->
-# BrickBreaker - Jogo Offline PWA
+# Brikaya - Jogo Offline PWA
 
 > Base: [./README.md](./README.md)
 
 **Fase: Documentação RUP Adaptada**
 
-Bem-vindo à documentação oficial do **BrickBreaker**, um jogo clássico implementado como Progressive Web App (PWA) com funcionamento 100% offline. O diretório `docs/rup/` organiza as fases do projeto conforme o **Rational Unified Process (RUP)** adaptado para desenvolvimento de jogos, garantindo rastreabilidade, qualidade e governança técnica contínua.
+Bem-vindo à documentação oficial do **Brikaya**, um jogo clássico implementado como Progressive Web App (PWA) com funcionamento 100% offline. O diretório `docs/rup/` organiza as fases do projeto conforme o **Rational Unified Process (RUP)** adaptado para desenvolvimento de jogos, garantindo rastreabilidade, qualidade e governança técnica contínua.
 
 ---
 
 ## Introdução Geral
 
-O BrickBreaker é uma implementação moderna do jogo clássico Breakout, desenvolvido com React + TypeScript e Vite. O projeto oferece experiência completa de jogo offline com física realista, sistema de pontuação persistente via IndexedDB, e builds nativos para iOS e Android através do Capacitor.
+O Brikaya é uma implementação moderna de um arcade clássico de quebrar blocos, desenvolvido com React + TypeScript e Vite. O projeto oferece experiência completa de jogo offline com física realista, sistema de pontuação persistente via IndexedDB, e builds nativos para iOS e Android através do Capacitor.
 
 Os componentes centrais abrangem motor de física de colisão, sistema de logging completo, armazenamento offline de dados, service worker para cache, e interface responsiva adaptável a diferentes tamanhos de tela. Esta documentação serve como guia completo — da concepção à manutenção evolutiva — e está alinhada às diretrizes definidas em `AGENTS.md`.
 
@@ -79,7 +79,7 @@ Todos os agentes operam com controle humano obrigatório, mantendo logs versiona
 
 ## 🎮 Responsabilidade Técnica
 
-**Projeto:** BrickBreaker - Jogo Offline PWA
+**Projeto:** Brikaya - Jogo Offline PWA
 **Responsável:** Ricardo Malnati — Engenheiro de Software
 **Tecnologias:** React + TypeScript + Vite + Capacitor
 **Licença:** Código aberto (ver LICENSE)

@@ -41,4 +41,4 @@ O PR só pode ser mesclado quando:
 - o preview Cloudflare passar no QA de power-ups;
 - os QAs publicados já existentes de gameplay, níveis, transição, layout, tema e SVG continuarem passando;
 - a produção for publicada após merge;
-- a produção repetir o QA publicado contra `https://malnati-brickbreaker.pages.dev/`.
+- a produção repetir o QA publicado contra `https://brikaya.com/`.

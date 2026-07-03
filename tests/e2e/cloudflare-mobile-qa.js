@@ -3,7 +3,9 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
-const DEFAULT_PUBLIC_URL = "https://malnati-brickbreaker.pages.dev/";
+import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
+
+const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_SCREENSHOT_PATH = "tmp/screenshots/cloudflare-mobile-qa.png";
 const DEFAULT_MENU_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-mobile-menu.png";
@@ -310,7 +312,7 @@ async function run() {
   const browser = await puppeteer.launch({
     headless: "new",
     executablePath: CHROME_EXECUTABLE_PATH,
-    args: ["--no-first-run", "--no-default-browser-check"],
+    args: buildChromeLaunchArgs(["--no-first-run", "--no-default-browser-check"]),
   });
 
   try {
@@ -337,12 +339,12 @@ async function run() {
     await page.screenshot({ path: screenshotPath, fullPage: true });
 
     assert(
-      layoutState.title === "Breakout",
+      layoutState.title === "Brikaya",
       "Título inesperado no app publicado.",
     );
     assert(
-      layoutState.heading.includes("Breakout"),
-      "Tela inicial sem heading Breakout.",
+      layoutState.heading.includes("Brikaya"),
+      "Tela inicial sem heading Brikaya.",
     );
     assert(layoutState.canvas, "Canvas não encontrado.");
     assert(

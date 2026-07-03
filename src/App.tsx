@@ -454,11 +454,11 @@ export default function App() {
 
   return (
     <main className="app-shell">
-      <section className="game-dashboard" aria-label="Jogo Breakout">
+      <section className="game-dashboard" aria-label="Jogo Brikaya">
         <header className="dashboard-header">
           <div className="dashboard-title-group">
             <p className="dashboard-eyebrow">Arcade clássico</p>
-            <h1>Breakout</h1>
+            <h1>Brikaya</h1>
           </div>
           <div
             className="dashboard-primary-controls"

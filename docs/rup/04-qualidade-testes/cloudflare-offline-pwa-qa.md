@@ -17,7 +17,7 @@ Provar que o jogo publicado no Cloudflare Pages abre, mantém o canvas visível 
 ## Comando
 
 ```bash
-BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ npm run test:cloudflare-offline-pwa
+BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ npm run test:cloudflare-offline-pwa
 ```
 
 Para preview de branch, substitua `BRICKBREAKER_PUBLIC_URL` pela URL publicada da branch.
