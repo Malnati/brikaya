@@ -3,6 +3,21 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.24.0] - 2026-07-03
+### Adicionado
+- Target `make cloudflare-cinematic-effects-qa` para validar efeitos visuais cinematográficos na versão publicada.
+- Documento de qualidade da fase #008 para efeitos visuais e sonoros com provas locais e Cloudflare.
+- Recibos versionados de QA para efeitos cinematográficos e áudio publicado.
+
+### Alterado
+- Roadmap marca #008 como concluído com overlays SVG, áudio local e QA publicado.
+
+### Testado
+- `npm run test:cinematic-media-assets`
+- `npm run test:audio-assets`
+- `make cloudflare-cinematic-effects-qa`
+- `make cloudflare-audio-qa`
+
 ## [1.23.0] - 2026-07-03
 ### Adicionado
 - Recordes gerais locais no menu do jogo, com melhor partida e ranking ordenado dos maiores scores salvos no dispositivo.

@@ -6,6 +6,8 @@ const VISUAL_ASSETS_PATH = 'src/constants/visualAssets.ts';
 const SERVICE_WORKER_PATH = 'public/sw.js';
 const CINEMATIC_DIR = 'public/assets/visual/vfx';
 const PUBLIC_PREFIX = 'public';
+const SVG_EXTENSION = '.svg';
+const RUNTIME_VISUAL_VFX_PREFIX = '/assets/visual/vfx/';
 const HTTPS_URL_PATTERN = /https?:\/\/(?!www\.w3\.org\/2000\/svg)/i;
 const DISALLOWED_SVG_PATTERNS = [/<script\b/i, /<image\b/i, /data:/i, /@font-face/i];
 const EXPECTED_MEDIA = [
@@ -67,10 +69,12 @@ function validate() {
   }
 
   const fileNames = readdirSync(CINEMATIC_DIR).filter((name) =>
-    name.endsWith('.svg'),
+    name.endsWith(SVG_EXTENSION),
   );
-  if (fileNames.length !== EXPECTED_MEDIA.length) {
-    fail(`Total de SVGs ${fileNames.length}, esperado ${EXPECTED_MEDIA.length}`);
+  if (fileNames.length < EXPECTED_MEDIA.length) {
+    fail(
+      `Total de SVGs ${fileNames.length}, mínimo esperado ${EXPECTED_MEDIA.length}`,
+    );
   }
 
   for (const expected of EXPECTED_MEDIA) {
@@ -85,7 +89,19 @@ function validate() {
     validateSvg(publicPath);
   }
 
-  console.log(`cinematic-media-assets ok: svg=${EXPECTED_MEDIA.length}`);
+  for (const fileName of fileNames) {
+    const runtimePath = `${RUNTIME_VISUAL_VFX_PREFIX}${fileName}`;
+    const publicPath = `${CINEMATIC_DIR}/${fileName}`;
+    if (!visualAssets.includes(runtimePath)) {
+      fail(`${VISUAL_ASSETS_PATH} não referencia ${runtimePath}`);
+    }
+    if (!serviceWorker.includes(runtimePath)) {
+      fail(`${SERVICE_WORKER_PATH} não precacheia ${runtimePath}`);
+    }
+    validateSvg(publicPath);
+  }
+
+  console.log(`cinematic-media-assets ok: svg=${fileNames.length}`);
 }
 
 validate();
