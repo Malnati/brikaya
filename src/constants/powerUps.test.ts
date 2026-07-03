@@ -32,7 +32,7 @@ describe("registry de power-ups", () => {
       expect(definition.type).toBe(powerUpType);
       expect(definition.visibleName).toBeTruthy();
       expect(definition.visual).toBeTruthy();
-      expect(definition.iconPath).toMatch(/^\/assets\/powerups\/.+\.svg$/);
+      expect(definition.iconPath).toMatch(/^\/assets\/visual\/powerups\/spr-powerup-.+\.svg$/);
       expect(definition.iconPath).not.toMatch(/https?:|data:|\.png|\.jpg|\.jpeg|\.webp/i);
       expect(definition.activationAudioId).toBe(
         getPowerUpActivationAudioId(powerUpType),
@@ -58,7 +58,7 @@ describe("registry de power-ups", () => {
 
     expect(audioId).toBe(GAME_AUDIO_IDS.POWERUP_ACTIVATE_LASER_FAN);
     expect(AUDIO_CATALOG[audioId].files).toEqual([
-      "/assets/audio/sfx_powerup_activate_laser_fan-01.mp3",
+      "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
     ]);
   });
 });

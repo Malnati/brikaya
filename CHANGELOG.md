@@ -3,6 +3,24 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.19.0] - 2026-07-03
+### Adicionado
+- Catálogo técnico `src/constants/visualAssets.ts` com IDs únicos, constantes camelCase e paths físicos padronizados para imagens exibidas em tela.
+- Tokens retro/arcade em `src/constants/visualDesign.ts`, sincronizados com variáveis CSS de cor e tipografia.
+- Cobertura `npm run test:asset-naming` para validar regex, tamanho 12-64, paridade código/disco, basenames exclusivos, existência física, CSS tokens e precache.
+- Especificação técnica em `docs/rup/02-design/retro-asset-system.md` para orientar próximos pedidos de sprites, VFX, UI, SFX e BGM.
+
+### Alterado
+- Assets visuais runtime foram reorganizados em `public/assets/visual/` por tipo semântico: `sprites/`, `bricks/`, `powerups/`, `vfx/` e `ui/`.
+- Assets sonoros runtime foram renomeados para kebab-case com prefixos `sfx-`/`bgm-` e sufixo numérico de variação.
+- Manifesto PWA, favicon, service worker, constantes, testes e validadores passam a referenciar os novos nomes semânticos.
+
+### Testado
+- `npm run test:asset-naming`
+- `npm run test:svg-assets`
+- `npm run test:cinematic-media-assets`
+- `npm run test:audio-assets`
+
 ## [1.18.5] - 2026-07-02
 ### Alterado
 - Imagens runtime do jogo passam a usar SVG local/offline para bola, raquete, tijolos, efeitos cinematográficos, power-ups, favicon e ícone PWA.

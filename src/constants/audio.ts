@@ -1,44 +1,44 @@
 // src/constants/audio.ts
 export const AUDIO_EVENT_IDS = [
-  "music_menu_loop",
-  "music_gameplay_loop",
-  "music_high_intensity_layer",
-  "sfx_game_start",
-  "sfx_paddle_hit_center",
-  "sfx_paddle_hit_edge",
-  "sfx_wall_hit",
-  "sfx_ceiling_hit",
-  "sfx_brick_hit",
-  "sfx_brick_break_red",
-  "sfx_brick_break_blue",
-  "sfx_brick_break_green",
-  "sfx_brick_break_yellow",
-  "sfx_brick_break_purple",
-  "sfx_score_tick",
-  "sfx_combo_small",
-  "sfx_combo_large",
-  "sfx_ball_lost",
-  "sfx_game_over",
-  "sfx_level_complete",
-  "sfx_level_toast_in",
-  "sfx_level_start",
-  "sfx_restart",
-  "sfx_reset_score",
-  "sfx_button_press",
-  "sfx_panel_open",
-  "sfx_panel_close",
-  "sfx_theme_toggle",
-  "sfx_ad_placeholder_none",
-  "sfx_powerup_spawn",
-  "sfx_powerup_collect",
-  "sfx_powerup_activate_multiball",
-  "sfx_powerup_activate_wide_paddle",
-  "sfx_powerup_activate_slow_ball",
-  "sfx_powerup_activate_laser_fan",
-  "sfx_powerup_expire",
-  "sfx_highscore_new",
-  "sfx_offline_ready",
-  "sfx_error_soft"
+  "bgm-menu-loop-main",
+  "bgm-gameplay-loop-main",
+  "bgm-gameplay-intense-layer",
+  "sfx-game-start",
+  "sfx-paddle-hit-center",
+  "sfx-paddle-hit-edge",
+  "sfx-wall-hit",
+  "sfx-ceiling-hit",
+  "sfx-brick-hit",
+  "sfx-brick-break-red",
+  "sfx-brick-break-blue",
+  "sfx-brick-break-green",
+  "sfx-brick-break-yellow",
+  "sfx-brick-break-purple",
+  "sfx-score-tick",
+  "sfx-combo-small",
+  "sfx-combo-large",
+  "sfx-ball-lost",
+  "sfx-game-over",
+  "sfx-level-complete",
+  "sfx-level-toast-in",
+  "sfx-level-start",
+  "sfx-restart",
+  "sfx-reset-score",
+  "sfx-button-press",
+  "sfx-panel-open",
+  "sfx-panel-close",
+  "sfx-theme-toggle",
+  "sfx-ad-placeholder-none",
+  "sfx-powerup-spawn",
+  "sfx-powerup-collect",
+  "sfx-powerup-activate-multiball",
+  "sfx-powerup-activate-wide-paddle",
+  "sfx-powerup-activate-slow-ball",
+  "sfx-powerup-activate-laser-fan",
+  "sfx-powerup-expire",
+  "sfx-highscore-new",
+  "sfx-offline-ready",
+  "sfx-error-soft"
 ] as const;
 
 export type AudioId = typeof AUDIO_EVENT_IDS[number];
@@ -62,8 +62,8 @@ export interface AudioCatalogEntry {
 }
 
 export const AUDIO_CATALOG = {
-  "music_menu_loop": {
-    "id": "music_menu_loop",
+  "bgm-menu-loop-main": {
+    "id": "bgm-menu-loop-main",
     "type": "music",
     "trigger": "Tela inicial, pausa futura ou estado entre partidas quando não houver partida ativa",
     "priorityLabel": "Média",
@@ -77,11 +77,11 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Deve sugerir arcade leve, sem urgência. Não tocar se o usuário ainda não interagiu e o navegador bloquear autoplay.",
     "loop": true,
     "files": [
-      "/assets/audio/music_menu_loop-01.mp3"
+      "/assets/audio/bgm-menu-loop-main-01.mp3"
     ]
   },
-  "music_gameplay_loop": {
-    "id": "music_gameplay_loop",
+  "bgm-gameplay-loop-main": {
+    "id": "bgm-gameplay-loop-main",
     "type": "music",
     "trigger": "Durante partida ativa após início ou reinício humano",
     "priorityLabel": "Média",
@@ -95,11 +95,11 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Deve manter energia constante e ficar claramente abaixo dos efeitos de tijolo, raquete e perda de bola.",
     "loop": true,
     "files": [
-      "/assets/audio/music_gameplay_loop-01.mp3"
+      "/assets/audio/bgm-gameplay-loop-main-01.mp3"
     ]
   },
-  "music_high_intensity_layer": {
-    "id": "music_high_intensity_layer",
+  "bgm-gameplay-intense-layer": {
+    "id": "bgm-gameplay-intense-layer",
     "type": "music",
     "trigger": "Fases altas ou velocidade acima de 1.6x, quando esse controle for implementado",
     "priorityLabel": "Baixa",
@@ -113,11 +113,11 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Camada opcional; não deve mudar a mecânica, apenas aumentar tensão.",
     "loop": true,
     "files": [
-      "/assets/audio/music_high_intensity_layer-01.mp3"
+      "/assets/audio/bgm-gameplay-intense-layer-01.mp3"
     ]
   },
-  "sfx_game_start": {
-    "id": "sfx_game_start",
+  "sfx-game-start": {
+    "id": "sfx-game-start",
     "type": "effect",
     "trigger": "Primeira partida, fim da contagem inicial ou reinício iniciado por ação humana",
     "priorityLabel": "Alta",
@@ -131,12 +131,12 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Deve comunicar prontidão, não vitória.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_game_start-01.mp3",
-      "/assets/audio/sfx_game_start-02.mp3"
+      "/assets/audio/sfx-game-start-01.mp3",
+      "/assets/audio/sfx-game-start-02.mp3"
     ]
   },
-  "sfx_paddle_hit_center": {
-    "id": "sfx_paddle_hit_center",
+  "sfx-paddle-hit-center": {
+    "id": "sfx-paddle-hit-center",
     "type": "effect",
     "trigger": "Bola colide com o centro da raquete",
     "priorityLabel": "Alta",
@@ -150,14 +150,14 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Som elástico e preciso; deve reforçar controle do jogador.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_paddle_hit_center-01.mp3",
-      "/assets/audio/sfx_paddle_hit_center-02.mp3",
-      "/assets/audio/sfx_paddle_hit_center-03.mp3",
-      "/assets/audio/sfx_paddle_hit_center-04.mp3"
+      "/assets/audio/sfx-paddle-hit-center-01.mp3",
+      "/assets/audio/sfx-paddle-hit-center-02.mp3",
+      "/assets/audio/sfx-paddle-hit-center-03.mp3",
+      "/assets/audio/sfx-paddle-hit-center-04.mp3"
     ]
   },
-  "sfx_paddle_hit_edge": {
-    "id": "sfx_paddle_hit_edge",
+  "sfx-paddle-hit-edge": {
+    "id": "sfx-paddle-hit-edge",
     "type": "effect",
     "trigger": "Bola colide perto das bordas da raquete e sai com ângulo acentuado",
     "priorityLabel": "Alta",
@@ -171,14 +171,14 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Mais agudo que colisão central para indicar risco e mudança de direção.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_paddle_hit_edge-01.mp3",
-      "/assets/audio/sfx_paddle_hit_edge-02.mp3",
-      "/assets/audio/sfx_paddle_hit_edge-03.mp3",
-      "/assets/audio/sfx_paddle_hit_edge-04.mp3"
+      "/assets/audio/sfx-paddle-hit-edge-01.mp3",
+      "/assets/audio/sfx-paddle-hit-edge-02.mp3",
+      "/assets/audio/sfx-paddle-hit-edge-03.mp3",
+      "/assets/audio/sfx-paddle-hit-edge-04.mp3"
     ]
   },
-  "sfx_wall_hit": {
-    "id": "sfx_wall_hit",
+  "sfx-wall-hit": {
+    "id": "sfx-wall-hit",
     "type": "effect",
     "trigger": "Bola colide com parede lateral",
     "priorityLabel": "Média",
@@ -192,15 +192,15 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Deve ser discreto porque ocorre com frequência.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_wall_hit-01.mp3",
-      "/assets/audio/sfx_wall_hit-02.mp3",
-      "/assets/audio/sfx_wall_hit-03.mp3",
-      "/assets/audio/sfx_wall_hit-04.mp3",
-      "/assets/audio/sfx_wall_hit-05.mp3"
+      "/assets/audio/sfx-wall-hit-01.mp3",
+      "/assets/audio/sfx-wall-hit-02.mp3",
+      "/assets/audio/sfx-wall-hit-03.mp3",
+      "/assets/audio/sfx-wall-hit-04.mp3",
+      "/assets/audio/sfx-wall-hit-05.mp3"
     ]
   },
-  "sfx_ceiling_hit": {
-    "id": "sfx_ceiling_hit",
+  "sfx-ceiling-hit": {
+    "id": "sfx-ceiling-hit",
     "type": "effect",
     "trigger": "Bola colide com o teto",
     "priorityLabel": "Média",
@@ -214,14 +214,14 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Ligeiramente mais agudo que parede lateral para orientar posição vertical.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_ceiling_hit-01.mp3",
-      "/assets/audio/sfx_ceiling_hit-02.mp3",
-      "/assets/audio/sfx_ceiling_hit-03.mp3",
-      "/assets/audio/sfx_ceiling_hit-04.mp3"
+      "/assets/audio/sfx-ceiling-hit-01.mp3",
+      "/assets/audio/sfx-ceiling-hit-02.mp3",
+      "/assets/audio/sfx-ceiling-hit-03.mp3",
+      "/assets/audio/sfx-ceiling-hit-04.mp3"
     ]
   },
-  "sfx_brick_hit": {
-    "id": "sfx_brick_hit",
+  "sfx-brick-hit": {
+    "id": "sfx-brick-hit",
     "type": "effect",
     "trigger": "Bola toca um tijolo antes ou junto do efeito de destruição",
     "priorityLabel": "Alta",
@@ -235,15 +235,15 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Deve dar feedback imediato de impacto. Pode ser combinado com o som específico de cor.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_brick_hit-01.mp3",
-      "/assets/audio/sfx_brick_hit-02.mp3",
-      "/assets/audio/sfx_brick_hit-03.mp3",
-      "/assets/audio/sfx_brick_hit-04.mp3",
-      "/assets/audio/sfx_brick_hit-05.mp3"
+      "/assets/audio/sfx-brick-hit-01.mp3",
+      "/assets/audio/sfx-brick-hit-02.mp3",
+      "/assets/audio/sfx-brick-hit-03.mp3",
+      "/assets/audio/sfx-brick-hit-04.mp3",
+      "/assets/audio/sfx-brick-hit-05.mp3"
     ]
   },
-  "sfx_brick_break_red": {
-    "id": "sfx_brick_break_red",
+  "sfx-brick-break-red": {
+    "id": "sfx-brick-break-red",
     "type": "effect",
     "trigger": "Tijolo vermelho é destruído",
     "priorityLabel": "Alta",
@@ -257,13 +257,13 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Timbre quente. Não deve soar mais importante que conclusão de fase.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_brick_break_red-01.mp3",
-      "/assets/audio/sfx_brick_break_red-02.mp3",
-      "/assets/audio/sfx_brick_break_red-03.mp3"
+      "/assets/audio/sfx-brick-break-red-01.mp3",
+      "/assets/audio/sfx-brick-break-red-02.mp3",
+      "/assets/audio/sfx-brick-break-red-03.mp3"
     ]
   },
-  "sfx_brick_break_blue": {
-    "id": "sfx_brick_break_blue",
+  "sfx-brick-break-blue": {
+    "id": "sfx-brick-break-blue",
     "type": "effect",
     "trigger": "Tijolo azul é destruído",
     "priorityLabel": "Alta",
@@ -277,13 +277,13 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Timbre claro e frio, com mesma presença do vermelho.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_brick_break_blue-01.mp3",
-      "/assets/audio/sfx_brick_break_blue-02.mp3",
-      "/assets/audio/sfx_brick_break_blue-03.mp3"
+      "/assets/audio/sfx-brick-break-blue-01.mp3",
+      "/assets/audio/sfx-brick-break-blue-02.mp3",
+      "/assets/audio/sfx-brick-break-blue-03.mp3"
     ]
   },
-  "sfx_brick_break_green": {
-    "id": "sfx_brick_break_green",
+  "sfx-brick-break-green": {
+    "id": "sfx-brick-break-green",
     "type": "effect",
     "trigger": "Tijolo verde é destruído",
     "priorityLabel": "Alta",
@@ -297,13 +297,13 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Timbre macio para evitar excesso de brilho em sequências.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_brick_break_green-01.mp3",
-      "/assets/audio/sfx_brick_break_green-02.mp3",
-      "/assets/audio/sfx_brick_break_green-03.mp3"
+      "/assets/audio/sfx-brick-break-green-01.mp3",
+      "/assets/audio/sfx-brick-break-green-02.mp3",
+      "/assets/audio/sfx-brick-break-green-03.mp3"
     ]
   },
-  "sfx_brick_break_yellow": {
-    "id": "sfx_brick_break_yellow",
+  "sfx-brick-break-yellow": {
+    "id": "sfx-brick-break-yellow",
     "type": "effect",
     "trigger": "Tijolo amarelo é destruído",
     "priorityLabel": "Alta",
@@ -317,13 +317,13 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Timbre mais brilhante, mas sem estridência.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_brick_break_yellow-01.mp3",
-      "/assets/audio/sfx_brick_break_yellow-02.mp3",
-      "/assets/audio/sfx_brick_break_yellow-03.mp3"
+      "/assets/audio/sfx-brick-break-yellow-01.mp3",
+      "/assets/audio/sfx-brick-break-yellow-02.mp3",
+      "/assets/audio/sfx-brick-break-yellow-03.mp3"
     ]
   },
-  "sfx_brick_break_purple": {
-    "id": "sfx_brick_break_purple",
+  "sfx-brick-break-purple": {
+    "id": "sfx-brick-break-purple",
     "type": "effect",
     "trigger": "Tijolo roxo é destruído",
     "priorityLabel": "Alta",
@@ -337,13 +337,13 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Timbre um pouco mais grave ou espacial para diferenciar cor.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_brick_break_purple-01.mp3",
-      "/assets/audio/sfx_brick_break_purple-02.mp3",
-      "/assets/audio/sfx_brick_break_purple-03.mp3"
+      "/assets/audio/sfx-brick-break-purple-01.mp3",
+      "/assets/audio/sfx-brick-break-purple-02.mp3",
+      "/assets/audio/sfx-brick-break-purple-03.mp3"
     ]
   },
-  "sfx_score_tick": {
-    "id": "sfx_score_tick",
+  "sfx-score-tick": {
+    "id": "sfx-score-tick",
     "type": "effect",
     "trigger": "Pontuação aumenta após destruição de tijolo",
     "priorityLabel": "Média",
@@ -357,13 +357,13 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Deve ficar 8 dB a 10 dB abaixo do som de tijolo; não duplicar sensação de impacto.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_score_tick-01.mp3",
-      "/assets/audio/sfx_score_tick-02.mp3",
-      "/assets/audio/sfx_score_tick-03.mp3"
+      "/assets/audio/sfx-score-tick-01.mp3",
+      "/assets/audio/sfx-score-tick-02.mp3",
+      "/assets/audio/sfx-score-tick-03.mp3"
     ]
   },
-  "sfx_combo_small": {
-    "id": "sfx_combo_small",
+  "sfx-combo-small": {
+    "id": "sfx-combo-small",
     "type": "future",
     "trigger": "Sequência curta de 3 ou mais tijolos destruídos em janela de combo futura",
     "priorityLabel": "Média",
@@ -377,12 +377,12 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Usar cooldown mínimo de 500 ms para não empilhar em excesso.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_combo_small-01.mp3",
-      "/assets/audio/sfx_combo_small-02.mp3"
+      "/assets/audio/sfx-combo-small-01.mp3",
+      "/assets/audio/sfx-combo-small-02.mp3"
     ]
   },
-  "sfx_combo_large": {
-    "id": "sfx_combo_large",
+  "sfx-combo-large": {
+    "id": "sfx-combo-large",
     "type": "future",
     "trigger": "Combo alto futuro, acima do limite definido pela mecânica",
     "priorityLabel": "Alta",
@@ -396,12 +396,12 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Deve soar como recompensa, não como fim de fase.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_combo_large-01.mp3",
-      "/assets/audio/sfx_combo_large-02.mp3"
+      "/assets/audio/sfx-combo-large-01.mp3",
+      "/assets/audio/sfx-combo-large-02.mp3"
     ]
   },
-  "sfx_ball_lost": {
-    "id": "sfx_ball_lost",
+  "sfx-ball-lost": {
+    "id": "sfx-ball-lost",
     "type": "effect",
     "trigger": "Bola passa pela raquete e sai da área de jogo",
     "priorityLabel": "Crítica",
@@ -415,12 +415,12 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Queda curta; precisa comunicar erro sem punição emocional exagerada.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_ball_lost-01.mp3",
-      "/assets/audio/sfx_ball_lost-02.mp3"
+      "/assets/audio/sfx-ball-lost-01.mp3",
+      "/assets/audio/sfx-ball-lost-02.mp3"
     ]
   },
-  "sfx_game_over": {
-    "id": "sfx_game_over",
+  "sfx-game-over": {
+    "id": "sfx-game-over",
     "type": "effect",
     "trigger": "Estado de fim de jogo é confirmado",
     "priorityLabel": "Crítica",
@@ -434,11 +434,11 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Grave limpo e conclusivo; deve deixar espaço para leitura da mensagem final.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_game_over-01.mp3"
+      "/assets/audio/sfx-game-over-01.mp3"
     ]
   },
-  "sfx_level_complete": {
-    "id": "sfx_level_complete",
+  "sfx-level-complete": {
+    "id": "sfx-level-complete",
     "type": "effect",
     "trigger": "Último tijolo ativo da fase é destruído e o jogo entra em transição",
     "priorityLabel": "Crítica",
@@ -452,12 +452,12 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Deve antecipar a pausa e reforçar recompensa de fase.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_level_complete-01.mp3",
-      "/assets/audio/sfx_level_complete-02.mp3"
+      "/assets/audio/sfx-level-complete-01.mp3",
+      "/assets/audio/sfx-level-complete-02.mp3"
     ]
   },
-  "sfx_level_toast_in": {
-    "id": "sfx_level_toast_in",
+  "sfx-level-toast-in": {
+    "id": "sfx-level-toast-in",
     "type": "ui",
     "trigger": "Mensagem de subida de fase aparece entre fases",
     "priorityLabel": "Alta",
@@ -471,12 +471,12 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Deve acompanhar o enter visual da mensagem sem parecer notificação externa.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_level_toast_in-01.mp3",
-      "/assets/audio/sfx_level_toast_in-02.mp3"
+      "/assets/audio/sfx-level-toast-in-01.mp3",
+      "/assets/audio/sfx-level-toast-in-02.mp3"
     ]
   },
-  "sfx_level_start": {
-    "id": "sfx_level_start",
+  "sfx-level-start": {
+    "id": "sfx-level-start",
     "type": "effect",
     "trigger": "Nova fase começa após a pausa de transição",
     "priorityLabel": "Crítica",
@@ -490,12 +490,12 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Pulso ascendente; comunica retorno à ação e aumento de velocidade.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_level_start-01.mp3",
-      "/assets/audio/sfx_level_start-02.mp3"
+      "/assets/audio/sfx-level-start-01.mp3",
+      "/assets/audio/sfx-level-start-02.mp3"
     ]
   },
-  "sfx_restart": {
-    "id": "sfx_restart",
+  "sfx-restart": {
+    "id": "sfx-restart",
     "type": "ui",
     "trigger": "Botão Reiniciar ou Jogar de novo é acionado",
     "priorityLabel": "Alta",
@@ -509,12 +509,12 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Deve soar como reset voluntário, não como falha.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_restart-01.mp3",
-      "/assets/audio/sfx_restart-02.mp3"
+      "/assets/audio/sfx-restart-01.mp3",
+      "/assets/audio/sfx-restart-02.mp3"
     ]
   },
-  "sfx_reset_score": {
-    "id": "sfx_reset_score",
+  "sfx-reset-score": {
+    "id": "sfx-reset-score",
     "type": "ui",
     "trigger": "Botão Zerar pontuação é acionado",
     "priorityLabel": "Média",
@@ -528,11 +528,11 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Som discreto; não deve sugerir erro ou conquista.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_reset_score-01.mp3"
+      "/assets/audio/sfx-reset-score-01.mp3"
     ]
   },
-  "sfx_button_press": {
-    "id": "sfx_button_press",
+  "sfx-button-press": {
+    "id": "sfx-button-press",
     "type": "ui",
     "trigger": "Botões comuns são pressionados, incluindo Logs, Colisões, Claro e Escuro",
     "priorityLabel": "Baixa",
@@ -546,14 +546,14 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Deve ser tátil e baixo para não competir com gameplay.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_button_press-01.mp3",
-      "/assets/audio/sfx_button_press-02.mp3",
-      "/assets/audio/sfx_button_press-03.mp3",
-      "/assets/audio/sfx_button_press-04.mp3"
+      "/assets/audio/sfx-button-press-01.mp3",
+      "/assets/audio/sfx-button-press-02.mp3",
+      "/assets/audio/sfx-button-press-03.mp3",
+      "/assets/audio/sfx-button-press-04.mp3"
     ]
   },
-  "sfx_panel_open": {
-    "id": "sfx_panel_open",
+  "sfx-panel-open": {
+    "id": "sfx-panel-open",
     "type": "ui",
     "trigger": "Painel de logs ou colisões é aberto",
     "priorityLabel": "Média",
@@ -567,12 +567,12 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Sweep curto, indicando que uma camada de leitura foi aberta.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_panel_open-01.mp3",
-      "/assets/audio/sfx_panel_open-02.mp3"
+      "/assets/audio/sfx-panel-open-01.mp3",
+      "/assets/audio/sfx-panel-open-02.mp3"
     ]
   },
-  "sfx_panel_close": {
-    "id": "sfx_panel_close",
+  "sfx-panel-close": {
+    "id": "sfx-panel-close",
     "type": "ui",
     "trigger": "Painel de logs ou colisões é fechado",
     "priorityLabel": "Média",
@@ -586,12 +586,12 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Sweep descendente, mais baixo que abertura.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_panel_close-01.mp3",
-      "/assets/audio/sfx_panel_close-02.mp3"
+      "/assets/audio/sfx-panel-close-01.mp3",
+      "/assets/audio/sfx-panel-close-02.mp3"
     ]
   },
-  "sfx_theme_toggle": {
-    "id": "sfx_theme_toggle",
+  "sfx-theme-toggle": {
+    "id": "sfx-theme-toggle",
     "type": "ui",
     "trigger": "Alternância entre tema claro e escuro",
     "priorityLabel": "Baixa",
@@ -605,12 +605,12 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Chime curto; não deve parecer evento de pontuação.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_theme_toggle-01.mp3",
-      "/assets/audio/sfx_theme_toggle-02.mp3"
+      "/assets/audio/sfx-theme-toggle-01.mp3",
+      "/assets/audio/sfx-theme-toggle-02.mp3"
     ]
   },
-  "sfx_ad_placeholder_none": {
-    "id": "sfx_ad_placeholder_none",
+  "sfx-ad-placeholder-none": {
+    "id": "sfx-ad-placeholder-none",
     "type": "system",
     "trigger": "Placeholder offline de publicidade aparece ou permanece visível",
     "priorityLabel": "Baixa",
@@ -625,8 +625,8 @@ export const AUDIO_CATALOG = {
     "loop": false,
     "files": []
   },
-  "sfx_powerup_spawn": {
-    "id": "sfx_powerup_spawn",
+  "sfx-powerup-spawn": {
+    "id": "sfx-powerup-spawn",
     "type": "future",
     "trigger": "Power-up futuro aparece no tabuleiro",
     "priorityLabel": "Média",
@@ -640,13 +640,13 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Spark leve; deve avisar oportunidade sem distrair da bola.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_powerup_spawn-01.mp3",
-      "/assets/audio/sfx_powerup_spawn-02.mp3",
-      "/assets/audio/sfx_powerup_spawn-03.mp3"
+      "/assets/audio/sfx-powerup-spawn-01.mp3",
+      "/assets/audio/sfx-powerup-spawn-02.mp3",
+      "/assets/audio/sfx-powerup-spawn-03.mp3"
     ]
   },
-  "sfx_powerup_collect": {
-    "id": "sfx_powerup_collect",
+  "sfx-powerup-collect": {
+    "id": "sfx-powerup-collect",
     "type": "future",
     "trigger": "Jogador coleta power-up futuro",
     "priorityLabel": "Alta",
@@ -660,13 +660,13 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Chime positivo acima de tijolo comum.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_powerup_collect-01.mp3",
-      "/assets/audio/sfx_powerup_collect-02.mp3",
-      "/assets/audio/sfx_powerup_collect-03.mp3"
+      "/assets/audio/sfx-powerup-collect-01.mp3",
+      "/assets/audio/sfx-powerup-collect-02.mp3",
+      "/assets/audio/sfx-powerup-collect-03.mp3"
     ]
   },
-  "sfx_powerup_activate_multiball": {
-    "id": "sfx_powerup_activate_multiball",
+  "sfx-powerup-activate-multiball": {
+    "id": "sfx-powerup-activate-multiball",
     "type": "future",
     "trigger": "Power-up de múltiplas bolas é ativado",
     "priorityLabel": "Alta",
@@ -680,12 +680,12 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Expansão estéreo curta; deve indicar multiplicação sem confundir com fase concluída.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_powerup_activate_multiball-01.mp3",
-      "/assets/audio/sfx_powerup_activate_multiball-02.mp3"
+      "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+      "/assets/audio/sfx-powerup-activate-multiball-02.mp3"
     ]
   },
-  "sfx_powerup_activate_wide_paddle": {
-    "id": "sfx_powerup_activate_wide_paddle",
+  "sfx-powerup-activate-wide-paddle": {
+    "id": "sfx-powerup-activate-wide-paddle",
     "type": "future",
     "trigger": "Power-up aumenta largura da raquete",
     "priorityLabel": "Alta",
@@ -699,12 +699,12 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Sweep horizontal, associado à raquete.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_powerup_activate_wide_paddle-01.mp3",
-      "/assets/audio/sfx_powerup_activate_wide_paddle-02.mp3"
+      "/assets/audio/sfx-powerup-activate-wide-paddle-01.mp3",
+      "/assets/audio/sfx-powerup-activate-wide-paddle-02.mp3"
     ]
   },
-  "sfx_powerup_activate_slow_ball": {
-    "id": "sfx_powerup_activate_slow_ball",
+  "sfx-powerup-activate-slow-ball": {
+    "id": "sfx-powerup-activate-slow-ball",
     "type": "future",
     "trigger": "Power-up reduz velocidade da bola",
     "priorityLabel": "Alta",
@@ -718,12 +718,12 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Pitch-down suave; deve comunicar desaceleração sem parecer perda.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_powerup_activate_slow_ball-01.mp3",
-      "/assets/audio/sfx_powerup_activate_slow_ball-02.mp3"
+      "/assets/audio/sfx-powerup-activate-slow-ball-01.mp3",
+      "/assets/audio/sfx-powerup-activate-slow-ball-02.mp3"
     ]
   },
-  "sfx_powerup_activate_laser_fan": {
-    "id": "sfx_powerup_activate_laser_fan",
+  "sfx-powerup-activate-laser-fan": {
+    "id": "sfx-powerup-activate-laser-fan",
     "type": "future",
     "trigger": "Power-up Laser em leque é ativado",
     "priorityLabel": "Alta",
@@ -737,11 +737,11 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Disparo curto e brilhante; deve comunicar raios em leque sem parecer explosão ou conclusão de fase.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_powerup_activate_laser_fan-01.mp3"
+      "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3"
     ]
   },
-  "sfx_powerup_expire": {
-    "id": "sfx_powerup_expire",
+  "sfx-powerup-expire": {
+    "id": "sfx-powerup-expire",
     "type": "future",
     "trigger": "Efeito de power-up futuro termina",
     "priorityLabel": "Média",
@@ -755,12 +755,12 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Blip neutro e baixo, sem tom punitivo.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_powerup_expire-01.mp3",
-      "/assets/audio/sfx_powerup_expire-02.mp3"
+      "/assets/audio/sfx-powerup-expire-01.mp3",
+      "/assets/audio/sfx-powerup-expire-02.mp3"
     ]
   },
-  "sfx_highscore_new": {
-    "id": "sfx_highscore_new",
+  "sfx-highscore-new": {
+    "id": "sfx-highscore-new",
     "type": "future",
     "trigger": "Novo recorde ou high-score futuro é confirmado",
     "priorityLabel": "Crítica",
@@ -774,12 +774,12 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Fanfarra curta; maior recompensa sonora fora de conclusão de fase.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_highscore_new-01.mp3",
-      "/assets/audio/sfx_highscore_new-02.mp3"
+      "/assets/audio/sfx-highscore-new-01.mp3",
+      "/assets/audio/sfx-highscore-new-02.mp3"
     ]
   },
-  "sfx_offline_ready": {
-    "id": "sfx_offline_ready",
+  "sfx-offline-ready": {
+    "id": "sfx-offline-ready",
     "type": "system",
     "trigger": "Estado futuro informa que o jogo está pronto para uso offline",
     "priorityLabel": "Baixa",
@@ -793,11 +793,11 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Opcional e só deve tocar se houver feedback visual correspondente.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_offline_ready-01.mp3"
+      "/assets/audio/sfx-offline-ready-01.mp3"
     ]
   },
-  "sfx_error_soft": {
-    "id": "sfx_error_soft",
+  "sfx-error-soft": {
+    "id": "sfx-error-soft",
     "type": "system",
     "trigger": "Erro não-crítico visível ao usuário, como falha de leitura local recuperável",
     "priorityLabel": "Média",
@@ -811,116 +811,118 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Tom baixo, claro e não alarmista; nunca deve expor detalhe técnico.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx_error_soft-01.mp3",
-      "/assets/audio/sfx_error_soft-02.mp3"
+      "/assets/audio/sfx-error-soft-01.mp3",
+      "/assets/audio/sfx-error-soft-02.mp3"
     ]
   }
 } satisfies Record<AudioId, AudioCatalogEntry>;
 
 export const MUSIC_AUDIO_IDS = [
-  "music_menu_loop",
-  "music_gameplay_loop",
-  "music_high_intensity_layer"
+  "bgm-menu-loop-main",
+  "bgm-gameplay-loop-main",
+  "bgm-gameplay-intense-layer"
 ] as const;
 
-export const AUDIO_PUBLIC_PATHS = [
-  "/assets/audio/music_gameplay_loop-01.mp3",
-  "/assets/audio/music_high_intensity_layer-01.mp3",
-  "/assets/audio/music_menu_loop-01.mp3",
-  "/assets/audio/sfx_ball_lost-01.mp3",
-  "/assets/audio/sfx_ball_lost-02.mp3",
-  "/assets/audio/sfx_brick_break_blue-01.mp3",
-  "/assets/audio/sfx_brick_break_blue-02.mp3",
-  "/assets/audio/sfx_brick_break_blue-03.mp3",
-  "/assets/audio/sfx_brick_break_green-01.mp3",
-  "/assets/audio/sfx_brick_break_green-02.mp3",
-  "/assets/audio/sfx_brick_break_green-03.mp3",
-  "/assets/audio/sfx_brick_break_purple-01.mp3",
-  "/assets/audio/sfx_brick_break_purple-02.mp3",
-  "/assets/audio/sfx_brick_break_purple-03.mp3",
-  "/assets/audio/sfx_brick_break_red-01.mp3",
-  "/assets/audio/sfx_brick_break_red-02.mp3",
-  "/assets/audio/sfx_brick_break_red-03.mp3",
-  "/assets/audio/sfx_brick_break_yellow-01.mp3",
-  "/assets/audio/sfx_brick_break_yellow-02.mp3",
-  "/assets/audio/sfx_brick_break_yellow-03.mp3",
-  "/assets/audio/sfx_brick_hit-01.mp3",
-  "/assets/audio/sfx_brick_hit-02.mp3",
-  "/assets/audio/sfx_brick_hit-03.mp3",
-  "/assets/audio/sfx_brick_hit-04.mp3",
-  "/assets/audio/sfx_brick_hit-05.mp3",
-  "/assets/audio/sfx_button_press-01.mp3",
-  "/assets/audio/sfx_button_press-02.mp3",
-  "/assets/audio/sfx_button_press-03.mp3",
-  "/assets/audio/sfx_button_press-04.mp3",
-  "/assets/audio/sfx_ceiling_hit-01.mp3",
-  "/assets/audio/sfx_ceiling_hit-02.mp3",
-  "/assets/audio/sfx_ceiling_hit-03.mp3",
-  "/assets/audio/sfx_ceiling_hit-04.mp3",
-  "/assets/audio/sfx_combo_large-01.mp3",
-  "/assets/audio/sfx_combo_large-02.mp3",
-  "/assets/audio/sfx_combo_small-01.mp3",
-  "/assets/audio/sfx_combo_small-02.mp3",
-  "/assets/audio/sfx_error_soft-01.mp3",
-  "/assets/audio/sfx_error_soft-02.mp3",
-  "/assets/audio/sfx_game_over-01.mp3",
-  "/assets/audio/sfx_game_start-01.mp3",
-  "/assets/audio/sfx_game_start-02.mp3",
-  "/assets/audio/sfx_highscore_new-01.mp3",
-  "/assets/audio/sfx_highscore_new-02.mp3",
-  "/assets/audio/sfx_level_complete-01.mp3",
-  "/assets/audio/sfx_level_complete-02.mp3",
-  "/assets/audio/sfx_level_start-01.mp3",
-  "/assets/audio/sfx_level_start-02.mp3",
-  "/assets/audio/sfx_level_toast_in-01.mp3",
-  "/assets/audio/sfx_level_toast_in-02.mp3",
-  "/assets/audio/sfx_offline_ready-01.mp3",
-  "/assets/audio/sfx_paddle_hit_center-01.mp3",
-  "/assets/audio/sfx_paddle_hit_center-02.mp3",
-  "/assets/audio/sfx_paddle_hit_center-03.mp3",
-  "/assets/audio/sfx_paddle_hit_center-04.mp3",
-  "/assets/audio/sfx_paddle_hit_edge-01.mp3",
-  "/assets/audio/sfx_paddle_hit_edge-02.mp3",
-  "/assets/audio/sfx_paddle_hit_edge-03.mp3",
-  "/assets/audio/sfx_paddle_hit_edge-04.mp3",
-  "/assets/audio/sfx_panel_close-01.mp3",
-  "/assets/audio/sfx_panel_close-02.mp3",
-  "/assets/audio/sfx_panel_open-01.mp3",
-  "/assets/audio/sfx_panel_open-02.mp3",
-  "/assets/audio/sfx_powerup_activate_multiball-01.mp3",
-  "/assets/audio/sfx_powerup_activate_multiball-02.mp3",
-  "/assets/audio/sfx_powerup_activate_slow_ball-01.mp3",
-  "/assets/audio/sfx_powerup_activate_slow_ball-02.mp3",
-  "/assets/audio/sfx_powerup_activate_laser_fan-01.mp3",
-  "/assets/audio/sfx_powerup_activate_wide_paddle-01.mp3",
-  "/assets/audio/sfx_powerup_activate_wide_paddle-02.mp3",
-  "/assets/audio/sfx_powerup_collect-01.mp3",
-  "/assets/audio/sfx_powerup_collect-02.mp3",
-  "/assets/audio/sfx_powerup_collect-03.mp3",
-  "/assets/audio/sfx_powerup_expire-01.mp3",
-  "/assets/audio/sfx_powerup_expire-02.mp3",
-  "/assets/audio/sfx_powerup_spawn-01.mp3",
-  "/assets/audio/sfx_powerup_spawn-02.mp3",
-  "/assets/audio/sfx_powerup_spawn-03.mp3",
-  "/assets/audio/sfx_reset_score-01.mp3",
-  "/assets/audio/sfx_restart-01.mp3",
-  "/assets/audio/sfx_restart-02.mp3",
-  "/assets/audio/sfx_score_tick-01.mp3",
-  "/assets/audio/sfx_score_tick-02.mp3",
-  "/assets/audio/sfx_score_tick-03.mp3",
-  "/assets/audio/sfx_theme_toggle-01.mp3",
-  "/assets/audio/sfx_theme_toggle-02.mp3",
-  "/assets/audio/sfx_wall_hit-01.mp3",
-  "/assets/audio/sfx_wall_hit-02.mp3",
-  "/assets/audio/sfx_wall_hit-03.mp3",
-  "/assets/audio/sfx_wall_hit-04.mp3",
-  "/assets/audio/sfx_wall_hit-05.mp3"
-] as const;
+export const AUDIO_ASSET_PATHS = {
+  bgmGameplayIntenseLayer01: '/assets/audio/bgm-gameplay-intense-layer-01.mp3',
+  bgmGameplayLoopMain01: '/assets/audio/bgm-gameplay-loop-main-01.mp3',
+  bgmMenuLoopMain01: '/assets/audio/bgm-menu-loop-main-01.mp3',
+  sfxBallLost01: '/assets/audio/sfx-ball-lost-01.mp3',
+  sfxBallLost02: '/assets/audio/sfx-ball-lost-02.mp3',
+  sfxBrickBreakBlue01: '/assets/audio/sfx-brick-break-blue-01.mp3',
+  sfxBrickBreakBlue02: '/assets/audio/sfx-brick-break-blue-02.mp3',
+  sfxBrickBreakBlue03: '/assets/audio/sfx-brick-break-blue-03.mp3',
+  sfxBrickBreakGreen01: '/assets/audio/sfx-brick-break-green-01.mp3',
+  sfxBrickBreakGreen02: '/assets/audio/sfx-brick-break-green-02.mp3',
+  sfxBrickBreakGreen03: '/assets/audio/sfx-brick-break-green-03.mp3',
+  sfxBrickBreakPurple01: '/assets/audio/sfx-brick-break-purple-01.mp3',
+  sfxBrickBreakPurple02: '/assets/audio/sfx-brick-break-purple-02.mp3',
+  sfxBrickBreakPurple03: '/assets/audio/sfx-brick-break-purple-03.mp3',
+  sfxBrickBreakRed01: '/assets/audio/sfx-brick-break-red-01.mp3',
+  sfxBrickBreakRed02: '/assets/audio/sfx-brick-break-red-02.mp3',
+  sfxBrickBreakRed03: '/assets/audio/sfx-brick-break-red-03.mp3',
+  sfxBrickBreakYellow01: '/assets/audio/sfx-brick-break-yellow-01.mp3',
+  sfxBrickBreakYellow02: '/assets/audio/sfx-brick-break-yellow-02.mp3',
+  sfxBrickBreakYellow03: '/assets/audio/sfx-brick-break-yellow-03.mp3',
+  sfxBrickHit01: '/assets/audio/sfx-brick-hit-01.mp3',
+  sfxBrickHit02: '/assets/audio/sfx-brick-hit-02.mp3',
+  sfxBrickHit03: '/assets/audio/sfx-brick-hit-03.mp3',
+  sfxBrickHit04: '/assets/audio/sfx-brick-hit-04.mp3',
+  sfxBrickHit05: '/assets/audio/sfx-brick-hit-05.mp3',
+  sfxButtonPress01: '/assets/audio/sfx-button-press-01.mp3',
+  sfxButtonPress02: '/assets/audio/sfx-button-press-02.mp3',
+  sfxButtonPress03: '/assets/audio/sfx-button-press-03.mp3',
+  sfxButtonPress04: '/assets/audio/sfx-button-press-04.mp3',
+  sfxCeilingHit01: '/assets/audio/sfx-ceiling-hit-01.mp3',
+  sfxCeilingHit02: '/assets/audio/sfx-ceiling-hit-02.mp3',
+  sfxCeilingHit03: '/assets/audio/sfx-ceiling-hit-03.mp3',
+  sfxCeilingHit04: '/assets/audio/sfx-ceiling-hit-04.mp3',
+  sfxComboLarge01: '/assets/audio/sfx-combo-large-01.mp3',
+  sfxComboLarge02: '/assets/audio/sfx-combo-large-02.mp3',
+  sfxComboSmall01: '/assets/audio/sfx-combo-small-01.mp3',
+  sfxComboSmall02: '/assets/audio/sfx-combo-small-02.mp3',
+  sfxErrorSoft01: '/assets/audio/sfx-error-soft-01.mp3',
+  sfxErrorSoft02: '/assets/audio/sfx-error-soft-02.mp3',
+  sfxGameOver01: '/assets/audio/sfx-game-over-01.mp3',
+  sfxGameStart01: '/assets/audio/sfx-game-start-01.mp3',
+  sfxGameStart02: '/assets/audio/sfx-game-start-02.mp3',
+  sfxHighscoreNew01: '/assets/audio/sfx-highscore-new-01.mp3',
+  sfxHighscoreNew02: '/assets/audio/sfx-highscore-new-02.mp3',
+  sfxLevelComplete01: '/assets/audio/sfx-level-complete-01.mp3',
+  sfxLevelComplete02: '/assets/audio/sfx-level-complete-02.mp3',
+  sfxLevelStart01: '/assets/audio/sfx-level-start-01.mp3',
+  sfxLevelStart02: '/assets/audio/sfx-level-start-02.mp3',
+  sfxLevelToastIn01: '/assets/audio/sfx-level-toast-in-01.mp3',
+  sfxLevelToastIn02: '/assets/audio/sfx-level-toast-in-02.mp3',
+  sfxOfflineReady01: '/assets/audio/sfx-offline-ready-01.mp3',
+  sfxPaddleHitCenter01: '/assets/audio/sfx-paddle-hit-center-01.mp3',
+  sfxPaddleHitCenter02: '/assets/audio/sfx-paddle-hit-center-02.mp3',
+  sfxPaddleHitCenter03: '/assets/audio/sfx-paddle-hit-center-03.mp3',
+  sfxPaddleHitCenter04: '/assets/audio/sfx-paddle-hit-center-04.mp3',
+  sfxPaddleHitEdge01: '/assets/audio/sfx-paddle-hit-edge-01.mp3',
+  sfxPaddleHitEdge02: '/assets/audio/sfx-paddle-hit-edge-02.mp3',
+  sfxPaddleHitEdge03: '/assets/audio/sfx-paddle-hit-edge-03.mp3',
+  sfxPaddleHitEdge04: '/assets/audio/sfx-paddle-hit-edge-04.mp3',
+  sfxPanelClose01: '/assets/audio/sfx-panel-close-01.mp3',
+  sfxPanelClose02: '/assets/audio/sfx-panel-close-02.mp3',
+  sfxPanelOpen01: '/assets/audio/sfx-panel-open-01.mp3',
+  sfxPanelOpen02: '/assets/audio/sfx-panel-open-02.mp3',
+  sfxPowerupActivateLaserFan01: '/assets/audio/sfx-powerup-activate-laser-fan-01.mp3',
+  sfxPowerupActivateMultiball01: '/assets/audio/sfx-powerup-activate-multiball-01.mp3',
+  sfxPowerupActivateMultiball02: '/assets/audio/sfx-powerup-activate-multiball-02.mp3',
+  sfxPowerupActivateSlowBall01: '/assets/audio/sfx-powerup-activate-slow-ball-01.mp3',
+  sfxPowerupActivateSlowBall02: '/assets/audio/sfx-powerup-activate-slow-ball-02.mp3',
+  sfxPowerupActivateWidePaddle01: '/assets/audio/sfx-powerup-activate-wide-paddle-01.mp3',
+  sfxPowerupActivateWidePaddle02: '/assets/audio/sfx-powerup-activate-wide-paddle-02.mp3',
+  sfxPowerupCollect01: '/assets/audio/sfx-powerup-collect-01.mp3',
+  sfxPowerupCollect02: '/assets/audio/sfx-powerup-collect-02.mp3',
+  sfxPowerupCollect03: '/assets/audio/sfx-powerup-collect-03.mp3',
+  sfxPowerupExpire01: '/assets/audio/sfx-powerup-expire-01.mp3',
+  sfxPowerupExpire02: '/assets/audio/sfx-powerup-expire-02.mp3',
+  sfxPowerupSpawn01: '/assets/audio/sfx-powerup-spawn-01.mp3',
+  sfxPowerupSpawn02: '/assets/audio/sfx-powerup-spawn-02.mp3',
+  sfxPowerupSpawn03: '/assets/audio/sfx-powerup-spawn-03.mp3',
+  sfxResetScore01: '/assets/audio/sfx-reset-score-01.mp3',
+  sfxRestart01: '/assets/audio/sfx-restart-01.mp3',
+  sfxRestart02: '/assets/audio/sfx-restart-02.mp3',
+  sfxScoreTick01: '/assets/audio/sfx-score-tick-01.mp3',
+  sfxScoreTick02: '/assets/audio/sfx-score-tick-02.mp3',
+  sfxScoreTick03: '/assets/audio/sfx-score-tick-03.mp3',
+  sfxThemeToggle01: '/assets/audio/sfx-theme-toggle-01.mp3',
+  sfxThemeToggle02: '/assets/audio/sfx-theme-toggle-02.mp3',
+  sfxWallHit01: '/assets/audio/sfx-wall-hit-01.mp3',
+  sfxWallHit02: '/assets/audio/sfx-wall-hit-02.mp3',
+  sfxWallHit03: '/assets/audio/sfx-wall-hit-03.mp3',
+  sfxWallHit04: '/assets/audio/sfx-wall-hit-04.mp3',
+  sfxWallHit05: '/assets/audio/sfx-wall-hit-05.mp3',
+} as const;
 
-export const SILENT_AUDIO_ID: AudioId = 'sfx_ad_placeholder_none';
-export const GAMEPLAY_MUSIC_AUDIO_ID: AudioId = 'music_gameplay_loop';
-export const MENU_MUSIC_AUDIO_ID: AudioId = 'music_menu_loop';
-export const HIGH_INTENSITY_MUSIC_AUDIO_ID: AudioId = 'music_high_intensity_layer';
+export const AUDIO_PUBLIC_PATHS = Object.values(AUDIO_ASSET_PATHS);
+
+export const SILENT_AUDIO_ID: AudioId = 'sfx-ad-placeholder-none';
+export const GAMEPLAY_MUSIC_AUDIO_ID: AudioId = 'bgm-gameplay-loop-main';
+export const MENU_MUSIC_AUDIO_ID: AudioId = 'bgm-menu-loop-main';
+export const HIGH_INTENSITY_MUSIC_AUDIO_ID: AudioId = 'bgm-gameplay-intense-layer';
 export const AUDIO_QA_SCENARIO = 'audio-event-tour';
 export const AUDIO_STORAGE_MUTED_KEY = 'brickbreaker-audio-muted';
 export const AUDIO_STORAGE_ENABLED_VALUE = '0';
@@ -939,42 +941,42 @@ export interface GameAudioSink {
 }
 
 export const GAME_AUDIO_IDS = {
-  GAME_START: 'sfx_game_start',
-  PADDLE_HIT_CENTER: 'sfx_paddle_hit_center',
-  PADDLE_HIT_EDGE: 'sfx_paddle_hit_edge',
-  WALL_HIT: 'sfx_wall_hit',
-  CEILING_HIT: 'sfx_ceiling_hit',
-  BRICK_HIT: 'sfx_brick_hit',
-  BRICK_BREAK_RED: 'sfx_brick_break_red',
-  BRICK_BREAK_BLUE: 'sfx_brick_break_blue',
-  BRICK_BREAK_GREEN: 'sfx_brick_break_green',
-  BRICK_BREAK_YELLOW: 'sfx_brick_break_yellow',
-  BRICK_BREAK_PURPLE: 'sfx_brick_break_purple',
-  SCORE_TICK: 'sfx_score_tick',
-  COMBO_SMALL: 'sfx_combo_small',
-  COMBO_LARGE: 'sfx_combo_large',
-  BALL_LOST: 'sfx_ball_lost',
-  GAME_OVER: 'sfx_game_over',
-  LEVEL_COMPLETE: 'sfx_level_complete',
-  LEVEL_START: 'sfx_level_start',
-  COUNTDOWN_TICK: 'sfx_score_tick',
-  LEVEL_UP_OVERLAY: 'sfx_level_toast_in',
-  RIP_OVERLAY: 'sfx_game_over',
-  RESTART: 'sfx_restart',
-  RESET_SCORE: 'sfx_reset_score',
-  BUTTON_PRESS: 'sfx_button_press',
-  PANEL_OPEN: 'sfx_panel_open',
-  PANEL_CLOSE: 'sfx_panel_close',
-  THEME_TOGGLE: 'sfx_theme_toggle',
-  AD_PLACEHOLDER_NONE: 'sfx_ad_placeholder_none',
-  POWERUP_SPAWN: 'sfx_powerup_spawn',
-  POWERUP_COLLECT: 'sfx_powerup_collect',
-  POWERUP_ACTIVATE_MULTIBALL: 'sfx_powerup_activate_multiball',
-  POWERUP_ACTIVATE_WIDE_PADDLE: 'sfx_powerup_activate_wide_paddle',
-  POWERUP_ACTIVATE_SLOW_BALL: 'sfx_powerup_activate_slow_ball',
-  POWERUP_ACTIVATE_LASER_FAN: 'sfx_powerup_activate_laser_fan',
-  POWERUP_EXPIRE: 'sfx_powerup_expire',
-  HIGHSCORE_NEW: 'sfx_highscore_new',
-  OFFLINE_READY: 'sfx_offline_ready',
-  ERROR_SOFT: 'sfx_error_soft',
+  GAME_START: 'sfx-game-start',
+  PADDLE_HIT_CENTER: 'sfx-paddle-hit-center',
+  PADDLE_HIT_EDGE: 'sfx-paddle-hit-edge',
+  WALL_HIT: 'sfx-wall-hit',
+  CEILING_HIT: 'sfx-ceiling-hit',
+  BRICK_HIT: 'sfx-brick-hit',
+  BRICK_BREAK_RED: 'sfx-brick-break-red',
+  BRICK_BREAK_BLUE: 'sfx-brick-break-blue',
+  BRICK_BREAK_GREEN: 'sfx-brick-break-green',
+  BRICK_BREAK_YELLOW: 'sfx-brick-break-yellow',
+  BRICK_BREAK_PURPLE: 'sfx-brick-break-purple',
+  SCORE_TICK: 'sfx-score-tick',
+  COMBO_SMALL: 'sfx-combo-small',
+  COMBO_LARGE: 'sfx-combo-large',
+  BALL_LOST: 'sfx-ball-lost',
+  GAME_OVER: 'sfx-game-over',
+  LEVEL_COMPLETE: 'sfx-level-complete',
+  LEVEL_START: 'sfx-level-start',
+  COUNTDOWN_TICK: 'sfx-score-tick',
+  LEVEL_UP_OVERLAY: 'sfx-level-toast-in',
+  RIP_OVERLAY: 'sfx-game-over',
+  RESTART: 'sfx-restart',
+  RESET_SCORE: 'sfx-reset-score',
+  BUTTON_PRESS: 'sfx-button-press',
+  PANEL_OPEN: 'sfx-panel-open',
+  PANEL_CLOSE: 'sfx-panel-close',
+  THEME_TOGGLE: 'sfx-theme-toggle',
+  AD_PLACEHOLDER_NONE: 'sfx-ad-placeholder-none',
+  POWERUP_SPAWN: 'sfx-powerup-spawn',
+  POWERUP_COLLECT: 'sfx-powerup-collect',
+  POWERUP_ACTIVATE_MULTIBALL: 'sfx-powerup-activate-multiball',
+  POWERUP_ACTIVATE_WIDE_PADDLE: 'sfx-powerup-activate-wide-paddle',
+  POWERUP_ACTIVATE_SLOW_BALL: 'sfx-powerup-activate-slow-ball',
+  POWERUP_ACTIVATE_LASER_FAN: 'sfx-powerup-activate-laser-fan',
+  POWERUP_EXPIRE: 'sfx-powerup-expire',
+  HIGHSCORE_NEW: 'sfx-highscore-new',
+  OFFLINE_READY: 'sfx-offline-ready',
+  ERROR_SOFT: 'sfx-error-soft',
 } as const satisfies Record<string, AudioId>;

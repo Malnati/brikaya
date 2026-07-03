@@ -1,24 +1,48 @@
 /* src/styles/index.css */
 :root {
   color-scheme: dark;
-  --bb-color-background: #131313;
-  --bb-color-surface: #1c1b1b;
-  --bb-color-panel: #20201f;
-  --bb-color-panel-soft: #2a2a2a;
-  --bb-color-text: #e5e2e1;
-  --bb-color-muted: #bbc9cf;
-  --bb-color-primary: #00d4ff;
-  --bb-color-primary-strong: #3cd7ff;
-  --bb-color-secondary: #ff4b89;
-  --bb-color-tertiary: #ad00ff;
-  --bb-color-outline: #859398;
-  --bb-color-outline-soft: #3c494e;
-  --bb-color-danger: #ffb4ab;
-  --bb-color-danger-strong: #93000a;
-  --bb-color-board: #0e0e0e;
-  --bb-color-on-primary: #003642;
-  --bb-shadow-panel: 0 24px 70px rgba(0, 0, 0, 0.34);
-  --bb-shadow-accent: 0 0 24px rgba(0, 212, 255, 0.14);
+  --bb-clr-arcade-bg-void: #080816;
+  --bb-clr-arcade-surface-panel: #12122a;
+  --bb-clr-neon-cyan-primary: #00e5ff;
+  --bb-clr-neon-magenta-accent: #ff2bd6;
+  --bb-clr-neon-yellow-reward: #ffe45e;
+  --bb-clr-neon-green-success: #39ff88;
+  --bb-clr-neon-red-danger: #ff3b5f;
+  --bb-clr-neon-purple-rare: #9b5cff;
+  --bb-clr-text-main-light: #f8f7ff;
+  --bb-clr-text-muted-blue: #9cb7d8;
+  --bb-clr-outline-grid-blue: #244c7a;
+  --bb-font-size-headline: 32px;
+  --bb-font-size-subtitle: 24px;
+  --bb-font-size-body: 16px;
+  --bb-font-size-caption: 12px;
+  --bb-font-body:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  --bb-font-display:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  --bb-font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  --bb-color-background: var(--bb-clr-arcade-bg-void);
+  --bb-color-surface: var(--bb-clr-arcade-surface-panel);
+  --bb-color-panel: #171736;
+  --bb-color-panel-soft: #20204a;
+  --bb-color-text: var(--bb-clr-text-main-light);
+  --bb-color-muted: var(--bb-clr-text-muted-blue);
+  --bb-color-primary: var(--bb-clr-neon-cyan-primary);
+  --bb-color-primary-strong: #7cf4ff;
+  --bb-color-secondary: var(--bb-clr-neon-magenta-accent);
+  --bb-color-tertiary: var(--bb-clr-neon-purple-rare);
+  --bb-color-outline: var(--bb-clr-outline-grid-blue);
+  --bb-color-outline-soft: #18385e;
+  --bb-color-danger: var(--bb-clr-neon-red-danger);
+  --bb-color-danger-strong: #ff6d88;
+  --bb-color-board: #050510;
+  --bb-color-on-primary: #00171d;
+  --bb-shadow-panel: 0 24px 70px rgba(0, 0, 0, 0.42);
+  --bb-shadow-accent: 0 0 24px rgba(0, 229, 255, 0.2);
   --color-bg: var(--bb-color-background);
   --color-surface: var(--bb-color-surface);
   --color-panel: var(--bb-color-panel);
@@ -39,13 +63,6 @@
   --shadow-panel: var(--bb-shadow-panel);
   --bb-visual-viewport-width: 100vw;
   --bb-visual-viewport-height: 100dvh;
-  --bb-font-body:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  --bb-font-display: var(--bb-font-body);
-  --bb-font-mono:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
 }
 
 :root[data-theme="light"] {
@@ -1200,5 +1217,14 @@ html.bb-landscape-immersive .game-status-region {
   .theme-toggle__button {
     animation: none;
     transition-property: opacity, background, border-color;
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --bb-font-size-headline: 28px;
+    --bb-font-size-subtitle: 20px;
+    --bb-font-size-body: 16px;
+    --bb-font-size-caption: 12px;
   }
 }

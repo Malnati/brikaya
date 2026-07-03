@@ -51,35 +51,35 @@ class ImageColorChecker {
           
           <div class="image-test">
             <h3>Brick Vermelho</h3>
-            <img id="red" src="/assets/bricks/brick-red.svg" width="64" height="32">
+            <img id="red" src="/assets/visual/bricks/spr-brick-basic-red-normal.svg" width="64" height="32">
             <canvas id="redCanvas" width="64" height="32"></canvas>
             <div id="redInfo" class="color-info"></div>
           </div>
           
           <div class="image-test">
             <h3>Brick Azul</h3>
-            <img id="blue" src="/assets/bricks/brick-blue.svg" width="64" height="32">
+            <img id="blue" src="/assets/visual/bricks/spr-brick-basic-blue-normal.svg" width="64" height="32">
             <canvas id="blueCanvas" width="64" height="32"></canvas>
             <div id="blueInfo" class="color-info"></div>
           </div>
           
           <div class="image-test">
             <h3>Brick Verde</h3>
-            <img id="green" src="/assets/bricks/brick-green.svg" width="64" height="32">
+            <img id="green" src="/assets/visual/bricks/spr-brick-basic-green-normal.svg" width="64" height="32">
             <canvas id="greenCanvas" width="64" height="32"></canvas>
             <div id="greenInfo" class="color-info"></div>
           </div>
           
           <div class="image-test">
             <h3>Brick Amarelo</h3>
-            <img id="yellow" src="/assets/bricks/brick-yellow.svg" width="64" height="32">
+            <img id="yellow" src="/assets/visual/bricks/spr-brick-basic-yellow-normal.svg" width="64" height="32">
             <canvas id="yellowCanvas" width="64" height="32"></canvas>
             <div id="yellowInfo" class="color-info"></div>
           </div>
           
           <div class="image-test">
             <h3>Brick Roxo</h3>
-            <img id="purple" src="/assets/bricks/brick-purple.svg" width="64" height="32">
+            <img id="purple" src="/assets/visual/bricks/spr-brick-basic-purple-normal.svg" width="64" height="32">
             <canvas id="purpleCanvas" width="64" height="32"></canvas>
             <div id="purpleInfo" class="color-info"></div>
           </div>

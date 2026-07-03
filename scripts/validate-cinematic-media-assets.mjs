@@ -2,32 +2,32 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 
 const CONSTANTS_PATH = 'src/constants/cinematicMedia.ts';
+const VISUAL_ASSETS_PATH = 'src/constants/visualAssets.ts';
 const SERVICE_WORKER_PATH = 'public/sw.js';
-const CINEMATIC_DIR = 'public/assets/cinematics';
-const RUNTIME_PREFIX = '/assets/cinematics/';
-const PUBLIC_PREFIX = 'public/assets/cinematics/';
+const CINEMATIC_DIR = 'public/assets/visual/vfx';
+const PUBLIC_PREFIX = 'public';
 const HTTPS_URL_PATTERN = /https?:\/\/(?!www\.w3\.org\/2000\/svg)/i;
 const DISALLOWED_SVG_PATTERNS = [/<script\b/i, /<image\b/i, /data:/i, /@font-face/i];
 const EXPECTED_MEDIA = [
   {
     id: 'countdown-circle',
-    runtimePath: '/assets/cinematics/countdown-circle.svg',
+    runtimePath: '/assets/visual/vfx/vfx-countdown-circle-overlay.svg',
   },
   {
     id: 'countdown-spark',
-    runtimePath: '/assets/cinematics/countdown-spark.svg',
+    runtimePath: '/assets/visual/vfx/vfx-countdown-spark-overlay.svg',
   },
   {
     id: 'level-up-twirl',
-    runtimePath: '/assets/cinematics/level-up-twirl.svg',
+    runtimePath: '/assets/visual/vfx/vfx-level-up-twirl-overlay.svg',
   },
   {
     id: 'level-up-star',
-    runtimePath: '/assets/cinematics/level-up-star.svg',
+    runtimePath: '/assets/visual/vfx/vfx-level-up-star-overlay.svg',
   },
   {
     id: 'rip-smoke',
-    runtimePath: '/assets/cinematics/rip-smoke.svg',
+    runtimePath: '/assets/visual/vfx/vfx-game-over-rip-smoke.svg',
   },
 ];
 
@@ -51,14 +51,19 @@ function validateSvg(path) {
 
 function validate() {
   if (!existsSync(CONSTANTS_PATH)) fail(`${CONSTANTS_PATH} ausente`);
+  if (!existsSync(VISUAL_ASSETS_PATH)) fail(`${VISUAL_ASSETS_PATH} ausente`);
   if (!existsSync(SERVICE_WORKER_PATH)) fail(`${SERVICE_WORKER_PATH} ausente`);
   if (!existsSync(CINEMATIC_DIR)) fail(`${CINEMATIC_DIR} ausente`);
 
   const constants = read(CONSTANTS_PATH);
+  const visualAssets = read(VISUAL_ASSETS_PATH);
   const serviceWorker = read(SERVICE_WORKER_PATH);
 
   if (HTTPS_URL_PATTERN.test(constants)) {
     fail(`${CONSTANTS_PATH} contém URL externa`);
+  }
+  if (HTTPS_URL_PATTERN.test(visualAssets)) {
+    fail(`${VISUAL_ASSETS_PATH} contém URL externa`);
   }
 
   const fileNames = readdirSync(CINEMATIC_DIR).filter((name) =>
@@ -69,10 +74,10 @@ function validate() {
   }
 
   for (const expected of EXPECTED_MEDIA) {
-    const publicPath = expected.runtimePath.replace(RUNTIME_PREFIX, PUBLIC_PREFIX);
+    const publicPath = `${PUBLIC_PREFIX}${expected.runtimePath}`;
     if (!existsSync(publicPath)) fail(`${publicPath} ausente`);
-    if (!constants.includes(expected.runtimePath)) {
-      fail(`${CONSTANTS_PATH} não referencia ${expected.runtimePath}`);
+    if (!visualAssets.includes(expected.runtimePath)) {
+      fail(`${VISUAL_ASSETS_PATH} não referencia ${expected.runtimePath}`);
     }
     if (!serviceWorker.includes(expected.runtimePath)) {
       fail(`${SERVICE_WORKER_PATH} não precacheia ${expected.runtimePath}`);
