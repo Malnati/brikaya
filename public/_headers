@@ -16,6 +16,3 @@
 
 /assets/*
   Cache-Control: public, max-age=0, must-revalidate, no-transform
-
-/*
-  Cache-Control: public, max-age=0, must-revalidate, no-transform

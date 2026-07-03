@@ -3,6 +3,19 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.27.1] - 2026-07-03
+### Corrigido
+- Removida regra fallback duplicada de headers para evitar `Cache-Control` repetido no domínio canônico.
+
+### Testado
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm test -- --runInBand`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm run build`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" make cloudflare-deploy`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-runtime-update-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-svg-assets-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-audio-qa`
+
 ## [1.27.0] - 2026-07-03
 ### Adicionado
 - Efeito visual de atualização com barra de progresso e confirmação `Versão vN instalada` após o reload seguro.
