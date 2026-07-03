@@ -15,9 +15,20 @@ const DEFAULT_ITEM_SCREENSHOT_PATH =
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const CHROME_LOW_RESOURCE_ARGS = [
+  "--disable-background-networking",
+  "--disable-background-timer-throttling",
+  "--disable-backgrounding-occluded-windows",
+  "--disable-component-update",
+  "--disable-dev-shm-usage",
+  "--disable-extensions",
   "--disable-gpu",
+  "--disable-renderer-backgrounding",
   "--disable-software-rasterizer",
+  "--hide-scrollbars",
+  "--mute-audio",
+  "--renderer-process-limit=2",
 ];
+const MAX_QA_DEVICE_SCALE_FACTOR = 1;
 const VIEWPORT = {
   width: 393,
   height: 852,
@@ -99,6 +110,16 @@ function withQaScenario(url) {
   const pageUrl = new URL(url);
   pageUrl.searchParams.set("qaScenario", EXPECTED_QA_SCENARIO);
   return pageUrl.toString();
+}
+
+function qaViewport() {
+  return {
+    ...VIEWPORT,
+    deviceScaleFactor: Math.min(
+      VIEWPORT.deviceScaleFactor,
+      MAX_QA_DEVICE_SCALE_FACTOR,
+    ),
+  };
 }
 
 async function clearOriginState(page, origin) {
@@ -466,7 +487,7 @@ async function run() {
     const page = await browser.newPage();
     await installPowerUpDrawProbe(page);
     await installLaserDrawProbe(page);
-    await page.setViewport(VIEWPORT);
+    await page.setViewport(qaViewport());
     page.on("console", (message) => {
       if (["error", "warn"].includes(message.type())) {
         consoleProblems.push({ type: message.type(), text: message.text() });
@@ -494,7 +515,7 @@ async function run() {
     const firstPowerUpDraw = await waitForPowerUpDraw(page);
     const targetPowerUpSize = await expectedPowerUpSize(page);
     await new Promise((resolve) => setTimeout(resolve, 120));
-    await page.screenshot({ path: outItemScreenshot, fullPage: true });
+    await page.screenshot({ path: outItemScreenshot });
 
     const laserDrawWindow = await waitForLaserDrawSample(page);
     const laserEffectPixel =
@@ -536,7 +557,7 @@ async function run() {
     );
 
     const layoutState = await collectLayoutState(page);
-    await page.screenshot({ path: outScreenshot, fullPage: true });
+    await page.screenshot({ path: outScreenshot });
     const events = await readGameEvents(page);
     const proofEvents = eventsThroughFirstLevelComplete(events);
     const byType = summarizeEvents(proofEvents);

@@ -1,0 +1,454 @@
+{
+  "publicUrl": "https://brikaya.com/",
+  "viewportMatrixPath": "tests/e2e/responsiveViewportMatrix.json",
+  "viewportName": "iphone-17-default",
+  "screenshotPath": "tmp/screenshots/cloudflare-mobile-qa.png",
+  "menuScreenshotPath": "tmp/screenshots/cloudflare-mobile-menu.png",
+  "layoutState": {
+    "title": "Brikaya",
+    "heading": "Brikaya",
+    "viewport": {
+      "width": 402,
+      "height": 874,
+      "scrollWidth": 402,
+      "scrollHeight": 874
+    },
+    "buttons": [
+      {
+        "text": "×",
+        "ariaLabel": "Sem som",
+        "title": "Sem som",
+        "rect": {
+          "x": 13,
+          "y": 13,
+          "width": 44,
+          "height": 44,
+          "right": 57,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "↻",
+        "ariaLabel": "Reiniciar",
+        "title": "Reiniciar",
+        "rect": {
+          "x": 61,
+          "y": 13,
+          "width": 44,
+          "height": 44,
+          "right": 105,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "Menu",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 321,
+          "y": 13,
+          "width": 68,
+          "height": 44,
+          "right": 389,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      }
+    ],
+    "buildVersion": null,
+    "canvas": {
+      "x": 13.015625,
+      "y": 111,
+      "width": 375.96875,
+      "height": 251.328125,
+      "right": 388.984375,
+      "bottom": 362.328125
+    },
+    "dashboardLayout": {
+      "x": 13,
+      "y": 111,
+      "width": 376,
+      "height": 331.328125,
+      "right": 389,
+      "bottom": 442.328125
+    },
+    "scoreHud": {
+      "x": 51.15625,
+      "y": 65,
+      "width": 299.6875,
+      "height": 38,
+      "right": 350.84375,
+      "bottom": 103
+    },
+    "scoreHudText": "Fase 1|Score 10|Total 0|Recorde 0",
+    "bottomSlot": {
+      "x": 13,
+      "y": 386.328125,
+      "width": 376,
+      "height": 56,
+      "right": 389,
+      "bottom": 442.328125
+    },
+    "scoreValue": 10,
+    "hasHorizontalOverflow": false,
+    "bodyOverflow": "hidden auto"
+  },
+  "menuState": {
+    "text": "Menu×Versão v124AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 101º 10Privacidade✓Revisar consentimentoFerramentas≡Logs◈Colisões0Zerar pontuação",
+    "drawer": {
+      "x": 82,
+      "y": 0,
+      "width": 320,
+      "height": 874,
+      "right": 402,
+      "bottom": 874
+    },
+    "hasHorizontalOverflow": false
+  },
+  "menuPauseState": {
+    "beforeScoreHudText": "Fase 1|Score 0|Total 10|Recorde 10",
+    "afterScoreHudText": "Fase 1|Score 0|Total 10|Recorde 10",
+    "beforeScoreValue": 0,
+    "afterScoreValue": 0,
+    "beforeFrameLength": 27650,
+    "afterFrameLength": 27650,
+    "scoreStable": true,
+    "canvasFrameStable": true
+  },
+  "logsState": {
+    "title": "Brikaya",
+    "heading": "Brikaya",
+    "viewport": {
+      "width": 402,
+      "height": 874,
+      "scrollWidth": 402,
+      "scrollHeight": 1329
+    },
+    "buttons": [
+      {
+        "text": "×",
+        "ariaLabel": "Sem som",
+        "title": "Sem som",
+        "rect": {
+          "x": 13,
+          "y": 13,
+          "width": 44,
+          "height": 44,
+          "right": 57,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "↻",
+        "ariaLabel": "Reiniciar",
+        "title": "Reiniciar",
+        "rect": {
+          "x": 61,
+          "y": 13,
+          "width": 44,
+          "height": 44,
+          "right": 105,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "Menu",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 321,
+          "y": 13,
+          "width": 68,
+          "height": 44,
+          "right": 389,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "✕ Fechar",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 20,
+          "y": 491.328125,
+          "width": 92.09375,
+          "height": 44,
+          "right": 112.09375,
+          "bottom": 535.328125
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "🔄 Atualizar",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 20,
+          "y": 671.140625,
+          "width": 176,
+          "height": 44,
+          "right": 196,
+          "bottom": 715.140625
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "📤 Exportar",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 206,
+          "y": 671.140625,
+          "width": 176,
+          "height": 44,
+          "right": 382,
+          "bottom": 715.140625
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "🗑️ Limpar",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 20,
+          "y": 725.140625,
+          "width": 362,
+          "height": 44,
+          "right": 382,
+          "bottom": 769.140625
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      }
+    ],
+    "buildVersion": null,
+    "canvas": {
+      "x": 13.015625,
+      "y": 111,
+      "width": 375.96875,
+      "height": 251.328125,
+      "right": 388.984375,
+      "bottom": 362.328125
+    },
+    "dashboardLayout": {
+      "x": 13,
+      "y": 111,
+      "width": 376,
+      "height": 331.328125,
+      "right": 389,
+      "bottom": 442.328125
+    },
+    "scoreHud": {
+      "x": 47.96875,
+      "y": 65,
+      "width": 306.046875,
+      "height": 38,
+      "right": 354.015625,
+      "bottom": 103
+    },
+    "scoreHudText": "Fase 1|Score 0|Total 10|Recorde 10",
+    "bottomSlot": {
+      "x": 13,
+      "y": 386.328125,
+      "width": 376,
+      "height": 56,
+      "right": 389,
+      "bottom": 442.328125
+    },
+    "scoreValue": 0,
+    "hasHorizontalOverflow": false,
+    "bodyOverflow": "hidden auto"
+  },
+  "statsState": {
+    "title": "Brikaya",
+    "heading": "Brikaya",
+    "viewport": {
+      "width": 402,
+      "height": 874,
+      "scrollWidth": 402,
+      "scrollHeight": 874
+    },
+    "buttons": [
+      {
+        "text": "×",
+        "ariaLabel": "Sem som",
+        "title": "Sem som",
+        "rect": {
+          "x": 13,
+          "y": 13,
+          "width": 44,
+          "height": 44,
+          "right": 57,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "↻",
+        "ariaLabel": "Reiniciar",
+        "title": "Reiniciar",
+        "rect": {
+          "x": 61,
+          "y": 13,
+          "width": 44,
+          "height": 44,
+          "right": 105,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "Menu",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 321,
+          "y": 13,
+          "width": 68,
+          "height": 44,
+          "right": 389,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "✕",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 324,
+          "y": 123.5,
+          "width": 44,
+          "height": 44,
+          "right": 368,
+          "bottom": 167.5
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "Mostrar Colisões Recentes",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 34,
+          "y": 640.5,
+          "width": 274.828125,
+          "height": 44,
+          "right": 308.828125,
+          "bottom": 684.5
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "Limpar Todas as Colisões",
+        "ariaLabel": "",
+        "title": "",
+        "rect": {
+          "x": 34,
+          "y": 694.5,
+          "width": 265.1875,
+          "height": 44,
+          "right": 299.1875,
+          "bottom": 738.5
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      }
+    ],
+    "buildVersion": null,
+    "canvas": {
+      "x": 13.015625,
+      "y": 111,
+      "width": 375.96875,
+      "height": 251.328125,
+      "right": 388.984375,
+      "bottom": 362.328125
+    },
+    "dashboardLayout": {
+      "x": 13,
+      "y": 111,
+      "width": 376,
+      "height": 331.328125,
+      "right": 389,
+      "bottom": 442.328125
+    },
+    "scoreHud": {
+      "x": 47.96875,
+      "y": 65,
+      "width": 306.046875,
+      "height": 38,
+      "right": 354.015625,
+      "bottom": 103
+    },
+    "scoreHudText": "Fase 1|Score 0|Total 10|Recorde 10",
+    "bottomSlot": {
+      "x": 13,
+      "y": 386.328125,
+      "width": 376,
+      "height": 56,
+      "right": 389,
+      "bottom": 442.328125
+    },
+    "scoreValue": 0,
+    "hasHorizontalOverflow": false,
+    "bodyOverflow": "hidden auto"
+  },
+  "indexedDbSummary": {
+    "databaseNames": [
+      "BrickBreakerCollisions",
+      "BrickBreakerGameLog",
+      "SystemDebugLog",
+      "breakout"
+    ],
+    "eventTypes": [
+      "game_start",
+      "brick_destroyed",
+      "score_update",
+      "collision",
+      "ball_lost",
+      "game_state_change",
+      "game_end",
+      "game_start"
+    ],
+    "hasRequiredDatabases": true,
+    "hasRequiredEvents": true,
+    "eventCount": 8
+  },
+  "consoleProblems": []
+}

@@ -20,11 +20,31 @@ const RESPONSIVE_VIEWPORT_MATRIX_PATH = new URL(
 );
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const CHROME_LOW_RESOURCE_ARGS = [
+  "--disable-background-networking",
+  "--disable-background-timer-throttling",
+  "--disable-backgrounding-occluded-windows",
+  "--disable-component-update",
+  "--disable-dev-shm-usage",
+  "--disable-extensions",
+  "--disable-gpu",
+  "--disable-renderer-backgrounding",
+  "--disable-software-rasterizer",
+  "--hide-scrollbars",
+  "--mute-audio",
+  "--renderer-process-limit=2",
+];
+const MAX_QA_DEVICE_SCALE_FACTOR = 1;
 const MIN_TOUCH_TARGET_SIZE = 44;
 const MAX_INITIAL_SCORE_AFTER_OBSERVATION = 260;
 const OBSERVATION_DURATION_MS = 1500;
 const MENU_PAUSE_OBSERVATION_MS = 1400;
 const BROWSER_CLOSE_SETTLE_MS = 250;
+const BROWSER_CLOSE_TIMEOUT_MS = 3000;
+const BROWSER_CLOSE_TIMEOUT_MESSAGE = "browser close timeout";
+const BROWSER_KILL_SIGNAL = "SIGKILL";
+const BLANK_PAGE_URL = "about:blank";
+const BLANK_PAGE_WAIT_UNTIL = "domcontentloaded";
 const REQUIRED_EVENT_TYPES = ["game_start"];
 const REQUIRED_DATABASE_NAMES = ["BrickBreakerGameLog"];
 const MENU_BUTTON_NAME = /menu/i;
@@ -93,8 +113,26 @@ function assert(condition, message) {
 
 async function closeBrowser(browser) {
   const browserProcess = browser.process();
-  browser.disconnect();
-  browserProcess?.kill("SIGKILL");
+  try {
+    await Promise.race([
+      browser.close(),
+      new Promise((_, reject) =>
+        setTimeout(
+          () => reject(new Error(BROWSER_CLOSE_TIMEOUT_MESSAGE)),
+          BROWSER_CLOSE_TIMEOUT_MS,
+        ),
+      ),
+    ]);
+  } catch {
+    browser.disconnect();
+  }
+  if (
+    browserProcess &&
+    browserProcess.exitCode === null &&
+    !browserProcess.killed
+  ) {
+    browserProcess.kill(BROWSER_KILL_SIGNAL);
+  }
   await new Promise((resolve) => setTimeout(resolve, BROWSER_CLOSE_SETTLE_MS));
 }
 
@@ -110,45 +148,35 @@ function puppeteerViewport(viewport) {
   return {
     width: viewport.width,
     height: viewport.height,
-    deviceScaleFactor: viewport.deviceScaleFactor,
+    deviceScaleFactor: Math.min(
+      viewport.deviceScaleFactor,
+      MAX_QA_DEVICE_SCALE_FACTOR,
+    ),
     isMobile: viewport.isMobile,
     hasTouch: viewport.hasTouch,
   };
 }
 
 async function clickButtonByPattern(page, pattern) {
-  const buttons = await page.$$("button");
-  const candidates = [];
-  for (const button of buttons) {
-    const labels = await button.evaluate((node) => ({
-      text: node.textContent || "",
-      ariaLabel: node.getAttribute("aria-label") || "",
-      title: node.getAttribute("title") || "",
-    }));
-    candidates.push({ button, labels });
-  }
-
-  const accessibleMatch = candidates.find(
-    ({ labels }) => pattern.test(labels.ariaLabel) || pattern.test(labels.title),
+  return page.evaluate(
+    ({ source, flags }) => {
+      const matcher = new RegExp(source, flags);
+      const button = Array.from(document.querySelectorAll("button")).find(
+        (node) =>
+          matcher.test(
+            node.getAttribute("aria-label") ||
+              node.getAttribute("title") ||
+              node.textContent ||
+              "",
+          ),
+      );
+      if (!(button instanceof HTMLElement)) return false;
+      button.scrollIntoView({ block: "center", inline: "center" });
+      button.click();
+      return true;
+    },
+    { source: pattern.source, flags: pattern.flags },
   );
-  if (accessibleMatch) {
-    await accessibleMatch.button.evaluate((node) =>
-      node.scrollIntoView({ block: "center", inline: "center" }),
-    );
-    await accessibleMatch.button.click();
-    return true;
-  }
-
-  const textMatch = candidates.find(({ labels }) => pattern.test(labels.text));
-  if (textMatch) {
-    await textMatch.button.evaluate((node) =>
-      node.scrollIntoView({ block: "center", inline: "center" }),
-    );
-    await textMatch.button.click();
-    return true;
-  }
-
-  return false;
 }
 
 async function openFirstEventDetails(
@@ -251,23 +279,22 @@ async function readIndexedDbSummary(page) {
   );
 }
 
-async function clearOfflineState(page) {
-  await page.evaluate(async () => {
-    if ("serviceWorker" in navigator) {
-      const registrations = await navigator.serviceWorker.getRegistrations();
-      await Promise.all(
-        registrations.map((registration) => registration.unregister()),
-      );
-    }
-    if ("caches" in window) {
-      const cacheNames = await caches.keys();
-      await Promise.all(
-        cacheNames.map((cacheName) => caches.delete(cacheName)),
-      );
-    }
-    window.localStorage.clear();
-    window.sessionStorage.clear();
-  });
+async function clearOriginState(page, origin) {
+  await page.goto(BLANK_PAGE_URL, { waitUntil: BLANK_PAGE_WAIT_UNTIL });
+  const client = await page.target().createCDPSession();
+  try {
+    await client.send("Storage.clearDataForOrigin", {
+      origin,
+      storageTypes: "all",
+    });
+  } finally {
+    await client.detach();
+  }
+}
+
+async function gotoCleanOrigin(page, targetUrl, origin) {
+  await clearOriginState(page, origin);
+  await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
 }
 
 async function waitForCinematicOverlayToClear(page) {
@@ -297,127 +324,135 @@ async function acceptPreGamePromptIfVisible(page) {
 }
 
 async function collectLayoutState(page) {
-  return page.evaluate((minTouchTargetSize, scoreValuePatternSource) => {
-    const scoreValuePattern = new RegExp(scoreValuePatternSource);
-    const viewport = {
-      width: window.innerWidth,
-      height: window.innerHeight,
-      scrollWidth: document.documentElement.scrollWidth,
-      scrollHeight: document.documentElement.scrollHeight,
-    };
-    const buttons = Array.from(document.querySelectorAll("button")).map(
-      (button) => {
-        const rect = button.getBoundingClientRect();
-        return {
-          text: button.textContent?.trim() || "",
-          ariaLabel: button.getAttribute("aria-label") || "",
-          title: button.getAttribute("title") || "",
-          rect: {
-            x: rect.x,
-            y: rect.y,
-            width: rect.width,
-            height: rect.height,
-            right: rect.right,
-            bottom: rect.bottom,
-          },
-          visibleInViewport:
-            rect.left >= 0 &&
-            rect.top >= 0 &&
-            rect.right <= window.innerWidth &&
-            rect.bottom <= window.innerHeight,
-          hasTouchTarget:
-            rect.width >= minTouchTargetSize &&
-            rect.height >= minTouchTargetSize,
-          inDrawer: Boolean(button.closest(".settings-drawer")),
-        };
-      },
-    );
-    const canvasRect = document
-      .querySelector("canvas")
-      ?.getBoundingClientRect();
-    const dashboardLayoutRect = document
-      .querySelector(".dashboard-layout")
-      ?.getBoundingClientRect();
-    const scoreHudRect = document
-      .querySelector(".score-hud")
-      ?.getBoundingClientRect();
-    const scoreHudText =
-      document.querySelector(".score-hud")?.textContent || "";
-    const buildVersionElement = document.querySelector(".build-version-badge");
-    const buildVersionRect = buildVersionElement?.getBoundingClientRect();
-    const bottomSlotRect = document
-      .querySelector(".ad-slot--bottom")
-      ?.getBoundingClientRect();
-    const scoreValue = Number(scoreHudText.match(scoreValuePattern)?.[1] || 0);
+  return page.evaluate(
+    (minTouchTargetSize, scoreValuePatternSource) => {
+      const scoreValuePattern = new RegExp(scoreValuePatternSource);
+      const viewport = {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        scrollWidth: document.documentElement.scrollWidth,
+        scrollHeight: document.documentElement.scrollHeight,
+      };
+      const buttons = Array.from(document.querySelectorAll("button")).map(
+        (button) => {
+          const rect = button.getBoundingClientRect();
+          return {
+            text: button.textContent?.trim() || "",
+            ariaLabel: button.getAttribute("aria-label") || "",
+            title: button.getAttribute("title") || "",
+            rect: {
+              x: rect.x,
+              y: rect.y,
+              width: rect.width,
+              height: rect.height,
+              right: rect.right,
+              bottom: rect.bottom,
+            },
+            visibleInViewport:
+              rect.left >= 0 &&
+              rect.top >= 0 &&
+              rect.right <= window.innerWidth &&
+              rect.bottom <= window.innerHeight,
+            hasTouchTarget:
+              rect.width >= minTouchTargetSize &&
+              rect.height >= minTouchTargetSize,
+            inDrawer: Boolean(button.closest(".settings-drawer")),
+          };
+        },
+      );
+      const canvasRect = document
+        .querySelector("canvas")
+        ?.getBoundingClientRect();
+      const dashboardLayoutRect = document
+        .querySelector(".dashboard-layout")
+        ?.getBoundingClientRect();
+      const scoreHudRect = document
+        .querySelector(".score-hud")
+        ?.getBoundingClientRect();
+      const scoreHudText =
+        document.querySelector(".score-hud")?.textContent || "";
+      const buildVersionElement = document.querySelector(
+        ".build-version-badge",
+      );
+      const buildVersionRect = buildVersionElement?.getBoundingClientRect();
+      const bottomSlotRect = document
+        .querySelector(".ad-slot--bottom")
+        ?.getBoundingClientRect();
+      const scoreValue = Number(
+        scoreHudText.match(scoreValuePattern)?.[1] || 0,
+      );
 
-    return {
-      title: document.title,
-      heading: document.querySelector("h1")?.textContent || "",
-      viewport,
-      buttons,
-      buildVersion: buildVersionElement
-        ? {
-            text: buildVersionElement.textContent?.trim() || "",
-            ariaLabel: buildVersionElement.getAttribute("aria-label") || "",
-            rect: buildVersionRect
-              ? {
-                  x: buildVersionRect.x,
-                  y: buildVersionRect.y,
-                  width: buildVersionRect.width,
-                  height: buildVersionRect.height,
-                  right: buildVersionRect.right,
-                  bottom: buildVersionRect.bottom,
-                }
-              : null,
-          }
-        : null,
-      canvas: canvasRect
-        ? {
-            x: canvasRect.x,
-            y: canvasRect.y,
-            width: canvasRect.width,
-            height: canvasRect.height,
-            right: canvasRect.right,
-            bottom: canvasRect.bottom,
-          }
-        : null,
-      dashboardLayout: dashboardLayoutRect
-        ? {
-            x: dashboardLayoutRect.x,
-            y: dashboardLayoutRect.y,
-            width: dashboardLayoutRect.width,
-            height: dashboardLayoutRect.height,
-            right: dashboardLayoutRect.right,
-            bottom: dashboardLayoutRect.bottom,
-          }
-        : null,
-      scoreHud: scoreHudRect
-        ? {
-            x: scoreHudRect.x,
-            y: scoreHudRect.y,
-            width: scoreHudRect.width,
-            height: scoreHudRect.height,
-            right: scoreHudRect.right,
-            bottom: scoreHudRect.bottom,
-          }
-        : null,
-      scoreHudText,
-      bottomSlot: bottomSlotRect
-        ? {
-            x: bottomSlotRect.x,
-            y: bottomSlotRect.y,
-            width: bottomSlotRect.width,
-            height: bottomSlotRect.height,
-            right: bottomSlotRect.right,
-            bottom: bottomSlotRect.bottom,
-          }
-        : null,
-      scoreValue,
-      hasHorizontalOverflow:
-        document.documentElement.scrollWidth > window.innerWidth,
-      bodyOverflow: getComputedStyle(document.body).overflow,
-    };
-  }, MIN_TOUCH_TARGET_SIZE, SCORE_VALUE_PATTERN.source);
+      return {
+        title: document.title,
+        heading: document.querySelector("h1")?.textContent || "",
+        viewport,
+        buttons,
+        buildVersion: buildVersionElement
+          ? {
+              text: buildVersionElement.textContent?.trim() || "",
+              ariaLabel: buildVersionElement.getAttribute("aria-label") || "",
+              rect: buildVersionRect
+                ? {
+                    x: buildVersionRect.x,
+                    y: buildVersionRect.y,
+                    width: buildVersionRect.width,
+                    height: buildVersionRect.height,
+                    right: buildVersionRect.right,
+                    bottom: buildVersionRect.bottom,
+                  }
+                : null,
+            }
+          : null,
+        canvas: canvasRect
+          ? {
+              x: canvasRect.x,
+              y: canvasRect.y,
+              width: canvasRect.width,
+              height: canvasRect.height,
+              right: canvasRect.right,
+              bottom: canvasRect.bottom,
+            }
+          : null,
+        dashboardLayout: dashboardLayoutRect
+          ? {
+              x: dashboardLayoutRect.x,
+              y: dashboardLayoutRect.y,
+              width: dashboardLayoutRect.width,
+              height: dashboardLayoutRect.height,
+              right: dashboardLayoutRect.right,
+              bottom: dashboardLayoutRect.bottom,
+            }
+          : null,
+        scoreHud: scoreHudRect
+          ? {
+              x: scoreHudRect.x,
+              y: scoreHudRect.y,
+              width: scoreHudRect.width,
+              height: scoreHudRect.height,
+              right: scoreHudRect.right,
+              bottom: scoreHudRect.bottom,
+            }
+          : null,
+        scoreHudText,
+        bottomSlot: bottomSlotRect
+          ? {
+              x: bottomSlotRect.x,
+              y: bottomSlotRect.y,
+              width: bottomSlotRect.width,
+              height: bottomSlotRect.height,
+              right: bottomSlotRect.right,
+              bottom: bottomSlotRect.bottom,
+            }
+          : null,
+        scoreValue,
+        hasHorizontalOverflow:
+          document.documentElement.scrollWidth > window.innerWidth,
+        bodyOverflow: getComputedStyle(document.body).overflow,
+      };
+    },
+    MIN_TOUCH_TARGET_SIZE,
+    SCORE_VALUE_PATTERN.source,
+  );
 }
 
 async function collectDrawerState(page) {
@@ -496,6 +531,7 @@ async function collectMenuPauseState(page) {
 
 async function run() {
   const publicUrl = getPublicUrl();
+  const parsed = new URL(publicUrl);
   const screenshotPath = getScreenshotPath();
   const menuScreenshotPath = getMenuScreenshotPath();
   const reportPath = getReportPath();
@@ -507,8 +543,12 @@ async function run() {
   const browser = await puppeteer.launch({
     headless: "new",
     executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs(["--no-first-run", "--no-default-browser-check"]),
-    });
+    args: buildChromeLaunchArgs([
+      "--no-first-run",
+      "--no-default-browser-check",
+      ...CHROME_LOW_RESOURCE_ARGS,
+    ]),
+  });
 
   try {
     const page = await browser.newPage();
@@ -522,9 +562,7 @@ async function run() {
       consoleProblems.push({ type: "pageerror", text: error.message }),
     );
 
-    await page.goto(publicUrl, { waitUntil: "networkidle0", timeout: 60000 });
-    await clearOfflineState(page);
-    await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
+    await gotoCleanOrigin(page, publicUrl, parsed.origin);
     await page.waitForSelector("canvas", { timeout: 30000 });
     await acceptPrivacyConsentIfPresent(page);
     await new Promise((resolve) =>
@@ -817,7 +855,11 @@ async function run() {
   }
 }
 
-run().catch((error) => {
-  console.error(error.stack || error.message);
-  process.exitCode = 1;
-});
+run()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error(error.stack || error.message);
+    process.exit(1);
+  });
