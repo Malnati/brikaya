@@ -2,6 +2,7 @@
 import { calculateResponsiveCanvasSize } from "../../src/utils/canvasSizing";
 
 const DESKTOP_COMPACT_AVAILABLE_HEIGHT = 572;
+const DESKTOP_COMPACT_MIN_RECOVERED_WIDTH = 850;
 const DESKTOP_AVAILABLE_HEIGHT = 524;
 const IPAD_PRO_LANDSCAPE_AVAILABLE_HEIGHT = 638;
 
@@ -151,6 +152,27 @@ describe("calculateResponsiveCanvasSize", () => {
 
     expect(size.isImmersiveLandscape).toBe(false);
     expect(size.height).toBeLessThanOrEqual(DESKTOP_COMPACT_AVAILABLE_HEIGHT);
+  });
+
+  it("não usa a altura corrente encolhida como limite recursivo no desktop compacto", () => {
+    const size = calculateResponsiveCanvasSize({
+      containerWidth: 1300,
+      containerHeight: 328,
+      viewportWidth: 1366,
+      viewportHeight: 768,
+      visualViewportWidth: 1366,
+      visualViewportHeight: 768,
+      rootPaddingInline: 16,
+      rootPaddingBlock: 16,
+      pointerCoarse: false,
+      hoverNone: false,
+    });
+
+    expect(size.isImmersiveLandscape).toBe(false);
+    expect(size.height).toBe(DESKTOP_COMPACT_AVAILABLE_HEIGHT);
+    expect(size.width).toBeGreaterThanOrEqual(
+      DESKTOP_COMPACT_MIN_RECOVERED_WIDTH,
+    );
   });
 
   it("limita iPad Pro 11 landscape fora do modo imersivo pela altura útil", () => {

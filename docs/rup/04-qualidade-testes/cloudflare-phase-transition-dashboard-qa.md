@@ -54,6 +54,7 @@ Assertivas mínimas:
 
 - sem overflow horizontal;
 - canvas inteiro visível, sem exigir scroll para jogar;
+- canvas com largura cheia quando a altura permitir ou largura jogável mínima quando a altura for o limite real;
 - botões principais com alvo mínimo de 44px;
 - header e chips visíveis;
 - logs e colisões acessíveis;

@@ -3,6 +3,19 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.28.1] - 2026-07-03
+### Corrigido
+- Canvas responsivo deixa de usar a altura corrente encolhida como limite recursivo em tablet/desktop.
+
+### Alterado
+- Cobertura publicada aceita canvas centralizado quando a altura útil da viewport é o limite real, mantendo largura jogável mínima de 60% da viewport.
+
+### Testado
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand tests/unit/canvasSizing.test.ts`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand tests/unit/canvasSizing.test.ts tests/unit/responsiveViewportMatrix.test.ts`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`
+
 ## [1.28.0] - 2026-07-03
 ### Adicionado
 - Matriz responsiva obrigatória em `tests/e2e/responsiveViewportMatrix.json` cobrindo iPhone default 2023-2026, iPad 11/default 2023-2026 e desktop 1366/1440/1920.
