@@ -103,7 +103,7 @@ describe("App theme selector", () => {
       screen.getByRole("button", { name: "Reiniciar" }),
     ).toBeInTheDocument();
     expect(
-      screen.queryByLabelText("Tema da interface"),
+      screen.queryByLabelText("Aparência do jogo"),
     ).not.toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: /zerar pontuação/i }),
@@ -132,7 +132,7 @@ describe("App theme selector", () => {
     expect(screen.queryByText(/^v\d+$/)).not.toBeInTheDocument();
   });
 
-  it("abre menu lateral com tema, logs, colisões e zerar pontuação", async () => {
+  it("abre menu lateral com aparência, logs, colisões e zerar pontuação", async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
 
@@ -146,12 +146,18 @@ describe("App theme selector", () => {
       within(drawer).queryByRole("button", { name: "Reiniciar" }),
     ).not.toBeInTheDocument();
     expect(within(drawer).queryByText("Partida")).not.toBeInTheDocument();
-    const themeGroup = screen.getByLabelText("Tema da interface");
+    const appearanceGroup = screen.getByLabelText("Aparência do jogo");
+    expect(within(appearanceGroup).getByText("Tema visual")).toBeInTheDocument();
+    expect(within(appearanceGroup).getByText("Imagens")).toBeInTheDocument();
+    expect(within(appearanceGroup).getByText("Fonte")).toBeInTheDocument();
     expect(
-      within(themeGroup).getByRole("button", { name: "Claro" }),
+      within(appearanceGroup).getByRole("button", { name: "Neon Arcade" }),
     ).toBeInTheDocument();
     expect(
-      within(themeGroup).getByRole("button", { name: "Escuro" }),
+      within(appearanceGroup).getByRole("button", { name: "Retro padrão" }),
+    ).toBeInTheDocument();
+    expect(
+      within(appearanceGroup).getByRole("button", { name: "Arcade" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /logs/i })).toBeInTheDocument();
     expect(
@@ -162,29 +168,43 @@ describe("App theme selector", () => {
     ).toBeInTheDocument();
   });
 
-  it("alterna tema, aplica no documento e persiste escolha", async () => {
+  it("alterna aparência, aplica no documento e persiste escolha", async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
 
     await renderApp();
 
-    expect(document.documentElement.dataset.theme).toBe("dark");
+    expect(document.documentElement.dataset.theme).toBe("neon-arcade");
+    expect(document.documentElement.dataset.imageSet).toBe("retro-default");
+    expect(document.documentElement.dataset.fontSet).toBe("arcade-ui");
     await user.click(screen.getByRole("button", { name: "Menu" }));
 
-    await user.click(screen.getByRole("button", { name: "Claro" }));
+    await user.click(screen.getByRole("button", { name: "CRT alto contraste" }));
+    await user.click(screen.getByRole("button", { name: "Alto contraste" }));
+    await user.click(screen.getByRole("button", { name: "CRT mono" }));
 
-    expect(document.documentElement.dataset.theme).toBe("light");
+    expect(document.documentElement.dataset.theme).toBe("crt-high-contrast");
+    expect(document.documentElement.dataset.imageSet).toBe("high-contrast");
+    expect(document.documentElement.dataset.fontSet).toBe("crt-mono");
     expect(window.localStorage.setItem).toHaveBeenCalledWith(
       "brickbreaker-theme",
-      "light",
+      "crt-high-contrast",
+    );
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(
+      "brickbreaker-image-set",
+      "high-contrast",
+    );
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(
+      "brickbreaker-font-set",
+      "crt-mono",
     );
 
-    await user.click(screen.getByRole("button", { name: "Escuro" }));
+    await user.click(screen.getByRole("button", { name: "Pixel Sunset" }));
 
-    expect(document.documentElement.dataset.theme).toBe("dark");
+    expect(document.documentElement.dataset.theme).toBe("pixel-sunset");
     expect(window.localStorage.setItem).toHaveBeenCalledWith(
       "brickbreaker-theme",
-      "dark",
+      "pixel-sunset",
     );
   });
 

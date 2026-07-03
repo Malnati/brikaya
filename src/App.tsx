@@ -2,7 +2,7 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import Game from "./components/Game";
 import { AdSlotPlaceholder } from "./components/AdSlotPlaceholder";
-import { ThemeToggle } from "./components/ThemeToggle";
+import { AppearanceSelector } from "./components/AppearanceSelector";
 import { AudioToggle } from "./components/AudioToggle";
 import { CollisionStats } from "./components/CollisionStats";
 import GameLogViewer from "./components/GameLogViewer";
@@ -40,7 +40,7 @@ import {
 import { LOG } from "./utils/logger";
 import { audioManager } from "./utils/audioManager";
 import { GameQaScenario } from "./logic/GameEngine";
-import { useThemePreference } from "./hooks/useThemePreference";
+import { useAppearancePreference } from "./hooks/useAppearancePreference";
 import { useAudioPreference } from "./hooks/useAudioPreference";
 
 LOG("🚦 App.tsx carregado");
@@ -81,7 +81,7 @@ export default function App() {
   const [isCinematicRipScenarioConsumed, setIsCinematicRipScenarioConsumed] =
     useState(false);
   const [isOfflineReadyVisible, setIsOfflineReadyVisible] = useState(false);
-  const { theme, selectTheme } = useThemePreference();
+  const { selection, selectTheme, selectImageSet, selectFontSet } = useAppearancePreference();
   const { isAudioMuted, toggleAudio } = useAudioPreference();
   const levelTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cinematicTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -369,6 +369,22 @@ export default function App() {
     [audioSink, selectTheme],
   );
 
+  const handleImageSetChange = useCallback(
+    (nextImageSet: Parameters<typeof selectImageSet>[0]) => {
+      audioSink.playAudio(GAME_AUDIO_IDS.THEME_TOGGLE);
+      selectImageSet(nextImageSet);
+    },
+    [audioSink, selectImageSet],
+  );
+
+  const handleFontSetChange = useCallback(
+    (nextFontSet: Parameters<typeof selectFontSet>[0]) => {
+      audioSink.playAudio(GAME_AUDIO_IDS.THEME_TOGGLE);
+      selectFontSet(nextFontSet);
+    },
+    [audioSink, selectFontSet],
+  );
+
   const handleAudioToggle = useCallback(async () => {
     if (!isAudioMuted) {
       audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
@@ -502,8 +518,13 @@ export default function App() {
                 {BUILD_VERSION_MENU_LABEL}
               </p>
               <div className="settings-drawer__section">
-                <h3>Tema</h3>
-                <ThemeToggle theme={theme} onThemeChange={handleThemeChange} />
+                <h3>Aparência</h3>
+                <AppearanceSelector
+                  selection={selection}
+                  onThemeChange={handleThemeChange}
+                  onImageSetChange={handleImageSetChange}
+                  onFontSetChange={handleFontSetChange}
+                />
               </div>
               <div className="settings-drawer__section">
                 <h3>Ferramentas</h3>
