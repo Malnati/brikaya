@@ -24,7 +24,7 @@ Este arquivo é um plano documental. Ele **não implementa** i18n, anúncios, Ad
 | Usuário final | Brikaya deve continuar gratuito para jogar. | Não planejar paywall, assinatura, compra obrigatória, venda de fases ou bloqueio de gameplay por pagamento. |
 | Mantenedor | A rota inicial não deve exigir taxa de publicação, compra de tráfego, compra de asset, royalty, assinatura ou licença paga. | Distribuição inicial recomendada fica em web/PWA, usando infraestrutura já existente e sem ativar campanhas. |
 | Licenciamento | Código, assets, textos e traduções devem permitir uso comercial gratuito. | Recusar materiais com restrição comercial, royalty, pagamento, watermark, assinatura ou obrigação incompatível com distribuição simples. |
-| Offline | O projeto atual exige PWA 100% offline após primeiro uso. | Anúncios reais exigem decisão futura de exceção: jogo offline, anúncios online opcionais. |
+| Offline | O jogo principal permanece offline após primeiro uso. | Exceção PWA-only aprovada: anúncios reais são opcionais, online-only, consentidos quando exigido e nunca necessários para jogar. |
 | Dados sensíveis | Documento não pode conter IDs reais, credenciais, contas, chaves, variáveis privadas ou valores de ambiente. | Toda configuração real deve ficar fora do Git e ser documentada apenas por função, não por valor. |
 
 ### 2.2. Bloqueios explícitos de custo
@@ -115,7 +115,7 @@ A rota inicial deve considerar não apenas consumo de games, mas também a capac
 
 | Prioridade | País/região | Idioma | Objetivo principal | Justificativa | Rota de distribuição | Observações legais/ads |
 | --- | --- | --- | --- | --- | --- | --- |
-| P0 — lançamento web inicial | Brasil | `pt-BR` | Base original, validação de produto, comunidade inicial e SEO em português. | Origem do projeto, menor custo de revisão, alto número de jogadores no ranking Newzoo e facilidade de comunicação. | Web/PWA em domínio existente e Cloudflare Pages; posts orgânicos; Search Console. | Manter jogo gratuito; anúncios reais bloqueados até aprovação e exceção offline; revisar marca no INPI. |
+| P0 — lançamento web inicial | Brasil | `pt-BR` | Base original, validação de produto, comunidade inicial e SEO em português. | Origem do projeto, menor custo de revisão, alto número de jogadores no ranking Newzoo e facilidade de comunicação. | Web/PWA em domínio existente e Cloudflare Pages; posts orgânicos; Search Console. | Manter jogo gratuito; anúncios reais dependem de aprovação de conta, consentimento quando exigido e regra online-only; revisar marca no INPI. |
 | P0 — lançamento web inicial | Estados Unidos, Canadá e Reino Unido | `en` | Alto valor de monetização futura e maior alcance internacional com um catálogo base. | EUA, Reino Unido e Canadá aparecem entre mercados fortes por receita; inglês reaproveita conteúdo para outros países. | Web/PWA, landing em inglês, metadados localizados, comunidades gratuitas. | EEA/UK exige atenção de consentimento no Reino Unido; Canadá/EUA exigem cuidado com privacidade e público infantil quando aplicável. |
 | P0 — lançamento web inicial | México e LATAM hispânica | `es-419` | Ampliar alcance regional com uma localização espanhola neutra latino-americana. | `es-419` cobre México, Colômbia, Argentina, Chile, Peru e outros mercados com baixo custo incremental. | Web/PWA, SEO em espanhol LATAM, posts orgânicos e diretórios gratuitos. | Evitar espanhol europeu como base inicial; revisar termos promocionais para não prometer ganhos/recompensas financeiras. |
 | P0 — lançamento web inicial | Índia | `en-IN`; evolução `hi-IN` | Alto alcance mobile e aprendizado de retenção em país mobile-first. | Grande base mobile e uso amplo de inglês em tecnologia/jogos; hindi expande alcance depois. | Web/PWA leve, metadados em inglês indiano, comunidades gratuitas. | Anúncios futuros exigem política clara para menores; hindi só após QA linguístico. |
@@ -186,22 +186,22 @@ A recomendação é criar um catálogo local, tipado e sem dependência externa 
 
 ## 6. Plano futuro de publicidade Google
 
-### 6.1. Conflito atual com PWA 100% offline
+### 6.1. Exceção aprovada para PWA-only
 
-O repositório exige que a PWA funcione 100% offline após o primeiro uso e proíbe requisições externas de runtime. Publicidade real do Google exige rede externa, carregamento de código/ads, medição e comunicação com plataformas de anúncio.
+O repositório exige que o jogo principal funcione offline após o primeiro uso e proíbe requisições externas para o gameplay essencial. Publicidade real do Google exige rede externa, carregamento de código/ads, medição e comunicação com plataformas de anúncio.
 
-Portanto, anúncios reais **não são compatíveis com a regra offline atual sem uma decisão explícita de exceção**. A exceção futura deve ser escrita como:
+A exceção PWA-only está aprovada com este contrato:
 
-> O jogo principal permanece offline após o primeiro uso; anúncios são recursos online opcionais, exibidos somente quando houver conexão, consentimento aplicável e aprovação de conta.
+> O jogo principal continua offline após primeiro carregamento; anúncios são opcionais, online-only, consentidos quando exigido e nunca necessários para jogar.
 
-Sem essa exceção aprovada, qualquer slot deve permanecer como placeholder offline sem scripts externos, sem IDs reais e sem chamadas de rede.
+Esta aprovação é apenas política/documental. Ela não implementa AdSense, H5 Games Ads, AdMob, SDK, script externo, ID real, credencial, campanha, mudança de service worker ou qualquer alteração de runtime. Até existir PR próprio de ativação, qualquer slot permanece como placeholder offline ou área ausente.
 
 ### 6.2. Web/PWA: AdSense e H5 Games Ads
 
 | Item | Requisito | Fonte | Decisão para Brikaya |
 | --- | --- | --- | --- |
 | AdSense | Conta e site precisam cumprir requisitos de elegibilidade, conteúdo próprio, políticas e idade mínima. | [AdSense eligibility](https://support.google.com/adsense/answer/9724?hl=en) | Futuro; não inserir código real agora. |
-| H5 Games Ads | Produto por aplicação; acesso não é garantido e requer AdSense aprovado. | [Ad Placement API signup](https://developers.google.com/ad-placement/docs/signup) | Futuro; solicitar somente após i18n P0 e política offline revisada. |
+| H5 Games Ads | Produto por aplicação; acesso não é garantido e requer AdSense aprovado. | [Ad Placement API signup](https://developers.google.com/ad-placement/docs/signup) | Futuro; solicitar somente após i18n P0 e desenho técnico compatível com a exceção aprovada. |
 | Formatos | H5 Games Ads permite interstitial e rewarded em momentos naturais do jogo. | [AdSense H5 Games Ads](https://support.google.com/adsense/answer/9959170?hl=en) | Usar apenas entre fases, pausa ou tela de fim; nunca durante jogada contínua. |
 | Código no Git | IDs reais de editor/anúncio não devem entrar no repositório. | Política interna do projeto. | Documentar nomes lógicos e manter valores reais fora do Git. |
 | Offline | Ads exigem rede e não podem ser pré-cacheados como parte do jogo. | Regra do repositório + natureza dos anúncios. | Modo offline deve ocultar/desativar publicidade real. |
@@ -247,7 +247,7 @@ A página [Google Ads Traffic Quality — Publishers](https://www.google.com/ads
 | Estado | Descrição | Permitido na rota atual? |
 | --- | --- | --- |
 | `ads_disabled` | Sem anúncio real; placeholders offline ou nenhuma área de anúncio. | Sim, rota atual. |
-| `ads_test` | Integração técnica com IDs de teste e consentimento validado. | Futuro, exige PR próprio e política offline revisada. |
+| `ads_test` | Integração técnica com IDs de teste e consentimento validado. | Futuro, exige PR próprio e desenho técnico compatível com a exceção aprovada. |
 | `ads_live` | Anúncios reais aprovados. | Futuro, exige aprovação AdSense/H5/AdMob, consentimento e decisão explícita de ativação. |
 
 
@@ -435,9 +435,9 @@ Regras para tradução:
 | --- | --- | --- | --- | --- |
 | Fase 0 | Documento de distribuição | Criar `docs/dist/projeto.md`. | Plano versionado com países, i18n, ads e licenciamento. | Nenhum após merge deste PR. |
 | Fase 1 | i18n P0 sem anúncios reais | Implementar `pt-BR`, `en`, `es-419`; fallback `en`; persistência local; `html lang`; QA publicado. | PR próprio com build e QA Cloudflare. | Não inserir ads reais. |
-| Fase 2 | Preparar consentimento e estados de ads | Definir arquitetura `ads_disabled`/`ads_test`/`ads_live`, consentimento e política offline revisada. | Documento técnico + implementação se aprovada. | Ads reais ainda desativados. |
+| Fase 2 | Preparar consentimento e estados de ads | Definir arquitetura `ads_disabled`/`ads_test`/`ads_live`, consentimento e desenho técnico compatível com a exceção aprovada. | Documento técnico + implementação se aprovada. | Ads reais ainda desativados. |
 | Fase 3 | Solicitar AdSense/H5 Games Ads | Preparar site, políticas, conteúdo original, candidatura e documentação de aprovação. | Conta/aprovação fora do Git; IDs reais fora do repositório. | Acesso não garantido; sem segredo no Git. |
-| Fase 4 | Ativar anúncios | Só após aprovação, consentimento, revisão de menores e exceção explícita à regra offline. | Ads online opcionais em momentos naturais. | Não ativar em modo offline; não ativar sem consentimento onde exigido. |
+| Fase 4 | Ativar anúncios | Só após aprovação de conta, consentimento, revisão de menores e PR próprio de ativação. | Ads online opcionais em momentos naturais. | Não ativar em modo offline; não ativar sem consentimento onde exigido. |
 | Fase 5 | Expansão P1/P2 | Traduzir `ja`, `ko`, `de`, `fr`, `it`, `id`, `vi` e futuros `fil`/`th` por dados reais. | Roadmap ajustado por retenção, país, CTR orgânico, eCPM e feedback. | Sem tradução automática não revisada em mercados críticos. |
 
 ## 10. Critérios de aceite deste documento
@@ -448,7 +448,7 @@ Regras para tradução:
 - Google Ads é pago e está marcado como bloqueado sem orçamento explícito.
 - Google Play está fora da rota zero-custo inicial por taxa oficial de US$25.
 - App Store/iOS estão fora da rota zero-custo inicial por Apple Developer Program de US$99/ano.
-- Publicidade real é descrita como futura, online-only, consentida e dependente de exceção explícita à regra offline.
+- Publicidade real é descrita como futura, online-only, consentida quando exigido e dependente de PR próprio de ativação.
 - AdSense/H5 Games Ads aparecem como dependentes de aprovação.
 - AdMob aparece apenas como rota nativa Android futura, não como PWA puro atual.
 - Licenciamento lista assets aceitos e recusados.

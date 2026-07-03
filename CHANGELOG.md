@@ -3,6 +3,14 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.28.7] - 2026-07-03
+### Alterado
+- Política offline passa a declarar a exceção PWA-only aprovada: jogo principal offline após primeiro carregamento; anúncios reais futuros opcionais, online-only, consentidos quando exigido e nunca necessários para jogar.
+- Documentação de distribuição e QA deixa de tratar anúncios reais como conflito absoluto com PWA offline e passa a exigir ocultar/desativar anúncios em modo offline.
+
+### Não alterado
+- Nenhuma implementação de anúncio, SDK, script externo, ID real, credencial, campanha, service worker ou runtime foi adicionada.
+
 ## [1.28.6] - 2026-07-03
 ### Adicionado
 - Documento P0 de registros, custos e documentos para Brikaya PWA-only em `docs/dist/registros.md`.
