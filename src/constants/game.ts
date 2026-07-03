@@ -33,6 +33,8 @@ export const LASER_FAN_MAX_SPAWNS_PER_LEVEL = 2;
 export const LASER_FAN_EFFECT_VISIBLE_MS = 2000;
 export const LEVEL_SPEED_STEP = 0.12;
 export const MAX_LEVEL_SPEED_MULTIPLIER = 2.2;
+export const LEVEL_BRICK_ROW_STEP = 1;
+export const LEVEL_BRICK_ROW_INTERVAL = 1;
 export const FIRST_LEVEL_MIN_SPEED_DIVISOR = 4;
 export const FIRST_LEVEL_BASE_SPEED_MULTIPLIER = 3;
 export const SPEED_PRECISION_FACTOR = 1000;
@@ -116,6 +118,21 @@ export function calculateLevelSpeedMultiplier(level: number): number {
     1 + (level - 1) * LEVEL_SPEED_STEP,
     MAX_LEVEL_SPEED_MULTIPLIER,
   );
+}
+
+export function calculateLevelBrickRows(
+  baseRows: number,
+  maxRows: number,
+  level: number,
+): number {
+  const safeBaseRows = Math.max(1, Math.floor(baseRows));
+  const safeMaxRows = Math.max(safeBaseRows, Math.floor(maxRows));
+  const safeLevel = Math.max(1, Math.floor(level));
+  const addedRows =
+    Math.floor((safeLevel - 1) / LEVEL_BRICK_ROW_INTERVAL) *
+    LEVEL_BRICK_ROW_STEP;
+
+  return Math.min(safeMaxRows, safeBaseRows + addedRows);
 }
 
 export function roundSpeedValue(speed: number): number {

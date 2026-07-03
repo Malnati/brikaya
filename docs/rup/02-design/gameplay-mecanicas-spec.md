@@ -13,8 +13,8 @@
 - **Penalidade de linha extra**: quando a bolinha retorna sem destruir tijolos, insere linha adicional de tijolos e registra log.
 
 ## Progressão e Futuro
-- **Fase atual**: dificuldade única com velocidade crescente.
-- **Planejado**: níveis progressivos (#005), power-ups (#006) e high-scores (#007) armazenados localmente.
+- **Níveis progressivos (#005)**: cada nova fase aumenta a velocidade-alvo e adiciona linhas de tijolos até o limite seguro do tabuleiro.
+- **Planejado**: power-ups (#006) e high-scores (#007) armazenados localmente.
 
 ## Interface e HUD
 - Elementos obrigatórios: pontuação atual, vidas restantes, contagem de bolinhas ativas e indicador de linha penalizada.

@@ -15,6 +15,7 @@ import {
   SpeedReductionSnapshot,
   SpeedStateSnapshot,
   calculateDynamicDimensions,
+  calculateLevelBrickRows,
   calculateLevelInitialSpawnSpeed,
   calculateLevelMaxSpeed,
   calculateLevelMinSpeed,
@@ -160,6 +161,7 @@ export class GameEngine {
     resolveGameVisualAssetPath(this.imageSetId, role);
 
   private maxBrickRows = 0;
+  private baseBrickRows = 0;
 
   constructor(
     private canvas: HTMLCanvasElement,
@@ -194,6 +196,7 @@ export class GameEngine {
       this.canvasSize.width,
       this.canvasSize.height,
     );
+    this.baseBrickRows = this.dimensions.brickRows;
 
     LOG(
       `📐 Dimensões calculadas: ${this.dimensions.brickCols} colunas x ${this.dimensions.brickRows} linhas`,
@@ -232,6 +235,7 @@ export class GameEngine {
 
     LOG(`🏗️  Criando Bricks...`);
     this.configureBrickRows();
+    this.applyLevelBrickRows(this.level);
     this.bricks = this.createBricks();
     this.prepareLaserFanQaPowerUp();
     this.startLevelSpeedTracking(this.level);
@@ -270,6 +274,7 @@ export class GameEngine {
     canvasHeight: number,
   ): DynamicGameDimensions {
     const dimensions = this.createDimensions(canvasWidth, canvasHeight);
+    this.baseBrickRows = dimensions.brickRows;
     const brickCols = this.dimensions.brickCols;
     const brickRows = this.dimensions.brickRows;
     const totalBricksWidth =
@@ -329,15 +334,29 @@ export class GameEngine {
   }
 
   private configureBrickRows() {
+    this.maxBrickRows = this.calculateMaxBrickRows(this.dimensions);
+  }
+
+  private calculateMaxBrickRows(dimensions: DynamicGameDimensions): number {
     const availableHeight =
-      this.canvasSize.height -
-      this.dimensions.paddleHeight -
-      this.dimensions.brickOffsetTop;
+      this.canvasSize.height - dimensions.paddleHeight - dimensions.brickOffsetTop;
     const computedRows = Math.floor(
       availableHeight /
-        (this.dimensions.brickHeight + this.dimensions.brickPadding),
+        (dimensions.brickHeight + dimensions.brickPadding),
     );
-    this.maxBrickRows = Math.max(this.dimensions.brickRows, computedRows);
+
+    return Math.max(dimensions.brickRows, computedRows);
+  }
+
+  private applyLevelBrickRows(level: number) {
+    this.dimensions = {
+      ...this.dimensions,
+      brickRows: calculateLevelBrickRows(
+        this.baseBrickRows,
+        this.maxBrickRows,
+        level,
+      ),
+    };
   }
 
   private createBricks(): Bricks {
@@ -546,8 +565,10 @@ export class GameEngine {
         this.canvasSize.width,
         this.canvasSize.height,
       );
+      this.baseBrickRows = this.dimensions.brickRows;
       this.configureBrickRows();
     }
+    this.applyLevelBrickRows(nextLevel);
     this.paddle.reset();
     this.activePowerUp = null;
     this.resetLaserFanSpawnCounterForLevel();
@@ -1047,10 +1068,20 @@ export class GameEngine {
         this.canvasSize.width,
         this.canvasSize.height,
       );
-      return previewDimensions.brickCols * previewDimensions.brickRows;
+      const previewMaxBrickRows = this.calculateMaxBrickRows(previewDimensions);
+      const previewBrickRows = calculateLevelBrickRows(
+        previewDimensions.brickRows,
+        previewMaxBrickRows,
+        level,
+      );
+
+      return previewDimensions.brickCols * previewBrickRows;
     }
 
-    return this.dimensions.brickCols * this.dimensions.brickRows;
+    return (
+      this.dimensions.brickCols *
+      calculateLevelBrickRows(this.baseBrickRows, this.maxBrickRows, level)
+    );
   }
 
   private setupListeners() {

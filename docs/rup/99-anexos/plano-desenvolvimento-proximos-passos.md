@@ -84,7 +84,7 @@ Este documento estabelece o roadmap completo para o desenvolvimento do BrickBrea
 #### 2.1 Melhorias no Gameplay
 **Priority:** Média
 **Issues GitHub:**
-- `#005`: Implementar sistema de níveis progressivos
+- `#005`: ✅ Implementar sistema de níveis progressivos - **CONCLUÍDO** (linhas/blocos aumentam por fase e QA publicado `test:cloudflare-level-progression`)
 - `#006`: Adicionar power-ups e especiais
 - `#007`: Criar sistema de high-scores global
 - `#008`: Implementar efeitos visuais e sonoros

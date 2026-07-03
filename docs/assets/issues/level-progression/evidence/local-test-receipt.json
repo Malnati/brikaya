@@ -1,0 +1,25 @@
+{
+  "branch": "feature/level-progression",
+  "previewUrl": "https://4fa4dc29.malnati-brickbreaker.pages.dev",
+  "checkedAt": "2026-07-03T06:31:00Z",
+  "localChecks": [
+    "node --version => v23.5.0",
+    "make help",
+    "npm test -- --runInBand => 28 suites, 128 tests",
+    "npm run test:asset-naming",
+    "npm run test:svg-assets",
+    "npm run build"
+  ],
+  "previewChecks": [
+    "make cloudflare-level-progression-qa",
+    "npm run test:cloudflare-gameplay-basic",
+    "npm run test:cloudflare-offline-pwa",
+    "make cloudflare-mobile-qa",
+    "make cloudflare-no-score-reset",
+    "make cloudflare-phase-transition-qa",
+    "make cloudflare-dashboard-layout-qa",
+    "make cloudflare-theme-qa",
+    "make cloudflare-svg-assets-qa"
+  ],
+  "result": "passed"
+}
