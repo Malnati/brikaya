@@ -3,6 +3,18 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.30.1] - 2026-07-03
+### Corrigido
+- Cenário publicado de power-ups mantém o item especial visível por mais frames antes da coleta, permitindo capturar e validar o tamanho SVG proporcional.
+
+### Testado
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version && npm --version && make help`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/logic/GameEngine.test.ts --runInBand`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node scripts/cloudflare-pages.js deploy`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-powerups-qa`
+
 ## [1.30.0] - 2026-07-03
 ### Adicionado
 - Menu de aparência passa a oferecer 10 temas visuais, mantendo imagens e fontes como escolhas separadas.
@@ -22,6 +34,7 @@
 - `make cloudflare-deploy`
 - `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa`
 - `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`
+
 
 ## [1.29.1] - 2026-07-03
 ### Corrigido
