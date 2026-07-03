@@ -28,6 +28,7 @@ const OUTPUT_DIR_KEY = 'BRICKBREAKER_CLOUDFLARE_PAGES_OUTPUT_DIR';
 const CUSTOM_DOMAIN_KEY = 'BRICKBREAKER_CLOUDFLARE_PAGES_CUSTOM_DOMAIN';
 const ACCOUNT_ID_KEY = 'CLOUDFLARE_ACCOUNT_ID';
 const API_TOKEN_KEY = 'CLOUDFLARE_API_TOKEN';
+const INDEX_HTML_FILE_NAME = 'index.html';
 const DEFAULT_PAGES_PROJECT_NAME = 'malnati-brickbreaker';
 const DEFAULT_PAGES_BRANCH = 'main';
 const DEFAULT_OUTPUT_DIR = 'dist';
@@ -53,6 +54,8 @@ const HTTP_GET = 'GET';
 const HTTP_POST = 'POST';
 const HTTP_PUT = 'PUT';
 const HTTP_DELETE = 'DELETE';
+const HTTP_STATUS_OK = 200;
+const FETCH_CACHE_NO_STORE = 'no-store';
 const REDIRECT_LIST_KIND = 'redirect';
 const RULESET_KIND_ROOT = 'root';
 const RULESET_PHASE_REDIRECT = 'http_request_redirect';
@@ -63,6 +66,13 @@ const ZONE_NAME_SEARCH_PARAM = 'name';
 const ACCOUNT_ID_SEARCH_PARAM = 'account.id';
 const BULK_OPERATION_COMPLETED_STATUS = 'completed';
 const BULK_OPERATION_FAILED_STATUS = 'failed';
+const PUBLIC_INDEX_MAX_POLLS = 24;
+const PUBLIC_INDEX_POLL_DELAY_MS = 5000;
+const PUBLIC_INDEX_FETCH_TIMEOUT_MS = 15000;
+const PUBLIC_INDEX_CHECK_PARAM = 'qaPublicIndexCheck';
+const PUBLIC_INDEX_TITLE_PATTERN = /<title>(.*?)<\/title>/i;
+const PUBLIC_INDEX_SCRIPT_PATTERN = /assets\/index-[^"']+\.js/i;
+const PUBLIC_INDEX_STYLE_PATTERN = /assets\/index-[^"']+\.css/i;
 const RULE_ENABLED = true;
 const CLOUDFLARE_AUTHENTICATION_ERROR = 'Authentication error';
 const REQUIRED_ENV_KEYS = [
@@ -98,6 +108,7 @@ const COMMANDS = new Set([
   'ensure-domain',
   'redirect-state',
   'ensure-pages-dev-redirect',
+  'verify-public-index',
   'deploy'
 ]);
 
@@ -457,6 +468,107 @@ function sleep(milliseconds) {
   return new Promise(resolveTimer => {
     setTimeout(resolveTimer, milliseconds);
   });
+}
+
+function readLocalPublicIndexExpectation(envValues) {
+  const indexPath = resolve(process.cwd(), envValues[OUTPUT_DIR_KEY], INDEX_HTML_FILE_NAME);
+  const indexHtml = readFileSync(indexPath, 'utf8');
+
+  return {
+    title: extractRequiredMatch(indexHtml, PUBLIC_INDEX_TITLE_PATTERN, 'título local'),
+    script: extractRequiredMatch(indexHtml, PUBLIC_INDEX_SCRIPT_PATTERN, 'script local'),
+    style: extractRequiredMatch(indexHtml, PUBLIC_INDEX_STYLE_PATTERN, 'estilo local')
+  };
+}
+
+function extractRequiredMatch(content, pattern, label) {
+  const match = content.match(pattern)?.[1] || content.match(pattern)?.[0];
+
+  if (!match) {
+    throw new Error(`Não foi possível ler ${label} do index público.`);
+  }
+
+  return match;
+}
+
+function buildPublicIndexCheckUrl(envValues) {
+  const publicUrl = new URL(buildCustomDomainUrl(envValues));
+  publicUrl.searchParams.set(PUBLIC_INDEX_CHECK_PARAM, String(Date.now()));
+
+  return publicUrl;
+}
+
+function createFetchTimeoutSignal() {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), PUBLIC_INDEX_FETCH_TIMEOUT_MS);
+
+  return {
+    signal: controller.signal,
+    clear: () => clearTimeout(timer)
+  };
+}
+
+async function fetchPublicIndex(envValues) {
+  const { signal, clear } = createFetchTimeoutSignal();
+
+  try {
+    const response = await fetch(buildPublicIndexCheckUrl(envValues), {
+      cache: FETCH_CACHE_NO_STORE,
+      signal
+    });
+    const html = await response.text();
+
+    return {
+      status: response.status,
+      title: extractRequiredMatch(html, PUBLIC_INDEX_TITLE_PATTERN, 'título publicado'),
+      script: extractRequiredMatch(html, PUBLIC_INDEX_SCRIPT_PATTERN, 'script publicado'),
+      style: extractRequiredMatch(html, PUBLIC_INDEX_STYLE_PATTERN, 'estilo publicado')
+    };
+  } finally {
+    clear();
+  }
+}
+
+function isPublicIndexCurrent(expectedIndex, publicIndex) {
+  return (
+    publicIndex.status === HTTP_STATUS_OK &&
+    publicIndex.title === expectedIndex.title &&
+    publicIndex.script === expectedIndex.script &&
+    publicIndex.style === expectedIndex.style
+  );
+}
+
+function buildPublicIndexMismatchMessage(expectedIndex, publicIndex) {
+  return (
+    'Domínio público ainda não serve o build local: ' +
+    `title=${publicIndex.title} expected=${expectedIndex.title}; ` +
+    `script=${publicIndex.script} expected=${expectedIndex.script}; ` +
+    `style=${publicIndex.style} expected=${expectedIndex.style}; ` +
+    `status=${publicIndex.status}`
+  );
+}
+
+async function verifyPublicIndex(envValues) {
+  validateEnvironment(envValues);
+  const expectedIndex = readLocalPublicIndexExpectation(envValues);
+  let lastPublicIndex = null;
+
+  for (let attempt = 1; attempt <= PUBLIC_INDEX_MAX_POLLS; attempt += 1) {
+    lastPublicIndex = await fetchPublicIndex(envValues);
+
+    if (isPublicIndexCurrent(expectedIndex, lastPublicIndex)) {
+      console.log(`OK domínio público atualizado: ${buildCustomDomainUrl(envValues)}`);
+      return;
+    }
+
+    console.log(
+      `WARN domínio público defasado tentativa=${attempt}/${PUBLIC_INDEX_MAX_POLLS}: ` +
+        buildPublicIndexMismatchMessage(expectedIndex, lastPublicIndex)
+    );
+    await sleep(PUBLIC_INDEX_POLL_DELAY_MS);
+  }
+
+  throw new Error(buildPublicIndexMismatchMessage(expectedIndex, lastPublicIndex));
 }
 
 async function listZones(envValues) {
@@ -934,6 +1046,11 @@ async function run() {
 
   if (command === 'ensure-pages-dev-redirect') {
     await ensurePagesDevRedirect(envValues);
+    return;
+  }
+
+  if (command === 'verify-public-index') {
+    await verifyPublicIndex(envValues);
     return;
   }
 

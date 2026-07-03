@@ -18,6 +18,9 @@ const RESPONSIVE_VIEWPORT_MATRIX_PATH = new URL(
   "./responsiveViewportMatrix.json",
   import.meta.url,
 );
+const SOURCE_INDEX_FILE_NAME = "index.html";
+const SOURCE_INDEX_PATH = resolve(process.cwd(), SOURCE_INDEX_FILE_NAME);
+const PUBLIC_TITLE_PATTERN = /<title>(.*?)<\/title>/i;
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const CHROME_LOW_RESOURCE_ARGS = [
@@ -72,6 +75,11 @@ const THEME_BUTTON_LABELS = [
 const RESPONSIVE_VIEWPORT_MATRIX = JSON.parse(
   readFileSync(RESPONSIVE_VIEWPORT_MATRIX_PATH, "utf8"),
 );
+const EXPECTED_PUBLIC_TITLE = extractRequiredMatch(
+  readFileSync(SOURCE_INDEX_PATH, "utf8"),
+  PUBLIC_TITLE_PATTERN,
+  "título público local",
+);
 const VIEWPORTS = RESPONSIVE_VIEWPORT_MATRIX.viewports;
 const MOBILE_DEFAULT_VIEWPORT = viewportByScreenshotRole("mobile-default");
 const CANVAS_IMAGE_MIME_TYPE = "image/png";
@@ -119,6 +127,16 @@ function assert(condition, message) {
   if (!condition) {
     throw new Error(message);
   }
+}
+
+function extractRequiredMatch(content, pattern, label) {
+  const match = content.match(pattern)?.[1] || content.match(pattern)?.[0];
+
+  if (!match) {
+    throw new Error(`Não foi possível ler ${label}.`);
+  }
+
+  return match;
 }
 
 async function closeBrowser(browser) {
@@ -683,7 +701,7 @@ async function run() {
     await page.screenshot({ path: screenshotPath, fullPage: true });
 
     assert(
-      layoutState.title === "Brikaya",
+      layoutState.title === EXPECTED_PUBLIC_TITLE,
       "Título inesperado no app publicado.",
     );
     assert(
