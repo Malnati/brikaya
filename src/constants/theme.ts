@@ -1,21 +1,32 @@
 // src/constants/theme.ts
-export const THEME_LIGHT = "light";
-export const THEME_DARK = "dark";
-export const THEME_STORAGE_KEY = "brickbreaker-theme";
+import {
+  APPEARANCE_STORAGE_KEYS,
+  LEGACY_THEME_DARK,
+  LEGACY_THEME_LIGHT,
+  THEME_CRT_HIGH_CONTRAST,
+  THEME_NEON_ARCADE,
+  isThemeId,
+  migrateStoredThemeId,
+  type ThemeId,
+} from './appearance';
 
-export type ThemeMode = typeof THEME_LIGHT | typeof THEME_DARK;
+export const THEME_LIGHT = THEME_CRT_HIGH_CONTRAST;
+export const THEME_DARK = THEME_NEON_ARCADE;
+export const THEME_STORAGE_KEY = APPEARANCE_STORAGE_KEYS.theme;
+
+export type ThemeMode = ThemeId;
 
 export function isThemeMode(value: unknown): value is ThemeMode {
-  return value === THEME_LIGHT || value === THEME_DARK;
+  return (
+    isThemeId(value) ||
+    value === LEGACY_THEME_LIGHT ||
+    value === LEGACY_THEME_DARK
+  );
 }
 
 export function resolveInitialTheme(
   storedTheme: unknown,
   _prefersDark: boolean,
 ): ThemeMode {
-  if (isThemeMode(storedTheme)) {
-    return storedTheme;
-  }
-
-  return THEME_DARK;
+  return migrateStoredThemeId(storedTheme) ?? THEME_NEON_ARCADE;
 }
