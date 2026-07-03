@@ -4,6 +4,7 @@ import {
   DEFAULT_APPEARANCE_SELECTION,
   FONT_SET_OPTIONS,
   IMAGE_SET_OPTIONS,
+  THEME_IDS,
   THEME_OPTIONS,
   isFontSetId,
   isImageSetId,
@@ -13,6 +14,30 @@ import {
 } from './appearance';
 
 const TECHNICAL_COPY_PATTERN = /svg|asset|token|css|dataset|runtime|cache|service worker|localstorage/i;
+const EXPECTED_THEME_IDS = [
+  'neon-arcade',
+  'crt-high-contrast',
+  'pixel-sunset',
+  'ocean-night',
+  'jungle-laser',
+  'amber-retro',
+  'cosmic-ice',
+  'electric-plum',
+  'lime-graphite',
+  'ruby-depth',
+] as const;
+const EXPECTED_THEME_LABELS = [
+  'Neon Arcade',
+  'CRT alto contraste',
+  'Pixel Sunset',
+  'Oceano noturno',
+  'Selva laser',
+  'Âmbar retrô',
+  'Gelo cósmico',
+  'Ameixa elétrica',
+  'Lima grafite',
+  'Rubi profundo',
+] as const;
 
 describe('appearance contract', () => {
   it('define escolhas padrão humanas e persistíveis', () => {
@@ -26,10 +51,22 @@ describe('appearance contract', () => {
     expect(APPEARANCE_STORAGE_KEYS.fontSet).toBe('brickbreaker-font-set');
   });
 
+  it('expõe exatamente dez temas visuais persistíveis', () => {
+    expect(THEME_IDS).toEqual(EXPECTED_THEME_IDS);
+    expect(THEME_OPTIONS).toHaveLength(10);
+    expect(THEME_OPTIONS.map((option) => option.id)).toEqual(
+      EXPECTED_THEME_IDS,
+    );
+    expect(THEME_OPTIONS.map((option) => option.label)).toEqual(
+      EXPECTED_THEME_LABELS,
+    );
+    expect(new Set(THEME_OPTIONS.map((option) => option.id)).size).toBe(10);
+  });
+
   it('aceita apenas IDs conhecidos', () => {
-    expect(isThemeId('neon-arcade')).toBe(true);
-    expect(isThemeId('crt-high-contrast')).toBe(true);
-    expect(isThemeId('pixel-sunset')).toBe(true);
+    for (const themeId of EXPECTED_THEME_IDS) {
+      expect(isThemeId(themeId)).toBe(true);
+    }
     expect(isThemeId('store')).toBe(false);
 
     expect(isImageSetId('retro-default')).toBe(true);
@@ -78,9 +115,7 @@ describe('appearance contract', () => {
       ...FONT_SET_OPTIONS,
     ].map((option) => option.label);
     expect(labels).toEqual([
-      'Neon Arcade',
-      'CRT alto contraste',
-      'Pixel Sunset',
+      ...EXPECTED_THEME_LABELS,
       'Retro padrão',
       'Alto contraste',
       'Cabine Sunset',

@@ -2,6 +2,13 @@
 export const THEME_NEON_ARCADE = 'neon-arcade';
 export const THEME_CRT_HIGH_CONTRAST = 'crt-high-contrast';
 export const THEME_PIXEL_SUNSET = 'pixel-sunset';
+export const THEME_OCEAN_NIGHT = 'ocean-night';
+export const THEME_JUNGLE_LASER = 'jungle-laser';
+export const THEME_AMBER_RETRO = 'amber-retro';
+export const THEME_COSMIC_ICE = 'cosmic-ice';
+export const THEME_ELECTRIC_PLUM = 'electric-plum';
+export const THEME_LIME_GRAPHITE = 'lime-graphite';
+export const THEME_RUBY_DEPTH = 'ruby-depth';
 export const IMAGE_SET_RETRO_DEFAULT = 'retro-default';
 export const IMAGE_SET_HIGH_CONTRAST = 'high-contrast';
 export const IMAGE_SET_SUNSET_CABINET = 'sunset-cabinet';
@@ -21,6 +28,13 @@ export const THEME_IDS = [
   THEME_NEON_ARCADE,
   THEME_CRT_HIGH_CONTRAST,
   THEME_PIXEL_SUNSET,
+  THEME_OCEAN_NIGHT,
+  THEME_JUNGLE_LASER,
+  THEME_AMBER_RETRO,
+  THEME_COSMIC_ICE,
+  THEME_ELECTRIC_PLUM,
+  THEME_LIME_GRAPHITE,
+  THEME_RUBY_DEPTH,
 ] as const;
 
 export const IMAGE_SET_IDS = [
@@ -60,6 +74,13 @@ export const THEME_OPTIONS = [
   { id: THEME_NEON_ARCADE, label: 'Neon Arcade' },
   { id: THEME_CRT_HIGH_CONTRAST, label: 'CRT alto contraste' },
   { id: THEME_PIXEL_SUNSET, label: 'Pixel Sunset' },
+  { id: THEME_OCEAN_NIGHT, label: 'Oceano noturno' },
+  { id: THEME_JUNGLE_LASER, label: 'Selva laser' },
+  { id: THEME_AMBER_RETRO, label: 'Âmbar retrô' },
+  { id: THEME_COSMIC_ICE, label: 'Gelo cósmico' },
+  { id: THEME_ELECTRIC_PLUM, label: 'Ameixa elétrica' },
+  { id: THEME_LIME_GRAPHITE, label: 'Lima grafite' },
+  { id: THEME_RUBY_DEPTH, label: 'Rubi profundo' },
 ] as const satisfies readonly AppearanceOption<ThemeId>[];
 
 export const IMAGE_SET_OPTIONS = [

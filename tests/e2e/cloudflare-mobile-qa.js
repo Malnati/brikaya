@@ -31,9 +31,23 @@ const MENU_BUTTON_NAME = /menu/i;
 const LOGS_BUTTON_NAME = /logs/i;
 const COLLISIONS_BUTTON_NAME = /colisões/i;
 const CLOSE_BUTTON_NAME = /fechar|×|✕/i;
+const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
+const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
 const SPEED_CURRENT_LABEL = "Velocidade atual";
 const LEVEL_TIME_LABEL = "Tempo da fase";
 const SPEED_REDUCTIONS_LABEL = "Reduções aplicadas";
+const THEME_BUTTON_LABELS = [
+  "Neon Arcade",
+  "CRT alto contraste",
+  "Pixel Sunset",
+  "Oceano noturno",
+  "Selva laser",
+  "Âmbar retrô",
+  "Gelo cósmico",
+  "Ameixa elétrica",
+  "Lima grafite",
+  "Rubi profundo",
+];
 const RESPONSIVE_VIEWPORT_MATRIX = JSON.parse(
   readFileSync(RESPONSIVE_VIEWPORT_MATRIX_PATH, "utf8"),
 );
@@ -103,12 +117,34 @@ function puppeteerViewport(viewport) {
 
 async function clickButtonByPattern(page, pattern) {
   const buttons = await page.$$("button");
+  const candidates = [];
   for (const button of buttons) {
-    const text = await button.evaluate((node) => node.textContent || "");
-    if (pattern.test(text)) {
-      await button.click();
-      return true;
-    }
+    const labels = await button.evaluate((node) => ({
+      text: node.textContent || "",
+      ariaLabel: node.getAttribute("aria-label") || "",
+      title: node.getAttribute("title") || "",
+    }));
+    candidates.push({ button, labels });
+  }
+
+  const accessibleMatch = candidates.find(
+    ({ labels }) => pattern.test(labels.ariaLabel) || pattern.test(labels.title),
+  );
+  if (accessibleMatch) {
+    await accessibleMatch.button.evaluate((node) =>
+      node.scrollIntoView({ block: "center", inline: "center" }),
+    );
+    await accessibleMatch.button.click();
+    return true;
+  }
+
+  const textMatch = candidates.find(({ labels }) => pattern.test(labels.text));
+  if (textMatch) {
+    await textMatch.button.evaluate((node) =>
+      node.scrollIntoView({ block: "center", inline: "center" }),
+    );
+    await textMatch.button.click();
+    return true;
   }
 
   return false;
@@ -230,6 +266,13 @@ async function clearOfflineState(page) {
     }
     window.localStorage.clear();
     window.sessionStorage.clear();
+  });
+}
+
+async function waitForCinematicOverlayToClear(page) {
+  await page.waitForSelector(CINEMATIC_OVERLAY_SELECTOR, {
+    hidden: true,
+    timeout: CINEMATIC_OVERLAY_TIMEOUT_MS,
   });
 }
 
@@ -467,6 +510,7 @@ async function run() {
     await new Promise((resolve) =>
       setTimeout(resolve, OBSERVATION_DURATION_MS),
     );
+    await waitForCinematicOverlayToClear(page);
 
     const layoutState = await collectLayoutState(page);
     await page.screenshot({ path: screenshotPath, fullPage: true });
@@ -615,9 +659,7 @@ async function run() {
       "Tema visual",
       "Imagens",
       "Fonte",
-      "Neon Arcade",
-      "CRT alto contraste",
-      "Pixel Sunset",
+      ...THEME_BUTTON_LABELS,
       "Retro padrão",
       "Alto contraste",
       "Cabine Sunset",

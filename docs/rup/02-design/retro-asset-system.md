@@ -222,7 +222,7 @@
 
 | Campo | Função | Storage key | Valores iniciais |
 | --- | --- | --- | --- |
-| `themeId` | Cores e superfícies | `brickbreaker-theme` | `neon-arcade`, `crt-high-contrast`, `pixel-sunset` |
+| `themeId` | Cores e superfícies | `brickbreaker-theme` | 10 temas visuais: `neon-arcade`, `crt-high-contrast`, `pixel-sunset`, `ocean-night`, `jungle-laser`, `amber-retro`, `cosmic-ice`, `electric-plum`, `lime-graphite`, `ruby-depth` |
 | `imageSetId` | Sprites, UI e VFX SVG | `brickbreaker-image-set` | `retro-default`, `high-contrast`, `sunset-cabinet` |
 | `fontSetId` | Tipografia local via CSS tokens | `brickbreaker-font-set` | `arcade-ui`, `crt-mono`, `block-pixel` |
 
@@ -233,3 +233,10 @@ Regra: todo asset visual runtime de tema deve ser SVG local/offline. PNG, JPG, W
 | Neon Arcade | `neon-arcade` | `retro-default` | `arcade-ui` | Padrão recomendado. |
 | CRT alto contraste | `crt-high-contrast` | `high-contrast` | `crt-mono` | Acessibilidade e leitura forte. |
 | Pixel Sunset | `pixel-sunset` | `sunset-cabinet` | `block-pixel` | Alternativa cromática sem mudar mecânica. |
+| Oceano noturno | `ocean-night` | `retro-default` | `arcade-ui` | Tema azul frio para baixa fadiga visual. |
+| Selva laser | `jungle-laser` | `retro-default` | `arcade-ui` | Tema verde intenso com leitura forte. |
+| Âmbar retrô | `amber-retro` | `retro-default` | `arcade-ui` | Tema quente inspirado em fósforo âmbar. |
+| Gelo cósmico | `cosmic-ice` | `retro-default` | `arcade-ui` | Tema frio de alto contraste sem alterar assets. |
+| Ameixa elétrica | `electric-plum` | `retro-default` | `arcade-ui` | Tema roxo com destaque elétrico. |
+| Lima grafite | `lime-graphite` | `retro-default` | `arcade-ui` | Tema grafite com accent lima. |
+| Rubi profundo | `ruby-depth` | `retro-default` | `arcade-ui` | Tema rubi escuro para contraste dramático. |
