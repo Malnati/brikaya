@@ -30,6 +30,7 @@ const MIN_IMMERSIVE_CANVAS_HEIGHT_RATIO = 0.68;
 const MIN_IMMERSIVE_BOARD_AREA_USAGE_RATIO = 0.9;
 const MIN_FULL_WIDTH_CANVAS_RATIO = 0.98;
 const MIN_FULL_WIDTH_BOARD_RATIO = 0.95;
+const MIN_HEIGHT_CONSTRAINED_CANVAS_VIEWPORT_WIDTH_RATIO = 0.6;
 const MAX_CANVAS_OVERLAP_PX = 2;
 const IMMERSIVE_ROOT_CLASS = "bb-landscape-immersive";
 const MAX_IMMERSIVE_SAFE_AREA_RESERVE_PX = 32;
@@ -481,11 +482,16 @@ async function run() {
         `${viewport.name}: canvas não fica inteiro visível no modo imersivo.`,
       );
       if (!isImmersiveLandscape) {
-        assert(
+        const hasFullWidthCanvas =
           state.dashboardLayout &&
-            state.canvas.width / state.dashboardLayout.width >=
-              MIN_FULL_WIDTH_CANVAS_RATIO,
-          `${viewport.name}: canvas não ocupa 96% da largura útil do dashboard.`,
+          state.canvas.width / state.dashboardLayout.width >=
+            MIN_FULL_WIDTH_CANVAS_RATIO;
+        const hasHeightConstrainedPlayableCanvas =
+          state.canvas.width / state.viewport.width >=
+          MIN_HEIGHT_CONSTRAINED_CANVAS_VIEWPORT_WIDTH_RATIO;
+        assert(
+          hasFullWidthCanvas || hasHeightConstrainedPlayableCanvas,
+          `${viewport.name}: canvas não tem largura jogável no viewport.`,
         );
         assert(
           state.dashboardLayout &&

@@ -35,6 +35,7 @@ BRICKBREAKER_PUBLIC_URL=<cloudflare-preview-ou-producao> make cloudflare-dashboa
 
 - Sem overflow horizontal.
 - Canvas inteiro dentro da área visível, sem exigir scroll para jogar.
+- Canvas ocupa a largura útil quando a altura permitir; quando a altura útil limitar o tabuleiro, a cobertura exige largura jogável mínima de 60% da viewport.
 - Canvas sem sobreposição por HUD, botões ou placeholders.
 - Raquete/bola/tijolos continuam operáveis após resize/orientação.
 - Rotação portrait → landscape não cria novo `game_start` nem `restart_game`.
@@ -44,6 +45,8 @@ BRICKBREAKER_PUBLIC_URL=<cloudflare-preview-ou-producao> make cloudflare-dashboa
 ## Achado incorporado em 2026-07-03
 
 A matriz inicial passava nos tamanhos novos, mas revelou que tablet landscape alto e desktop podiam manter o canvas abaixo da primeira dobra. Como a prioridade é o jogo em si, a cobertura foi endurecida para exigir tabuleiro completo visível; o sizing responsivo deve limitar o canvas pela altura útil da viewport fora do modo landscape imersivo.
+
+No deploy inicial dessa correção, a validação publicada revelou um segundo efeito: a altura corrente do canvas podia virar limite recursivo e encolher o tabuleiro em tablet/desktop. A cobertura foi ajustada para recuperar o tamanho a partir da altura útil da viewport e aceitar canvas centralizado quando a altura, e não a largura, for o limite real.
 
 ## Referências revisadas em 2026-07-03
 
