@@ -17,7 +17,7 @@ import {
 
 jest.mock('../utils/assetLoader', () => ({
   AssetLoader: {
-    getImage: jest.fn(() => null),
+    getOrLoadImage: jest.fn(() => null),
   },
 }));
 

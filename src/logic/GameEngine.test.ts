@@ -148,7 +148,7 @@ jest.mock("../utils/assetLoader", () => ({
   AssetLoader: {
     preloadAllAssets: jest.fn().mockResolvedValue(undefined),
     preloadImageSet: jest.fn().mockResolvedValue(undefined),
-    getImage: jest.fn(() => null),
+    getOrLoadImage: jest.fn(() => null),
   },
 }));
 

@@ -6,6 +6,8 @@ import {
 import { getRuntimeVisualAssetPathsForImageSet } from './visualAssetResolver';
 import { LOG, ERROR, WARN } from './logger';
 
+const IMAGE_LOAD_TIMEOUT_MS = 10000;
+
 export class AssetLoader {
   private static imageCache: Map<string, HTMLImageElement> = new Map();
   private static loadPromises: Map<string, Promise<HTMLImageElement>> = new Map();
@@ -27,7 +29,7 @@ export class AssetLoader {
         ERROR(`Timeout ao carregar imagem: ${path}`);
         this.loadPromises.delete(path);
         reject(new Error(`Timeout loading image: ${path}`));
-      }, 10000); // 10 segundos de timeout
+      }, IMAGE_LOAD_TIMEOUT_MS);
       
       img.onload = () => {
         clearTimeout(timeout);
@@ -89,5 +91,13 @@ export class AssetLoader {
       WARN(`Imagem não encontrada no cache: ${path}`);
     }
     return image;
+  }
+
+  static getOrLoadImage(path: string): HTMLImageElement | null {
+    const image = this.imageCache.get(path) || null;
+    if (image) return image;
+
+    void this.preloadImage(path).catch(() => null);
+    return null;
   }
 }

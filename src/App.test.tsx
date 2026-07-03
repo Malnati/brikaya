@@ -6,6 +6,10 @@ import userEvent from "@testing-library/user-event";
 import App from "./App";
 import { audioManager } from "./utils/audioManager";
 import type { LevelTransitionPayload } from "./constants/game";
+import {
+  BRICKBREAKER_UPDATE_INSTALLED_KEY,
+  BRICKBREAKER_UPDATE_PROGRESS_EVENT,
+} from "./registerServiceWorker";
 
 interface MockGameProps {
   boardControls?: React.ReactNode;
@@ -29,6 +33,7 @@ const COUNTDOWN_STEP_MS = 600;
 const COUNTDOWN_TOTAL_MS = 1800;
 const LEVEL_UP_OVERLAY_VISIBLE_MS = 1200;
 const RIP_VISIBLE_MS = 1800;
+const UPDATE_TEST_PROGRESS = 64;
 
 let mockLastGameProps: MockGameProps | null = null;
 
@@ -102,6 +107,7 @@ describe("App theme selector", () => {
     mockLastGameProps = null;
     document.documentElement.removeAttribute("data-theme");
     window.localStorage.clear();
+    window.sessionStorage.clear();
   });
 
   afterEach(() => {
@@ -146,6 +152,37 @@ describe("App theme selector", () => {
     expect(version).toHaveClass("settings-drawer__version");
     expect(version).toHaveAccessibleName("Versão do jogo v0");
     expect(screen.queryByText(/^v\d+$/)).not.toBeInTheDocument();
+  });
+
+  it("mostra progresso visual durante atualização do jogo", async () => {
+    mockSystemTheme(true);
+
+    await renderApp();
+
+    act(() => {
+      window.dispatchEvent(
+        new CustomEvent(BRICKBREAKER_UPDATE_PROGRESS_EVENT, {
+          detail: { progress: UPDATE_TEST_PROGRESS },
+        }),
+      );
+    });
+
+    expect(screen.getByText("Atualizando jogo")).toBeInTheDocument();
+    expect(
+      screen.getByRole("progressbar", { name: "Progresso da atualização" }),
+    ).toHaveAttribute("aria-valuenow", String(UPDATE_TEST_PROGRESS));
+  });
+
+  it("confirma a versão instalada após atualização", async () => {
+    mockSystemTheme(true);
+    window.sessionStorage.setItem(BRICKBREAKER_UPDATE_INSTALLED_KEY, "pending");
+
+    await renderApp();
+
+    expect(screen.getByText("Versão v0 instalada")).toBeInTheDocument();
+    expect(
+      window.sessionStorage.getItem(BRICKBREAKER_UPDATE_INSTALLED_KEY),
+    ).toBeNull();
   });
 
   it("abre menu lateral com aparência, logs, colisões e zerar pontuação", async () => {

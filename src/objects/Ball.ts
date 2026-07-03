@@ -342,7 +342,7 @@ export class Ball {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    const ballImage = AssetLoader.getImage(
+    const ballImage = AssetLoader.getOrLoadImage(
       this.resolveAssetPath(GAME_VISUAL_ASSET_ROLES.ball)
     );
     

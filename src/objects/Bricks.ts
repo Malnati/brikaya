@@ -122,7 +122,7 @@ export class Bricks {
           // Desenhar a imagem do brick
           const brickAssetRole =
             BRICK_ASSET_ROLES[b.colorIndex] ?? GAME_VISUAL_ASSET_ROLES.brickRed;
-          const brickImage = AssetLoader.getImage(
+          const brickImage = AssetLoader.getOrLoadImage(
             this.resolveAssetPath(brickAssetRole),
           );
           if (brickImage) {

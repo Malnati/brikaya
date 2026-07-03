@@ -114,7 +114,7 @@ export class Paddle {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    const paddleImage = AssetLoader.getImage(
+    const paddleImage = AssetLoader.getOrLoadImage(
       this.resolveAssetPath(GAME_VISUAL_ASSET_ROLES.paddle)
     );
     

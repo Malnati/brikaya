@@ -55,6 +55,8 @@ const RIP_TITLE = "RIP";
 const RIP_HINT = "Recomeçando...";
 const MEDIA_CLASS_NAME = `${BASE_CLASS_NAME}__media`;
 const MEDIA_ALT = "";
+const MEDIA_LOADING = "lazy";
+const MEDIA_DECODING = "async";
 const CINEMATIC_MEDIA_ROLES = {
   "countdown-circle": GAME_VISUAL_ASSET_ROLES.countdownCircleOverlay,
   "countdown-spark": GAME_VISUAL_ASSET_ROLES.countdownSparkOverlay,
@@ -85,6 +87,8 @@ function renderMediaLayers(
         data-cinematic-media={media.id}
         src={src}
         alt={MEDIA_ALT}
+        loading={MEDIA_LOADING}
+        decoding={MEDIA_DECODING}
         aria-hidden="true"
         draggable={false}
       />

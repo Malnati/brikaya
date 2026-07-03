@@ -84,7 +84,7 @@ export class PowerUp {
   draw(ctx: CanvasRenderingContext2D): void {
     const left = this.x - POWER_UP_SIZE / 2;
     const top = this.y - POWER_UP_SIZE / 2;
-    const icon = AssetLoader.getImage(
+    const icon = AssetLoader.getOrLoadImage(
       this.resolveAssetPath(POWER_UP_ASSET_ROLES[this.type]),
     );
 
