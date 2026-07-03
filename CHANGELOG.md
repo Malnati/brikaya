@@ -3,6 +3,10 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.25.2] - 2026-07-03
+### Adicionado
+- Análise documental sobre recebimento de anúncios como pessoa física, pessoa física paraguaia/brasileira e EAS paraguaia em `docs/dist/projeto.md`.
+
 ## [1.25.1] - 2026-07-03
 ### Adicionado
 - Documento de distribuição internacional, i18n, monetização Google e licenciamento zero-custo em `docs/dist/projeto.md`.
