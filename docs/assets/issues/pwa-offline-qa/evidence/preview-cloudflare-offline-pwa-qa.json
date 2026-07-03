@@ -1,0 +1,89 @@
+{
+  "ok": true,
+  "publicUrl": "https://ccc6ed91.malnati-brickbreaker.pages.dev",
+  "checkedAt": "2026-07-03T06:07:10.220Z",
+  "serviceWorkerState": {
+    "ready": true,
+    "controlled": true,
+    "eventSeen": true
+  },
+  "cacheNamesBeforeOffline": [
+    "breakout-cache-20260703060642"
+  ],
+  "cacheNamesAfterOffline": [
+    "breakout-cache-20260703060642"
+  ],
+  "offlineFetchChecks": [
+    {
+      "path": "/",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/index.html",
+      "ok": true,
+      "status": 200,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/manifest.webmanifest",
+      "ok": true,
+      "status": 200,
+      "contentType": "application/manifest+json"
+    },
+    {
+      "path": "/assets/visual/sprites/spr-ball-player-default.svg",
+      "ok": true,
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "path": "/assets/visual/sprites/spr-paddle-player-default.svg",
+      "ok": true,
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "path": "/assets/visual/bricks/spr-brick-basic-red-normal.svg",
+      "ok": true,
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "path": "/assets/visual/ui/ui-pwa-app-icon.svg",
+      "ok": true,
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "path": "/assets/audio/sfx-offline-ready-01.mp3",
+      "ok": true,
+      "status": 200,
+      "contentType": "audio/mpeg"
+    }
+  ],
+  "offlineState": {
+    "title": "Breakout",
+    "heading": "Breakout",
+    "hasCanvas": true,
+    "hasController": true,
+    "bodyHasInternalCopy": false,
+    "canvas": {
+      "x": 13.015625,
+      "y": 111,
+      "width": 366.96875,
+      "height": 245.328125,
+      "right": 379.984375,
+      "bottom": 356.328125
+    },
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393
+    }
+  },
+  "externalRequests": [],
+  "failedRequests": [],
+  "screenshotPath": "tmp/screenshots/cloudflare-offline-pwa-qa.png"
+}

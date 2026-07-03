@@ -49,7 +49,7 @@ Este documento estabelece o roadmap completo para o desenvolvimento do BrickBrea
 - `#001`: ✅ Criar suíte de testes unitários para GameEngine - **CONCLUÍDO** (9 testes passando)
 - `#002`: ✅ Implementar testes de integração para sistema de logging - **CONCLUÍDO** (5 testes passando)
 - `#003`: ⏳ Criar testes E2E para gameplay básico - **PENDENTE**
-- `#004`: ⏳ Testar funcionalidade offline da PWA - **PENDENTE**
+- `#004`: ✅ Testar funcionalidade offline da PWA - **CONCLUÍDO** (QA publicado `test:cloudflare-offline-pwa`)
 
 **Progresso atual:**
 - ✅ Jest configurado e funcionando
@@ -57,6 +57,7 @@ Este documento estabelece o roadmap completo para o desenvolvimento do BrickBrea
 - ✅ Testes de integração para gameLogger implementados e passando (5 testes)
 - ✅ Mocks adequados para Paddle, Ball, Bricks, AssetLoader e gameLogger
 - ✅ Total: 14 testes passando
+- ✅ QA publicado para funcionamento offline após primeiro carregamento
 - ⏳ Testes para componentes React pendentes (Game.tsx, GameLogViewer.tsx, CollisionStats.tsx)
 - ⏳ Testes para objetos do jogo pendentes (Ball.ts, Bricks.ts, Paddle.ts)
 - ⏳ Cobertura atual: ~18% (meta: >80%)
@@ -251,8 +252,8 @@ Detalhamento completo da tarefa
 
 - **Baseado em:** Análise de commits, logs e documentação atual
 - **Referências:** AGENTS.md, PENDING.md, CHANGELOG.md
-- **Atualização:** 2025-01-27
-- **Última revisão:** 2025-01-27 - Testes unitários básicos implementados e passando
+- **Atualização:** 2026-07-03
+- **Última revisão:** 2026-07-03 - QA publicado offline da PWA implementado
 - **Responsável:** Equipe de desenvolvimento BrickBreaker
 
 ---

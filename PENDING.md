@@ -4,6 +4,8 @@
 - [ ] Validar emissão do certificado TLS do Caddy após apontar o DNS de `brickbreacker.cranio.dev` para o host.
 - [ ] Monitorar o endpoint `/healthz` exposto pelo Caddy para integração com monitoramento externo.
 
+- [x] Adicionar QA publicado para provar funcionamento offline da PWA após o primeiro carregamento.
+
 - [x] Padronizar nomenclatura semântica e exclusiva de assets runtime visuais e sonoros exibidos/usados pelo jogo.
 
 - [x] Corrigir sobreposição de HUD/menu/controles sobre o canvas no modo paisagem imersivo mobile/tablet.
