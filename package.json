@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -p tsconfig.app.json && vite build && node scripts/stamp-service-worker-version.mjs",
+    "build": "npm run test:svg-assets && tsc -p tsconfig.app.json && vite build && node scripts/stamp-service-worker-version.mjs",
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch",

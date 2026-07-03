@@ -3,6 +3,34 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.20.0] - 2026-07-03
+### Adicionado
+- Sistema de aparência com seleção de tema visual, conjunto de imagens SVG e fonte no menu.
+- Novos conjuntos `high-contrast` e `sunset-cabinet` para sprites, power-ups, tijolos e VFX em SVG local/offline.
+
+### Alterado
+- O jogo troca o conjunto de imagens no motor atual sem recriar partida, pontuação ou fase.
+- QA Cloudflare de tema passa a validar `Aparência`, persistência de tema/imagens/fonte e screenshots de contraste/Sunset.
+
+### Testado
+- `npm test -- src/hooks/useGameLoop.test.tsx src/components/Game.test.tsx src/components/GameCinematicOverlay.test.tsx src/App.test.tsx src/logic/GameEngine.test.ts src/objects/Ball.test.ts src/objects/Bricks.test.ts src/objects/PowerUp.test.ts --runInBand`
+- `npm run test:asset-naming`
+- `npm run test:svg-assets`
+- `npm run build`
+
+## [1.19.1] - 2026-07-03
+### Adicionado
+- Regra obrigatória SVG-only para imagens visuais runtime e artefatos visuais Codex de planejamento.
+- Recibo JSON `tmp/reports/svg-assets-guard.json` gerado pelo validador SVG.
+
+### Alterado
+- `npm run build` passa a executar `npm run test:svg-assets` antes da compilação.
+- Especificação de assets visuais passa a aceitar somente `.svg`, preservando screenshots/evidências PNG fora do runtime visual.
+
+### Testado
+- `npm run test:svg-assets`
+- `npm run build`
+
 ## [1.19.0] - 2026-07-03
 ### Adicionado
 - Catálogo técnico `src/constants/visualAssets.ts` com IDs únicos, constantes camelCase e paths físicos padronizados para imagens exibidas em tela.
