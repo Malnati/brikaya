@@ -3,13 +3,32 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.24.2] - 2026-07-03
+### Adicionado
+- Target `make cloudflare-offline-pwa-qa` para executar o QA offline publicado já existente.
+- Suporte opcional a regra temporária de resolução no QA offline publicado quando o domínio canônico ainda aguarda DNS público.
+
+### Alterado
+- QA offline publicado foca o bloqueio de requests externos na etapa sem internet.
+
+### Removido
+- Infraestrutura legada de publicação alternativa, mantendo Cloudflare Pages como único fluxo web oficial.
+- Pendências e recibos operacionais da publicação alternativa removidos dos documentos de acompanhamento.
+
+### Testado
+- Validação textual de ausência de referências à publicação alternativa.
+- `npm run test:svg-assets`
+- `npm run build`
+- `make cloudflare-build`
+- `make cloudflare-env-check`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ BRICKBREAKER_CHROME_HOST_RESOLVER_RULES='MAP brikaya.com 172.66.44.201' make cloudflare-offline-pwa-qa`
+
 ## [1.24.1] - 2026-07-03
 ### Adicionado
 - Documento de QA final das pendências publicadas com recibos e screenshots de produção.
-- Recibo remoto bloqueado para Caddy/TLS/`/healthz`, executado no orquestrador obrigatório.
 
 ### Alterado
-- `PENDING.md` marca a suíte Cloudflare publicada como concluída e explicita o bloqueio DNS das pendências Caddy.
+- `PENDING.md` marca a suíte Cloudflare publicada como concluída.
 
 ### Testado
 - `make cloudflare-mobile-qa`
@@ -17,7 +36,6 @@
 - `make cloudflare-phase-transition-qa`
 - `make cloudflare-dashboard-layout-qa`
 - `make cloudflare-theme-qa`
-- Prova Caddy remota via `tmux` + Codex headless em `root@217.76.58.179:/root/w/iac`: bloqueada por DNS `NXDOMAIN`.
 
 ## [1.24.0] - 2026-07-03
 ### Adicionado
@@ -403,13 +421,6 @@
 - Service Worker volta a ser registrado e passa a cachear assets de produção com estratégia cache-first.
 - Manifest PWA passa a usar ícones PNG locais.
 - Alertas/debug visíveis foram removidos do carregamento inicial.
-
-## [1.8.0] - 2025-11-21
-### Adicionado
-- **Serviço Caddy com HTTPS**: Novo container dedicado que publica `brickbreacker.cranio.dev` com TLS automático e proxy para o serviço `brickbreaker`.
-- **Infraestrutura Docker atualizada**: `docker-compose.yml` com volumes de configuração/certificados e rede compartilhada `vmi2889919_caddy_mesh`.
-- **Automação Makefile**: Alvos para criar a rede externa, acompanhar logs e recarregar a configuração do Caddy.
-- **Documentação operacional**: Instruções de uso do Caddy via Docker e variáveis configuráveis no README.
 
 ## [1.7.0] - 2025-01-27
 ### Adicionado

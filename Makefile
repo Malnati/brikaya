@@ -5,13 +5,6 @@
 ASSET_DIR=public/assets
 TEMP_DIR=tmp
 
-# Reverse proxy configuration
-CADDY_DOMAIN=brickbreacker.cranio.dev
-CADDY_UPSTREAM=http://brickbreaker:7979
-CADDY_NETWORK=vmi2889919_caddy_mesh
-CADDY_SERVICE=caddy
-ACME_EMAIL=infra@cranio.dev
-
 # Development configuration
 NODE_MODULES=node_modules
 DIST_DIR=dist
@@ -32,7 +25,7 @@ KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
 # Target padrão: mostrar help quando make é executado sem argumentos
 .DEFAULT_GOAL := help
 
-.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-deploy cloudflare-mobile-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-powerups-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa docker-build docker-up docker-down docker-logs docker-shell docker-create-caddy-network docker-logs-caddy docker-reload-caddy
+.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-deploy cloudflare-mobile-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-powerups-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa cloudflare-offline-pwa-qa docker-build docker-up docker-down docker-logs docker-shell
 
 # Função para matar processos anteriores
 kill-processes:
@@ -117,6 +110,9 @@ cloudflare-runtime-update-qa:
 
 cloudflare-audio-qa:
 	@npm run test:cloudflare-audio
+
+cloudflare-offline-pwa-qa:
+	@npm run test:cloudflare-offline-pwa
 
 # Executar o jogo em modo de desenvolvimento
 dev: kill-processes
@@ -207,7 +203,7 @@ docker-build:
 	@docker compose build
 
 # Docker: Iniciar containers
-docker-up: docker-create-caddy-network
+docker-up:
 	@echo "🚀 Iniciando containers Docker..."
 	@docker compose up -d
 	@echo "✅ Aplicação disponível em http://localhost:7979"
@@ -224,19 +220,6 @@ docker-logs:
 # Docker: Acessar shell do container
 docker-shell:
 	@docker compose exec brickbreaker /bin/bash
-
-# Docker: Garantir rede externa do Caddy
-docker-create-caddy-network:
-	@echo "🔌 Garantindo rede externa do Caddy..."
-	@docker network inspect $(CADDY_NETWORK) >/dev/null 2>&1 || docker network create --driver bridge $(CADDY_NETWORK)
-
-# Docker: Ver logs do Caddy
-docker-logs-caddy:
-	@docker compose logs -f $(CADDY_SERVICE)
-
-# Docker: Recarregar configuração do Caddy
-docker-reload-caddy:
-	@docker compose exec $(CADDY_SERVICE) caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
 
 # Docker: Build de produção
 docker-build-prod:
@@ -279,6 +262,7 @@ help:
 	@echo "  cloudflare-svg-assets-qa - Validar SVGs runtime/cache contra Cloudflare publicado"
 	@echo "  cloudflare-runtime-update-qa - Validar atualização automática contra Cloudflare publicado"
 	@echo "  cloudflare-audio-qa - Validar áudio/cache contra Cloudflare publicado"
+	@echo "  cloudflare-offline-pwa-qa - Validar PWA offline contra Cloudflare publicado"
 	@echo ""
 	@echo "Builds Nativos:"
 	@echo "  build-pwa      - Gerar build da PWA"
@@ -294,9 +278,6 @@ help:
 	@echo "  docker-logs    - Ver logs do container"
 	@echo "  docker-shell   - Acessar shell do container"
 	@echo "  docker-build-prod - Build de produção via Docker"
-	@echo "  docker-create-caddy-network - Garantir rede externa do Caddy"
-	@echo "  docker-logs-caddy - Ver logs do reverse proxy Caddy"
-	@echo "  docker-reload-caddy - Recarregar configuração ativa do Caddy"
 	@echo ""
 	@echo "Testes:"
 	@echo "  test-colors    - Testar cores do jogo"

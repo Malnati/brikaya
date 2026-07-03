@@ -27,29 +27,6 @@ services:
     restart: unless-stopped
     networks:
       - brickbreaker-network
-      - caddy_mesh
-
-  caddy:
-    build:
-      context: ./caddy
-      dockerfile: Dockerfile
-    container_name: brickbreaker-caddy
-    depends_on:
-      - brickbreaker
-    environment:
-      - CADDY_DOMAIN=${CADDY_DOMAIN:-brickbreacker.cranio.dev}
-      - CADDY_UPSTREAM=${CADDY_UPSTREAM:-http://brickbreaker:7979}
-      - ACME_EMAIL=${ACME_EMAIL:-infra@cranio.dev}
-    ports:
-      - "80:80"
-      - "443:443"
-    restart: unless-stopped
-    volumes:
-      - caddy_data:/data
-      - caddy_config:/config
-    networks:
-      - brickbreaker-network
-      - caddy_mesh
 
   # Serviço para build de produção (opcional)
   brickbreaker-build:
@@ -68,12 +45,7 @@ services:
 
 volumes:
   build-output:
-  caddy_data:
-  caddy_config:
 
 networks:
   brickbreaker-network:
     driver: bridge
-  caddy_mesh:
-    external: true
-    name: vmi2889919_caddy_mesh
