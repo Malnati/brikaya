@@ -250,6 +250,55 @@ A página [Google Ads Traffic Quality — Publishers](https://www.google.com/ads
 | `ads_test` | Integração técnica com IDs de teste e consentimento validado. | Futuro, exige PR próprio e política offline revisada. |
 | `ads_live` | Anúncios reais aprovados. | Futuro, exige aprovação AdSense/H5/AdMob, consentimento e decisão explícita de ativação. |
 
+
+### 6.7. Viabilidade de receita, lucro e titularidade para recebimento
+
+Esta seção responde se Brikaya pode gerar receita de anúncios como PWA nos países-alvo e se o recebimento pode ocorrer por pessoa física, pessoa física paraguaia, pessoa física brasileira ou EAS paraguaia. A resposta é operacional, não jurídica, contábil ou fiscal.
+
+A conclusão é: **é possível receber receita de anúncios em tese**, desde que AdSense/H5 Games Ads ou AdMob aprovem o site/app, a conta cumpra políticas, o titular passe verificações de identidade/endereço/pagamentos, os dados fiscais sejam enviados quando solicitados e as regras de privacidade/consentimento de cada país sejam cumpridas. **Isso não garante lucro líquido.** Google informa que ganhos variam por tráfego, país do usuário, tipo de conteúdo, formato de anúncio, demanda de anunciantes, sazonalidade e câmbio. Portanto, receita de anúncios deve ser tratada como experimento futuro, não como promessa financeira.
+
+#### Perguntas diretas
+
+| Pergunta | Resposta operacional | Condições e riscos |
+| --- | --- | --- |
+| Dá para publicar e receber anúncios como pessoa física? | Sim, em tese, via conta AdSense individual; pagamento vai ao nome do titular. | O Google AdSense oferece tipos de conta `individual` e `organization`; depois de ativada, a troca de tipo pode exigir cancelar e abrir outra conta. |
+| Como pessoa física paraguaia? | Sim, em tese. Paraguai consta na disponibilidade AdSense e AdMob. | Exige identidade/endereço/pagamento compatíveis, dados fiscais quando solicitados e tratamento tributário local. Pode exigir RUC ou obrigação local conforme atividade e orientação contábil. |
+| Como pessoa física brasileira? | Sim, em tese. Brasil consta na disponibilidade AdSense. | Exige CPF/identidade/endereço compatíveis. Para residente fiscal no Brasil, renda recebida do exterior deve entrar na análise fiscal, incluindo Carnê-Leão quando aplicável. |
+| Como EAS paraguaia? | Sim, em tese, via perfil de pagamentos de organização. | Exige documento da EAS, RUC, dados bancários/recebimento, representante/admin autorizado e coerência entre nome da organização, documentos e perfil Google Payments. |
+| Países-alvo mudam PF/PJ? | Não diretamente. | A escolha PF/PJ depende do titular fiscal e de pagamentos, não do país onde o jogador vê o anúncio. Países-alvo afetam consentimento, políticas, demanda, eCPM, idioma, retenção e privacidade. |
+| Precisa empresa ou ID nos países-alvo? | Para PWA com AdSense/H5, não como regra geral. | Precisa titularidade válida no país da conta de pagamentos e cumprimento das regras dos países onde anúncios são exibidos. Empresa/ID local só deve ser considerada se houver operação local, app store, contrato local, obrigação regulatória específica ou estratégia fiscal própria. |
+
+#### Comparação PF/PJ para recebimento
+
+| Opção de titularidade | Quando faz sentido | Documentos/condições prováveis | Pontos de atenção |
+| --- | --- | --- | --- |
+| Pessoa física paraguaia | Menor complexidade inicial quando a receita pertence ao titular individual. | Cédula/identidade paraguaia válida, endereço de pagamento, conta ou forma de recebimento aceita, informações fiscais quando solicitadas. | Confirmar com contador paraguaio se a atividade recorrente exige RUC, regime fiscal específico ou formalização posterior. |
+| Pessoa física brasileira | Possível pelo lado Google quando a receita pertence à pessoa física brasileira. | CPF, documento de identidade, endereço brasileiro, forma de pagamento aceita e informações fiscais. | Para residente no Brasil, rendimentos do exterior podem exigir Carnê-Leão mensal e declaração anual; validar com contador antes de ativar receita. |
+| EAS paraguaia | Melhor quando o objetivo é separar patrimônio, operar como empresa e receber em nome da pessoa jurídica. | EAS constituída, RUC, documento de registro, representante/admin autorizado, endereço e conta/forma de pagamento compatível. | Perfil Google Payments deve ser organização desde o início se a receita for da EAS; dados do perfil devem bater com documentos oficiais. |
+| Empresa nos países-alvo | Normalmente desnecessária para PWA inicial. | Só avaliar se houver app store local, equipe/contrato local, obrigação regulatória, venda direta, filial, retenção fiscal local ou parceiro comercial. | Não abrir empresa/ID em país-alvo apenas porque há usuários vendo anúncios naquele país. |
+
+#### Regras de decisão para Brikaya
+
+1. Se a receita inicial for experimental e pessoal, a rota mais simples é avaliar conta individual no país real de residência fiscal do titular.
+2. Se a receita deve pertencer à EAS, criar a rota como organização desde o começo, com documentos da EAS/RUC e representante autorizado.
+3. Não usar país, endereço, documento ou banco artificial para tentar melhorar pagamento, eCPM ou aprovação.
+4. Não confundir país do público com país do titular: jogadores nos Estados Unidos, Índia, Japão, Europa ou Sudeste Asiático não obrigam empresa nesses países para uma PWA global.
+5. Países-alvo influenciam consentimento e privacidade: EEA/UK/CH exigem tratamento mais rigoroso antes de ads reais; EUA exigem atenção a leis estaduais e menores; Brasil/Paraguai/LATAM exigem linguagem e política coerentes.
+6. Receita bruta só vira lucro líquido depois de impostos, custos bancários, câmbio, contador, compliance, eventual campanha paga e manutenção operacional.
+7. Como esta é pesquisa operacional, antes de ativar anúncios reais deve haver validação com contador no país do titular e revisão das telas/políticas exigidas pelo Google.
+
+#### Checklist antes de ativar monetização real
+
+| Item | Pessoa física paraguaia | Pessoa física brasileira | EAS paraguaia |
+| --- | --- | --- | --- |
+| País disponível no AdSense/AdMob | Sim, Paraguai aparece nas listas de disponibilidade. | Sim, Brasil aparece nas listas de disponibilidade. | Sim, Paraguai aparece nas listas de disponibilidade. |
+| Tipo de conta recomendado | Individual. | Individual. | Organization. |
+| Documento principal | Cédula/identidade compatível com o perfil. | CPF/documento de identidade compatível com o perfil. | Documento da EAS/RUC e representante autorizado. |
+| Pagamento | Forma aceita para endereço de pagamento no Paraguai. | Forma aceita para endereço de pagamento no Brasil. | Forma aceita em nome da organização ou conforme perfil aprovado. |
+| Impostos | Confirmar RUC/obrigações com contador paraguaio. | Avaliar Carnê-Leão e declaração anual se residente fiscal no Brasil. | Confirmar regime da EAS, faturamento, notas/registro e impostos com contador paraguaio. |
+| Países-alvo | Não exigem documento local por si só. | Não exigem documento local por si só. | Não exigem documento local por si só. |
+
+
 ## 7. Plano de impulsionamento
 
 ### 7.1. Zero-custo permitido
@@ -406,6 +455,10 @@ Regras para tradução:
 - Mecânica de jogo diferencia ideia/sistema de expressão protegida.
 - Marcas de terceiros são bloqueadas para UI, anúncio e descrição pública.
 - Fontes estão linkadas.
+- Documento responde explicitamente se é possível receber anúncios como pessoa física, pessoa física paraguaia, pessoa física brasileira e EAS paraguaia.
+- Documento separa titularidade fiscal/pagamentos da geografia dos usuários nos países-alvo.
+- Documento não promete lucro garantido e diferencia receita bruta, pagamento recebido e lucro líquido.
+- Documento marca a análise de PF/PJ/Paraguai/Brasil como pesquisa operacional, não parecer jurídico, contábil ou fiscal.
 - Nenhum ID real, credencial, conta privada, chave ou valor de ambiente foi incluído.
 
 ## 11. Fontes consultadas
@@ -428,6 +481,18 @@ Regras para tradução:
 | Qualidade de tráfego de anúncios | [Google Ads Traffic Quality](https://www.google.com/ads/adtrafficquality/publishers/) |
 | Geotargeting Google Ads | [Google Ads geotargeting](https://support.google.com/google-ads/answer/1722043?hl=en) |
 | App Campaigns | [Google App Campaigns](https://business.google.com/en-all/ad-solutions/app-ads/) |
+| Tipos de conta AdSense | [AdSense account type](https://support.google.com/adsense/answer/10163?hl=en) |
+| Tipos de conta Google Payments | [Google Payments account type](https://support.google.com/paymentscenter/answer/11543916?hl=en) |
+| Disponibilidade AdSense | [AdSense availability](https://support.google.com/adsense/answer/13402307?hl=en) |
+| Métodos de pagamento AdSense | [AdSense payment methods](https://support.google.com/adsense/answer/1714397?hl=en) |
+| Nome/endereço/país de pagamento AdSense | [AdSense payment name/address/country](https://support.google.com/adsense/answer/2628816?hl=en) |
+| Receita AdSense | [AdSense revenue](https://support.google.com/adsense/answer/9902?hl=en) |
+| Etapas para receber AdSense | [Steps to getting paid](https://support.google.com/adsense/answer/1709858?hl=en) |
+| Disponibilidade AdMob | [AdMob availability](https://support.google.com/admob/answer/16451422?hl=en-GB) |
+| Funcionamento AdMob | [How AdMob works](https://support.google.com/admob/answer/7356092?hl=en) |
+| Receita Federal — Carnê-Leão | [Carnê-Leão](https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/pagamento/carne-leao) |
+| Gov.br — Apurar Carnê-Leão | [Apurar Carnê-Leão](https://www.gov.br/pt-br/servicos/apurar-carne-leao) |
+| DNIT Paraguai — RUC pessoas físicas/jurídicas | [DNIT RUC](https://www.dnit.gov.py/web/portal-institucional/inscripci%C3%B3n-de-personas-f%C3%ADsicas-y-jur%C3%ADdicas) |
 | MIT | [Open Source Initiative — MIT License](https://opensource.org/license/mit) |
 | CC0 | [Creative Commons CC0](https://creativecommons.org/publicdomain/zero/1.0/deed.en) |
 | Copyright | [U.S. Copyright Office — What is Copyright?](https://www.copyright.gov/what-is-copyright/) |
