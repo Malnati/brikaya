@@ -23,6 +23,16 @@ interface GameLoopCallbacks {
   onLevelChange?: (level: number) => void;
 }
 
+const TOUCH_START_EVENT_NAME = 'touchstart';
+const TOUCH_MOVE_EVENT_NAME = 'touchmove';
+const TOUCH_END_EVENT_NAME = 'touchend';
+const TOUCH_CANCEL_EVENT_NAME = 'touchcancel';
+const TOUCH_LISTENER_OPTIONS = { passive: false } as const;
+
+function readTouchClientX(event: TouchEvent) {
+  return event.touches[0]?.clientX ?? event.changedTouches[0]?.clientX ?? null;
+}
+
 export function useGameLoop(
   canvasRef: RefObject<HTMLCanvasElement>,
   onScoreUpdate: (score: number) => void,
@@ -35,7 +45,8 @@ export function useGameLoop(
   onLevelChange?: (level: number) => void,
   startBlocked = false,
   imageSetId: ImageSetId = IMAGE_SET_RETRO_DEFAULT,
-  paused = false
+  paused = false,
+  paddleTouchZoneRef?: RefObject<HTMLElement>
 ) {
   const engineRef = useRef<GameEngine | null>(null);
   const callbacksRef = useRef<GameLoopCallbacks>({ onScoreUpdate, onGameWon, onGameOver, onLevelTransition, onLevelChange });
@@ -99,4 +110,62 @@ export function useGameLoop(
     if (!canvasSize) return;
     engineRef.current?.resize(canvasSize);
   }, [canvasSize]);
+
+  useEffect(() => {
+    const paddleTouchZone = paddleTouchZoneRef?.current;
+    if (!paddleTouchZone) return undefined;
+
+    const handleTouchStart = (event: TouchEvent) => {
+      const clientX = readTouchClientX(event);
+      if (clientX === null) return;
+
+      event.preventDefault();
+      engineRef.current?.startPaddleDrag(clientX);
+    };
+    const handleTouchMove = (event: TouchEvent) => {
+      const clientX = readTouchClientX(event);
+      if (clientX === null) return;
+
+      event.preventDefault();
+      engineRef.current?.movePaddleDrag(clientX);
+    };
+    const handleTouchEnd = (event: TouchEvent) => {
+      event.preventDefault();
+      engineRef.current?.endPaddleDrag();
+    };
+
+    paddleTouchZone.addEventListener(
+      TOUCH_START_EVENT_NAME,
+      handleTouchStart,
+      TOUCH_LISTENER_OPTIONS,
+    );
+    paddleTouchZone.addEventListener(
+      TOUCH_MOVE_EVENT_NAME,
+      handleTouchMove,
+      TOUCH_LISTENER_OPTIONS,
+    );
+    paddleTouchZone.addEventListener(
+      TOUCH_END_EVENT_NAME,
+      handleTouchEnd,
+      TOUCH_LISTENER_OPTIONS,
+    );
+    paddleTouchZone.addEventListener(
+      TOUCH_CANCEL_EVENT_NAME,
+      handleTouchEnd,
+      TOUCH_LISTENER_OPTIONS,
+    );
+
+    return () => {
+      paddleTouchZone.removeEventListener(
+        TOUCH_START_EVENT_NAME,
+        handleTouchStart,
+      );
+      paddleTouchZone.removeEventListener(TOUCH_MOVE_EVENT_NAME, handleTouchMove);
+      paddleTouchZone.removeEventListener(TOUCH_END_EVENT_NAME, handleTouchEnd);
+      paddleTouchZone.removeEventListener(
+        TOUCH_CANCEL_EVENT_NAME,
+        handleTouchEnd,
+      );
+    };
+  }, [paddleTouchZoneRef]);
 }

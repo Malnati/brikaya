@@ -496,6 +496,33 @@ select {
   box-sizing: border-box;
 }
 
+.game-board-playfield {
+  position: relative;
+  margin-inline: auto;
+  box-sizing: border-box;
+}
+
+.game-paddle-touch-zone {
+  position: absolute;
+  left: 0;
+  z-index: 4;
+  display: none;
+  width: 100%;
+  transform: translateY(-50%);
+  touch-action: none;
+  pointer-events: none;
+  background: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+@media (pointer: coarse), (hover: none) {
+  .game-paddle-touch-zone {
+    display: block;
+    pointer-events: auto;
+  }
+}
+
 canvas {
   border: 2px solid var(--color-accent);
   border-radius: 5px;

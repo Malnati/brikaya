@@ -157,12 +157,6 @@ export class GameEngine {
     this.paddle.onKeyDown(event);
   private readonly handleKeyUp = (event: KeyboardEvent) =>
     this.paddle.onKeyUp(event);
-  private readonly handleTouchStart = (event: TouchEvent) =>
-    this.onTouchStart(event);
-  private readonly handleTouchMove = (event: TouchEvent) =>
-    this.onTouchMove(event);
-  private readonly handleTouchEnd = (event: TouchEvent) =>
-    this.onTouchEnd(event);
   private readonly resolveAssetPath = (role: GameVisualAssetRole) =>
     resolveGameVisualAssetPath(this.imageSetId, role);
 
@@ -1118,44 +1112,33 @@ export class GameEngine {
   private setupListeners() {
     document.addEventListener("keydown", this.handleKeyDown);
     document.addEventListener("keyup", this.handleKeyUp);
-    this.canvas.addEventListener("touchstart", this.handleTouchStart, {
-      passive: false,
-    });
-    this.canvas.addEventListener("touchmove", this.handleTouchMove, {
-      passive: false,
-    });
-    this.canvas.addEventListener("touchend", this.handleTouchEnd, {
-      passive: false,
-    });
   }
 
   private removeListeners() {
     document.removeEventListener("keydown", this.handleKeyDown);
     document.removeEventListener("keyup", this.handleKeyUp);
-    this.canvas.removeEventListener("touchstart", this.handleTouchStart);
-    this.canvas.removeEventListener("touchmove", this.handleTouchMove);
-    this.canvas.removeEventListener("touchend", this.handleTouchEnd);
   }
 
-  private onTouchStart(event: TouchEvent) {
-    event.preventDefault();
+  public startPaddleDrag(clientX: number) {
     this.isTouching = true;
+    this.movePaddleFromClientX(clientX);
   }
 
-  private onTouchMove(event: TouchEvent) {
-    event.preventDefault();
+  public movePaddleDrag(clientX: number) {
     if (!this.isTouching) return;
 
-    const touch = event.touches[0];
-    const rect = this.canvas.getBoundingClientRect();
-    const touchX = touch.clientX - rect.left;
-    const canvasX = (touchX / rect.width) * this.canvasSize.width;
-    this.paddle.setPosition(canvasX);
+    this.movePaddleFromClientX(clientX);
   }
 
-  private onTouchEnd(event: TouchEvent) {
-    event.preventDefault();
+  public endPaddleDrag() {
     this.isTouching = false;
+  }
+
+  private movePaddleFromClientX(clientX: number) {
+    const rect = this.canvas.getBoundingClientRect();
+    const touchX = clientX - rect.left;
+    const canvasX = (touchX / rect.width) * this.canvasSize.width;
+    this.paddle.setPosition(canvasX);
   }
 
   public async start() {

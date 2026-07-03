@@ -251,6 +251,30 @@ describe("GameEngine", () => {
     expect(gameState.speedState.elapsedLevelMs).toBeGreaterThanOrEqual(0);
   });
 
+  it("move a raquete pelo início do arraste touch na faixa sensível", () => {
+    jest.spyOn(canvas, "getBoundingClientRect").mockReturnValue({
+      left: 100,
+      width: 400,
+    } as DOMRect);
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+
+    engine.startPaddleDrag(300);
+
+    expect((engine as any).paddle.setPosition).toHaveBeenCalledWith(400);
+  });
+
+  it("ignora movimento touch sem arraste ativo", () => {
+    jest.spyOn(canvas, "getBoundingClientRect").mockReturnValue({
+      left: 100,
+      width: 400,
+    } as DOMRect);
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+
+    engine.movePaddleDrag(300);
+
+    expect((engine as any).paddle.setPosition).not.toHaveBeenCalled();
+  });
+
   it("lança erro sem contexto 2D", () => {
     const canvasWithoutContext = document.createElement("canvas");
     jest.spyOn(canvasWithoutContext, "getContext").mockReturnValue(null);

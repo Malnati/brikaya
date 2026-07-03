@@ -3,6 +3,25 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.30.4] - 2026-07-03
+### Adicionado
+- Mobile passa a ter faixa sensível invisível de 2in sobre a região da raquete, permitindo tocar e arrastar horizontalmente sem acertar exatamente a raquete.
+
+### Alterado
+- Controle touch da raquete passa a iniciar movimento no primeiro toque da faixa e continuar durante o arraste, mantendo teclado e desktop sem mudança.
+- QA publicado mobile passa a validar presença, altura, largura, alinhamento e movimentação registrada pela faixa sensível.
+
+### Testado
+- `node --version && npm --version && make help`
+- `node --check tests/e2e/cloudflare-mobile-qa.js`
+- `npm test -- src/components/Game.test.tsx src/logic/GameEngine.test.ts --runInBand`
+- `npm run build`
+- `npm test -- --runInBand`
+- `make cloudflare-env-check && make cloudflare-deploy`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-no-score-reset`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`
+
 ## [1.30.3] - 2026-07-03
 ### Corrigido
 - Harnesses publicados mobile e dashboard reduzem uso gráfico do Chrome, encerram navegador/páginas de forma determinística e evitam handles pendentes em execuções longas.
