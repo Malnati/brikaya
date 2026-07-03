@@ -3,6 +3,13 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.28.9] - 2026-07-03
+### Adicionado
+- Plano documental PWA-only de i18n e SEO em `docs/dist/projeto-pwa.md`, com auditoria atual, canonical, `hreflang`, sitemap, robots e Search Console como implementação futura.
+
+### Alterado
+- Roadmap PWA-only passa a separar entrega documental de implementação futura de SEO/i18n, sem runtime, ads, scripts externos ou credenciais nesta fase.
+
 ## [1.28.8] - 2026-07-03
 ### Adicionado
 - Documento P0 de monetização PWA-only em `docs/dist/monetizacao.md`, mantendo ads reais fora do lançamento inicial.
