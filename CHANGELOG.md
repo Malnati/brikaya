@@ -3,6 +3,10 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.28.2] - 2026-07-03
+### Adicionado
+- Política Codex para resolver conflitos e fazer PR+merge automático em entregas documentação-only.
+
 ## [1.28.1] - 2026-07-03
 ### Corrigido
 - Canvas responsivo deixa de usar a altura corrente encolhida como limite recursivo em tablet/desktop.
