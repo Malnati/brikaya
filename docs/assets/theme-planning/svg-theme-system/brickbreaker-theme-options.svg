@@ -178,7 +178,7 @@
 <text x="100" y="1156" class="muted" >2. Implementar CRT Alto Contraste como primeiro extra: é melhoria de acessibilidade, não só estética.</text>
 <text x="100" y="1188" class="muted" >3. Manter Pixel Sunset como opção visual posterior, sem criar mecânicas novas.</text>
 <text x="100" y="1220" class="muted" >4. Separar themeId, assetSetId e fontSetId: combinações independentes, menu simples e testes menores.</text>
-<text x="100" y="1252" class="muted" >5. Toda imagem nova segue prefixo, ID único 12–64 chars, catálogo runtime e precache offline.</text>
+<text x="100" y="1252" class="muted" >5. Toda imagem nova segue prefixo, ID único 12–64 chars, catálogo runtime e cache lazy offline.</text>
 
   <rect x="70" y="1320" width="1460" height="486" rx="28" fill="#12122a" stroke="#244c7a"/>
   <text x="100" y="1364" class="panel-title" >Vocabulário técnico para conversar com humanos</text>

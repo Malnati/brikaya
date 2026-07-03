@@ -23,7 +23,7 @@ Explique como o jogo difere de clones de jogos de quebrar blocos e como garante 
 
 ## 5. Métricas de Sucesso
 - FPS médio ≥ 55 em dispositivos de entrada
-- Tempo de carregamento inicial ≤ 3s (assets pré-cacheados)
+- Tempo de carregamento inicial ≤ 3s (shell pré-cacheado e assets sob demanda)
 - Taxa de crash 0% em sessões de 10 minutos
 - Cobertura de testes unitários/integração > 60% no curto prazo
 

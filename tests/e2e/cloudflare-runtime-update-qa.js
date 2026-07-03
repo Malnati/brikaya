@@ -21,6 +21,9 @@ const PUBLIC_URL_ENV_KEY = "BRICKBREAKER_PUBLIC_URL";
 const SEED_MODE = "seed";
 const VERIFY_MODE = "verify";
 const SW_PATH = "/sw.js";
+const SERVICE_WORKER_SCOPE = "/";
+const SERVICE_WORKER_UPDATE_VIA_CACHE = "none";
+const SERVICE_WORKER_UPDATE_CACHE_BUST_PARAM = "qaRuntimeUpdate";
 const BUILD_ID_PATTERN = /const\s+BUILD_ID\s*=\s*['"]([^'"]+)['"]/;
 const BUILD_ID_PLACEHOLDER = "__BRICKBREAKER_BUILD_ID__";
 const GET_VERSION_MESSAGE = "GET_VERSION";
@@ -39,6 +42,13 @@ const VIEWPORT = {
   isMobile: true,
   hasTouch: true,
 };
+const LAZY_ASSET_PROBE_PATHS = [
+  "/assets/visual/sprites/spr-ball-player-default.svg",
+  "/assets/visual/bricks/spr-brick-basic-red-normal.svg",
+  "/assets/audio/sfx-offline-ready-01.mp3",
+];
+const ASSET_CACHE_STATUS_HEADER = "x-brickbreaker-asset-cache";
+const ASSET_CACHE_MISS_STATUS = "miss";
 
 function env(name, fallback) {
   return process.env[name] || fallback;
@@ -200,6 +210,29 @@ async function readCacheNames(page) {
   });
 }
 
+async function fetchLazyAssetProbe(page) {
+  return page.evaluate(
+    async ({ paths, cacheStatusHeader }) =>
+      Promise.all(
+        paths.map(async (path) => {
+          const response = await fetch(path, { cache: "no-store" });
+
+          return {
+            path,
+            status: response.status,
+            ok: response.ok,
+            contentType: response.headers.get("content-type") || "",
+            assetCacheStatus: response.headers.get(cacheStatusHeader) || "",
+          };
+        }),
+      ),
+    {
+      paths: LAZY_ASSET_PROBE_PATHS,
+      cacheStatusHeader: ASSET_CACHE_STATUS_HEADER,
+    },
+  );
+}
+
 async function openGame(page, targetUrl) {
   await page.setViewport(VIEWPORT);
   await page.goto(targetUrl, {
@@ -212,11 +245,54 @@ async function openGame(page, targetUrl) {
 
 async function triggerRuntimeUpdateCheck(page) {
   try {
-    await page.evaluate(() => {
-      window.dispatchEvent(new Event("focus"));
-      window.dispatchEvent(new PageTransitionEvent("pageshow"));
-      document.dispatchEvent(new Event("visibilitychange"));
-    });
+    await page.evaluate(
+      async ({
+        cacheBustParam,
+        scope,
+        skipWaitingMessage,
+        swPath,
+        updateViaCache,
+      }) => {
+        try {
+          window.dispatchEvent(new Event("focus"));
+        } catch {}
+        try {
+          const pageShowEvent =
+            typeof PageTransitionEvent === "function"
+              ? new PageTransitionEvent("pageshow")
+              : new Event("pageshow");
+          window.dispatchEvent(pageShowEvent);
+        } catch {}
+        try {
+          document.dispatchEvent(new Event("visibilitychange"));
+        } catch {}
+
+        const registration = await navigator.serviceWorker?.getRegistration(
+          scope,
+        );
+        await registration?.update().catch(() => {});
+        registration?.waiting?.postMessage({ type: skipWaitingMessage });
+
+        if (!registration?.installing && !registration?.waiting) {
+          const cacheBustUrl = new URL(swPath, window.location.origin);
+          cacheBustUrl.searchParams.set(cacheBustParam, String(Date.now()));
+          const refreshedRegistration = await navigator.serviceWorker.register(
+            `${cacheBustUrl.pathname}${cacheBustUrl.search}`,
+            { scope, updateViaCache },
+          ).catch(() => null);
+          const pendingWorker =
+            refreshedRegistration?.waiting || refreshedRegistration?.installing;
+          pendingWorker?.postMessage({ type: skipWaitingMessage });
+        }
+      },
+      {
+        cacheBustParam: SERVICE_WORKER_UPDATE_CACHE_BUST_PARAM,
+        scope: SERVICE_WORKER_SCOPE,
+        skipWaitingMessage: SKIP_WAITING_MESSAGE,
+        swPath: SW_PATH,
+        updateViaCache: SERVICE_WORKER_UPDATE_VIA_CACHE,
+      },
+    );
   } catch {}
 }
 
@@ -245,6 +321,22 @@ async function waitForActiveBuild(page, expectedBuildId) {
 
     await new Promise((resolve) => setTimeout(resolve, WAIT_STEP_MS));
   }
+
+  try {
+    await page.reload({
+      waitUntil: "domcontentloaded",
+      timeout: NAVIGATION_TIMEOUT_MS,
+    });
+    await page.waitForSelector("canvas", {
+      timeout: NAVIGATION_TIMEOUT_MS,
+    });
+    lastVersion = await readActiveServiceWorkerVersion(page);
+    lastState = await collectRuntimeState(page);
+
+    if (lastVersion?.buildId === expectedBuildId) {
+      return { version: lastVersion, state: lastState };
+    }
+  } catch {}
 
   throw new Error(
     `Service Worker ativo não chegou ao BUILD_ID esperado. esperado=${expectedBuildId} último=${JSON.stringify(lastVersion)} estado=${JSON.stringify(lastState)}`,
@@ -314,6 +406,11 @@ async function run() {
         cacheName !== activeAfterWait?.cacheName
       );
     });
+    const lazyAssetProbe = await fetchLazyAssetProbe(page);
+    const shouldRequireLazyAssetCacheHit =
+      selectedMode === VERIFY_MODE &&
+      staleCacheNamesBefore.length > 0 &&
+      activeBeforeWait?.buildId !== latest.buildId;
     const result = {
       mode: selectedMode,
       url: targetUrl,
@@ -327,6 +424,8 @@ async function run() {
       cacheNamesAfterWait,
       staleCacheNamesBefore,
       staleCacheNamesAfter,
+      lazyAssetProbe,
+      shouldRequireLazyAssetCacheHit,
       navigationEvents,
       consoleProblems,
       screenshotPath: screenshotPath(),
@@ -351,6 +450,19 @@ async function run() {
         );
       }
 
+      assert(
+        lazyAssetProbe.every((item) => item.ok),
+        `Probe lazy de assets falhou: ${JSON.stringify(lazyAssetProbe)}`,
+      );
+      if (shouldRequireLazyAssetCacheHit) {
+        const missedProbeAssets = lazyAssetProbe.filter(
+          (item) => item.assetCacheStatus === ASSET_CACHE_MISS_STATUS,
+        );
+        assert(
+          missedProbeAssets.length === 0,
+          `Assets cacheados foram baixados novamente após update: ${JSON.stringify(missedProbeAssets)}`,
+        );
+      }
       assert(
         verifyState.hasCanvas,
         "Canvas não renderizou após atualização automática.",

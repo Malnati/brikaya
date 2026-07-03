@@ -7,7 +7,7 @@ Definir o pacote completo de áudios necessários para aquisição ou produção
 
 ## Premissas offline
 
-- Todos os áudios futuros devem ser arquivos locais do projeto, precacheáveis pelo service worker e funcionais sem rede após o primeiro carregamento.
+- Todos os áudios futuros devem ser arquivos locais do projeto, cacheáveis sob demanda pelo service worker e funcionais sem rede após o primeiro carregamento.
 - Não usar CDN, streaming, bancos de áudio remotos em tempo de execução, scripts externos, serviços pagos ou dependências que quebrem a experiência offline-first.
 - O jogo deve continuar totalmente jogável quando o usuário mutar o áudio, quando o navegador bloquear autoplay ou quando o dispositivo não oferecer saída de som.
 - Preferências futuras de áudio devem ser locais: mudo, volume mestre, volume de música e volume de efeitos.
@@ -88,7 +88,7 @@ Definir o pacote completo de áudios necessários para aquisição ou produção
 
 ## Critérios de aceite futuro
 
-- O jogo funciona sem rede depois do primeiro carregamento com todos os áudios precacheados.
+- O jogo funciona sem rede depois do primeiro carregamento com áudios usados cacheados sob demanda pelo service worker.
 - O usuário consegue jogar com áudio ligado, parcialmente reduzido ou mudo sem perda de informação essencial.
 - Música não encobre colisões, perda de bola, fase concluída, nova fase ou fim de jogo.
 - Sons de UI não competem com gameplay e não disparam em placeholders de publicidade.

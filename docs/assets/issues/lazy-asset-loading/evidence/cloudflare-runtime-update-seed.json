@@ -1,0 +1,93 @@
+{
+  "mode": "seed",
+  "url": "https://brikaya.com/",
+  "profileDir": "tmp/browser-profiles/lazy-asset-loading",
+  "latest": {
+    "buildId": "20260703125851",
+    "hasPlaceholder": false
+  },
+  "activeBeforeWait": {
+    "buildId": "20260703125851",
+    "cacheName": "breakout-cache-20260703125851"
+  },
+  "activeAfterWait": {
+    "buildId": "20260703125851",
+    "cacheName": "breakout-cache-20260703125851"
+  },
+  "seedState": {
+    "title": "Brikaya",
+    "hasCanvas": true,
+    "canvas": {
+      "x": 13.015625,
+      "y": 111,
+      "width": 366.96875,
+      "height": 245.328125,
+      "right": 379.984375,
+      "bottom": 356.328125
+    },
+    "hasController": true,
+    "cacheNames": [],
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393
+    }
+  },
+  "verifyState": {
+    "title": "Brikaya",
+    "hasCanvas": true,
+    "canvas": {
+      "x": 13.015625,
+      "y": 111,
+      "width": 366.96875,
+      "height": 245.328125,
+      "right": 379.984375,
+      "bottom": 356.328125
+    },
+    "hasController": true,
+    "cacheNames": [],
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393
+    }
+  },
+  "cacheNamesBeforeWait": [
+    "breakout-cache-20260703125851"
+  ],
+  "cacheNamesAfterWait": [
+    "breakout-cache-20260703125851"
+  ],
+  "staleCacheNamesBefore": [],
+  "staleCacheNamesAfter": [],
+  "lazyAssetProbe": [
+    {
+      "path": "/assets/visual/sprites/spr-ball-player-default.svg",
+      "status": 200,
+      "ok": true,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": ""
+    },
+    {
+      "path": "/assets/visual/bricks/spr-brick-basic-red-normal.svg",
+      "status": 200,
+      "ok": true,
+      "contentType": "image/svg+xml",
+      "assetCacheStatus": ""
+    },
+    {
+      "path": "/assets/audio/sfx-offline-ready-01.mp3",
+      "status": 200,
+      "ok": true,
+      "contentType": "audio/mpeg",
+      "assetCacheStatus": ""
+    }
+  ],
+  "shouldRequireLazyAssetCacheHit": false,
+  "navigationEvents": [
+    "about:blank",
+    "https://brikaya.com/"
+  ],
+  "consoleProblems": [],
+  "screenshotPath": "docs/assets/issues/lazy-asset-loading/evidence/cloudflare-runtime-update-seed.png"
+}

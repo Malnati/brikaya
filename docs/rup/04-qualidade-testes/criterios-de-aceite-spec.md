@@ -12,7 +12,7 @@ Definir critérios mínimos para aprovar entregas do jogo em cada sprint, manten
 
 ## Critérios Não Funcionais
 - FPS médio ≥ 55 em dispositivos alvo durante gameplay padrão.
-- Tempo de carregamento inicial ≤ 3s com assets precacheados.
+- Tempo de carregamento inicial ≤ 3s com shell pré-cacheado e assets sob demanda.
 - Nenhum erro não tratado no console durante partidas de 10 minutos.
 
 ## Evidências e QA

@@ -7,8 +7,11 @@ const SERVICE_WORKER_PATH = 'public/sw.js';
 const CINEMATIC_DIR = 'public/assets/visual/vfx';
 const PUBLIC_PREFIX = 'public';
 const SVG_EXTENSION = '.svg';
+const RUNTIME_VISUAL_PATH_PREFIX = '/assets/visual/';
 const RUNTIME_VISUAL_VFX_PREFIX = '/assets/visual/vfx/';
 const HTTPS_URL_PATTERN = /https?:\/\/(?!www\.w3\.org\/2000\/svg)/i;
+const ASSET_MANIFEST_RUNTIME_PATH = '/asset-cache-manifest.json';
+const ASSET_CACHE_NAME_TOKEN = 'ASSET_CACHE_NAME';
 const DISALLOWED_SVG_PATTERNS = [/<script\b/i, /<image\b/i, /data:/i, /@font-face/i];
 const EXPECTED_MEDIA = [
   {
@@ -51,6 +54,18 @@ function validateSvg(path) {
   }
 }
 
+function validateLazyAssetServiceWorker(serviceWorker) {
+  if (!serviceWorker.includes(ASSET_MANIFEST_RUNTIME_PATH)) {
+    fail(`${SERVICE_WORKER_PATH} não referencia ${ASSET_MANIFEST_RUNTIME_PATH}`);
+  }
+  if (!serviceWorker.includes(RUNTIME_VISUAL_PATH_PREFIX)) {
+    fail(`${SERVICE_WORKER_PATH} não trata ${RUNTIME_VISUAL_PATH_PREFIX} sob demanda`);
+  }
+  if (!serviceWorker.includes(ASSET_CACHE_NAME_TOKEN)) {
+    fail(`${SERVICE_WORKER_PATH} não declara cache estável de assets`);
+  }
+}
+
 function validate() {
   if (!existsSync(CONSTANTS_PATH)) fail(`${CONSTANTS_PATH} ausente`);
   if (!existsSync(VISUAL_ASSETS_PATH)) fail(`${VISUAL_ASSETS_PATH} ausente`);
@@ -67,6 +82,7 @@ function validate() {
   if (HTTPS_URL_PATTERN.test(visualAssets)) {
     fail(`${VISUAL_ASSETS_PATH} contém URL externa`);
   }
+  validateLazyAssetServiceWorker(serviceWorker);
 
   const fileNames = readdirSync(CINEMATIC_DIR).filter((name) =>
     name.endsWith(SVG_EXTENSION),
@@ -83,9 +99,6 @@ function validate() {
     if (!visualAssets.includes(expected.runtimePath)) {
       fail(`${VISUAL_ASSETS_PATH} não referencia ${expected.runtimePath}`);
     }
-    if (!serviceWorker.includes(expected.runtimePath)) {
-      fail(`${SERVICE_WORKER_PATH} não precacheia ${expected.runtimePath}`);
-    }
     validateSvg(publicPath);
   }
 
@@ -94,9 +107,6 @@ function validate() {
     const publicPath = `${CINEMATIC_DIR}/${fileName}`;
     if (!visualAssets.includes(runtimePath)) {
       fail(`${VISUAL_ASSETS_PATH} não referencia ${runtimePath}`);
-    }
-    if (!serviceWorker.includes(runtimePath)) {
-      fail(`${SERVICE_WORKER_PATH} não precacheia ${runtimePath}`);
     }
     validateSvg(publicPath);
   }

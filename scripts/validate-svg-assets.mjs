@@ -21,9 +21,18 @@ const SOURCE_SCAN_ENTRIES = ['src', 'public/sw.js', 'public/manifest.webmanifest
 const EXPECTED_REFERENCES = {
   'index.html': [FAVICON_RUNTIME_PATH],
   [VISUAL_ASSET_SOURCE_PATH]: [],
-  'public/sw.js': [],
   'public/manifest.webmanifest': [PWA_ICON_RUNTIME_PATH],
 };
+const ASSET_MANIFEST_RUNTIME_PATH = '/asset-cache-manifest.json';
+const VISUAL_RUNTIME_PATH_PREFIX = '/assets/visual/';
+const AUDIO_RUNTIME_PATH_PREFIX = '/assets/audio/';
+const ASSET_CACHE_NAME_TOKEN = 'ASSET_CACHE_NAME';
+const SERVICE_WORKER_EXPECTED_REFERENCES = [
+  ASSET_MANIFEST_RUNTIME_PATH,
+  VISUAL_RUNTIME_PATH_PREFIX,
+  AUDIO_RUNTIME_PATH_PREFIX,
+  ASSET_CACHE_NAME_TOKEN,
+];
 const DISALLOWED_SVG_PATTERNS = [
   { pattern: /<script\b/i, label: '<script>' },
   { pattern: /<image\b/i, label: '<image>' },
@@ -124,7 +133,7 @@ function validateExpectedReferences(expectedRuntimeSvgPaths) {
   const expectedReferences = {
     ...EXPECTED_REFERENCES,
     [VISUAL_ASSET_SOURCE_PATH]: expectedRuntimeSvgPaths,
-    'public/sw.js': expectedRuntimeSvgPaths,
+    'public/sw.js': SERVICE_WORKER_EXPECTED_REFERENCES,
   };
   const failures = [];
   for (const [sourceFile, expectedPaths] of Object.entries(expectedReferences)) {
