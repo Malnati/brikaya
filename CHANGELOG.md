@@ -3,6 +3,22 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.24.1] - 2026-07-03
+### Adicionado
+- Documento de QA final das pendências publicadas com recibos e screenshots de produção.
+- Recibo remoto bloqueado para Caddy/TLS/`/healthz`, executado no orquestrador obrigatório.
+
+### Alterado
+- `PENDING.md` marca a suíte Cloudflare publicada como concluída e explicita o bloqueio DNS das pendências Caddy.
+
+### Testado
+- `make cloudflare-mobile-qa`
+- `make cloudflare-no-score-reset`
+- `make cloudflare-phase-transition-qa`
+- `make cloudflare-dashboard-layout-qa`
+- `make cloudflare-theme-qa`
+- Prova Caddy remota via `tmux` + Codex headless em `root@217.76.58.179:/root/w/iac`: bloqueada por DNS `NXDOMAIN`.
+
 ## [1.24.0] - 2026-07-03
 ### Adicionado
 - Target `make cloudflare-cinematic-effects-qa` para validar efeitos visuais cinematográficos na versão publicada.
