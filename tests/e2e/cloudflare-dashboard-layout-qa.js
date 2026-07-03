@@ -1,6 +1,13 @@
 // tests/e2e/cloudflare-dashboard-layout-qa.js
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
 import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
@@ -25,6 +32,9 @@ const RESPONSIVE_VIEWPORT_MATRIX_PATH = new URL(
 );
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const CAPTURE_SCREENSHOTS_ENV_KEY =
+  "BRICKBREAKER_DASHBOARD_QA_CAPTURE_SCREENSHOTS";
+const USER_DATA_DIR_PREFIX = "brickbreaker-dashboard-qa-";
 const MIN_TOUCH_TARGET_SIZE = 44;
 const MIN_SIDE_AD_DISTANCE_PX = 150;
 const MIN_BOTTOM_AD_DISTANCE_PX = 24;
@@ -39,6 +49,7 @@ const MAX_CANVAS_OVERLAP_PX = 2;
 const IMMERSIVE_ROOT_CLASS = "bb-landscape-immersive";
 const MAX_IMMERSIVE_SAFE_AREA_RESERVE_PX = 32;
 const BROWSER_CLOSE_TIMEOUT_MS = 5000;
+const PROGRESS_PREFIX = "cloudflare-dashboard-layout-qa";
 const MENU_BUTTON_NAME = /menu/i;
 const LOGS_BUTTON_NAME = /logs/i;
 const COLLISIONS_BUTTON_NAME = /colisões/i;
@@ -102,6 +113,16 @@ function ensureParentDirectory(filePath) {
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+function shouldCaptureScreenshots() {
+  return ["1", "true", "yes"].includes(
+    (process.env[CAPTURE_SCREENSHOTS_ENV_KEY] || "").toLowerCase(),
+  );
+}
+
+function logProgress(message) {
+  console.log(`${PROGRESS_PREFIX}: ${message}`);
 }
 
 async function closeBrowser(browser) {
@@ -492,15 +513,20 @@ async function run() {
   const outLandscapeScreenshot = landscapeScreenshotPath();
   const outTabletScreenshot = tabletScreenshotPath();
   ensureParentDirectory(outReport);
-  ensureParentDirectory(outScreenshot);
-  ensureParentDirectory(outDesktopScreenshot);
-  ensureParentDirectory(outLandscapeScreenshot);
-  ensureParentDirectory(outTabletScreenshot);
+  const captureScreenshots = shouldCaptureScreenshots();
+  if (captureScreenshots) {
+    ensureParentDirectory(outScreenshot);
+    ensureParentDirectory(outDesktopScreenshot);
+    ensureParentDirectory(outLandscapeScreenshot);
+    ensureParentDirectory(outTabletScreenshot);
+  }
 
   const consoleProblems = [];
+  const userDataDir = mkdtempSync(join(tmpdir(), USER_DATA_DIR_PREFIX));
   const browser = await puppeteer.launch({
     headless: "new",
     executablePath: CHROME_EXECUTABLE_PATH,
+    userDataDir,
     args: buildChromeLaunchArgs([
       "--no-first-run",
       "--no-default-browser-check",
@@ -519,7 +545,9 @@ async function run() {
     );
 
     const results = [];
+    logProgress(`validar ${VIEWPORTS.length} viewports publicados`);
     for (const viewport of VIEWPORTS) {
+      logProgress(`${viewport.name}: carregar`);
       await setQaViewport(page, viewport);
       await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
       await clearOfflineState(page);
@@ -529,6 +557,7 @@ async function run() {
       await waitForCinematicOverlayToClear(page);
       await new Promise((resolve) => setTimeout(resolve, 600));
       const state = await collectLayoutState(page, viewport.name);
+      logProgress(`${viewport.name}: estado coletado`);
       results.push(state);
 
       assert(
@@ -765,6 +794,7 @@ async function run() {
       }
 
       if (OVERLAY_TARGET_VIEWPORTS.includes(viewport.name)) {
+        logProgress(`${viewport.name}: validar overlays`);
         await waitForInitialCountdownToFinish(page);
         const openedMenuForLogs = await clickButtonByPattern(
           page,
@@ -854,40 +884,44 @@ async function run() {
     const desktopViewport = viewportByScreenshotRole("desktop-default");
     const tabletViewport = viewportByScreenshotRole("tablet-default");
     const landscapeViewport = viewportByScreenshotRole("landscape-default");
+    if (captureScreenshots) {
+      logProgress("capturar screenshots");
+      await setQaViewport(page, portraitViewport);
+      await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
+      await clearOfflineState(page);
+      await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
+      await page.waitForSelector("canvas", { timeout: 30000 });
+      await acceptPrivacyConsentIfPresent(page);
+      await waitForCinematicOverlayToClear(page);
+      await page.screenshot({ path: outScreenshot, fullPage: true });
+      await setQaViewport(page, tabletViewport);
+      await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
+      await clearOfflineState(page);
+      await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
+      await page.waitForSelector("canvas", { timeout: 30000 });
+      await acceptPrivacyConsentIfPresent(page);
+      await waitForCinematicOverlayToClear(page);
+      await page.screenshot({ path: outTabletScreenshot, fullPage: true });
+      await setQaViewport(page, desktopViewport);
+      await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
+      await clearOfflineState(page);
+      await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
+      await page.waitForSelector("canvas", { timeout: 30000 });
+      await acceptPrivacyConsentIfPresent(page);
+      await waitForCinematicOverlayToClear(page);
+      await page.screenshot({ path: outDesktopScreenshot, fullPage: true });
+      await setQaViewport(page, landscapeViewport);
+      await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
+      await clearOfflineState(page);
+      await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
+      await page.waitForSelector("canvas", { timeout: 30000 });
+      await acceptPrivacyConsentIfPresent(page);
+      await waitForCinematicOverlayToClear(page);
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      await page.screenshot({ path: outLandscapeScreenshot, fullPage: true });
+    }
     await setQaViewport(page, portraitViewport);
-    await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
-    await clearOfflineState(page);
-    await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
-    await page.waitForSelector("canvas", { timeout: 30000 });
-    await acceptPrivacyConsentIfPresent(page);
-    await waitForCinematicOverlayToClear(page);
-    await page.screenshot({ path: outScreenshot, fullPage: true });
-    await setQaViewport(page, tabletViewport);
-    await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
-    await clearOfflineState(page);
-    await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
-    await page.waitForSelector("canvas", { timeout: 30000 });
-    await acceptPrivacyConsentIfPresent(page);
-    await waitForCinematicOverlayToClear(page);
-    await page.screenshot({ path: outTabletScreenshot, fullPage: true });
-    await setQaViewport(page, desktopViewport);
-    await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
-    await clearOfflineState(page);
-    await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
-    await page.waitForSelector("canvas", { timeout: 30000 });
-    await acceptPrivacyConsentIfPresent(page);
-    await waitForCinematicOverlayToClear(page);
-    await page.screenshot({ path: outDesktopScreenshot, fullPage: true });
-    await setQaViewport(page, landscapeViewport);
-    await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
-    await clearOfflineState(page);
-    await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
-    await page.waitForSelector("canvas", { timeout: 30000 });
-    await acceptPrivacyConsentIfPresent(page);
-    await waitForCinematicOverlayToClear(page);
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    await page.screenshot({ path: outLandscapeScreenshot, fullPage: true });
-    await setQaViewport(page, portraitViewport);
+    logProgress("validar rotação sem reinício");
     await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
     await clearOfflineState(page);
     const orientationStartedAt = Date.now();
@@ -938,6 +972,7 @@ async function run() {
     const report = {
       url: targetUrl,
       viewportMatrixPath: "tests/e2e/responsiveViewportMatrix.json",
+      captureScreenshots,
       screenshotPath: outScreenshot,
       tabletScreenshotPath: outTabletScreenshot,
       desktopScreenshotPath: outDesktopScreenshot,
@@ -950,7 +985,25 @@ async function run() {
       consoleProblems,
     };
     writeFileSync(outReport, JSON.stringify(report, null, 2));
-    console.log(JSON.stringify(report, null, 2));
+    console.log(
+      JSON.stringify(
+        {
+          url: report.url,
+          captureScreenshots: report.captureScreenshots,
+          screenshotPath: report.screenshotPath,
+          tabletScreenshotPath: report.tabletScreenshotPath,
+          desktopScreenshotPath: report.desktopScreenshotPath,
+          landscapeScreenshotPath: report.landscapeScreenshotPath,
+          validatedViewports: report.results.map(
+            (result) => result.viewport.name,
+          ),
+          orientationEvents: report.orientationEvents,
+          consoleProblems: report.consoleProblems,
+        },
+        null,
+        2,
+      ),
+    );
 
     assert(
       consoleProblems.length === 0,
@@ -958,6 +1011,7 @@ async function run() {
     );
   } finally {
     await closeBrowser(browser);
+    rmSync(userDataDir, { recursive: true, force: true });
   }
 }
 

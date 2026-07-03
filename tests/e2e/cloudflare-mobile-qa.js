@@ -1,6 +1,13 @@
 // tests/e2e/cloudflare-mobile-qa.js
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
 import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
@@ -20,11 +27,14 @@ const RESPONSIVE_VIEWPORT_MATRIX_PATH = new URL(
 );
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const CAPTURE_SCREENSHOTS_ENV_KEY =
+  "BRICKBREAKER_MOBILE_QA_CAPTURE_SCREENSHOTS";
+const USER_DATA_DIR_PREFIX = "brickbreaker-mobile-qa-";
 const MIN_TOUCH_TARGET_SIZE = 44;
 const MAX_INITIAL_SCORE_AFTER_OBSERVATION = 260;
 const OBSERVATION_DURATION_MS = 1500;
 const MENU_PAUSE_OBSERVATION_MS = 1400;
-const BROWSER_CLOSE_SETTLE_MS = 250;
+const BROWSER_CLOSE_TIMEOUT_MS = 5000;
 const REQUIRED_EVENT_TYPES = ["game_start"];
 const REQUIRED_DATABASE_NAMES = ["BrickBreakerGameLog"];
 const MENU_BUTTON_NAME = /menu/i;
@@ -92,10 +102,27 @@ function assert(condition, message) {
 }
 
 async function closeBrowser(browser) {
-  const browserProcess = browser.process();
-  browser.disconnect();
-  browserProcess?.kill("SIGKILL");
-  await new Promise((resolve) => setTimeout(resolve, BROWSER_CLOSE_SETTLE_MS));
+  let timedOut = false;
+  await Promise.race([
+    browser.close(),
+    new Promise((resolve) =>
+      setTimeout(() => {
+        timedOut = true;
+        resolve();
+      }, BROWSER_CLOSE_TIMEOUT_MS),
+    ),
+  ]);
+  if (timedOut) {
+    const browserProcess = browser.process();
+    browser.disconnect();
+    browserProcess?.kill("SIGTERM");
+  }
+}
+
+function shouldCaptureScreenshots() {
+  return ["1", "true", "yes"].includes(
+    (process.env[CAPTURE_SCREENSHOTS_ENV_KEY] || "").toLowerCase(),
+  );
 }
 
 function viewportByScreenshotRole(screenshotRole) {
@@ -499,14 +526,19 @@ async function run() {
   const screenshotPath = getScreenshotPath();
   const menuScreenshotPath = getMenuScreenshotPath();
   const reportPath = getReportPath();
-  ensureParentDirectory(screenshotPath);
-  ensureParentDirectory(menuScreenshotPath);
   ensureParentDirectory(reportPath);
+  const captureScreenshots = shouldCaptureScreenshots();
+  if (captureScreenshots) {
+    ensureParentDirectory(screenshotPath);
+    ensureParentDirectory(menuScreenshotPath);
+  }
 
   const consoleProblems = [];
+  const userDataDir = mkdtempSync(join(tmpdir(), USER_DATA_DIR_PREFIX));
   const browser = await puppeteer.launch({
     headless: "new",
     executablePath: CHROME_EXECUTABLE_PATH,
+    userDataDir,
     args: buildChromeLaunchArgs(["--no-first-run", "--no-default-browser-check"]),
     });
 
@@ -534,7 +566,9 @@ async function run() {
     await acceptPreGamePromptIfVisible(page);
 
     const layoutState = await collectLayoutState(page);
-    await page.screenshot({ path: screenshotPath, fullPage: true });
+    if (captureScreenshots) {
+      await page.screenshot({ path: screenshotPath, fullPage: true });
+    }
 
     assert(
       layoutState.title === "Brikaya",
@@ -657,7 +691,9 @@ async function run() {
     await page.waitForSelector(".settings-drawer", { timeout: 10000 });
     const menuState = await collectDrawerState(page);
     const menuPauseState = await collectMenuPauseState(page);
-    await page.screenshot({ path: menuScreenshotPath, fullPage: true });
+    if (captureScreenshots) {
+      await page.screenshot({ path: menuScreenshotPath, fullPage: true });
+    }
     assert(menuState.drawer, "Drawer do menu não encontrado.");
     assert(
       !menuState.hasHorizontalOverflow,
@@ -760,6 +796,7 @@ async function run() {
       publicUrl,
       viewportMatrixPath: "tests/e2e/responsiveViewportMatrix.json",
       viewportName: MOBILE_DEFAULT_VIEWPORT.name,
+      captureScreenshots,
       screenshotPath,
       menuScreenshotPath,
       layoutState,
@@ -811,9 +848,24 @@ async function run() {
       `Console publicou warnings/errors: ${JSON.stringify(consoleProblems.slice(0, 5))}`,
     );
 
-    console.log(JSON.stringify(report, null, 2));
+    console.log(
+      JSON.stringify(
+        {
+          publicUrl: report.publicUrl,
+          viewportName: report.viewportName,
+          captureScreenshots: report.captureScreenshots,
+          screenshotPath: report.screenshotPath,
+          menuScreenshotPath: report.menuScreenshotPath,
+          indexedDbSummary: report.indexedDbSummary,
+          consoleProblems: report.consoleProblems,
+        },
+        null,
+        2,
+      ),
+    );
   } finally {
     await closeBrowser(browser);
+    rmSync(userDataDir, { recursive: true, force: true });
   }
 }
 

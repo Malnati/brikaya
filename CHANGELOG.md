@@ -3,6 +3,23 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.30.3] - 2026-07-03
+### Corrigido
+- QAs publicados mobile e dashboard usam perfil temporário isolado, saída compacta e screenshots opcionais, evitando encerramento do runner antes de finalizar a validação.
+- QA publicado de dashboard emite progresso por viewport para manter a execução observável durante a matriz responsiva completa.
+
+### Testado
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" node --version`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" make help`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm run build`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm test -- --runInBand --silent`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-no-score-reset`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-phase-transition-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-powerups-qa`
+
 ## [1.30.2] - 2026-07-03
 ### Corrigido
 - QA publicado de power-ups limpa o estado do domínio antes de abrir o app, evitando logs antigos quando IndexedDB já estava bloqueado por sessão anterior.
