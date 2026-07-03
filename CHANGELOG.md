@@ -3,6 +3,22 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.31.0] - 2026-07-03
+### Adicionado
+- Metadados públicos de descoberta para `brikaya.com`, com idioma `pt-BR`, descrição, URL canônica, Open Graph e Twitter summary.
+- `robots.txt` e `sitemap.xml` canônicos para verificação e envio do domínio no Google Search Console.
+- Cobertura unitária para impedir regressão de `canonical`, `robots.txt` e `sitemap.xml`.
+- Evidência operacional sem segredo em `docs/assets/issues/search-console-seo/evidence/evi-search-console-seo-public-validation.json`, registrando Search Console verificado, sitemap processado e indexação solicitada.
+
+### Testado
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version && npm --version && make help`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- tests/unit/seoMetadata.test.ts --runInBand`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make cloudflare-deploy`
+- `curl -sS https://brikaya.com/robots.txt`
+- `curl -sS https://brikaya.com/sitemap.xml`
+- Search Console: propriedade `sc-domain:brikaya.com` verificada; `https://brikaya.com/sitemap.xml` processado com 1 página; indexação de `https://brikaya.com/` solicitada.
+
 ## [1.30.4] - 2026-07-03
 ### Adicionado
 - Mobile passa a ter faixa sensível invisível de 2in sobre a região da raquete, permitindo tocar e arrastar horizontalmente sem acertar exatamente a raquete.

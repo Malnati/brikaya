@@ -119,6 +119,7 @@ Enviar consulta curta ao canal oficial se houver dúvida sobre a hipótese “br
 | Requisitos | Conta Google; controle de `brikaya.com`; DNS TXT recomendado para propriedade de domínio; sitemap publicado. |
 | Evidência esperada | Propriedade verificada; sitemap enviado; URL principal inspecionada. |
 | Risco | Tokens de verificação não devem expor credenciais; preferir DNS TXT quando possível. |
+| Estado operacional | Concluído em 2026-07-03: propriedade `sc-domain:brikaya.com` verificada por DNS TXT, sitemap processado com 1 página encontrada e indexação da homepage solicitada. |
 
 ### 5.2. Bing Webmaster Tools
 
@@ -216,9 +217,9 @@ Não faz parte do lançamento porque `docs/dist/projeto-pwa.md` mantém anúncio
 
 ### 8.2. Descoberta gratuita
 
-- [ ] Verificar `brikaya.com` no Google Search Console por DNS TXT.
-- [ ] Enviar sitemap.
-- [ ] Inspecionar URL principal.
+- [x] Verificar `brikaya.com` no Google Search Console por DNS TXT.
+- [x] Enviar sitemap.
+- [x] Inspecionar URL principal e solicitar indexação inicial.
 - [ ] Verificar/importar site no Bing Webmaster Tools.
 - [ ] Salvar resumo de busca gratuita de marca/nome por base oficial.
 

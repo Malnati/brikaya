@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "validatedAtUtc": "2026-07-03T22:59:10Z",
+  "canonicalUrl": "https://brikaya.com/",
+  "publicChecks": {
+    "homeHttpStatus": 200,
+    "robotsHttpStatus": 200,
+    "sitemapHttpStatus": 200,
+    "canonicalLinkPresent": true,
+    "descriptionPresent": true,
+    "robotsSitemapDirectivePresent": true,
+    "sitemapXmlDeclarationPresent": true,
+    "sitemapCanonicalLocPresent": true
+  },
+  "cloudflare": {
+    "pagesProject": "malnati-brickbreaker",
+    "customDomainActive": true,
+    "canonicalRedirectConfigured": true,
+    "dnsTxtVerificationRecordPresent": true,
+    "dnsTxtVerificationValueRedacted": true,
+    "paidServicesEnabled": false
+  },
+  "googleSearchConsole": {
+    "property": "sc-domain:brikaya.com",
+    "ownershipVerified": true,
+    "verificationMethod": "DNS TXT",
+    "sitemapSubmitted": "https://brikaya.com/sitemap.xml",
+    "sitemapProcessed": true,
+    "pagesFound": 1,
+    "homeUrlInspected": true,
+    "homeUrlIndexingStateAtInspection": "Detected, currently not indexed",
+    "indexingRequested": true
+  },
+  "secrets": {
+    "verificationTokenPrinted": false,
+    "verificationTokenStoredInRepository": false
+  }
+}
