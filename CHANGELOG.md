@@ -3,6 +3,15 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.28.6] - 2026-07-03
+### Adicionado
+- Documento P0 de registros, custos e documentos para Brikaya PWA-only em `docs/dist/registros.md`.
+
+### Testado
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version`
+- `make help`
+- `npm run build`
+
 ## [1.28.5] - 2026-07-03
 ### Adicionado
 - Guard `test:semantic-file-names` para bloquear arquivos governados com nomes genéricos, duplicados ou fora do padrão semântico.
