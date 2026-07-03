@@ -8,6 +8,9 @@ import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-theme-qa.json";
+const CAPTURE_SCREENSHOTS_ENV_KEY = "BRICKBREAKER_THEME_QA_CAPTURE_SCREENSHOTS";
+const DISABLED_ENV_VALUE = "false";
+const ENABLED_ENV_VALUE = "true";
 const DEFAULT_IPHONE15_CONTRAST_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-iphone15-contrast.png";
 const DEFAULT_IPHONE15_SUNSET_SCREENSHOT =
@@ -24,6 +27,16 @@ const DEFAULT_DESKTOP_OCEAN_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-desktop-ocean.png";
 const DEFAULT_DESKTOP_RUBY_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-desktop-ruby.png";
+const SCREENSHOT_ENV_KEYS = [
+  "BRICKBREAKER_THEME_QA_IPHONE15_CONTRAST_SCREENSHOT",
+  "BRICKBREAKER_THEME_QA_IPHONE15_SUNSET_SCREENSHOT",
+  "BRICKBREAKER_THEME_QA_IPHONE15_OCEAN_SCREENSHOT",
+  "BRICKBREAKER_THEME_QA_IPHONE15_RUBY_SCREENSHOT",
+  "BRICKBREAKER_THEME_QA_DESKTOP_CONTRAST_SCREENSHOT",
+  "BRICKBREAKER_THEME_QA_DESKTOP_SUNSET_SCREENSHOT",
+  "BRICKBREAKER_THEME_QA_DESKTOP_OCEAN_SCREENSHOT",
+  "BRICKBREAKER_THEME_QA_DESKTOP_RUBY_SCREENSHOT",
+];
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const MIN_TOUCH_TARGET_SIZE = 44;
@@ -114,6 +127,18 @@ function env(name, fallback) {
 
 function publicUrl() {
   return env("BRICKBREAKER_PUBLIC_URL", DEFAULT_PUBLIC_URL);
+}
+
+function shouldCaptureScreenshots() {
+  const configured = process.env[CAPTURE_SCREENSHOTS_ENV_KEY];
+  if (configured === DISABLED_ENV_VALUE) return false;
+  if (configured === ENABLED_ENV_VALUE) return true;
+  return SCREENSHOT_ENV_KEYS.some((key) => Boolean(process.env[key]));
+}
+
+async function captureScreenshot(page, path) {
+  if (!shouldCaptureScreenshots()) return;
+  await page.screenshot({ path, fullPage: true });
 }
 
 function ensureParentDirectory(filePath) {
@@ -571,7 +596,7 @@ async function validateViewport(
       contrastState.storedFontSet === FONT_SET_CRT_MONO,
     `${viewportName}: aparência CRT alto contraste não persistida.`,
   );
-  await page.screenshot({ path: screenshots.contrast, fullPage: true });
+  await captureScreenshot(page, screenshots.contrast);
 
   await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
   await page.waitForSelector("canvas", { timeout: 30000 });
@@ -622,7 +647,7 @@ async function validateViewport(
       sunsetState.storedFontSet === FONT_SET_BLOCK_PIXEL,
     `${viewportName}: aparência Pixel Sunset não persistida.`,
   );
-  await page.screenshot({ path: screenshots.sunset, fullPage: true });
+  await captureScreenshot(page, screenshots.sunset);
 
   await clickButtonByText(page, "Oceano noturno");
   await page.waitForFunction(
@@ -637,7 +662,7 @@ async function validateViewport(
       oceanState.storedTheme === THEME_OCEAN_NIGHT,
     `${viewportName}: tema Oceano noturno não aplicado/persistido.`,
   );
-  await page.screenshot({ path: screenshots.ocean, fullPage: true });
+  await captureScreenshot(page, screenshots.ocean);
 
   await clickButtonByText(page, "Rubi profundo");
   await page.waitForFunction(
@@ -652,7 +677,7 @@ async function validateViewport(
       rubyState.storedTheme === THEME_RUBY_DEPTH,
     `${viewportName}: tema Rubi profundo não aplicado/persistido.`,
   );
-  await page.screenshot({ path: screenshots.ruby, fullPage: true });
+  await captureScreenshot(page, screenshots.ruby);
 
   return {
     initialState,
@@ -783,6 +808,7 @@ async function run() {
       results,
       externalRequests: [...new Set(externalRequests)],
       consoleProblems,
+      screenshotCaptureEnabled: shouldCaptureScreenshots(),
     };
     writeFileSync(reportPath, JSON.stringify(report, null, 2));
     console.log(
@@ -803,7 +829,11 @@ async function run() {
   }
 }
 
-run().catch((error) => {
-  console.error(error.stack || error.message);
-  process.exitCode = 1;
-});
+run()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error(error.stack || error.message);
+    process.exit(1);
+  });
