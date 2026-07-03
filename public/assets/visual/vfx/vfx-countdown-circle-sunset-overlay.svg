@@ -1,0 +1,6 @@
+<!-- public/assets/visual/vfx/vfx-countdown-circle-sunset-overlay.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="Efeito de contagem">
+  <circle cx="90" cy="90" r="64" fill="none" stroke="#ff8a00" stroke-width="10" opacity="0.9"/>
+  <circle cx="90" cy="90" r="42" fill="none" stroke="#ffe45e" stroke-width="6" opacity="0.72"/>
+  <path d="M90 18v28M90 134v28M18 90h28M134 90h28" stroke="#ffe6f1" stroke-width="6" stroke-linecap="round"/>
+</svg>

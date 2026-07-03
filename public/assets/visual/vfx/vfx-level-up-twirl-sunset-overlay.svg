@@ -1,0 +1,6 @@
+<!-- public/assets/visual/vfx/vfx-level-up-twirl-sunset-overlay.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="Espiral de fase">
+  <path d="M90 36c35 0 58 21 58 48 0 36-37 60-72 46-24-10-26-37-9-50 16-12 41-4 44 13" fill="none" stroke="#ff8a00" stroke-width="10" stroke-linecap="round"/>
+  <path d="M43 125c28 31 88 29 105-16" fill="none" stroke="#ff2bd6" stroke-width="8" stroke-linecap="round" opacity="0.8"/>
+  <circle cx="112" cy="94" r="10" fill="#ffe45e"/>
+</svg>

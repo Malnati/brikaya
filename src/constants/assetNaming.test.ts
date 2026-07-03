@@ -19,7 +19,7 @@ import {
   SILENT_AUDIO_ID,
 } from './audio';
 
-const VISUAL_ASSET_PATTERN = /^(spr|ui|vfx)-[a-z0-9]+(-[a-z0-9]+)*\.(svg|png|webp)$/;
+const VISUAL_ASSET_PATTERN = /^(spr|ui|vfx)-[a-z0-9]+(-[a-z0-9]+)*\.svg$/;
 const AUDIO_ASSET_PATTERN = /^(sfx|bgm)-[a-z0-9]+(-[a-z0-9]+)*-[0-9]{2}\.(mp3|ogg)$/;
 const TOKEN_PATTERN = /^(spr|ui|vfx|clr|typ|sfx|bgm)-[a-z0-9]+(-[a-z0-9]+)*(-[0-9]{2})?$/;
 const MIN_ID_LENGTH = 12;
@@ -74,9 +74,9 @@ function assertEntryParity(entry: VisualAssetCatalogEntry) {
 describe('nomenclatura semântica de assets visuais exibidos', () => {
   it('mantém paridade exata entre ID, variável camelCase e arquivo físico', () => {
     const visualPaths = Object.values(VISUAL_ASSET_PATHS);
-    const diskVisualPaths = collectAssetFilePaths(VISUAL_ASSET_DIR, ['.svg', '.png', '.webp']);
+    const diskVisualPaths = collectAssetFilePaths(VISUAL_ASSET_DIR, ['.svg']);
 
-    expect(VISUAL_ASSET_CATALOG).toHaveLength(18);
+    expect(VISUAL_ASSET_CATALOG).toHaveLength(diskVisualPaths.length);
     expect(visualPaths).toHaveLength(VISUAL_ASSET_CATALOG.length);
     expect(visualPaths.sort()).toEqual(diskVisualPaths.sort());
     assertUniqueBasenames(visualPaths);

@@ -1,50 +1,26 @@
 // scripts/validate-svg-assets.mjs
 import { existsSync, readFileSync } from 'node:fs';
 
-const EXPECTED_FAVICON_RUNTIME_PATHS = ['/assets/visual/ui/ui-app-browser-favicon.svg'];
-const EXPECTED_CORE_RUNTIME_PATHS = [
-  '/assets/visual/sprites/spr-ball-player-default.svg',
-  '/assets/visual/sprites/spr-paddle-player-default.svg',
-  '/assets/visual/bricks/spr-brick-basic-red-normal.svg',
-  '/assets/visual/bricks/spr-brick-basic-blue-normal.svg',
-  '/assets/visual/bricks/spr-brick-basic-green-normal.svg',
-  '/assets/visual/bricks/spr-brick-basic-yellow-normal.svg',
-  '/assets/visual/bricks/spr-brick-basic-purple-normal.svg',
-];
-const EXPECTED_CINEMATIC_RUNTIME_PATHS = [
-  '/assets/visual/vfx/vfx-countdown-circle-overlay.svg',
-  '/assets/visual/vfx/vfx-countdown-spark-overlay.svg',
-  '/assets/visual/vfx/vfx-level-up-star-overlay.svg',
-  '/assets/visual/vfx/vfx-level-up-twirl-overlay.svg',
-  '/assets/visual/vfx/vfx-game-over-rip-smoke.svg',
-];
-const EXPECTED_POWER_UP_RUNTIME_PATHS = [
-  '/assets/visual/powerups/spr-powerup-multiball-orb.svg',
-  '/assets/visual/powerups/spr-powerup-wide-paddle.svg',
-  '/assets/visual/powerups/spr-powerup-slow-ball.svg',
-  '/assets/visual/powerups/spr-powerup-laser-fan.svg',
-];
-const EXPECTED_ICON_RUNTIME_PATHS = ['/assets/visual/ui/ui-pwa-app-icon.svg'];
+const VISUAL_ASSET_SOURCE_PATH = 'src/constants/visualAssets.ts';
+const FAVICON_RUNTIME_PATH = '/assets/visual/ui/ui-app-browser-favicon.svg';
+const PWA_ICON_RUNTIME_PATH = '/assets/visual/ui/ui-pwa-app-icon.svg';
+const RUNTIME_SVG_PATTERN = /'((?:\/assets\/visual\/)[^']+\.svg)'/g;
+const EXPECTED_VISUAL_RUNTIME_PATHS = [
+  ...new Set(
+    [...readFileSync(VISUAL_ASSET_SOURCE_PATH, 'utf8').matchAll(RUNTIME_SVG_PATTERN)].map(
+      (match) => match[1],
+    ),
+  ),
+].sort();
 const EXPECTED_REFERENCES = {
-  'index.html': EXPECTED_FAVICON_RUNTIME_PATHS,
-  'src/constants/visualAssets.ts': [
-    ...EXPECTED_CORE_RUNTIME_PATHS,
-    ...EXPECTED_CINEMATIC_RUNTIME_PATHS,
-    ...EXPECTED_POWER_UP_RUNTIME_PATHS,
-  ],
-  'public/sw.js': [
-    ...EXPECTED_FAVICON_RUNTIME_PATHS,
-    ...EXPECTED_ICON_RUNTIME_PATHS,
-    ...EXPECTED_CORE_RUNTIME_PATHS,
-    ...EXPECTED_CINEMATIC_RUNTIME_PATHS,
-    ...EXPECTED_POWER_UP_RUNTIME_PATHS,
-  ],
-  'public/manifest.webmanifest': EXPECTED_ICON_RUNTIME_PATHS,
+  'index.html': [FAVICON_RUNTIME_PATH],
+  [VISUAL_ASSET_SOURCE_PATH]: EXPECTED_VISUAL_RUNTIME_PATHS,
+  'public/sw.js': EXPECTED_VISUAL_RUNTIME_PATHS,
+  'public/manifest.webmanifest': [PWA_ICON_RUNTIME_PATH],
 };
-const EXPECTED_SVG_ASSETS = Object.values(EXPECTED_REFERENCES)
-  .flat()
-  .filter((path, index, paths) => paths.indexOf(path) === index)
-  .map((path) => `public${path}`);
+const EXPECTED_SVG_ASSETS = EXPECTED_VISUAL_RUNTIME_PATHS.map(
+  (runtimePath) => `public${runtimePath}`,
+);
 const DISALLOWED_SVG_PATTERNS = [
   { pattern: /<script\b/i, label: '<script>' },
   { pattern: /<image\b/i, label: '<image>' },

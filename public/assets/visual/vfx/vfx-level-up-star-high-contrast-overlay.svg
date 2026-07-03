@@ -1,0 +1,5 @@
+<!-- public/assets/visual/vfx/vfx-level-up-star-high-contrast-overlay.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="Estrela de fase">
+  <path d="M90 18l19 48 52 4-40 34 12 51-43-27-43 27 12-51-40-34 52-4z" fill="#ffd000" stroke="#f8f7ff" stroke-width="6"/>
+  <path d="M90 44l10 31 33 2-26 20 8 32-25-18-25 18 8-32-26-20 33-2z" fill="#7df9ff" opacity="0.74"/>
+</svg>

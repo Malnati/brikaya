@@ -1,0 +1,5 @@
+<!-- public/assets/visual/vfx/vfx-countdown-spark-sunset-overlay.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="Faísca de contagem">
+  <path d="M90 18l10 48 40-28-28 40 50 12-50 12 28 40-40-28-10 48-10-48-40 28 28-40-50-12 50-12-28-40 40 28z" fill="#ffe45e" stroke="#ffe6f1" stroke-width="5"/>
+  <circle cx="90" cy="90" r="18" fill="#ff8a00"/>
+</svg>

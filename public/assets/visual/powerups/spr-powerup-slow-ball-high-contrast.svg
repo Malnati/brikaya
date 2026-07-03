@@ -1,0 +1,7 @@
+<!-- public/assets/visual/powerups/spr-powerup-slow-ball-high-contrast.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Power-up do jogo">
+  <circle cx="32" cy="32" r="27" fill="#7df9ff" stroke="#f8f7ff" stroke-width="4"/>
+  <circle cx="24" cy="20" r="6" fill="#ffffff" opacity="0.34"/>
+  <path d="M24 18h16M24 46h16M20 18c0 12 24 12 24 28M44 18c0 12-24 12-24 28" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" opacity="0.82"/>
+  <path d="M18 50c8 5 20 5 28 0" fill="none" stroke="#02040a" stroke-width="4" stroke-linecap="round" opacity="0.26"/>
+</svg>

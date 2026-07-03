@@ -1,0 +1,7 @@
+<!-- public/assets/visual/powerups/spr-powerup-multiball-orb-sunset.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Power-up do jogo">
+  <circle cx="32" cy="32" r="27" fill="#ff365e" stroke="#ffe6f1" stroke-width="4"/>
+  <circle cx="24" cy="20" r="6" fill="#ffffff" opacity="0.34"/>
+  <circle cx="26" cy="28" r="7" fill="#ffffff" opacity="0.86"/><circle cx="39" cy="28" r="7" fill="#ffffff" opacity="0.72"/>
+  <path d="M18 50c8 5 20 5 28 0" fill="none" stroke="#16071f" stroke-width="4" stroke-linecap="round" opacity="0.26"/>
+</svg>
