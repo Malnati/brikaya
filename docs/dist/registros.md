@@ -5,7 +5,7 @@ Pesquisa atualizada em 2026-07-03. Este documento é operacional para decisão d
 
 ## 1. Resumo executivo P0
 
-Brikaya será distribuído como PWA/web 100% offline após o primeiro carregamento, sem Google Play, Apple App Store, Microsoft Store, IARC por loja, APK alternativo ou anúncio real no lançamento.
+Brikaya será distribuído como PWA/web 100% offline após o primeiro carregamento, sem Google Play, Apple App Store, Microsoft Store, IARC por loja, APK alternativo ou anúncio real no lançamento. A execução operacional passa a considerar todos os idiomas/locales planejados ou em tradução, incluindo `zh-CN`, mas a restrição de custo zero prevalece sobre qualquer cobertura regional.
 
 ### 1.1. Executar agora
 
@@ -13,8 +13,11 @@ Brikaya será distribuído como PWA/web 100% offline após o primeiro carregamen
 | --- | --- | ---: | --- |
 | Brasil - Classificação Indicativa / CLASSIND | Jogo digital acessível no Brasil e instalável/offline; risco regulatório baixo de resolver porque não há taxa. | R$ 0 | Tratar como obrigatório/condicional conservador. Preparar autoclassificação, símbolos e dossiê. |
 | Google Search Console | Registro gratuito de propriedade para indexação, sitemap e diagnóstico SEO do domínio. | R$ 0 | Verificar domínio `brikaya.com` e enviar sitemap. |
-| Bing Webmaster Tools | Registro gratuito para Bing/Copilot/ecossistema Microsoft e importação/diagnóstico de sitemap. | R$ 0 | Verificar site ou importar do Search Console. |
-| Buscas gratuitas de marca/nome | Reduz risco de conflito antes de crescer internacionalmente sem criar custo de depósito. | R$ 0 | Pesquisar `Brikaya`, `BrickBreaker`, domínio, logotipo e variações. |
+| Bing Webmaster Tools | Registro gratuito para Bing/Copilot/ecossistema Microsoft e importação/diagnóstico de sitemap. | R$ 0 | Verificar site ou importar do Search Console quando houver conta sem aprovação administrativa. |
+| Yandex Webmaster | Registro gratuito para descoberta em Yandex e leitura de sitemap. | R$ 0 | Fazer somente com conta autorizada e sem Yandex Metrica/tag externo. |
+| Naver Search Advisor | Registro gratuito para coreano/Naver, se houver conta Naver autorizada. | R$ 0 | Verificar site e sitemap sem script runtime. |
+| Baidu Search Resource Platform | Registro gratuito para descoberta em chinês, se houver conta Baidu autorizada. | R$ 0 | Tentar apenas domínio global; bloquear ICP, China Network, hospedagem China e serviço pago. |
+| Buscas gratuitas de marca/nome | Reduz risco de conflito antes de crescer internacionalmente sem criar custo de depósito. | R$ 0 | Pesquisar `Brikaya`, `BrickBreaker`, domínio, logotipo, transliterações e variações por idioma. |
 
 ### 1.2. Monitorar
 
@@ -23,6 +26,7 @@ Brikaya será distribuído como PWA/web 100% offline após o primeiro carregamen
 | Índia - Online Gaming Rules 2026 | Se houver dinheiro, aposta, prêmio real, cash-out, e-sport, notificação de categoria ou determinação da autoridade. | Não registrar agora; manter guardrails sem monetização ao jogador. |
 | AdSense / H5 Games Ads | Antes de qualquer anúncio real. | Planejar cadastro e documentos; não ativar no lançamento. |
 | Reino Unido / EEA consentimento | Antes de anúncios personalizados para UK/EEA/CH. | Usar CMP certificado quando ads reais entrarem. |
+| China continental | Antes de infraestrutura, app store, hospedagem local, ICP, monetização ou aceleração regional. | Não executar no custo-zero; manter apenas domínio global e busca gratuita se conta Baidu permitir. |
 
 ### 1.3. Não executar no P0
 
@@ -32,9 +36,10 @@ Registros de marca, copyright/software, patente, modelo de utilidade, desenho in
 
 ### 2.1. Inclui
 
-- Registro obrigatório para lançar ou manter Brikaya PWA nos países P0.
+- Registro obrigatório para lançar ou manter Brikaya PWA nos países/idiomas cobertos.
 - Registro gratuito, mesmo opcional, quando ajuda decisão, descoberta, prova operacional ou redução de risco.
 - Procedimento possível para pessoa física ou jurídica brasileira/paraguaia, sem constituir entidade local em terceiro país.
+- Cadastro de webmaster gratuito para buscadores relevantes por idioma, quando não exigir conta paga, entidade local, representante, cartão, aprovação administrativa ou script runtime externo.
 - Cadastro gratuito de webmaster/ads somente quando não ativa custo, cobrança, campanha ou compra de tráfego.
 
 ### 2.2. Exclui
@@ -44,6 +49,7 @@ Registros de marca, copyright/software, patente, modelo de utilidade, desenho in
 - Registros que dependem de empresa, endereço, representante obrigatório ou licença local fora de Brasil/Paraguai quando isso for condição de obtenção.
 - Compra de domínio adicional, tráfego pago, assinatura, agência, despachante, escritório local ou parecer jurídico pago.
 - Qualquer cadastro que peça upgrade, overage, cartão obrigatório para cobrança ou autorização de gastos sem aprovação explícita.
+- Qualquer rota chinesa que exija ICP, hospedagem na China continental, Cloudflare China Network, content vetting pago, contrato comercial, entidade local ou app store local.
 
 ### 2.3. Interpretação de custo
 
@@ -66,9 +72,12 @@ Registros de marca, copyright/software, patente, modelo de utilidade, desenho in
 | Reino Unido | PEGI/Games Rating Authority | Não identificado como filing obrigatório para PWA web gratuito sem venda física/loja. | Não executar | Publisher via sistema PEGI/IARC quando canal exige. | Build, materiais e formulário quando aplicável. | Não executar no P0; manter informação etária própria/CLASSIND. |
 | México | Sistema mexicano de classificação de videojuegos | Obrigação focada em sujeitos obrigados que distribuem/comercializam/arrendam videojogos físicos. | R$ 0 para o PWA, pois não há filing P0 identificado. | Distribuidor/comercializador/arrendador, quando aplicável. | Estampa/classificação em produto físico e publicidade do sujeito obrigado. | Não obrigatório para PWA gratuito sem mídia física, venda ou aluguel. |
 | Índia | Online Gaming Authority / PROG Rules 2026 | Não obrigatório enquanto Brikaya for social/casual sem dinheiro, prêmio real ou e-sport. | R$ 0 agora | Service provider se requerer determinação/registro ou for notificado. | Descrição do jogo; user-safety features; grievance mechanism se aplicável; documentos da aplicação se houver notificação. | Monitorar; proibir staking, cash-out, prêmio real, aposta, loot monetizável e e-sport no P0. |
-| Global/web | Google Search Console | Opcional gratuito | R$ 0 | Proprietário/controlador do domínio/site. | Conta Google; prova de propriedade por DNS TXT, HTML file, meta tag ou método aceito; sitemap. | Fazer. |
-| Global/web | Bing Webmaster Tools | Opcional gratuito | R$ 0 | Proprietário/controlador do domínio/site. | Conta Microsoft/Google/Facebook; site; sitemap; verificação por XML/meta/CNAME ou importação do Search Console. | Fazer. |
-| Global/web | Buscas gratuitas de marca/nome | Opcional gratuito | R$ 0 | Qualquer responsável pelo projeto. | Lista de termos e prints/links de resultado; nenhuma taxa. | Fazer antes de impulsionar SEO internacional. |
+| China global `zh-CN` | Baidu Search Resource Platform | Opcional gratuito se conta Baidu autorizada existir | R$ 0 | Controlador do site com login Baidu. | Login; prova de posse; sitemap. | Tentar apenas como webmaster gratuito. Não fazer ICP, Cloudflare China Network, hospedagem local, app store, pagamento, licença ou monetização. |
+| Coreia `ko` | Naver Search Advisor | Opcional gratuito se conta Naver autorizada existir | R$ 0 | Controlador do site com login Naver. | Login; prova de posse; sitemap. | Tentar quando houver conta Naver autorizada; não inserir script runtime. |
+| Global/Rússia/adjacentes | Yandex Webmaster | Opcional gratuito se conta Yandex autorizada existir | R$ 0 | Controlador do site com login Yandex. | Login; prova de posse; sitemap. | Tentar sem Yandex Metrica/tag externo. |
+| Global/web | Google Search Console | Opcional gratuito | R$ 0 | Proprietário/controlador do domínio/site. | Conta Google; prova de propriedade por DNS TXT, HTML file, meta tag ou método aceito; sitemap. | Concluído para domínio. |
+| Global/web | Bing Webmaster Tools | Opcional gratuito | R$ 0 | Proprietário/controlador do domínio/site. | Conta Microsoft/Google/Facebook; site; sitemap; verificação por XML/meta/CNAME ou importação do Search Console. | Bloqueado nesta execução por aprovação admin do login Microsoft disponível; retomar com conta autorizada sem custo. |
+| Global/web | Buscas gratuitas de marca/nome | Opcional gratuito | R$ 0 | Qualquer responsável pelo projeto. | Lista de termos, transliterações, prints/links de resultado; nenhuma taxa. | Fazer antes de impulsionar SEO internacional; não depositar marca. |
 | Global/web | AdSense / H5 Games Ads | Condicional futuro | R$ 0 direto, sem contar tributos/banco/contabilidade | Pessoa física ou jurídica em país suportado, incluindo Brasil/Paraguai conforme disponibilidade. | Conta Google; site/conteúdo próprio; país/endereço de pagamento; dados fiscais; identidade; PIN postal; banco/forma de pagamento; política de privacidade; aprovação H5 separada. | Não executar agora. Documentar gatilhos antes de ads reais. |
 
 ## 4. CLASSIND Brasil - decisão P0 detalhada
@@ -130,8 +139,21 @@ Enviar consulta curta ao canal oficial se houver dúvida sobre a hipótese “br
 | Requisitos | Conta Microsoft/Google/Facebook; controle do domínio/site; sitemap; verificação por XML/meta/CNAME/importação. |
 | Evidência esperada | Site verificado; sitemap enviado ou importado. |
 | Risco | Não adicionar scripts de terceiros no runtime do jogo; usar verificação DNS/arquivo/meta estática. |
+| Estado operacional | Bloqueado em 2026-07-03: login Microsoft disponível pediu aprovação de administrador para o aplicativo BingWebmasterTools. Não foi acionado `Request approval`. |
 
-### 5.3. Buscas gratuitas de marca/nome
+### 5.3. Buscadores por idioma
+
+| Buscador/ferramenta | Idiomas/mercados cobertos | Estado em 2026-07-03 | Regra de custo zero |
+| --- | --- | --- | --- |
+| Google Search Console | Todos os idiomas no domínio, incluindo `pt-BR`, `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th`, `zh-CN`. | Concluído para domínio; sitemap raiz processado. | Atualizar sitemap multilíngue somente quando rotas localizadas reais tiverem metadados/canonical próprios. |
+| Bing Webmaster Tools | Global/Bing/Copilot. | Bloqueado por aprovação admin da conta Microsoft disponível. | Retomar com conta autorizada; não clicar pedido admin nem oferta de ads. |
+| Yandex Webmaster | Mercados onde Yandex ainda traz descoberta orgânica. | Página pública confirma serviço gratuito; login pendente. | Sem Yandex Metrica/tag externo; só domínio e sitemap. |
+| Naver Search Advisor | Coreano/`ko`. | Pendente por conta Naver autorizada. | Sem script runtime; usar verificação HTML/DNS/arquivo se disponível. |
+| Baidu Search Resource Platform | Chinês simplificado/`zh-CN`. | Pendente por conta Baidu autorizada. | Sem ICP, China Network, hospedagem China, app store, monetização ou serviço pago. |
+
+Rotas localizadas verificadas em 2026-07-03 (`/en/`, `/zh-CN/` e demais) ainda servem HTML `pt-BR`, canonical raiz e metadados em português. Portanto, `hreflang` fica bloqueado até a publicação real de páginas equivalentes por idioma.
+
+### 5.4. Buscas gratuitas de marca/nome
 
 Buscas não registram direito novo, mas reduzem risco antes de internacionalizar SEO e materiais públicos. Guardar evidência textual de data, termo, base consultada e resultado sintético; não salvar dados pessoais de terceiros além do mínimo público necessário.
 
@@ -146,6 +168,8 @@ Buscas não registram direito novo, mas reduzem risco antes de internacionalizar
 | CIPO Canadá | <https://ised-isde.canada.ca/cipo/trademark-search/> | `Brikaya`, `BrickBreaker`. |
 | IMPI México / Marcanet | <https://marcia.impi.gob.mx/marcas/search> | `Brikaya`, `BrickBreaker`. |
 | IP India | <https://ipindiaonline.gov.in/tmrpublicsearch/frmmain.aspx> | `Brikaya`, `BrickBreaker`. |
+| China/Baidu/web chinês | <https://ziyuan.baidu.com/site/index> e busca web local gratuita | `Brikaya`, `布里卡亚` se adotado, transliterações revisadas. |
+| Coreia/Naver/web coreano | <https://searchadvisor.naver.com/> e busca web local gratuita | `Brikaya`, transliteração coreana se adotada, `BrickBreaker`. |
 | Web/domínios | Buscadores gerais, registradores e redes públicas | domínio principal, variações `.com`, perfis sociais. |
 
 ## 6. Itens condicionais futuros
@@ -220,7 +244,11 @@ Não faz parte do lançamento porque `docs/dist/projeto-pwa.md` mantém anúncio
 - [x] Verificar `brikaya.com` no Google Search Console por DNS TXT.
 - [x] Enviar sitemap.
 - [x] Inspecionar URL principal e solicitar indexação inicial.
-- [ ] Verificar/importar site no Bing Webmaster Tools.
+- [x] Confirmar que sitemap multilíngue/`hreflang` ainda não deve ser enviado porque as rotas localizadas publicadas não têm HTML/metadados localizados.
+- [ ] Verificar/importar site no Bing Webmaster Tools com conta não bloqueada por aprovação administrativa.
+- [ ] Verificar site no Yandex Webmaster com conta autorizada.
+- [ ] Verificar site no Naver Search Advisor com conta autorizada.
+- [ ] Verificar site no Baidu Search Resource Platform com conta autorizada e sem rota China paga.
 - [ ] Salvar resumo de busca gratuita de marca/nome por base oficial.
 
 ### 8.3. Monitoramento futuro
@@ -248,13 +276,18 @@ Data de consulta: 2026-07-03. Usar a tabela vigente do órgão quando houver div
 | H5 Games Ads | [Get started with AdSense H5 Games Ads](https://support.google.com/adsense/answer/9959170?hl=en) e [Ad Placement API signup](https://developers.google.com/ad-placement/docs/signup) |
 | CMP Google | [Google consent management requirements](https://support.google.com/adsense/answer/13554116?hl=en) |
 | Google Search Console | [Search Console](https://search.google.com/search-console/about) e [Verify your site ownership](https://support.google.com/webmasters/answer/9008080?hl=en) |
-| Bing Webmaster Tools | [Bing Webmaster Tools](https://www.bing.com/toolbox/webmaster/) |
+| Bing Webmaster Tools | [Bing Webmaster Tools](https://www.bing.com/toolbox/webmaster/) e [Add and Verify site](https://www.bing.com/webmasters/help/add-and-verify-site-12184f8b) |
 | INPI custos | [Tabela de retribuições INPI](https://www.gov.br/inpi/pt-br/inpi-data/precificacao-dos-servicos/tabela-de-retribuicoes-inpi_portaria-mdic-no110_2025-e-portaria-inpi-no-10_2025.pdf) |
 | INPI software | [Registro de Programa de Computador - INPI](https://www.gov.br/inpi/pt-br/servicos/programas-de-computador/arquivos/guia-basico/REGISTRODEPROGRAMADECOMPUTADOR3.pdf) |
 | DINAPI registros | [DINAPI - Como registrar](https://www.dinapi.gov.py/portal/v3/derecho-de-autor/como-registrar/) |
 | DINAPI software | [Instructivo Derecho de Autor para Software](https://www.dinapi.gov.py/portal/v3/assets/biblioteca/documentos/Instructivo-Industria-del-Software-1.2-6.pdf) |
 | DINAPI marca | [Requisitos para registro de marca](https://mosaico.dinapi.gov.py/osticket/v011401/kb/faq.php?id=25) |
 | Paraguai jornal mínimo | [MTESS - reajuste 2026](https://www.mtess.gov.py/?p=36166) e [Decreto 6225/2026](https://www.mtess.gov.py/wp-content/uploads/2026/06/DECRETO-N%C2%B0-6225-SALARIO-MINIMO-2026.pdf) |
+| Google páginas localizadas | [Localized Versions](https://developers.google.com/search/docs/specialty/international/localized-versions) |
+| Yandex sitemap | [Sitemap files - Yandex Webmaster](https://yandex.com/support/webmaster/en/indexing-options/sitemap) |
+| Naver webmaster/sitemap | [Naver Search Advisor](https://searchadvisor.naver.com/start) e [RSS/site map](https://searchadvisor.naver.com/guide/request-feed) |
+| Baidu site management | [Baidu Search Resource Platform](https://ziyuan.baidu.com/site/index) |
+| Cloudflare China Network | [Cloudflare China Network FAQ](https://developers.cloudflare.com/china-network/faq/) |
 | USPTO marca opcional | [Why register your trademark?](https://www.uspto.gov/trademarks/basics/why-register-your-trademark) |
 | ESRB | [ESRB FAQ](https://www.esrb.org/faqs/) |
 | Reino Unido PEGI | [UK GOV - PEGI rules](https://www.gov.uk/government/news/new-rules-to-better-protect-children-from-inappropriate-video-game-content) |
@@ -263,7 +296,7 @@ Data de consulta: 2026-07-03. Usar a tabela vigente do órgão quando houver div
 
 1. Nenhum registro pago de PI é obrigatório para lançar Brikaya como PWA-only.
 2. O único registro regulatório tratado como P0 obrigatório/condicional é CLASSIND Brasil, por custo zero e por ambiguidade conservadora do PWA offline.
-3. Search Console, Bing Webmaster Tools e buscas gratuitas de marca/nome entram no P0 porque não custam e ajudam distribuição web sem lojas.
+3. Search Console, Bing Webmaster Tools, Yandex, Naver, Baidu e buscas gratuitas de marca/nome entram no P0 apenas quando não custam e ajudam distribuição web sem lojas.
 4. Monetização via AdSense/H5 é futura, gratuita para cadastrar, mas condicionada a aprovação, documentos fiscais/pagamento, privacidade e possível consentimento UK/EEA/CH.
 5. Índia permanece sem registro enquanto Brikaya não envolver dinheiro, aposta, prêmio real, e-sport ou categoria notificada.
-6. Qualquer mudança para app store, anúncios reais, compra de tráfego, prêmio real, ranking premiado, loja nativa ou depósito de marca/software/patente exige nova decisão fora deste P0.
+6. Qualquer mudança para app store, anúncios reais, compra de tráfego, prêmio real, ranking premiado, loja nativa, depósito de marca/software/patente, ICP/China Network/hospedagem China ou ativação comercial exige nova decisão fora deste P0.
