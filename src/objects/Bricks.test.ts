@@ -2,6 +2,24 @@
 import { Bricks } from "./Bricks";
 import type { DynamicGameDimensions } from "../constants/game";
 
+jest.mock("../storage/gameLogger", () => ({
+  gameLogger: {
+    logBrickDestroyed: jest.fn().mockResolvedValue(undefined),
+  },
+}));
+
+jest.mock("../utils/collisionTracker", () => ({
+  collisionTracker: {
+    logBrickCollision: jest.fn().mockResolvedValue(undefined),
+  },
+}));
+
+jest.mock("../utils/logger", () => ({
+  ERROR: jest.fn(),
+  LOG: jest.fn(),
+  WARN: jest.fn(),
+}));
+
 const TEST_DIMENSIONS: DynamicGameDimensions = {
   brickWidth: 50,
   brickHeight: 20,

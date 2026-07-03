@@ -8,8 +8,12 @@ import {
   SpeedReductionSnapshot,
   SpeedStateSnapshot
 } from '../constants/game';
-import { ASSET_PATHS } from '../constants/assets';
 import { AssetLoader } from '../utils/assetLoader';
+import {
+  DEFAULT_GAME_VISUAL_ASSET_RESOLVER,
+  GAME_VISUAL_ASSET_ROLES,
+  type VisualAssetPathResolver,
+} from '../utils/visualAssetResolver';
 import { collisionTracker } from '../utils/collisionTracker';
 import { ERROR, LOG } from '../utils/logger';
 import { gameLogger, type LoggedGameState } from '../storage/gameLogger';
@@ -45,7 +49,8 @@ export class Ball {
     private canvasWidth: number,
     private canvasHeight: number,
     private dimensions: DynamicGameDimensions,
-    private speedMultiplier = 1
+    private speedMultiplier = 1,
+    private resolveAssetPath: VisualAssetPathResolver = DEFAULT_GAME_VISUAL_ASSET_RESOLVER
   ) {
     this.radius = this.dimensions.ballRadius;
     this.x = this.canvasWidth / 2;
@@ -337,7 +342,9 @@ export class Ball {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    const ballImage = AssetLoader.getImage(ASSET_PATHS.BALL);
+    const ballImage = AssetLoader.getImage(
+      this.resolveAssetPath(GAME_VISUAL_ASSET_ROLES.ball)
+    );
     
     if (ballImage) {
       // Desenha a imagem da bolinha
@@ -429,7 +436,13 @@ export class Ball {
   }
 
   createClone(angleOffset: number): Ball {
-    const clone = new Ball(this.canvasWidth, this.canvasHeight, this.dimensions, this.speedMultiplier);
+    const clone = new Ball(
+      this.canvasWidth,
+      this.canvasHeight,
+      this.dimensions,
+      this.speedMultiplier,
+      this.resolveAssetPath
+    );
     clone.x = this.x;
     clone.y = this.y;
     clone.level = this.level;

@@ -1,7 +1,13 @@
 // src/objects/PowerUp.ts
 import { GAME_COLOR } from '../constants/game';
-import { getPowerUpDefinition, type PowerUpType } from '../constants/powerUps';
+import { type PowerUpType } from '../constants/powerUps';
 import { AssetLoader } from '../utils/assetLoader';
+import {
+  DEFAULT_GAME_VISUAL_ASSET_RESOLVER,
+  GAME_VISUAL_ASSET_ROLES,
+  type GameVisualAssetRole,
+  type VisualAssetPathResolver,
+} from '../utils/visualAssetResolver';
 
 const POWER_UP_SIZE = 18;
 const POWER_UP_FALL_SPEED = 1.2;
@@ -25,6 +31,12 @@ const POWER_UP_COLORS: Record<PowerUpType, string> = {
   slow_ball: POWER_UP_SLOW_BALL_COLOR,
   laser_fan: POWER_UP_LASER_FAN_COLOR,
 };
+const POWER_UP_ASSET_ROLES = {
+  multiball: GAME_VISUAL_ASSET_ROLES.powerupMultiball,
+  wide_paddle: GAME_VISUAL_ASSET_ROLES.powerupWidePaddle,
+  slow_ball: GAME_VISUAL_ASSET_ROLES.powerupSlowBall,
+  laser_fan: GAME_VISUAL_ASSET_ROLES.powerupLaserFan,
+} as const satisfies Record<PowerUpType, GameVisualAssetRole>;
 
 interface PaddleBounds {
   x: number;
@@ -56,7 +68,12 @@ function drawRoundedRect(
 export class PowerUp {
   private y: number;
 
-  constructor(private x: number, startY: number, private type: PowerUpType) {
+  constructor(
+    private x: number,
+    startY: number,
+    private type: PowerUpType,
+    private resolveAssetPath: VisualAssetPathResolver = DEFAULT_GAME_VISUAL_ASSET_RESOLVER,
+  ) {
     this.y = startY;
   }
 
@@ -67,8 +84,9 @@ export class PowerUp {
   draw(ctx: CanvasRenderingContext2D): void {
     const left = this.x - POWER_UP_SIZE / 2;
     const top = this.y - POWER_UP_SIZE / 2;
-    const definition = getPowerUpDefinition(this.type);
-    const icon = AssetLoader.getImage(definition.iconPath);
+    const icon = AssetLoader.getImage(
+      this.resolveAssetPath(POWER_UP_ASSET_ROLES[this.type]),
+    );
 
     if (icon) {
       ctx.drawImage(icon, left, top, POWER_UP_SIZE, POWER_UP_SIZE);

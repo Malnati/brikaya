@@ -576,6 +576,7 @@ export default function App() {
                 qaScenario={effectiveQaScenario}
                 audioSink={audioSink}
                 startBlocked={isInitialCountdownActive}
+                imageSetId={selection.imageSetId}
               />
             </div>
             <AdSlotPlaceholder variant="bottom" />
@@ -608,7 +609,10 @@ export default function App() {
         onClose={handleCloseCollisionStats}
       />
       <GameLogViewer isVisible={showGameLogs} onClose={handleCloseLogs} />
-      <GameCinematicOverlay state={cinematicOverlay} />
+      <GameCinematicOverlay
+        state={cinematicOverlay}
+        imageSetId={selection.imageSetId}
+      />
     </main>
   );
 }

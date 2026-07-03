@@ -37,6 +37,14 @@ import {
   getPowerUpActivationAudioId,
   type PowerUpType,
 } from "../constants/powerUps";
+import {
+  IMAGE_SET_RETRO_DEFAULT,
+  type ImageSetId,
+} from "../constants/appearance";
+import {
+  resolveGameVisualAssetPath,
+  type GameVisualAssetRole,
+} from "../utils/visualAssetResolver";
 import { LOG, ERROR, WARN } from "../utils/logger";
 
 LOG("📦 GameEngine.ts carregado, gameLogger:", gameLogger);
@@ -148,6 +156,8 @@ export class GameEngine {
     this.onTouchMove(event);
   private readonly handleTouchEnd = (event: TouchEvent) =>
     this.onTouchEnd(event);
+  private readonly resolveAssetPath = (role: GameVisualAssetRole) =>
+    resolveGameVisualAssetPath(this.imageSetId, role);
 
   private maxBrickRows = 0;
 
@@ -161,6 +171,7 @@ export class GameEngine {
     private qaScenario?: GameQaScenario | null,
     private audioSink: GameAudioSink = NOOP_AUDIO_SINK,
     private onLevelChange?: (level: number) => void,
+    private imageSetId: ImageSetId = IMAGE_SET_RETRO_DEFAULT,
   ) {
     LOG(`🚀 GameEngine constructor iniciado`);
 
@@ -204,6 +215,7 @@ export class GameEngine {
       this.canvasSize.width,
       this.canvasSize.height,
       this.dimensions,
+      this.resolveAssetPath,
     );
     this.balls.push(
       new Ball(
@@ -211,6 +223,7 @@ export class GameEngine {
         this.canvasSize.height,
         this.dimensions,
         calculateLevelSpeedMultiplier(this.level),
+        this.resolveAssetPath,
       ),
     );
     this.prepareQaBall();
@@ -308,6 +321,13 @@ export class GameEngine {
     this.bricks.resize(this.dimensions, this.maxBrickRows);
   }
 
+  public setImageSet(imageSetId: ImageSetId) {
+    if (this.imageSetId === imageSetId) return;
+
+    this.imageSetId = imageSetId;
+    void AssetLoader.preloadImageSet(imageSetId);
+  }
+
   private configureBrickRows() {
     const availableHeight =
       this.canvasSize.height -
@@ -325,6 +345,8 @@ export class GameEngine {
       this.dimensions,
       this.onBrickDestroyed.bind(this),
       this.maxBrickRows,
+      undefined,
+      this.resolveAssetPath,
     );
   }
 
@@ -386,6 +408,7 @@ export class GameEngine {
       this.paddle.position.x + this.paddle.position.width / CENTER_DIVISOR,
       this.paddle.position.y - LASER_FAN_QA_POWER_UP_Y_OFFSET,
       "laser_fan",
+      this.resolveAssetPath,
     );
     this.laserFanSpawnsThisLevel = 1;
   }
@@ -393,7 +416,7 @@ export class GameEngine {
   private async preloadAssets() {
     try {
       LOG("🎮 Iniciando carregamento de assets...");
-      await AssetLoader.preloadAllAssets();
+      await AssetLoader.preloadAllAssets(this.imageSetId);
       this.assetsLoaded = true;
       LOG("✅ Assets carregados com sucesso!");
     } catch (error) {
@@ -535,6 +558,7 @@ export class GameEngine {
         this.canvasSize.height,
         this.dimensions,
         nextSpeedMultiplier,
+        this.resolveAssetPath,
       ),
     ];
     this.prepareQaBall();
@@ -754,7 +778,12 @@ export class GameEngine {
       ),
     );
     const spawnY = this.dimensions.brickOffsetTop + POWER_UP_START_Y_OFFSET;
-    this.activePowerUp = new PowerUp(spawnX, spawnY, powerUpType);
+    this.activePowerUp = new PowerUp(
+      spawnX,
+      spawnY,
+      powerUpType,
+      this.resolveAssetPath,
+    );
     this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_SPAWN);
   }
 

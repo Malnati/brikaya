@@ -1,5 +1,4 @@
 // src/objects/Bricks.ts
-import { BRICK_COLORS } from "../constants/assets";
 import {
   DynamicGameDimensions,
   SpeedReductionSnapshot,
@@ -8,9 +7,22 @@ import { gameLogger, type LoggedGameState } from "../storage/gameLogger";
 import { AssetLoader } from "../utils/assetLoader";
 import { collisionTracker } from "../utils/collisionTracker";
 import { ERROR, LOG, WARN } from "../utils/logger";
+import {
+  DEFAULT_GAME_VISUAL_ASSET_RESOLVER,
+  GAME_VISUAL_ASSET_ROLES,
+  type GameVisualAssetRole,
+  type VisualAssetPathResolver,
+} from "../utils/visualAssetResolver";
 
 const BRICK_ACTIVE = 1;
 const BRICK_DESTROYED = 0;
+const BRICK_ASSET_ROLES = [
+  GAME_VISUAL_ASSET_ROLES.brickRed,
+  GAME_VISUAL_ASSET_ROLES.brickBlue,
+  GAME_VISUAL_ASSET_ROLES.brickGreen,
+  GAME_VISUAL_ASSET_ROLES.brickYellow,
+  GAME_VISUAL_ASSET_ROLES.brickPurple,
+] as const satisfies readonly GameVisualAssetRole[];
 
 interface Brick {
   x: number;
@@ -40,6 +52,7 @@ export class Bricks {
     private onBrickDestroyed?: (colorIndex: number) => void | Promise<void>,
     maxRows?: number,
     private onMaxRowsReached?: () => void,
+    private resolveAssetPath: VisualAssetPathResolver = DEFAULT_GAME_VISUAL_ASSET_RESOLVER,
   ) {
     this.dimensions = dimensions;
     this.rows = dimensions.brickRows;
@@ -56,7 +69,7 @@ export class Bricks {
           x: 0,
           y: 0,
           status: BRICK_ACTIVE,
-          colorIndex: Math.floor(Math.random() * BRICK_COLORS.length),
+          colorIndex: Math.floor(Math.random() * BRICK_ASSET_ROLES.length),
         };
       }
     }
@@ -107,7 +120,11 @@ export class Bricks {
           b.y = brickY;
 
           // Desenhar a imagem do brick
-          const brickImage = AssetLoader.getImage(BRICK_COLORS[b.colorIndex]);
+          const brickAssetRole =
+            BRICK_ASSET_ROLES[b.colorIndex] ?? GAME_VISUAL_ASSET_ROLES.brickRed;
+          const brickImage = AssetLoader.getImage(
+            this.resolveAssetPath(brickAssetRole),
+          );
           if (brickImage) {
             ctx.drawImage(
               brickImage,
@@ -146,7 +163,7 @@ export class Bricks {
         x: 0,
         y: 0,
         status: BRICK_ACTIVE,
-        colorIndex: Math.floor(Math.random() * BRICK_COLORS.length),
+        colorIndex: Math.floor(Math.random() * BRICK_ASSET_ROLES.length),
       });
     }
     this.rows += 1;

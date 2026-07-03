@@ -11,6 +11,10 @@ import {
 } from "../constants/game";
 import { GameQaScenario } from "../logic/GameEngine";
 import { calculateResponsiveCanvasSize } from "../utils/canvasSizing";
+import {
+  IMAGE_SET_RETRO_DEFAULT,
+  type ImageSetId,
+} from "../constants/appearance";
 import type { GameAudioSink } from "../constants/audio";
 import type { LevelTransitionPayload } from "../constants/game";
 import type { ReactNode } from "react";
@@ -25,6 +29,7 @@ interface GameProps {
   audioSink?: GameAudioSink;
   boardControls?: ReactNode;
   startBlocked?: boolean;
+  imageSetId?: ImageSetId;
 }
 
 const RESIZE_EVENT_NAME = "resize";
@@ -87,6 +92,7 @@ export default function Game({
   audioSink,
   boardControls,
   startBlocked = false,
+  imageSetId = IMAGE_SET_RETRO_DEFAULT,
 }: GameProps) {
   const surfaceRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -181,6 +187,7 @@ export default function Game({
     audioSink,
     onLevelChange,
     startBlocked,
+    imageSetId,
   );
   useColorDebug(canvasRef);
 

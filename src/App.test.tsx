@@ -12,6 +12,7 @@ interface MockGameProps {
   startBlocked?: boolean;
   onLevelTransition?: (payload: LevelTransitionPayload) => void;
   onGameOver?: () => Promise<void> | void;
+  imageSetId?: string;
 }
 
 const TEST_LEVEL_TRANSITION_PAYLOAD: LevelTransitionPayload = {
@@ -177,6 +178,7 @@ describe("App theme selector", () => {
     expect(document.documentElement.dataset.theme).toBe("neon-arcade");
     expect(document.documentElement.dataset.imageSet).toBe("retro-default");
     expect(document.documentElement.dataset.fontSet).toBe("arcade-ui");
+    expect(mockLastGameProps?.imageSetId).toBe("retro-default");
     await user.click(screen.getByRole("button", { name: "Menu" }));
 
     await user.click(screen.getByRole("button", { name: "CRT alto contraste" }));
@@ -186,6 +188,7 @@ describe("App theme selector", () => {
     expect(document.documentElement.dataset.theme).toBe("crt-high-contrast");
     expect(document.documentElement.dataset.imageSet).toBe("high-contrast");
     expect(document.documentElement.dataset.fontSet).toBe("crt-mono");
+    expect(mockLastGameProps?.imageSetId).toBe("high-contrast");
     expect(window.localStorage.setItem).toHaveBeenCalledWith(
       "brickbreaker-theme",
       "crt-high-contrast",

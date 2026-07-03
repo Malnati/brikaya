@@ -9,8 +9,12 @@ import {
   calculateLevelPreviousMaxSpeed,
   calculateSpeedReductionPerBrick
 } from '../constants/game';
-import { ASSET_PATHS } from '../constants/assets';
 import { AssetLoader } from '../utils/assetLoader';
+import {
+  DEFAULT_GAME_VISUAL_ASSET_RESOLVER,
+  GAME_VISUAL_ASSET_ROLES,
+  type VisualAssetPathResolver,
+} from '../utils/visualAssetResolver';
 import { gameLogger } from '../storage/gameLogger';
 import { ERROR } from '../utils/logger';
 
@@ -28,7 +32,12 @@ export class Paddle {
   private height: number;
   private previousPosition: { x: number; y: number } | null = null;
 
-  constructor(private canvasWidth: number, private canvasHeight: number, dimensions: DynamicGameDimensions) {
+  constructor(
+    private canvasWidth: number,
+    private canvasHeight: number,
+    dimensions: DynamicGameDimensions,
+    private resolveAssetPath: VisualAssetPathResolver = DEFAULT_GAME_VISUAL_ASSET_RESOLVER
+  ) {
     this.baseWidth = dimensions.paddleWidth;
     this.width = dimensions.paddleWidth;
     this.height = dimensions.paddleHeight;
@@ -105,7 +114,9 @@ export class Paddle {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    const paddleImage = AssetLoader.getImage(ASSET_PATHS.PADDLE);
+    const paddleImage = AssetLoader.getImage(
+      this.resolveAssetPath(GAME_VISUAL_ASSET_ROLES.paddle)
+    );
     
     if (paddleImage) {
       // Draw image at paddle position

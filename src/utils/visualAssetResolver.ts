@@ -82,6 +82,8 @@ export const GAME_VISUAL_ASSET_ROLES = {
 export type GameVisualAssetRole =
   (typeof GAME_VISUAL_ASSET_ROLES)[keyof typeof GAME_VISUAL_ASSET_ROLES];
 
+export type VisualAssetPathResolver = (role: GameVisualAssetRole) => string;
+
 export const GAME_VISUAL_ASSETS_BY_IMAGE_SET = {
   [IMAGE_SET_RETRO_DEFAULT]: {
     [GAME_VISUAL_ASSET_ROLES.ball]: sprBallPlayerDefault,
@@ -151,6 +153,10 @@ export function resolveGameVisualAssetPath(
 ): string {
   return GAME_VISUAL_ASSETS_BY_IMAGE_SET[imageSetId][role];
 }
+
+export const DEFAULT_GAME_VISUAL_ASSET_RESOLVER: VisualAssetPathResolver = (
+  role,
+) => resolveGameVisualAssetPath(IMAGE_SET_RETRO_DEFAULT, role);
 
 export function getRuntimeVisualAssetPathsForImageSet(
   imageSetId: ImageSetId,
