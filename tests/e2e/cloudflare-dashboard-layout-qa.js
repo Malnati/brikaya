@@ -48,6 +48,9 @@ const LEVEL_TIME_LABEL = "Tempo da fase";
 const SPEED_REDUCTIONS_LABEL = "Reduções aplicadas";
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
+const EVENT_HEADER_SELECTOR = ".event-header";
+const EVENT_DETAILS_SELECTOR = ".event-details";
+const EVENT_DETAILS_WAIT_TIMEOUT_MS = 10000;
 const RESPONSIVE_VIEWPORT_MATRIX = JSON.parse(
   readFileSync(RESPONSIVE_VIEWPORT_MATRIX_PATH, "utf8"),
 );
@@ -406,6 +409,48 @@ async function clickButtonByPattern(page, pattern) {
   return false;
 }
 
+async function openFirstEventDetails(
+  page,
+  refreshButtonMissingMessage,
+  eventMissingMessage,
+) {
+  let firstEventHeader = await page.$(EVENT_HEADER_SELECTOR);
+  if (!firstEventHeader) {
+    const refreshedLogs = await clickButtonByPattern(page, /atualizar/i);
+    assert(refreshedLogs, refreshButtonMissingMessage);
+    await page.waitForFunction(
+      (eventHeaderSelector) =>
+        Boolean(document.querySelector(eventHeaderSelector)),
+      { timeout: EVENT_DETAILS_WAIT_TIMEOUT_MS },
+      EVENT_HEADER_SELECTOR,
+    );
+    firstEventHeader = await page.$(EVENT_HEADER_SELECTOR);
+  }
+  assert(firstEventHeader, eventMissingMessage);
+  await page.evaluate((eventHeaderSelector) => {
+    const header = document.querySelector(eventHeaderSelector);
+    if (header instanceof HTMLElement) {
+      header.click();
+    }
+  }, EVENT_HEADER_SELECTOR);
+  await page.waitForSelector(EVENT_DETAILS_SELECTOR, {
+    timeout: EVENT_DETAILS_WAIT_TIMEOUT_MS,
+  });
+}
+
+async function waitForLogDetailLabels(page, speedLabel, timeLabel) {
+  await page.waitForFunction(
+    ({ expectedSpeedLabel, expectedTimeLabel }) => {
+      const text = document.body.textContent || "";
+      return (
+        text.includes(expectedSpeedLabel) && text.includes(expectedTimeLabel)
+      );
+    },
+    { timeout: EVENT_DETAILS_WAIT_TIMEOUT_MS },
+    { expectedSpeedLabel: speedLabel, expectedTimeLabel: timeLabel },
+  );
+}
+
 async function collectOverlayLayoutState(page) {
   return page.evaluate(() => ({
     hasHorizontalOverflow:
@@ -731,29 +776,15 @@ async function run() {
           { timeout: 10000 },
         );
         await new Promise((resolve) => setTimeout(resolve, 500));
-        let firstEventHeader = await page.$(".event-header");
-        if (!firstEventHeader) {
-          const refreshedLogs = await clickButtonByPattern(page, /atualizar/i);
-          assert(
-            refreshedLogs,
-            `${viewport.name}: logs abriu sem botão Atualizar disponível.`,
-          );
-          await page.waitForFunction(
-            () => Boolean(document.querySelector(".event-header")),
-            { timeout: 10000 },
-          );
-          firstEventHeader = await page.$(".event-header");
-        }
-        if (firstEventHeader) {
-          await firstEventHeader.click();
-        }
-        await page.waitForFunction(
-          ({ speedLabel, timeLabel }) => {
-            const text = document.body.textContent || "";
-            return text.includes(speedLabel) && text.includes(timeLabel);
-          },
-          { timeout: 10000 },
-          { speedLabel: SPEED_CURRENT_LABEL, timeLabel: LEVEL_TIME_LABEL },
+        await openFirstEventDetails(
+          page,
+          `${viewport.name}: logs abriu sem botão Atualizar disponível.`,
+          `${viewport.name}: nenhum evento disponível no painel de logs.`,
+        );
+        await waitForLogDetailLabels(
+          page,
+          SPEED_CURRENT_LABEL,
+          LEVEL_TIME_LABEL,
         );
         const logsOverlayState = await collectOverlayLayoutState(page);
         assert(

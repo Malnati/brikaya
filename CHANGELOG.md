@@ -3,6 +3,18 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.29.1] - 2026-07-03
+### Corrigido
+- QAs publicados mobile e dashboard passam a abrir detalhes do primeiro evento de log de forma estável após a tela de consentimento, evitando falha de clique coordenado em viewport móvel.
+
+### Testado
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm run build`
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm test -- --runInBand`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ node tests/e2e/cloudflare-consent-screen-qa.js`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-offline-pwa-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`
+
 ## [1.29.0] - 2026-07-03
 ### Adicionado
 - Tela inicial obrigatória de consentimento local para liberar a partida sem anúncios reais, CMP, scripts externos ou chamadas de rede.
