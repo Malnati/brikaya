@@ -1,0 +1,60 @@
+{
+  "generatedAt": "2026-07-03T07:32:30.614Z",
+  "publicUrl": "https://malnati-brickbreaker.pages.dev/",
+  "qa": [
+    {
+      "command": "make cloudflare-mobile-qa",
+      "report": "evi-final-pending-qa-production-cloudflare-mobile-qa.json",
+      "url": "https://malnati-brickbreaker.pages.dev/",
+      "consoleProblems": 0,
+      "externalRequests": null,
+      "screenshotPath": "tmp/screenshots/cloudflare-mobile-qa.png",
+      "passed": true
+    },
+    {
+      "command": "make cloudflare-no-score-reset",
+      "report": "evi-final-pending-qa-production-cloudflare-no-score-reset-after.json",
+      "url": "https://malnati-brickbreaker.pages.dev/",
+      "consoleProblems": 0,
+      "externalRequests": null,
+      "screenshotPath": "tmp/screenshots/cloudflare-no-score-reset-after-brick.png",
+      "passed": true
+    },
+    {
+      "command": "make cloudflare-phase-transition-qa",
+      "report": "evi-final-pending-qa-production-cloudflare-phase-transition.json",
+      "url": "https://malnati-brickbreaker.pages.dev/?qaScenario=single-brick-phase-clear",
+      "consoleProblems": 0,
+      "externalRequests": null,
+      "screenshotPath": "tmp/screenshots/cloudflare-phase-transition.png",
+      "passed": true
+    },
+    {
+      "command": "make cloudflare-dashboard-layout-qa",
+      "report": "evi-final-pending-qa-production-cloudflare-dashboard-layo-d4a1a9.json",
+      "url": "https://malnati-brickbreaker.pages.dev/",
+      "consoleProblems": 0,
+      "externalRequests": null,
+      "screenshotPath": "tmp/screenshots/cloudflare-dashboard-layout.png",
+      "passed": true
+    },
+    {
+      "command": "make cloudflare-theme-qa",
+      "report": "evi-final-pending-qa-production-cloudflare-theme-qa.json",
+      "url": "https://malnati-brickbreaker.pages.dev/",
+      "consoleProblems": 0,
+      "externalRequests": 0,
+      "screenshotPath": {
+        "iphone15": {
+          "contrast": "tmp/screenshots/cloudflare-theme-iphone15-contrast.png",
+          "sunset": "tmp/screenshots/cloudflare-theme-iphone15-sunset.png"
+        },
+        "desktop": {
+          "contrast": "tmp/screenshots/cloudflare-theme-desktop-contrast.png",
+          "sunset": "tmp/screenshots/cloudflare-theme-desktop-sunset.png"
+        }
+      },
+      "passed": true
+    }
+  ]
+}

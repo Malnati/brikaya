@@ -1,0 +1,38 @@
+{
+  "url": "https://27715075.malnati-brickbreaker.pages.dev/?qaScenario=late-phase-stability",
+  "screenshotPath": "docs/assets/issues/local-high-scores/evidence/evi-local-high-scores-preview-cloudflare-high-scores-adc22e.png",
+  "seededScores": [
+    20,
+    0,
+    120,
+    80,
+    -5,
+    40
+  ],
+  "expectedRanks": [
+    "1º 120",
+    "2º 80",
+    "3º 40",
+    "4º 20"
+  ],
+  "state": {
+    "hasDrawer": true,
+    "hasPanel": true,
+    "bestText": "Melhor partida 120",
+    "ranks": [
+      "1º 120",
+      "2º 80",
+      "3º 40",
+      "4º 20"
+    ],
+    "drawerText": "Menu×Versão v89AparênciaTema visualNeon ArcadeCRT alto contrastePixel SunsetImagensRetro padrãoAlto contrasteCabine SunsetFonteArcadeCRT monoBlocos pixelRecordesMelhor partida 1201º 1202º 803º 404º 20Ferramentas≡Logs◈Colisões0Zerar pontuação",
+    "bodyHasInternalCopy": false,
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393
+    }
+  },
+  "externalRequests": [],
+  "consoleProblems": []
+}

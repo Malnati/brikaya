@@ -7,13 +7,13 @@ import { buildChromeLaunchArgs } from './chromeLaunchArgs.js';
 
 const DEFAULT_PUBLIC_URL = 'https://brikaya.com/';
 const DEFAULT_REPORT_PATH =
-  'docs/assets/issues/cinematic-public-domain-media/evidence/cloudflare-cinematic-effects.json';
+  'docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-effects.json';
 const DEFAULT_COUNTDOWN_SCREENSHOT_PATH =
-  'docs/assets/issues/cinematic-public-domain-media/evidence/cloudflare-cinematic-countdown.png';
+  'docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-countdown.png';
 const DEFAULT_LEVEL_UP_SCREENSHOT_PATH =
-  'docs/assets/issues/cinematic-public-domain-media/evidence/cloudflare-cinematic-level-up.png';
+  'docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-level-up.png';
 const DEFAULT_RIP_SCREENSHOT_PATH =
-  'docs/assets/issues/cinematic-public-domain-media/evidence/cloudflare-cinematic-rip.png';
+  'docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-rip.png';
 const CHROME_EXECUTABLE_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const VIEWPORT = { width: 393, height: 852, deviceScaleFactor: 3, isMobile: true, hasTouch: true };
 const COUNTDOWN_MAX_DURATION_MS = 2000;

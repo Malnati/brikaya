@@ -57,6 +57,19 @@ Este é um projeto de jogo **Brikaya** (Breakout) implementado em TypeScript/Rea
 
 ⸻
 
+## Regra Obrigatória — Nomes Semânticos Exclusivos
+
+- Arquivos governados devem ter stem entre 12 e 64 caracteres, em kebab-case, sem acentos, espaços, maiúsculas ou caracteres especiais.
+- Nenhum basename ou stem governado pode repetir no repositório.
+- O escopo governado inclui `public/assets/visual/**`, `public/assets/audio/**`, `docs/assets/theme-planning/**` e `docs/assets/issues/**/(evidence|orientation)/**`.
+- Visual runtime deve usar `spr-`, `ui-` ou `vfx-` e extensão `.svg`; áudio runtime deve usar `sfx-` ou `bgm-`, sufixo `-NN` e extensão `.mp3` ou `.ogg`.
+- Artefatos visuais de planejamento Codex devem usar `codex-*.svg`.
+- Evidências Codex devem usar `evi-*`; nomes genéricos como `mobile-qa.png`, `cloudflare-mobile-qa.json`, `preview-url.txt` ou `README.md` são proibidos em pastas de evidência/orientação.
+- Antes de commit, PR ou merge, rode `npm run test:semantic-file-names`; `npm run build` também deve falhar se a regra for violada.
+- Para corrigir nomes antigos ou novos fora do padrão, rode `npm run normalize:semantic-file-names` e revise o mapa em `docs/assets/issues/semantic-file-names/evidence/evi-semantic-file-names-rename-map.json`.
+
+⸻
+
 ## Regra Obrigatória — Caminho do Arquivo no Topo
 
 Cada arquivo gerado deve conter seu caminho completo como primeira linha comentada, respeitando a sintaxe da linguagem:

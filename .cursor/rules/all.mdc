@@ -19,6 +19,17 @@ description: |
   - Áudio não faz parte desta regra e segue o catálogo sonoro próprio.
   - `npm run test:svg-assets` é bloqueio obrigatório, e `npm run build` deve falhar quando a regra SVG-only for violada.
 
+  # Regra obrigatória: nomes semânticos exclusivos
+
+  - Arquivos governados devem ter stem entre 12 e 64 caracteres, em kebab-case, sem acentos, espaços, maiúsculas ou caracteres especiais.
+  - Nenhum basename ou stem governado pode repetir no repositório.
+  - Escopo governado: `public/assets/visual/**`, `public/assets/audio/**`, `docs/assets/theme-planning/**` e `docs/assets/issues/**/(evidence|orientation)/**`.
+  - Visual runtime deve usar `spr-`, `ui-` ou `vfx-` e `.svg`; áudio runtime deve usar `sfx-` ou `bgm-`, sufixo `-NN` e `.mp3` ou `.ogg`.
+  - Planejamento visual Codex deve usar `codex-*.svg`; evidência Codex deve usar `evi-*`.
+  - Nomes genéricos, curtos demais, baseados apenas no tipo de QA ou baseados apenas em timestamp são proibidos em pastas governadas.
+  - `npm run test:semantic-file-names` é bloqueio obrigatório, e `npm run build` deve falhar quando a regra for violada.
+  - Para correção controlada, use `npm run normalize:semantic-file-names` e revise o mapa versionado em `docs/assets/issues/semantic-file-names/evidence/evi-semantic-file-names-rename-map.json`.
+
   # Regras do arquivo: constants.mdc
 
   Nenhum valor fixo (hardcoded) deve ser utilizado diretamente no corpo de funções, métodos ou blocos de código.

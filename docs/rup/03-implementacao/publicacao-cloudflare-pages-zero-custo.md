@@ -142,8 +142,8 @@ Validações no navegador:
 
 ## Evidência pública
 
-- Screenshot: `docs/assets/issues/cloudflare-pages-zero-cost/evidence/2026-06-30-public-desktop.png`
-- Recibo técnico sanitizado: `docs/assets/issues/cloudflare-pages-zero-cost/evidence/2026-06-30-public-validation.json`
+- Screenshot: `docs/assets/issues/cloudflare-pages-zero-cost/evidence/evi-cloudflare-pages-zero-cost-public-desktop.png`
+- Recibo técnico sanitizado: `docs/assets/issues/cloudflare-pages-zero-cost/evidence/evi-cloudflare-pages-zero-cost-public-validation.json`
 
 ## Recibo sanitizado esperado
 

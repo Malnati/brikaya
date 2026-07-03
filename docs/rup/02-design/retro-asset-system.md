@@ -7,10 +7,10 @@
 | --- | --- |
 | Escopo runtime | Apenas imagens, ícones, VFX e áudios exibidos/usados pelo jogo, HUD, menus e overlays. |
 | SVG-only visual | Toda imagem visual runtime deve ser SVG local/offline; raster é proibido em `public/assets/visual/`. |
-| Fora de escopo | Evidências, screenshots técnicos, imagens de issues/PRs fora de `public/assets/visual/` e áudio. |
+| Evidências Codex | Screenshots e recibos técnicos fora de runtime podem usar PNG/JPG/JPEG/WebP/SVG/JSON, mas devem seguir prefixo `evi-` e unicidade global. |
 | Offline | Todo asset runtime deve existir em `public/`, constar no manifesto de assets e usar cache lazy/versionado do service worker. |
 | Paridade | O stem do arquivo físico é o ID único e deve converter exatamente para a constante camelCase. |
-| Exclusividade | Nenhum basename runtime pode repetir no catálogo nem no disco. |
+| Exclusividade | Nenhum basename ou stem governado pode repetir no catálogo, no código-fonte ou no disco. |
 | Tamanho do ID | 12 a 64 caracteres. |
 
 ## 2. Convenção global de nomenclatura
@@ -26,6 +26,8 @@
 | BGM | `bgm-` | `public/assets/audio/` | `^(bgm)-[a-z0-9]+(-[a-z0-9]+)*-[0-9]{2}\.(mp3\|ogg)$` | `bgm-gameplay-loop-main-01.mp3` | `bgmGameplayLoopMain01` |
 | Cor | `clr-` | Código/CSS | `^(clr)-[a-z0-9]+(-[a-z0-9]+)*$` | `clr-neon-cyan-primary` | `clrNeonCyanPrimary` |
 | Tipografia | `typ-` | CSS/fonte local futura | `^(typ)-[a-z0-9]+(-[a-z0-9]+)*$` | `typ-arcade-score-pixel` | `typArcadeScorePixel` |
+| Planejamento Codex | `codex-` | `docs/assets/theme-planning/` | `^(codex)-[a-z0-9]+(-[a-z0-9]+)*\.svg$` | `codex-brickbreaker-theme-options.svg` | N/A |
+| Evidência Codex | `evi-` | `docs/assets/issues/**/(evidence\|orientation)/` | `^(evi)-[a-z0-9]+(-[a-z0-9]+)*\.(png\|jpg\|jpeg\|webp\|svg\|json)$` | `evi-semantic-file-names-check-report.json` | N/A |
 
 ## 2.1 Regra SVG-only para imagens
 
@@ -38,6 +40,17 @@
 | Exceções | Screenshots/evidências de QA e issues/PRs podem usar PNG fora dos diretórios acima. Áudio segue regras próprias. |
 | Bloqueio | `npm run test:svg-assets` e `npm run build` devem falhar quando a regra for violada. |
 
+## 2.2 Regra de nomes semânticos exclusivos
+
+| Item | Regra |
+| --- | --- |
+| Tamanho | Todo stem governado deve ter 12 a 64 caracteres. |
+| Caixa | Kebab-case obrigatório, sem acentos, espaços, maiúsculas ou caracteres especiais. |
+| Unicidade | Basename e stem devem ser únicos globalmente entre arquivos governados. |
+| Evidência | Arquivos em `docs/assets/issues/**/(evidence|orientation)/**` devem usar prefixo `evi-` e incluir contexto da issue no nome. |
+| Planejamento | SVGs de planejamento visual em `docs/assets/theme-planning/**` devem usar prefixo `codex-`. |
+| Correção | `npm run normalize:semantic-file-names` aplica `git mv`, atualiza referências textuais e gera mapa versionado. |
+| Bloqueio | `npm run test:semantic-file-names` e `npm run build` falham se houver nome genérico, duplicado ou fora do padrão. |
 
 ## 3. Função normativa de conversão
 
@@ -186,23 +199,24 @@
 | Teste/validador | Deve validar |
 | --- | --- |
 | `src/constants/assetNaming.test.ts` | Regex, 12-64 chars, basename único, paridade kebab/camel e cobertura disco/código. |
+| `npm run test:semantic-file-names` | Nomes semânticos globais para runtime, planejamento Codex e evidências Codex. |
 | `npm run test:asset-naming` | Catálogos visuais/áudio, existência física e cobertura no manifesto/cache lazy. |
 | `npm run test:svg-assets` | SVG local, `viewBox`, ausência de script, raster embutido, data URI, URL externa, raster runtime e artefato Codex visual fora de SVG. |
 | `npm run test:cinematic-media-assets` | VFX de overlay existem, são locais e entram no manifesto/cache lazy do service worker. |
 | `npm run test:audio-assets` | Catálogo sonoro, arquivos MP3, duração, SHA, licença e cache lazy. |
 | `npm test -- --runInBand` | Regressão unitária completa. |
-| `npm run build` | SVG-only guard, TypeScript, Vite build e carimbo do service worker. |
+| `npm run build` | Guard de nomes semânticos, SVG-only guard, TypeScript, Vite build, manifesto runtime e carimbo do service worker. |
 
 ## 11. Critérios de aceite para novos assets
 
 | Critério | Regra |
 | --- | --- |
-| Nome físico | Kebab-case, prefixo obrigatório, sem acento/espaço/caractere especial e extensão `.svg` para visual runtime. |
+| Nome físico | Kebab-case, prefixo obrigatório, sem acento/espaço/caractere especial, 12-64 caracteres e unicidade global. |
 | Constante | camelCase derivada exatamente do stem. |
 | Catálogo | Adicionar em `src/constants/visualAssets.ts` ou `src/constants/audio.ts`. |
 | Service worker | Garantir inclusão no manifesto runtime de assets. |
 | Documento | Atualizar esta especificação quando o asset criar novo grupo/estado. |
-| Testes | Rodar `test:asset-naming`, validador específico e build. |
+| Testes | Rodar `test:semantic-file-names`, `test:asset-naming`, validador específico e build. |
 
 ## 12. Temas e conjuntos SVG
 

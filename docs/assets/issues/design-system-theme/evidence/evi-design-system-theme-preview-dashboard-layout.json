@@ -1,0 +1,918 @@
+{
+  "url": "https://feature-design-system-theme.malnati-brickbreaker.pages.dev/",
+  "screenshotPath": "docs/assets/issues/design-system-theme/evidence/evi-design-system-theme-evi-design-system-theme-preview-dashboard-iphone15.png",
+  "desktopScreenshotPath": "docs/assets/issues/design-system-theme/evidence/evi-design-system-theme-evi-design-system-theme-preview-dashboard-desktop.png",
+  "results": [
+    {
+      "viewport": {
+        "name": "iphone-se",
+        "width": 375,
+        "height": 667,
+        "scrollWidth": 375,
+        "scrollHeight": 667
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 0",
+        "Total 0"
+      ],
+      "canvas": {
+        "x": 19,
+        "y": 161.84375,
+        "width": 337,
+        "height": 244,
+        "right": 356,
+        "bottom": 405.84375
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 349,
+        "height": 140.84375,
+        "right": 362,
+        "bottom": 153.84375
+      },
+      "scoreStrip": {
+        "x": 13,
+        "y": 57.84375,
+        "width": 349,
+        "height": 38,
+        "right": 362,
+        "bottom": 95.84375
+      },
+      "buttons": [
+        {
+          "text": "Claro",
+          "width": 167.5,
+          "height": 44,
+          "x": 18,
+          "y": 104.84375,
+          "right": 185.5,
+          "bottom": 148.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "Escuro",
+          "width": 167.5,
+          "height": 44,
+          "x": 189.5,
+          "y": 104.84375,
+          "right": 357,
+          "bottom": 148.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "≡Logs",
+          "width": 170.5,
+          "height": 44,
+          "x": 13,
+          "y": 413.84375,
+          "right": 183.5,
+          "bottom": 457.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "◈Colisões",
+          "width": 170.5,
+          "height": 44,
+          "x": 191.5,
+          "y": 413.84375,
+          "right": 362,
+          "bottom": 457.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "↻Reiniciar",
+          "width": 170.5,
+          "height": 44,
+          "x": 13,
+          "y": 465.84375,
+          "right": 183.5,
+          "bottom": 509.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "0Zerar pontuação",
+          "width": 170.5,
+          "height": 44,
+          "x": 191.5,
+          "y": 465.84375,
+          "right": 362,
+          "bottom": 509.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 13,
+        "y": 533.84375,
+        "width": 349,
+        "height": 56,
+        "right": 362,
+        "bottom": 589.84375
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 128,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-12-14",
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "scrollHeight": 844
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 0",
+        "Total 0"
+      ],
+      "canvas": {
+        "x": 19,
+        "y": 161.84375,
+        "width": 352,
+        "height": 244,
+        "right": 371,
+        "bottom": 405.84375
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 364,
+        "height": 140.84375,
+        "right": 377,
+        "bottom": 153.84375
+      },
+      "scoreStrip": {
+        "x": 13,
+        "y": 57.84375,
+        "width": 364,
+        "height": 38,
+        "right": 377,
+        "bottom": 95.84375
+      },
+      "buttons": [
+        {
+          "text": "Claro",
+          "width": 175,
+          "height": 44,
+          "x": 18,
+          "y": 104.84375,
+          "right": 193,
+          "bottom": 148.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "Escuro",
+          "width": 175,
+          "height": 44,
+          "x": 197,
+          "y": 104.84375,
+          "right": 372,
+          "bottom": 148.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "≡Logs",
+          "width": 178,
+          "height": 44,
+          "x": 13,
+          "y": 413.84375,
+          "right": 191,
+          "bottom": 457.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "◈Colisões",
+          "width": 178,
+          "height": 44,
+          "x": 199,
+          "y": 413.84375,
+          "right": 377,
+          "bottom": 457.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "↻Reiniciar",
+          "width": 178,
+          "height": 44,
+          "x": 13,
+          "y": 465.84375,
+          "right": 191,
+          "bottom": 509.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "0Zerar pontuação",
+          "width": 178,
+          "height": 44,
+          "x": 199,
+          "y": 465.84375,
+          "right": 377,
+          "bottom": 509.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 13,
+        "y": 533.84375,
+        "width": 364,
+        "height": 56,
+        "right": 377,
+        "bottom": 589.84375
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 128,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-15",
+        "width": 393,
+        "height": 852,
+        "scrollWidth": 393,
+        "scrollHeight": 852
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 0",
+        "Total 0"
+      ],
+      "canvas": {
+        "x": 19,
+        "y": 161.84375,
+        "width": 355,
+        "height": 244,
+        "right": 374,
+        "bottom": 405.84375
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 367,
+        "height": 140.84375,
+        "right": 380,
+        "bottom": 153.84375
+      },
+      "scoreStrip": {
+        "x": 13,
+        "y": 57.84375,
+        "width": 367,
+        "height": 38,
+        "right": 380,
+        "bottom": 95.84375
+      },
+      "buttons": [
+        {
+          "text": "Claro",
+          "width": 176.5,
+          "height": 44,
+          "x": 18,
+          "y": 104.84375,
+          "right": 194.5,
+          "bottom": 148.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "Escuro",
+          "width": 176.5,
+          "height": 44,
+          "x": 198.5,
+          "y": 104.84375,
+          "right": 375,
+          "bottom": 148.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "≡Logs",
+          "width": 179.5,
+          "height": 44,
+          "x": 13,
+          "y": 413.84375,
+          "right": 192.5,
+          "bottom": 457.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "◈Colisões",
+          "width": 179.5,
+          "height": 44,
+          "x": 200.5,
+          "y": 413.84375,
+          "right": 380,
+          "bottom": 457.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "↻Reiniciar",
+          "width": 179.5,
+          "height": 44,
+          "x": 13,
+          "y": 465.84375,
+          "right": 192.5,
+          "bottom": 509.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "0Zerar pontuação",
+          "width": 179.5,
+          "height": 44,
+          "x": 200.5,
+          "y": 465.84375,
+          "right": 380,
+          "bottom": 509.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 13,
+        "y": 533.84375,
+        "width": 367,
+        "height": 56,
+        "right": 380,
+        "bottom": 589.84375
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 128,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-pro-max",
+        "width": 430,
+        "height": 932,
+        "scrollWidth": 430,
+        "scrollHeight": 932
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 0",
+        "Total 0"
+      ],
+      "canvas": {
+        "x": 19,
+        "y": 161.84375,
+        "width": 392,
+        "height": 262,
+        "right": 411,
+        "bottom": 423.84375
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 404,
+        "height": 140.84375,
+        "right": 417,
+        "bottom": 153.84375
+      },
+      "scoreStrip": {
+        "x": 13,
+        "y": 57.84375,
+        "width": 404,
+        "height": 38,
+        "right": 417,
+        "bottom": 95.84375
+      },
+      "buttons": [
+        {
+          "text": "Claro",
+          "width": 195,
+          "height": 44,
+          "x": 18,
+          "y": 104.84375,
+          "right": 213,
+          "bottom": 148.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "Escuro",
+          "width": 195,
+          "height": 44,
+          "x": 217,
+          "y": 104.84375,
+          "right": 412,
+          "bottom": 148.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "≡Logs",
+          "width": 198,
+          "height": 44,
+          "x": 13,
+          "y": 431.84375,
+          "right": 211,
+          "bottom": 475.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "◈Colisões",
+          "width": 198,
+          "height": 44,
+          "x": 219,
+          "y": 431.84375,
+          "right": 417,
+          "bottom": 475.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "↻Reiniciar",
+          "width": 198,
+          "height": 44,
+          "x": 13,
+          "y": 483.84375,
+          "right": 211,
+          "bottom": 527.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "0Zerar pontuação",
+          "width": 198,
+          "height": 44,
+          "x": 219,
+          "y": 483.84375,
+          "right": 417,
+          "bottom": 527.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 13,
+        "y": 551.84375,
+        "width": 404,
+        "height": 56,
+        "right": 417,
+        "bottom": 607.84375
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 128,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-15-landscape",
+        "width": 852,
+        "height": 393,
+        "scrollWidth": 852,
+        "scrollHeight": 393
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 10",
+        "Total 0"
+      ],
+      "canvas": {
+        "x": 300.5,
+        "y": 75,
+        "width": 251,
+        "height": 169,
+        "right": 551.5,
+        "bottom": 244
+      },
+      "header": {
+        "x": 15,
+        "y": 13,
+        "width": 822,
+        "height": 54,
+        "right": 837,
+        "bottom": 67
+      },
+      "scoreStrip": {
+        "x": 484.09375,
+        "y": 23,
+        "width": 220.15625,
+        "height": 34,
+        "right": 704.25,
+        "bottom": 57
+      },
+      "buttons": [
+        {
+          "text": "Claro",
+          "width": 52,
+          "height": 44,
+          "x": 717.25,
+          "y": 18,
+          "right": 769.25,
+          "bottom": 62,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "Escuro",
+          "width": 58.75,
+          "height": 44,
+          "x": 773.25,
+          "y": 18,
+          "right": 832,
+          "bottom": 62,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "≡Logs",
+          "width": 80.390625,
+          "height": 44,
+          "x": 331.546875,
+          "y": 260,
+          "right": 411.9375,
+          "bottom": 304,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "◈Colisões",
+          "width": 104.515625,
+          "height": 44,
+          "x": 415.9375,
+          "y": 260,
+          "right": 520.453125,
+          "bottom": 304,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "↻Reiniciar",
+          "width": 105.796875,
+          "height": 44,
+          "x": 293.59375,
+          "y": 320,
+          "right": 399.390625,
+          "bottom": 364,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "0Zerar pontuação",
+          "width": 155.015625,
+          "height": 44,
+          "x": 403.390625,
+          "y": 320,
+          "right": 558.40625,
+          "bottom": 364,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": false,
+      "sideAdDistance": null,
+      "bottomAdDistance": null,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "tablet",
+        "width": 768,
+        "height": 1024,
+        "scrollWidth": 768,
+        "scrollHeight": 1024
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 0",
+        "Total 0"
+      ],
+      "canvas": {
+        "x": 59.5,
+        "y": 183.59375,
+        "width": 649,
+        "height": 434,
+        "right": 708.5,
+        "bottom": 617.59375
+      },
+      "header": {
+        "x": 19,
+        "y": 19,
+        "width": 730,
+        "height": 148.59375,
+        "right": 749,
+        "bottom": 167.59375
+      },
+      "scoreStrip": {
+        "x": 19,
+        "y": 67.59375,
+        "width": 730,
+        "height": 38,
+        "right": 749,
+        "bottom": 105.59375
+      },
+      "buttons": [
+        {
+          "text": "Claro",
+          "width": 64,
+          "height": 44,
+          "x": 24,
+          "y": 118.59375,
+          "right": 88,
+          "bottom": 162.59375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "Escuro",
+          "width": 73.65625,
+          "height": 44,
+          "x": 92,
+          "y": 118.59375,
+          "right": 165.65625,
+          "bottom": 162.59375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "≡Logs",
+          "width": 361,
+          "height": 44,
+          "x": 19,
+          "y": 633.59375,
+          "right": 380,
+          "bottom": 677.59375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "◈Colisões",
+          "width": 361,
+          "height": 44,
+          "x": 388,
+          "y": 633.59375,
+          "right": 749,
+          "bottom": 677.59375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "↻Reiniciar",
+          "width": 361,
+          "height": 44,
+          "x": 19,
+          "y": 693.59375,
+          "right": 380,
+          "bottom": 737.59375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "0Zerar pontuação",
+          "width": 361,
+          "height": 44,
+          "x": 388,
+          "y": 693.59375,
+          "right": 749,
+          "bottom": 737.59375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        }
+      ],
+      "sideSlot": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "bottomSlot": {
+        "x": 124,
+        "y": 769.59375,
+        "width": 520,
+        "height": 56,
+        "right": 644,
+        "bottom": 825.59375
+      },
+      "sideSlotVisible": false,
+      "bottomSlotVisible": true,
+      "sideAdDistance": null,
+      "bottomAdDistance": 152,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "desktop",
+        "width": 1280,
+        "height": 720,
+        "scrollWidth": 1280,
+        "scrollHeight": 720
+      },
+      "heading": "Breakout",
+      "chips": [
+        "Fase 1",
+        "Score 0",
+        "Total 0"
+      ],
+      "canvas": {
+        "x": 226.5,
+        "y": 103.84375,
+        "width": 457,
+        "height": 306,
+        "right": 683.5,
+        "bottom": 409.84375
+      },
+      "header": {
+        "x": 33,
+        "y": 33,
+        "width": 1214,
+        "height": 54.84375,
+        "right": 1247,
+        "bottom": 87.84375
+      },
+      "scoreStrip": {
+        "x": 842,
+        "y": 39.421875,
+        "width": 245.34375,
+        "height": 42,
+        "right": 1087.34375,
+        "bottom": 81.421875
+      },
+      "buttons": [
+        {
+          "text": "Claro",
+          "width": 64,
+          "height": 44,
+          "x": 1100.34375,
+          "y": 38.421875,
+          "right": 1164.34375,
+          "bottom": 82.421875,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "Escuro",
+          "width": 73.65625,
+          "height": 44,
+          "x": 1168.34375,
+          "y": 38.421875,
+          "right": 1242,
+          "bottom": 82.421875,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "≡Logs",
+          "width": 98.1875,
+          "height": 44,
+          "x": 338.53125,
+          "y": 425.84375,
+          "right": 436.71875,
+          "bottom": 469.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "◈Colisões",
+          "width": 126.734375,
+          "height": 44,
+          "x": 444.71875,
+          "y": 425.84375,
+          "right": 571.453125,
+          "bottom": 469.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "↻Reiniciar",
+          "width": 128.09375,
+          "height": 44,
+          "x": 293.546875,
+          "y": 485.84375,
+          "right": 421.640625,
+          "bottom": 529.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        },
+        {
+          "text": "0Zerar pontuação",
+          "width": 186.796875,
+          "height": 44,
+          "x": 429.640625,
+          "y": 485.84375,
+          "right": 616.4375,
+          "bottom": 529.84375,
+          "visibleInViewport": true,
+          "hasTouchTarget": true
+        }
+      ],
+      "sideSlot": {
+        "x": 1027,
+        "y": 103.84375,
+        "width": 220,
+        "height": 538,
+        "right": 1247,
+        "bottom": 641.84375
+      },
+      "bottomSlot": {
+        "x": 195,
+        "y": 569.84375,
+        "width": 520,
+        "height": 72,
+        "right": 715,
+        "bottom": 641.84375
+      },
+      "sideSlotVisible": true,
+      "bottomSlotVisible": true,
+      "sideAdDistance": 343.5,
+      "bottomAdDistance": 160,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    }
+  ],
+  "consoleProblems": []
+}
