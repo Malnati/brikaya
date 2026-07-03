@@ -20,6 +20,7 @@ interface AppearanceSelectorProps {
 interface AppearanceOptionGroupProps<T extends string> {
   title: string;
   options: readonly AppearanceOption<T>[];
+  compact?: boolean;
   selectedId: T;
   onChange: (id: T) => void;
 }
@@ -29,9 +30,16 @@ function AppearanceOptionGroup<T extends string>({
   options,
   selectedId,
   onChange,
+  compact = false,
 }: AppearanceOptionGroupProps<T>) {
   return (
-    <div className="appearance-selector__group">
+    <div
+      className={
+        compact
+          ? 'appearance-selector__group appearance-selector__group--compact'
+          : 'appearance-selector__group'
+      }
+    >
       <h4>{title}</h4>
       <div className="appearance-selector__options">
         {options.map((option) => (
@@ -62,6 +70,7 @@ export function AppearanceSelector({
         title="Tema visual"
         options={THEME_OPTIONS}
         selectedId={selection.themeId}
+        compact
         onChange={onThemeChange}
       />
       <AppearanceOptionGroup

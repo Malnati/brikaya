@@ -12,17 +12,33 @@ const DEFAULT_IPHONE15_CONTRAST_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-iphone15-contrast.png";
 const DEFAULT_IPHONE15_SUNSET_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-iphone15-sunset.png";
+const DEFAULT_IPHONE15_OCEAN_SCREENSHOT =
+  "tmp/screenshots/cloudflare-theme-iphone15-ocean.png";
+const DEFAULT_IPHONE15_RUBY_SCREENSHOT =
+  "tmp/screenshots/cloudflare-theme-iphone15-ruby.png";
 const DEFAULT_DESKTOP_CONTRAST_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-desktop-contrast.png";
 const DEFAULT_DESKTOP_SUNSET_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-desktop-sunset.png";
+const DEFAULT_DESKTOP_OCEAN_SCREENSHOT =
+  "tmp/screenshots/cloudflare-theme-desktop-ocean.png";
+const DEFAULT_DESKTOP_RUBY_SCREENSHOT =
+  "tmp/screenshots/cloudflare-theme-desktop-ruby.png";
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const MIN_TOUCH_TARGET_SIZE = 44;
-const BROWSER_CLOSE_TIMEOUT_MS = 5000;
+const BROWSER_CLOSE_SETTLE_MS = 250;
+const MENU_BUTTON_NAME = /menu/i;
+const MENU_OPEN_ATTEMPTS = 3;
+const MENU_OPEN_RETRY_DELAY_MS = 500;
+const MENU_OPEN_WAIT_TIMEOUT_MS = 4000;
+const BUTTON_FIND_TIMEOUT_MS = 10000;
+const BUTTON_FIND_RETRY_DELAY_MS = 100;
 const THEME_NEON_ARCADE = "neon-arcade";
 const THEME_CRT_HIGH_CONTRAST = "crt-high-contrast";
 const THEME_PIXEL_SUNSET = "pixel-sunset";
+const THEME_OCEAN_NIGHT = "ocean-night";
+const THEME_RUBY_DEPTH = "ruby-depth";
 const IMAGE_SET_RETRO_DEFAULT = "retro-default";
 const IMAGE_SET_HIGH_CONTRAST = "high-contrast";
 const IMAGE_SET_SUNSET_CABINET = "sunset-cabinet";
@@ -37,10 +53,20 @@ const APPEARANCE_STORAGE_KEYS = [
   IMAGE_SET_STORAGE_KEY,
   FONT_SET_STORAGE_KEY,
 ];
-const APPEARANCE_BUTTON_LABELS = [
+const THEME_BUTTON_LABELS = [
   "Neon Arcade",
   "CRT alto contraste",
   "Pixel Sunset",
+  "Oceano noturno",
+  "Selva laser",
+  "Âmbar retrô",
+  "Gelo cósmico",
+  "Ameixa elétrica",
+  "Lima grafite",
+  "Rubi profundo",
+];
+const APPEARANCE_BUTTON_LABELS = [
+  ...THEME_BUTTON_LABELS,
   "Retro padrão",
   "Alto contraste",
   "Cabine Sunset",
@@ -100,42 +126,131 @@ function assert(condition, message) {
 
 async function closeBrowser(browser) {
   const browserProcess = browser.process();
-  let closed = false;
-  await Promise.race([
-    browser.close().then(() => {
-      closed = true;
-    }),
-    new Promise((resolve) => setTimeout(resolve, BROWSER_CLOSE_TIMEOUT_MS)),
-  ]);
+  browser.disconnect();
+  browserProcess?.kill("SIGKILL");
+  await new Promise((resolve) => setTimeout(resolve, BROWSER_CLOSE_SETTLE_MS));
+}
 
-  if (!closed && browserProcess) {
-    browserProcess.kill("SIGKILL");
+function waitForRetryDelay() {
+  return new Promise((resolve) =>
+    setTimeout(resolve, BUTTON_FIND_RETRY_DELAY_MS),
+  );
+}
+
+async function clickButton(page, matcher, missingMessage) {
+  const startedAt = Date.now();
+
+  while (Date.now() - startedAt < BUTTON_FIND_TIMEOUT_MS) {
+    const buttons = await page.$$("button");
+    const candidates = [];
+    for (const button of buttons) {
+      const labels = await button.evaluate((node) => {
+        const rect = node.getBoundingClientRect();
+        const style = window.getComputedStyle(node);
+        return {
+          text: node.textContent?.trim() || "",
+          ariaLabel: node.getAttribute("aria-label") || "",
+          title: node.getAttribute("title") || "",
+          visible:
+            rect.width > 0 &&
+            rect.height > 0 &&
+            rect.bottom >= 0 &&
+            rect.right >= 0 &&
+            rect.top <= window.innerHeight &&
+            rect.left <= window.innerWidth &&
+            style.visibility !== "hidden" &&
+            style.display !== "none",
+        };
+      });
+      candidates.push({ button, labels });
+    }
+
+    const visibleMatch = candidates.find(
+      (candidate) => candidate.labels.visible && matcher(candidate.labels),
+    );
+    const fallbackMatch = candidates.find((candidate) =>
+      matcher(candidate.labels),
+    );
+    const match = visibleMatch || fallbackMatch;
+
+    if (match) {
+      try {
+        await match.button.evaluate((node) => {
+          node.scrollIntoView({ block: "center", inline: "center" });
+          node.click();
+        });
+        return;
+      } catch {
+        await waitForRetryDelay();
+        continue;
+      }
+    }
+
+    await waitForRetryDelay();
   }
+
+  throw new Error(missingMessage);
 }
 
 async function clickButtonByText(page, label) {
-  const buttons = await page.$$("button");
-  for (const button of buttons) {
-    const text = await button.evaluate(
-      (node) => node.textContent?.trim() || "",
-    );
-    if (text === label) {
-      await button.click();
-      return;
-    }
-  }
-  throw new Error(`Botão não encontrado: ${label}`);
+  await clickButton(
+    page,
+    (labels) => labels.text === label,
+    `Botão não encontrado: ${label}`,
+  );
 }
 
+async function clickButtonByPattern(page, pattern) {
+  await clickButton(
+    page,
+    (labels) =>
+      pattern.test(labels.text) ||
+      pattern.test(labels.ariaLabel) ||
+      pattern.test(labels.title),
+    `Botão não encontrado: ${pattern}`,
+  );
+}
 async function openMenu(page) {
-  await clickButtonByText(page, "Menu");
-  await page.waitForSelector(".settings-drawer", { timeout: 10000 });
+  for (let attempt = 1; attempt <= MENU_OPEN_ATTEMPTS; attempt += 1) {
+    if (await page.$(".settings-drawer")) return;
+    await clickButtonByPattern(page, MENU_BUTTON_NAME);
+    try {
+      await page.waitForSelector(".settings-drawer", {
+        timeout: MENU_OPEN_WAIT_TIMEOUT_MS,
+      });
+      return;
+    } catch (error) {
+      if (attempt === MENU_OPEN_ATTEMPTS) throw error;
+      await new Promise((resolve) =>
+        setTimeout(resolve, MENU_OPEN_RETRY_DELAY_MS),
+      );
+    }
+  }
 }
 
 async function waitForCinematicOverlayToClear(page) {
   await page.waitForSelector(CINEMATIC_OVERLAY_SELECTOR, {
     hidden: true,
     timeout: CINEMATIC_OVERLAY_TIMEOUT_MS,
+  });
+}
+
+async function clearOfflineState(page) {
+  await page.evaluate(async () => {
+    if ("serviceWorker" in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(
+        registrations.map((registration) => registration.unregister()),
+      );
+    }
+    if ("caches" in window) {
+      const cacheNames = await caches.keys();
+      await Promise.all(
+        cacheNames.map((cacheName) => caches.delete(cacheName)),
+      );
+    }
+    window.localStorage.clear();
+    window.sessionStorage.clear();
   });
 }
 
@@ -196,6 +311,14 @@ async function collectState(page) {
         appearanceSelector: Boolean(
           document.querySelector('[aria-label="Aparência do jogo"]'),
         ),
+        appearanceGroups: Array.from(
+          document.querySelectorAll(".appearance-selector__group"),
+        ).map((group) => ({
+          title: group.querySelector("h4")?.textContent?.trim() || "",
+          buttons: Array.from(group.querySelectorAll("button")).map(
+            (button) => button.textContent?.trim() || "",
+          ),
+        })),
         menuOpen: Boolean(document.querySelector(".settings-drawer")),
         buttons,
         bodyText,
@@ -253,11 +376,28 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
   );
   if (expectMenuOpen) {
     assert(state.menuOpen, `${viewportName}: menu lateral fechado.`);
-    assert(state.appearanceSelector, `${viewportName}: seletor de aparência ausente.`);
+    assert(
+      state.appearanceSelector,
+      `${viewportName}: seletor de aparência ausente.`,
+    );
     for (const label of APPEARANCE_BUTTON_LABELS) {
       assert(
         state.buttons.some((button) => button.text === label),
         `${viewportName}: botão ${label} ausente.`,
+      );
+    }
+    const themeGroup = state.appearanceGroups.find(
+      (group) => group.title === "Tema visual",
+    );
+    assert(themeGroup, `${viewportName}: grupo Tema visual ausente.`);
+    assert(
+      themeGroup.buttons.length === THEME_BUTTON_LABELS.length,
+      `${viewportName}: Tema visual deveria ter ${THEME_BUTTON_LABELS.length} botões, recebeu ${themeGroup.buttons.length}.`,
+    );
+    for (const label of THEME_BUTTON_LABELS) {
+      assert(
+        themeGroup.buttons.includes(label),
+        `${viewportName}: tema ${label} ausente no grupo Tema visual.`,
       );
     }
     for (const heading of ["Aparência", "Tema visual", "Imagens", "Fonte"]) {
@@ -368,8 +508,11 @@ async function validateViewport(
     { name: "prefers-color-scheme", value: "light" },
   ]);
   await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
+  await clearOfflineState(page);
+  await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
   await page.evaluate((storageKeys) => {
-    for (const storageKey of storageKeys) window.localStorage.removeItem(storageKey);
+    for (const storageKey of storageKeys)
+      window.localStorage.removeItem(storageKey);
   }, APPEARANCE_STORAGE_KEYS);
   await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
   await page.waitForSelector("canvas", { timeout: 30000 });
@@ -481,7 +624,44 @@ async function validateViewport(
   );
   await page.screenshot({ path: screenshots.sunset, fullPage: true });
 
-  return { initialState, contrastState, reloadedContrastState, sunsetState };
+  await clickButtonByText(page, "Oceano noturno");
+  await page.waitForFunction(
+    (theme) => document.documentElement.dataset.theme === theme,
+    {},
+    THEME_OCEAN_NIGHT,
+  );
+  const oceanState = await collectState(page);
+  assertBaseState(oceanState, `${viewportName}/oceano-noturno`, true);
+  assert(
+    oceanState.theme === THEME_OCEAN_NIGHT &&
+      oceanState.storedTheme === THEME_OCEAN_NIGHT,
+    `${viewportName}: tema Oceano noturno não aplicado/persistido.`,
+  );
+  await page.screenshot({ path: screenshots.ocean, fullPage: true });
+
+  await clickButtonByText(page, "Rubi profundo");
+  await page.waitForFunction(
+    (theme) => document.documentElement.dataset.theme === theme,
+    {},
+    THEME_RUBY_DEPTH,
+  );
+  const rubyState = await collectState(page);
+  assertBaseState(rubyState, `${viewportName}/rubi-profundo`, true);
+  assert(
+    rubyState.theme === THEME_RUBY_DEPTH &&
+      rubyState.storedTheme === THEME_RUBY_DEPTH,
+    `${viewportName}: tema Rubi profundo não aplicado/persistido.`,
+  );
+  await page.screenshot({ path: screenshots.ruby, fullPage: true });
+
+  return {
+    initialState,
+    contrastState,
+    reloadedContrastState,
+    sunsetState,
+    oceanState,
+    rubyState,
+  };
 }
 
 async function run() {
@@ -503,6 +683,14 @@ async function run() {
         "BRICKBREAKER_THEME_QA_IPHONE15_SUNSET_SCREENSHOT",
         DEFAULT_IPHONE15_SUNSET_SCREENSHOT,
       ),
+      ocean: env(
+        "BRICKBREAKER_THEME_QA_IPHONE15_OCEAN_SCREENSHOT",
+        DEFAULT_IPHONE15_OCEAN_SCREENSHOT,
+      ),
+      ruby: env(
+        "BRICKBREAKER_THEME_QA_IPHONE15_RUBY_SCREENSHOT",
+        DEFAULT_IPHONE15_RUBY_SCREENSHOT,
+      ),
     },
     desktop: {
       contrast: env(
@@ -512,6 +700,14 @@ async function run() {
       sunset: env(
         "BRICKBREAKER_THEME_QA_DESKTOP_SUNSET_SCREENSHOT",
         DEFAULT_DESKTOP_SUNSET_SCREENSHOT,
+      ),
+      ocean: env(
+        "BRICKBREAKER_THEME_QA_DESKTOP_OCEAN_SCREENSHOT",
+        DEFAULT_DESKTOP_OCEAN_SCREENSHOT,
+      ),
+      ruby: env(
+        "BRICKBREAKER_THEME_QA_DESKTOP_RUBY_SCREENSHOT",
+        DEFAULT_DESKTOP_RUBY_SCREENSHOT,
       ),
     },
   };
@@ -525,7 +721,10 @@ async function run() {
   const browser = await puppeteer.launch({
     headless: "new",
     executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs(["--no-first-run", "--no-default-browser-check"]),
+    args: buildChromeLaunchArgs([
+      "--no-first-run",
+      "--no-default-browser-check",
+    ]),
   });
 
   try {
@@ -586,13 +785,25 @@ async function run() {
       consoleProblems,
     };
     writeFileSync(reportPath, JSON.stringify(report, null, 2));
-    console.log(JSON.stringify(report, null, 2));
+    console.log(
+      JSON.stringify(
+        {
+          url: report.url,
+          screenshotPaths: report.screenshotPaths,
+          externalRequests: report.externalRequests,
+          consoleProblems: report.consoleProblems,
+          validatedViewports: Object.keys(report.results),
+        },
+        null,
+        2,
+      ),
+    );
   } finally {
     await closeBrowser(browser);
   }
 }
 
 run().catch((error) => {
-  console.error(error.message);
+  console.error(error.stack || error.message);
   process.exitCode = 1;
 });

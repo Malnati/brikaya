@@ -3,6 +3,26 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.30.0] - 2026-07-03
+### Adicionado
+- Menu de aparência passa a oferecer 10 temas visuais, mantendo imagens e fontes como escolhas separadas.
+- Novas paletas locais/offline: Oceano noturno, Selva laser, Âmbar retrô, Gelo cósmico, Ameixa elétrica, Lima grafite e Rubi profundo.
+
+### Alterado
+- Seletor de temas usa grade compacta no menu para manter toque mínimo de 44px e reduzir rolagem.
+- QAs de tema e mobile validam 10 opções no grupo Tema visual, persistência de novos temas e abertura do menu por rótulos acessíveis.
+- QAs publicados estabilizam a abertura do menu, o prompt pré-jogo e o acesso ao primeiro evento do painel de logs.
+- Harnesses publicados de tema e mobile ficam mais robustos para reabrir menu e expandir logs após rolagem.
+
+### Testado
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" node --version`
+- `make help`
+- `npm run build`
+- `npm test -- --runInBand`
+- `make cloudflare-deploy`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`
+
 ## [1.29.1] - 2026-07-03
 ### Corrigido
 - QAs publicados mobile e dashboard passam a abrir detalhes do primeiro evento de log de forma estável após a tela de consentimento, evitando falha de clique coordenado em viewport móvel.
