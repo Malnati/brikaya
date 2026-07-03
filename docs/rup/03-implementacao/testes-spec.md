@@ -1,8 +1,8 @@
 <!-- docs/rup/03-implementacao/testes-spec.md -->
-# Estratégia de Testes na Implementação — BrickBreaker
+# Estratégia de Testes na Implementação — Brikaya
 
 ## Objetivo
-Definir cobertura mínima e tipos de teste para validar engine, UI e infraestrutura offline do BrickBreaker, conforme roadmap (#001–#004) e fases descritas no plano de desenvolvimento.
+Definir cobertura mínima e tipos de teste para validar engine, UI e infraestrutura offline do Brikaya, conforme roadmap (#001–#004) e fases descritas no plano de desenvolvimento.
 
 ## Escopo Prioritário (Fase 1)
 - **Engine**: colisões, multiplicação de bolinhas, penalidade de linha extra, limites de canvas.

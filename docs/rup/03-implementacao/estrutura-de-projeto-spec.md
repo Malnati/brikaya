@@ -1,8 +1,8 @@
 <!-- docs/rup/03-implementacao/estrutura-de-projeto-spec.md -->
-# Estrutura de Projeto — BrickBreaker
+# Estrutura de Projeto — Brikaya
 
 ## Visão Geral
-Este documento descreve como o código do BrickBreaker está organizado para manter alta coesão, baixa dependência externa e suporte total ao modo offline. A estrutura reflete o layout definido em `AGENTS.md` e serve como referência para novos módulos e testes.
+Este documento descreve como o código do Brikaya está organizado para manter alta coesão, baixa dependência externa e suporte total ao modo offline. A estrutura reflete o layout definido em `AGENTS.md` e serve como referência para novos módulos e testes.
 
 ## Diretórios Principais
 - `src/components/` — componentes React do HUD e da interface de jogo (`Game`, `GameLogViewer`, `CollisionStats`).

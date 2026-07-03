@@ -1,5 +1,5 @@
 # Makefile
-# Makefile para projeto BrickBreaker - Jogo Breakout offline
+# Makefile para projeto Brikaya - jogo offline
 
 # Asset configuration
 ASSET_DIR=public/assets
@@ -14,6 +14,7 @@ MALNATI_ENV_FILE=/Users/mal/GitHub/malnati/.env
 BRICKBREAKER_CLOUDFLARE_PAGES_PROJECT_NAME=malnati-brickbreaker
 BRICKBREAKER_CLOUDFLARE_PAGES_BRANCH=main
 BRICKBREAKER_CLOUDFLARE_PAGES_OUTPUT_DIR=dist
+BRICKBREAKER_CLOUDFLARE_PAGES_CUSTOM_DOMAIN=brikaya.com
 
 # Process management
 KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
@@ -25,7 +26,7 @@ KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
 # Target padrão: mostrar help quando make é executado sem argumentos
 .DEFAULT_GOAL := help
 
-.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-deploy cloudflare-mobile-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-powerups-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa cloudflare-offline-pwa-qa docker-build docker-up docker-down docker-logs docker-shell
+.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-domain cloudflare-deploy cloudflare-mobile-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-powerups-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa cloudflare-offline-pwa-qa docker-build docker-up docker-down docker-logs docker-shell
 
 # Função para matar processos anteriores
 kill-processes:
@@ -65,10 +66,19 @@ cloudflare-build:
 	@npm run build
 	@echo "Build estático gerado em $(BRICKBREAKER_CLOUDFLARE_PAGES_OUTPUT_DIR)"
 
+# Garantir domínio canônico no Cloudflare Pages, mantendo custo zero
+cloudflare-domain: cloudflare-env-check
+	@node scripts/cloudflare-pages.js ensure-domain
+	@node scripts/cloudflare-pages.js ensure-dns
+	@node scripts/cloudflare-pages.js ensure-pages-dev-redirect
+
 # Publicar no Cloudflare Pages via Direct Upload, mantendo custo zero
 cloudflare-deploy: cloudflare-env-check cloudflare-build
 	@node scripts/cloudflare-pages.js ensure-project
 	@node scripts/cloudflare-pages.js deploy
+	@node scripts/cloudflare-pages.js ensure-domain
+	@node scripts/cloudflare-pages.js ensure-dns
+	@node scripts/cloudflare-pages.js ensure-pages-dev-redirect
 
 
 # Validar layout, logs e estatísticas contra o app publicado no Cloudflare Pages
@@ -248,7 +258,8 @@ help:
 	@echo "Cloudflare Pages sem custo:"
 	@echo "  cloudflare-env-check - Validar variáveis Cloudflare sem exibir valores"
 	@echo "  cloudflare-build     - Gerar build estático para Pages"
-	@echo "  cloudflare-deploy    - Publicar dist no Cloudflare Pages"
+	@echo "  cloudflare-domain    - Garantir domínio canônico e redirect para brikaya.com"
+	@echo "  cloudflare-deploy    - Publicar dist no Cloudflare Pages e manter brikaya.com canônico"
 	@echo "  cloudflare-mobile-qa - Testar iPhone 15/logs contra Cloudflare publicado"
 	@echo "  cloudflare-no-score-reset - Validar continuidade após tijolo no Cloudflare publicado"
 	@echo "  cloudflare-phase-transition-qa - Validar pausa/toast de fase no Cloudflare publicado"

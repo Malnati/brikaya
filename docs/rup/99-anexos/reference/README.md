@@ -1,7 +1,7 @@
 <!-- docs/rup/99-anexos/reference/README.md -->
 # Referências Técnicas
 
-Este diretório contém bibliotecas e documentação de referência utilizadas no projeto BrickBreaker.
+Este diretório contém bibliotecas e documentação de referência utilizadas no projeto Brikaya.
 
 ## Conteúdo disponível
 

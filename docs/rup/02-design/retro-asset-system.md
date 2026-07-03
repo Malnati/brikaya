@@ -1,5 +1,5 @@
 <!-- docs/rup/02-design/retro-asset-system.md -->
-# Especificação Técnica — BrickBreaker Retro/Pixel Arcade Assets
+# Especificação Técnica — Brikaya Retro/Pixel Arcade Assets
 
 ## 1. Escopo implementado
 

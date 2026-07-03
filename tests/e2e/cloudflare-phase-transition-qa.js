@@ -3,7 +3,9 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import puppeteer from 'puppeteer';
 
-const DEFAULT_PUBLIC_URL = 'https://malnati-brickbreaker.pages.dev/';
+import { buildChromeLaunchArgs } from './chromeLaunchArgs.js';
+
+const DEFAULT_PUBLIC_URL = 'https://brikaya.com/';
 const DEFAULT_REPORT_PATH = 'tmp/reports/cloudflare-phase-transition.json';
 const DEFAULT_SCREENSHOT_PATH = 'tmp/screenshots/cloudflare-phase-transition.png';
 const CHROME_EXECUTABLE_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
@@ -142,13 +144,13 @@ async function run() {
   ensureParentDirectory(outScreenshot);
 
   const parsed = new URL(targetUrl);
-  assert(parsed.hostname.endsWith('.pages.dev'), `URL precisa ser Cloudflare Pages: ${targetUrl}`);
+  assert(parsed.hostname === 'brikaya.com', `URL precisa ser brikaya.com: ${targetUrl}`);
 
   const consoleProblems = [];
   const browser = await puppeteer.launch({
     headless: 'new',
     executablePath: CHROME_EXECUTABLE_PATH,
-    args: ['--no-first-run', '--no-default-browser-check']
+    args: buildChromeLaunchArgs(['--no-first-run', '--no-default-browser-check'])
   });
 
   try {

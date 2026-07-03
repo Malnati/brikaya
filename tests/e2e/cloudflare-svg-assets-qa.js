@@ -3,7 +3,9 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import puppeteer from 'puppeteer';
 
-const DEFAULT_PUBLIC_URL = 'https://malnati-brickbreaker.pages.dev/';
+import { buildChromeLaunchArgs } from './chromeLaunchArgs.js';
+
+const DEFAULT_PUBLIC_URL = 'https://brikaya.com/';
 const DEFAULT_REPORT_PATH = 'tmp/reports/cloudflare-svg-assets-qa.json';
 const DEFAULT_SCREENSHOT_PATH = 'tmp/screenshots/cloudflare-svg-assets-qa.png';
 const CHROME_EXECUTABLE_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
@@ -107,7 +109,7 @@ async function run() {
   const browser = await puppeteer.launch({
     headless: 'new',
     executablePath: CHROME_EXECUTABLE_PATH,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: buildChromeLaunchArgs(['--no-sandbox', '--disable-setuid-sandbox']),
   });
   const page = await browser.newPage();
   const requests = [];

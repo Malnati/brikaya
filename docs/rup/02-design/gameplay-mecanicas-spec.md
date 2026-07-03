@@ -1,5 +1,5 @@
 <!-- docs/rup/02-design/gameplay-mecanicas-spec.md -->
-# Design de Gameplay e Mecânicas — BrickBreaker
+# Design de Gameplay e Mecânicas — Brikaya
 
 ## Princípios de Experiência
 - **Responsividade**: movimentos da raquete e da bolinha devem responder em <16ms por frame.

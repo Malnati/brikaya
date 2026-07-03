@@ -1,5 +1,5 @@
 <!-- docs/rup/01-arquitetura/arquitetura-jogo.md -->
-# Template de Arquitetura — BrickBreaker
+# Template de Arquitetura — Brikaya
 
 ## 1. Visão Geral
 Descreva componentes principais (engine, renderização, UI React, armazenamento) e como se comunicam.

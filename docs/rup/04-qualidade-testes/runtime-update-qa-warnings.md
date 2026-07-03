@@ -8,7 +8,7 @@ Investigar e reduzir ruído não bloqueante observado no `cloudflare-runtime-upd
 
 ## Context
 
-A versão publicada em `https://malnati-brickbreaker.pages.dev/` no commit `7f80528` foi validada em 2026-07-01 com `BUILD_ID` publicado `prod-7f80528-proof-20260701125312`.
+A versão publicada em `https://brikaya.com/` no commit `7f80528` foi validada em 2026-07-01 com `BUILD_ID` publicado `prod-7f80528-proof-20260701125312`.
 
 O QA runtime update passa e confirma:
 
@@ -21,7 +21,7 @@ Mesmo com aceite funcional, o recibo do QA runtime update registra warnings de c
 
 - `⚠️ IndexedDB não inicializado`;
 - `Falha ao armazenar log no IndexedDB: JSHandle@error`;
-- warning do manifesto para `https://malnati-brickbreaker.pages.dev/icons/icon-192.png`.
+- warning do manifesto para `https://brikaya.com/icons/icon-192.png`.
 
 Os demais QAs publicados relevantes registraram `consoleProblems: 0`.
 
@@ -58,7 +58,7 @@ GitHub Issues está desativado no repositório `Malnati/brickbreaker`, então es
 
 ## Acceptance criteria
 
-- `BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-runtime-update-qa` continua passando.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-runtime-update-qa` continua passando.
 - Cada warning remanescente no recibo é reduzido ou justificado tecnicamente.
 - `npm test -- --runInBand` passa.
 - `npm run build` passa.
@@ -98,17 +98,17 @@ PATH=/opt/homebrew/bin:$PATH node --version
 make help
 npm test -- --runInBand
 npm run build
-BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-runtime-update-qa
+BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-runtime-update-qa
 ```
 
 Se houver alteração funcional ou de QA, executar também os QAs publicados existentes:
 
 ```bash
-BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-mobile-qa
-BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-no-score-reset
-BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-phase-transition-qa
-BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-dashboard-layout-qa
-BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-theme-qa
+BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa
+BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-no-score-reset
+BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-phase-transition-qa
+BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa
+BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa
 ```
 
 ## Expected evidence
@@ -120,17 +120,17 @@ BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-
 
 ## Evidence — preview
 
-- Preview: `https://89d40e66.malnati-brickbreaker.pages.dev/`
+- Preview: `https://89d40e66.brikaya.com/`
 - `PATH=/opt/homebrew/bin:$PATH node --version`: `v23.5.0`.
 - `make help`: passou.
 - `npm test -- --runInBand`: 12 suites, 53 testes, 0 falhas.
 - `npm run build`: passou; `BUILD_ID` de preview `preview-fix-runtime-update-qa-warnings-20260701174406`.
-- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.malnati-brickbreaker.pages.dev/ make cloudflare-runtime-update-qa`: passou com `consoleProblems: []`.
-- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.malnati-brickbreaker.pages.dev/ make cloudflare-mobile-qa`: passou com `consoleProblems: []`.
-- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.malnati-brickbreaker.pages.dev/ make cloudflare-dashboard-layout-qa`: passou com `consoleProblems: []`.
-- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.malnati-brickbreaker.pages.dev/ make cloudflare-no-score-reset`: passou com `consoleProblems: []`.
-- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.malnati-brickbreaker.pages.dev/ make cloudflare-phase-transition-qa`: passou com `consoleProblems: []`.
-- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.malnati-brickbreaker.pages.dev/ make cloudflare-theme-qa`: passou com `consoleProblems: []`.
+- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.brikaya.com/ make cloudflare-runtime-update-qa`: passou com `consoleProblems: []`.
+- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.brikaya.com/ make cloudflare-mobile-qa`: passou com `consoleProblems: []`.
+- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.brikaya.com/ make cloudflare-dashboard-layout-qa`: passou com `consoleProblems: []`.
+- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.brikaya.com/ make cloudflare-no-score-reset`: passou com `consoleProblems: []`.
+- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.brikaya.com/ make cloudflare-phase-transition-qa`: passou com `consoleProblems: []`.
+- `BRICKBREAKER_PUBLIC_URL=https://89d40e66.brikaya.com/ make cloudflare-theme-qa`: passou com `consoleProblems: []`.
 
 Recibos JSON:
 

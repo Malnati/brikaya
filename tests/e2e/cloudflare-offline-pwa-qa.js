@@ -3,14 +3,13 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
-const DEFAULT_PUBLIC_URL = "https://malnati-brickbreaker.pages.dev/";
+import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
+
+const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-offline-pwa-qa.json";
 const DEFAULT_SCREENSHOT_PATH = "tmp/screenshots/cloudflare-offline-pwa-qa.png";
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const CHROME_HOST_RESOLVER_RULES_ENV_NAME =
-  "BRICKBREAKER_CHROME_HOST_RESOLVER_RULES";
-const HOST_RESOLVER_RULES_ARG_PREFIX = "--host-resolver-rules=";
 const VIEWPORT = {
   width: 393,
   height: 852,
@@ -50,17 +49,6 @@ function screenshotPath() {
     process.env.BRICKBREAKER_OFFLINE_PWA_QA_SCREENSHOT ||
     DEFAULT_SCREENSHOT_PATH
   );
-}
-
-function browserArgs() {
-  const args = ["--no-sandbox", "--disable-setuid-sandbox"];
-  const hostResolverRules = process.env[CHROME_HOST_RESOLVER_RULES_ENV_NAME];
-
-  if (hostResolverRules) {
-    args.push(`${HOST_RESOLVER_RULES_ARG_PREFIX}${hostResolverRules}`);
-  }
-
-  return args;
 }
 
 function ensureParentDirectory(filePath) {
@@ -234,7 +222,7 @@ async function run() {
   const browser = await puppeteer.launch({
     headless: "new",
     executablePath: CHROME_EXECUTABLE_PATH,
-    args: browserArgs(),
+    args: buildChromeLaunchArgs(["--no-sandbox", "--disable-setuid-sandbox"]),
   });
   const page = await browser.newPage();
   const allRequests = [];

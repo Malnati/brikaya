@@ -3,15 +3,15 @@
 
 ## Objetivo
 
-Garantir que a adaptação visual ao Design System e o seletor `Claro`/`Escuro` funcionem somente com funcionalidades existentes do BrickBreaker e sem recursos externos.
+Garantir que a adaptação visual ao Design System e o seletor `Claro`/`Escuro` funcionem somente com funcionalidades existentes do Brikaya e sem recursos externos.
 
 ## Comando oficial
 
 ```bash
-BRICKBREAKER_PUBLIC_URL=https://malnati-brickbreaker.pages.dev/ make cloudflare-theme-qa
+BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa
 ```
 
-Para preview de branch, substitua `BRICKBREAKER_PUBLIC_URL` pela URL publicada pelo Cloudflare Pages.
+Use somente o domínio canônico publicado. Domínios gerados pelo Pages podem existir para operação interna, mas devem redirecionar para `https://brikaya.com/` e não são endpoint público de QA.
 
 ## Evidências esperadas
 
@@ -23,7 +23,7 @@ Para preview de branch, substitua `BRICKBREAKER_PUBLIC_URL` pela URL publicada p
 
 ## Critérios obrigatórios
 
-- URL precisa terminar em `.pages.dev`.
+- URL precisa começar com `https://brikaya.com/`.
 - Seletor `Claro`/`Escuro` deve aparecer em iPhone 15 e desktop.
 - A seleção deve mudar `data-theme` no documento.
 - A escolha deve persistir após reload.

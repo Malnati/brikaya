@@ -1,7 +1,7 @@
 <!-- docs/rup/99-anexos/README.md -->
 # Anexos e Referências
 
-Este diretório contém materiais de apoio, checklists de qualidade e referências técnicas utilizadas no desenvolvimento do BrickBreaker.
+Este diretório contém materiais de apoio, checklists de qualidade e referências técnicas utilizadas no desenvolvimento do Brikaya.
 
 ## Estrutura
 

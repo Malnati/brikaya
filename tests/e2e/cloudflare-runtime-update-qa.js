@@ -3,7 +3,9 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
-const DEFAULT_PUBLIC_URL = "https://malnati-brickbreaker.pages.dev/";
+import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
+
+const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_MODE = "verify";
 const DEFAULT_PROFILE_DIR = "tmp/browser-profiles/cloudflare-runtime-update";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-runtime-update-qa.json";
@@ -261,7 +263,7 @@ async function run() {
     headless: "new",
     executablePath: CHROME_EXECUTABLE_PATH,
     userDataDir: profileDir(),
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: buildChromeLaunchArgs(["--no-sandbox", "--disable-setuid-sandbox"]),
   });
   const page = await browser.newPage();
   const consoleProblems = [];

@@ -52,4 +52,4 @@ O PR só pode ser mesclado quando:
 - validações locais de mídia visual e áudio passarem;
 - regressões principais de gameplay/tema/SVG continuarem passando;
 - produção for publicada após merge;
-- produção repetir os QAs publicados contra `https://malnati-brickbreaker.pages.dev/`.
+- produção repetir os QAs publicados contra `https://brikaya.com/`.
