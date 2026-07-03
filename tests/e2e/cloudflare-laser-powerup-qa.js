@@ -41,12 +41,15 @@ const POWER_UP_SIZE_TOLERANCE_PX = 1;
 const EXPECTED_QA_SCENARIO = "laser-fan";
 const EXPECTED_SCORE_REASON = "laser_fan";
 const EXPECTED_MIN_SCORE = 10;
+const LEVEL_COMPLETE_EVENT_TYPE = "level_complete";
+const EVENT_WINDOW_THROUGH_FIRST_LEVEL_COMPLETE =
+  "through_first_level_complete";
 const REQUIRED_EVENT_TYPES = [
   "game_start",
   "power_up",
   "brick_destroyed",
   "score_update",
-  "level_complete",
+  LEVEL_COMPLETE_EVENT_TYPE,
 ];
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
@@ -167,6 +170,16 @@ function summarizeEvents(events) {
     accumulator[event.type] = (accumulator[event.type] || 0) + 1;
     return accumulator;
   }, {});
+}
+
+function eventsThroughFirstLevelComplete(events) {
+  const completionIndex = events.findIndex(
+    (event) => event.type === LEVEL_COMPLETE_EVENT_TYPE,
+  );
+
+  if (completionIndex === -1) return events;
+
+  return events.slice(0, completionIndex + 1);
 }
 
 async function waitForCinematicOverlayToClear(page) {
@@ -433,7 +446,10 @@ async function run() {
   const browser = await puppeteer.launch({
     headless: "new",
     executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs(["--no-first-run", "--no-default-browser-check"]),
+    args: buildChromeLaunchArgs([
+      "--no-first-run",
+      "--no-default-browser-check",
+    ]),
   });
 
   try {
@@ -514,27 +530,32 @@ async function run() {
     const layoutState = await collectLayoutState(page);
     await page.screenshot({ path: outScreenshot, fullPage: true });
     const events = await readGameEvents(page);
-    const byType = summarizeEvents(events);
-    const scoreEvents = events.filter((event) => event.type === "score_update");
+    const proofEvents = eventsThroughFirstLevelComplete(events);
+    const byType = summarizeEvents(proofEvents);
+    const scoreEvents = proofEvents.filter(
+      (event) => event.type === "score_update",
+    );
     const laserScoreEvents = scoreEvents.filter(
       (event) => event.metadata?.reason === EXPECTED_SCORE_REASON,
     );
     const laserScoreEvent = laserScoreEvents[0] || null;
-    const activatedPowerUpEvents = events.filter(
+    const activatedPowerUpEvents = proofEvents.filter(
       (event) =>
         event.type === "power_up" &&
         event.metadata?.powerUpType === "laser_fan" &&
         event.metadata?.action === "activate",
     );
-    const levelCompleteEvents = events.filter(
-      (event) => event.type === "level_complete",
+    const levelCompleteEvents = proofEvents.filter(
+      (event) => event.type === LEVEL_COMPLETE_EVENT_TYPE,
     );
     const report = {
       url: targetUrl,
       screenshotPath: outScreenshot,
       itemScreenshotPath: outItemScreenshot,
       byType,
-      eventTypes: events.map((event) => event.type),
+      eventTypes: proofEvents.map((event) => event.type),
+      allEventTypes: events.map((event) => event.type),
+      eventWindow: EVENT_WINDOW_THROUGH_FIRST_LEVEL_COMPLETE,
       laserScoreEvent: laserScoreEvent?.metadata || null,
       laserScoreEvents: laserScoreEvents.length,
       activatedPowerUpEvents: activatedPowerUpEvents.length,
@@ -589,7 +610,10 @@ async function run() {
       "Laser não desenhou o leque visual mínimo.",
     );
     assert(firstPowerUpDraw, "Item especial não foi desenhado no canvas.");
-    assert(targetPowerUpSize, "Tamanho esperado do item especial não foi calculado.");
+    assert(
+      targetPowerUpSize,
+      "Tamanho esperado do item especial não foi calculado.",
+    );
     assert(
       Math.abs(firstPowerUpDraw.width - targetPowerUpSize) <=
         POWER_UP_SIZE_TOLERANCE_PX,
