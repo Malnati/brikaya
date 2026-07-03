@@ -3,6 +3,16 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.30.2] - 2026-07-03
+### Corrigido
+- QA publicado de power-ups limpa o estado do domínio antes de abrir o app, evitando logs antigos quando IndexedDB já estava bloqueado por sessão anterior.
+
+### Testado
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version && npm --version && make help`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --check tests/e2e/cloudflare-laser-powerup-qa.js`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-powerups-qa`
+
 ## [1.30.1] - 2026-07-03
 ### Corrigido
 - Cenário publicado de power-ups mantém o item especial visível por mais frames antes da coleta, permitindo capturar e validar o tamanho SVG proporcional.
