@@ -25,6 +25,10 @@
 - `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand`
 - `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`
 
+## [1.27.3] - 2026-07-03
+### Adicionado
+- Documento PWA-only de distribuição internacional, monetização web e licenciamento em `docs/dist/projeto-pwa.md`.
+
 ## [1.27.2] - 2026-07-03
 ### Corrigido
 - QA runtime de update passa a tolerar navegação automática durante a leitura do aviso visual instalado.
