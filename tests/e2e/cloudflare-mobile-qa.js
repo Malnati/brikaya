@@ -1,5 +1,5 @@
 // tests/e2e/cloudflare-mobile-qa.js
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
@@ -10,15 +10,12 @@ const DEFAULT_SCREENSHOT_PATH = "tmp/screenshots/cloudflare-mobile-qa.png";
 const DEFAULT_MENU_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-mobile-menu.png";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-mobile-qa.json";
+const RESPONSIVE_VIEWPORT_MATRIX_PATH = new URL(
+  "./responsiveViewportMatrix.json",
+  import.meta.url,
+);
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const IPHONE_15_VIEWPORT = {
-  width: 393,
-  height: 852,
-  deviceScaleFactor: 3,
-  isMobile: true,
-  hasTouch: true,
-};
 const MIN_TOUCH_TARGET_SIZE = 44;
 const MAX_INITIAL_SCORE_AFTER_OBSERVATION = 260;
 const OBSERVATION_DURATION_MS = 1500;
@@ -31,6 +28,11 @@ const CLOSE_BUTTON_NAME = /fechar|×|✕/i;
 const SPEED_CURRENT_LABEL = "Velocidade atual";
 const LEVEL_TIME_LABEL = "Tempo da fase";
 const SPEED_REDUCTIONS_LABEL = "Reduções aplicadas";
+const RESPONSIVE_VIEWPORT_MATRIX = JSON.parse(
+  readFileSync(RESPONSIVE_VIEWPORT_MATRIX_PATH, "utf8"),
+);
+const VIEWPORTS = RESPONSIVE_VIEWPORT_MATRIX.viewports;
+const MOBILE_DEFAULT_VIEWPORT = viewportByScreenshotRole("mobile-default");
 
 function getPublicUrl() {
   return process.env.BRICKBREAKER_PUBLIC_URL || DEFAULT_PUBLIC_URL;
@@ -61,6 +63,24 @@ function assert(condition, message) {
   if (!condition) {
     throw new Error(message);
   }
+}
+
+function viewportByScreenshotRole(screenshotRole) {
+  const viewport = VIEWPORTS.find(
+    (candidate) => candidate.screenshotRole === screenshotRole,
+  );
+  assert(viewport, `Viewport com screenshotRole ${screenshotRole} ausente.`);
+  return viewport;
+}
+
+function puppeteerViewport(viewport) {
+  return {
+    width: viewport.width,
+    height: viewport.height,
+    deviceScaleFactor: viewport.deviceScaleFactor,
+    isMobile: viewport.isMobile,
+    hasTouch: viewport.hasTouch,
+  };
 }
 
 async function clickButtonByPattern(page, pattern) {
@@ -313,11 +333,11 @@ async function run() {
     headless: "new",
     executablePath: CHROME_EXECUTABLE_PATH,
     args: buildChromeLaunchArgs(["--no-first-run", "--no-default-browser-check"]),
-  });
+    });
 
   try {
     const page = await browser.newPage();
-    await page.setViewport(IPHONE_15_VIEWPORT);
+    await page.setViewport(puppeteerViewport(MOBILE_DEFAULT_VIEWPORT));
     page.on("console", (message) => {
       if (["error", "warn"].includes(message.type())) {
         consoleProblems.push({ type: message.type(), text: message.text() });
@@ -353,12 +373,12 @@ async function run() {
     );
     assert(
       layoutState.canvas.right <= layoutState.viewport.width,
-      "Canvas excede a largura do iPhone 15.",
+      "Canvas excede a largura do mobile default.",
     );
     assert(
       layoutState.dashboardLayout &&
         layoutState.canvas.width / layoutState.dashboardLayout.width >= 0.98,
-      "Canvas não ocupa largura full-width no iPhone 15.",
+      "Canvas não ocupa largura full-width no mobile default.",
     );
     assert(layoutState.scoreHud, "HUD único de pontuação não encontrado.");
     assert(
@@ -567,6 +587,8 @@ async function run() {
 
     const report = {
       publicUrl,
+      viewportMatrixPath: "tests/e2e/responsiveViewportMatrix.json",
+      viewportName: MOBILE_DEFAULT_VIEWPORT.name,
       screenshotPath,
       menuScreenshotPath,
       layoutState,

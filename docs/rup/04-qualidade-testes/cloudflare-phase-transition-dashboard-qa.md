@@ -44,18 +44,16 @@ BRICKBREAKER_PUBLIC_URL=<cloudflare-preview-ou-producao> make cloudflare-dashboa
 
 Viewports obrigatórios:
 
-- `375x667` — iPhone SE;
-- `390x844` — iPhone 12/13/14;
-- `393x852` — iPhone 15;
-- `430x932` — iPhone Pro Max;
-- `852x393` — iPhone 15 landscape;
-- `768x1024` — tablet;
-- `1280x720` — desktop.
+- Fonte executável: `tests/e2e/responsiveViewportMatrix.json`.
+- Mobile: iPhone 15/16 (`393x852` e `852x393`), iPhone 16e (`390x844` e `844x390`) e iPhone 17 (`402x874` e `874x402`).
+- Tablet: iPad 11/Air 11 (`820x1180` e `1180x820`) e iPad Pro 11 M4 (`834x1210` e `1210x834`).
+- Desktop: `1366x768`, `1440x900` e `1920x1080`.
+- Documento detalhado: `docs/rup/04-qualidade-testes/responsive-viewport-matrix.md`.
 
 Assertivas mínimas:
 
 - sem overflow horizontal;
-- canvas inteiro visível;
+- canvas inteiro visível, sem exigir scroll para jogar;
 - botões principais com alvo mínimo de 44px;
 - header e chips visíveis;
 - logs e colisões acessíveis;
