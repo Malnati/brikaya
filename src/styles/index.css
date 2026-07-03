@@ -364,17 +364,10 @@ canvas {
   position: fixed;
   inset: 0;
   z-index: 20;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
   box-sizing: border-box;
+  display: block;
   min-width: 100vw;
   min-height: 100dvh;
-  padding: max(24px, env(safe-area-inset-top))
-    max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom))
-    max(24px, env(safe-area-inset-left));
   pointer-events: auto;
   text-align: center;
   color: var(--color-text);
@@ -390,13 +383,32 @@ canvas {
   animation: cinematic-overlay-in 180ms ease-out;
 }
 
+.game-cinematic-overlay__stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: var(--space-2);
+  overflow: visible;
+}
+
 .game-cinematic-overlay__media {
   position: absolute;
   top: 50%;
   left: 50%;
   z-index: 0;
-  width: min(84vw, 680px);
-  max-height: 80dvh;
+  width: min(120%, 680px);
+  max-height: 140%;
   object-fit: contain;
   pointer-events: none;
   user-select: none;
@@ -404,31 +416,31 @@ canvas {
 }
 
 .game-cinematic-overlay__media--countdown-circle {
-  width: min(92vw, 720px);
+  width: min(128%, 720px);
   opacity: 0.42;
   animation: cinematic-media-spin 1800ms linear both;
 }
 
 .game-cinematic-overlay__media--countdown-spark {
-  width: min(56vw, 360px);
+  width: min(62%, 360px);
   opacity: 0.72;
   animation: cinematic-media-pulse 600ms ease-out both;
 }
 
 .game-cinematic-overlay__media--level-up-twirl {
-  width: min(86vw, 640px);
+  width: min(120%, 640px);
   opacity: 0.5;
   animation: cinematic-media-spin 1200ms ease-out both;
 }
 
 .game-cinematic-overlay__media--level-up-star {
-  width: min(44vw, 320px);
+  width: min(62%, 320px);
   opacity: 0.72;
   animation: cinematic-media-pulse 1200ms ease-out both;
 }
 
 .game-cinematic-overlay__media--rip-smoke {
-  width: min(96vw, 760px);
+  width: min(132%, 760px);
   opacity: 0.62;
   filter: grayscale(1) sepia(0.25) hue-rotate(300deg);
   animation: cinematic-media-drift 1800ms ease-out both;
@@ -543,7 +555,7 @@ canvas {
 @keyframes cinematic-media-drift {
   from {
     opacity: 0;
-    transform: translate(-50%, -44%) scale(0.88);
+    transform: translate(-50%, -50%) scale(0.88);
   }
 
   to {

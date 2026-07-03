@@ -1,0 +1,139 @@
+{
+  "url": "https://brikaya.com/?qaScenario=laser-fan",
+  "screenshotPath": "docs/assets/issues/vfx-powerup-alignment/evidence/evi-vfx-powerup-alignment-cloudflare-laser-powerup-qa-ba4975.png",
+  "itemScreenshotPath": "docs/assets/issues/vfx-powerup-alignment/evidence/evi-vfx-powerup-alignment-cloudflare-laser-powerup-item.png",
+  "byType": {
+    "game_start": 2,
+    "power_up": 3,
+    "brick_destroyed": 26,
+    "score_update": 3,
+    "level_complete": 1,
+    "level_start": 1,
+    "collision": 1,
+    "ball_lost": 1,
+    "game_state_change": 1,
+    "game_end": 1
+  },
+  "eventTypes": [
+    "game_start",
+    "power_up",
+    "power_up",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "brick_destroyed",
+    "score_update",
+    "level_complete",
+    "level_start",
+    "brick_destroyed",
+    "score_update",
+    "collision",
+    "ball_lost",
+    "game_state_change",
+    "game_end",
+    "game_start",
+    "power_up",
+    "brick_destroyed",
+    "score_update"
+  ],
+  "laserScoreEvent": {
+    "pointsAdded": 240,
+    "reason": "laser_fan",
+    "newTotalScore": 240,
+    "bricksRemaining": 0,
+    "speedState": {
+      "level": 1,
+      "initialBrickCount": 24,
+      "successfulBrickHits": 24,
+      "initialSpawnSpeed": 3.3,
+      "maxSpeed": 3.3,
+      "minSpeed": 0.825,
+      "currentSpeed": 3.3,
+      "reductionPerBrick": 0.103,
+      "previousLevelMaxSpeed": 3.3,
+      "levelStartedAt": 1783103113167,
+      "elapsedLevelMs": 255,
+      "minReached": false
+    }
+  },
+  "laserScoreEvents": 1,
+  "activatedPowerUpEvents": 1,
+  "levelCompleteEvents": 1,
+  "laserEffect": {
+    "minVisibleMs": 2000,
+    "sampleDelayMs": 1900,
+    "pixel": {
+      "red": 0,
+      "green": 0,
+      "blue": 0,
+      "alpha": 0,
+      "brightness": 0
+    },
+    "drawWindow": {
+      "first": {
+        "strokeStyle": "rgba(245, 247, 255, 0.82)",
+        "alpha": 0.82,
+        "lineWidth": 2.2874999046325684,
+        "timestamp": 1783103113436
+      },
+      "last": {
+        "strokeStyle": "rgba(245, 247, 255, 0.82)",
+        "alpha": 0.82,
+        "lineWidth": 2.2874999046325684,
+        "timestamp": 1783103115421
+      },
+      "count": 990,
+      "spanMs": 1985
+    }
+  },
+  "powerUpItem": {
+    "draw": {
+      "source": "https://brikaya.com/assets/visual/powerups/spr-powerup-laser-fan.svg",
+      "width": 29.983333333333334,
+      "height": 29.983333333333334,
+      "timestamp": 1783103113235
+    },
+    "expectedSize": 29.983333333333334,
+    "tolerancePx": 1
+  },
+  "layoutState": {
+    "canvas": {
+      "x": 13.015625,
+      "y": 111,
+      "width": 366.96875,
+      "height": 245.328125,
+      "right": 379.984375,
+      "bottom": 356.328125
+    },
+    "scoreText": "Fase 2|Score 250|Total 0|Recorde 0",
+    "levelToastText": "",
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393
+    },
+    "hasHorizontalOverflow": false
+  },
+  "externalRequests": [],
+  "consoleProblems": []
+}

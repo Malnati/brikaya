@@ -34,6 +34,7 @@ import {
 } from "../constants/audio";
 import {
   ACTIVE_POWER_UP_TYPES,
+  calculatePowerUpSize,
   getPowerUpActivationAudioId,
   type PowerUpType,
 } from "../constants/powerUps";
@@ -329,6 +330,7 @@ export class GameEngine {
       ),
     );
     this.bricks.resize(this.dimensions, this.maxBrickRows);
+    this.activePowerUp?.setSize(this.getPowerUpSize());
   }
 
   public setImageSet(imageSetId: ImageSetId) {
@@ -431,6 +433,7 @@ export class GameEngine {
       this.paddle.position.x + this.paddle.position.width / CENTER_DIVISOR,
       this.paddle.position.y - LASER_FAN_QA_POWER_UP_Y_OFFSET,
       "laser_fan",
+      this.getPowerUpSize(),
       this.resolveAssetPath,
     );
     this.laserFanSpawnsThisLevel = 1;
@@ -800,6 +803,7 @@ export class GameEngine {
       spawnX,
       spawnY,
       powerUpType,
+      this.getPowerUpSize(),
       this.resolveAssetPath,
     );
     this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_SPAWN);
@@ -833,6 +837,10 @@ export class GameEngine {
 
   private resetLaserFanSpawnCounterForLevel() {
     this.laserFanSpawnsThisLevel = 0;
+  }
+
+  private getPowerUpSize(): number {
+    return calculatePowerUpSize(this.dimensions);
   }
 
   private updatePowerUp() {

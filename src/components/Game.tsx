@@ -1,5 +1,5 @@
 // src/components/Game.tsx
-import { useRef, useLayoutEffect, useState } from "react";
+import { useRef, useLayoutEffect, useState, useCallback } from "react";
 
 import { useGameLoop } from "../hooks/useGameLoop";
 import { useColorDebug } from "../hooks/useColorDebug";
@@ -31,6 +31,14 @@ interface GameProps {
   startBlocked?: boolean;
   imageSetId?: ImageSetId;
   paused?: boolean;
+  onBoardRectChange?: (rect: GameBoardRect) => void;
+}
+
+export interface GameBoardRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }
 
 const RESIZE_EVENT_NAME = "resize";
@@ -83,6 +91,16 @@ function clearImmersiveViewportState() {
   document.documentElement.style.removeProperty(VISUAL_VIEWPORT_HEIGHT_CSS_VAR);
 }
 
+function readBoardRect(canvas: HTMLCanvasElement): GameBoardRect {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: rect.x,
+    y: rect.y,
+    width: rect.width,
+    height: rect.height,
+  };
+}
+
 export default function Game({
   onScoreUpdate,
   onGameWon,
@@ -95,6 +113,7 @@ export default function Game({
   startBlocked = false,
   imageSetId = IMAGE_SET_RETRO_DEFAULT,
   paused = false,
+  onBoardRectChange,
 }: GameProps) {
   const surfaceRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -103,6 +122,12 @@ export default function Game({
     height: CANVAS_HEIGHT,
   });
   const [isLandscapeImmersive, setIsLandscapeImmersive] = useState(false);
+  const publishBoardRect = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || !onBoardRectChange) return;
+
+    onBoardRectChange(readBoardRect(canvas));
+  }, [onBoardRectChange]);
 
   useLayoutEffect(() => {
     const updateCanvasSize = () => {
@@ -146,6 +171,7 @@ export default function Game({
 
         return nextSize;
       });
+      publishBoardRect();
     };
 
     updateCanvasSize();
@@ -176,7 +202,11 @@ export default function Game({
       );
       clearImmersiveViewportState();
     };
-  }, []);
+  }, [publishBoardRect]);
+
+  useLayoutEffect(() => {
+    publishBoardRect();
+  }, [canvasSize, isLandscapeImmersive, publishBoardRect]);
 
   useGameLoop(
     canvasRef,

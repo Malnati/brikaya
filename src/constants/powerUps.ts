@@ -1,11 +1,16 @@
 // src/constants/powerUps.ts
 import { GAME_AUDIO_IDS, type AudioId } from './audio';
+import type { DynamicGameDimensions } from './game';
 import {
   sprPowerupLaserFan,
   sprPowerupMultiballOrb,
   sprPowerupSlowBall,
   sprPowerupWidePaddle,
 } from './visualAssets';
+
+const POWER_UP_BRICK_WIDTH_RATIO = 0.7;
+const POWER_UP_MIN_SIZE = 24;
+const POWER_UP_MAX_SIZE = 56;
 
 export type PowerUpType =
   'multiball' | 'wide_paddle' | 'slow_ball' | 'laser_fan';
@@ -71,4 +76,13 @@ export function getPowerUpDefinition(type: PowerUpType): PowerUpDefinition {
 
 export function getPowerUpActivationAudioId(type: PowerUpType): AudioId {
   return getPowerUpDefinition(type).activationAudioId;
+}
+
+export function calculatePowerUpSize(
+  dimensions: Pick<DynamicGameDimensions, 'brickWidth'>,
+): number {
+  return Math.min(
+    POWER_UP_MAX_SIZE,
+    Math.max(POWER_UP_MIN_SIZE, dimensions.brickWidth * POWER_UP_BRICK_WIDTH_RATIO),
+  );
 }

@@ -29,6 +29,14 @@ const LASER_EFFECT_SAMPLE_DELAY_MS = 1900;
 const LASER_EFFECT_CENTER_X_RATIO = 0.5;
 const LASER_EFFECT_CENTER_Y_RATIO = 0.78;
 const LASER_EFFECT_MIN_PIXEL_BRIGHTNESS = 180;
+const LASER_EFFECT_STROKE_COLOR_FRAGMENT = "245, 247, 255";
+const LASER_EFFECT_MIN_ALPHA = 0.8;
+const LASER_EFFECT_MAX_ALPHA = 0.84;
+const LASER_EFFECT_MIN_DRAW_COUNT = 9;
+const POWER_UP_BRICK_WIDTH_RATIO = 0.7;
+const POWER_UP_MIN_SIZE = 24;
+const POWER_UP_MAX_SIZE = 56;
+const POWER_UP_SIZE_TOLERANCE_PX = 1;
 const EXPECTED_QA_SCENARIO = "laser-fan";
 const EXPECTED_SCORE_REASON = "laser_fan";
 const EXPECTED_MIN_SCORE = 10;
@@ -167,6 +175,142 @@ async function waitForCinematicOverlayToClear(page) {
   });
 }
 
+async function installPowerUpDrawProbe(page) {
+  await page.evaluateOnNewDocument(() => {
+    window.__brickbreakerPowerUpDraws = [];
+    const originalDrawImage = CanvasRenderingContext2D.prototype.drawImage;
+    CanvasRenderingContext2D.prototype.drawImage = function drawImageProbe(
+      image,
+      ...args
+    ) {
+      const source = image?.currentSrc || image?.src || "";
+      if (String(source).includes("/assets/visual/powerups/")) {
+        const width = args.length >= 8 ? args[6] : args[2];
+        const height = args.length >= 8 ? args[7] : args[3];
+        window.__brickbreakerPowerUpDraws.push({
+          source,
+          width,
+          height,
+          timestamp: Date.now(),
+        });
+      }
+
+      return originalDrawImage.call(this, image, ...args);
+    };
+  });
+}
+
+async function installLaserDrawProbe(page) {
+  await page.evaluateOnNewDocument(
+    ({ colorFragment, minAlpha, maxAlpha, xRatio, yRatio }) => {
+      window.__brickbreakerLaserFanDraws = [];
+      const originalStroke = CanvasRenderingContext2D.prototype.stroke;
+      CanvasRenderingContext2D.prototype.stroke = function laserStrokeProbe(
+        ...args
+      ) {
+        const strokeStyle = String(this.strokeStyle);
+        const alpha = this.globalAlpha;
+        const isLaserStroke =
+          strokeStyle.includes(colorFragment) &&
+          alpha >= minAlpha &&
+          alpha <= maxAlpha;
+        const result = originalStroke.apply(this, args);
+        if (isLaserStroke) {
+          const sampleX = Math.floor(this.canvas.width * xRatio);
+          const sampleY = Math.floor(this.canvas.height * yRatio);
+          const [red, green, blue, alphaChannel] = this.getImageData(
+            sampleX,
+            sampleY,
+            1,
+            1,
+          ).data;
+          window.__brickbreakerLaserFanDraws.push({
+            strokeStyle,
+            alpha,
+            lineWidth: this.lineWidth,
+            pixel: {
+              red,
+              green,
+              blue,
+              alpha: alphaChannel,
+              brightness: red + green + blue,
+            },
+            timestamp: Date.now(),
+          });
+        }
+
+        return result;
+      };
+    },
+    {
+      colorFragment: LASER_EFFECT_STROKE_COLOR_FRAGMENT,
+      minAlpha: LASER_EFFECT_MIN_ALPHA,
+      maxAlpha: LASER_EFFECT_MAX_ALPHA,
+      xRatio: LASER_EFFECT_CENTER_X_RATIO,
+      yRatio: LASER_EFFECT_CENTER_Y_RATIO,
+    },
+  );
+}
+
+async function waitForPowerUpDraw(page) {
+  await page.waitForFunction(
+    () => (window.__brickbreakerPowerUpDraws || []).length > 0,
+    { timeout: MAX_WAIT_FOR_LASER_MS },
+  );
+
+  return page.evaluate(() => (window.__brickbreakerPowerUpDraws || [])[0]);
+}
+
+async function waitForLaserDrawSample(page) {
+  await page.waitForFunction(
+    (minDrawCount) =>
+      (window.__brickbreakerLaserFanDraws || []).length >= minDrawCount,
+    { timeout: MAX_WAIT_FOR_LASER_MS },
+    LASER_EFFECT_MIN_DRAW_COUNT,
+  );
+
+  return page.evaluate(() => {
+    const draws = window.__brickbreakerLaserFanDraws || [];
+    const first = draws[0] || null;
+    const last = draws[draws.length - 1] || null;
+    return {
+      first,
+      last,
+      count: draws.length,
+      spanMs: first && last ? last.timestamp - first.timestamp : 0,
+    };
+  });
+}
+
+async function expectedPowerUpSize(page) {
+  return page.evaluate(
+    ({ minSize, maxSize, ratio }) => {
+      const canvas = document.querySelector("canvas");
+      if (!canvas) return null;
+      const canvasWidth = canvas.width;
+      const availableWidth = canvasWidth - 60;
+      const minBrickWidth = 40;
+      const maxBrickWidth = 120;
+      let brickCols = Math.floor(availableWidth / (minBrickWidth + 10));
+      brickCols = Math.max(3, Math.min(8, brickCols));
+      const brickWidth = Math.max(
+        minBrickWidth,
+        Math.min(
+          maxBrickWidth,
+          (availableWidth - (brickCols - 1) * 10) / brickCols,
+        ),
+      );
+
+      return Math.min(maxSize, Math.max(minSize, brickWidth * ratio));
+    },
+    {
+      minSize: POWER_UP_MIN_SIZE,
+      maxSize: POWER_UP_MAX_SIZE,
+      ratio: POWER_UP_BRICK_WIDTH_RATIO,
+    },
+  );
+}
+
 async function waitForLaserCompletion(page) {
   await page.waitForFunction(
     async ({ dbName, storeName, dbVersion, reason }) => {
@@ -293,6 +437,8 @@ async function run() {
 
   try {
     const page = await browser.newPage();
+    await installPowerUpDrawProbe(page);
+    await installLaserDrawProbe(page);
     await page.setViewport(VIEWPORT);
     page.on("console", (message) => {
       if (["error", "warn"].includes(message.type())) {
@@ -319,14 +465,15 @@ async function run() {
     await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
     await page.waitForSelector("canvas", { timeout: 30000 });
     await waitForCinematicOverlayToClear(page);
+    const firstPowerUpDraw = await waitForPowerUpDraw(page);
+    const targetPowerUpSize = await expectedPowerUpSize(page);
     await new Promise((resolve) => setTimeout(resolve, 120));
     await page.screenshot({ path: outItemScreenshot, fullPage: true });
 
+    const laserDrawWindow = await waitForLaserDrawSample(page);
+    const laserEffectPixel =
+      laserDrawWindow.last?.pixel || (await sampleLaserEffectPixel(page));
     await waitForLaserCompletion(page);
-    await new Promise((resolve) =>
-      setTimeout(resolve, LASER_EFFECT_SAMPLE_DELAY_MS),
-    );
-    const laserEffectPixel = await sampleLaserEffectPixel(page);
     await page.waitForFunction(
       async ({ dbName, storeName, dbVersion }) => {
         const events = await new Promise((resolve) => {
@@ -394,6 +541,12 @@ async function run() {
         minVisibleMs: LASER_EFFECT_MIN_VISIBLE_MS,
         sampleDelayMs: LASER_EFFECT_SAMPLE_DELAY_MS,
         pixel: laserEffectPixel,
+        drawWindow: laserDrawWindow,
+      },
+      powerUpItem: {
+        draw: firstPowerUpDraw,
+        expectedSize: targetPowerUpSize,
+        tolerancePx: POWER_UP_SIZE_TOLERANCE_PX,
       },
       layoutState,
       externalRequests,
@@ -429,6 +582,22 @@ async function run() {
       "Laser disparou level_complete duplicado ou ausente.",
     );
     assert(laserEffectPixel, "Laser não gerou amostra visual no canvas.");
+    assert(
+      report.laserEffect.drawWindow.count >= LASER_EFFECT_MIN_DRAW_COUNT,
+      "Laser não desenhou o leque visual mínimo.",
+    );
+    assert(firstPowerUpDraw, "Item especial não foi desenhado no canvas.");
+    assert(targetPowerUpSize, "Tamanho esperado do item especial não foi calculado.");
+    assert(
+      Math.abs(firstPowerUpDraw.width - targetPowerUpSize) <=
+        POWER_UP_SIZE_TOLERANCE_PX,
+      "Item especial não respeitou largura proporcional ao bloco.",
+    );
+    assert(
+      Math.abs(firstPowerUpDraw.height - targetPowerUpSize) <=
+        POWER_UP_SIZE_TOLERANCE_PX,
+      "Item especial não respeitou altura proporcional ao bloco.",
+    );
     assert(
       laserEffectPixel.brightness >= LASER_EFFECT_MIN_PIXEL_BRIGHTNESS,
       `Laser não permaneceu visualmente ativo por pelo menos ${LASER_EFFECT_MIN_VISIBLE_MS}ms.`,
