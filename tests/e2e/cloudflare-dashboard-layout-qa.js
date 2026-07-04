@@ -76,7 +76,7 @@ const COLLISIONS_BUTTON_NAME = /colisões/i;
 const CLOSE_BUTTON_NAME = /fechar|×|✕/i;
 const SPEED_CURRENT_LABEL = "Velocidade atual";
 const LEVEL_TIME_LABEL = "Tempo da fase";
-const SPEED_REDUCTIONS_LABEL = "Reduções aplicadas";
+const COLLISIONS_PANEL_TITLE = "Estatísticas de Colisões";
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
 const EVENT_HEADER_SELECTOR = ".event-header";
@@ -279,6 +279,9 @@ async function collectLayoutState(page, viewportName) {
           bottom: rect.bottom,
         };
       }
+      function displayOf(element) {
+        return element ? getComputedStyle(element).display : "none";
+      }
 
       const viewport = {
         name: viewportName,
@@ -320,14 +323,12 @@ async function collectLayoutState(page, viewportName) {
       const boardControls = rectOf(
         document.querySelector(".game-board-controls"),
       );
-      const sideSlot = rectOf(document.querySelector(".ad-slot--side"));
-      const bottomSlot = rectOf(document.querySelector(".ad-slot--bottom"));
-      const sideSlotStyle = getComputedStyle(
-        document.querySelector(".ad-slot--side"),
-      );
-      const bottomSlotStyle = getComputedStyle(
-        document.querySelector(".ad-slot--bottom"),
-      );
+      const sideSlotElement = document.querySelector(".ad-slot--side");
+      const bottomSlotElement = document.querySelector(".ad-slot--bottom");
+      const sideSlot = rectOf(sideSlotElement);
+      const bottomSlot = rectOf(bottomSlotElement);
+      const sideSlotDisplay = displayOf(sideSlotElement);
+      const bottomSlotDisplay = displayOf(bottomSlotElement);
       const buttons = Array.from(document.querySelectorAll("button")).map(
         (button) => {
           const rect = button.getBoundingClientRect();
@@ -357,12 +358,12 @@ async function collectLayoutState(page, viewportName) {
         document.documentElement.scrollWidth > window.innerWidth;
       const sideSlotVisible =
         Boolean(sideSlot) &&
-        sideSlotStyle.display !== "none" &&
+        sideSlotDisplay !== "none" &&
         sideSlot.width > 0 &&
         sideSlot.height > 0;
       const bottomSlotVisible =
         Boolean(bottomSlot) &&
-        bottomSlotStyle.display !== "none" &&
+        bottomSlotDisplay !== "none" &&
         bottomSlot.width > 0 &&
         bottomSlot.height > 0;
       const sideAdDistance =
@@ -944,16 +945,13 @@ async function run() {
               `${viewport.name}: não abriu painel de colisões.`,
             );
             await page.waitForFunction(
-              ({ speedLabel, reductionsLabel }) => {
+              ({ panelTitle }) => {
                 const text = document.body.textContent || "";
-                return (
-                  text.includes(speedLabel) && text.includes(reductionsLabel)
-                );
+                return text.includes(panelTitle);
               },
               { timeout: 10000 },
               {
-                speedLabel: SPEED_CURRENT_LABEL,
-                reductionsLabel: SPEED_REDUCTIONS_LABEL,
+                panelTitle: COLLISIONS_PANEL_TITLE,
               },
             );
             const collisionsOverlayState =

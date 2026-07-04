@@ -94,4 +94,12 @@ describe("GameCinematicOverlay media", () => {
     );
     expectDecorativeMedia(container, "rip-smoke", RIP_SMOKE_PATH);
   });
+
+  it("mantém o RIP centralizado na viewport mesmo quando o tabuleiro informa retângulo", () => {
+    render(
+      <GameCinematicOverlay state={{ type: "rip" }} boardRect={TEST_BOARD_RECT} />,
+    );
+
+    expect(screen.getByTestId(STAGE_TEST_ID)).not.toHaveAttribute("style");
+  });
 });
