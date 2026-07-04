@@ -9,7 +9,11 @@ import {
   refreshAppAfterLocalReset,
   resetLocalAppState,
 } from "./utils/localAppReset";
-import { GAME_AUDIO_IDS } from "./constants/audio";
+import {
+  AUDIO_STORAGE_MUTED_VALUE,
+  GAME_AUDIO_IDS,
+  MUSIC_STORAGE_MUTED_KEY,
+} from "./constants/audio";
 import type { LevelTransitionPayload } from "./constants/game";
 import {
   BRICKBREAKER_UPDATE_INSTALLED_KEY,
@@ -120,10 +124,14 @@ jest.mock("./utils/localAppReset", () => ({
   resetLocalAppState: jest.fn().mockResolvedValue(undefined),
 }));
 
-function mockPrivacyConsent(value: string | null) {
+function mockLocalStorageValues(values: Record<string, string | null>) {
   (window.localStorage.getItem as jest.Mock).mockImplementation(
-    (key: string) => (key === PRIVACY_CONSENT_STORAGE_KEY ? value : null),
+    (key: string) => values[key] ?? null,
   );
+}
+
+function mockPrivacyConsent(value: string | null) {
+  mockLocalStorageValues({ [PRIVACY_CONSENT_STORAGE_KEY]: value });
 }
 
 function mockSystemTheme(prefersDark: boolean) {
@@ -747,6 +755,34 @@ describe("App theme selector", () => {
     expect(musicOnButton).toHaveTextContent("♫");
     expect(setMusicMuted).toHaveBeenLastCalledWith(false);
     expect(playMusic).toHaveBeenCalled();
+  });
+
+  it("mantém música pausada ao ligar som quando a preferência foi salva", async () => {
+    mockSystemTheme(true);
+    mockLocalStorageValues({
+      [PRIVACY_CONSENT_STORAGE_KEY]: VALID_PRIVACY_CONSENT_RECORD,
+      [MUSIC_STORAGE_MUTED_KEY]: AUDIO_STORAGE_MUTED_VALUE,
+    });
+    const user = userEvent.setup();
+
+    jest.spyOn(audioManager, "unlock").mockResolvedValue(true);
+    const playMusic = jest
+      .spyOn(audioManager, "playMusic")
+      .mockResolvedValue(undefined);
+
+    await renderApp();
+
+    await user.click(screen.getByRole("button", { name: "Sem som" }));
+
+    expect(await screen.findByRole("button", { name: "Som" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: "Sem música" })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
+    expect(playMusic).not.toHaveBeenCalled();
   });
 
   it("mantém ícone mudo quando o desbloqueio de áudio falha", async () => {
