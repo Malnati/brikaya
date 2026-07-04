@@ -22,11 +22,11 @@ function hasUnsafeValue(value: unknown, visited = new Set<unknown>()): boolean {
 
 function createDebugIndexedDbMock() {
   const storedEntries: any[] = [];
-  const mockStore = {
-    add: jest.fn((entry: any) => {
-      if (hasUnsafeValue(entry.args)) {
-        throw new DOMException('Value could not be cloned.', 'DataCloneError');
-      }
+    const mockStore = {
+      add: jest.fn((entry: any) => {
+        if (hasUnsafeValue(entry.args)) {
+          throw new DOMException('Value could not be cloned.', 'DataCloneError');
+        }
 
       storedEntries.push(entry);
       const request = {
@@ -41,9 +41,24 @@ function createDebugIndexedDbMock() {
         }
       }, 0);
 
-      return request;
-    }),
-  };
+        return request;
+      }),
+      clear: jest.fn(() => {
+        const request = {
+          onsuccess: null,
+          onerror: null,
+          error: null,
+        } as IDBRequest;
+
+        setTimeout(() => {
+          if (request.onsuccess) {
+            request.onsuccess(new Event('success') as any);
+          }
+        }, 0);
+
+        return request;
+      }),
+    };
   const mockDb = {
     objectStoreNames: {
       contains: jest.fn(() => true),
@@ -104,5 +119,21 @@ describe('DebugLogger', () => {
       expect.stringContaining('Falha ao armazenar log no IndexedDB:'),
       expect.anything(),
     );
+  });
+
+  it('inicializa antes de limpar logs quando o banco ainda não está pronto', async () => {
+    const indexedDbMock = createDebugIndexedDbMock();
+    const { debugLogger } = await import('./debugLogger');
+    (debugLogger as any).db = null;
+    const initializeSpy = jest
+      .spyOn(debugLogger as any, 'initialize')
+      .mockImplementation(async () => {
+        (debugLogger as any).db = indexedDbMock.mockDb;
+      });
+
+    await debugLogger.clearAllLogs();
+
+    expect(initializeSpy).toHaveBeenCalledTimes(1);
+    expect(indexedDbMock.mockStore.clear).toHaveBeenCalledTimes(1);
   });
 });

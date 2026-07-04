@@ -8,24 +8,37 @@
 - Botão “Restaurar padrão” no menu para apagar dados locais do jogo com confirmação antes da ação.
 - Utilitário de reset local que limpa preferências, idioma manual, consentimentos, pontuações, recordes, histórico de eventos, colisões e logs antes de reabrir o app na rota inicial.
 - QA publicado `test:cloudflare-reset-preferences` com semeadura de dados locais, confirmação do reset, validação da tela inicial e evidência visual.
+- Blocos desviantes que evitam a primeira colisão, reaparecem com animação e só podem ser destruídos em uma batida posterior.
+- Cenário e QA publicado `test:cloudflare-evasive-blocks` para validar colisão evasiva no app publicado.
+- Targets `cloudflare-reset-preferences-qa` e `cloudflare-evasive-blocks-qa` no `Makefile`.
+- Cobertura unitária para limpeza padrão de dados locais, erro ao restaurar padrão, limpeza de logs, limpeza de colisões e comportamento dos blocos desviantes.
 
 ### Alterado
 - Menu de dados do jogo passa a oferecer reset total separado de “Zerar pontuação”.
 - Fluxo de restauração tenta buscar atualização disponível antes de reabrir o app, preservando o suporte offline.
+- Cenário de QA `evasive-blocks` usa grade controlada com três blocos desviantes para prova reproduzível.
 
 ### Testado
 - `node --version` → `v23.5.0`.
 - `make help`.
 - `npm test -- src/utils/localAppReset.test.ts src/App.test.tsx --runInBand` → 2 suites / 29 testes.
-- `npm test -- --runInBand --silent` → 45 suites / 253 testes.
+- `npm test -- src/logic/GameEngine.test.ts src/objects/Bricks.test.ts src/utils/localAppReset.test.ts src/App.test.tsx src/storage/debugLogger.test.ts src/utils/collisionTracker.test.ts --runInBand` → 6 suites / 74 testes.
+- Auditoria de cobertura inicial encontrou linhas executáveis alteradas sem cobertura em restauração, limpeza de logs, limpeza de colisões e helpers evasivos; após os testes dedicados, a auditoria das linhas executáveis alteradas em `src/App.tsx`, `src/logic/GameEngine.ts` e `src/objects/Bricks.ts` retornou 108 linhas executáveis alteradas, 0 descobertas.
+- `npm test -- --runInBand --silent` → 46 suites / 265 testes.
 - `node --check tests/e2e/cloudflare-reset-preferences-qa.js`.
-- `npm run test:semantic-file-names` → governed=869.
+- `node --check tests/e2e/cloudflare-evasive-blocks-qa.js`.
+- `npm run test:semantic-file-names` → governed=871.
 - `npm run test:svg-assets` → runtime=139, codex=2.
+- `npm run test:audio-assets` → ids=39, mp3=91.
 - `npm run build`.
 - `make cloudflare-deploy`.
 - `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-evasive-blocks-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-reset-preferences-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`.
 - `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ BRICKBREAKER_RESET_PREFERENCES_QA_REPORT=docs/assets/issues/reset-preferences/evidence/evi-reset-preferences-default-state-report.json BRICKBREAKER_RESET_PREFERENCES_QA_SCREENSHOT=docs/assets/issues/reset-preferences/evidence/evi-reset-preferences-default-state.png npm run test:cloudflare-reset-preferences`.
 - Evidências: `docs/assets/issues/reset-preferences/evidence/evi-reset-preferences-default-state.png` e `docs/assets/issues/reset-preferences/evidence/evi-reset-preferences-default-state-report.json`.
+- Evidências de blocos desviantes: `docs/assets/issues/evasive-blocks/evidence/evi-evasive-blocks-cloudflare-screen.png` e `docs/assets/issues/evasive-blocks/evidence/evi-evasive-blocks-cloudflare-report.json`.
 
 ## [1.32.22] - 2026-07-04
 ### Adicionado

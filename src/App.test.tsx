@@ -26,6 +26,7 @@ interface MockGameProps {
   boardControls?: React.ReactNode;
   startBlocked?: boolean;
   paused?: boolean;
+  qaScenario?: string | null;
   onBoardRectChange?: (rect: TestBoardRect) => void;
   onLevelTransition?: (payload: LevelTransitionPayload) => void;
   onGameOver?: () => Promise<void> | void;
@@ -171,6 +172,7 @@ describe("App theme selector", () => {
     document.documentElement.removeAttribute("data-theme");
     window.localStorage.clear();
     window.sessionStorage.clear();
+    window.history.replaceState(null, "", "/");
     mockPrivacyConsent(VALID_PRIVACY_CONSENT_RECORD);
   });
 
@@ -500,6 +502,15 @@ describe("App theme selector", () => {
     ).toHaveAttribute("data-settings-action", "reset-preferences");
   });
 
+  it("encaminha cenário de QA de blocos desviantes para o jogo", async () => {
+    mockSystemTheme(true);
+    window.history.replaceState(null, "", "/?qaScenario=evasive-blocks");
+
+    await renderApp();
+
+    expect(mockLastGameProps?.qaScenario).toBe("evasive-blocks");
+  });
+
   it("confirma, limpa dados locais e atualiza o app ao restaurar padrão", async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
@@ -517,6 +528,30 @@ describe("App theme selector", () => {
     await waitFor(() => expect(resetLocalAppState).toHaveBeenCalledTimes(1));
     expect(refreshAppAfterLocalReset).toHaveBeenCalledTimes(1);
     expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.RESET_SCORE);
+  });
+
+  it("mostra erro quando não consegue restaurar padrão", async () => {
+    mockSystemTheme(true);
+    const user = userEvent.setup();
+    jest.spyOn(window, "confirm").mockReturnValue(true);
+    const playAudio = jest
+      .spyOn(audioManager, "play")
+      .mockResolvedValue(undefined);
+    (resetLocalAppState as jest.Mock).mockRejectedValueOnce(
+      new Error("reset-failed"),
+    );
+
+    await renderApp();
+
+    await user.click(screen.getByRole("button", { name: "Menu" }));
+    await user.click(screen.getByTestId(SETTINGS_ACTION_RESET_PREFERENCES_TEST_ID));
+
+    expect(refreshAppAfterLocalReset).not.toHaveBeenCalled();
+    expect(
+      await screen.findByText("Não foi possível restaurar o padrão."),
+    ).toBeInTheDocument();
+    expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.RESET_SCORE);
+    expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.ERROR_SOFT);
   });
 
   it("não limpa dados locais quando restauração padrão é cancelada", async () => {

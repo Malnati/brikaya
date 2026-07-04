@@ -2,6 +2,7 @@
 import { Bricks } from "./Bricks";
 import type { DynamicGameDimensions } from "../constants/game";
 import { GAME_VISUAL_ASSET_ROLES } from "../utils/visualAssetResolver";
+import { AssetLoader } from "../utils/assetLoader";
 
 jest.mock("../storage/gameLogger", () => ({
   gameLogger: {
@@ -34,6 +35,10 @@ const FIRST_BRICK_METAL_RANDOM_VALUES = [
 ];
 const FIRST_TWO_BRICKS_METAL_RANDOM_VALUES = [
   0, 0, 0, 0, 0, 0, 0.5, 0.99, 0.99, 0.99, 0.99, 0.99,
+];
+const FIRST_THREE_BRICKS_EVASIVE_RANDOM_VALUES = [
+  0, 0, 0, 0, 0, 0, 0, 0.99, 0.99, 0.99, 0.99, 0.99, 0.99, 0.99, 0.99,
+  0.99, 0.99,
 ];
 const BRICK_TOUCH_Y = 40;
 const SECOND_ROW_BRICK_TOUCH_Y = 70;
@@ -72,6 +77,18 @@ function createCanvasContext() {
   return {
     drawImage: jest.fn(),
     fillRect: jest.fn(),
+  } as unknown as CanvasRenderingContext2D;
+}
+
+function createAnimatedCanvasContext() {
+  return {
+    drawImage: jest.fn(),
+    fillRect: jest.fn(),
+    save: jest.fn(),
+    restore: jest.fn(),
+    translate: jest.fn(),
+    scale: jest.fn(),
+    globalAlpha: 1,
   } as unknown as CanvasRenderingContext2D;
 }
 
@@ -293,5 +310,98 @@ describe("Bricks laser fan helpers", () => {
     expect(resolveAssetPath).toHaveBeenCalledWith(
       GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne,
     );
+  });
+
+  it("marca três blocos desviantes aleatórios por grade", () => {
+    const bricks = new Bricks(
+      TEST_DIMENSIONS,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      createRandom(FIRST_THREE_BRICKS_EVASIVE_RANDOM_VALUES),
+    );
+
+    expect(bricks.getEvasiveBrickSnapshots()).toEqual([
+      expect.objectContaining({ col: 0, row: 0 }),
+      expect.objectContaining({ col: 0, row: 1 }),
+      expect.objectContaining({ col: 1, row: 0 }),
+    ]);
+    expect(bricks.isBrickEvasive(-1, 0)).toBe(false);
+    expect(bricks.hasBrickEvaded(0, 99)).toBe(false);
+  });
+
+  it("faz o bloco desviante rebater sem destruir nem pontuar na primeira colisão", async () => {
+    const onBrickDestroyed = jest.fn();
+    const bricks = new Bricks(
+      TEST_DIMENSIONS,
+      onBrickDestroyed,
+      undefined,
+      undefined,
+      undefined,
+      createRandom(FIRST_THREE_BRICKS_EVASIVE_RANDOM_VALUES),
+    );
+    const ball = createBall();
+
+    expect(bricks.isBrickEvasive(0, 0)).toBe(true);
+
+    await bricks.collide(ball);
+
+    expect(bricks.isBrickActive(0, 0)).toBe(true);
+    expect(bricks.hasBrickEvaded(0, 0)).toBe(true);
+    expect(ball.bounceY).toHaveBeenCalledTimes(1);
+    expect(ball.registerBrickHit).not.toHaveBeenCalled();
+    expect(onBrickDestroyed).not.toHaveBeenCalled();
+
+    await separateAndTouchBrick(bricks, ball);
+
+    expect(bricks.isBrickActive(0, 0)).toBe(false);
+    expect(ball.bounceY).toHaveBeenCalledTimes(2);
+    expect(ball.registerBrickHit).toHaveBeenCalledTimes(1);
+    expect(onBrickDestroyed).toHaveBeenCalledTimes(1);
+  });
+
+  it("usa a animação de desaparecimento/reaparecimento após a evasão", async () => {
+    const bricks = new Bricks(
+      TEST_DIMENSIONS,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      createRandom(FIRST_THREE_BRICKS_EVASIVE_RANDOM_VALUES),
+    );
+    const ball = createBall();
+    const ctx = createAnimatedCanvasContext();
+    const dateSpy = jest.spyOn(Date, "now").mockReturnValue(1000);
+
+    try {
+      await bricks.collide(ball);
+      bricks.draw(ctx);
+      dateSpy.mockReturnValue(1400);
+      bricks.draw(ctx);
+    } finally {
+      dateSpy.mockRestore();
+    }
+
+    expect(ctx.save).toHaveBeenCalled();
+    expect(ctx.scale).toHaveBeenCalled();
+    expect(ctx.restore).toHaveBeenCalled();
+  });
+
+  it("desenha fallback sólido quando asset do bloco não está disponível", () => {
+    (AssetLoader.getOrLoadImage as jest.Mock).mockReturnValueOnce(null);
+    const bricks = new Bricks(
+      TEST_DIMENSIONS,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      createRandom(BASIC_BRICK_RANDOM_VALUES),
+    );
+    const ctx = createCanvasContext();
+
+    bricks.draw(ctx);
+
+    expect(ctx.fillRect).toHaveBeenCalled();
   });
 });

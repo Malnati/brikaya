@@ -3,6 +3,10 @@ import {
   refreshAppAfterLocalReset,
   resetLocalAppState,
 } from "./localAppReset";
+import { resetScores } from "../storage/score";
+import { debugLogger } from "../storage/debugLogger";
+import { gameLogger } from "../storage/gameLogger";
+import { collisionTracker } from "./collisionTracker";
 
 jest.mock("../storage/score", () => ({
   resetScores: jest.fn().mockResolvedValue(undefined),
@@ -27,6 +31,10 @@ function createStorageMock() {
 }
 
 describe("local app reset", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("limpa armazenamentos do navegador e dados locais do jogo", async () => {
     const localStorage = createStorageMock();
     const sessionStorage = createStorageMock();
@@ -49,6 +57,20 @@ describe("local app reset", () => {
     expect(clearGameEvents).toHaveBeenCalledTimes(1);
     expect(clearCollisions).toHaveBeenCalledTimes(1);
     expect(clearDebugLogs).toHaveBeenCalledTimes(1);
+  });
+
+  it("usa limpadores padrão quando dependências de dados não são injetadas", async () => {
+    const localStorage = createStorageMock();
+    const sessionStorage = createStorageMock();
+
+    await resetLocalAppState({
+      windowRef: { localStorage, sessionStorage },
+    });
+
+    expect(resetScores).toHaveBeenCalledTimes(1);
+    expect(gameLogger.clearAllEvents).toHaveBeenCalledTimes(1);
+    expect(collisionTracker.clearAllCollisions).toHaveBeenCalledTimes(1);
+    expect(debugLogger.clearAllLogs).toHaveBeenCalledTimes(1);
   });
 
   it("atualiza o app e volta para a rota padrão", async () => {

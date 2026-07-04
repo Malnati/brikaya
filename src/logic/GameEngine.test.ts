@@ -811,6 +811,63 @@ describe("GameEngine", () => {
     );
   });
 
+  it("posiciona bola de QA de fase única na primeira linha", () => {
+    const { Bricks } = require("../objects/Bricks");
+
+    new (GameEngine as any)(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      undefined,
+      "single-brick-phase-clear",
+    );
+
+    const dimensions = (Bricks as jest.Mock).mock.calls[0][0];
+    const ball = mockBallInstances[0];
+
+    expect(ball.setPosition).toHaveBeenCalledWith(
+      dimensions.brickOffsetLeft + dimensions.brickWidth / 2,
+      dimensions.brickOffsetTop + dimensions.brickHeight + ball.position.radius - 1,
+    );
+    expect(ball.setDirection).toHaveBeenCalledWith(0);
+  });
+
+  it("configura cenário de QA com três blocos desviantes", () => {
+    const { Bricks } = require("../objects/Bricks");
+
+    new (GameEngine as any)(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      undefined,
+      "evasive-blocks",
+    );
+
+    const dimensions = (Bricks as jest.Mock).mock.calls[0][0];
+    const random = (Bricks as jest.Mock).mock.calls[0][5];
+
+    expect(dimensions).toMatchObject({
+      brickCols: 1,
+      brickRows: 3,
+    });
+    expect(typeof random).toBe("function");
+    expect([random(), random(), random(), random(), random(), random()]).toEqual(
+      [0, 0, 0, 0, 0.99, 0.99],
+    );
+    expect(mockBallInstances[0].setPosition).toHaveBeenCalledWith(
+      dimensions.brickOffsetLeft + dimensions.brickWidth / 2,
+      dimensions.brickOffsetTop +
+        2 * (dimensions.brickHeight + dimensions.brickPadding) +
+        dimensions.brickHeight +
+        mockBallInstances[0].position.radius -
+        1,
+    );
+  });
+
   it("mantém power-up de QA visível antes da coleta para captura publicada", () => {
     const engine = new GameEngine(
       canvas,

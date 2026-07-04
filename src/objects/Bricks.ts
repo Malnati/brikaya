@@ -20,12 +20,19 @@ const FIRST_INDEX = 0;
 const RANDOM_SELECTION_OFFSET = 1;
 const BRICK_KIND_BASIC = "basic";
 const BRICK_KIND_METAL = "metal";
+const BRICK_KIND_EVASIVE = "evasive";
 const BASIC_BRICK_HITS = 1;
 const METAL_BRICK_HITS = 3;
 const METAL_BRICK_DENTED_ONE_HITS = 2;
 const METAL_BRICK_DENTED_TWO_HITS = 1;
 const METAL_BRICK_MIN_COUNT = 0;
 const METAL_BRICK_MAX_COUNT = 3;
+const EVASIVE_BRICK_COUNT = 3;
+const EVASIVE_BRICK_ANIMATION_MS = 520;
+const EVASIVE_BRICK_REAPPEAR_PROGRESS = 0.5;
+const EVASIVE_BRICK_MIN_SCALE = 0.08;
+const EVASIVE_BRICK_FULL_VISIBILITY = 1;
+const CENTER_DIVISOR = 2;
 const BRICK_ASSET_ROLES = [
   GAME_VISUAL_ASSET_ROLES.brickRed,
   GAME_VISUAL_ASSET_ROLES.brickBlue,
@@ -34,7 +41,10 @@ const BRICK_ASSET_ROLES = [
   GAME_VISUAL_ASSET_ROLES.brickPurple,
 ] as const satisfies readonly GameVisualAssetRole[];
 
-type BrickKind = typeof BRICK_KIND_BASIC | typeof BRICK_KIND_METAL;
+type BrickKind =
+  | typeof BRICK_KIND_BASIC
+  | typeof BRICK_KIND_METAL
+  | typeof BRICK_KIND_EVASIVE;
 
 interface Brick {
   x: number;
@@ -44,6 +54,8 @@ interface Brick {
   kind: BrickKind;
   hitsRemaining: number;
   isTouching: boolean;
+  hasEvaded: boolean;
+  evasionStartedAt: number;
 }
 
 export interface DestroyedBrickSnapshot {
@@ -89,6 +101,8 @@ export class Bricks {
           kind: BRICK_KIND_BASIC,
           hitsRemaining: BASIC_BRICK_HITS,
           isTouching: false,
+          hasEvaded: false,
+          evasionStartedAt: 0,
         };
       }
     }
@@ -106,6 +120,7 @@ export class Bricks {
       }
     }
     this.assignRandomMetalBricks();
+    this.assignRandomEvasiveBricks();
     LOG(`✅ Bricks criados com sucesso`);
   }
 
@@ -139,29 +154,7 @@ export class Bricks {
           b.x = brickX;
           b.y = brickY;
 
-          // Desenhar a imagem do brick
-          const brickAssetRole = this.getBrickAssetRole(b);
-          const brickImage = AssetLoader.getOrLoadImage(
-            this.resolveAssetPath(brickAssetRole),
-          );
-          if (brickImage) {
-            ctx.drawImage(
-              brickImage,
-              brickX,
-              brickY,
-              this.dimensions.brickWidth,
-              this.dimensions.brickHeight,
-            );
-          } else {
-            // Fallback para retângulo colorido se a imagem não carregou
-            ctx.fillStyle = "#00d4ff";
-            ctx.fillRect(
-              brickX,
-              brickY,
-              this.dimensions.brickWidth,
-              this.dimensions.brickHeight,
-            );
-          }
+          this.drawBrick(ctx, b, brickX, brickY);
         }
       }
     }
@@ -186,6 +179,8 @@ export class Bricks {
         kind: BRICK_KIND_BASIC,
         hitsRemaining: BASIC_BRICK_HITS,
         isTouching: false,
+        hasEvaded: false,
+        evasionStartedAt: 0,
       });
     }
     this.rows += 1;
@@ -440,6 +435,7 @@ export class Bricks {
       brick.status = BRICK_DESTROYED;
       brick.hitsRemaining = BRICK_DESTROYED;
       brick.isTouching = false;
+      brick.evasionStartedAt = 0;
       destroyed.push(snapshot);
     }
 
@@ -457,6 +453,7 @@ export class Bricks {
         brick.status = BRICK_DESTROYED;
         brick.hitsRemaining = BRICK_DESTROYED;
         brick.isTouching = false;
+        brick.evasionStartedAt = 0;
         destroyed.push(snapshot);
       }
     }
@@ -476,6 +473,48 @@ export class Bricks {
     return this.bricks[col][row].kind === BRICK_KIND_METAL;
   }
 
+  isBrickEvasive(col: number, row: number): boolean {
+    if (
+      col < 0 ||
+      col >= this.dimensions.brickCols ||
+      row < 0 ||
+      row >= this.rows
+    ) {
+      return false;
+    }
+    return this.bricks[col][row].kind === BRICK_KIND_EVASIVE;
+  }
+
+  hasBrickEvaded(col: number, row: number): boolean {
+    if (
+      col < 0 ||
+      col >= this.dimensions.brickCols ||
+      row < 0 ||
+      row >= this.rows
+    ) {
+      return false;
+    }
+    return this.bricks[col][row].hasEvaded;
+  }
+
+  getEvasiveBrickSnapshots(): DestroyedBrickSnapshot[] {
+    const evasiveBricks: DestroyedBrickSnapshot[] = [];
+    for (let c = 0; c < this.dimensions.brickCols; c++) {
+      for (let r = 0; r < this.rows; r++) {
+        const brick = this.bricks[c][r];
+        if (
+          brick.status !== BRICK_ACTIVE ||
+          brick.kind !== BRICK_KIND_EVASIVE
+        )
+          continue;
+
+        evasiveBricks.push(this.snapshotBrick(c, r, brick));
+      }
+    }
+
+    return evasiveBricks;
+  }
+
   getBrickHitsRemaining(col: number, row: number): number {
     if (
       col < 0 ||
@@ -486,6 +525,94 @@ export class Bricks {
       return BRICK_DESTROYED;
     }
     return this.bricks[col][row].hitsRemaining;
+  }
+
+  private drawBrick(
+    ctx: CanvasRenderingContext2D,
+    brick: Brick,
+    brickX: number,
+    brickY: number,
+  ) {
+    const brickAssetRole = this.getBrickAssetRole(brick);
+    const brickImage = AssetLoader.getOrLoadImage(
+      this.resolveAssetPath(brickAssetRole),
+    );
+    if (!this.isBrickEvasionAnimating(brick)) {
+      this.drawBrickImage(ctx, brickImage, brickX, brickY);
+      return;
+    }
+
+    const visibility = this.getBrickEvasionVisibility(brick);
+    const scale =
+      EVASIVE_BRICK_MIN_SCALE +
+      (EVASIVE_BRICK_FULL_VISIBILITY - EVASIVE_BRICK_MIN_SCALE) * visibility;
+    const centerX = brickX + this.dimensions.brickWidth / CENTER_DIVISOR;
+    const centerY = brickY + this.dimensions.brickHeight / CENTER_DIVISOR;
+
+    ctx.save();
+    ctx.globalAlpha = visibility;
+    ctx.translate(centerX, centerY);
+    ctx.scale(scale, scale);
+    this.drawBrickImage(
+      ctx,
+      brickImage,
+      -this.dimensions.brickWidth / CENTER_DIVISOR,
+      -this.dimensions.brickHeight / CENTER_DIVISOR,
+    );
+    ctx.restore();
+  }
+
+  private drawBrickImage(
+    ctx: CanvasRenderingContext2D,
+    brickImage: HTMLImageElement | null,
+    brickX: number,
+    brickY: number,
+  ) {
+    if (brickImage) {
+      ctx.drawImage(
+        brickImage,
+        brickX,
+        brickY,
+        this.dimensions.brickWidth,
+        this.dimensions.brickHeight,
+      );
+    } else {
+      ctx.fillStyle = "#00d4ff";
+      ctx.fillRect(
+        brickX,
+        brickY,
+        this.dimensions.brickWidth,
+        this.dimensions.brickHeight,
+      );
+    }
+  }
+
+  private isBrickEvasionAnimating(brick: Brick): boolean {
+    return (
+      brick.evasionStartedAt > 0 &&
+      Date.now() - brick.evasionStartedAt <= EVASIVE_BRICK_ANIMATION_MS
+    );
+  }
+
+  private getBrickEvasionVisibility(brick: Brick): number {
+    const progress = Math.min(
+      EVASIVE_BRICK_FULL_VISIBILITY,
+      Math.max(
+        0,
+        (Date.now() - brick.evasionStartedAt) / EVASIVE_BRICK_ANIMATION_MS,
+      ),
+    );
+    if (progress <= EVASIVE_BRICK_REAPPEAR_PROGRESS) {
+      return (
+        EVASIVE_BRICK_FULL_VISIBILITY -
+        progress / EVASIVE_BRICK_REAPPEAR_PROGRESS
+      );
+    }
+
+    return (
+      (progress - EVASIVE_BRICK_REAPPEAR_PROGRESS) /
+      EVASIVE_BRICK_REAPPEAR_PROGRESS
+    );
   }
 
   private assignRandomMetalBricks() {
@@ -505,6 +632,24 @@ export class Bricks {
       const brick = this.bricks[metalBrick.col][metalBrick.row];
       brick.kind = BRICK_KIND_METAL;
       brick.hitsRemaining = METAL_BRICK_HITS;
+    }
+  }
+
+  private assignRandomEvasiveBricks() {
+    const activeBasicBricks = this.getActiveBasicBrickSnapshots();
+    if (activeBasicBricks.length < EVASIVE_BRICK_COUNT) return;
+
+    const evasiveBricks = this.selectRandomSnapshots(
+      activeBasicBricks,
+      EVASIVE_BRICK_COUNT,
+    );
+
+    for (const evasiveBrick of evasiveBricks) {
+      const brick = this.bricks[evasiveBrick.col][evasiveBrick.row];
+      brick.kind = BRICK_KIND_EVASIVE;
+      brick.hitsRemaining = BASIC_BRICK_HITS;
+      brick.hasEvaded = false;
+      brick.evasionStartedAt = 0;
     }
   }
 
@@ -539,6 +684,12 @@ export class Bricks {
   }
 
   private hitBrick(brick: Brick): boolean {
+    if (brick.kind === BRICK_KIND_EVASIVE && !brick.hasEvaded) {
+      brick.hasEvaded = true;
+      brick.evasionStartedAt = Date.now();
+      return false;
+    }
+
     brick.hitsRemaining = Math.max(BRICK_DESTROYED, brick.hitsRemaining - 1);
     if (brick.hitsRemaining > BRICK_DESTROYED) {
       return false;
@@ -567,6 +718,24 @@ export class Bricks {
     }
 
     return snapshots.slice(FIRST_INDEX, limit);
+  }
+
+  private getActiveBasicBrickSnapshots(): DestroyedBrickSnapshot[] {
+    const activeBricks: DestroyedBrickSnapshot[] = [];
+    for (let c = 0; c < this.dimensions.brickCols; c++) {
+      for (let r = 0; r < this.rows; r++) {
+        const brick = this.bricks[c][r];
+        if (
+          brick.status !== BRICK_ACTIVE ||
+          brick.kind !== BRICK_KIND_BASIC
+        )
+          continue;
+
+        activeBricks.push(this.snapshotBrick(c, r, brick));
+      }
+    }
+
+    return activeBricks;
   }
 
   private getActiveBrickSnapshots(): DestroyedBrickSnapshot[] {

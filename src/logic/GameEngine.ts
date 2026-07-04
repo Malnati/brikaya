@@ -56,6 +56,7 @@ const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
 const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
 const LASER_FAN_QA_SCENARIO = "laser-fan";
 const METAL_BLOCK_QA_SCENARIO = "metal-block";
+const EVASIVE_BLOCKS_QA_SCENARIO = "evasive-blocks";
 const LATE_PHASE_STABILITY_LEVEL = 11;
 const LATE_PHASE_STABILITY_Y_RATIO = 0.35;
 const CINEMATIC_RIP_X_RATIO = 0.12;
@@ -63,6 +64,21 @@ const CINEMATIC_RIP_Y_OFFSET = 2;
 const LASER_FAN_QA_POWER_UP_Y_OFFSET = 64;
 const METAL_BLOCK_QA_RANDOM_VALUES = [0, 0.99] as const;
 const METAL_BLOCK_QA_RANDOM_FALLBACK = 0.99;
+const EVASIVE_BLOCKS_QA_RANDOM_VALUES = [
+  0, 0, 0, 0, 0.99, 0.99, 0.99, 0.99,
+] as const;
+const EVASIVE_BLOCKS_QA_RANDOM_FALLBACK = 0.99;
+const EVASIVE_BLOCKS_QA_BRICK_COLS = 1;
+const EVASIVE_BLOCKS_QA_BRICK_ROWS = 3;
+const EVASIVE_BLOCKS_QA_BRICK_WIDTH_RATIO = 0.18;
+const EVASIVE_BLOCKS_QA_BRICK_WIDTH_MIN = 48;
+const EVASIVE_BLOCKS_QA_BRICK_WIDTH_MAX = 88;
+const EVASIVE_BLOCKS_QA_BRICK_HEIGHT_RATIO = 0.05;
+const EVASIVE_BLOCKS_QA_BRICK_HEIGHT_MIN = 18;
+const EVASIVE_BLOCKS_QA_BRICK_HEIGHT_MAX = 28;
+const EVASIVE_BLOCKS_QA_BRICK_PADDING = 8;
+const EVASIVE_BLOCKS_QA_TARGET_ROW =
+  EVASIVE_BLOCKS_QA_BRICK_ROWS - 1;
 const COMBO_WINDOW_MS = 1200;
 const COMBO_COOLDOWN_MS = 500;
 const COMBO_SMALL_THRESHOLD = 3;
@@ -161,6 +177,7 @@ export type GameQaScenario =
   | typeof CINEMATIC_RIP_QA_SCENARIO
   | typeof LASER_FAN_QA_SCENARIO
   | typeof METAL_BLOCK_QA_SCENARIO
+  | typeof EVASIVE_BLOCKS_QA_SCENARIO
   | typeof AUDIO_QA_SCENARIO;
 
 export class GameEngine {
@@ -279,6 +296,7 @@ export class GameEngine {
       ),
     );
     this.prepareQaBall();
+    this.prepareEvasiveBlocksQaBall();
     this.prepareCinematicRipBall();
     this.prepareLatePhaseStabilityBall();
 
@@ -309,6 +327,39 @@ export class GameEngine {
         brickOffsetTop: Math.max(24, canvasHeight * 0.12),
         brickOffsetLeft:
           (canvasWidth - Math.min(96, Math.max(56, canvasWidth * 0.24))) / 2,
+      };
+    }
+
+    if (this.isEvasiveBlocksQaScenario() && !this.qaScenarioConsumed) {
+      const brickWidth = Math.min(
+        EVASIVE_BLOCKS_QA_BRICK_WIDTH_MAX,
+        Math.max(
+          EVASIVE_BLOCKS_QA_BRICK_WIDTH_MIN,
+          canvasWidth * EVASIVE_BLOCKS_QA_BRICK_WIDTH_RATIO,
+        ),
+      );
+      const brickHeight = Math.min(
+        EVASIVE_BLOCKS_QA_BRICK_HEIGHT_MAX,
+        Math.max(
+          EVASIVE_BLOCKS_QA_BRICK_HEIGHT_MIN,
+          canvasHeight * EVASIVE_BLOCKS_QA_BRICK_HEIGHT_RATIO,
+        ),
+      );
+      const totalBricksWidth =
+        EVASIVE_BLOCKS_QA_BRICK_COLS * brickWidth +
+        (EVASIVE_BLOCKS_QA_BRICK_COLS - 1) *
+          EVASIVE_BLOCKS_QA_BRICK_PADDING;
+
+      return {
+        ...dimensions,
+        brickCols: EVASIVE_BLOCKS_QA_BRICK_COLS,
+        brickRows: EVASIVE_BLOCKS_QA_BRICK_ROWS,
+        brickWidth,
+        brickHeight,
+        brickPadding: EVASIVE_BLOCKS_QA_BRICK_PADDING,
+        brickOffsetTop: Math.max(24, canvasHeight * 0.12),
+        brickOffsetLeft:
+          (canvasWidth - totalBricksWidth) / CENTER_DIVISOR,
       };
     }
 
@@ -407,15 +458,15 @@ export class GameEngine {
   }
 
   private createBricks(): Bricks {
-    const metalBlockQaRandom = this.createMetalBlockQaRandom();
-    if (metalBlockQaRandom) {
+    const brickQaRandom = this.createBrickQaRandom();
+    if (brickQaRandom) {
       return new Bricks(
         this.dimensions,
         this.onBrickDestroyed.bind(this),
         this.maxBrickRows,
         undefined,
         this.resolveAssetPath,
-        metalBlockQaRandom,
+        brickQaRandom,
       );
     }
 
@@ -435,6 +486,14 @@ export class GameEngine {
     );
   }
 
+  private isEvasiveBlocksQaScenario(): boolean {
+    return this.qaScenario === EVASIVE_BLOCKS_QA_SCENARIO;
+  }
+
+  private createBrickQaRandom(): (() => number) | null {
+    return this.createMetalBlockQaRandom() ?? this.createEvasiveBlocksQaRandom();
+  }
+
   private createMetalBlockQaRandom(): (() => number) | null {
     if (
       this.qaScenario !== METAL_BLOCK_QA_SCENARIO ||
@@ -446,6 +505,20 @@ export class GameEngine {
     let index = 0;
     return () =>
       METAL_BLOCK_QA_RANDOM_VALUES[index++] ?? METAL_BLOCK_QA_RANDOM_FALLBACK;
+  }
+
+  private createEvasiveBlocksQaRandom(): (() => number) | null {
+    if (
+      this.qaScenario !== EVASIVE_BLOCKS_QA_SCENARIO ||
+      this.qaScenarioConsumed
+    ) {
+      return null;
+    }
+
+    let index = 0;
+    return () =>
+      EVASIVE_BLOCKS_QA_RANDOM_VALUES[index++] ??
+      EVASIVE_BLOCKS_QA_RANDOM_FALLBACK;
   }
 
   private prepareQaBall() {
@@ -461,6 +534,28 @@ export class GameEngine {
       this.dimensions.brickOffsetLeft + this.dimensions.brickWidth / 2;
     const targetY =
       this.dimensions.brickOffsetTop +
+      this.dimensions.brickHeight +
+      ball.position.radius -
+      1;
+    ball.setPosition(targetX, targetY);
+    ball.setDirection(0);
+  }
+
+  private prepareEvasiveBlocksQaBall() {
+    if (
+      !this.isEvasiveBlocksQaScenario() ||
+      this.qaScenarioConsumed ||
+      this.balls.length === 0
+    )
+      return;
+
+    const ball = this.balls[0];
+    const targetX =
+      this.dimensions.brickOffsetLeft + this.dimensions.brickWidth / 2;
+    const targetY =
+      this.dimensions.brickOffsetTop +
+      EVASIVE_BLOCKS_QA_TARGET_ROW *
+        (this.dimensions.brickHeight + this.dimensions.brickPadding) +
       this.dimensions.brickHeight +
       ball.position.radius -
       1;
