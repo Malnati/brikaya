@@ -3,6 +3,29 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.14] - 2026-07-04
+### Alterado
+- Cobertura de i18n passa a validar `navigator.language` quando `navigator.languages` não está disponível, preservando fallback por fuso somente depois dos idiomas do navegador.
+- Cobertura de aparência localizada passa a incluir os cinco novos temas realistas e os cinco novos conjuntos de imagens realistas.
+- QA publicado de i18n passa a registrar que detecção automática por idioma não grava locale nem origem manual.
+
+### Corrigido
+- Rótulos dos novos temas e conjuntos realistas deixam de cair no inglês em idiomas não ingleses.
+
+### Testado
+- `node --version` → `v23.5.0`.
+- `make help`.
+- RED: `npm test -- src/i18n/i18n.test.tsx --runInBand` falhou em `Night metro` herdado do inglês.
+- GREEN: `npm test -- src/i18n/i18n.test.tsx --runInBand` → 17 testes.
+- `node --check tests/e2e/cloudflare-i18n-seo-qa.js`.
+- `npx prettier --check CHANGELOG.md src/i18n/messages.ts src/i18n/i18n.test.tsx tests/e2e/cloudflare-i18n-seo-qa.js`.
+- `npm test -- --runInBand` → 40 suites / 211 testes.
+- `npm run build`.
+- `make cloudflare-env-check`, `make cloudflare-build` e `make cloudflare-deploy`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-i18n-seo-qa`.
+- Varredura textual do diff alterado não encontrou credencial, chave privada ou segredo real.
+
 ## [1.32.13] - 2026-07-04
 ### Adicionado
 - Blocos metálicos passam a ser sorteados em quantidade aleatória de zero a três por fase, com aparência metálica em todos os temas visuais.

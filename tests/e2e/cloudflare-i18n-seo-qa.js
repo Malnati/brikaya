@@ -356,17 +356,31 @@ async function validateRuntimeBrowserLocale(baseUrl) {
       BROWSER_AUTO_EXPECTED_PATH,
     );
 
-    const runtimeState = await page.evaluate(() => ({
-      lang: document.documentElement.lang,
-      canonical: document
-        .querySelector('link[rel="canonical"]')
-        ?.getAttribute("href"),
-      path: window.location.pathname,
-    }));
+    const runtimeState = await page.evaluate(
+      (localeKey, sourceKey) => ({
+        lang: document.documentElement.lang,
+        canonical: document
+          .querySelector('link[rel="canonical"]')
+          ?.getAttribute("href"),
+        path: window.location.pathname,
+        storedLocale: window.localStorage.getItem(localeKey),
+        storedSource: window.localStorage.getItem(sourceKey),
+      }),
+      LOCALE_STORAGE_KEY,
+      LOCALE_SOURCE_STORAGE_KEY,
+    );
     assert(
       runtimeState.canonical ===
         new URL(BROWSER_AUTO_EXPECTED_PATH, baseUrl).href,
       "canonical não acompanhou idioma automático do navegador",
+    );
+    assert(
+      runtimeState.storedLocale === null,
+      "detecção automática por idioma não deve salvar locale manual",
+    );
+    assert(
+      runtimeState.storedSource === null,
+      "detecção automática por idioma não deve salvar origem manual",
     );
 
     return runtimeState;
