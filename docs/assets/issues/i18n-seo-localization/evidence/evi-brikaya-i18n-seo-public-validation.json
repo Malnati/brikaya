@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-07-04T04:14:27.411Z",
+  "checkedAt": "2026-07-04T04:35:39.478Z",
   "baseUrl": "https://brikaya.com/",
   "localesChecked": [
     "pt-BR",
@@ -66,6 +66,13 @@
     "lang": "es-419",
     "canonical": "https://brikaya.com/es-419/",
     "path": "/es-419/"
+  },
+  "timeZoneLocaleRuntime": {
+    "lang": "de",
+    "canonical": "https://brikaya.com/de/",
+    "path": "/de/",
+    "storedLocale": null,
+    "timeZone": "Europe/Berlin"
   },
   "screenshot": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-localized-menu.png"
 }
