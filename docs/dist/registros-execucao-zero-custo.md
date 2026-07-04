@@ -1,17 +1,17 @@
 <!-- docs/dist/registros-execucao-zero-custo.md -->
 # Execução zero-custo dos registros multilíngues Brikaya
 
-Data UTC: 2026-07-03 23:30:00. Escopo: domínio canônico `https://brikaya.com/`, PWA-only, todos os idiomas planejados/traduzidos e nenhuma ação com custo.
+Data UTC: 2026-07-04 01:02:38. Escopo: domínio canônico `https://brikaya.com/`, PWA-only, todos os idiomas planejados/traduzidos e nenhuma ação com custo.
 
 ## Resultado operacional
 
 | Frente | Status | Resultado | Próxima ação segura |
 | --- | --- | --- | --- |
-| Google Search Console | Concluído | Propriedade `sc-domain:brikaya.com` verificada por DNS TXT; sitemap `https://brikaya.com/sitemap.xml` processado; 1 página encontrada; homepage inspecionada. | Reenviar sitemap quando rotas localizadas reais tiverem metadados/canonical próprios. |
-| Sitemap/robots público | Concluído para raiz | `robots.txt` aponta para sitemap; sitemap lista a raiz canônica; HTTP 200 confirmado. | Não adicionar `hreflang` até rotas localizadas servirem conteúdo e metadados equivalentes por idioma. |
-| Bing Webmaster Tools | Bloqueado por conta | Login Microsoft disponível no Chrome pertence a tenant corporativo e pediu aprovação de administrador para `BingWebmasterTools`. Não acionei `Request approval`. | Usar conta Microsoft pessoal/autorizada ou login Google permitido; importar Search Console ou verificar por DNS/meta/arquivo. |
-| Yandex Webmaster | Bloqueado por login/UI | Página pública confirma serviço gratuito; fluxo de adicionar site exige login. A automação Chrome foi interrompida por UI de extensão antes de autenticar. | Retomar com conta Yandex autorizada; adicionar `brikaya.com` e sitemap sem Metrica/tag externo. |
-| Naver Search Advisor | Não executado | Fonte oficial orienta Webmaster Tools com login/posse de site; não havia conta Naver autorizada. | Usar conta Naver autorizada; verificar posse e submeter sitemap. |
+| Google Search Console | Concluído | Propriedade `sc-domain:brikaya.com` verificada por DNS TXT; sitemap `https://brikaya.com/sitemap.xml` reenviado com 15 URLs localizadas; reprocessamento das novas URLs fica pendente do Google. | Reenviar sitemap quando novas rotas reais forem adicionadas. |
+| Sitemap/robots público | Concluído | `robots.txt`, homepage, sitemap multilíngue com 15 URLs e arquivo público de verificação Naver seguem HTTP 200. | Remover arquivo público de verificação somente se o Naver confirmar que a posse permanecerá válida sem ele. |
+| Bing Webmaster Tools | Concluído | Site `https://brikaya.com/` verificado por CNAME DNS no Cloudflare; sitemap enviado e exibido como `Submitted/Processing`, com 0 erros e 0 warnings. | Manter sem Microsoft Clarity, ads, campanhas, importações pagas ou aprovação administrativa. |
+| Yandex Webmaster | Concluído | Site verificado por DNS TXT no Cloudflare; usuário ficou com papel Owner; sitemap enviado para a fila de processamento do Yandex. | Aguardar processamento do sitemap; não ativar Yandex Metrica, tag externo ou proteção/serviço pago. |
+| Naver Search Advisor | Bloqueado por CAPTCHA obrigatório | Conta Naver autenticada; termo gratuito do Search Advisor aceito; site `https://brikaya.com/` adicionado; arquivo HTML oficial de verificação publicado no domínio e validado em HTTP 200; ao acionar propriedade, o Naver abriu CAPTCHA. | Resolver CAPTCHA somente com confirmação explícita do usuário; depois concluir propriedade e enviar sitemap. |
 | Baidu Search Resource Platform | Não executado | Fonte oficial exige login para adicionar site. Conta Baidu/local não estava disponível. | Usar somente conta Baidu gratuita se disponível; não ativar ICP/China Network/hospedagem China/serviço pago. |
 | CLASSIND Brasil | Dossiê preparado | Conteúdo e critérios estão documentados em `docs/dist/registros.md`; submissão exige gov.br/CLASSIND e dados do requerente/titular. | Submeter com conta gov.br/CLASSIND autorizada; parar se aparecer qualquer custo. |
 | Buscas gratuitas de marca | Parcial/documentado | Busca web geral não mostrou colisão oficial evidente para `Brikaya`; apareceu risco fonético público `Brekiya`, exigindo busca oficial antes de depósito pago futuro. | Executar bases oficiais nominativas quando login/captcha permitir; não depositar marca. |
@@ -19,9 +19,11 @@ Data UTC: 2026-07-03 23:30:00. Escopo: domínio canônico `https://brikaya.com/`
 ## Decisões aplicadas
 
 - A propriedade de domínio no Google cobre todos os caminhos futuros (`/en/`, `/zh-CN/`, etc.); não é necessário registrar cada idioma separadamente no Search Console.
-- `hreflang` não foi publicado porque as rotas verificadas (`/en/`, `/zh-CN/` e demais) ainda respondem com HTML `pt-BR`, canonical raiz e metadados em português. Publicar alternates agora criaria sinal SEO incorreto.
+- `hreflang` e sitemap multilíngue foram publicados após as rotas localizadas passarem a servir HTML/metadados próprios; os buscadores recebem o mesmo sitemap canônico.
 - China fica limitada a descoberta global sem custo. Cloudflare China Network/ICP/hospedagem local/licença/app store chinesa ficam bloqueados por custo/obrigações.
 - Nenhum anúncio, campanha, tag de analytics, script de terceiro, conta paga, cartão, depósito de PI ou aprovação administrativa foi acionado.
+- O arquivo HTML público do Naver é exceção mínima de verificação de posse exigida pelo provedor; o token fica versionado apenas no arquivo público necessário, redigido em docs/evidências/chat.
+- CAPTCHA do Naver não foi resolvido porque exige confirmação explícita antes de qualquer tentativa de solução.
 
 ## Evidência
 

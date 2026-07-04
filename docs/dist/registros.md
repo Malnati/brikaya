@@ -73,10 +73,10 @@ Registros de marca, copyright/software, patente, modelo de utilidade, desenho in
 | México | Sistema mexicano de classificação de videojuegos | Obrigação focada em sujeitos obrigados que distribuem/comercializam/arrendam videojogos físicos. | R$ 0 para o PWA, pois não há filing P0 identificado. | Distribuidor/comercializador/arrendador, quando aplicável. | Estampa/classificação em produto físico e publicidade do sujeito obrigado. | Não obrigatório para PWA gratuito sem mídia física, venda ou aluguel. |
 | Índia | Online Gaming Authority / PROG Rules 2026 | Não obrigatório enquanto Brikaya for social/casual sem dinheiro, prêmio real ou e-sport. | R$ 0 agora | Service provider se requerer determinação/registro ou for notificado. | Descrição do jogo; user-safety features; grievance mechanism se aplicável; documentos da aplicação se houver notificação. | Monitorar; proibir staking, cash-out, prêmio real, aposta, loot monetizável e e-sport no P0. |
 | China global `zh-CN` | Baidu Search Resource Platform | Opcional gratuito se conta Baidu autorizada existir | R$ 0 | Controlador do site com login Baidu. | Login; prova de posse; sitemap. | Tentar apenas como webmaster gratuito. Não fazer ICP, Cloudflare China Network, hospedagem local, app store, pagamento, licença ou monetização. |
-| Coreia `ko` | Naver Search Advisor | Opcional gratuito se conta Naver autorizada existir | R$ 0 | Controlador do site com login Naver. | Login; prova de posse; sitemap. | Tentar quando houver conta Naver autorizada; não inserir script runtime. |
-| Global/Rússia/adjacentes | Yandex Webmaster | Opcional gratuito se conta Yandex autorizada existir | R$ 0 | Controlador do site com login Yandex. | Login; prova de posse; sitemap. | Tentar sem Yandex Metrica/tag externo. |
+| Coreia `ko` | Naver Search Advisor | Opcional gratuito se conta Naver autorizada existir | R$ 0 | Controlador do site com login Naver. | Login; prova de posse; sitemap. | Parcial em 2026-07-04: site adicionado, arquivo HTML público oficial publicado e validado em HTTP 200; verificação final bloqueada por CAPTCHA obrigatório do Naver antes do sitemap. |
+| Global/Rússia/adjacentes | Yandex Webmaster | Opcional gratuito se conta Yandex autorizada existir | R$ 0 | Controlador do site com login Yandex. | Login; prova de posse; sitemap. | Concluído em 2026-07-04 por DNS TXT no Cloudflare; sitemap enviado para fila de processamento sem Yandex Metrica/tag externo. |
 | Global/web | Google Search Console | Opcional gratuito | R$ 0 | Proprietário/controlador do domínio/site. | Conta Google; prova de propriedade por DNS TXT, HTML file, meta tag ou método aceito; sitemap. | Concluído para domínio. |
-| Global/web | Bing Webmaster Tools | Opcional gratuito | R$ 0 | Proprietário/controlador do domínio/site. | Conta Microsoft/Google/Facebook; site; sitemap; verificação por XML/meta/CNAME ou importação do Search Console. | Bloqueado nesta execução por aprovação admin do login Microsoft disponível; retomar com conta autorizada sem custo. |
+| Global/web | Bing Webmaster Tools | Opcional gratuito | R$ 0 | Proprietário/controlador do domínio/site. | Conta Microsoft/Google/Facebook; site; sitemap; verificação por XML/meta/CNAME ou importação do Search Console. | Concluído em 2026-07-04 por CNAME DNS no Cloudflare; sitemap enviado sem custo. |
 | Global/web | Buscas gratuitas de marca/nome | Opcional gratuito | R$ 0 | Qualquer responsável pelo projeto. | Lista de termos, transliterações, prints/links de resultado; nenhuma taxa. | Fazer antes de impulsionar SEO internacional; não depositar marca. |
 | Global/web | AdSense / H5 Games Ads | Condicional futuro | R$ 0 direto, sem contar tributos/banco/contabilidade | Pessoa física ou jurídica em país suportado, incluindo Brasil/Paraguai conforme disponibilidade. | Conta Google; site/conteúdo próprio; país/endereço de pagamento; dados fiscais; identidade; PIN postal; banco/forma de pagamento; política de privacidade; aprovação H5 separada. | Não executar agora. Documentar gatilhos antes de ads reais. |
 
@@ -139,19 +139,19 @@ Enviar consulta curta ao canal oficial se houver dúvida sobre a hipótese “br
 | Requisitos | Conta Microsoft/Google/Facebook; controle do domínio/site; sitemap; verificação por XML/meta/CNAME/importação. |
 | Evidência esperada | Site verificado; sitemap enviado ou importado. |
 | Risco | Não adicionar scripts de terceiros no runtime do jogo; usar verificação DNS/arquivo/meta estática. |
-| Estado operacional | Bloqueado em 2026-07-03: login Microsoft disponível pediu aprovação de administrador para o aplicativo BingWebmasterTools. Não foi acionado `Request approval`. |
+| Estado operacional | Concluído em 2026-07-04: site `https://brikaya.com/` verificado por CNAME DNS no Cloudflare; sitemap `https://brikaya.com/sitemap.xml` enviado e exibido como `Submitted/Processing`, com 0 erros e 0 warnings. |
 
 ### 5.3. Buscadores por idioma
 
-| Buscador/ferramenta | Idiomas/mercados cobertos | Estado em 2026-07-03 | Regra de custo zero |
+| Buscador/ferramenta | Idiomas/mercados cobertos | Estado em 2026-07-04 | Regra de custo zero |
 | --- | --- | --- | --- |
-| Google Search Console | Todos os idiomas no domínio, incluindo `pt-BR`, `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th`, `zh-CN`. | Concluído para domínio; sitemap raiz processado. | Atualizar sitemap multilíngue somente quando rotas localizadas reais tiverem metadados/canonical próprios. |
-| Bing Webmaster Tools | Global/Bing/Copilot. | Bloqueado por aprovação admin da conta Microsoft disponível. | Retomar com conta autorizada; não clicar pedido admin nem oferta de ads. |
-| Yandex Webmaster | Mercados onde Yandex ainda traz descoberta orgânica. | Página pública confirma serviço gratuito; login pendente. | Sem Yandex Metrica/tag externo; só domínio e sitemap. |
-| Naver Search Advisor | Coreano/`ko`. | Pendente por conta Naver autorizada. | Sem script runtime; usar verificação HTML/DNS/arquivo se disponível. |
+| Google Search Console | Todos os idiomas no domínio, incluindo `pt-BR`, `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th`, `zh-CN`. | Concluído para domínio; sitemap multilíngue com 15 URLs canônicas reenviado após i18n/SEO. | Aguardar reprocessamento das novas URLs localizadas; reenviar sitemap quando novas rotas reais forem adicionadas. |
+| Bing Webmaster Tools | Global/Bing/Copilot. | Concluído: site verificado por CNAME DNS e sitemap enviado. | Manter sem Clarity, ads, importação paga, aprovação administrativa ou script runtime. |
+| Yandex Webmaster | Mercados onde Yandex ainda traz descoberta orgânica. | Concluído: site verificado por DNS TXT e sitemap enviado para fila de processamento. | Sem Yandex Metrica/tag externo; manter somente domínio e sitemap. |
+| Naver Search Advisor | Coreano/`ko`. | Parcial: site adicionado, termo gratuito aceito, arquivo HTML público oficial publicado e HTTP 200; CAPTCHA obrigatório bloqueia confirmação final e envio de sitemap. | Não resolver CAPTCHA sem confirmação explícita; sem script runtime; arquivo público é o único artefato de verificação. |
 | Baidu Search Resource Platform | Chinês simplificado/`zh-CN`. | Pendente por conta Baidu autorizada. | Sem ICP, China Network, hospedagem China, app store, monetização ou serviço pago. |
 
-Rotas localizadas verificadas em 2026-07-03 (`/en/`, `/zh-CN/` e demais) ainda servem HTML `pt-BR`, canonical raiz e metadados em português. Portanto, `hreflang` fica bloqueado até a publicação real de páginas equivalentes por idioma.
+Rotas localizadas publicadas em 2026-07-04 (`/en/`, `/zh-CN/` e demais) já têm HTML/metadados localizados, canonical próprio, sitemap multilíngue e `hreflang`. Os cadastros Bing/Yandex usam o mesmo `https://brikaya.com/sitemap.xml`, agora com 15 URLs canônicas.
 
 ### 5.4. Buscas gratuitas de marca/nome
 
@@ -245,7 +245,7 @@ Não faz parte do lançamento porque `docs/dist/projeto-pwa.md` mantém anúncio
 - [x] Enviar sitemap.
 - [x] Reenviar sitemap localizado com 15 URLs canônicas no Google Search Console.
 - [x] Inspecionar URL principal e solicitar indexação inicial.
-- [x] Confirmar que sitemap multilíngue/`hreflang` ainda não deve ser enviado porque as rotas localizadas publicadas não têm HTML/metadados localizados.
+- [x] Confirmar que sitemap multilíngue/`hreflang` foi publicado após rotas localizadas reais com metadados próprios.
 - [ ] Verificar/importar site no Bing Webmaster Tools com conta não bloqueada por aprovação administrativa.
 - [ ] Verificar site no Yandex Webmaster com conta autorizada.
 - [ ] Verificar site no Naver Search Advisor com conta autorizada.

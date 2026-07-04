@@ -1,21 +1,24 @@
 {
   "schemaVersion": 1,
-  "validatedAtUtc": "2026-07-03T23:30:00Z",
+  "validatedAtUtc": "2026-07-04T01:02:38Z",
   "canonicalUrl": "https://brikaya.com/",
   "zeroCostPolicy": {
     "paidActionsAttempted": false,
     "adsOrCampaignsActivated": false,
     "paymentMethodRequestedOrSaved": false,
     "destructiveActionsPerformed": false,
-    "thirdPartyRuntimeScriptsAdded": false
+    "thirdPartyRuntimeScriptsAdded": false,
+    "publicVerificationFileAdded": true,
+    "paidOrAdminApprovalScreensAccepted": false
   },
   "publishedSeoState": {
     "homeHttpStatus": 200,
     "robotsHttpStatus": 200,
     "sitemapHttpStatus": 200,
+    "naverVerificationFileHttpStatus": 200,
     "canonicalDomain": "brikaya.com",
     "sitemapUrl": "https://brikaya.com/sitemap.xml",
-    "sitemapUrlsSubmitted": 1,
+    "sitemapUrlsSubmitted": 15,
     "localizedRoutesChecked": [
       "pt-BR",
       "en",
@@ -34,9 +37,10 @@
       "zh-CN"
     ],
     "localizedRoutesServeHtml": true,
-    "localizedRoutesHaveLocalizedHtmlMetadata": false,
-    "hreflangPublished": false,
-    "hreflangReason": "Rotas localizadas ainda servem HTML pt-BR/canonical raiz; publicar hreflang agora seria sinal SEO incorreto."
+    "localizedRoutesHaveLocalizedHtmlMetadata": true,
+    "hreflangPublished": true,
+    "hreflangReason": "Publicado após rotas localizadas reais com metadados/canonical próprios.",
+    "localizedSitemapUrlCount": 15
   },
   "registrations": {
     "googleSearchConsole": {
@@ -44,29 +48,51 @@
       "property": "sc-domain:brikaya.com",
       "verificationMethod": "DNS TXT",
       "sitemapSubmitted": "https://brikaya.com/sitemap.xml",
-      "sitemapStatus": "Processado",
+      "sitemapStatus": "Reenviado com 15 URLs localizadas; reprocessamento pendente do Google",
       "pagesFound": 1,
       "homeUrlInspected": true,
       "domainCoversAllFutureLocalizedPaths": true,
-      "tokenRedacted": true
+      "tokenRedacted": true,
+      "localizedSitemapSubmitted": true,
+      "localizedSitemapUrls": 15
     },
     "bingWebmasterTools": {
-      "status": "blocked",
-      "reason": "Chrome abriu login Microsoft corporativo e o aplicativo BingWebmasterTools pediu aprovação de administrador; Request approval não foi acionado.",
-      "costBlock": false,
-      "nextSafeAction": "Entrar com conta Microsoft pessoal/autorizada ou Google em fluxo que não peça aprovação administrativa nem custo; então importar do Search Console ou verificar por DNS/meta/arquivo."
+      "status": "done",
+      "site": "https://brikaya.com/",
+      "verificationMethod": "DNS CNAME via Cloudflare",
+      "sitemapSubmitted": "https://brikaya.com/sitemap.xml",
+      "sitemapStatus": "Submitted/Processing",
+      "knownSitemaps": 1,
+      "errors": 0,
+      "warnings": 0,
+      "tokenRedacted": true
     },
     "yandexWebmaster": {
-      "status": "blocked",
-      "reason": "Página pública confirma serviço gratuito, mas fluxo de adicionar site exigiu login; automação Chrome foi interrompida por UI de extensão antes de autenticar.",
-      "costBlock": false,
-      "nextSafeAction": "Retomar com conta Yandex autorizada; adicionar brikaya.com e sitemap.xml sem Metrica/tag externo."
+      "status": "done",
+      "site": "https://brikaya.com/",
+      "verificationMethod": "DNS TXT via Cloudflare",
+      "role": "Owner",
+      "sitemapSubmitted": "https://brikaya.com/sitemap.xml",
+      "sitemapStatus": "Processing queue",
+      "metricsOrTagsActivated": false,
+      "protectionOrPaidServicesActivated": false,
+      "tokenRedacted": true
     },
     "naverSearchAdvisor": {
-      "status": "not_executed_account_required",
-      "reason": "Fonte oficial indica uso de Webmaster Tools com login/posse do site; não havia conta Naver autorizada disponível.",
+      "status": "blocked_captcha_required",
+      "site": "https://brikaya.com/",
+      "accountAuthenticated": true,
+      "freeTermsAccepted": true,
+      "siteAdded": true,
+      "verificationMethodPrepared": "HTML file upload",
+      "verificationFilePathRedacted": "public/naver[REDACTED].html",
+      "verificationFilePublicHttpStatus": 200,
+      "ownershipVerificationClicked": true,
+      "captchaRequired": true,
+      "sitemapSubmitted": false,
       "costBlock": false,
-      "nextSafeAction": "Usar conta Naver autorizada, adicionar brikaya.com, verificar posse e submeter sitemap.xml sem script runtime."
+      "nextSafeAction": "Resolver CAPTCHA somente com confirmação explícita do usuário; depois concluir propriedade e enviar https://brikaya.com/sitemap.xml.",
+      "tokenRedacted": true
     },
     "baiduSearchResourcePlatform": {
       "status": "not_executed_account_required",
@@ -79,6 +105,23 @@
       "reason": "Dossiê de conteúdo preparado; submissão exige gov.br/CLASSIND e possível transmissão de dados do requerente/titular não disponível nos acessos autorizados deste run.",
       "costBlock": false,
       "nextSafeAction": "Submeter pelo gov.br/CLASSIND quando conta autorizada estiver disponível; manter taxa zero e parar se houver custo."
+    }
+  },
+  "validation": {
+    "nodeVersion": "v23.5.0",
+    "makeHelp": "ok",
+    "cloudflareEnvCheck": "ok",
+    "npmRunBuild": "ok",
+    "cloudflareDeploy": "ok",
+    "publicCurl": {
+      "home": 200,
+      "robots": 200,
+      "sitemap": 200,
+      "naverVerificationFile": 200
+    },
+    "dnsChecks": {
+      "bingCname": "ok redacted",
+      "yandexTxt": "ok redacted"
     }
   },
   "freeTrademarkSearch": {
@@ -110,7 +153,7 @@
     "https://www.gov.br/mj/pt-br/assuntos/seus-direitos/classificacao-1/paginas-classificacao-indicativa/jogos-e-apps"
   ],
   "secrets": {
-    "verificationTokensPrinted": false,
+    "verificationTokensPrintedInDocsOrFinal": false,
     "personalEmailsRecorded": false,
     "credentialsStored": false
   }
