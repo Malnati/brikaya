@@ -99,6 +99,7 @@ const PAGES_DEPLOY_COMMAND = ['pages', 'deploy'];
 const PROJECT_NAME_OPTION = '--project-name';
 const BRANCH_OPTION = '--branch';
 const PRODUCTION_BRANCH_OPTION = '--production-branch';
+const SKIP_CACHING_OPTION = '--skip-caching';
 const COMMANDS = new Set([
   'env-check',
   'whoami',
@@ -267,6 +268,10 @@ function buildPagesDomainsPath(envValues) {
   return `/accounts/${envValues[ACCOUNT_ID_KEY]}/pages/projects/${envValues[PROJECT_NAME_KEY]}/domains`;
 }
 
+function buildPagesProjectsPath(envValues) {
+  return `/accounts/${envValues[ACCOUNT_ID_KEY]}/pages/projects`;
+}
+
 function buildZonesPath(envValues) {
   const searchParams = new URLSearchParams({
     [ZONE_NAME_SEARCH_PARAM]: envValues[CUSTOM_DOMAIN_KEY],
@@ -396,6 +401,10 @@ function getPagesDomainName(domain) {
 
 function getPagesDomainStatus(domain) {
   return domain?.status || DOMAIN_STATUS_FALLBACK;
+}
+
+function getPagesProjectName(project) {
+  return project?.name || EMPTY_STRING;
 }
 
 function getZoneName(zone) {
@@ -982,11 +991,23 @@ function printEnvCheck(envValues) {
   });
 }
 
-function ensureProject(envValues) {
+async function listPagesProjects(envValues) {
+  const payload = await requestCloudflareApi(
+    buildPagesProjectsPath(envValues),
+    {
+      method: HTTP_GET
+    },
+    envValues
+  );
+
+  return payload.result || API_RESULT_FALLBACK;
+}
+
+async function ensureProject(envValues) {
   validateEnvironment(envValues);
   const projectName = envValues[PROJECT_NAME_KEY];
-  const projectListOutput = runWrangler(PROJECT_LIST_COMMAND, envValues);
-  const projectExists = projectListOutput.includes(projectName);
+  const projects = await listPagesProjects(envValues);
+  const projectExists = projects.some(project => getPagesProjectName(project) === projectName);
 
   if (projectExists) {
     console.log(`Projeto Pages já existe: ${projectName}`);
@@ -1008,7 +1029,8 @@ function deploy(envValues) {
       PROJECT_NAME_OPTION,
       envValues[PROJECT_NAME_KEY],
       BRANCH_OPTION,
-      envValues[BRANCH_KEY]
+      envValues[BRANCH_KEY],
+      SKIP_CACHING_OPTION
     ],
     envValues
   );
@@ -1040,7 +1062,7 @@ async function run() {
   }
 
   if (command === 'ensure-project') {
-    ensureProject(envValues);
+    await ensureProject(envValues);
     return;
   }
 

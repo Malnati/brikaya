@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run test:semantic-file-names && npm run test:svg-assets && tsc -p tsconfig.app.json && vite build && node scripts/generate-localized-seo.mjs && node scripts/generate-runtime-asset-manifest.mjs && node scripts/stamp-service-worker-version.mjs",
+    "build": "npm run test:semantic-file-names && npm run test:svg-assets && npm run test:trace-guard:unit && npm run test:trace-guard && tsc -p tsconfig.app.json && vite build && node scripts/generate-localized-seo.mjs && node scripts/generate-runtime-asset-manifest.mjs && node scripts/stamp-service-worker-version.mjs && npm run test:trace-guard -- --include-dist",
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -37,7 +37,9 @@
     "test:semantic-file-names": "node scripts/normalize-semantic-file-names.mjs --check",
     "normalize:semantic-file-names": "node scripts/normalize-semantic-file-names.mjs --write",
     "test:cloudflare-i18n-seo": "node tests/e2e/cloudflare-i18n-seo-qa.js",
-    "test:cloudflare-metal-blocks": "node tests/e2e/cloudflare-metal-blocks-qa.js"
+    "test:cloudflare-metal-blocks": "node tests/e2e/cloudflare-metal-blocks-qa.js",
+    "test:trace-guard": "node scripts/validate-public-trace-guard.mjs",
+    "test:trace-guard:unit": "node scripts/validate-public-trace-guard.test.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.4",
