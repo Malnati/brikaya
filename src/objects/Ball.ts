@@ -354,9 +354,11 @@ export class Ball {
     const polar = toPolar(this.position, this.geometry);
     const boundaryRadius = this.geometry.radius - this.radius;
 
-    if (polar.radius < boundaryRadius) return true;
-
-    if (isAngleBetween(polar.angle, paddlePos.radial.startAngle, paddlePos.radial.endAngle)) {
+    if (
+      this.isMovingOutward(polar.angle) &&
+      this.hasReachedRadialPaddleBand(polar.radius, paddlePos) &&
+      isAngleBetween(polar.angle, paddlePos.radial.startAngle, paddlePos.radial.endAngle)
+    ) {
       const hitPosition = this.calculateRadialPaddleHitPosition(
         polar.angle,
         paddlePos,
@@ -395,6 +397,8 @@ export class Ball {
       this.paddleCollision = true;
       return true;
     }
+
+    if (polar.radius < boundaryRadius) return true;
 
     if (
       this.isMovingOutward(polar.angle) &&
@@ -483,6 +487,16 @@ export class Ball {
       0,
       Math.min(1, (angle - paddlePos.radial.startAngle) / span),
     );
+  }
+
+  private hasReachedRadialPaddleBand(
+    radius: number,
+    paddlePos: RadialPaddleBounds,
+  ): boolean {
+    const halfThickness = paddlePos.radial.thickness * CENTER_RATIO;
+    const innerRadius = paddlePos.radial.radius - halfThickness - this.radius;
+
+    return radius >= innerRadius;
   }
 
   private handlePaddleCollision(paddlePos: RectBounds) {

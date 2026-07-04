@@ -69,6 +69,8 @@ const MEDIA_EXTENSION_PATTERN = /\.(gif|jpe?g|mp3|mp4|ogg|png|webm|webp|wav)(\?|
 const CANONICAL_HOST = 'brikaya.com';
 const MAX_STAGE_OFFSET_PX = 3;
 const MAX_MEDIA_CENTER_OFFSET_PX = 4;
+const MAX_MEDIA_OVERFLOW_PX = 2;
+const MAX_CONTENT_CENTER_OFFSET_PX = 4;
 const MAX_RIP_VIEWPORT_CENTER_OFFSET_PX = 8;
 const MIN_RIP_STAGE_VIEWPORT_COVERAGE_RATIO = 0.96;
 const RIP_SAFE_AREA_PX = 12;
@@ -317,10 +319,13 @@ function assertFullViewport(snapshot, label) {
 function assertBoardAnchoring(snapshot, label) {
   assert(snapshot.stageRect, `${label}: palco cinematográfico ausente.`);
   assert(snapshot.canvasRect, `${label}: canvas ausente para comparar ancoragem.`);
+  assert(snapshot.contentRect, `${label}: conteúdo textual sem retângulo visual.`);
   assert(Math.abs(snapshot.stageRect.x - snapshot.canvasRect.x) <= MAX_STAGE_OFFSET_PX, `${label}: palco desalinhado no eixo X.`);
   assert(Math.abs(snapshot.stageRect.y - snapshot.canvasRect.y) <= MAX_STAGE_OFFSET_PX, `${label}: palco desalinhado no eixo Y.`);
   assert(Math.abs(snapshot.stageRect.width - snapshot.canvasRect.width) <= MAX_STAGE_OFFSET_PX, `${label}: largura do palco difere do canvas.`);
   assert(Math.abs(snapshot.stageRect.height - snapshot.canvasRect.height) <= MAX_STAGE_OFFSET_PX, `${label}: altura do palco difere do canvas.`);
+  assert(Math.abs(snapshot.contentRect.centerX - snapshot.canvasRect.centerX) <= MAX_CONTENT_CENTER_OFFSET_PX, `${label}: conteúdo textual descentralizado no eixo X.`);
+  assert(Math.abs(snapshot.contentRect.centerY - snapshot.canvasRect.centerY) <= MAX_CONTENT_CENTER_OFFSET_PX, `${label}: conteúdo textual descentralizado no eixo Y.`);
 
   for (const item of snapshot.media) {
     assert(item.rect, `${label}: mídia sem retângulo visual ${item.id}.`);
@@ -328,6 +333,10 @@ function assertBoardAnchoring(snapshot, label) {
     assert(item.rect.height > 0, `${label}: mídia sem altura visual ${item.id}.`);
     assert(Math.abs(item.rect.centerX - snapshot.canvasRect.centerX) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: mídia ${item.id} descentralizada no eixo X.`);
     assert(Math.abs(item.rect.centerY - snapshot.canvasRect.centerY) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: mídia ${item.id} descentralizada no eixo Y.`);
+    assert(item.rect.x >= snapshot.canvasRect.x - MAX_MEDIA_OVERFLOW_PX, `${label}: mídia ${item.id} saiu pela esquerda do canvas.`);
+    assert(item.rect.y >= snapshot.canvasRect.y - MAX_MEDIA_OVERFLOW_PX, `${label}: mídia ${item.id} saiu pelo topo do canvas.`);
+    assert(item.rect.right <= snapshot.canvasRect.right + MAX_MEDIA_OVERFLOW_PX, `${label}: mídia ${item.id} saiu pela direita do canvas.`);
+    assert(item.rect.bottom <= snapshot.canvasRect.bottom + MAX_MEDIA_OVERFLOW_PX, `${label}: mídia ${item.id} saiu pelo rodapé do canvas.`);
   }
 }
 

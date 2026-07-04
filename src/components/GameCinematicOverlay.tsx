@@ -299,7 +299,11 @@ export function GameCinematicOverlay({
         {renderStage(
           <>
             {renderMediaLayers(state, imageSetId)}
-            <span className={`${BASE_CLASS_NAME}__count`}>{state.value}</span>
+            {renderContent(
+              <span className={`${BASE_CLASS_NAME}__count`}>
+                {state.value}
+              </span>,
+            )}
           </>,
           boardRect,
         )}
@@ -313,15 +317,19 @@ export function GameCinematicOverlay({
         {renderStage(
           <>
             {renderMediaLayers(state, imageSetId)}
-            <span className={`${BASE_CLASS_NAME}__eyebrow`}>
-              {t("cinematic.levelUpEyebrow")}
-            </span>
-            <span className={`${BASE_CLASS_NAME}__title`}>
-              {t("cinematic.levelPrefix")} {state.nextLevel}
-            </span>
-            <span className={`${BASE_CLASS_NAME}__detail`}>
-              {t("cinematic.speedPrefix")} {state.speedLabel}
-            </span>
+            {renderContent(
+              <>
+                <span className={`${BASE_CLASS_NAME}__eyebrow`}>
+                  {t("cinematic.levelUpEyebrow")}
+                </span>
+                <span className={`${BASE_CLASS_NAME}__title`}>
+                  {t("cinematic.levelPrefix")} {state.nextLevel}
+                </span>
+                <span className={`${BASE_CLASS_NAME}__detail`}>
+                  {t("cinematic.speedPrefix")} {state.speedLabel}
+                </span>
+              </>,
+            )}
           </>,
           boardRect,
         )}

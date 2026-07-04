@@ -20,9 +20,9 @@ export const TOUCH_SENSITIVITY = 2;
 export const TOUCH_DEAD_ZONE = 10;
 
 export const BALL_RADIUS = 10;
-export const BALL_SPEED = 2;
+export const BALL_SPEED = 2.5;
 export const MOBILE_CANVAS_WIDTH_THRESHOLD = 480;
-export const MOBILE_BALL_SPEED_MULTIPLIER = 0.55;
+export const MOBILE_BALL_SPEED_MULTIPLIER = 0.75;
 export const LEVEL_CLEAR_PAUSE_MS = 1800;
 export const LEVEL_UP_OVERLAY_VISIBLE_MS = 1200;
 export const CINEMATIC_COUNTDOWN_STEPS = ["3", "2", "1"] as const;
@@ -36,7 +36,7 @@ export const LEVEL_SPEED_STEP = 0.12;
 export const MAX_LEVEL_SPEED_MULTIPLIER = 2.2;
 export const LEVEL_BRICK_ROW_STEP = 1;
 export const LEVEL_BRICK_ROW_INTERVAL = 1;
-export const FIRST_LEVEL_MIN_SPEED_DIVISOR = 4;
+export const FIRST_LEVEL_MIN_SPEED_DIVISOR = 3;
 export const FIRST_LEVEL_BASE_SPEED_MULTIPLIER = 3;
 export const SPEED_PRECISION_FACTOR = 1000;
 

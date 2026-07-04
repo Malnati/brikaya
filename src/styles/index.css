@@ -715,25 +715,25 @@ canvas {
 }
 
 .game-cinematic-overlay__media--countdown-circle {
-  width: min(128%, 720px);
+  width: min(68%, 420px);
   opacity: 0.42;
   animation: cinematic-media-spin 1800ms linear both;
 }
 
 .game-cinematic-overlay__media--countdown-spark {
-  width: min(62%, 360px);
+  width: min(46%, 260px);
   opacity: 0.72;
   animation: cinematic-media-pulse 600ms ease-out both;
 }
 
 .game-cinematic-overlay__media--level-up-twirl {
-  width: min(120%, 640px);
+  width: min(68%, 420px);
   opacity: 0.5;
   animation: cinematic-media-spin 1200ms ease-out both;
 }
 
 .game-cinematic-overlay__media--level-up-star {
-  width: min(62%, 320px);
+  width: min(46%, 260px);
   opacity: 0.72;
   animation: cinematic-media-pulse 1200ms ease-out both;
 }

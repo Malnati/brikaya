@@ -3,6 +3,34 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.29] - 2026-07-04
+### Corrigido
+- Bolinha passa a iniciar mais rápida em mobile e desktop, mantendo redução gradual sem cair para velocidade visualmente lenta.
+- Colisão radial da raquete passa a considerar a banda visual da raquete antes da borda externa da arena, impedindo a bolinha de atravessar a raquete.
+- Mídias das animações de início e subida de fase ficam centralizadas e contidas no canvas durante a rotação.
+
+### Adicionado
+- Cenário QA publicado `paddle-collision` valida colisão determinística da bolinha com a raquete no domínio canônico.
+- Cobertura unitária para velocidade mínima/inicial, colisão radial na banda visual da raquete e roteamento do cenário QA.
+- QA cinematográfico publicado passa a validar centro do conteúdo textual e limites visuais das mídias dentro do canvas.
+- Evidências publicadas da alteração em `docs/assets/issues/gameplay-speed-paddle-cinematic-fix/evidence/`.
+
+### Testado
+- `node --version` → `v23.5.0`.
+- `make help`.
+- `npm test -- --runInBand src/constants/game.test.ts src/objects/Ball.test.ts src/components/GameCinematicOverlay.test.tsx src/App.test.tsx`.
+- `node --check tests/e2e/cloudflare-gameplay-basic-qa.js && node --check tests/e2e/cloudflare-cinematic-effects-qa.js && node --check tests/e2e/cloudflare-no-score-reset-after-brick.js`.
+- `npm test -- --runInBand --silent` → 47 suites / 282 testes.
+- `npm run build`.
+- `make cloudflare-env-check`.
+- `make cloudflare-deploy` → domínio público `https://brikaya.com/` atualizado.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-no-score-reset`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ npm run test:cloudflare-gameplay-basic`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-cinematic-effects-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`.
+- `npm run test:semantic-file-names`.
+- Varredura textual das evidências não encontrou token, chave privada ou credencial real.
+
 ## [1.32.28] - 2026-07-04
 ### Alterado
 - Controles principais no mobile passam a ficar alinhados à esquerda na base da janela em portrait e landscape.

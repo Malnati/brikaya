@@ -73,20 +73,42 @@ describe('game speed helpers', () => {
     );
   });
 
-  it('usa um quarto da própria máxima como mínimo da fase 1', () => {
+  it('usa um terço da própria máxima como mínimo da fase 1', () => {
     expect(calculateLevelMinSpeed(CANVAS_WIDTH, PHASE_ONE)).toBeCloseTo(
       calculateLevelMaxSpeed(CANVAS_WIDTH, PHASE_ONE) / FIRST_LEVEL_MIN_SPEED_DIVISOR,
       5
     );
   });
 
-  it('usa um quarto da própria máxima como mínimo da fase 2', () => {
+  it('usa um terço da própria máxima como mínimo da fase 2', () => {
     expect(calculateLevelMinSpeed(CANVAS_WIDTH, PHASE_TWO)).toBeCloseTo(
       calculateLevelMaxSpeed(CANVAS_WIDTH, PHASE_TWO) / FIRST_LEVEL_MIN_SPEED_DIVISOR,
       5
     );
     expect(calculateLevelMinSpeed(CANVAS_WIDTH, PHASE_TWO)).toBeGreaterThan(
       calculateLevelMinSpeed(CANVAS_WIDTH, PHASE_ONE)
+    );
+  });
+
+  it('mantém a fase 1 mobile com velocidade visível mínima e inicial', () => {
+    expect(calculateLevelInitialSpawnSpeed(CANVAS_WIDTH, PHASE_ONE)).toBeCloseTo(
+      5.625,
+      5,
+    );
+    expect(calculateLevelMinSpeed(CANVAS_WIDTH, PHASE_ONE)).toBeCloseTo(
+      1.875,
+      5,
+    );
+  });
+
+  it('mantém a fase 1 desktop com velocidade visível mínima e inicial', () => {
+    expect(calculateLevelInitialSpawnSpeed(WIDE_CANVAS_WIDTH, PHASE_ONE)).toBeCloseTo(
+      7.5,
+      5,
+    );
+    expect(calculateLevelMinSpeed(WIDE_CANVAS_WIDTH, PHASE_ONE)).toBeCloseTo(
+      2.5,
+      5,
     );
   });
 

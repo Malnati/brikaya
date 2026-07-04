@@ -58,6 +58,7 @@ const ERROR_NO_2D_CONTEXT = "No 2D context";
 const SINGLE_BRICK_QA_SCENARIO = "single-brick-phase-clear";
 const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
 const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
+const PADDLE_COLLISION_QA_SCENARIO = "paddle-collision";
 const LASER_FAN_QA_SCENARIO = "laser-fan";
 const METAL_BLOCK_QA_SCENARIO = "metal-block";
 const EVASIVE_BLOCKS_QA_SCENARIO = "evasive-blocks";
@@ -65,6 +66,7 @@ const LATE_PHASE_STABILITY_LEVEL = 11;
 const LATE_PHASE_STABILITY_Y_RATIO = 0.35;
 const CINEMATIC_RIP_X_RATIO = 0.12;
 const CINEMATIC_RIP_Y_OFFSET = 2;
+const PADDLE_COLLISION_QA_BALL_INSET = 1;
 const LASER_FAN_QA_POWER_UP_Y_OFFSET = 64;
 const METAL_BLOCK_QA_RANDOM_VALUES = [0, 0.99] as const;
 const METAL_BLOCK_QA_RANDOM_FALLBACK = 0.99;
@@ -184,6 +186,7 @@ export type GameQaScenario =
   | typeof SINGLE_BRICK_QA_SCENARIO
   | typeof LATE_PHASE_STABILITY_QA_SCENARIO
   | typeof CINEMATIC_RIP_QA_SCENARIO
+  | typeof PADDLE_COLLISION_QA_SCENARIO
   | typeof LASER_FAN_QA_SCENARIO
   | typeof METAL_BLOCK_QA_SCENARIO
   | typeof EVASIVE_BLOCKS_QA_SCENARIO
@@ -315,6 +318,7 @@ export class GameEngine {
     this.prepareQaBall();
     this.prepareEvasiveBlocksQaBall();
     this.prepareCinematicRipBall();
+    this.preparePaddleCollisionQaBall();
     this.prepareLatePhaseStabilityBall();
 
     LOG(`🏗️  Criando Bricks...`);
@@ -615,6 +619,30 @@ export class GameEngine {
     ball.setPosition(
       this.canvasSize.width * CINEMATIC_RIP_X_RATIO,
       this.canvasSize.height + ball.position.radius + CINEMATIC_RIP_Y_OFFSET,
+    );
+    ball.setDirection(Math.PI);
+  }
+
+  private preparePaddleCollisionQaBall() {
+    if (
+      this.qaScenario !== PADDLE_COLLISION_QA_SCENARIO ||
+      this.balls.length === 0
+    )
+      return;
+
+    const ball = this.balls[0];
+    const paddlePosition = this.paddle.position;
+    const radialPaddle = paddlePosition.radial;
+    const targetRadius =
+      radialPaddle.radius -
+      radialPaddle.thickness / CENTER_DIVISOR -
+      ball.position.radius -
+      PADDLE_COLLISION_QA_BALL_INSET;
+    const targetAngle = radialPaddle.centerAngle;
+
+    ball.setPosition(
+      radialPaddle.centerX + Math.cos(targetAngle) * targetRadius,
+      radialPaddle.centerY + Math.sin(targetAngle) * targetRadius,
     );
     ball.setDirection(Math.PI);
   }

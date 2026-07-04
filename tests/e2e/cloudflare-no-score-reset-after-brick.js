@@ -15,6 +15,7 @@ const MAX_WAIT_FOR_SCORE_MS = 30000;
 const INITIAL_POSITION_TOLERANCE_PX = 1;
 const SPEED_TOLERANCE = 0.0001;
 const SPEED_PRECISION_FACTOR = 1000;
+const EXPECTED_MIN_SPEED_DIVISOR = 3;
 const GAME_LOG_DB_NAME = 'BrickBreakerGameLog';
 const GAME_LOG_STORE_NAME = 'gameEvents';
 const GAME_LOG_DB_VERSION = 2;
@@ -236,7 +237,7 @@ async function run() {
     assert(Math.abs(scoreSpeedReduction.speedBefore - expectedFirstLevelSpawnSpeed) <= SPEED_TOLERANCE, `Fase 1 não começou na nova máxima inicial: speedBefore=${scoreSpeedReduction.speedBefore}, esperado=${expectedFirstLevelSpawnSpeed}.`);
     assert(Math.abs(scoreSpeedReduction.speedBefore - scoreSpeedReduction.maxSpeed) <= SPEED_TOLERANCE, 'Fase 1 não iniciou em currentSpeed === maxSpeed.');
     assert(scoreSpeedReduction.speedAfter + SPEED_TOLERANCE >= scoreSpeedReduction.minSpeed, 'speedAfter ficou abaixo do minSpeed.');
-    assert(Math.abs(scoreSpeedState.minSpeed - (scoreSpeedState.maxSpeed / 4)) <= SPEED_TOLERANCE, 'minSpeed da Fase 1 não usou maxSpeed / 4.');
+    assert(Math.abs(scoreSpeedState.minSpeed - (scoreSpeedState.maxSpeed / EXPECTED_MIN_SPEED_DIVISOR)) <= SPEED_TOLERANCE, 'minSpeed da Fase 1 não usou maxSpeed / 3.');
     assert(Math.abs(scoreSpeedReduction.reductionApplied - expectedReductionPerBrick) <= SPEED_TOLERANCE, 'Redução por bloco não distribuiu a faixa maxSpeed-minSpeed pela quantidade inicial de blocos.');
     if (scoreSpeedState.initialBrickCount > 1) {
       assert(scoreSpeedReduction.speedAfter > scoreSpeedReduction.minSpeed, 'Primeira colisão em fase normal chegou ao minSpeed de uma vez.');

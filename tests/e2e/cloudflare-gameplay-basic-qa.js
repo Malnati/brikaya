@@ -21,9 +21,12 @@ const VIEWPORT = {
 const MAX_NAVIGATION_MS = 45000;
 const OBSERVATION_TIMEOUT_MS = 7000;
 const OBSERVATION_STEP_MS = 200;
+const PADDLE_COLLISION_TIMEOUT_MS = 10000;
 const MIN_TOUCH_TARGET_SIZE = 44;
 const REQUIRED_EVENT_TYPES = ["game_start", "brick_destroyed", "score_update"];
 const FORBIDDEN_EVENT_TYPES = ["restart_game", "game_end"];
+const PADDLE_COLLISION_QA_SCENARIO = "paddle-collision";
+const PADDLE_COLLISION_TYPE = "paddle";
 const REQUIRED_BUTTON_PATTERNS = [/menu/i, /reiniciar/i];
 const SCORE_TEXT_PATTERN = /Score\s+(\d+)/;
 const CANVAS_SELECTOR = "canvas";
@@ -45,6 +48,13 @@ function screenshotPath() {
     process.env.BRICKBREAKER_GAMEPLAY_BASIC_QA_SCREENSHOT ||
     DEFAULT_SCREENSHOT_PATH
   );
+}
+
+function scenarioUrl(baseUrl, scenario) {
+  const url = new URL(baseUrl);
+  url.searchParams.set("qaScenario", scenario);
+
+  return url.toString();
 }
 
 function ensureParentDirectory(filePath) {
@@ -225,6 +235,28 @@ async function waitForGameplayProgress(page) {
   return { state: lastState, events: lastEvents };
 }
 
+async function waitForPaddleCollision(page) {
+  const startedAt = Date.now();
+  let lastEvents = await readEvents(page);
+
+  while (Date.now() - startedAt < PADDLE_COLLISION_TIMEOUT_MS) {
+    lastEvents = await readEvents(page);
+    const paddleCollision = lastEvents.find(
+      (event) =>
+        event?.type === "collision" &&
+        event?.collisionInfo?.type === PADDLE_COLLISION_TYPE,
+    );
+
+    if (paddleCollision) {
+      return { events: lastEvents, paddleCollision };
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, OBSERVATION_STEP_MS));
+  }
+
+  return { events: lastEvents, paddleCollision: null };
+}
+
 function summarizeEvents(events) {
   return events.reduce((summary, event) => {
     const eventType = event?.type;
@@ -280,7 +312,7 @@ async function run() {
     const eventSummary = summarizeEvents(events);
     const eventTypes = Object.keys(eventSummary);
     const visibleButtons = state.buttons.filter((button) => button.visibleInViewport);
-    const externalRequests = requests.filter(
+    let externalRequests = requests.filter(
       (requestUrl) => new URL(requestUrl).origin !== new URL(targetUrl).origin,
     );
 
@@ -314,6 +346,40 @@ async function run() {
     assert(failedRequests.length === 0, `Requests falharam: ${JSON.stringify(failedRequests)}`);
     assert(consoleProblems.length === 0, `Console com problemas: ${JSON.stringify(consoleProblems)}`);
 
+    await clearRuntimeState(page);
+    await page.goto(scenarioUrl(targetUrl, PADDLE_COLLISION_QA_SCENARIO), {
+      waitUntil: "networkidle0",
+      timeout: MAX_NAVIGATION_MS,
+    });
+    await page.waitForSelector(CANVAS_SELECTOR, { timeout: MAX_NAVIGATION_MS });
+    await acceptPrivacyConsentIfPresent(page);
+    const paddleRegression = await waitForPaddleCollision(page);
+    const paddleEventSummary = summarizeEvents(paddleRegression.events);
+    const paddleCollision = paddleRegression.paddleCollision;
+    assert(paddleCollision, `Colisão com raquete não registrada: ${JSON.stringify(paddleEventSummary)}`);
+    assert(
+      paddleCollision.collisionInfo.velocityBefore.dy > 0,
+      `Bolinha não estava saindo antes da raquete: ${JSON.stringify(paddleCollision.collisionInfo.velocityBefore)}`,
+    );
+    assert(
+      paddleCollision.collisionInfo.velocityAfter.dy < 0,
+      `Bolinha não voltou após raquete: ${JSON.stringify(paddleCollision.collisionInfo.velocityAfter)}`,
+    );
+    assert(
+      (paddleEventSummary.ball_lost || 0) === 0,
+      `Bolinha perdida apesar da raquete: ${JSON.stringify(paddleEventSummary)}`,
+    );
+    assert(
+      (paddleEventSummary.game_end || 0) === 0,
+      `Fim de jogo apesar da raquete: ${JSON.stringify(paddleEventSummary)}`,
+    );
+    externalRequests = requests.filter(
+      (requestUrl) => new URL(requestUrl).origin !== new URL(targetUrl).origin,
+    );
+    assert(externalRequests.length === 0, `Requests externos: ${externalRequests.join(", ")}`);
+    assert(failedRequests.length === 0, `Requests falharam: ${JSON.stringify(failedRequests)}`);
+    assert(consoleProblems.length === 0, `Console com problemas: ${JSON.stringify(consoleProblems)}`);
+
     const report = {
       ok: true,
       publicUrl: targetUrl,
@@ -324,6 +390,10 @@ async function run() {
       externalRequests,
       failedRequests,
       consoleProblems,
+      paddleCollisionRegression: {
+        eventSummary: paddleEventSummary,
+        collisionInfo: paddleCollision.collisionInfo,
+      },
       screenshotPath: screenshotPath(),
     };
     ensureParentDirectory(reportPath());

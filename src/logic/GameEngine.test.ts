@@ -493,7 +493,7 @@ describe("GameEngine", () => {
       afterState.speedState.maxSpeed,
     );
     expect(afterState.speedState.minSpeed).toBe(
-      calculateLevelMaxSpeed(canvas.width, expectedNextLevel) / 4,
+      calculateLevelMinSpeed(canvas.width, expectedNextLevel),
     );
     expect(afterState.speedState.reductionPerBrick).toBe(
       calculateSpeedReductionPerBrick(

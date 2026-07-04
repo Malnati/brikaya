@@ -528,6 +528,15 @@ describe("App theme selector", () => {
     expect(mockLastGameProps?.qaScenario).toBe("evasive-blocks");
   });
 
+  it("encaminha cenário de QA de colisão da raquete para o jogo", async () => {
+    mockSystemTheme(true);
+    window.history.replaceState(null, "", "/?qaScenario=paddle-collision");
+
+    await renderApp();
+
+    expect(mockLastGameProps?.qaScenario).toBe("paddle-collision");
+  });
+
   it("confirma, limpa dados locais e atualiza o app ao restaurar padrão", async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();

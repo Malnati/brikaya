@@ -65,6 +65,8 @@ const PHASE_ONE = 1;
 const PHASE_TWO = 2;
 const LATE_PHASE = 11;
 const INITIAL_BRICK_COUNT = DIMENSIONS.brickCols * DIMENSIONS.brickRows;
+const CENTER_DIVISOR = 2;
+const RADIAL_PADDLE_TEST_INSET = 1;
 
 function buildPhaseSpeedConfig(level: number): PhaseSpeedConfig {
   const maxSpeed = calculateLevelMaxSpeed(CANVAS_WIDTH, level);
@@ -284,6 +286,35 @@ describe('Ball', () => {
 
     const inPlay = await ball.update(
       paddle,
+      bricks,
+      CANVAS_HEIGHT,
+      createGameState(ball),
+    );
+
+    expect(inPlay).toBe(true);
+    expect(ball.getVelocity().dy).toBeLessThan(0);
+  });
+
+  it('rebate na banda visual da raquete radial antes da borda externa', async () => {
+    const geometry = calculateRadialPlayfieldGeometry(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const paddlePosition = calculateRadialPaddleBounds(geometry, DIMENSIONS, Math.PI / 2, 1);
+    const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const bricks = { collide: jest.fn().mockResolvedValue(false) };
+    const targetRadius =
+      paddlePosition.radial.radius -
+      paddlePosition.radial.thickness / CENTER_DIVISOR -
+      DIMENSIONS.ballRadius -
+      RADIAL_PADDLE_TEST_INSET;
+
+    ball.applyPhaseSpeedConfig(buildPhaseSpeedConfig(PHASE_ONE));
+    ball.setPosition(
+      geometry.centerX,
+      geometry.centerY + targetRadius,
+    );
+    ball.setDirection(Math.PI);
+
+    const inPlay = await ball.update(
+      { position: paddlePosition },
       bricks,
       CANVAS_HEIGHT,
       createGameState(ball),
