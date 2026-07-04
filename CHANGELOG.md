@@ -3,6 +3,38 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.31.4] - 2026-07-04
+### Corrigido
+- Cards de publicidade deixam de ser renderizados enquanto não houver anúncio real aprovado em escopo.
+- Layout principal não reserva espaço para publicidade oculta.
+
+### Alterado
+- QA mobile e dashboard passam a bloquear regressão quando `Publicidade` ou `.ad-slot` aparecem sem anúncio real.
+- Documentação de QA e Design System passa a exigir publicidade oculta, sem placeholder visual.
+
+### Testado
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version && npm --version && make help`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --check tests/e2e/cloudflare-mobile-qa.js`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --check tests/e2e/cloudflare-dashboard-layout-qa.js`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/App.test.tsx src/constants/audio.test.ts src/constants/assetNaming.test.ts src/utils/audioManager.test.ts --runInBand`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:semantic-file-names`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:svg-assets`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make cloudflare-env-check`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make cloudflare-build`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make cloudflare-deploy`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make cloudflare-public-check`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-offline-pwa-qa`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-no-score-reset`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-phase-transition-qa`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-audio-qa`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-svg-assets-qa`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-runtime-update-qa`
+
 ## [1.31.3] - 2026-07-03
 ### Corrigido
 - RIP de fim de jogo passa a centralizar texto e fumaça na viewport em mobile, tablet e desktop, sem herdar o retângulo do tabuleiro.

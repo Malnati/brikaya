@@ -888,33 +888,6 @@ canvas {
   background: color-mix(in srgb, var(--bb-color-surface) 34%, transparent);
 }
 
-.ad-slot {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  border: 1px dashed
-    color-mix(in srgb, var(--bb-color-outline) 44%, transparent);
-  border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--bb-color-surface) 46%, transparent);
-  color: var(--color-muted);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.ad-slot--side {
-  display: none;
-  min-height: 100%;
-  margin-left: 0;
-}
-
-.ad-slot--bottom {
-  width: min(100%, 520px);
-  min-height: 64px;
-  margin-top: var(--space-2);
-}
-
 .game-status-region {
   margin-top: var(--space-2);
   min-height: 0;
@@ -1234,9 +1207,6 @@ canvas {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .ad-slot--side {
-    display: none;
-  }
 }
 
 @media (max-width: 768px) {
@@ -1272,10 +1242,6 @@ canvas {
     font-size: 0.9rem;
   }
 
-  .ad-slot--bottom {
-    min-height: 56px;
-    margin-top: var(--space-3);
-  }
 }
 
 @media (max-width: 480px) {
@@ -1475,8 +1441,6 @@ canvas {
     font-size: 0.78rem;
   }
 
-  .ad-slot--bottom,
-  .ad-slot--side,
   .game-status-region {
     display: none;
   }
@@ -1609,8 +1573,6 @@ html.bb-landscape-immersive .dashboard-button {
   font-size: 0.78rem;
 }
 
-html.bb-landscape-immersive .ad-slot--bottom,
-html.bb-landscape-immersive .ad-slot--side,
 html.bb-landscape-immersive .game-status-region {
   display: none;
 }

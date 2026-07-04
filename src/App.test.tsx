@@ -178,6 +178,8 @@ describe("App theme selector", () => {
         /loja|ranking|upgrades|tutorial|multiplayer|settings/i,
       ),
     ).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Publicidade")).not.toBeInTheDocument();
+    expect(screen.queryByText("Publicidade")).not.toBeInTheDocument();
   });
 
   it("exige consentimento antes da primeira contagem", async () => {

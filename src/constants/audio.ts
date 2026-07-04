@@ -612,7 +612,7 @@ export const AUDIO_CATALOG = {
   "sfx-ad-placeholder-none": {
     "id": "sfx-ad-placeholder-none",
     "type": "system",
-    "trigger": "Placeholder offline de publicidade aparece ou permanece visível",
+    "trigger": "Referência silenciosa interna para fluxos sem áudio real",
     "priorityLabel": "Baixa",
     "priorityWeight": 1,
     "volume": 0,
@@ -621,7 +621,7 @@ export const AUDIO_CATALOG = {
     "duckingMs": 0,
     "targetDuration": "Silêncio",
     "variations": "0",
-    "uxNotes": "Silêncio intencional; área não funcional não deve chamar atenção sonora.",
+    "uxNotes": "Silêncio intencional; não deve aparecer nem chamar atenção na interface.",
     "loop": false,
     "files": []
   },
@@ -968,7 +968,6 @@ export const GAME_AUDIO_IDS = {
   PANEL_OPEN: 'sfx-panel-open',
   PANEL_CLOSE: 'sfx-panel-close',
   THEME_TOGGLE: 'sfx-theme-toggle',
-  AD_PLACEHOLDER_NONE: 'sfx-ad-placeholder-none',
   POWERUP_SPAWN: 'sfx-powerup-spawn',
   POWERUP_COLLECT: 'sfx-powerup-collect',
   POWERUP_ACTIVATE_MULTIBALL: 'sfx-powerup-activate-multiball',

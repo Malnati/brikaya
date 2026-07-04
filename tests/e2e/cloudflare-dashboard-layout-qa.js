@@ -74,6 +74,10 @@ const MENU_BUTTON_NAME = /menu/i;
 const LOGS_BUTTON_NAME = /logs/i;
 const COLLISIONS_BUTTON_NAME = /colisões/i;
 const CLOSE_BUTTON_NAME = /fechar|×|✕/i;
+const AD_SLOT_SELECTOR = ".ad-slot";
+const AD_SLOT_SIDE_SELECTOR = ".ad-slot--side";
+const AD_SLOT_BOTTOM_SELECTOR = ".ad-slot--bottom";
+const PUBLICITY_LABEL = "Publicidade";
 const SPEED_CURRENT_LABEL = "Velocidade atual";
 const LEVEL_TIME_LABEL = "Tempo da fase";
 const COLLISIONS_PANEL_TITLE = "Estatísticas de Colisões";
@@ -266,6 +270,10 @@ async function collectLayoutState(page, viewportName) {
       minBottomAdDistance,
       viewportName,
       immersiveRootClass,
+      adSlotSelector,
+      adSlotSideSelector,
+      adSlotBottomSelector,
+      publicityLabel,
     }) => {
       function rectOf(element) {
         if (!element) return null;
@@ -323,12 +331,13 @@ async function collectLayoutState(page, viewportName) {
       const boardControls = rectOf(
         document.querySelector(".game-board-controls"),
       );
-      const sideSlotElement = document.querySelector(".ad-slot--side");
-      const bottomSlotElement = document.querySelector(".ad-slot--bottom");
+      const sideSlotElement = document.querySelector(adSlotSideSelector);
+      const bottomSlotElement = document.querySelector(adSlotBottomSelector);
       const sideSlot = rectOf(sideSlotElement);
       const bottomSlot = rectOf(bottomSlotElement);
       const sideSlotDisplay = displayOf(sideSlotElement);
       const bottomSlotDisplay = displayOf(bottomSlotElement);
+      const publicityLabelPattern = new RegExp(`\\b${publicityLabel}\\b`);
       const buttons = Array.from(document.querySelectorAll("button")).map(
         (button) => {
           const rect = button.getBoundingClientRect();
@@ -407,6 +416,10 @@ async function collectLayoutState(page, viewportName) {
         bottomSlot,
         sideSlotVisible,
         bottomSlotVisible,
+        adSlotCount: document.querySelectorAll(adSlotSelector).length,
+        publicityTextPresent: publicityLabelPattern.test(
+          document.body.textContent || "",
+        ),
         sideAdDistance,
         bottomAdDistance,
         minSideAdDistance,
@@ -420,6 +433,10 @@ async function collectLayoutState(page, viewportName) {
       minBottomAdDistance: MIN_BOTTOM_AD_DISTANCE_PX,
       viewportName,
       immersiveRootClass: IMMERSIVE_ROOT_CLASS,
+      adSlotSelector: AD_SLOT_SELECTOR,
+      adSlotSideSelector: AD_SLOT_SIDE_SELECTOR,
+      adSlotBottomSelector: AD_SLOT_BOTTOM_SELECTOR,
+      publicityLabel: PUBLICITY_LABEL,
     },
   );
 }
@@ -779,6 +796,14 @@ async function run() {
               `${viewport.name}: slot lateral perto demais do tabuleiro.`,
             );
           }
+          assert(
+            state.adSlotCount === 0,
+            `${viewport.name}: publicidade não deve renderizar slots.`,
+          );
+          assert(
+            !state.publicityTextPresent,
+            `${viewport.name}: texto Publicidade apareceu sem anúncio real.`,
+          );
           if (state.viewport.width < 1120) {
             assert(
               !state.sideSlotVisible,

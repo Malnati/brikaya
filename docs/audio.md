@@ -64,7 +64,7 @@ Definir o pacote completo de áudios necessários para aquisição ou produção
 | `sfx-panel-open` | UI | Painel de logs ou colisões é aberto | Média | 38% | Fade-in 80 ms / fade-out 120 ms | Sem ducking | 180 ms a 350 ms | 2 | Sweep curto, indicando que uma camada de leitura foi aberta. |
 | `sfx-panel-close` | UI | Painel de logs ou colisões é fechado | Média | 34% | Fade-in 60 ms / fade-out 120 ms | Sem ducking | 160 ms a 300 ms | 2 | Sweep descendente, mais baixo que abertura. |
 | `sfx-theme-toggle` | UI | Alternância entre tema claro e escuro | Baixa | 36% | Sem fade-in / fade-out 80 ms | Sem ducking | 120 ms a 250 ms | 2 | Chime curto; não deve parecer evento de pontuação. |
-| `sfx-ad-placeholder-none` | Sistema | Placeholder offline de publicidade aparece ou permanece visível | Baixa | 0% | Não aplicável | Não aplicável | Silêncio | 0 | Silêncio intencional; área não funcional não deve chamar atenção sonora. |
+| `sfx-ad-placeholder-none` | Sistema | Referência silenciosa interna para fluxos sem áudio real | Baixa | 0% | Não aplicável | Não aplicável | Silêncio | 0 | Silêncio intencional; não deve aparecer nem chamar atenção na interface. |
 | `sfx-powerup-spawn` | Futuro | Power-up futuro aparece no tabuleiro | Média | 55% | Sem fade-in / fade-out 100 ms | Reduz música por 160 ms | 200 ms a 450 ms | 3 | Spark leve; deve avisar oportunidade sem distrair da bola. |
 | `sfx-powerup-collect` | Futuro | Jogador coleta power-up futuro | Alta | 72% | Sem fade-in / fade-out 160 ms | Reduz música por 300 ms | 350 ms a 700 ms | 3 | Chime positivo acima de tijolo comum. |
 | `sfx-powerup-activate-multiball` | Futuro | Power-up de múltiplas bolas é ativado | Alta | 80% | Sem fade-in / fade-out 200 ms | Reduz música por 450 ms | 500 ms a 900 ms | 2 | Expansão estéreo curta; deve indicar multiplicação sem confundir com fase concluída. |
@@ -91,7 +91,7 @@ Definir o pacote completo de áudios necessários para aquisição ou produção
 - O jogo funciona sem rede depois do primeiro carregamento com áudios usados cacheados sob demanda pelo service worker.
 - O usuário consegue jogar com áudio ligado, parcialmente reduzido ou mudo sem perda de informação essencial.
 - Música não encobre colisões, perda de bola, fase concluída, nova fase ou fim de jogo.
-- Sons de UI não competem com gameplay e não disparam em placeholders de publicidade.
+- Sons de UI não competem com gameplay e não disparam para publicidade oculta.
 - Eventos frequentes não causam fadiga sonora em sessões de 10 minutos.
 - Navegador que bloqueia autoplay não impede início da partida, pontuação, logs, colisões ou progressão.
 - Testes futuros devem verificar que não há requisições externas de áudio e que cada ID lógico referenciado existe no manifesto local.
