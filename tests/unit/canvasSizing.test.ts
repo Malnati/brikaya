@@ -5,6 +5,9 @@ const DESKTOP_COMPACT_AVAILABLE_HEIGHT = 572;
 const DESKTOP_COMPACT_MIN_RECOVERED_WIDTH = 850;
 const DESKTOP_AVAILABLE_HEIGHT = 524;
 const IPAD_PRO_LANDSCAPE_AVAILABLE_HEIGHT = 638;
+const MOBILE_LANDSCAPE_FOCUSED_MIN_HEIGHT = 376;
+const MOBILE_LANDSCAPE_VISUAL_VIEWPORT_MIN_HEIGHT = 400;
+const TABLET_LANDSCAPE_RESERVED_MAX_HEIGHT = 700;
 
 describe("calculateResponsiveCanvasSize", () => {
   it("usa visualViewport quase inteiro em mobile landscape imersivo", () => {
@@ -23,8 +26,9 @@ describe("calculateResponsiveCanvasSize", () => {
 
     expect(size.isImmersiveLandscape).toBe(true);
     expect(size.width).toBeGreaterThanOrEqual(818);
-    expect(size.height).toBeGreaterThanOrEqual(320);
-    expect(size.height).toBeLessThan(372);
+    expect(size.height).toBeGreaterThanOrEqual(
+      MOBILE_LANDSCAPE_FOCUSED_MIN_HEIGHT,
+    );
   });
 
   it("usa a altura real reservada ao tabuleiro no landscape imersivo", () => {
@@ -97,8 +101,9 @@ describe("calculateResponsiveCanvasSize", () => {
     });
 
     expect(size.isImmersiveLandscape).toBe(true);
-    expect(size.height).toBeGreaterThanOrEqual(300);
-    expect(size.height).toBeLessThan(398);
+    expect(size.height).toBeGreaterThanOrEqual(
+      MOBILE_LANDSCAPE_VISUAL_VIEWPORT_MIN_HEIGHT,
+    );
   });
 
   it("ativa modo imersivo em tablet landscape com toque", () => {
@@ -117,6 +122,9 @@ describe("calculateResponsiveCanvasSize", () => {
 
     expect(size.isImmersiveLandscape).toBe(true);
     expect(size.height).toBeGreaterThanOrEqual(640);
+    expect(size.height).toBeLessThanOrEqual(
+      TABLET_LANDSCAPE_RESERVED_MAX_HEIGHT,
+    );
   });
 
   it("não ativa modo imersivo em desktop landscape sem toque", () => {

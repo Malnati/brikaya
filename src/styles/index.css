@@ -1715,7 +1715,7 @@ canvas {
   }
 
   .dashboard-primary-controls {
-    top: max(8px, env(safe-area-inset-top));
+    bottom: max(8px, env(safe-area-inset-bottom));
     left: max(8px, env(safe-area-inset-left));
     gap: 4px;
   }
@@ -1726,6 +1726,7 @@ canvas {
   }
 
   .score-hud {
+    display: none;
     bottom: max(8px, env(safe-area-inset-bottom));
     left: max(8px, env(safe-area-inset-left));
     max-width: calc(var(--bb-visual-viewport-width) - 16px);
@@ -2042,6 +2043,72 @@ html.bb-landscape-immersive .dashboard-button {
 
 html.bb-landscape-immersive .game-status-region {
   display: none;
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .dashboard-header,
+  html.bb-landscape-immersive .dashboard-header {
+    position: fixed;
+    inset: 0 auto auto 0;
+    z-index: 10;
+    display: block;
+    width: var(--bb-visual-viewport-width);
+    height: 0;
+    margin: 0;
+    pointer-events: none;
+  }
+
+  .dashboard-primary-controls,
+  .dashboard-header-controls,
+  html.bb-landscape-immersive .dashboard-primary-controls,
+  html.bb-landscape-immersive .dashboard-header-controls {
+    position: fixed;
+    z-index: 11;
+    pointer-events: auto;
+  }
+
+  .dashboard-primary-controls,
+  html.bb-landscape-immersive .dashboard-primary-controls {
+    top: auto;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    left: max(8px, env(safe-area-inset-left));
+    gap: 4px;
+  }
+
+  .dashboard-header-controls,
+  html.bb-landscape-immersive .dashboard-header-controls {
+    top: max(8px, env(safe-area-inset-top));
+    right: max(8px, env(safe-area-inset-right));
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+  }
+
+  .score-hud,
+  html.bb-landscape-immersive .score-hud {
+    display: none;
+  }
+
+  .dashboard-layout,
+  html.bb-landscape-immersive .dashboard-layout {
+    height: 100%;
+    min-height: 0;
+    align-items: stretch;
+  }
+
+  .play-column,
+  .game-container,
+  .game-surface,
+  html.bb-landscape-immersive .play-column,
+  html.bb-landscape-immersive .game-container,
+  html.bb-landscape-immersive .game-surface {
+    min-height: 0;
+    height: 100%;
+  }
+
+  .game-surface,
+  html.bb-landscape-immersive .game-surface {
+    gap: 0;
+  }
 }
 
 .game-board-controls {

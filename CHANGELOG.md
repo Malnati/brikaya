@@ -3,6 +3,35 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.28] - 2026-07-04
+### Alterado
+- Controles principais no mobile passam a ficar alinhados à esquerda na base da janela em portrait e landscape.
+- Menu permanece no canto superior direito nos modos mobile.
+- HUD `Fase | Score | Total | Recorde` fica oculto na tela principal mobile para liberar a área de jogo.
+- Landscape mobile passa a priorizar altura total útil do canvas, sem reservar bloco visual para HUD/controles.
+
+### Adicionado
+- Cobertura unitária para altura full-height no landscape mobile e preservação da reserva em tablet landscape.
+- QA publicado mobile/dashboard passa a validar controles na base esquerda, menu preservado, HUD oculto e canvas full-width/full-height.
+- Evidências publicadas da alteração em `docs/assets/issues/mobile-controls-bottom/evidence/`.
+
+### Testado
+- `node --version` → `v23.5.0`.
+- `make help`.
+- `npm test -- tests/unit/canvasSizing.test.ts --runInBand`.
+- `node --check tests/e2e/cloudflare-mobile-qa.js`.
+- `node --check tests/e2e/cloudflare-dashboard-layout-qa.js`.
+- `npx tsc -p tsconfig.app.json --noEmit`.
+- `npm test -- --runInBand --silent`.
+- `npm run build`.
+- `make cloudflare-env-check`.
+- `make cloudflare-build`.
+- `make cloudflare-deploy` → domínio público `https://brikaya.com/` atualizado.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ npm run test:cloudflare-gameplay-basic`.
+- Varredura textual das evidências e arquivos alterados não encontrou token, chave privada ou credencial real.
+
 ## [1.32.27] - 2026-07-04
 ### Alterado
 - Layout mobile em retrato reduz a moldura visual do painel, move controles principais para o canto superior esquerdo, move o botão Menu para o canto superior direito e fixa o HUD no canto inferior esquerdo.

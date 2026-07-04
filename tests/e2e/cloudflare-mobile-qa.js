@@ -135,7 +135,7 @@ const PADDLE_MOVE_WAIT_TIMEOUT_MS = 10000;
 const PADDLE_MOVE_POLL_MS = 250;
 const LOWER_CANVAS_BAND_RATIO = 0.85;
 const MOBILE_PORTRAIT_CANVAS_ASPECT_MIN = 0.98;
-const MOBILE_FOCUSED_CORNER_OFFSET_PX = 18;
+const MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX = 18;
 const RECT_TOLERANCE_PX = 2;
 
 function getPublicUrl() {
@@ -510,11 +510,12 @@ async function collectLayoutState(page) {
       const dashboardLayoutRect = document
         .querySelector(".dashboard-layout")
         ?.getBoundingClientRect();
-      const scoreHudRect = document
-        .querySelector(".score-hud")
-        ?.getBoundingClientRect();
-      const scoreHudText =
-        document.querySelector(".score-hud")?.textContent || "";
+      const scoreHudElement = document.querySelector(".score-hud");
+      const scoreHudRect = scoreHudElement?.getBoundingClientRect();
+      const scoreHudDisplay = scoreHudElement
+        ? getComputedStyle(scoreHudElement).display
+        : "none";
+      const scoreHudText = scoreHudElement?.textContent || "";
       const buildVersionElement = document.querySelector(
         ".build-version-badge",
       );
@@ -578,6 +579,12 @@ async function collectLayoutState(page) {
               bottom: scoreHudRect.bottom,
             }
           : null,
+        scoreHudDisplay,
+        scoreHudVisible:
+          scoreHudDisplay !== "none" &&
+          Boolean(scoreHudRect) &&
+          scoreHudRect.width > 0 &&
+          scoreHudRect.height > 0,
         scoreHudText,
         bottomSlot: bottomSlotRect
           ? {
@@ -852,6 +859,10 @@ async function run() {
       "HUD de pontuação não contém Fase | Score | Total | Recorde.",
     );
     assert(
+      !layoutState.scoreHudVisible,
+      "HUD deve ficar oculto na tela principal mobile.",
+    );
+    assert(
       layoutState.buttons.every((button) => button.visibleInViewport),
       `Botão fora da viewport: ${layoutState.buttons
         .filter((button) => !button.visibleInViewport)
@@ -914,13 +925,15 @@ async function run() {
       "Texto Publicidade não deve aparecer enquanto não há anúncio real.",
     );
     assert(
-      audioIcon.rect.x <= MOBILE_FOCUSED_CORNER_OFFSET_PX &&
-        audioIcon.rect.y <= MOBILE_FOCUSED_CORNER_OFFSET_PX,
-      "Ícone de som não ficou no canto superior esquerdo.",
+      audioIcon.rect.x <= MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX &&
+        audioIcon.rect.bottom >=
+          layoutState.viewport.height - MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX,
+      "Ícone de som não ficou na base esquerda.",
     );
     assert(
-      restartIcon.rect.y <= MOBILE_FOCUSED_CORNER_OFFSET_PX,
-      "Ícone Reiniciar não ficou no topo da tela.",
+      restartIcon.rect.bottom >=
+        layoutState.viewport.height - MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX,
+      "Ícone Reiniciar não ficou na base da tela.",
     );
     const menuButton = mainButtons.find((button) =>
       MENU_BUTTON_NAME.test(button.text),
@@ -928,16 +941,14 @@ async function run() {
     assert(
       menuButton &&
         menuButton.rect.right >=
-          layoutState.viewport.width - MOBILE_FOCUSED_CORNER_OFFSET_PX &&
-        menuButton.rect.y <= MOBILE_FOCUSED_CORNER_OFFSET_PX,
+          layoutState.viewport.width - MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX &&
+        menuButton.rect.y <= MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX,
       "Menu não ficou no canto superior direito.",
     );
     assert(
-      layoutState.scoreHud &&
-        layoutState.scoreHud.x <= MOBILE_FOCUSED_CORNER_OFFSET_PX &&
-        layoutState.scoreHud.bottom >=
-          layoutState.viewport.height - MOBILE_FOCUSED_CORNER_OFFSET_PX,
-      "HUD não ficou compacto no canto inferior.",
+      musicIcon.rect.bottom >=
+        layoutState.viewport.height - MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX,
+      "Ícone de música não ficou na base da tela.",
     );
     if (layoutState.bottomSlot) {
       for (const button of [audioIcon, musicIcon, restartIcon]) {
