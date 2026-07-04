@@ -178,9 +178,8 @@ function readStoredLocale(): AppLocale | null {
       MANUAL_LOCALE_SOURCE
     )
       return storedLocale;
-    if (storedLocale === DEFAULT_LOCALE) return null;
 
-    return storedLocale;
+    return null;
   } catch {
     return null;
   }
@@ -237,7 +236,10 @@ function readInitialLocale(): AppLocale {
 function persistManualLocale(locale: AppLocale) {
   try {
     window.localStorage.setItem(LOCALE_STORAGE_KEY, locale);
-    window.localStorage.setItem(LOCALE_SOURCE_STORAGE_KEY, MANUAL_LOCALE_SOURCE);
+    window.localStorage.setItem(
+      LOCALE_SOURCE_STORAGE_KEY,
+      MANUAL_LOCALE_SOURCE,
+    );
   } catch {
     return;
   }

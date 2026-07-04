@@ -22,7 +22,11 @@ const ROOT_LOCALE = "pt-BR";
 const TESTED_LOCALES = [
   { locale: "pt-BR", path: "/", title: "Brikaya — arcade de quebrar blocos" },
   { locale: "en", path: "/en/", title: "Brikaya — block breaker arcade" },
-  { locale: "es-419", path: "/es-419/", title: "Brikaya — arcade de romper bloques" },
+  {
+    locale: "es-419",
+    path: "/es-419/",
+    title: "Brikaya — arcade de romper bloques",
+  },
   { locale: "zh-CN", path: "/zh-CN/", title: "Brikaya — 打砖块街机" },
 ];
 const ALL_HREFLANG_LOCALES = [
@@ -61,6 +65,8 @@ const TIME_ZONE_AUTO_VALUE = "Europe/Berlin";
 const TIME_ZONE_AUTO_EXPECTED_LOCALE = "de";
 const TIME_ZONE_AUTO_EXPECTED_PATH = "/de/";
 const LOCALE_STORAGE_KEY = "brikaya-locale";
+const LOCALE_SOURCE_STORAGE_KEY = "brikaya-locale-source";
+const MANUAL_LOCALE_SOURCE = "manual";
 const SITEMAP_PATH = "/sitemap.xml";
 const ROBOTS_PATH = "/robots.txt";
 const REPORT_JSON_SPACES = 2;
@@ -105,14 +111,26 @@ async function validateHtml(baseUrl, item) {
   const canonical = canonicalFor(baseUrl, item.locale, item.path);
 
   assert(status === HTTP_OK, `${url} status=${status}`);
-  assert(body.includes(`<html lang="${item.locale}">`), `${url} sem lang ${item.locale}`);
-  assert(body.includes(`<link rel="canonical" href="${canonical}" />`), `${url} canonical incorreto`);
-  assert(body.includes(`<title>${item.title}</title>`), `${url} title incorreto`);
+  assert(
+    body.includes(`<html lang="${item.locale}">`),
+    `${url} sem lang ${item.locale}`,
+  );
+  assert(
+    body.includes(`<link rel="canonical" href="${canonical}" />`),
+    `${url} canonical incorreto`,
+  );
+  assert(
+    body.includes(`<title>${item.title}</title>`),
+    `${url} title incorreto`,
+  );
   assert(!body.includes(".pages.dev"), `${url} contém pages.dev`);
   assert(!body.includes('href="./assets/'), `${url} tem href asset relativo`);
   assert(!body.includes('src="./assets/'), `${url} tem src asset relativo`);
   for (const locale of ALL_HREFLANG_LOCALES) {
-    assert(body.includes(`hreflang="${locale}"`), `${url} sem hreflang ${locale}`);
+    assert(
+      body.includes(`hreflang="${locale}"`),
+      `${url} sem hreflang ${locale}`,
+    );
   }
   assert(body.includes('hreflang="x-default"'), `${url} sem x-default`);
 
@@ -136,7 +154,12 @@ async function validateSitemapAndRobots(baseUrl) {
   }
   assert(robots.body.includes(`Sitemap: ${sitemapUrl}`), "robots sem sitemap");
 
-  return { sitemapUrl, robotsUrl, sitemapStatus: sitemap.status, robotsStatus: robots.status };
+  return {
+    sitemapUrl,
+    robotsUrl,
+    sitemapStatus: sitemap.status,
+    robotsStatus: robots.status,
+  };
 }
 
 async function closeBrowser(browser) {
@@ -188,7 +211,9 @@ async function waitForCinematicOverlayToClear(page) {
 async function openMenuAndWaitForLanguageSelector(page) {
   for (let attempt = 0; attempt < MENU_OPEN_ATTEMPTS; attempt += 1) {
     await waitForCinematicOverlayToClear(page);
-    await page.waitForSelector(MENU_BUTTON_SELECTOR, { timeout: PAGE_TIMEOUT_MS });
+    await page.waitForSelector(MENU_BUTTON_SELECTOR, {
+      timeout: PAGE_TIMEOUT_MS,
+    });
     await page.click(MENU_BUTTON_SELECTOR);
     const selector = await page
       .waitForSelector(LANGUAGE_SELECT_SELECTOR, {
@@ -212,12 +237,21 @@ async function validateRuntimeLanguageSwitch(baseUrl, outputScreenshotPath) {
 
   try {
     const page = await browser.newPage();
-    await page.setViewport({ width: 393, height: 852, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+    await page.setViewport({
+      width: 393,
+      height: 852,
+      deviceScaleFactor: 3,
+      isMobile: true,
+      hasTouch: true,
+    });
     await page.evaluateOnNewDocument(() => {
       localStorage.clear();
       sessionStorage.clear();
     });
-    await page.goto(baseUrl, { waitUntil: "networkidle2", timeout: PAGE_TIMEOUT_MS });
+    await page.goto(baseUrl, {
+      waitUntil: "networkidle2",
+      timeout: PAGE_TIMEOUT_MS,
+    });
     const consentButton = await page
       .waitForSelector(CONSENT_BUTTON_SELECTOR, {
         timeout: OPTIONAL_CONSENT_TIMEOUT_MS,
@@ -230,7 +264,10 @@ async function validateRuntimeLanguageSwitch(baseUrl, outputScreenshotPath) {
     await acceptPreGamePromptIfVisible(page);
     await openMenuAndWaitForLanguageSelector(page);
     await page.select(LANGUAGE_SELECT_SELECTOR, "zh-CN");
-    await page.waitForFunction(() => document.documentElement.lang === "zh-CN", { timeout: PAGE_TIMEOUT_MS });
+    await page.waitForFunction(
+      () => document.documentElement.lang === "zh-CN",
+      { timeout: PAGE_TIMEOUT_MS },
+    );
     await page.waitForFunction(
       (text) => document.body.textContent?.includes(text),
       { timeout: PAGE_TIMEOUT_MS },
@@ -238,14 +275,39 @@ async function validateRuntimeLanguageSwitch(baseUrl, outputScreenshotPath) {
     );
     ensureParentDirectory(outputScreenshotPath);
     await page.screenshot({ path: outputScreenshotPath, fullPage: true });
-    const runtimeState = await page.evaluate(() => ({
+    const runtimeState = await page.evaluate(
+      (localeKey, sourceKey) => ({
+        lang: document.documentElement.lang,
+        canonical: document
+          .querySelector('link[rel="canonical"]')
+          ?.getAttribute("href"),
+        path: window.location.pathname,
+        visibleChinese: document.body.textContent?.includes("隐私") || false,
+        storedLocale: window.localStorage.getItem(localeKey),
+        storedSource: window.localStorage.getItem(sourceKey),
+      }),
+      LOCALE_STORAGE_KEY,
+      LOCALE_SOURCE_STORAGE_KEY,
+    );
+    assert(
+      runtimeState.storedLocale === "zh-CN",
+      "preferência manual não persistiu locale",
+    );
+    assert(
+      runtimeState.storedSource === MANUAL_LOCALE_SOURCE,
+      "preferência manual não persistiu origem",
+    );
+    await page.reload({ waitUntil: "networkidle2", timeout: PAGE_TIMEOUT_MS });
+    await page.waitForFunction(
+      () => document.documentElement.lang === "zh-CN",
+      { timeout: PAGE_TIMEOUT_MS },
+    );
+    const reloadedState = await page.evaluate(() => ({
       lang: document.documentElement.lang,
-      canonical: document.querySelector('link[rel="canonical"]')?.getAttribute("href"),
       path: window.location.pathname,
-      visibleChinese: document.body.textContent?.includes("隐私") || false,
     }));
 
-    return runtimeState;
+    return { ...runtimeState, reloadedState };
   } finally {
     await closeBrowser(browser);
     rmSync(userDataDir, { recursive: true, force: true });
@@ -263,19 +325,26 @@ async function validateRuntimeBrowserLocale(baseUrl) {
 
   try {
     const page = await browser.newPage();
-    await page.evaluateOnNewDocument((languages, language) => {
-      Object.defineProperty(window.navigator, "languages", {
-        configurable: true,
-        get: () => languages,
-      });
-      Object.defineProperty(window.navigator, "language", {
-        configurable: true,
-        get: () => language,
-      });
-      localStorage.clear();
-      sessionStorage.clear();
-    }, BROWSER_AUTO_LANGUAGES, BROWSER_AUTO_LANGUAGE);
-    await page.goto(baseUrl, { waitUntil: "networkidle2", timeout: PAGE_TIMEOUT_MS });
+    await page.evaluateOnNewDocument(
+      (languages, language) => {
+        Object.defineProperty(window.navigator, "languages", {
+          configurable: true,
+          get: () => languages,
+        });
+        Object.defineProperty(window.navigator, "language", {
+          configurable: true,
+          get: () => language,
+        });
+        localStorage.clear();
+        sessionStorage.clear();
+      },
+      BROWSER_AUTO_LANGUAGES,
+      BROWSER_AUTO_LANGUAGE,
+    );
+    await page.goto(baseUrl, {
+      waitUntil: "networkidle2",
+      timeout: PAGE_TIMEOUT_MS,
+    });
     await page.waitForFunction(
       (locale) => document.documentElement.lang === locale,
       { timeout: PAGE_TIMEOUT_MS },
@@ -289,11 +358,14 @@ async function validateRuntimeBrowserLocale(baseUrl) {
 
     const runtimeState = await page.evaluate(() => ({
       lang: document.documentElement.lang,
-      canonical: document.querySelector('link[rel="canonical"]')?.getAttribute("href"),
+      canonical: document
+        .querySelector('link[rel="canonical"]')
+        ?.getAttribute("href"),
       path: window.location.pathname,
     }));
     assert(
-      runtimeState.canonical === new URL(BROWSER_AUTO_EXPECTED_PATH, baseUrl).href,
+      runtimeState.canonical ===
+        new URL(BROWSER_AUTO_EXPECTED_PATH, baseUrl).href,
       "canonical não acompanhou idioma automático do navegador",
     );
 
@@ -316,19 +388,26 @@ async function validateRuntimeTimeZoneLocale(baseUrl) {
   try {
     const page = await browser.newPage();
     await page.emulateTimezone(TIME_ZONE_AUTO_VALUE);
-    await page.evaluateOnNewDocument((languages, language) => {
-      Object.defineProperty(window.navigator, "languages", {
-        configurable: true,
-        get: () => languages,
-      });
-      Object.defineProperty(window.navigator, "language", {
-        configurable: true,
-        get: () => language,
-      });
-      localStorage.clear();
-      sessionStorage.clear();
-    }, TIME_ZONE_AUTO_LANGUAGES, TIME_ZONE_AUTO_LANGUAGE);
-    await page.goto(baseUrl, { waitUntil: "networkidle2", timeout: PAGE_TIMEOUT_MS });
+    await page.evaluateOnNewDocument(
+      (languages, language) => {
+        Object.defineProperty(window.navigator, "languages", {
+          configurable: true,
+          get: () => languages,
+        });
+        Object.defineProperty(window.navigator, "language", {
+          configurable: true,
+          get: () => language,
+        });
+        localStorage.clear();
+        sessionStorage.clear();
+      },
+      TIME_ZONE_AUTO_LANGUAGES,
+      TIME_ZONE_AUTO_LANGUAGE,
+    );
+    await page.goto(baseUrl, {
+      waitUntil: "networkidle2",
+      timeout: PAGE_TIMEOUT_MS,
+    });
     await page.waitForFunction(
       (locale) => document.documentElement.lang === locale,
       { timeout: PAGE_TIMEOUT_MS },
@@ -340,15 +419,21 @@ async function validateRuntimeTimeZoneLocale(baseUrl) {
       TIME_ZONE_AUTO_EXPECTED_PATH,
     );
 
-    const runtimeState = await page.evaluate((storageKey) => ({
-      lang: document.documentElement.lang,
-      canonical: document.querySelector('link[rel="canonical"]')?.getAttribute("href"),
-      path: window.location.pathname,
-      storedLocale: window.localStorage.getItem(storageKey),
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    }), LOCALE_STORAGE_KEY);
+    const runtimeState = await page.evaluate(
+      (storageKey) => ({
+        lang: document.documentElement.lang,
+        canonical: document
+          .querySelector('link[rel="canonical"]')
+          ?.getAttribute("href"),
+        path: window.location.pathname,
+        storedLocale: window.localStorage.getItem(storageKey),
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      }),
+      LOCALE_STORAGE_KEY,
+    );
     assert(
-      runtimeState.canonical === new URL(TIME_ZONE_AUTO_EXPECTED_PATH, baseUrl).href,
+      runtimeState.canonical ===
+        new URL(TIME_ZONE_AUTO_EXPECTED_PATH, baseUrl).href,
       "canonical não acompanhou fuso horário automático do navegador",
     );
     assert(
@@ -370,7 +455,10 @@ async function run() {
     htmlResults.push(await validateHtml(baseUrl, item));
   }
   const sitemapRobots = await validateSitemapAndRobots(baseUrl);
-  const runtime = await validateRuntimeLanguageSwitch(baseUrl, screenshotPath());
+  const runtime = await validateRuntimeLanguageSwitch(
+    baseUrl,
+    screenshotPath(),
+  );
   const browserLocaleRuntime = await validateRuntimeBrowserLocale(baseUrl);
   const timeZoneLocaleRuntime = await validateRuntimeTimeZoneLocale(baseUrl);
   const report = {
@@ -387,7 +475,10 @@ async function run() {
   };
 
   ensureParentDirectory(reportPath());
-  writeFileSync(reportPath(), `${JSON.stringify(report, null, REPORT_JSON_SPACES)}\n`);
+  writeFileSync(
+    reportPath(),
+    `${JSON.stringify(report, null, REPORT_JSON_SPACES)}\n`,
+  );
   console.log(`cloudflare-i18n-seo-qa ok: report=${reportPath()}`);
 }
 

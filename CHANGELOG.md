@@ -3,6 +3,29 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.11] - 2026-07-04
+### Corrigido
+- Idioma automático deixa de reutilizar locale legado sem marcador manual, permitindo que o primeiro acesso volte a seguir a localidade atual do navegador.
+- Detecção por navegador passa a ter cobertura explícita para varrer toda a lista de idiomas antes de cair no fuso horário offline.
+
+### Alterado
+- QA de i18n publicado passa a validar persistência manual após recarregar a página.
+- Documento PWA reforça que range de IP, GeoIP em runtime, serviço externo ou recurso pago não fazem parte da detecção automática offline.
+
+### Testado
+- `node --version` → `v23.5.0`.
+- `make help`.
+- RED: `npm test -- src/i18n/i18n.test.tsx --runInBand` falhou ao manter `hi-IN` legado sem marcador manual.
+- GREEN: `npm test -- src/i18n/i18n.test.tsx --runInBand` → 16 testes.
+- `node --check tests/e2e/cloudflare-i18n-seo-qa.js`.
+- `npx prettier --check CHANGELOG.md docs/dist/projeto-pwa.md src/i18n/index.tsx src/i18n/i18n.test.tsx tests/e2e/cloudflare-i18n-seo-qa.js`.
+- `npm test -- --runInBand` → 40 suites / 208 testes.
+- `npm run build`.
+- `make cloudflare-env-check`, `make cloudflare-build` e `make cloudflare-deploy`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-i18n-seo-qa`.
+- Varredura textual do diff alterado não encontrou token, chave privada ou credencial real.
+
 ## [1.32.10] - 2026-07-04
 ### Alterado
 - Item especial laser passa a escolher aleatoriamente até cinco blocos ativos, mantendo-os visíveis durante a animação de rachadura, brilho e explosão antes da destruição.
