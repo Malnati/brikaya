@@ -56,6 +56,9 @@ const COLLISIONS_BUTTON_NAME = /colisões/i;
 const CLOSE_BUTTON_NAME = /fechar|×|✕/i;
 const PRE_GAME_ACCEPT_BUTTON_LABEL = "Aceitar e jogar";
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
+const AD_SLOT_SELECTOR = ".ad-slot";
+const AD_SLOT_BOTTOM_SELECTOR = ".ad-slot--bottom";
+const PUBLICITY_LABEL = "Publicidade";
 const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
 const SPEED_CURRENT_LABEL = "Velocidade atual";
 const LEVEL_TIME_LABEL = "Tempo da fase";
@@ -375,7 +378,13 @@ async function acceptPreGamePromptIfVisible(page) {
 
 async function collectLayoutState(page) {
   return page.evaluate(
-    (minTouchTargetSize, scoreValuePatternSource) => {
+    (
+      minTouchTargetSize,
+      scoreValuePatternSource,
+      adSlotSelector,
+      adSlotBottomSelector,
+      publicityLabel,
+    ) => {
       const scoreValuePattern = new RegExp(scoreValuePatternSource);
       const viewport = {
         width: window.innerWidth,
@@ -426,8 +435,9 @@ async function collectLayoutState(page) {
       );
       const buildVersionRect = buildVersionElement?.getBoundingClientRect();
       const bottomSlotRect = document
-        .querySelector(".ad-slot--bottom")
+        .querySelector(adSlotBottomSelector)
         ?.getBoundingClientRect();
+      const publicityLabelPattern = new RegExp(`\\b${publicityLabel}\\b`);
       const scoreValue = Number(
         scoreHudText.match(scoreValuePattern)?.[1] || 0,
       );
@@ -494,6 +504,10 @@ async function collectLayoutState(page) {
               bottom: bottomSlotRect.bottom,
             }
           : null,
+        adSlotCount: document.querySelectorAll(adSlotSelector).length,
+        publicityTextPresent: publicityLabelPattern.test(
+          document.body.textContent || "",
+        ),
         scoreValue,
         hasHorizontalOverflow:
           document.documentElement.scrollWidth > window.innerWidth,
@@ -502,6 +516,9 @@ async function collectLayoutState(page) {
     },
     MIN_TOUCH_TARGET_SIZE,
     SCORE_VALUE_PATTERN.source,
+    AD_SLOT_SELECTOR,
+    AD_SLOT_BOTTOM_SELECTOR,
+    PUBLICITY_LABEL,
   );
 }
 
@@ -776,6 +793,14 @@ async function run() {
     assert(
       layoutState.canvas,
       "Canvas ausente para validar posição dos ícones.",
+    );
+    assert(
+      layoutState.adSlotCount === 0,
+      `Publicidade não deve renderizar slots, mas encontrou ${layoutState.adSlotCount}.`,
+    );
+    assert(
+      !layoutState.publicityTextPresent,
+      "Texto Publicidade não deve aparecer enquanto não há anúncio real.",
     );
     for (const button of [audioIcon, restartIcon]) {
       assert(

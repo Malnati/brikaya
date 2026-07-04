@@ -22,7 +22,7 @@ Aplicar o Design System proposto em `design-system/` ao jogo existente sem trans
 | Alternância claro/escuro | Não existia | Implementar como seletor visível `Claro`/`Escuro`. |
 | Logs | Existe | Adaptar visual aos tokens do tema. |
 | Estatísticas de colisões | Existe | Adaptar visual aos tokens do tema. |
-| Publicidade | Existe como placeholder offline | Manter placeholder; não adicionar scripts reais. |
+| Publicidade | Sem anúncio real aprovado | Manter oculto; não adicionar placeholder, reserva visual nem scripts reais. |
 | Loja/store | Não existe | Fora de escopo. Não implementar. |
 | Upgrades/power-ups novos | Não existe nesta entrega | Fora de escopo. Não implementar. |
 | Ranking/leaderboard | Não existe | Fora de escopo. Não implementar. |

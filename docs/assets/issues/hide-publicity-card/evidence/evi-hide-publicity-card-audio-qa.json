@@ -1,0 +1,5153 @@
+{
+  "publicUrl": "https://brikaya.com/",
+  "targetUrl": "https://brikaya.com/?qaScenario=audio-event-tour",
+  "screenshotPath": "docs/assets/issues/audio-cc0-integration/evidence/evi-audio-cc0-integration-cloudflare-audio-control.png",
+  "browserMatrix": [
+    "chrome-desktop-macos",
+    "chrome-android-emulated",
+    "chrome-iphone-emulated"
+  ],
+  "viewportResults": [
+    {
+      "viewport": "chrome-desktop-macos",
+      "initial": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "heading": "Brikaya",
+        "soundButton": {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "ariaPressed": "false"
+        },
+        "audioState": {
+          "muted": true,
+          "unlocked": false,
+          "contextState": "missing",
+          "lastUnlockResult": {
+            "unlocked": false,
+            "contextState": "missing",
+            "reason": "not_started"
+          },
+          "loaded": 0,
+          "events": [
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122335868
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122335868
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122335893
+            },
+            {
+              "id": "bgm-gameplay-intense-layer",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+              "timestamp": 1783122335918
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122335945
+            },
+            {
+              "id": "sfx-paddle-hit-center",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-center-02.mp3",
+              "timestamp": 1783122335971
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122335973
+            },
+            {
+              "id": "sfx-paddle-hit-edge",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-edge-01.mp3",
+              "timestamp": 1783122335998
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-wall-hit-02.mp3",
+              "timestamp": 1783122336024
+            },
+            {
+              "id": "sfx-ceiling-hit",
+              "status": "silent",
+              "path": "/assets/audio/sfx-ceiling-hit-02.mp3",
+              "timestamp": 1783122336051
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-hit-03.mp3",
+              "timestamp": 1783122336077
+            },
+            {
+              "id": "sfx-brick-break-red",
+              "status": "silent",
+              "path": "/assets/audio/sfx-brick-break-red-01.mp3",
+              "timestamp": 1783122336103
+            },
+            {
+              "id": "sfx-brick-break-blue",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-blue-02.mp3",
+              "timestamp": 1783122336129
+            },
+            {
+              "id": "sfx-brick-break-green",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-green-03.mp3",
+              "timestamp": 1783122336155
+            },
+            {
+              "id": "sfx-brick-break-yellow",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-yellow-03.mp3",
+              "timestamp": 1783122336181
+            },
+            {
+              "id": "sfx-brick-break-purple",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-purple-01.mp3",
+              "timestamp": 1783122336205
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122336231
+            },
+            {
+              "id": "sfx-combo-small",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-small-02.mp3",
+              "timestamp": 1783122336257
+            },
+            {
+              "id": "sfx-combo-large",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-large-01.mp3",
+              "timestamp": 1783122336282
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "muted",
+              "path": "/assets/audio/sfx-ball-lost-02.mp3",
+              "timestamp": 1783122336307
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122336332
+            },
+            {
+              "id": "sfx-level-complete",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-complete-02.mp3",
+              "timestamp": 1783122336357
+            },
+            {
+              "id": "sfx-level-toast-in",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-toast-in-01.mp3",
+              "timestamp": 1783122336383
+            },
+            {
+              "id": "sfx-level-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-start-01.mp3",
+              "timestamp": 1783122336408
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-01.mp3",
+              "timestamp": 1783122336434
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-01.mp3",
+              "timestamp": 1783122336439
+            },
+            {
+              "id": "sfx-restart",
+              "status": "muted",
+              "path": "/assets/audio/sfx-restart-02.mp3",
+              "timestamp": 1783122336444
+            },
+            {
+              "id": "sfx-reset-score",
+              "status": "muted",
+              "path": "/assets/audio/sfx-reset-score-01.mp3",
+              "timestamp": 1783122336469
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-04.mp3",
+              "timestamp": 1783122336494
+            },
+            {
+              "id": "sfx-panel-open",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-open-02.mp3",
+              "timestamp": 1783122336519
+            },
+            {
+              "id": "sfx-panel-close",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-close-01.mp3",
+              "timestamp": 1783122336545
+            },
+            {
+              "id": "sfx-theme-toggle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-theme-toggle-02.mp3",
+              "timestamp": 1783122336572
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122336598
+            },
+            {
+              "id": "sfx-powerup-spawn",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-spawn-02.mp3",
+              "timestamp": 1783122336623
+            },
+            {
+              "id": "sfx-powerup-collect",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-collect-03.mp3",
+              "timestamp": 1783122336650
+            },
+            {
+              "id": "sfx-powerup-activate-multiball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+              "timestamp": 1783122336675
+            },
+            {
+              "id": "sfx-powerup-activate-wide-paddle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-wide-paddle-01.mp3",
+              "timestamp": 1783122336701
+            },
+            {
+              "id": "sfx-powerup-activate-slow-ball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-slow-ball-01.mp3",
+              "timestamp": 1783122336726
+            },
+            {
+              "id": "sfx-powerup-activate-laser-fan",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+              "timestamp": 1783122336753
+            },
+            {
+              "id": "sfx-powerup-expire",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-expire-02.mp3",
+              "timestamp": 1783122336777
+            },
+            {
+              "id": "sfx-highscore-new",
+              "status": "muted",
+              "path": "/assets/audio/sfx-highscore-new-02.mp3",
+              "timestamp": 1783122336802
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122336828
+            },
+            {
+              "id": "sfx-error-soft",
+              "status": "silent",
+              "path": "/assets/audio/sfx-error-soft-01.mp3",
+              "timestamp": 1783122336854
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122337040
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-02.mp3",
+              "timestamp": 1783122337640
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122338245
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122338245
+            }
+          ]
+        },
+        "cacheNames": [
+          "breakout-cache-20260703234434",
+          "breakout-asset-cache-v1"
+        ],
+        "cachedAudioPaths": []
+      },
+      "enabled": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "heading": "Brikaya",
+        "soundButton": {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "ariaPressed": "true"
+        },
+        "audioState": {
+          "muted": false,
+          "unlocked": true,
+          "contextState": "running",
+          "lastUnlockResult": {
+            "unlocked": true,
+            "contextState": "running",
+            "reason": "already_running"
+          },
+          "loaded": 1,
+          "events": [
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122335868
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122335868
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122335893
+            },
+            {
+              "id": "bgm-gameplay-intense-layer",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+              "timestamp": 1783122335918
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122335945
+            },
+            {
+              "id": "sfx-paddle-hit-center",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-center-02.mp3",
+              "timestamp": 1783122335971
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122335973
+            },
+            {
+              "id": "sfx-paddle-hit-edge",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-edge-01.mp3",
+              "timestamp": 1783122335998
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-wall-hit-02.mp3",
+              "timestamp": 1783122336024
+            },
+            {
+              "id": "sfx-ceiling-hit",
+              "status": "silent",
+              "path": "/assets/audio/sfx-ceiling-hit-02.mp3",
+              "timestamp": 1783122336051
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-hit-03.mp3",
+              "timestamp": 1783122336077
+            },
+            {
+              "id": "sfx-brick-break-red",
+              "status": "silent",
+              "path": "/assets/audio/sfx-brick-break-red-01.mp3",
+              "timestamp": 1783122336103
+            },
+            {
+              "id": "sfx-brick-break-blue",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-blue-02.mp3",
+              "timestamp": 1783122336129
+            },
+            {
+              "id": "sfx-brick-break-green",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-green-03.mp3",
+              "timestamp": 1783122336155
+            },
+            {
+              "id": "sfx-brick-break-yellow",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-yellow-03.mp3",
+              "timestamp": 1783122336181
+            },
+            {
+              "id": "sfx-brick-break-purple",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-purple-01.mp3",
+              "timestamp": 1783122336205
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122336231
+            },
+            {
+              "id": "sfx-combo-small",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-small-02.mp3",
+              "timestamp": 1783122336257
+            },
+            {
+              "id": "sfx-combo-large",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-large-01.mp3",
+              "timestamp": 1783122336282
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "muted",
+              "path": "/assets/audio/sfx-ball-lost-02.mp3",
+              "timestamp": 1783122336307
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122336332
+            },
+            {
+              "id": "sfx-level-complete",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-complete-02.mp3",
+              "timestamp": 1783122336357
+            },
+            {
+              "id": "sfx-level-toast-in",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-toast-in-01.mp3",
+              "timestamp": 1783122336383
+            },
+            {
+              "id": "sfx-level-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-start-01.mp3",
+              "timestamp": 1783122336408
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-01.mp3",
+              "timestamp": 1783122336434
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-01.mp3",
+              "timestamp": 1783122336439
+            },
+            {
+              "id": "sfx-restart",
+              "status": "muted",
+              "path": "/assets/audio/sfx-restart-02.mp3",
+              "timestamp": 1783122336444
+            },
+            {
+              "id": "sfx-reset-score",
+              "status": "muted",
+              "path": "/assets/audio/sfx-reset-score-01.mp3",
+              "timestamp": 1783122336469
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-04.mp3",
+              "timestamp": 1783122336494
+            },
+            {
+              "id": "sfx-panel-open",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-open-02.mp3",
+              "timestamp": 1783122336519
+            },
+            {
+              "id": "sfx-panel-close",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-close-01.mp3",
+              "timestamp": 1783122336545
+            },
+            {
+              "id": "sfx-theme-toggle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-theme-toggle-02.mp3",
+              "timestamp": 1783122336572
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122336598
+            },
+            {
+              "id": "sfx-powerup-spawn",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-spawn-02.mp3",
+              "timestamp": 1783122336623
+            },
+            {
+              "id": "sfx-powerup-collect",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-collect-03.mp3",
+              "timestamp": 1783122336650
+            },
+            {
+              "id": "sfx-powerup-activate-multiball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+              "timestamp": 1783122336675
+            },
+            {
+              "id": "sfx-powerup-activate-wide-paddle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-wide-paddle-01.mp3",
+              "timestamp": 1783122336701
+            },
+            {
+              "id": "sfx-powerup-activate-slow-ball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-slow-ball-01.mp3",
+              "timestamp": 1783122336726
+            },
+            {
+              "id": "sfx-powerup-activate-laser-fan",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+              "timestamp": 1783122336753
+            },
+            {
+              "id": "sfx-powerup-expire",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-expire-02.mp3",
+              "timestamp": 1783122336777
+            },
+            {
+              "id": "sfx-highscore-new",
+              "status": "muted",
+              "path": "/assets/audio/sfx-highscore-new-02.mp3",
+              "timestamp": 1783122336802
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122336828
+            },
+            {
+              "id": "sfx-error-soft",
+              "status": "silent",
+              "path": "/assets/audio/sfx-error-soft-01.mp3",
+              "timestamp": 1783122336854
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122337040
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-02.mp3",
+              "timestamp": 1783122337640
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122338245
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122338245
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "played",
+              "path": "/assets/audio/sfx-button-press-03.mp3",
+              "timestamp": 1783122340910
+            }
+          ]
+        },
+        "cacheNames": [
+          "breakout-cache-20260703234434",
+          "breakout-asset-cache-v1"
+        ],
+        "cachedAudioPaths": [
+          "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+          "/assets/audio/sfx-button-press-03.mp3"
+        ]
+      },
+      "disabled": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "heading": "Brikaya",
+        "soundButton": {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "ariaPressed": "false"
+        },
+        "audioState": {
+          "muted": true,
+          "unlocked": true,
+          "contextState": "running",
+          "lastUnlockResult": {
+            "unlocked": true,
+            "contextState": "running",
+            "reason": "already_running"
+          },
+          "loaded": 1,
+          "events": [
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122335868
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122335868
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122335893
+            },
+            {
+              "id": "bgm-gameplay-intense-layer",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+              "timestamp": 1783122335918
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122335945
+            },
+            {
+              "id": "sfx-paddle-hit-center",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-center-02.mp3",
+              "timestamp": 1783122335971
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122335973
+            },
+            {
+              "id": "sfx-paddle-hit-edge",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-edge-01.mp3",
+              "timestamp": 1783122335998
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-wall-hit-02.mp3",
+              "timestamp": 1783122336024
+            },
+            {
+              "id": "sfx-ceiling-hit",
+              "status": "silent",
+              "path": "/assets/audio/sfx-ceiling-hit-02.mp3",
+              "timestamp": 1783122336051
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-hit-03.mp3",
+              "timestamp": 1783122336077
+            },
+            {
+              "id": "sfx-brick-break-red",
+              "status": "silent",
+              "path": "/assets/audio/sfx-brick-break-red-01.mp3",
+              "timestamp": 1783122336103
+            },
+            {
+              "id": "sfx-brick-break-blue",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-blue-02.mp3",
+              "timestamp": 1783122336129
+            },
+            {
+              "id": "sfx-brick-break-green",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-green-03.mp3",
+              "timestamp": 1783122336155
+            },
+            {
+              "id": "sfx-brick-break-yellow",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-yellow-03.mp3",
+              "timestamp": 1783122336181
+            },
+            {
+              "id": "sfx-brick-break-purple",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-purple-01.mp3",
+              "timestamp": 1783122336205
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122336231
+            },
+            {
+              "id": "sfx-combo-small",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-small-02.mp3",
+              "timestamp": 1783122336257
+            },
+            {
+              "id": "sfx-combo-large",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-large-01.mp3",
+              "timestamp": 1783122336282
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "muted",
+              "path": "/assets/audio/sfx-ball-lost-02.mp3",
+              "timestamp": 1783122336307
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122336332
+            },
+            {
+              "id": "sfx-level-complete",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-complete-02.mp3",
+              "timestamp": 1783122336357
+            },
+            {
+              "id": "sfx-level-toast-in",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-toast-in-01.mp3",
+              "timestamp": 1783122336383
+            },
+            {
+              "id": "sfx-level-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-start-01.mp3",
+              "timestamp": 1783122336408
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-01.mp3",
+              "timestamp": 1783122336434
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-01.mp3",
+              "timestamp": 1783122336439
+            },
+            {
+              "id": "sfx-restart",
+              "status": "muted",
+              "path": "/assets/audio/sfx-restart-02.mp3",
+              "timestamp": 1783122336444
+            },
+            {
+              "id": "sfx-reset-score",
+              "status": "muted",
+              "path": "/assets/audio/sfx-reset-score-01.mp3",
+              "timestamp": 1783122336469
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-04.mp3",
+              "timestamp": 1783122336494
+            },
+            {
+              "id": "sfx-panel-open",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-open-02.mp3",
+              "timestamp": 1783122336519
+            },
+            {
+              "id": "sfx-panel-close",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-close-01.mp3",
+              "timestamp": 1783122336545
+            },
+            {
+              "id": "sfx-theme-toggle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-theme-toggle-02.mp3",
+              "timestamp": 1783122336572
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122336598
+            },
+            {
+              "id": "sfx-powerup-spawn",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-spawn-02.mp3",
+              "timestamp": 1783122336623
+            },
+            {
+              "id": "sfx-powerup-collect",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-collect-03.mp3",
+              "timestamp": 1783122336650
+            },
+            {
+              "id": "sfx-powerup-activate-multiball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+              "timestamp": 1783122336675
+            },
+            {
+              "id": "sfx-powerup-activate-wide-paddle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-wide-paddle-01.mp3",
+              "timestamp": 1783122336701
+            },
+            {
+              "id": "sfx-powerup-activate-slow-ball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-slow-ball-01.mp3",
+              "timestamp": 1783122336726
+            },
+            {
+              "id": "sfx-powerup-activate-laser-fan",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+              "timestamp": 1783122336753
+            },
+            {
+              "id": "sfx-powerup-expire",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-expire-02.mp3",
+              "timestamp": 1783122336777
+            },
+            {
+              "id": "sfx-highscore-new",
+              "status": "muted",
+              "path": "/assets/audio/sfx-highscore-new-02.mp3",
+              "timestamp": 1783122336802
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122336828
+            },
+            {
+              "id": "sfx-error-soft",
+              "status": "silent",
+              "path": "/assets/audio/sfx-error-soft-01.mp3",
+              "timestamp": 1783122336854
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122337040
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-02.mp3",
+              "timestamp": 1783122337640
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122338245
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122338245
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "played",
+              "path": "/assets/audio/sfx-button-press-03.mp3",
+              "timestamp": 1783122340910
+            }
+          ]
+        },
+        "cacheNames": [
+          "breakout-cache-20260703234434",
+          "breakout-asset-cache-v1"
+        ],
+        "cachedAudioPaths": [
+          "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+          "/assets/audio/sfx-button-press-03.mp3"
+        ]
+      },
+      "reenabled": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "heading": "Brikaya",
+        "soundButton": {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "ariaPressed": "true"
+        },
+        "audioState": {
+          "muted": false,
+          "unlocked": true,
+          "contextState": "running",
+          "lastUnlockResult": {
+            "unlocked": true,
+            "contextState": "running",
+            "reason": "already_running"
+          },
+          "loaded": 35,
+          "events": [
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122335868
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122335868
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122335893
+            },
+            {
+              "id": "bgm-gameplay-intense-layer",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+              "timestamp": 1783122335918
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122335945
+            },
+            {
+              "id": "sfx-paddle-hit-center",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-center-02.mp3",
+              "timestamp": 1783122335971
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122335973
+            },
+            {
+              "id": "sfx-paddle-hit-edge",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-edge-01.mp3",
+              "timestamp": 1783122335998
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-wall-hit-02.mp3",
+              "timestamp": 1783122336024
+            },
+            {
+              "id": "sfx-ceiling-hit",
+              "status": "silent",
+              "path": "/assets/audio/sfx-ceiling-hit-02.mp3",
+              "timestamp": 1783122336051
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-hit-03.mp3",
+              "timestamp": 1783122336077
+            },
+            {
+              "id": "sfx-brick-break-red",
+              "status": "silent",
+              "path": "/assets/audio/sfx-brick-break-red-01.mp3",
+              "timestamp": 1783122336103
+            },
+            {
+              "id": "sfx-brick-break-blue",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-blue-02.mp3",
+              "timestamp": 1783122336129
+            },
+            {
+              "id": "sfx-brick-break-green",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-green-03.mp3",
+              "timestamp": 1783122336155
+            },
+            {
+              "id": "sfx-brick-break-yellow",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-yellow-03.mp3",
+              "timestamp": 1783122336181
+            },
+            {
+              "id": "sfx-brick-break-purple",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-purple-01.mp3",
+              "timestamp": 1783122336205
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122336231
+            },
+            {
+              "id": "sfx-combo-small",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-small-02.mp3",
+              "timestamp": 1783122336257
+            },
+            {
+              "id": "sfx-combo-large",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-large-01.mp3",
+              "timestamp": 1783122336282
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "muted",
+              "path": "/assets/audio/sfx-ball-lost-02.mp3",
+              "timestamp": 1783122336307
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122336332
+            },
+            {
+              "id": "sfx-level-complete",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-complete-02.mp3",
+              "timestamp": 1783122336357
+            },
+            {
+              "id": "sfx-level-toast-in",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-toast-in-01.mp3",
+              "timestamp": 1783122336383
+            },
+            {
+              "id": "sfx-level-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-start-01.mp3",
+              "timestamp": 1783122336408
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-01.mp3",
+              "timestamp": 1783122336434
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-01.mp3",
+              "timestamp": 1783122336439
+            },
+            {
+              "id": "sfx-restart",
+              "status": "muted",
+              "path": "/assets/audio/sfx-restart-02.mp3",
+              "timestamp": 1783122336444
+            },
+            {
+              "id": "sfx-reset-score",
+              "status": "muted",
+              "path": "/assets/audio/sfx-reset-score-01.mp3",
+              "timestamp": 1783122336469
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-04.mp3",
+              "timestamp": 1783122336494
+            },
+            {
+              "id": "sfx-panel-open",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-open-02.mp3",
+              "timestamp": 1783122336519
+            },
+            {
+              "id": "sfx-panel-close",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-close-01.mp3",
+              "timestamp": 1783122336545
+            },
+            {
+              "id": "sfx-theme-toggle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-theme-toggle-02.mp3",
+              "timestamp": 1783122336572
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122336598
+            },
+            {
+              "id": "sfx-powerup-spawn",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-spawn-02.mp3",
+              "timestamp": 1783122336623
+            },
+            {
+              "id": "sfx-powerup-collect",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-collect-03.mp3",
+              "timestamp": 1783122336650
+            },
+            {
+              "id": "sfx-powerup-activate-multiball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+              "timestamp": 1783122336675
+            },
+            {
+              "id": "sfx-powerup-activate-wide-paddle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-wide-paddle-01.mp3",
+              "timestamp": 1783122336701
+            },
+            {
+              "id": "sfx-powerup-activate-slow-ball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-slow-ball-01.mp3",
+              "timestamp": 1783122336726
+            },
+            {
+              "id": "sfx-powerup-activate-laser-fan",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+              "timestamp": 1783122336753
+            },
+            {
+              "id": "sfx-powerup-expire",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-expire-02.mp3",
+              "timestamp": 1783122336777
+            },
+            {
+              "id": "sfx-highscore-new",
+              "status": "muted",
+              "path": "/assets/audio/sfx-highscore-new-02.mp3",
+              "timestamp": 1783122336802
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122336828
+            },
+            {
+              "id": "sfx-error-soft",
+              "status": "silent",
+              "path": "/assets/audio/sfx-error-soft-01.mp3",
+              "timestamp": 1783122336854
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122337040
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-02.mp3",
+              "timestamp": 1783122337640
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122338245
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122338245
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "played",
+              "path": "/assets/audio/sfx-button-press-03.mp3",
+              "timestamp": 1783122340910
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "played",
+              "path": "/assets/audio/sfx-button-press-04.mp3",
+              "timestamp": 1783122341067
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "played",
+              "path": "/assets/audio/sfx-button-press-02.mp3",
+              "timestamp": 1783122341106
+            },
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122341652
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122341812
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122341812
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122341812
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122341812
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122341812
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "played",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122342019
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-hit-02.mp3",
+              "timestamp": 1783122342020
+            },
+            {
+              "id": "sfx-brick-break-purple",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-break-purple-03.mp3",
+              "timestamp": 1783122342025
+            },
+            {
+              "id": "bgm-gameplay-intense-layer",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+              "timestamp": 1783122342147
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "played",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122342202
+            },
+            {
+              "id": "sfx-paddle-hit-center",
+              "status": "played",
+              "path": "/assets/audio/sfx-paddle-hit-center-02.mp3",
+              "timestamp": 1783122342250
+            },
+            {
+              "id": "sfx-paddle-hit-edge",
+              "status": "played",
+              "path": "/assets/audio/sfx-paddle-hit-edge-01.mp3",
+              "timestamp": 1783122342309
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "played",
+              "path": "/assets/audio/sfx-wall-hit-01.mp3",
+              "timestamp": 1783122342313
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "played",
+              "path": "/assets/audio/sfx-wall-hit-04.mp3",
+              "timestamp": 1783122342358
+            },
+            {
+              "id": "sfx-ceiling-hit",
+              "status": "silent",
+              "path": "/assets/audio/sfx-ceiling-hit-03.mp3",
+              "timestamp": 1783122342383
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-hit-04.mp3",
+              "timestamp": 1783122342431
+            },
+            {
+              "id": "sfx-brick-break-red",
+              "status": "silent",
+              "path": "/assets/audio/sfx-brick-break-red-03.mp3",
+              "timestamp": 1783122342456
+            },
+            {
+              "id": "sfx-brick-break-blue",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-break-blue-03.mp3",
+              "timestamp": 1783122342508
+            },
+            {
+              "id": "sfx-brick-break-green",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-break-green-03.mp3",
+              "timestamp": 1783122342562
+            },
+            {
+              "id": "sfx-brick-break-yellow",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-break-yellow-03.mp3",
+              "timestamp": 1783122342614
+            },
+            {
+              "id": "sfx-brick-break-purple",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-break-purple-02.mp3",
+              "timestamp": 1783122342662
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "played",
+              "path": "/assets/audio/sfx-score-tick-02.mp3",
+              "timestamp": 1783122342713
+            },
+            {
+              "id": "sfx-combo-small",
+              "status": "played",
+              "path": "/assets/audio/sfx-combo-small-01.mp3",
+              "timestamp": 1783122342771
+            },
+            {
+              "id": "sfx-combo-large",
+              "status": "played",
+              "path": "/assets/audio/sfx-combo-large-02.mp3",
+              "timestamp": 1783122342824
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "played",
+              "path": "/assets/audio/sfx-ball-lost-02.mp3",
+              "timestamp": 1783122342878
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "played",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122342941
+            },
+            {
+              "id": "sfx-level-complete",
+              "status": "played",
+              "path": "/assets/audio/sfx-level-complete-02.mp3",
+              "timestamp": 1783122343001
+            },
+            {
+              "id": "sfx-level-toast-in",
+              "status": "played",
+              "path": "/assets/audio/sfx-level-toast-in-02.mp3",
+              "timestamp": 1783122343051
+            },
+            {
+              "id": "sfx-level-start",
+              "status": "played",
+              "path": "/assets/audio/sfx-level-start-01.mp3",
+              "timestamp": 1783122343108
+            },
+            {
+              "id": "sfx-restart",
+              "status": "played",
+              "path": "/assets/audio/sfx-restart-01.mp3",
+              "timestamp": 1783122343163
+            },
+            {
+              "id": "sfx-reset-score",
+              "status": "played",
+              "path": "/assets/audio/sfx-reset-score-01.mp3",
+              "timestamp": 1783122343213
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-button-press-03.mp3",
+              "timestamp": 1783122343238
+            },
+            {
+              "id": "sfx-panel-open",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-panel-open-01.mp3",
+              "timestamp": 1783122343265
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-ball-lost-02.mp3",
+              "timestamp": 1783122343290
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122343291
+            },
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122343292
+            },
+            {
+              "id": "sfx-panel-close",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-panel-close-01.mp3",
+              "timestamp": 1783122343292
+            },
+            {
+              "id": "sfx-highscore-new",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-highscore-new-02.mp3",
+              "timestamp": 1783122343300
+            },
+            {
+              "id": "sfx-theme-toggle",
+              "status": "played",
+              "path": "/assets/audio/sfx-theme-toggle-01.mp3",
+              "timestamp": 1783122343382
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122343406
+            },
+            {
+              "id": "sfx-powerup-spawn",
+              "status": "played",
+              "path": "/assets/audio/sfx-powerup-spawn-01.mp3",
+              "timestamp": 1783122343469
+            },
+            {
+              "id": "sfx-powerup-collect",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-powerup-collect-03.mp3",
+              "timestamp": 1783122343495
+            },
+            {
+              "id": "sfx-powerup-activate-multiball",
+              "status": "played",
+              "path": "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+              "timestamp": 1783122343548
+            },
+            {
+              "id": "sfx-powerup-activate-wide-paddle",
+              "status": "played",
+              "path": "/assets/audio/sfx-powerup-activate-wide-paddle-01.mp3",
+              "timestamp": 1783122343599
+            },
+            {
+              "id": "sfx-powerup-activate-slow-ball",
+              "status": "played",
+              "path": "/assets/audio/sfx-powerup-activate-slow-ball-02.mp3",
+              "timestamp": 1783122343649
+            },
+            {
+              "id": "sfx-powerup-activate-laser-fan",
+              "status": "played",
+              "path": "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+              "timestamp": 1783122343701
+            },
+            {
+              "id": "sfx-powerup-expire",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-powerup-expire-02.mp3",
+              "timestamp": 1783122343726
+            },
+            {
+              "id": "sfx-highscore-new",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-highscore-new-02.mp3",
+              "timestamp": 1783122343751
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122343775
+            },
+            {
+              "id": "sfx-error-soft",
+              "status": "silent",
+              "path": "/assets/audio/sfx-error-soft-02.mp3",
+              "timestamp": 1783122343801
+            }
+          ]
+        },
+        "cacheNames": [
+          "breakout-cache-20260703234434",
+          "breakout-asset-cache-v1"
+        ],
+        "cachedAudioPaths": [
+          "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+          "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+          "/assets/audio/bgm-menu-loop-main-01.mp3",
+          "/assets/audio/sfx-ball-lost-02.mp3",
+          "/assets/audio/sfx-brick-break-blue-03.mp3",
+          "/assets/audio/sfx-brick-break-green-03.mp3",
+          "/assets/audio/sfx-brick-break-purple-02.mp3",
+          "/assets/audio/sfx-brick-break-purple-03.mp3",
+          "/assets/audio/sfx-brick-break-yellow-03.mp3",
+          "/assets/audio/sfx-brick-hit-02.mp3",
+          "/assets/audio/sfx-brick-hit-04.mp3",
+          "/assets/audio/sfx-button-press-02.mp3",
+          "/assets/audio/sfx-button-press-03.mp3",
+          "/assets/audio/sfx-button-press-04.mp3",
+          "/assets/audio/sfx-combo-large-02.mp3",
+          "/assets/audio/sfx-combo-small-01.mp3",
+          "/assets/audio/sfx-game-over-01.mp3",
+          "/assets/audio/sfx-game-start-02.mp3",
+          "/assets/audio/sfx-level-complete-02.mp3",
+          "/assets/audio/sfx-level-start-01.mp3",
+          "/assets/audio/sfx-level-toast-in-02.mp3",
+          "/assets/audio/sfx-paddle-hit-center-02.mp3",
+          "/assets/audio/sfx-paddle-hit-edge-01.mp3",
+          "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+          "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+          "/assets/audio/sfx-powerup-activate-slow-ball-02.mp3",
+          "/assets/audio/sfx-powerup-activate-wide-paddle-01.mp3",
+          "/assets/audio/sfx-powerup-spawn-01.mp3",
+          "/assets/audio/sfx-reset-score-01.mp3",
+          "/assets/audio/sfx-restart-01.mp3",
+          "/assets/audio/sfx-score-tick-02.mp3",
+          "/assets/audio/sfx-score-tick-03.mp3",
+          "/assets/audio/sfx-theme-toggle-01.mp3",
+          "/assets/audio/sfx-wall-hit-01.mp3",
+          "/assets/audio/sfx-wall-hit-04.mp3"
+        ]
+      }
+    },
+    {
+      "viewport": "chrome-android-emulated",
+      "initial": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "heading": "Brikaya",
+        "soundButton": {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "ariaPressed": "false"
+        },
+        "audioState": {
+          "muted": true,
+          "unlocked": false,
+          "contextState": "missing",
+          "lastUnlockResult": {
+            "unlocked": false,
+            "contextState": "missing",
+            "reason": "not_started"
+          },
+          "loaded": 0,
+          "events": [
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122346208
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122346208
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122346233
+            },
+            {
+              "id": "bgm-gameplay-intense-layer",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+              "timestamp": 1783122346258
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122346285
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122346291
+            },
+            {
+              "id": "sfx-paddle-hit-center",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-center-04.mp3",
+              "timestamp": 1783122346311
+            },
+            {
+              "id": "sfx-paddle-hit-edge",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-edge-02.mp3",
+              "timestamp": 1783122346337
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-wall-hit-01.mp3",
+              "timestamp": 1783122346363
+            },
+            {
+              "id": "sfx-ceiling-hit",
+              "status": "silent",
+              "path": "/assets/audio/sfx-ceiling-hit-02.mp3",
+              "timestamp": 1783122346388
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-hit-03.mp3",
+              "timestamp": 1783122346414
+            },
+            {
+              "id": "sfx-brick-break-red",
+              "status": "silent",
+              "path": "/assets/audio/sfx-brick-break-red-03.mp3",
+              "timestamp": 1783122346438
+            },
+            {
+              "id": "sfx-brick-break-blue",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-blue-02.mp3",
+              "timestamp": 1783122346464
+            },
+            {
+              "id": "sfx-brick-break-green",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-green-01.mp3",
+              "timestamp": 1783122346490
+            },
+            {
+              "id": "sfx-brick-break-yellow",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-yellow-03.mp3",
+              "timestamp": 1783122346515
+            },
+            {
+              "id": "sfx-brick-break-purple",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-purple-03.mp3",
+              "timestamp": 1783122346541
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122346567
+            },
+            {
+              "id": "sfx-combo-small",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-small-01.mp3",
+              "timestamp": 1783122346593
+            },
+            {
+              "id": "sfx-combo-large",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-large-01.mp3",
+              "timestamp": 1783122346619
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "muted",
+              "path": "/assets/audio/sfx-ball-lost-01.mp3",
+              "timestamp": 1783122346645
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122346671
+            },
+            {
+              "id": "sfx-level-complete",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-complete-01.mp3",
+              "timestamp": 1783122346697
+            },
+            {
+              "id": "sfx-level-toast-in",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-toast-in-02.mp3",
+              "timestamp": 1783122346724
+            },
+            {
+              "id": "sfx-level-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-start-01.mp3",
+              "timestamp": 1783122346750
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-02.mp3",
+              "timestamp": 1783122346761
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122346763
+            },
+            {
+              "id": "sfx-restart",
+              "status": "muted",
+              "path": "/assets/audio/sfx-restart-01.mp3",
+              "timestamp": 1783122346775
+            },
+            {
+              "id": "sfx-reset-score",
+              "status": "muted",
+              "path": "/assets/audio/sfx-reset-score-01.mp3",
+              "timestamp": 1783122346801
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-03.mp3",
+              "timestamp": 1783122346827
+            },
+            {
+              "id": "sfx-panel-open",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-open-02.mp3",
+              "timestamp": 1783122346853
+            },
+            {
+              "id": "sfx-panel-close",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-close-02.mp3",
+              "timestamp": 1783122346878
+            },
+            {
+              "id": "sfx-theme-toggle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-theme-toggle-02.mp3",
+              "timestamp": 1783122346903
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122346930
+            },
+            {
+              "id": "sfx-powerup-spawn",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-spawn-01.mp3",
+              "timestamp": 1783122346955
+            },
+            {
+              "id": "sfx-powerup-collect",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-collect-01.mp3",
+              "timestamp": 1783122346981
+            },
+            {
+              "id": "sfx-powerup-activate-multiball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+              "timestamp": 1783122347005
+            },
+            {
+              "id": "sfx-powerup-activate-wide-paddle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-wide-paddle-01.mp3",
+              "timestamp": 1783122347031
+            },
+            {
+              "id": "sfx-powerup-activate-slow-ball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-slow-ball-02.mp3",
+              "timestamp": 1783122347055
+            },
+            {
+              "id": "sfx-powerup-activate-laser-fan",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+              "timestamp": 1783122347082
+            },
+            {
+              "id": "sfx-powerup-expire",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-expire-01.mp3",
+              "timestamp": 1783122347107
+            },
+            {
+              "id": "sfx-highscore-new",
+              "status": "muted",
+              "path": "/assets/audio/sfx-highscore-new-02.mp3",
+              "timestamp": 1783122347133
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122347158
+            },
+            {
+              "id": "sfx-error-soft",
+              "status": "silent",
+              "path": "/assets/audio/sfx-error-soft-01.mp3",
+              "timestamp": 1783122347184
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-01.mp3",
+              "timestamp": 1783122347364
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-01.mp3",
+              "timestamp": 1783122347965
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-01.mp3",
+              "timestamp": 1783122348571
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122348571
+            }
+          ]
+        },
+        "cacheNames": [
+          "breakout-cache-20260703234434",
+          "breakout-asset-cache-v1"
+        ],
+        "cachedAudioPaths": []
+      },
+      "enabled": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "heading": "Brikaya",
+        "soundButton": {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "ariaPressed": "true"
+        },
+        "audioState": {
+          "muted": false,
+          "unlocked": true,
+          "contextState": "running",
+          "lastUnlockResult": {
+            "unlocked": true,
+            "contextState": "running",
+            "reason": "already_running"
+          },
+          "loaded": 1,
+          "events": [
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122346208
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122346208
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122346233
+            },
+            {
+              "id": "bgm-gameplay-intense-layer",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+              "timestamp": 1783122346258
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122346285
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122346291
+            },
+            {
+              "id": "sfx-paddle-hit-center",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-center-04.mp3",
+              "timestamp": 1783122346311
+            },
+            {
+              "id": "sfx-paddle-hit-edge",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-edge-02.mp3",
+              "timestamp": 1783122346337
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-wall-hit-01.mp3",
+              "timestamp": 1783122346363
+            },
+            {
+              "id": "sfx-ceiling-hit",
+              "status": "silent",
+              "path": "/assets/audio/sfx-ceiling-hit-02.mp3",
+              "timestamp": 1783122346388
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-hit-03.mp3",
+              "timestamp": 1783122346414
+            },
+            {
+              "id": "sfx-brick-break-red",
+              "status": "silent",
+              "path": "/assets/audio/sfx-brick-break-red-03.mp3",
+              "timestamp": 1783122346438
+            },
+            {
+              "id": "sfx-brick-break-blue",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-blue-02.mp3",
+              "timestamp": 1783122346464
+            },
+            {
+              "id": "sfx-brick-break-green",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-green-01.mp3",
+              "timestamp": 1783122346490
+            },
+            {
+              "id": "sfx-brick-break-yellow",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-yellow-03.mp3",
+              "timestamp": 1783122346515
+            },
+            {
+              "id": "sfx-brick-break-purple",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-purple-03.mp3",
+              "timestamp": 1783122346541
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122346567
+            },
+            {
+              "id": "sfx-combo-small",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-small-01.mp3",
+              "timestamp": 1783122346593
+            },
+            {
+              "id": "sfx-combo-large",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-large-01.mp3",
+              "timestamp": 1783122346619
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "muted",
+              "path": "/assets/audio/sfx-ball-lost-01.mp3",
+              "timestamp": 1783122346645
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122346671
+            },
+            {
+              "id": "sfx-level-complete",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-complete-01.mp3",
+              "timestamp": 1783122346697
+            },
+            {
+              "id": "sfx-level-toast-in",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-toast-in-02.mp3",
+              "timestamp": 1783122346724
+            },
+            {
+              "id": "sfx-level-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-start-01.mp3",
+              "timestamp": 1783122346750
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-02.mp3",
+              "timestamp": 1783122346761
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122346763
+            },
+            {
+              "id": "sfx-restart",
+              "status": "muted",
+              "path": "/assets/audio/sfx-restart-01.mp3",
+              "timestamp": 1783122346775
+            },
+            {
+              "id": "sfx-reset-score",
+              "status": "muted",
+              "path": "/assets/audio/sfx-reset-score-01.mp3",
+              "timestamp": 1783122346801
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-03.mp3",
+              "timestamp": 1783122346827
+            },
+            {
+              "id": "sfx-panel-open",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-open-02.mp3",
+              "timestamp": 1783122346853
+            },
+            {
+              "id": "sfx-panel-close",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-close-02.mp3",
+              "timestamp": 1783122346878
+            },
+            {
+              "id": "sfx-theme-toggle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-theme-toggle-02.mp3",
+              "timestamp": 1783122346903
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122346930
+            },
+            {
+              "id": "sfx-powerup-spawn",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-spawn-01.mp3",
+              "timestamp": 1783122346955
+            },
+            {
+              "id": "sfx-powerup-collect",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-collect-01.mp3",
+              "timestamp": 1783122346981
+            },
+            {
+              "id": "sfx-powerup-activate-multiball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+              "timestamp": 1783122347005
+            },
+            {
+              "id": "sfx-powerup-activate-wide-paddle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-wide-paddle-01.mp3",
+              "timestamp": 1783122347031
+            },
+            {
+              "id": "sfx-powerup-activate-slow-ball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-slow-ball-02.mp3",
+              "timestamp": 1783122347055
+            },
+            {
+              "id": "sfx-powerup-activate-laser-fan",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+              "timestamp": 1783122347082
+            },
+            {
+              "id": "sfx-powerup-expire",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-expire-01.mp3",
+              "timestamp": 1783122347107
+            },
+            {
+              "id": "sfx-highscore-new",
+              "status": "muted",
+              "path": "/assets/audio/sfx-highscore-new-02.mp3",
+              "timestamp": 1783122347133
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122347158
+            },
+            {
+              "id": "sfx-error-soft",
+              "status": "silent",
+              "path": "/assets/audio/sfx-error-soft-01.mp3",
+              "timestamp": 1783122347184
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-01.mp3",
+              "timestamp": 1783122347364
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-01.mp3",
+              "timestamp": 1783122347965
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-01.mp3",
+              "timestamp": 1783122348571
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122348571
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "played",
+              "path": "/assets/audio/sfx-button-press-03.mp3",
+              "timestamp": 1783122348702
+            }
+          ]
+        },
+        "cacheNames": [
+          "breakout-cache-20260703234434",
+          "breakout-asset-cache-v1"
+        ],
+        "cachedAudioPaths": [
+          "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+          "/assets/audio/sfx-button-press-03.mp3"
+        ]
+      },
+      "disabled": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "heading": "Brikaya",
+        "soundButton": {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "ariaPressed": "false"
+        },
+        "audioState": {
+          "muted": true,
+          "unlocked": true,
+          "contextState": "running",
+          "lastUnlockResult": {
+            "unlocked": true,
+            "contextState": "running",
+            "reason": "already_running"
+          },
+          "loaded": 1,
+          "events": [
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122346208
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122346208
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122346233
+            },
+            {
+              "id": "bgm-gameplay-intense-layer",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+              "timestamp": 1783122346258
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122346285
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122346291
+            },
+            {
+              "id": "sfx-paddle-hit-center",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-center-04.mp3",
+              "timestamp": 1783122346311
+            },
+            {
+              "id": "sfx-paddle-hit-edge",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-edge-02.mp3",
+              "timestamp": 1783122346337
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-wall-hit-01.mp3",
+              "timestamp": 1783122346363
+            },
+            {
+              "id": "sfx-ceiling-hit",
+              "status": "silent",
+              "path": "/assets/audio/sfx-ceiling-hit-02.mp3",
+              "timestamp": 1783122346388
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-hit-03.mp3",
+              "timestamp": 1783122346414
+            },
+            {
+              "id": "sfx-brick-break-red",
+              "status": "silent",
+              "path": "/assets/audio/sfx-brick-break-red-03.mp3",
+              "timestamp": 1783122346438
+            },
+            {
+              "id": "sfx-brick-break-blue",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-blue-02.mp3",
+              "timestamp": 1783122346464
+            },
+            {
+              "id": "sfx-brick-break-green",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-green-01.mp3",
+              "timestamp": 1783122346490
+            },
+            {
+              "id": "sfx-brick-break-yellow",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-yellow-03.mp3",
+              "timestamp": 1783122346515
+            },
+            {
+              "id": "sfx-brick-break-purple",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-purple-03.mp3",
+              "timestamp": 1783122346541
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122346567
+            },
+            {
+              "id": "sfx-combo-small",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-small-01.mp3",
+              "timestamp": 1783122346593
+            },
+            {
+              "id": "sfx-combo-large",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-large-01.mp3",
+              "timestamp": 1783122346619
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "muted",
+              "path": "/assets/audio/sfx-ball-lost-01.mp3",
+              "timestamp": 1783122346645
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122346671
+            },
+            {
+              "id": "sfx-level-complete",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-complete-01.mp3",
+              "timestamp": 1783122346697
+            },
+            {
+              "id": "sfx-level-toast-in",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-toast-in-02.mp3",
+              "timestamp": 1783122346724
+            },
+            {
+              "id": "sfx-level-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-start-01.mp3",
+              "timestamp": 1783122346750
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-02.mp3",
+              "timestamp": 1783122346761
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122346763
+            },
+            {
+              "id": "sfx-restart",
+              "status": "muted",
+              "path": "/assets/audio/sfx-restart-01.mp3",
+              "timestamp": 1783122346775
+            },
+            {
+              "id": "sfx-reset-score",
+              "status": "muted",
+              "path": "/assets/audio/sfx-reset-score-01.mp3",
+              "timestamp": 1783122346801
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-03.mp3",
+              "timestamp": 1783122346827
+            },
+            {
+              "id": "sfx-panel-open",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-open-02.mp3",
+              "timestamp": 1783122346853
+            },
+            {
+              "id": "sfx-panel-close",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-close-02.mp3",
+              "timestamp": 1783122346878
+            },
+            {
+              "id": "sfx-theme-toggle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-theme-toggle-02.mp3",
+              "timestamp": 1783122346903
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122346930
+            },
+            {
+              "id": "sfx-powerup-spawn",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-spawn-01.mp3",
+              "timestamp": 1783122346955
+            },
+            {
+              "id": "sfx-powerup-collect",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-collect-01.mp3",
+              "timestamp": 1783122346981
+            },
+            {
+              "id": "sfx-powerup-activate-multiball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+              "timestamp": 1783122347005
+            },
+            {
+              "id": "sfx-powerup-activate-wide-paddle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-wide-paddle-01.mp3",
+              "timestamp": 1783122347031
+            },
+            {
+              "id": "sfx-powerup-activate-slow-ball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-slow-ball-02.mp3",
+              "timestamp": 1783122347055
+            },
+            {
+              "id": "sfx-powerup-activate-laser-fan",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+              "timestamp": 1783122347082
+            },
+            {
+              "id": "sfx-powerup-expire",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-expire-01.mp3",
+              "timestamp": 1783122347107
+            },
+            {
+              "id": "sfx-highscore-new",
+              "status": "muted",
+              "path": "/assets/audio/sfx-highscore-new-02.mp3",
+              "timestamp": 1783122347133
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122347158
+            },
+            {
+              "id": "sfx-error-soft",
+              "status": "silent",
+              "path": "/assets/audio/sfx-error-soft-01.mp3",
+              "timestamp": 1783122347184
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-01.mp3",
+              "timestamp": 1783122347364
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-01.mp3",
+              "timestamp": 1783122347965
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-01.mp3",
+              "timestamp": 1783122348571
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122348571
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "played",
+              "path": "/assets/audio/sfx-button-press-03.mp3",
+              "timestamp": 1783122348702
+            }
+          ]
+        },
+        "cacheNames": [
+          "breakout-cache-20260703234434",
+          "breakout-asset-cache-v1"
+        ],
+        "cachedAudioPaths": [
+          "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+          "/assets/audio/sfx-button-press-03.mp3"
+        ]
+      },
+      "reenabled": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "heading": "Brikaya",
+        "soundButton": {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "ariaPressed": "true"
+        },
+        "audioState": {
+          "muted": false,
+          "unlocked": true,
+          "contextState": "running",
+          "lastUnlockResult": {
+            "unlocked": true,
+            "contextState": "running",
+            "reason": "already_running"
+          },
+          "loaded": 31,
+          "events": [
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122346208
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122346208
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122346233
+            },
+            {
+              "id": "bgm-gameplay-intense-layer",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+              "timestamp": 1783122346258
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122346285
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122346291
+            },
+            {
+              "id": "sfx-paddle-hit-center",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-center-04.mp3",
+              "timestamp": 1783122346311
+            },
+            {
+              "id": "sfx-paddle-hit-edge",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-edge-02.mp3",
+              "timestamp": 1783122346337
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-wall-hit-01.mp3",
+              "timestamp": 1783122346363
+            },
+            {
+              "id": "sfx-ceiling-hit",
+              "status": "silent",
+              "path": "/assets/audio/sfx-ceiling-hit-02.mp3",
+              "timestamp": 1783122346388
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-hit-03.mp3",
+              "timestamp": 1783122346414
+            },
+            {
+              "id": "sfx-brick-break-red",
+              "status": "silent",
+              "path": "/assets/audio/sfx-brick-break-red-03.mp3",
+              "timestamp": 1783122346438
+            },
+            {
+              "id": "sfx-brick-break-blue",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-blue-02.mp3",
+              "timestamp": 1783122346464
+            },
+            {
+              "id": "sfx-brick-break-green",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-green-01.mp3",
+              "timestamp": 1783122346490
+            },
+            {
+              "id": "sfx-brick-break-yellow",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-yellow-03.mp3",
+              "timestamp": 1783122346515
+            },
+            {
+              "id": "sfx-brick-break-purple",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-purple-03.mp3",
+              "timestamp": 1783122346541
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122346567
+            },
+            {
+              "id": "sfx-combo-small",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-small-01.mp3",
+              "timestamp": 1783122346593
+            },
+            {
+              "id": "sfx-combo-large",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-large-01.mp3",
+              "timestamp": 1783122346619
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "muted",
+              "path": "/assets/audio/sfx-ball-lost-01.mp3",
+              "timestamp": 1783122346645
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122346671
+            },
+            {
+              "id": "sfx-level-complete",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-complete-01.mp3",
+              "timestamp": 1783122346697
+            },
+            {
+              "id": "sfx-level-toast-in",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-toast-in-02.mp3",
+              "timestamp": 1783122346724
+            },
+            {
+              "id": "sfx-level-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-start-01.mp3",
+              "timestamp": 1783122346750
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-02.mp3",
+              "timestamp": 1783122346761
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122346763
+            },
+            {
+              "id": "sfx-restart",
+              "status": "muted",
+              "path": "/assets/audio/sfx-restart-01.mp3",
+              "timestamp": 1783122346775
+            },
+            {
+              "id": "sfx-reset-score",
+              "status": "muted",
+              "path": "/assets/audio/sfx-reset-score-01.mp3",
+              "timestamp": 1783122346801
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-03.mp3",
+              "timestamp": 1783122346827
+            },
+            {
+              "id": "sfx-panel-open",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-open-02.mp3",
+              "timestamp": 1783122346853
+            },
+            {
+              "id": "sfx-panel-close",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-close-02.mp3",
+              "timestamp": 1783122346878
+            },
+            {
+              "id": "sfx-theme-toggle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-theme-toggle-02.mp3",
+              "timestamp": 1783122346903
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122346930
+            },
+            {
+              "id": "sfx-powerup-spawn",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-spawn-01.mp3",
+              "timestamp": 1783122346955
+            },
+            {
+              "id": "sfx-powerup-collect",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-collect-01.mp3",
+              "timestamp": 1783122346981
+            },
+            {
+              "id": "sfx-powerup-activate-multiball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+              "timestamp": 1783122347005
+            },
+            {
+              "id": "sfx-powerup-activate-wide-paddle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-wide-paddle-01.mp3",
+              "timestamp": 1783122347031
+            },
+            {
+              "id": "sfx-powerup-activate-slow-ball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-slow-ball-02.mp3",
+              "timestamp": 1783122347055
+            },
+            {
+              "id": "sfx-powerup-activate-laser-fan",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+              "timestamp": 1783122347082
+            },
+            {
+              "id": "sfx-powerup-expire",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-expire-01.mp3",
+              "timestamp": 1783122347107
+            },
+            {
+              "id": "sfx-highscore-new",
+              "status": "muted",
+              "path": "/assets/audio/sfx-highscore-new-02.mp3",
+              "timestamp": 1783122347133
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122347158
+            },
+            {
+              "id": "sfx-error-soft",
+              "status": "silent",
+              "path": "/assets/audio/sfx-error-soft-01.mp3",
+              "timestamp": 1783122347184
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-01.mp3",
+              "timestamp": 1783122347364
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-01.mp3",
+              "timestamp": 1783122347965
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-01.mp3",
+              "timestamp": 1783122348571
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122348571
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "played",
+              "path": "/assets/audio/sfx-button-press-03.mp3",
+              "timestamp": 1783122348702
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "played",
+              "path": "/assets/audio/sfx-button-press-01.mp3",
+              "timestamp": 1783122348832
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "played",
+              "path": "/assets/audio/sfx-button-press-01.mp3",
+              "timestamp": 1783122348874
+            },
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122349289
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122349332
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122349332
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122349332
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122349332
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122349332
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-hit-02.mp3",
+              "timestamp": 1783122349442
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "played",
+              "path": "/assets/audio/sfx-score-tick-01.mp3",
+              "timestamp": 1783122349455
+            },
+            {
+              "id": "sfx-brick-break-blue",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-break-blue-01.mp3",
+              "timestamp": 1783122349456
+            },
+            {
+              "id": "bgm-gameplay-intense-layer",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+              "timestamp": 1783122349573
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "played",
+              "path": "/assets/audio/sfx-game-start-01.mp3",
+              "timestamp": 1783122349628
+            },
+            {
+              "id": "sfx-paddle-hit-center",
+              "status": "played",
+              "path": "/assets/audio/sfx-paddle-hit-center-03.mp3",
+              "timestamp": 1783122349677
+            },
+            {
+              "id": "sfx-paddle-hit-edge",
+              "status": "played",
+              "path": "/assets/audio/sfx-paddle-hit-edge-04.mp3",
+              "timestamp": 1783122349727
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "played",
+              "path": "/assets/audio/sfx-wall-hit-01.mp3",
+              "timestamp": 1783122349759
+            },
+            {
+              "id": "sfx-ceiling-hit",
+              "status": "silent",
+              "path": "/assets/audio/sfx-ceiling-hit-03.mp3",
+              "timestamp": 1783122349784
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-hit-01.mp3",
+              "timestamp": 1783122349836
+            },
+            {
+              "id": "sfx-brick-break-red",
+              "status": "silent",
+              "path": "/assets/audio/sfx-brick-break-red-03.mp3",
+              "timestamp": 1783122349861
+            },
+            {
+              "id": "sfx-brick-break-blue",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-break-blue-03.mp3",
+              "timestamp": 1783122349896
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "played",
+              "path": "/assets/audio/sfx-wall-hit-03.mp3",
+              "timestamp": 1783122349915
+            },
+            {
+              "id": "sfx-brick-break-green",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-break-green-03.mp3",
+              "timestamp": 1783122349924
+            },
+            {
+              "id": "sfx-brick-break-yellow",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-break-yellow-02.mp3",
+              "timestamp": 1783122349974
+            },
+            {
+              "id": "sfx-brick-break-purple",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-break-purple-03.mp3",
+              "timestamp": 1783122350005
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "played",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122350033
+            },
+            {
+              "id": "sfx-combo-small",
+              "status": "played",
+              "path": "/assets/audio/sfx-combo-small-02.mp3",
+              "timestamp": 1783122350086
+            },
+            {
+              "id": "sfx-combo-large",
+              "status": "played",
+              "path": "/assets/audio/sfx-combo-large-01.mp3",
+              "timestamp": 1783122350140
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "played",
+              "path": "/assets/audio/sfx-ball-lost-02.mp3",
+              "timestamp": 1783122350172
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "played",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122350212
+            },
+            {
+              "id": "sfx-level-complete",
+              "status": "played",
+              "path": "/assets/audio/sfx-level-complete-01.mp3",
+              "timestamp": 1783122350270
+            },
+            {
+              "id": "sfx-level-toast-in",
+              "status": "played",
+              "path": "/assets/audio/sfx-level-toast-in-01.mp3",
+              "timestamp": 1783122350317
+            },
+            {
+              "id": "sfx-level-start",
+              "status": "played",
+              "path": "/assets/audio/sfx-level-start-01.mp3",
+              "timestamp": 1783122350352
+            },
+            {
+              "id": "sfx-restart",
+              "status": "played",
+              "path": "/assets/audio/sfx-restart-01.mp3",
+              "timestamp": 1783122350383
+            },
+            {
+              "id": "sfx-reset-score",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-reset-score-01.mp3",
+              "timestamp": 1783122350408
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-button-press-04.mp3",
+              "timestamp": 1783122350434
+            },
+            {
+              "id": "sfx-panel-open",
+              "status": "played",
+              "path": "/assets/audio/sfx-panel-open-02.mp3",
+              "timestamp": 1783122350485
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "played",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122350507
+            },
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122350507
+            },
+            {
+              "id": "sfx-panel-close",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-panel-close-02.mp3",
+              "timestamp": 1783122350510
+            },
+            {
+              "id": "sfx-theme-toggle",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-theme-toggle-02.mp3",
+              "timestamp": 1783122350631
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "played",
+              "path": "/assets/audio/sfx-ball-lost-01.mp3",
+              "timestamp": 1783122350639
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122350655
+            },
+            {
+              "id": "sfx-powerup-spawn",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-powerup-spawn-03.mp3",
+              "timestamp": 1783122350680
+            },
+            {
+              "id": "sfx-powerup-collect",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-powerup-collect-02.mp3",
+              "timestamp": 1783122350705
+            },
+            {
+              "id": "sfx-powerup-activate-multiball",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-powerup-activate-multiball-02.mp3",
+              "timestamp": 1783122350731
+            },
+            {
+              "id": "sfx-powerup-activate-wide-paddle",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-powerup-activate-wide-paddle-02.mp3",
+              "timestamp": 1783122350755
+            },
+            {
+              "id": "sfx-powerup-activate-slow-ball",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-powerup-activate-slow-ball-02.mp3",
+              "timestamp": 1783122350781
+            },
+            {
+              "id": "sfx-powerup-activate-laser-fan",
+              "status": "played",
+              "path": "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+              "timestamp": 1783122350811
+            },
+            {
+              "id": "sfx-powerup-expire",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-powerup-expire-02.mp3",
+              "timestamp": 1783122350838
+            },
+            {
+              "id": "sfx-highscore-new",
+              "status": "played",
+              "path": "/assets/audio/sfx-highscore-new-01.mp3",
+              "timestamp": 1783122350901
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122350927
+            },
+            {
+              "id": "sfx-error-soft",
+              "status": "silent",
+              "path": "/assets/audio/sfx-error-soft-01.mp3",
+              "timestamp": 1783122350954
+            }
+          ]
+        },
+        "cacheNames": [
+          "breakout-cache-20260703234434",
+          "breakout-asset-cache-v1"
+        ],
+        "cachedAudioPaths": [
+          "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+          "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+          "/assets/audio/bgm-menu-loop-main-01.mp3",
+          "/assets/audio/sfx-ball-lost-01.mp3",
+          "/assets/audio/sfx-ball-lost-02.mp3",
+          "/assets/audio/sfx-brick-break-blue-01.mp3",
+          "/assets/audio/sfx-brick-break-blue-03.mp3",
+          "/assets/audio/sfx-brick-break-green-03.mp3",
+          "/assets/audio/sfx-brick-break-purple-03.mp3",
+          "/assets/audio/sfx-brick-break-yellow-02.mp3",
+          "/assets/audio/sfx-brick-hit-01.mp3",
+          "/assets/audio/sfx-brick-hit-02.mp3",
+          "/assets/audio/sfx-button-press-01.mp3",
+          "/assets/audio/sfx-button-press-03.mp3",
+          "/assets/audio/sfx-combo-large-01.mp3",
+          "/assets/audio/sfx-combo-small-02.mp3",
+          "/assets/audio/sfx-game-over-01.mp3",
+          "/assets/audio/sfx-game-start-01.mp3",
+          "/assets/audio/sfx-highscore-new-01.mp3",
+          "/assets/audio/sfx-level-complete-01.mp3",
+          "/assets/audio/sfx-level-start-01.mp3",
+          "/assets/audio/sfx-level-toast-in-01.mp3",
+          "/assets/audio/sfx-paddle-hit-center-03.mp3",
+          "/assets/audio/sfx-paddle-hit-edge-04.mp3",
+          "/assets/audio/sfx-panel-open-02.mp3",
+          "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+          "/assets/audio/sfx-restart-01.mp3",
+          "/assets/audio/sfx-score-tick-01.mp3",
+          "/assets/audio/sfx-score-tick-03.mp3",
+          "/assets/audio/sfx-wall-hit-01.mp3",
+          "/assets/audio/sfx-wall-hit-03.mp3"
+        ]
+      }
+    },
+    {
+      "viewport": "chrome-iphone-emulated",
+      "initial": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "heading": "Brikaya",
+        "soundButton": {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "ariaPressed": "false"
+        },
+        "audioState": {
+          "muted": true,
+          "unlocked": false,
+          "contextState": "missing",
+          "lastUnlockResult": {
+            "unlocked": false,
+            "contextState": "missing",
+            "reason": "not_started"
+          },
+          "loaded": 0,
+          "events": [
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122353506
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122353506
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122353531
+            },
+            {
+              "id": "bgm-gameplay-intense-layer",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+              "timestamp": 1783122353557
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-01.mp3",
+              "timestamp": 1783122353584
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122353589
+            },
+            {
+              "id": "sfx-paddle-hit-center",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-center-01.mp3",
+              "timestamp": 1783122353609
+            },
+            {
+              "id": "sfx-paddle-hit-edge",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-edge-03.mp3",
+              "timestamp": 1783122353635
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-wall-hit-04.mp3",
+              "timestamp": 1783122353662
+            },
+            {
+              "id": "sfx-ceiling-hit",
+              "status": "silent",
+              "path": "/assets/audio/sfx-ceiling-hit-04.mp3",
+              "timestamp": 1783122353688
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-hit-03.mp3",
+              "timestamp": 1783122353715
+            },
+            {
+              "id": "sfx-brick-break-red",
+              "status": "silent",
+              "path": "/assets/audio/sfx-brick-break-red-01.mp3",
+              "timestamp": 1783122353741
+            },
+            {
+              "id": "sfx-brick-break-blue",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-blue-03.mp3",
+              "timestamp": 1783122353767
+            },
+            {
+              "id": "sfx-brick-break-green",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-green-02.mp3",
+              "timestamp": 1783122353793
+            },
+            {
+              "id": "sfx-brick-break-yellow",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-yellow-03.mp3",
+              "timestamp": 1783122353819
+            },
+            {
+              "id": "sfx-brick-break-purple",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-purple-03.mp3",
+              "timestamp": 1783122353845
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122353871
+            },
+            {
+              "id": "sfx-combo-small",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-small-02.mp3",
+              "timestamp": 1783122353897
+            },
+            {
+              "id": "sfx-combo-large",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-large-02.mp3",
+              "timestamp": 1783122353921
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "muted",
+              "path": "/assets/audio/sfx-ball-lost-02.mp3",
+              "timestamp": 1783122353947
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122353974
+            },
+            {
+              "id": "sfx-level-complete",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-complete-02.mp3",
+              "timestamp": 1783122354000
+            },
+            {
+              "id": "sfx-level-toast-in",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-toast-in-02.mp3",
+              "timestamp": 1783122354026
+            },
+            {
+              "id": "sfx-level-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-start-01.mp3",
+              "timestamp": 1783122354052
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-01.mp3",
+              "timestamp": 1783122354077
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122354080
+            },
+            {
+              "id": "sfx-restart",
+              "status": "muted",
+              "path": "/assets/audio/sfx-restart-02.mp3",
+              "timestamp": 1783122354082
+            },
+            {
+              "id": "sfx-reset-score",
+              "status": "muted",
+              "path": "/assets/audio/sfx-reset-score-01.mp3",
+              "timestamp": 1783122354106
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-02.mp3",
+              "timestamp": 1783122354131
+            },
+            {
+              "id": "sfx-panel-open",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-open-02.mp3",
+              "timestamp": 1783122354156
+            },
+            {
+              "id": "sfx-panel-close",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-close-01.mp3",
+              "timestamp": 1783122354182
+            },
+            {
+              "id": "sfx-theme-toggle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-theme-toggle-02.mp3",
+              "timestamp": 1783122354207
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122354233
+            },
+            {
+              "id": "sfx-powerup-spawn",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-spawn-02.mp3",
+              "timestamp": 1783122354258
+            },
+            {
+              "id": "sfx-powerup-collect",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-collect-01.mp3",
+              "timestamp": 1783122354285
+            },
+            {
+              "id": "sfx-powerup-activate-multiball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+              "timestamp": 1783122354310
+            },
+            {
+              "id": "sfx-powerup-activate-wide-paddle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-wide-paddle-02.mp3",
+              "timestamp": 1783122354337
+            },
+            {
+              "id": "sfx-powerup-activate-slow-ball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-slow-ball-02.mp3",
+              "timestamp": 1783122354362
+            },
+            {
+              "id": "sfx-powerup-activate-laser-fan",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+              "timestamp": 1783122354388
+            },
+            {
+              "id": "sfx-powerup-expire",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-expire-01.mp3",
+              "timestamp": 1783122354414
+            },
+            {
+              "id": "sfx-highscore-new",
+              "status": "muted",
+              "path": "/assets/audio/sfx-highscore-new-02.mp3",
+              "timestamp": 1783122354438
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122354465
+            },
+            {
+              "id": "sfx-error-soft",
+              "status": "silent",
+              "path": "/assets/audio/sfx-error-soft-02.mp3",
+              "timestamp": 1783122354490
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-02.mp3",
+              "timestamp": 1783122354682
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-02.mp3",
+              "timestamp": 1783122355283
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122355890
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122355890
+            }
+          ]
+        },
+        "cacheNames": [
+          "breakout-cache-20260703234434",
+          "breakout-asset-cache-v1"
+        ],
+        "cachedAudioPaths": []
+      },
+      "enabled": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "heading": "Brikaya",
+        "soundButton": {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "ariaPressed": "true"
+        },
+        "audioState": {
+          "muted": false,
+          "unlocked": true,
+          "contextState": "running",
+          "lastUnlockResult": {
+            "unlocked": true,
+            "contextState": "running",
+            "reason": "already_running"
+          },
+          "loaded": 1,
+          "events": [
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122353506
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122353506
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122353531
+            },
+            {
+              "id": "bgm-gameplay-intense-layer",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+              "timestamp": 1783122353557
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-01.mp3",
+              "timestamp": 1783122353584
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122353589
+            },
+            {
+              "id": "sfx-paddle-hit-center",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-center-01.mp3",
+              "timestamp": 1783122353609
+            },
+            {
+              "id": "sfx-paddle-hit-edge",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-edge-03.mp3",
+              "timestamp": 1783122353635
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-wall-hit-04.mp3",
+              "timestamp": 1783122353662
+            },
+            {
+              "id": "sfx-ceiling-hit",
+              "status": "silent",
+              "path": "/assets/audio/sfx-ceiling-hit-04.mp3",
+              "timestamp": 1783122353688
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-hit-03.mp3",
+              "timestamp": 1783122353715
+            },
+            {
+              "id": "sfx-brick-break-red",
+              "status": "silent",
+              "path": "/assets/audio/sfx-brick-break-red-01.mp3",
+              "timestamp": 1783122353741
+            },
+            {
+              "id": "sfx-brick-break-blue",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-blue-03.mp3",
+              "timestamp": 1783122353767
+            },
+            {
+              "id": "sfx-brick-break-green",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-green-02.mp3",
+              "timestamp": 1783122353793
+            },
+            {
+              "id": "sfx-brick-break-yellow",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-yellow-03.mp3",
+              "timestamp": 1783122353819
+            },
+            {
+              "id": "sfx-brick-break-purple",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-purple-03.mp3",
+              "timestamp": 1783122353845
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122353871
+            },
+            {
+              "id": "sfx-combo-small",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-small-02.mp3",
+              "timestamp": 1783122353897
+            },
+            {
+              "id": "sfx-combo-large",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-large-02.mp3",
+              "timestamp": 1783122353921
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "muted",
+              "path": "/assets/audio/sfx-ball-lost-02.mp3",
+              "timestamp": 1783122353947
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122353974
+            },
+            {
+              "id": "sfx-level-complete",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-complete-02.mp3",
+              "timestamp": 1783122354000
+            },
+            {
+              "id": "sfx-level-toast-in",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-toast-in-02.mp3",
+              "timestamp": 1783122354026
+            },
+            {
+              "id": "sfx-level-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-start-01.mp3",
+              "timestamp": 1783122354052
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-01.mp3",
+              "timestamp": 1783122354077
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122354080
+            },
+            {
+              "id": "sfx-restart",
+              "status": "muted",
+              "path": "/assets/audio/sfx-restart-02.mp3",
+              "timestamp": 1783122354082
+            },
+            {
+              "id": "sfx-reset-score",
+              "status": "muted",
+              "path": "/assets/audio/sfx-reset-score-01.mp3",
+              "timestamp": 1783122354106
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-02.mp3",
+              "timestamp": 1783122354131
+            },
+            {
+              "id": "sfx-panel-open",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-open-02.mp3",
+              "timestamp": 1783122354156
+            },
+            {
+              "id": "sfx-panel-close",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-close-01.mp3",
+              "timestamp": 1783122354182
+            },
+            {
+              "id": "sfx-theme-toggle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-theme-toggle-02.mp3",
+              "timestamp": 1783122354207
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122354233
+            },
+            {
+              "id": "sfx-powerup-spawn",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-spawn-02.mp3",
+              "timestamp": 1783122354258
+            },
+            {
+              "id": "sfx-powerup-collect",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-collect-01.mp3",
+              "timestamp": 1783122354285
+            },
+            {
+              "id": "sfx-powerup-activate-multiball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+              "timestamp": 1783122354310
+            },
+            {
+              "id": "sfx-powerup-activate-wide-paddle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-wide-paddle-02.mp3",
+              "timestamp": 1783122354337
+            },
+            {
+              "id": "sfx-powerup-activate-slow-ball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-slow-ball-02.mp3",
+              "timestamp": 1783122354362
+            },
+            {
+              "id": "sfx-powerup-activate-laser-fan",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+              "timestamp": 1783122354388
+            },
+            {
+              "id": "sfx-powerup-expire",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-expire-01.mp3",
+              "timestamp": 1783122354414
+            },
+            {
+              "id": "sfx-highscore-new",
+              "status": "muted",
+              "path": "/assets/audio/sfx-highscore-new-02.mp3",
+              "timestamp": 1783122354438
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122354465
+            },
+            {
+              "id": "sfx-error-soft",
+              "status": "silent",
+              "path": "/assets/audio/sfx-error-soft-02.mp3",
+              "timestamp": 1783122354490
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-02.mp3",
+              "timestamp": 1783122354682
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-02.mp3",
+              "timestamp": 1783122355283
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122355890
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122355890
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "played",
+              "path": "/assets/audio/sfx-button-press-03.mp3",
+              "timestamp": 1783122355988
+            }
+          ]
+        },
+        "cacheNames": [
+          "breakout-cache-20260703234434",
+          "breakout-asset-cache-v1"
+        ],
+        "cachedAudioPaths": [
+          "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+          "/assets/audio/sfx-button-press-03.mp3"
+        ]
+      },
+      "disabled": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "heading": "Brikaya",
+        "soundButton": {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "ariaPressed": "false"
+        },
+        "audioState": {
+          "muted": true,
+          "unlocked": true,
+          "contextState": "running",
+          "lastUnlockResult": {
+            "unlocked": true,
+            "contextState": "running",
+            "reason": "already_running"
+          },
+          "loaded": 1,
+          "events": [
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122353506
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122353506
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122353531
+            },
+            {
+              "id": "bgm-gameplay-intense-layer",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+              "timestamp": 1783122353557
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-01.mp3",
+              "timestamp": 1783122353584
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122353589
+            },
+            {
+              "id": "sfx-paddle-hit-center",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-center-01.mp3",
+              "timestamp": 1783122353609
+            },
+            {
+              "id": "sfx-paddle-hit-edge",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-edge-03.mp3",
+              "timestamp": 1783122353635
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-wall-hit-04.mp3",
+              "timestamp": 1783122353662
+            },
+            {
+              "id": "sfx-ceiling-hit",
+              "status": "silent",
+              "path": "/assets/audio/sfx-ceiling-hit-04.mp3",
+              "timestamp": 1783122353688
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-hit-03.mp3",
+              "timestamp": 1783122353715
+            },
+            {
+              "id": "sfx-brick-break-red",
+              "status": "silent",
+              "path": "/assets/audio/sfx-brick-break-red-01.mp3",
+              "timestamp": 1783122353741
+            },
+            {
+              "id": "sfx-brick-break-blue",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-blue-03.mp3",
+              "timestamp": 1783122353767
+            },
+            {
+              "id": "sfx-brick-break-green",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-green-02.mp3",
+              "timestamp": 1783122353793
+            },
+            {
+              "id": "sfx-brick-break-yellow",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-yellow-03.mp3",
+              "timestamp": 1783122353819
+            },
+            {
+              "id": "sfx-brick-break-purple",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-purple-03.mp3",
+              "timestamp": 1783122353845
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122353871
+            },
+            {
+              "id": "sfx-combo-small",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-small-02.mp3",
+              "timestamp": 1783122353897
+            },
+            {
+              "id": "sfx-combo-large",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-large-02.mp3",
+              "timestamp": 1783122353921
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "muted",
+              "path": "/assets/audio/sfx-ball-lost-02.mp3",
+              "timestamp": 1783122353947
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122353974
+            },
+            {
+              "id": "sfx-level-complete",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-complete-02.mp3",
+              "timestamp": 1783122354000
+            },
+            {
+              "id": "sfx-level-toast-in",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-toast-in-02.mp3",
+              "timestamp": 1783122354026
+            },
+            {
+              "id": "sfx-level-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-start-01.mp3",
+              "timestamp": 1783122354052
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-01.mp3",
+              "timestamp": 1783122354077
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122354080
+            },
+            {
+              "id": "sfx-restart",
+              "status": "muted",
+              "path": "/assets/audio/sfx-restart-02.mp3",
+              "timestamp": 1783122354082
+            },
+            {
+              "id": "sfx-reset-score",
+              "status": "muted",
+              "path": "/assets/audio/sfx-reset-score-01.mp3",
+              "timestamp": 1783122354106
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-02.mp3",
+              "timestamp": 1783122354131
+            },
+            {
+              "id": "sfx-panel-open",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-open-02.mp3",
+              "timestamp": 1783122354156
+            },
+            {
+              "id": "sfx-panel-close",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-close-01.mp3",
+              "timestamp": 1783122354182
+            },
+            {
+              "id": "sfx-theme-toggle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-theme-toggle-02.mp3",
+              "timestamp": 1783122354207
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122354233
+            },
+            {
+              "id": "sfx-powerup-spawn",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-spawn-02.mp3",
+              "timestamp": 1783122354258
+            },
+            {
+              "id": "sfx-powerup-collect",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-collect-01.mp3",
+              "timestamp": 1783122354285
+            },
+            {
+              "id": "sfx-powerup-activate-multiball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+              "timestamp": 1783122354310
+            },
+            {
+              "id": "sfx-powerup-activate-wide-paddle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-wide-paddle-02.mp3",
+              "timestamp": 1783122354337
+            },
+            {
+              "id": "sfx-powerup-activate-slow-ball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-slow-ball-02.mp3",
+              "timestamp": 1783122354362
+            },
+            {
+              "id": "sfx-powerup-activate-laser-fan",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+              "timestamp": 1783122354388
+            },
+            {
+              "id": "sfx-powerup-expire",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-expire-01.mp3",
+              "timestamp": 1783122354414
+            },
+            {
+              "id": "sfx-highscore-new",
+              "status": "muted",
+              "path": "/assets/audio/sfx-highscore-new-02.mp3",
+              "timestamp": 1783122354438
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122354465
+            },
+            {
+              "id": "sfx-error-soft",
+              "status": "silent",
+              "path": "/assets/audio/sfx-error-soft-02.mp3",
+              "timestamp": 1783122354490
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-02.mp3",
+              "timestamp": 1783122354682
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-02.mp3",
+              "timestamp": 1783122355283
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122355890
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122355890
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "played",
+              "path": "/assets/audio/sfx-button-press-03.mp3",
+              "timestamp": 1783122355988
+            }
+          ]
+        },
+        "cacheNames": [
+          "breakout-cache-20260703234434",
+          "breakout-asset-cache-v1"
+        ],
+        "cachedAudioPaths": [
+          "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+          "/assets/audio/sfx-button-press-02.mp3",
+          "/assets/audio/sfx-button-press-03.mp3"
+        ]
+      },
+      "reenabled": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "heading": "Brikaya",
+        "soundButton": {
+          "text": "♪",
+          "ariaLabel": "Som",
+          "title": "Som",
+          "ariaPressed": "true"
+        },
+        "audioState": {
+          "muted": false,
+          "unlocked": true,
+          "contextState": "running",
+          "lastUnlockResult": {
+            "unlocked": true,
+            "contextState": "running",
+            "reason": "already_running"
+          },
+          "loaded": 28,
+          "events": [
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122353506
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122353506
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122353531
+            },
+            {
+              "id": "bgm-gameplay-intense-layer",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+              "timestamp": 1783122353557
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-01.mp3",
+              "timestamp": 1783122353584
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122353589
+            },
+            {
+              "id": "sfx-paddle-hit-center",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-center-01.mp3",
+              "timestamp": 1783122353609
+            },
+            {
+              "id": "sfx-paddle-hit-edge",
+              "status": "muted",
+              "path": "/assets/audio/sfx-paddle-hit-edge-03.mp3",
+              "timestamp": 1783122353635
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-wall-hit-04.mp3",
+              "timestamp": 1783122353662
+            },
+            {
+              "id": "sfx-ceiling-hit",
+              "status": "silent",
+              "path": "/assets/audio/sfx-ceiling-hit-04.mp3",
+              "timestamp": 1783122353688
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-hit-03.mp3",
+              "timestamp": 1783122353715
+            },
+            {
+              "id": "sfx-brick-break-red",
+              "status": "silent",
+              "path": "/assets/audio/sfx-brick-break-red-01.mp3",
+              "timestamp": 1783122353741
+            },
+            {
+              "id": "sfx-brick-break-blue",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-blue-03.mp3",
+              "timestamp": 1783122353767
+            },
+            {
+              "id": "sfx-brick-break-green",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-green-02.mp3",
+              "timestamp": 1783122353793
+            },
+            {
+              "id": "sfx-brick-break-yellow",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-yellow-03.mp3",
+              "timestamp": 1783122353819
+            },
+            {
+              "id": "sfx-brick-break-purple",
+              "status": "muted",
+              "path": "/assets/audio/sfx-brick-break-purple-03.mp3",
+              "timestamp": 1783122353845
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122353871
+            },
+            {
+              "id": "sfx-combo-small",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-small-02.mp3",
+              "timestamp": 1783122353897
+            },
+            {
+              "id": "sfx-combo-large",
+              "status": "muted",
+              "path": "/assets/audio/sfx-combo-large-02.mp3",
+              "timestamp": 1783122353921
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "muted",
+              "path": "/assets/audio/sfx-ball-lost-02.mp3",
+              "timestamp": 1783122353947
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122353974
+            },
+            {
+              "id": "sfx-level-complete",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-complete-02.mp3",
+              "timestamp": 1783122354000
+            },
+            {
+              "id": "sfx-level-toast-in",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-toast-in-02.mp3",
+              "timestamp": 1783122354026
+            },
+            {
+              "id": "sfx-level-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-level-start-01.mp3",
+              "timestamp": 1783122354052
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-01.mp3",
+              "timestamp": 1783122354077
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-03.mp3",
+              "timestamp": 1783122354080
+            },
+            {
+              "id": "sfx-restart",
+              "status": "muted",
+              "path": "/assets/audio/sfx-restart-02.mp3",
+              "timestamp": 1783122354082
+            },
+            {
+              "id": "sfx-reset-score",
+              "status": "muted",
+              "path": "/assets/audio/sfx-reset-score-01.mp3",
+              "timestamp": 1783122354106
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "muted",
+              "path": "/assets/audio/sfx-button-press-02.mp3",
+              "timestamp": 1783122354131
+            },
+            {
+              "id": "sfx-panel-open",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-open-02.mp3",
+              "timestamp": 1783122354156
+            },
+            {
+              "id": "sfx-panel-close",
+              "status": "muted",
+              "path": "/assets/audio/sfx-panel-close-01.mp3",
+              "timestamp": 1783122354182
+            },
+            {
+              "id": "sfx-theme-toggle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-theme-toggle-02.mp3",
+              "timestamp": 1783122354207
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122354233
+            },
+            {
+              "id": "sfx-powerup-spawn",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-spawn-02.mp3",
+              "timestamp": 1783122354258
+            },
+            {
+              "id": "sfx-powerup-collect",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-collect-01.mp3",
+              "timestamp": 1783122354285
+            },
+            {
+              "id": "sfx-powerup-activate-multiball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+              "timestamp": 1783122354310
+            },
+            {
+              "id": "sfx-powerup-activate-wide-paddle",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-wide-paddle-02.mp3",
+              "timestamp": 1783122354337
+            },
+            {
+              "id": "sfx-powerup-activate-slow-ball",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-slow-ball-02.mp3",
+              "timestamp": 1783122354362
+            },
+            {
+              "id": "sfx-powerup-activate-laser-fan",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+              "timestamp": 1783122354388
+            },
+            {
+              "id": "sfx-powerup-expire",
+              "status": "muted",
+              "path": "/assets/audio/sfx-powerup-expire-01.mp3",
+              "timestamp": 1783122354414
+            },
+            {
+              "id": "sfx-highscore-new",
+              "status": "muted",
+              "path": "/assets/audio/sfx-highscore-new-02.mp3",
+              "timestamp": 1783122354438
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122354465
+            },
+            {
+              "id": "sfx-error-soft",
+              "status": "silent",
+              "path": "/assets/audio/sfx-error-soft-02.mp3",
+              "timestamp": 1783122354490
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-02.mp3",
+              "timestamp": 1783122354682
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "muted",
+              "path": "/assets/audio/sfx-score-tick-02.mp3",
+              "timestamp": 1783122355283
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "muted",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122355890
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "muted",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122355890
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "played",
+              "path": "/assets/audio/sfx-button-press-03.mp3",
+              "timestamp": 1783122355988
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "played",
+              "path": "/assets/audio/sfx-button-press-02.mp3",
+              "timestamp": 1783122356106
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "played",
+              "path": "/assets/audio/sfx-button-press-04.mp3",
+              "timestamp": 1783122356174
+            },
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122356579
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122356627
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122356627
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122356627
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122356627
+            },
+            {
+              "id": "bgm-gameplay-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+              "timestamp": 1783122356627
+            },
+            {
+              "id": "sfx-brick-break-red",
+              "status": "silent",
+              "path": "/assets/audio/sfx-brick-break-red-02.mp3",
+              "timestamp": 1783122356706
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "played",
+              "path": "/assets/audio/sfx-score-tick-02.mp3",
+              "timestamp": 1783122356711
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-hit-05.mp3",
+              "timestamp": 1783122356733
+            },
+            {
+              "id": "bgm-gameplay-intense-layer",
+              "status": "played",
+              "path": "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+              "timestamp": 1783122356867
+            },
+            {
+              "id": "sfx-game-start",
+              "status": "played",
+              "path": "/assets/audio/sfx-game-start-02.mp3",
+              "timestamp": 1783122356898
+            },
+            {
+              "id": "sfx-paddle-hit-center",
+              "status": "played",
+              "path": "/assets/audio/sfx-paddle-hit-center-04.mp3",
+              "timestamp": 1783122356949
+            },
+            {
+              "id": "sfx-paddle-hit-edge",
+              "status": "played",
+              "path": "/assets/audio/sfx-paddle-hit-edge-02.mp3",
+              "timestamp": 1783122357011
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "played",
+              "path": "/assets/audio/sfx-wall-hit-05.mp3",
+              "timestamp": 1783122357067
+            },
+            {
+              "id": "sfx-ceiling-hit",
+              "status": "silent",
+              "path": "/assets/audio/sfx-ceiling-hit-02.mp3",
+              "timestamp": 1783122357092
+            },
+            {
+              "id": "sfx-brick-hit",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-hit-02.mp3",
+              "timestamp": 1783122357124
+            },
+            {
+              "id": "sfx-brick-break-red",
+              "status": "silent",
+              "path": "/assets/audio/sfx-brick-break-red-02.mp3",
+              "timestamp": 1783122357150
+            },
+            {
+              "id": "sfx-wall-hit",
+              "status": "played",
+              "path": "/assets/audio/sfx-wall-hit-05.mp3",
+              "timestamp": 1783122357156
+            },
+            {
+              "id": "sfx-brick-break-blue",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-break-blue-03.mp3",
+              "timestamp": 1783122357179
+            },
+            {
+              "id": "sfx-brick-break-green",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-break-green-03.mp3",
+              "timestamp": 1783122357210
+            },
+            {
+              "id": "sfx-brick-break-yellow",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-break-yellow-01.mp3",
+              "timestamp": 1783122357261
+            },
+            {
+              "id": "sfx-brick-break-purple",
+              "status": "played",
+              "path": "/assets/audio/sfx-brick-break-purple-02.mp3",
+              "timestamp": 1783122357292
+            },
+            {
+              "id": "sfx-score-tick",
+              "status": "played",
+              "path": "/assets/audio/sfx-score-tick-02.mp3",
+              "timestamp": 1783122357318
+            },
+            {
+              "id": "sfx-combo-small",
+              "status": "played",
+              "path": "/assets/audio/sfx-combo-small-01.mp3",
+              "timestamp": 1783122357350
+            },
+            {
+              "id": "sfx-combo-large",
+              "status": "played",
+              "path": "/assets/audio/sfx-combo-large-01.mp3",
+              "timestamp": 1783122357383
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "played",
+              "path": "/assets/audio/sfx-ball-lost-01.mp3",
+              "timestamp": 1783122357417
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "played",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122357456
+            },
+            {
+              "id": "sfx-level-complete",
+              "status": "played",
+              "path": "/assets/audio/sfx-level-complete-01.mp3",
+              "timestamp": 1783122357494
+            },
+            {
+              "id": "sfx-level-toast-in",
+              "status": "played",
+              "path": "/assets/audio/sfx-level-toast-in-02.mp3",
+              "timestamp": 1783122357525
+            },
+            {
+              "id": "sfx-level-start",
+              "status": "played",
+              "path": "/assets/audio/sfx-level-start-02.mp3",
+              "timestamp": 1783122357580
+            },
+            {
+              "id": "sfx-restart",
+              "status": "played",
+              "path": "/assets/audio/sfx-restart-01.mp3",
+              "timestamp": 1783122357612
+            },
+            {
+              "id": "sfx-reset-score",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-reset-score-01.mp3",
+              "timestamp": 1783122357638
+            },
+            {
+              "id": "sfx-button-press",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-button-press-01.mp3",
+              "timestamp": 1783122357664
+            },
+            {
+              "id": "sfx-panel-open",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-panel-open-02.mp3",
+              "timestamp": 1783122357688
+            },
+            {
+              "id": "sfx-game-over",
+              "status": "played",
+              "path": "/assets/audio/sfx-game-over-01.mp3",
+              "timestamp": 1783122357740
+            },
+            {
+              "id": "bgm-menu-loop-main",
+              "status": "played",
+              "path": "/assets/audio/bgm-menu-loop-main-01.mp3",
+              "timestamp": 1783122357740
+            },
+            {
+              "id": "sfx-panel-close",
+              "status": "played",
+              "path": "/assets/audio/sfx-panel-close-02.mp3",
+              "timestamp": 1783122357741
+            },
+            {
+              "id": "sfx-ball-lost",
+              "status": "played",
+              "path": "/assets/audio/sfx-ball-lost-02.mp3",
+              "timestamp": 1783122357750
+            },
+            {
+              "id": "sfx-theme-toggle",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-theme-toggle-01.mp3",
+              "timestamp": 1783122357850
+            },
+            {
+              "id": "sfx-ad-placeholder-none",
+              "status": "silent",
+              "path": null,
+              "timestamp": 1783122357875
+            },
+            {
+              "id": "sfx-powerup-spawn",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-powerup-spawn-02.mp3",
+              "timestamp": 1783122357901
+            },
+            {
+              "id": "sfx-powerup-collect",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-powerup-collect-02.mp3",
+              "timestamp": 1783122357927
+            },
+            {
+              "id": "sfx-powerup-activate-multiball",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+              "timestamp": 1783122357953
+            },
+            {
+              "id": "sfx-powerup-activate-wide-paddle",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-powerup-activate-wide-paddle-02.mp3",
+              "timestamp": 1783122357978
+            },
+            {
+              "id": "sfx-powerup-activate-slow-ball",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-powerup-activate-slow-ball-02.mp3",
+              "timestamp": 1783122358003
+            },
+            {
+              "id": "sfx-powerup-activate-laser-fan",
+              "status": "played",
+              "path": "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+              "timestamp": 1783122358034
+            },
+            {
+              "id": "sfx-powerup-expire",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-powerup-expire-01.mp3",
+              "timestamp": 1783122358059
+            },
+            {
+              "id": "sfx-highscore-new",
+              "status": "blocked",
+              "path": "/assets/audio/sfx-highscore-new-02.mp3",
+              "timestamp": 1783122358084
+            },
+            {
+              "id": "sfx-offline-ready",
+              "status": "silent",
+              "path": "/assets/audio/sfx-offline-ready-01.mp3",
+              "timestamp": 1783122358109
+            },
+            {
+              "id": "sfx-error-soft",
+              "status": "silent",
+              "path": "/assets/audio/sfx-error-soft-02.mp3",
+              "timestamp": 1783122358134
+            }
+          ]
+        },
+        "cacheNames": [
+          "breakout-cache-20260703234434",
+          "breakout-asset-cache-v1"
+        ],
+        "cachedAudioPaths": [
+          "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+          "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+          "/assets/audio/bgm-menu-loop-main-01.mp3",
+          "/assets/audio/sfx-ball-lost-01.mp3",
+          "/assets/audio/sfx-ball-lost-02.mp3",
+          "/assets/audio/sfx-brick-break-blue-03.mp3",
+          "/assets/audio/sfx-brick-break-green-03.mp3",
+          "/assets/audio/sfx-brick-break-purple-02.mp3",
+          "/assets/audio/sfx-brick-break-yellow-01.mp3",
+          "/assets/audio/sfx-brick-hit-02.mp3",
+          "/assets/audio/sfx-brick-hit-05.mp3",
+          "/assets/audio/sfx-button-press-02.mp3",
+          "/assets/audio/sfx-button-press-03.mp3",
+          "/assets/audio/sfx-button-press-04.mp3",
+          "/assets/audio/sfx-combo-large-01.mp3",
+          "/assets/audio/sfx-combo-small-01.mp3",
+          "/assets/audio/sfx-game-over-01.mp3",
+          "/assets/audio/sfx-game-start-02.mp3",
+          "/assets/audio/sfx-level-complete-01.mp3",
+          "/assets/audio/sfx-level-start-02.mp3",
+          "/assets/audio/sfx-level-toast-in-02.mp3",
+          "/assets/audio/sfx-paddle-hit-center-04.mp3",
+          "/assets/audio/sfx-paddle-hit-edge-02.mp3",
+          "/assets/audio/sfx-panel-close-02.mp3",
+          "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+          "/assets/audio/sfx-restart-01.mp3",
+          "/assets/audio/sfx-score-tick-02.mp3",
+          "/assets/audio/sfx-wall-hit-05.mp3"
+        ]
+      }
+    }
+  ],
+  "expectedAudioIds": [
+    "bgm-menu-loop-main",
+    "bgm-gameplay-loop-main",
+    "bgm-gameplay-intense-layer",
+    "sfx-game-start",
+    "sfx-paddle-hit-center",
+    "sfx-paddle-hit-edge",
+    "sfx-wall-hit",
+    "sfx-ceiling-hit",
+    "sfx-brick-hit",
+    "sfx-brick-break-red",
+    "sfx-brick-break-blue",
+    "sfx-brick-break-green",
+    "sfx-brick-break-yellow",
+    "sfx-brick-break-purple",
+    "sfx-score-tick",
+    "sfx-combo-small",
+    "sfx-combo-large",
+    "sfx-ball-lost",
+    "sfx-game-over",
+    "sfx-level-complete",
+    "sfx-level-toast-in",
+    "sfx-level-start",
+    "sfx-restart",
+    "sfx-reset-score",
+    "sfx-button-press",
+    "sfx-panel-open",
+    "sfx-panel-close",
+    "sfx-theme-toggle",
+    "sfx-ad-placeholder-none",
+    "sfx-powerup-spawn",
+    "sfx-powerup-collect",
+    "sfx-powerup-activate-multiball",
+    "sfx-powerup-activate-wide-paddle",
+    "sfx-powerup-activate-slow-ball",
+    "sfx-powerup-activate-laser-fan",
+    "sfx-powerup-expire",
+    "sfx-highscore-new",
+    "sfx-offline-ready",
+    "sfx-error-soft"
+  ],
+  "emittedAudioIds": [
+    "bgm-gameplay-intense-layer",
+    "bgm-gameplay-loop-main",
+    "bgm-menu-loop-main",
+    "sfx-ad-placeholder-none",
+    "sfx-ball-lost",
+    "sfx-brick-break-blue",
+    "sfx-brick-break-green",
+    "sfx-brick-break-purple",
+    "sfx-brick-break-red",
+    "sfx-brick-break-yellow",
+    "sfx-brick-hit",
+    "sfx-button-press",
+    "sfx-ceiling-hit",
+    "sfx-combo-large",
+    "sfx-combo-small",
+    "sfx-error-soft",
+    "sfx-game-over",
+    "sfx-game-start",
+    "sfx-highscore-new",
+    "sfx-level-complete",
+    "sfx-level-start",
+    "sfx-level-toast-in",
+    "sfx-offline-ready",
+    "sfx-paddle-hit-center",
+    "sfx-paddle-hit-edge",
+    "sfx-panel-close",
+    "sfx-panel-open",
+    "sfx-powerup-activate-laser-fan",
+    "sfx-powerup-activate-multiball",
+    "sfx-powerup-activate-slow-ball",
+    "sfx-powerup-activate-wide-paddle",
+    "sfx-powerup-collect",
+    "sfx-powerup-expire",
+    "sfx-powerup-spawn",
+    "sfx-reset-score",
+    "sfx-restart",
+    "sfx-score-tick",
+    "sfx-theme-toggle",
+    "sfx-wall-hit"
+  ],
+  "localAudioPaths": [
+    "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+    "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+    "/assets/audio/bgm-menu-loop-main-01.mp3",
+    "/assets/audio/sfx-ball-lost-01.mp3",
+    "/assets/audio/sfx-ball-lost-02.mp3",
+    "/assets/audio/sfx-brick-break-blue-01.mp3",
+    "/assets/audio/sfx-brick-break-blue-02.mp3",
+    "/assets/audio/sfx-brick-break-blue-03.mp3",
+    "/assets/audio/sfx-brick-break-green-01.mp3",
+    "/assets/audio/sfx-brick-break-green-02.mp3",
+    "/assets/audio/sfx-brick-break-green-03.mp3",
+    "/assets/audio/sfx-brick-break-purple-01.mp3",
+    "/assets/audio/sfx-brick-break-purple-02.mp3",
+    "/assets/audio/sfx-brick-break-purple-03.mp3",
+    "/assets/audio/sfx-brick-break-red-01.mp3",
+    "/assets/audio/sfx-brick-break-red-02.mp3",
+    "/assets/audio/sfx-brick-break-red-03.mp3",
+    "/assets/audio/sfx-brick-break-yellow-01.mp3",
+    "/assets/audio/sfx-brick-break-yellow-02.mp3",
+    "/assets/audio/sfx-brick-break-yellow-03.mp3",
+    "/assets/audio/sfx-brick-hit-01.mp3",
+    "/assets/audio/sfx-brick-hit-02.mp3",
+    "/assets/audio/sfx-brick-hit-03.mp3",
+    "/assets/audio/sfx-brick-hit-04.mp3",
+    "/assets/audio/sfx-brick-hit-05.mp3",
+    "/assets/audio/sfx-button-press-01.mp3",
+    "/assets/audio/sfx-button-press-02.mp3",
+    "/assets/audio/sfx-button-press-03.mp3",
+    "/assets/audio/sfx-button-press-04.mp3",
+    "/assets/audio/sfx-ceiling-hit-01.mp3",
+    "/assets/audio/sfx-ceiling-hit-02.mp3",
+    "/assets/audio/sfx-ceiling-hit-03.mp3",
+    "/assets/audio/sfx-ceiling-hit-04.mp3",
+    "/assets/audio/sfx-combo-large-01.mp3",
+    "/assets/audio/sfx-combo-large-02.mp3",
+    "/assets/audio/sfx-combo-small-01.mp3",
+    "/assets/audio/sfx-combo-small-02.mp3",
+    "/assets/audio/sfx-error-soft-01.mp3",
+    "/assets/audio/sfx-error-soft-02.mp3",
+    "/assets/audio/sfx-game-over-01.mp3",
+    "/assets/audio/sfx-game-start-01.mp3",
+    "/assets/audio/sfx-game-start-02.mp3",
+    "/assets/audio/sfx-highscore-new-01.mp3",
+    "/assets/audio/sfx-highscore-new-02.mp3",
+    "/assets/audio/sfx-level-complete-01.mp3",
+    "/assets/audio/sfx-level-complete-02.mp3",
+    "/assets/audio/sfx-level-start-01.mp3",
+    "/assets/audio/sfx-level-start-02.mp3",
+    "/assets/audio/sfx-level-toast-in-01.mp3",
+    "/assets/audio/sfx-level-toast-in-02.mp3",
+    "/assets/audio/sfx-offline-ready-01.mp3",
+    "/assets/audio/sfx-paddle-hit-center-01.mp3",
+    "/assets/audio/sfx-paddle-hit-center-02.mp3",
+    "/assets/audio/sfx-paddle-hit-center-03.mp3",
+    "/assets/audio/sfx-paddle-hit-center-04.mp3",
+    "/assets/audio/sfx-paddle-hit-edge-01.mp3",
+    "/assets/audio/sfx-paddle-hit-edge-02.mp3",
+    "/assets/audio/sfx-paddle-hit-edge-03.mp3",
+    "/assets/audio/sfx-paddle-hit-edge-04.mp3",
+    "/assets/audio/sfx-panel-close-01.mp3",
+    "/assets/audio/sfx-panel-close-02.mp3",
+    "/assets/audio/sfx-panel-open-01.mp3",
+    "/assets/audio/sfx-panel-open-02.mp3",
+    "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+    "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+    "/assets/audio/sfx-powerup-activate-multiball-02.mp3",
+    "/assets/audio/sfx-powerup-activate-slow-ball-01.mp3",
+    "/assets/audio/sfx-powerup-activate-slow-ball-02.mp3",
+    "/assets/audio/sfx-powerup-activate-wide-paddle-01.mp3",
+    "/assets/audio/sfx-powerup-activate-wide-paddle-02.mp3",
+    "/assets/audio/sfx-powerup-collect-01.mp3",
+    "/assets/audio/sfx-powerup-collect-02.mp3",
+    "/assets/audio/sfx-powerup-collect-03.mp3",
+    "/assets/audio/sfx-powerup-expire-01.mp3",
+    "/assets/audio/sfx-powerup-expire-02.mp3",
+    "/assets/audio/sfx-powerup-spawn-01.mp3",
+    "/assets/audio/sfx-powerup-spawn-02.mp3",
+    "/assets/audio/sfx-powerup-spawn-03.mp3",
+    "/assets/audio/sfx-reset-score-01.mp3",
+    "/assets/audio/sfx-restart-01.mp3",
+    "/assets/audio/sfx-restart-02.mp3",
+    "/assets/audio/sfx-score-tick-01.mp3",
+    "/assets/audio/sfx-score-tick-02.mp3",
+    "/assets/audio/sfx-score-tick-03.mp3",
+    "/assets/audio/sfx-theme-toggle-01.mp3",
+    "/assets/audio/sfx-theme-toggle-02.mp3",
+    "/assets/audio/sfx-wall-hit-01.mp3",
+    "/assets/audio/sfx-wall-hit-02.mp3",
+    "/assets/audio/sfx-wall-hit-03.mp3",
+    "/assets/audio/sfx-wall-hit-04.mp3",
+    "/assets/audio/sfx-wall-hit-05.mp3"
+  ],
+  "sameOriginAudioRequests": [
+    "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+    "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+    "/assets/audio/bgm-menu-loop-main-01.mp3",
+    "/assets/audio/sfx-ball-lost-01.mp3",
+    "/assets/audio/sfx-ball-lost-02.mp3",
+    "/assets/audio/sfx-brick-break-blue-01.mp3",
+    "/assets/audio/sfx-brick-break-blue-03.mp3",
+    "/assets/audio/sfx-brick-break-green-03.mp3",
+    "/assets/audio/sfx-brick-break-purple-02.mp3",
+    "/assets/audio/sfx-brick-break-purple-03.mp3",
+    "/assets/audio/sfx-brick-break-yellow-01.mp3",
+    "/assets/audio/sfx-brick-break-yellow-02.mp3",
+    "/assets/audio/sfx-brick-break-yellow-03.mp3",
+    "/assets/audio/sfx-brick-hit-01.mp3",
+    "/assets/audio/sfx-brick-hit-02.mp3",
+    "/assets/audio/sfx-brick-hit-04.mp3",
+    "/assets/audio/sfx-brick-hit-05.mp3",
+    "/assets/audio/sfx-button-press-01.mp3",
+    "/assets/audio/sfx-button-press-02.mp3",
+    "/assets/audio/sfx-button-press-03.mp3",
+    "/assets/audio/sfx-button-press-04.mp3",
+    "/assets/audio/sfx-combo-large-01.mp3",
+    "/assets/audio/sfx-combo-large-02.mp3",
+    "/assets/audio/sfx-combo-small-01.mp3",
+    "/assets/audio/sfx-combo-small-02.mp3",
+    "/assets/audio/sfx-game-over-01.mp3",
+    "/assets/audio/sfx-game-start-01.mp3",
+    "/assets/audio/sfx-game-start-02.mp3",
+    "/assets/audio/sfx-highscore-new-01.mp3",
+    "/assets/audio/sfx-level-complete-01.mp3",
+    "/assets/audio/sfx-level-complete-02.mp3",
+    "/assets/audio/sfx-level-start-01.mp3",
+    "/assets/audio/sfx-level-start-02.mp3",
+    "/assets/audio/sfx-level-toast-in-01.mp3",
+    "/assets/audio/sfx-level-toast-in-02.mp3",
+    "/assets/audio/sfx-paddle-hit-center-02.mp3",
+    "/assets/audio/sfx-paddle-hit-center-03.mp3",
+    "/assets/audio/sfx-paddle-hit-center-04.mp3",
+    "/assets/audio/sfx-paddle-hit-edge-01.mp3",
+    "/assets/audio/sfx-paddle-hit-edge-02.mp3",
+    "/assets/audio/sfx-paddle-hit-edge-04.mp3",
+    "/assets/audio/sfx-panel-close-02.mp3",
+    "/assets/audio/sfx-panel-open-02.mp3",
+    "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+    "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+    "/assets/audio/sfx-powerup-activate-slow-ball-02.mp3",
+    "/assets/audio/sfx-powerup-activate-wide-paddle-01.mp3",
+    "/assets/audio/sfx-powerup-spawn-01.mp3",
+    "/assets/audio/sfx-reset-score-01.mp3",
+    "/assets/audio/sfx-restart-01.mp3",
+    "/assets/audio/sfx-score-tick-01.mp3",
+    "/assets/audio/sfx-score-tick-02.mp3",
+    "/assets/audio/sfx-score-tick-03.mp3",
+    "/assets/audio/sfx-theme-toggle-01.mp3",
+    "/assets/audio/sfx-wall-hit-01.mp3",
+    "/assets/audio/sfx-wall-hit-03.mp3",
+    "/assets/audio/sfx-wall-hit-04.mp3",
+    "/assets/audio/sfx-wall-hit-05.mp3"
+  ],
+  "externalAudioRequests": [],
+  "cachedAudioPaths": [
+    "/assets/audio/bgm-gameplay-intense-layer-01.mp3",
+    "/assets/audio/bgm-gameplay-loop-main-01.mp3",
+    "/assets/audio/bgm-menu-loop-main-01.mp3",
+    "/assets/audio/sfx-ball-lost-01.mp3",
+    "/assets/audio/sfx-ball-lost-02.mp3",
+    "/assets/audio/sfx-brick-break-blue-01.mp3",
+    "/assets/audio/sfx-brick-break-blue-03.mp3",
+    "/assets/audio/sfx-brick-break-green-03.mp3",
+    "/assets/audio/sfx-brick-break-purple-02.mp3",
+    "/assets/audio/sfx-brick-break-purple-03.mp3",
+    "/assets/audio/sfx-brick-break-yellow-01.mp3",
+    "/assets/audio/sfx-brick-break-yellow-02.mp3",
+    "/assets/audio/sfx-brick-break-yellow-03.mp3",
+    "/assets/audio/sfx-brick-hit-01.mp3",
+    "/assets/audio/sfx-brick-hit-02.mp3",
+    "/assets/audio/sfx-brick-hit-04.mp3",
+    "/assets/audio/sfx-brick-hit-05.mp3",
+    "/assets/audio/sfx-button-press-01.mp3",
+    "/assets/audio/sfx-button-press-02.mp3",
+    "/assets/audio/sfx-button-press-03.mp3",
+    "/assets/audio/sfx-button-press-04.mp3",
+    "/assets/audio/sfx-combo-large-01.mp3",
+    "/assets/audio/sfx-combo-large-02.mp3",
+    "/assets/audio/sfx-combo-small-01.mp3",
+    "/assets/audio/sfx-combo-small-02.mp3",
+    "/assets/audio/sfx-game-over-01.mp3",
+    "/assets/audio/sfx-game-start-01.mp3",
+    "/assets/audio/sfx-game-start-02.mp3",
+    "/assets/audio/sfx-highscore-new-01.mp3",
+    "/assets/audio/sfx-level-complete-01.mp3",
+    "/assets/audio/sfx-level-complete-02.mp3",
+    "/assets/audio/sfx-level-start-01.mp3",
+    "/assets/audio/sfx-level-start-02.mp3",
+    "/assets/audio/sfx-level-toast-in-01.mp3",
+    "/assets/audio/sfx-level-toast-in-02.mp3",
+    "/assets/audio/sfx-paddle-hit-center-02.mp3",
+    "/assets/audio/sfx-paddle-hit-center-03.mp3",
+    "/assets/audio/sfx-paddle-hit-center-04.mp3",
+    "/assets/audio/sfx-paddle-hit-edge-01.mp3",
+    "/assets/audio/sfx-paddle-hit-edge-02.mp3",
+    "/assets/audio/sfx-paddle-hit-edge-04.mp3",
+    "/assets/audio/sfx-panel-close-02.mp3",
+    "/assets/audio/sfx-panel-open-02.mp3",
+    "/assets/audio/sfx-powerup-activate-laser-fan-01.mp3",
+    "/assets/audio/sfx-powerup-activate-multiball-01.mp3",
+    "/assets/audio/sfx-powerup-activate-slow-ball-02.mp3",
+    "/assets/audio/sfx-powerup-activate-wide-paddle-01.mp3",
+    "/assets/audio/sfx-powerup-spawn-01.mp3",
+    "/assets/audio/sfx-reset-score-01.mp3",
+    "/assets/audio/sfx-restart-01.mp3",
+    "/assets/audio/sfx-score-tick-01.mp3",
+    "/assets/audio/sfx-score-tick-02.mp3",
+    "/assets/audio/sfx-score-tick-03.mp3",
+    "/assets/audio/sfx-theme-toggle-01.mp3",
+    "/assets/audio/sfx-wall-hit-01.mp3",
+    "/assets/audio/sfx-wall-hit-03.mp3",
+    "/assets/audio/sfx-wall-hit-04.mp3",
+    "/assets/audio/sfx-wall-hit-05.mp3"
+  ],
+  "cacheNames": [
+    "breakout-asset-cache-v1",
+    "breakout-cache-20260703234434"
+  ]
+}

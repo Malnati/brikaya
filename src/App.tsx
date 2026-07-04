@@ -1,7 +1,6 @@
 // src/App.tsx
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import Game, { type GameBoardRect } from "./components/Game";
-import { AdSlotPlaceholder } from "./components/AdSlotPlaceholder";
 import { AppearanceSelector } from "./components/AppearanceSelector";
 import { AudioToggle } from "./components/AudioToggle";
 import { ConsentScreen } from "./components/ConsentScreen";
@@ -321,10 +320,6 @@ export default function App() {
       countdownTimerRefs.current = [];
     };
   }, [audioSink, isInitialCountdownActive]);
-
-  useEffect(() => {
-    audioSink.playAudio(GAME_AUDIO_IDS.AD_PLACEHOLDER_NONE);
-  }, [audioSink]);
 
   useEffect(() => {
     if (isAudioMuted) return undefined;
@@ -777,9 +772,7 @@ export default function App() {
                 onBoardRectChange={handleBoardRectChange}
               />
             </div>
-            <AdSlotPlaceholder variant="bottom" />
           </div>
-          <AdSlotPlaceholder variant="side" />
         </div>
 
         <div className="game-status-region" aria-live="polite">

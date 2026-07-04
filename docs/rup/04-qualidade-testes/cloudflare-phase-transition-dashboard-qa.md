@@ -3,7 +3,7 @@
 
 ## Objetivo
 
-Garantir que a versão publicada no Cloudflare Pages prove os comportamentos de fase, toast, layout mobile e placeholders de publicidade antes de PR, merge ou produção.
+Garantir que a versão publicada no Cloudflare Pages prove os comportamentos de fase, toast, layout mobile e ausência de publicidade visível antes de PR, merge ou produção.
 
 ## Gates obrigatórios
 
@@ -59,9 +59,7 @@ Assertivas mínimas:
 - header e chips visíveis;
 - logs e colisões acessíveis;
 - iPhone 15 sem botões cortados;
-- slot lateral somente quando há espaço;
-- slot inferior não fica entre canvas e controles principais;
-- placeholders de publicidade mantêm distância visual da área jogável.
+- nenhum slot, card, texto ou região acessível de publicidade aparece enquanto não houver anúncio real em escopo.
 
 ## Tema claro/escuro e Design System
 
@@ -84,7 +82,7 @@ Assertivas mínimas:
 
 ## Política de publicidade
 
-- Esta entrega permite apenas placeholders offline com texto `Publicidade`.
+- Enquanto não houver anúncio real aprovado em escopo, a interface não deve renderizar slot, card, texto ou região acessível de publicidade.
 - É proibido adicionar script externo, `adsbygoogle`, `ca-pub-*` ou `data-ad-slot`.
 - A regra aprovada para PWA-only mantém o jogo principal offline após primeiro carregamento; anúncios reais futuros são opcionais, online-only, consentidos quando exigido e nunca necessários para jogar.
 - Em QA offline, anúncios reais futuros devem ficar ocultos ou desativados sem bloquear gameplay, logs, pontuação ou navegação.
@@ -97,7 +95,7 @@ Salvar em `docs/assets/issues/phase-pause-modern-dashboard/evidence/`:
 
 - screenshot iPhone 15 normal;
 - screenshot iPhone 15 com toast;
-- screenshot desktop com placeholders;
+- screenshot desktop sem publicidade visível;
 - JSON do `cloudflare-phase-transition-qa`;
 - JSON do `cloudflare-dashboard-layout-qa`;
 - JSON do `cloudflare-mobile-qa`;
