@@ -7,9 +7,12 @@ const ROBOTS_TXT_PATH = 'public/robots.txt';
 const SITEMAP_XML_PATH = 'public/sitemap.xml';
 const CANONICAL_URL = 'https://brikaya.com/';
 const SITEMAP_URL = 'https://brikaya.com/sitemap.xml';
+const SOCIAL_IMAGE_URL = 'https://brikaya.com/assets/visual/ui/ui-pwa-app-icon.svg';
 const PORTUGUESE_LOCALE = 'pt-BR';
 const DESCRIPTION_META_NAME = 'name="description"';
 const CANONICAL_REL = 'rel="canonical"';
+const OG_IMAGE_PROPERTY = 'property="og:image"';
+const TWITTER_IMAGE_NAME = 'name="twitter:image"';
 const SITEMAP_DIRECTIVE = `Sitemap: ${SITEMAP_URL}`;
 const LOC_TAG = `<loc>${CANONICAL_URL}</loc>`;
 const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8"?>';
@@ -43,6 +46,9 @@ describe('metadados públicos de descoberta do Brikaya', () => {
     expect(html).toContain(DESCRIPTION_META_NAME);
     expect(html).toContain(CANONICAL_REL);
     expect(html).toContain(CANONICAL_URL);
+    expect(html).toContain(OG_IMAGE_PROPERTY);
+    expect(html).toContain(TWITTER_IMAGE_NAME);
+    expect(html).toContain(SOCIAL_IMAGE_URL);
     for (const locale of LOCALIZED_LOCALES) {
       expect(html).toContain(`hreflang="${locale}"`);
     }

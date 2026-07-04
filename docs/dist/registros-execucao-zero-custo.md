@@ -15,6 +15,7 @@ Data UTC: 2026-07-04T02:11:17Z. Escopo: domínio canônico `https://brikaya.com/
 | Baidu Search Resource Platform | Não executado | Fonte oficial exige login para adicionar site. Conta Baidu/local não estava disponível. | Usar somente conta Baidu gratuita se disponível; não ativar ICP/China Network/hospedagem China/serviço pago. |
 | CLASSIND Brasil | Concluído; em triagem | Inscrição processual de Brikaya enviada no Safari/gov.br; confirmação "Inscrição processual completa" exibida; listagem mostra Brikaya com status "Triagem". Evidência sanitizada da sinopse anexada: `docs/assets/issues/multilingual-zero-cost-registrations/evidence/evi-classind-sinopse-brikaya-zero-custo.json`. | Aguardar análise/contato do CLASSIND; aplicar símbolo/descritores públicos quando houver resultado; continuar bloqueando qualquer cobrança. |
 | Buscas gratuitas de marca | Parcial/documentado | Busca web geral não mostrou colisão oficial evidente para `Brikaya`; apareceu risco fonético público `Brekiya`, exigindo busca oficial antes de depósito pago futuro. | Executar bases oficiais nominativas quando login/captcha permitir; não depositar marca. |
+| Cadastros de marketing externos | Documentado; bloqueado antes de compromisso | Plano de Google Ads, Meta Ads, Reddit Ads e TikTok Ads registrado em `docs/dist/pendencias-publicacao-impulsionamento.md`; nenhum cartão, saldo, campanha ativa, pixel, tag, anúncio no jogo ou cobrança foi criado. | O responsável deve ler o documento e decidir qualquer gasto; teto total futuro registrado: R$500. |
 
 Reconferência Chrome autenticada em 2026-07-04: Google Search Console, Bing, Yandex e Naver exibiram o sitemap de `brikaya.com` sem CAPTCHA ativo, cobrança, aprovação administrativa, tag externa ou produto pago aceito nesta rodada. Cloudflare foi usado apenas como leitura de cache/estado; nenhum purge ou mudança de plano foi acionado nesta reconferência.
 
@@ -27,6 +28,7 @@ Reconferência Chrome autenticada em 2026-07-04: Google Search Console, Bing, Ya
 - O arquivo HTML público do Naver é exceção mínima de verificação de posse exigida pelo provedor; o token fica versionado apenas no arquivo público necessário, redigido em docs/evidências/chat.
 - CAPTCHA do Naver deixou de bloquear a sessão; a propriedade foi confirmada e o sitemap foi enviado sem custo.
 - CLASSIND foi submetido apenas após confirmação final explícita do usuário; a confirmação e o status de triagem foram verificados no Safari sem custo.
+- Impulsionamento externo fica preparado apenas por documentação e links canônicos com UTM; cadastros/campanhas param antes de cartão, orçamento ativo ou cobrança.
 
 ## Evidência
 
@@ -48,3 +50,4 @@ Reconferência Chrome autenticada em 2026-07-04: Google Search Console, Bing, Ya
 | Baidu Search Resource Platform | <https://ziyuan.baidu.com/site/index> |
 | Cloudflare China Network | <https://developers.cloudflare.com/china-network/faq/> |
 | CLASSIND jogos/apps | <https://www.gov.br/mj/pt-br/assuntos/seus-direitos/classificacao-1/paginas-classificacao-indicativa/jogos-e-apps> |
+| Plano de impulsionamento externo | `docs/dist/pendencias-publicacao-impulsionamento.md` |

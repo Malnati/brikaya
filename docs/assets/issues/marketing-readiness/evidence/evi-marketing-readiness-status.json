@@ -1,0 +1,67 @@
+{
+  "artifact": "evi-marketing-readiness-status",
+  "generatedAtUtc": "2026-07-04T04:15:24.015Z",
+  "scope": "Brikaya publicacao global e impulsionamento externo sem publicidade no jogo",
+  "canonicalUrl": "https://brikaya.com/",
+  "budgetLimitBrl": 500,
+  "spendAuthorized": false,
+  "paymentCommitmentCreated": false,
+  "runtimeAdsAdded": false,
+  "externalScriptsAdded": false,
+  "marketingRegistrations": [
+    {
+      "service": "Google Ads",
+      "status": "documented-blocked-before-payment",
+      "reason": "account or campaign completion can require billing and payment details"
+    },
+    {
+      "service": "Meta Ads",
+      "status": "documented-blocked-before-first-ad-payment",
+      "reason": "first ad flow requires a payment method"
+    },
+    {
+      "service": "Reddit Ads",
+      "status": "documented-blocked-before-card-and-campaign",
+      "reason": "purchase flow requires card and campaign launch"
+    },
+    {
+      "service": "TikTok Ads",
+      "status": "documented-blocked-by-minimum-budget",
+      "reason": "official minimum campaign and ad group budgets are denominated in USD"
+    },
+    {
+      "service": "Baidu Search Resource Platform",
+      "status": "pending-authorized-free-account",
+      "reason": "login/account unavailable and China paid/regulatory routes remain blocked"
+    }
+  ],
+  "implementedFiles": [
+    "docs/dist/pendencias-publicacao-impulsionamento.md",
+    "src/marketing/campaignLinks.ts",
+    "tests/unit/campaignLinks.test.ts",
+    "src/i18n/i18n.test.tsx",
+    "tests/unit/seoMetadata.test.ts",
+    "index.html"
+  ],
+  "validation": {
+    "status": "passed",
+    "commands": [
+      "node --version -> v23.5.0",
+      "make help",
+      "npm test -- tests/unit/campaignLinks.test.ts src/i18n/i18n.test.tsx tests/unit/seoMetadata.test.ts --runInBand -> 3 suites / 16 tests passed",
+      "npm test -- --runInBand -> 40 suites / 197 tests passed",
+      "npm run test:semantic-file-names -> passed",
+      "npm run test:svg-assets -> passed",
+      "npm run build -> passed",
+      "make cloudflare-env-check -> passed without printing secrets",
+      "make cloudflare-build -> passed",
+      "make cloudflare-deploy -> deployed to brikaya.com",
+      "BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check -> passed",
+      "BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-i18n-seo-qa -> passed",
+      "BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-offline-pwa-qa -> passed",
+      "BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa -> passed",
+      "public https://brikaya.com/ contains og:image/twitter:image SVG metadata and latest bundle -> passed",
+      "secret/id scan for ads IDs and known token markers in changed marketing files -> no matches"
+    ]
+  }
+}

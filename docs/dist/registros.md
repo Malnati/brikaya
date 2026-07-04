@@ -18,6 +18,7 @@ Brikaya será distribuído como PWA/web 100% offline após o primeiro carregamen
 | Naver Search Advisor | Registro gratuito para coreano/Naver, se houver conta Naver autorizada. | R$ 0 | Concluído: site verificado por arquivo HTML público oficial e sitemap enviado sem script runtime. |
 | Baidu Search Resource Platform | Registro gratuito para descoberta em chinês, se houver conta Baidu autorizada. | R$ 0 | Tentar apenas domínio global; bloquear ICP, China Network, hospedagem China e serviço pago. |
 | Buscas gratuitas de marca/nome | Reduz risco de conflito antes de crescer internacionalmente sem criar custo de depósito. | R$ 0 | Pesquisar `Brikaya`, `BrickBreaker`, domínio, logotipo, transliterações e variações por idioma. |
+| Cadastros de marketing externos | Deixar caminho de impulsionamento pronto sem publicidade no jogo. | R$ 0 até o ponto anterior a pagamento | Documentar Google Ads, Meta Ads, Reddit Ads e TikTok Ads em `docs/dist/pendencias-publicacao-impulsionamento.md`; parar antes de cartão, saldo, campanha ativa ou cobrança. |
 
 ### 1.2. Monitorar
 
@@ -257,6 +258,8 @@ Não faz parte do lançamento porque `docs/dist/projeto-pwa.md` mantém anúncio
 - [x] Verificar site no Naver Search Advisor com conta autorizada e enviar sitemap.
 - [ ] Verificar site no Baidu Search Resource Platform com conta autorizada e sem rota China paga.
 - [ ] Salvar resumo de busca gratuita de marca/nome por base oficial.
+- [x] Registrar pendências de publicação, cadastros e impulsionamento externo em `docs/dist/pendencias-publicacao-impulsionamento.md`.
+- [x] Preparar links canônicos de campanha com UTM sem inserir anúncio, pixel, tag ou script externo no jogo.
 
 ### 8.3. Monitoramento futuro
 
@@ -264,6 +267,8 @@ Não faz parte do lançamento porque `docs/dist/projeto-pwa.md` mantém anúncio
 - [ ] Revisar AdSense/H5 somente quando anúncios forem autorizados.
 - [ ] Revisar CMP UK/EEA/CH antes de qualquer anúncio personalizado.
 - [ ] Reavaliar marca registrada paga somente após tração, receita ou risco real de conflito.
+- [ ] Criar contas/campanhas externas somente até o ponto sem compromisso financeiro; qualquer cartão, saldo, orçamento ativo ou cobrança fica para decisão do responsável.
+- [ ] Se o responsável aprovar impulsionamento, respeitar teto total de R$500 e dividir conforme o plano documentado.
 
 ## 9. Fontes oficiais e consulta
 

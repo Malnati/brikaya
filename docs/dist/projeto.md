@@ -11,7 +11,7 @@ Este documento define o plano profundo para ampliar a distribuição internacion
 2. **Licenciamento 100% regular** para código, assets, textos, traduções, marca e materiais promocionais.
 3. **Separação explícita entre monetização por anúncios e impulsionamento pago**:
    - monetização por anúncios: receita futura exibida dentro ou ao redor do jogo, condicionada a aprovação de conta, consentimento e exceção à política offline;
-   - impulsionamento pago: compra de tráfego/campanhas, tratada como custo bloqueado até autorização expressa de orçamento.
+   - impulsionamento pago externo: compra de tráfego/campanhas, tratada como custo bloqueado até autorização expressa de orçamento; a preparação documental e os links UTM ficam em `docs/dist/pendencias-publicacao-impulsionamento.md`.
 
 Este arquivo é um plano documental. Ele **não implementa** i18n, anúncios, AdSense, AdMob, Google Ads, Firebase, scripts externos, mudanças de service worker, mudanças Cloudflare, IDs reais, credenciais ou qualquer alteração de runtime.
 
@@ -435,10 +435,11 @@ Regras para tradução:
 | --- | --- | --- | --- | --- |
 | Fase 0 | Documento de distribuição | Criar `docs/dist/projeto.md`. | Plano versionado com países, i18n, ads e licenciamento. | Nenhum após merge deste PR. |
 | Fase 1 | i18n P0 sem anúncios reais | Implementar `pt-BR`, `en`, `es-419`; fallback `en`; persistência local; `html lang`; QA publicado. | PR próprio com build e QA Cloudflare. | Não inserir ads reais. |
-| Fase 2 | Preparar consentimento e estados de ads | Definir arquitetura `ads_disabled`/`ads_test`/`ads_live`, consentimento e desenho técnico compatível com a exceção aprovada. | Documento técnico + implementação se aprovada. | Ads reais ainda desativados. |
-| Fase 3 | Solicitar AdSense/H5 Games Ads | Preparar site, políticas, conteúdo original, candidatura e documentação de aprovação. | Conta/aprovação fora do Git; IDs reais fora do repositório. | Acesso não garantido; sem segredo no Git. |
-| Fase 4 | Ativar anúncios | Só após aprovação de conta, consentimento, revisão de menores e PR próprio de ativação. | Ads online opcionais em momentos naturais. | Não ativar em modo offline; não ativar sem consentimento onde exigido. |
-| Fase 5 | Expansão P1/P2 | Traduzir `ja`, `ko`, `de`, `fr`, `it`, `id`, `vi` e futuros `fil`/`th` por dados reais. | Roadmap ajustado por retenção, país, CTR orgânico, eCPM e feedback. | Sem tradução automática não revisada em mercados críticos. |
+| Fase 2 | Preparar impulsionamento externo | Documentar pendências por país, orçamento R$500, cadastros possíveis sem contratação e links UTM. | `docs/dist/pendencias-publicacao-impulsionamento.md` + suporte de URL canônica. | Parar antes de cartão, saldo, campanha ativa ou cobrança. |
+| Fase 3 | Preparar consentimento e estados de ads | Definir arquitetura `ads_disabled`/`ads_test`/`ads_live`, consentimento e desenho técnico compatível com a exceção aprovada. | Documento técnico + implementação se aprovada. | Ads reais ainda desativados. |
+| Fase 4 | Solicitar AdSense/H5 Games Ads | Preparar site, políticas, conteúdo original, candidatura e documentação de aprovação. | Conta/aprovação fora do Git; IDs reais fora do repositório. | Acesso não garantido; sem segredo no Git. |
+| Fase 5 | Ativar anúncios | Só após aprovação de conta, consentimento, revisão de menores e PR próprio de ativação. | Ads online opcionais em momentos naturais. | Não ativar em modo offline; não ativar sem consentimento onde exigido. |
+| Fase 6 | Expansão P1/P2 | Traduzir `ja`, `ko`, `de`, `fr`, `it`, `id`, `vi` e futuros `fil`/`th` por dados reais. | Roadmap ajustado por retenção, país, CTR orgânico, eCPM e feedback. | Sem tradução automática não revisada em mercados críticos. |
 
 ## 10. Critérios de aceite deste documento
 
@@ -446,6 +447,7 @@ Regras para tradução:
 - Primeira linha é `<!-- docs/dist/projeto.md -->`.
 - Países e idiomas aparecem em tabela priorizada P0/P1/P2.
 - Google Ads é pago e está marcado como bloqueado sem orçamento explícito.
+- O plano de impulsionamento externo fica separado em `docs/dist/pendencias-publicacao-impulsionamento.md`, com teto futuro R$500 e sem publicidade no jogo.
 - Google Play está fora da rota zero-custo inicial por taxa oficial de US$25.
 - App Store/iOS estão fora da rota zero-custo inicial por Apple Developer Program de US$99/ano.
 - Publicidade real é descrita como futura, online-only, consentida quando exigido e dependente de PR próprio de ativação.
