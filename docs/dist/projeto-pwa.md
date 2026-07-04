@@ -165,29 +165,29 @@ PWA depende de navegador e plataforma. Chrome/Android tende a ser rota forte par
 
 ## 8. Plano PWA-only de i18n e SEO
 
-Esta seção é **plano documental**. Ela não implementa internacionalização, metadados, sitemap, Search Console, rotas localizadas, anúncios, scripts externos, métricas externas ou qualquer mudança de runtime. A implementação deve ocorrer em PR futuro e continuar PWA-only/offline-first.
+Esta seção registra o plano e o estado operacional de i18n/SEO. Em 2026-07-03, a primeira implementação PWA-only/offline-first foi publicada no domínio canônico, sem anúncios reais, scripts externos, métricas externas, credenciais versionadas ou serviço pago.
 
 ### 8.1. Auditoria atual da base PWA
 
 | Área | Estado atual observado | Decisão documental |
 | --- | --- | --- |
-| `index.html` | `html lang="en"`, `<title>Brikaya</title>`, sem `description`, `canonical`, Open Graph ou Twitter Card. | Corrigir em PR futuro de SEO mínimo; não alterar nesta entrega documental. |
+| `index.html` | `html lang="pt-BR"`, título/descrição/canonical, Open Graph, Twitter Card e `hreflang` para 15 locales no domínio canônico. | Manter geração localizada no build e bloquear URLs `.pages.dev` em SEO público. |
 | `manifest.webmanifest` | `name`, `short_name`, `start_url`, `display`, `theme_color`, `background_color`, `scope` e ícone SVG local já existem. | Base PWA está presente; futuras descrições/screenshot metadata precisam seguir assets próprios e offline. |
 | Domínio público | Canônico operacional é `https://brikaya.com/`. | Usar apenas domínio canônico em material público; URLs de preview/Pages são evidência técnica, não destino público. |
-| Conteúdo localizado | Não há rotas localizadas versionadas nesta fase. | Não publicar `hreflang` até existirem URLs localizadas equivalentes e revisadas. |
-| Ads/Search Console | Não há IDs, tags ou verificação real nesta entrega. | Não inserir IDs reais de publisher, chamadas de anúncios, chaves, tokens ou arquivos de verificação sem autorização explícita. |
+| Conteúdo localizado | Rotas públicas equivalentes existem para `pt-BR`, `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th` e `zh-CN`. | Manter catálogo local/offline, preferência local e QA publicado antes de ampliar copy. |
+| Ads/Search Console | Search Console está verificado por DNS TXT e o sitemap localizado foi reenviado; não há anúncios reais, IDs de publisher, tags pagas ou scripts externos. | Aguardar reprocessamento do Google; manter bloqueio para ads, CMP e custos sem tarefa própria aprovada. |
 
 ### 8.2. Fases de i18n PWA-only
 
 | Fase | Locales | Entrega PWA | Critério para avançar |
 | --- | --- | --- | --- |
 | P0 origem | `pt-BR` | Definir texto-base de produto, UX copy e metadados em português brasileiro. | Texto completo, original, sem marca de concorrente e validado no domínio publicado. |
-| P0 internacional | `en`, `es-419` | Catálogo local/offline, metadados e futura rota/página por idioma. | Fallback `en`, revisão humana mínima e QA publicado. |
-| P0 Índia | `en-IN` futuro | Ajustar metadados/copy quando dados reais justificarem; não duplicar produto antes de tração. | Evidência de acesso/retenção por Índia no PWA publicado. |
-| P1 alto valor | `de`, `fr`, `it`, `ja`, `ko` | Localização após P0 provar retenção e descoberta orgânica. | Dados P0, revisão cultural e validação de consentimento antes de ads. |
-| P2 volume SEA | `id`, `vi`, futuro `fil`, `th` | Localizar somente onde volume real justificar custo de revisão. | Dados de acesso/retenção e revisão local mínima. |
+| P0 internacional | `en`, `es-419` | Catálogo local/offline, metadados e rota pública por idioma. | Fallback `en`, revisão humana mínima e QA publicado. |
+| P0 Índia | `en-IN`, `hi-IN` | Rotas públicas e metadados iniciais para validação zero-custo. | Dados reais de acesso/retenção antes de qualquer expansão paga ou campanha. |
+| P1 alto valor | `de`, `fr`, `it`, `ja`, `ko` | Rotas públicas e catálogo inicial para SEO orgânico. | Dados P0, revisão cultural e validação de consentimento antes de ads. |
+| P2 volume SEA | `id`, `vi`, `fil`, `th` | Rotas públicas e catálogo inicial para teste orgânico. | Dados de acesso/retenção e revisão local mínima antes de campanhas ou ads. |
 
-Regras futuras de i18n:
+Regras permanentes de i18n:
 
 - “Brikaya” não traduz.
 - Catálogo deve ser local/offline, tipado e versionado no repositório; não carregar tradução de serviço externo em runtime.
@@ -212,24 +212,24 @@ Regras futuras de i18n:
 | Mobile-first | Conteúdo e ações importantes devem existir e funcionar no mobile. | Não depender de conteúdo só desktop para indexação ou primeira experiência. |
 | Search Console | Verificar domínio e enviar sitemap quando SEO mínimo estiver publicado. | Não versionar arquivo/token real de verificação sem autorização e sem `.env`/segredo tratado. |
 
-### 8.4. Entrega mínima futura de SEO
+### 8.4. Entrega mínima de SEO implementada
 
-A primeira implementação de SEO deve ser pequena e testável:
+A primeira implementação de SEO ficou pequena e testável:
 
-1. atualizar `index.html` com `lang`, título, description, canonical e metadados sociais da versão inicial;
-2. gerar ou versionar `public/robots.txt` e `public/sitemap.xml` apenas com URLs canônicas reais;
-3. manter `https://brikaya.com/` como único destino público;
-4. não adicionar scripts externos, analytics, tags de ads ou verificações reais;
-5. validar `npm run build` e QA publicado no domínio canônico;
-6. documentar Search Console como ação operacional externa quando a página estiver publicada.
+1. `index.html` recebe `lang`, título, description, canonical, metadados sociais e `hreflang`;
+2. `public/robots.txt` e `public/sitemap.xml` usam somente URLs canônicas reais;
+3. `https://brikaya.com/` permanece como único destino público;
+4. nenhum script externo, analytics, tag de ads ou credencial foi adicionado;
+5. `npm run build` e QA publicado validam o domínio canônico;
+6. Search Console foi conferido no Chrome autenticado e o sitemap localizado foi reenviado.
 
-### 8.5. Critérios de aceite futuros para i18n + SEO
+### 8.5. Critérios de aceite para i18n + SEO
 
-- `pt-BR`, `en` e `es-419` têm catálogo local/offline completo antes de ativar seleção pública de idioma.
+- `pt-BR`, `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th` e `zh-CN` têm catálogo local/offline antes de ativar seleção pública de idioma.
 - `html lang` acompanha o idioma ativo.
 - Fallback `en` funciona sem quebrar UI, HUD, menus, toasts, recordes ou logs.
 - Título, description, canonical, Open Graph, sitemap e robots usam somente domínio canônico e assets próprios.
-- `hreflang` só aparece depois de URLs localizadas reais existirem.
+- `hreflang` aparece somente para URLs localizadas reais publicadas no domínio canônico.
 - Nenhum texto público usa marcas de concorrentes, nomes de lojas, promessa de recompensa ou copy copiada.
 - Nenhuma implementação futura insere IDs de publisher, atributos de slot, chamadas de anúncios, chaves, tokens, arquivos de verificação reais ou scripts remotos sem tarefa própria aprovada.
 - Build, testes relevantes e QA publicado passam antes de considerar i18n/SEO prontos.
@@ -267,7 +267,7 @@ A regra atual do projeto exige PWA 100% offline após primeiro carregamento. Ads
 
 > O jogo principal continua offline após primeiro carregamento; anúncios são opcionais, online-only, consentidos quando exigido e nunca necessários para jogar.
 
-Se essa exceção não for aprovada, manter apenas placeholders offline ou nenhuma área de anúncio.
+Estado atual: nenhuma área visual de anúncio deve ser renderizada. Qualquer placeholder futuro exige tarefa própria aprovada e QA publicado para não bloquear jogo, layout ou offline.
 
 ### 9.4. PF/PJ e países-alvo
 
@@ -306,13 +306,13 @@ A rota PWA-only não reduz obrigações de licenciamento. Ela só remove loja/ap
 | Fase | Objetivo | Entrega | Bloqueio |
 | --- | --- | --- | --- |
 | 0 | Documento PWA-only | `docs/dist/projeto-pwa.md` com escopo PWA-only, i18n/SEO, monetização e licenciamento. | Nenhum após merge do PR documental; não implementa runtime. |
-| 1 | SEO mínimo PWA | Planejar e implementar title/description/canonical/Open Graph/sitemap/robots/Search Console em PR próprio. | Sem ads reais, sem IDs sensíveis e sem URLs `.pages.dev` públicas. |
-| 2 | i18n P0 | `pt-BR`, `en`, `es-419`, fallback `en`, `html lang`, preferência local e catálogo offline. | QA publicado obrigatório; `en-IN` fica para metadado/variação futura por dados. |
+| 1 | SEO mínimo PWA | Title/description/canonical/Open Graph/sitemap/robots/Search Console publicados e validados. | Sem ads reais, sem IDs sensíveis e sem URLs `.pages.dev` públicas. |
+| 2 | i18n P0/P1/P2 inicial | 15 locales com rotas públicas, fallback `en`, `html lang`, preferência local e catálogo offline. | QA publicado obrigatório; revisão cultural continua antes de ads ou campanhas. |
 | 3 | Medição zero-custo permitida | Decidir métricas locais/privacidade sem serviço pago. | Não quebrar offline. |
 | 4 | Preparar ads PWA | Base local de privacidade sem ads reais; política offline+ads, CMP quando exigida e estados `ads_disabled`/`ads_test`/`ads_live` em etapa futura. | Aprovação explícita necessária. |
 | 5 | Solicitar AdSense/H5 | Site maduro, conteúdo original, privacidade, titularidade PF/PJ definida. | Acesso não garantido. |
 | 6 | Ativar ads reais | Só após aprovação, consentimento e QA publicado. | Nunca como dependência para jogar. |
-| 7 | Expandir P1/P2 | Locales adicionais guiados por dados reais de acesso/retensão. | Sem tradução sem revisão. |
+| 7 | Otimizar i18n por dados | Ajustar copy, países e futuras páginas por dados reais de acesso/retensão. | Sem campanha paga e sem ads reais sem aprovação própria. |
 
 ## 12. Decisão recomendada PWA-only
 
@@ -333,8 +333,8 @@ Para decidir agora, sem loja, a recomendação é:
 - O documento declara que Google Play, App Store e outras lojas estão fora de escopo.
 - Pesquisa e matriz de países são reinterpretadas para PWA/web.
 - O plano usa SEO, Search Console, link direto, comunidades e instalação por navegador como distribuição principal.
-- A seção de i18n/SEO separa auditoria atual, regras futuras, canonical, `hreflang`, sitemap, robots e Search Console.
-- O documento declara que esta entrega não implementa runtime, sitemap real, Search Console, ads, scripts externos ou credenciais.
+- A seção de i18n/SEO separa auditoria atual, regras permanentes, canonical, `hreflang`, sitemap, robots e Search Console.
+- O documento declara que a implementação atual não adiciona ads, scripts externos, métricas externas ou credenciais versionadas.
 - Monetização é AdSense/H5 Games Ads futura, sem AdMob ou SDK nativo.
 - O conflito offline x ads é explicado como anúncios online opcionais.
 - PF/PJ e Brasil/Paraguai são tratados como titularidade de pagamento, não como exigência por país-alvo.

@@ -26,7 +26,7 @@ KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
 # Target padrão: mostrar help quando make é executado sem argumentos
 .DEFAULT_GOAL := help
 
-.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-domain cloudflare-deploy cloudflare-public-check cloudflare-mobile-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-powerups-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa cloudflare-offline-pwa-qa docker-build docker-up docker-down docker-logs docker-shell
+.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-domain cloudflare-deploy cloudflare-purge-cache cloudflare-public-check cloudflare-mobile-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-powerups-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa cloudflare-offline-pwa-qa cloudflare-i18n-seo-qa docker-build docker-up docker-down docker-logs docker-shell
 
 # Função para matar processos anteriores
 kill-processes:
@@ -79,7 +79,12 @@ cloudflare-deploy: cloudflare-env-check cloudflare-build
 	@node scripts/cloudflare-pages.js ensure-domain
 	@node scripts/cloudflare-pages.js ensure-dns
 	@node scripts/cloudflare-pages.js ensure-pages-dev-redirect
+	@node scripts/cloudflare-pages.js purge-public-cache
 	@node scripts/cloudflare-pages.js verify-public-index
+
+# Limpar cache público do domínio canônico sem alterar dados de origem
+cloudflare-purge-cache: cloudflare-env-check
+	@node scripts/cloudflare-pages.js purge-public-cache
 
 # Validar que o domínio canônico serve o build estático local
 cloudflare-public-check:
@@ -127,6 +132,9 @@ cloudflare-audio-qa:
 
 cloudflare-offline-pwa-qa:
 	@npm run test:cloudflare-offline-pwa
+
+cloudflare-i18n-seo-qa:
+	@npm run test:cloudflare-i18n-seo
 
 # Executar o jogo em modo de desenvolvimento
 dev: kill-processes
@@ -264,6 +272,7 @@ help:
 	@echo "  cloudflare-build     - Gerar build estático para Pages"
 	@echo "  cloudflare-domain    - Garantir domínio canônico e redirect para brikaya.com"
 	@echo "  cloudflare-deploy    - Publicar dist no Cloudflare Pages e manter brikaya.com canônico"
+	@echo "  cloudflare-purge-cache - Limpar cache público de brikaya.com sem alterar origem"
 	@echo "  cloudflare-public-check - Validar que brikaya.com serve o build local"
 	@echo "  cloudflare-mobile-qa - Testar mobile default/logs contra Cloudflare publicado"
 	@echo "  cloudflare-no-score-reset - Validar continuidade após tijolo no Cloudflare publicado"
@@ -279,6 +288,7 @@ help:
 	@echo "  cloudflare-runtime-update-qa - Validar atualização automática contra Cloudflare publicado"
 	@echo "  cloudflare-audio-qa - Validar áudio/cache contra Cloudflare publicado"
 	@echo "  cloudflare-offline-pwa-qa - Validar PWA offline contra Cloudflare publicado"
+	@echo "  cloudflare-i18n-seo-qa - Validar i18n, hreflang, sitemap e SEO no Cloudflare publicado"
 	@echo ""
 	@echo "Builds Nativos:"
 	@echo "  build-pwa      - Gerar build da PWA"

@@ -1,0 +1,66 @@
+{
+  "checkedAt": "2026-07-04T00:48:53.986Z",
+  "baseUrl": "https://brikaya.com/",
+  "localesChecked": [
+    "pt-BR",
+    "en",
+    "es-419",
+    "zh-CN"
+  ],
+  "hreflangLocales": [
+    "pt-BR",
+    "en",
+    "es-419",
+    "en-IN",
+    "hi-IN",
+    "de",
+    "fr",
+    "it",
+    "ja",
+    "ko",
+    "id",
+    "vi",
+    "fil",
+    "th",
+    "zh-CN"
+  ],
+  "htmlResults": [
+    {
+      "url": "https://brikaya.com/",
+      "status": 200,
+      "canonical": "https://brikaya.com/",
+      "locale": "pt-BR"
+    },
+    {
+      "url": "https://brikaya.com/en/",
+      "status": 200,
+      "canonical": "https://brikaya.com/en/",
+      "locale": "en"
+    },
+    {
+      "url": "https://brikaya.com/es-419/",
+      "status": 200,
+      "canonical": "https://brikaya.com/es-419/",
+      "locale": "es-419"
+    },
+    {
+      "url": "https://brikaya.com/zh-CN/",
+      "status": 200,
+      "canonical": "https://brikaya.com/zh-CN/",
+      "locale": "zh-CN"
+    }
+  ],
+  "sitemapRobots": {
+    "sitemapUrl": "https://brikaya.com/sitemap.xml",
+    "robotsUrl": "https://brikaya.com/robots.txt",
+    "sitemapStatus": 200,
+    "robotsStatus": 200
+  },
+  "runtime": {
+    "lang": "zh-CN",
+    "canonical": "https://brikaya.com/zh-CN/",
+    "path": "/zh-CN/",
+    "visibleChinese": true
+  },
+  "screenshot": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-localized-menu.png"
+}

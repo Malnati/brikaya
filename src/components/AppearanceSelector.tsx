@@ -9,6 +9,7 @@ import {
   type ImageSetId,
   type ThemeId,
 } from '../constants/appearance';
+import { useI18n, type TranslationKey } from '../i18n';
 
 interface AppearanceSelectorProps {
   selection: AppearanceSelection;
@@ -23,6 +24,7 @@ interface AppearanceOptionGroupProps<T extends string> {
   compact?: boolean;
   selectedId: T;
   onChange: (id: T) => void;
+  getOptionLabel: (option: AppearanceOption<T>) => string;
 }
 
 function AppearanceOptionGroup<T extends string>({
@@ -30,6 +32,7 @@ function AppearanceOptionGroup<T extends string>({
   options,
   selectedId,
   onChange,
+  getOptionLabel,
   compact = false,
 }: AppearanceOptionGroupProps<T>) {
   return (
@@ -50,7 +53,7 @@ function AppearanceOptionGroup<T extends string>({
             aria-pressed={selectedId === option.id}
             onClick={() => onChange(option.id)}
           >
-            {option.label}
+            {getOptionLabel(option)}
           </button>
         ))}
       </div>
@@ -64,25 +67,32 @@ export function AppearanceSelector({
   onImageSetChange,
   onFontSetChange,
 }: AppearanceSelectorProps) {
+  const { t } = useI18n();
+  const getOptionLabel = <T extends string>(option: AppearanceOption<T>) =>
+    t(`appearance.option.${option.id}` as TranslationKey);
+
   return (
-    <div className="appearance-selector" aria-label="Aparência do jogo">
+    <div className="appearance-selector" aria-label={t("appearance.aria")}>
       <AppearanceOptionGroup
-        title="Tema visual"
+        title={t("appearance.theme")}
         options={THEME_OPTIONS}
         selectedId={selection.themeId}
         compact
+        getOptionLabel={getOptionLabel}
         onChange={onThemeChange}
       />
       <AppearanceOptionGroup
-        title="Imagens"
+        title={t("appearance.images")}
         options={IMAGE_SET_OPTIONS}
         selectedId={selection.imageSetId}
+        getOptionLabel={getOptionLabel}
         onChange={onImageSetChange}
       />
       <AppearanceOptionGroup
-        title="Fonte"
+        title={t("appearance.font")}
         options={FONT_SET_OPTIONS}
         selectedId={selection.fontSetId}
+        getOptionLabel={getOptionLabel}
         onChange={onFontSetChange}
       />
     </div>

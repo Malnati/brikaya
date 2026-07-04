@@ -51,7 +51,7 @@ const BLANK_PAGE_WAIT_UNTIL = "domcontentloaded";
 const REQUIRED_EVENT_TYPES = ["game_start"];
 const REQUIRED_DATABASE_NAMES = ["BrickBreakerGameLog"];
 const MENU_BUTTON_NAME = /menu/i;
-const LOGS_BUTTON_NAME = /logs/i;
+const LOGS_BUTTON_NAME = /histórico/i;
 const COLLISIONS_BUTTON_NAME = /colisões/i;
 const CLOSE_BUTTON_NAME = /fechar|×|✕/i;
 const PRE_GAME_ACCEPT_BUTTON_LABEL = "Aceitar e jogar";
@@ -64,9 +64,9 @@ const SPEED_CURRENT_LABEL = "Velocidade atual";
 const LEVEL_TIME_LABEL = "Tempo da fase";
 const SPEED_REDUCTIONS_LABEL = "Reduções aplicadas";
 const THEME_BUTTON_LABELS = [
-  "Neon Arcade",
+  "Arcade neon",
   "CRT alto contraste",
-  "Pixel Sunset",
+  "Pôr do sol pixelado",
   "Oceano noturno",
   "Selva laser",
   "Âmbar retrô",
@@ -718,7 +718,7 @@ async function run() {
     await page.screenshot({ path: screenshotPath, fullPage: true });
 
     assert(
-      layoutState.title === EXPECTED_PUBLIC_TITLE,
+layoutState.title === EXPECTED_PUBLIC_TITLE,
       "Título inesperado no app publicado.",
     );
     assert(
@@ -918,16 +918,16 @@ async function run() {
       "Imagens",
       "Fonte",
       ...THEME_BUTTON_LABELS,
-      "Retro padrão",
+      "Retrô padrão",
       "Alto contraste",
-      "Cabine Sunset",
+      "Cabine pôr do sol",
       "Arcade",
       "CRT mono",
-      "Blocos pixel",
+      "Blocos pixelados",
     ]) {
       assert(menuState.text.includes(label), `Menu lateral sem ${label}.`);
     }
-    assert(menuState.text.includes("Logs"), "Menu lateral sem opção Logs.");
+    assert(menuState.text.includes("Histórico"), "Menu lateral sem opção Histórico.");
     assert(
       menuState.text.includes("Colisões"),
       "Menu lateral sem opção Colisões.",
@@ -946,23 +946,23 @@ async function run() {
       "Canvas continuou renderizando com menu aberto.",
     );
     const openedLogs = await clickButtonByPattern(page, LOGS_BUTTON_NAME);
-    assert(openedLogs, "Botão de logs não encontrado.");
+    assert(openedLogs, "Botão de histórico não encontrado.");
     await page.waitForFunction(
-      () => document.body.textContent?.includes("Visualizador de Logs"),
+      () => document.body.textContent?.includes("Histórico do jogo"),
       { timeout: 10000 },
     );
     await new Promise((resolve) => setTimeout(resolve, 500));
     await openFirstEventDetails(
       page,
-      "Painel de logs abriu sem botão Atualizar disponível.",
-      "Nenhum evento disponível no painel de logs.",
+      "Painel de histórico abriu sem botão Atualizar disponível.",
+      "Nenhum evento disponível no painel de histórico.",
     );
     await waitForLogDetailLabels(page, SPEED_CURRENT_LABEL, LEVEL_TIME_LABEL);
     const indexedDbSummary = await readIndexedDbSummary(page);
-    const logsState = await collectLayoutState(page);
+    const historyState = await collectLayoutState(page);
 
     const closedLogs = await clickButtonByPattern(page, CLOSE_BUTTON_NAME);
-    assert(closedLogs, "Não foi possível fechar o painel de logs.");
+    assert(closedLogs, "Não foi possível fechar o painel de histórico.");
 
     await waitForInitialCountdownToFinish(page);
     const openedMenuForCollisions = await clickButtonByPattern(
@@ -1006,7 +1006,7 @@ async function run() {
       afterTouchSummary,
       menuState,
       menuPauseState,
-      logsState,
+      historyState,
       statsState,
       indexedDbSummary,
       consoleProblems,
@@ -1022,14 +1022,14 @@ async function run() {
       `Eventos obrigatórios ausentes: ${REQUIRED_EVENT_TYPES.join(", ")}.`,
     );
     assert(
-      !logsState.hasHorizontalOverflow,
-      "Tela de logs tem overflow horizontal.",
+      !historyState.hasHorizontalOverflow,
+      "Tela de histórico tem overflow horizontal.",
     );
     assert(
-      logsState.buttons
+      historyState.buttons
         .filter((button) => button.visibleInViewport)
         .every((button) => button.hasTouchTarget),
-      `Botão visível em logs menor que alvo touch mínimo: ${logsState.buttons
+      `Botão visível em histórico menor que alvo touch mínimo: ${historyState.buttons
         .filter((button) => button.visibleInViewport && !button.hasTouchTarget)
         .map((button) => button.text)
         .join(", ")}`,

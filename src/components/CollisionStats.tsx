@@ -1,6 +1,7 @@
 // src/components/CollisionStats.tsx
 import { useState } from 'react';
 import { useCollisionStats } from '../hooks/useCollisionStats';
+import { useI18n } from '../i18n';
 
 interface CollisionStatsProps {
   isVisible: boolean;
@@ -8,6 +9,7 @@ interface CollisionStatsProps {
 }
 
 export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
+  const { locale, t } = useI18n();
   const { stats, loading, error, clearAllCollisions, getRecentCollisions } = useCollisionStats(2000, isVisible);
   const [showRecentCollisions, setShowRecentCollisions] = useState(false);
   const [recentCollisions, setRecentCollisions] = useState<any[]>([]);
@@ -19,7 +21,7 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
   };
 
   const formatTimestamp = (timestamp: number) => {
-    return new Date(timestamp).toLocaleTimeString('pt-BR');
+    return new Date(timestamp).toLocaleTimeString(locale);
   };
 
   const formatSpeed = (speed: number | null | undefined) => {
@@ -43,15 +45,15 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
     <div className="collision-stats-overlay">
       <div className="collision-stats-modal">
         <div className="collision-stats-header">
-          <h2>📊 Estatísticas de Colisões</h2>
+          <h2>📊 {t("collision.title")}</h2>
           <button onClick={onClose} className="close-button">✕</button>
         </div>
 
-        {loading && <div className="loading">Carregando...</div>}
+        {loading && <div className="loading">{t("collision.loading")}</div>}
         
         {error && (
           <div className="error">
-            ❌ Erro: {error}
+            ❌ {t("collision.error", { error })}
           </div>
         )}
 
@@ -59,43 +61,43 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
           <div className="collision-stats-content">
             <div className="stats-summary">
               <div className="stat-item">
-                <span className="stat-label">Total de Colisões:</span>
+                <span className="stat-label">{t("collision.total")}</span>
                 <span className="stat-value">{stats.total}</span>
               </div>
               
               <div className="stat-item">
-                <span className="stat-label">Último Minuto:</span>
+                <span className="stat-label">{t("collision.lastMinute")}</span>
                 <span className="stat-value">{stats.recentActivity.lastMinute}</span>
               </div>
               
               <div className="stat-item">
-                <span className="stat-label">Últimos 5 Minutos:</span>
+                <span className="stat-label">{t("collision.last5Minutes")}</span>
                 <span className="stat-value">{stats.recentActivity.last5Minutes}</span>
               </div>
               
               <div className="stat-item">
-                <span className="stat-label">Última Hora:</span>
+                <span className="stat-label">{t("collision.lastHour")}</span>
                 <span className="stat-value">{stats.recentActivity.lastHour}</span>
               </div>
 
               <div className="stat-item">
-                <span className="stat-label">Velocidade atual:</span>
+                <span className="stat-label">{t("collision.currentSpeed")}</span>
                 <span className="stat-value">{formatSpeed(stats.latestSpeedState?.currentSpeed)}</span>
               </div>
 
               <div className="stat-item">
-                <span className="stat-label">Reduções aplicadas:</span>
+                <span className="stat-label">{t("collision.reductions")}</span>
                 <span className="stat-value">{stats.brickSpeedSamples.length}</span>
               </div>
 
               <div className="stat-item">
-                <span className="stat-label">Mínimo atingido:</span>
+                <span className="stat-label">{t("collision.minimumReached")}</span>
                 <span className="stat-value">{stats.minSpeedReachedCount}</span>
               </div>
             </div>
 
             <div className="stats-by-type">
-              <h3>Por Tipo:</h3>
+              <h3>{t("collision.byType")}</h3>
               {Object.entries(stats.byType).map(([type, count]) => (
                 <div key={type} className="type-stat">
                   <span className="type-icon">{getCollisionTypeIcon(type)}</span>
@@ -110,20 +112,22 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
                 onClick={handleShowRecentCollisions}
                 className="action-button"
               >
-                {showRecentCollisions ? 'Ocultar' : 'Mostrar'} Colisões Recentes
+                {showRecentCollisions
+                  ? t("collision.hideRecent")
+                  : t("collision.showRecent")}
               </button>
               
               <button 
                 onClick={clearAllCollisions}
                 className="action-button danger"
               >
-                Limpar Todas as Colisões
+                {t("collision.clearAll")}
               </button>
             </div>
 
             {showRecentCollisions && (
               <div className="recent-collisions">
-                <h3>Colisões Recentes:</h3>
+                <h3>{t("collision.recentTitle")}</h3>
                 <div className="collisions-list">
                   {recentCollisions.map((collision) => (
                     <div key={collision.id} className="collision-item">
@@ -140,7 +144,9 @@ export function CollisionStats({ isVisible, onClose }: CollisionStatsProps) {
                         ({Math.round(collision.ballPosition.x)}, {Math.round(collision.ballPosition.y)})
                       </span>
                       <span className="collision-position">
-                        {' '}• Velocidade: {formatSpeed(collision.gameState?.speedState?.currentSpeed)}
+                        {' '}• {t("collision.speed", {
+                          speed: formatSpeed(collision.gameState?.speedState?.currentSpeed),
+                        })}
                       </span>
                     </div>
                   ))}

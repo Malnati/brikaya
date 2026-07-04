@@ -71,7 +71,7 @@ const RECOVERABLE_BROWSER_ERROR_PATTERNS = [
 const BLANK_PAGE_URL = "about:blank";
 const BLANK_PAGE_WAIT_UNTIL = "domcontentloaded";
 const MENU_BUTTON_NAME = /menu/i;
-const LOGS_BUTTON_NAME = /logs/i;
+const LOGS_BUTTON_NAME = /histórico/i;
 const COLLISIONS_BUTTON_NAME = /colisões/i;
 const CLOSE_BUTTON_NAME = /fechar|×|✕/i;
 const AD_SLOT_SELECTOR = ".ad-slot";
@@ -770,7 +770,7 @@ async function run() {
           }
           assert(
             !state.buttons.some((button) => LOGS_BUTTON_NAME.test(button.text)),
-            `${viewport.name}: logs apareceu fora do menu.`,
+            `${viewport.name}: histórico apareceu fora do menu.`,
           );
           assert(
             !state.buttons.some((button) =>
@@ -912,7 +912,7 @@ async function run() {
             );
             assert(
               openedMenuForLogs,
-              `${viewport.name}: não abriu menu para logs.`,
+              `${viewport.name}: não abriu menu para histórico.`,
             );
             await page.waitForSelector(".settings-drawer", { timeout: 10000 });
             const menuOverlayState = await collectOverlayLayoutState(page);
@@ -924,32 +924,32 @@ async function run() {
               page,
               LOGS_BUTTON_NAME,
             );
-            assert(openedLogs, `${viewport.name}: não abriu painel de logs.`);
+            assert(openedLogs, `${viewport.name}: não abriu painel de histórico.`);
             await page.waitForFunction(
-              () => document.body.textContent?.includes("Visualizador de Logs"),
+              () => document.body.textContent?.includes("Histórico do jogo"),
               { timeout: 10000 },
             );
             await new Promise((resolve) => setTimeout(resolve, 500));
             await openFirstEventDetails(
               page,
-              `${viewport.name}: logs abriu sem botão Atualizar disponível.`,
-              `${viewport.name}: nenhum evento disponível no painel de logs.`,
+              `${viewport.name}: histórico abriu sem botão Atualizar disponível.`,
+              `${viewport.name}: nenhum evento disponível no painel de histórico.`,
             );
             await waitForLogDetailLabels(
               page,
               SPEED_CURRENT_LABEL,
               LEVEL_TIME_LABEL,
             );
-            const logsOverlayState = await collectOverlayLayoutState(page);
+            const historyOverlayState = await collectOverlayLayoutState(page);
             assert(
-              !logsOverlayState.hasHorizontalOverflow,
-              `${viewport.name}: logs gerou overflow horizontal ${logsOverlayState.scrollWidth} > ${logsOverlayState.viewportWidth}.`,
+              !historyOverlayState.hasHorizontalOverflow,
+              `${viewport.name}: histórico gerou overflow horizontal ${historyOverlayState.scrollWidth} > ${historyOverlayState.viewportWidth}.`,
             );
             const closedLogs = await clickButtonByPattern(
               page,
               CLOSE_BUTTON_NAME,
             );
-            assert(closedLogs, `${viewport.name}: não fechou painel de logs.`);
+            assert(closedLogs, `${viewport.name}: não fechou painel de histórico.`);
 
             await waitForInitialCountdownToFinish(page);
             const openedMenuForCollisions = await clickButtonByPattern(

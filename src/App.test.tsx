@@ -381,7 +381,7 @@ describe("App theme selector", () => {
     expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.UPDATE_INSTALLED);
   });
 
-  it("abre menu lateral com aparência, logs, colisões e zerar pontuação", async () => {
+  it("abre menu lateral com aparência, histórico, colisões e zerar pontuação", async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
 
@@ -400,15 +400,17 @@ describe("App theme selector", () => {
     expect(within(appearanceGroup).getByText("Imagens")).toBeInTheDocument();
     expect(within(appearanceGroup).getByText("Fonte")).toBeInTheDocument();
     expect(
-      within(appearanceGroup).getByRole("button", { name: "Neon Arcade" }),
+      within(appearanceGroup).getByRole("button", { name: "Arcade neon" }),
     ).toBeInTheDocument();
     expect(
-      within(appearanceGroup).getByRole("button", { name: "Retro padrão" }),
+      within(appearanceGroup).getByRole("button", { name: "Retrô padrão" }),
     ).toBeInTheDocument();
     expect(
       within(appearanceGroup).getByRole("button", { name: "Arcade" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /logs/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /histórico/i }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /colisões/i }),
     ).toBeInTheDocument();
@@ -502,7 +504,7 @@ describe("App theme selector", () => {
       "crt-mono",
     );
 
-    await user.click(screen.getByRole("button", { name: "Pixel Sunset" }));
+    await user.click(screen.getByRole("button", { name: "Pôr do sol pixelado" }));
 
     expect(document.documentElement.dataset.theme).toBe("pixel-sunset");
     expect(window.localStorage.setItem).toHaveBeenCalledWith(

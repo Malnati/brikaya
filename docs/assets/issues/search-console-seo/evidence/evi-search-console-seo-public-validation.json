@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
-  "validatedAtUtc": "2026-07-03T22:59:10Z",
+  "schemaVersion": 2,
+  "validatedAtUtc": "2026-07-03T23:45:25Z",
   "canonicalUrl": "https://brikaya.com/",
   "publicChecks": {
     "homeHttpStatus": 200,
@@ -29,7 +29,20 @@
     "pagesFound": 1,
     "homeUrlInspected": true,
     "homeUrlIndexingStateAtInspection": "Detected, currently not indexed",
-    "indexingRequested": true
+    "indexingRequested": true,
+    "latestSitemapSubmission": {
+      "submittedUrl": "https://brikaya.com/sitemap.xml",
+      "submittedAtUtc": "2026-07-03T23:45:25Z",
+      "chromeAuthenticatedSessionUsed": true,
+      "submittedWithoutPaidService": true,
+      "postSubmitMessageSeen": "Sitemap enviado; Google processará periodicamente e procurará alterações.",
+      "searchConsoleTablePagesFoundAtSubmission": 1,
+      "publishedSitemapLocalizedUrlCount": 15,
+      "publishedHreflangLocaleCount": 15,
+      "localizedSitemapProcessingPending": true
+    },
+    "localizedSitemapResubmitted": true,
+    "localizedSitemapProcessingPending": true
   },
   "secrets": {
     "verificationTokenPrinted": false,
