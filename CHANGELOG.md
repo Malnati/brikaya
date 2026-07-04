@@ -3,6 +3,34 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.17] - 2026-07-04
+### Adicionado
+- Consentimento opcional de região aproximada para sugerir idioma, sem salvar coordenadas, sem envio externo e sem bloquear o jogo quando negado.
+- Animação de preparo de idioma com cortina cyber, teclado abstrato e barra de progresso de 2 segundos.
+- Páginas públicas `/privacy/` e `/terms/` documentam dados locais, idioma por região opcional, ausência de anúncios reais e revogação pelo menu.
+
+### Alterado
+- Fluxo de idioma passa a aceitar região consentida antes de navegador/fuso, preservando rota localizada e preferência manual como prioridades superiores.
+- Sitemap e gerador SEO passam a incluir as páginas de privacidade e termos para reenvio nos painéis de busca.
+- Documentação PWA, monetização e registros passam a refletir a região aproximada opcional para idioma.
+
+### Testado
+- `node --version` → `v23.5.0`.
+- `make help`.
+- `npm test -- src/i18n/locationLocale.test.ts src/i18n/i18n.test.tsx src/hooks/useLanguageLocationConsent.test.ts src/components/ConsentScreen.test.tsx src/App.test.tsx tests/unit/seoMetadata.test.ts tests/unit/localizedSeoGenerator.test.ts --runInBand` → 7 suites / 60 testes.
+- `npm test -- --runInBand` → 42 suites / 236 testes.
+- `npm run test:semantic-file-names` → governed=840.
+- `npm run test:svg-assets` → runtime=139, codex=2.
+- `npm run build`.
+- `make cloudflare-env-check`, `make cloudflare-build` e `make cloudflare-deploy` → preview `https://f8a05c93.malnati-brickbreaker.pages.dev` e domínio canônico atualizado em `https://brikaya.com/`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-i18n-seo-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ BRICKBREAKER_CONSENT_QA_REPORT=docs/assets/issues/location-consent-auto-locale/evidence/evi-location-consent-auto-locale-consent-report.json BRICKBREAKER_CONSENT_QA_SCREENSHOT=docs/assets/issues/location-consent-auto-locale/evidence/evi-location-consent-auto-locale-consent-screen.png node tests/e2e/cloudflare-consent-screen-qa.js`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ node tests/e2e/cloudflare-location-language-qa.js`.
+- `curl -L https://brikaya.com/privacy/`, `curl -L https://brikaya.com/terms/`, `curl -L https://brikaya.com/sitemap.xml` e `curl -L https://brikaya.com/robots.txt`.
+- Chrome autenticado: Google Search Console reenviado com toast `Sitemap enviado`; Bing Webmaster Tools reenviado e exibido como `Submitted/Processing`; Yandex lido em fila de processamento; Baidu bloqueado por login obrigatório sem ação paga.
+- Evidências: `docs/assets/issues/location-consent-auto-locale/evidence/evi-location-consent-auto-locale-consent-screen.png`, `docs/assets/issues/location-consent-auto-locale/evidence/evi-location-consent-auto-locale-location-overlay.png`, `docs/assets/issues/location-consent-auto-locale/evidence/evi-location-consent-auto-locale-consent-report.json`, `docs/assets/issues/location-consent-auto-locale/evidence/evi-location-consent-auto-locale-location-flow-report.json` e `docs/assets/issues/location-consent-auto-locale/evidence/evi-location-consent-auto-locale-search-submissions.json`.
+
 ## [1.32.16] - 2026-07-04
 ### Adicionado
 - Blocos metálicos passam a exibir amassados progressivos individuais após cada colisão parcial da bolinha.

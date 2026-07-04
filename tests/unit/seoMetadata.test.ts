@@ -15,6 +15,8 @@ const OG_IMAGE_PROPERTY = 'property="og:image"';
 const TWITTER_IMAGE_NAME = 'name="twitter:image"';
 const SITEMAP_DIRECTIVE = `Sitemap: ${SITEMAP_URL}`;
 const LOC_TAG = `<loc>${CANONICAL_URL}</loc>`;
+const PRIVACY_LOC_TAG = '<loc>https://brikaya.com/privacy/</loc>';
+const TERMS_LOC_TAG = '<loc>https://brikaya.com/terms/</loc>';
 const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8"?>';
 const LOCALIZED_LOCALES = [
   'pt-BR',
@@ -76,6 +78,8 @@ describe('metadados públicos de descoberta do Brikaya', () => {
           : `https://brikaya.com/${locale}/`;
       expect(sitemap).toContain(`<loc>${localizedUrl}</loc>`);
     }
+    expect(sitemap).toContain(PRIVACY_LOC_TAG);
+    expect(sitemap).toContain(TERMS_LOC_TAG);
     expect(sitemap).not.toContain('.pages.dev');
   });
 });

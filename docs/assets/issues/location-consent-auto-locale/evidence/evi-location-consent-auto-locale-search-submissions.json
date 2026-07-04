@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "validatedAtUtc": "2026-07-04T08:08:30Z",
+  "canonicalUrl": "https://brikaya.com/",
+  "sitemapUrl": "https://brikaya.com/sitemap.xml",
+  "scope": "location consent auto-locale release plus free webmaster sitemap refresh",
+  "publishedSitemap": {
+    "httpStatus": 200,
+    "containsPrivacyUrl": true,
+    "containsTermsUrl": true,
+    "localizedUrlsExpected": 15,
+    "staticPolicyUrlsExpected": 2
+  },
+  "chromeAuthenticatedActions": {
+    "googleSearchConsole": {
+      "status": "submitted",
+      "property": "sc-domain:brikaya.com",
+      "submittedSitemap": "https://brikaya.com/sitemap.xml",
+      "visibleSubmittedDate": "4 de jul. de 2026",
+      "visibleLastReadDate": "3 de jul. de 2026",
+      "visibleStatus": "Processado",
+      "visiblePagesFound": 1,
+      "toastObserved": "Sitemap enviado",
+      "captchaObserved": false,
+      "paidOrAdminApprovalObserved": false
+    },
+    "bingWebmasterTools": {
+      "status": "submitted",
+      "site": "https://brikaya.com/",
+      "submittedSitemap": "https://brikaya.com/sitemap.xml",
+      "visibleLastSubmit": "7/4/2026",
+      "visibleLastCrawl": "7/4/2026",
+      "visibleStatus": "Processing",
+      "visibleUrlsDiscovered": 1,
+      "visibleErrors": 0,
+      "visibleWarnings": 0,
+      "captchaObserved": false,
+      "paidOrAdminApprovalObserved": false
+    },
+    "yandexWebmaster": {
+      "status": "checked_read_only",
+      "site": "https://brikaya.com/",
+      "sitemap": "https://brikaya.com/sitemap.xml",
+      "visibleState": "Processing queue; sitemap previously added on 07/03/2026; Yandex says processing can take up to 1-2 weeks.",
+      "mutationThisRun": false,
+      "captchaObserved": false,
+      "paidOrAdminApprovalObserved": false,
+      "metricsOrTagsActivated": false
+    },
+    "naverSearchAdvisor": {
+      "status": "not_changed_current_session_sign_in_required",
+      "site": "https://brikaya.com/",
+      "previousEvidence": "docs/assets/issues/multilingual-zero-cost-registrations/evidence/evi-multilingual-zero-cost-registration-status.json",
+      "currentVisibleState": "Naver OAuth sign-in page displayed; no current-session mutation performed.",
+      "captchaSolvedByAgent": false,
+      "paidOrAdminApprovalObserved": false,
+      "runtimeScriptAdded": false
+    },
+    "baiduSearchResourcePlatform": {
+      "status": "not_executed_login_required",
+      "url": "https://ziyuan.baidu.com/site/index",
+      "visibleState": "Baidu showed not logged in and required login to add/manage site.",
+      "nextSafeAction": "Use only a free authenticated Baidu webmaster account for the global domain if available; do not activate ICP, China hosting, Cloudflare China Network, app-store route, ads, accelerator or paid service.",
+      "paidOrAdminApprovalObserved": false
+    }
+  },
+  "zeroCostPolicy": {
+    "paidActionsAttempted": false,
+    "adsOrCampaignsActivated": false,
+    "paymentMethodRequestedOrSaved": false,
+    "destructiveActionsPerformed": false,
+    "thirdPartyRuntimeScriptsAdded": false,
+    "captchaSolvedByAgent": false,
+    "chromeAuthenticatedAccessAuthorizedByUser": true,
+    "outOfScopeAccountsOrPaidProductsTouched": false
+  },
+  "secrets": {
+    "verificationTokensPrinted": false,
+    "personalEmailsRecorded": false,
+    "credentialsStored": false
+  }
+}

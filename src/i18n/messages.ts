@@ -22,6 +22,8 @@ export const EN_MESSAGES = {
   "menu.version": "Version {{version}}",
   "menu.versionAria": "Game version {{version}}",
   "menu.reviewConsent": "Review consent",
+  "menu.privacyPolicy": "Privacy policy",
+  "menu.terms": "Terms",
   "menu.logs": "Logs",
   "menu.collisions": "Collisions",
   "menu.resetScores": "Reset score",
@@ -42,6 +44,14 @@ export const EN_MESSAGES = {
   "language.option.fil": "Filipino",
   "language.option.th": "ไทย",
   "language.option.zh-CN": "简体中文",
+  "language.detectingTitle": "Preparing language",
+  "language.detectingBody": "Checking the best way to start.",
+  "language.detectingProgress": "Language setup progress",
+  "language.regionEnabled": "Region help is on for language suggestions.",
+  "language.regionDisabled":
+    "Region help is off. Browser language is used instead.",
+  "language.reviewRegion": "Use region for language",
+  "language.disableRegion": "Stop using region",
   "appearance.aria": "Game appearance",
   "appearance.theme": "Visual theme",
   "appearance.images": "Images",
@@ -81,8 +91,12 @@ export const EN_MESSAGES = {
   "consent.brand": "Brikaya",
   "consent.body.storage":
     "Your score, records, and preferences stay on this device so your next game is ready.",
+  "consent.body.location":
+    "You can allow approximate region once to suggest the game language. Coordinates are not saved.",
   "consent.body.ads":
     "This version does not show real ads. You can review this choice in the menu.",
+  "consent.locationLabel": "Use region to suggest language",
+  "consent.locationHint": "If you skip this, the browser language is used.",
   "consent.accept": "Accept and play",
   "status.updateTitle": "Updating game",
   "status.updateProgress": "Update progress",
@@ -189,11 +203,22 @@ const PT_BR_MESSAGES: TranslationCatalog = {
   "menu.version": "Versão {{version}}",
   "menu.versionAria": "Versão do jogo {{version}}",
   "menu.reviewConsent": "Revisar consentimento",
+  "menu.privacyPolicy": "Política de privacidade",
+  "menu.terms": "Termos",
   "menu.logs": "Logs",
   "menu.collisions": "Colisões",
   "menu.resetScores": "Zerar pontuação",
   "language.title": "Idioma",
   "language.aria": "Idioma do jogo",
+  "language.detectingTitle": "Preparando idioma",
+  "language.detectingBody": "Ajustando a melhor forma de começar.",
+  "language.detectingProgress": "Progresso do preparo do idioma",
+  "language.regionEnabled":
+    "A ajuda por região está ativa para sugerir idioma.",
+  "language.regionDisabled":
+    "A ajuda por região está desligada. O idioma do navegador será usado.",
+  "language.reviewRegion": "Usar região para idioma",
+  "language.disableRegion": "Parar uso da região",
   "appearance.aria": "Aparência do jogo",
   "appearance.theme": "Tema visual",
   "appearance.images": "Imagens",
@@ -232,8 +257,13 @@ const PT_BR_MESSAGES: TranslationCatalog = {
   "consent.title": "Antes de jogar",
   "consent.body.storage":
     "Sua pontuação, recordes e preferências ficam neste aparelho para manter sua próxima partida pronta.",
+  "consent.body.location":
+    "Você pode permitir região aproximada uma vez para sugerir o idioma do jogo. Coordenadas não ficam salvas.",
   "consent.body.ads":
     "Esta versão não mostra anúncios reais. Você pode revisar esta escolha no menu.",
+  "consent.locationLabel": "Usar região para sugerir idioma",
+  "consent.locationHint":
+    "Se você pular esta opção, o idioma do navegador será usado.",
   "consent.accept": "Aceitar e jogar",
   "status.updateTitle": "Atualizando jogo",
   "status.updateProgress": "Progresso da atualização",
@@ -329,10 +359,21 @@ const ES_419_MESSAGES: TranslationCatalog = {
   "menu.version": "Versión {{version}}",
   "menu.versionAria": "Versión del juego {{version}}",
   "menu.reviewConsent": "Revisar consentimiento",
+  "menu.privacyPolicy": "Política de privacidad",
+  "menu.terms": "Términos",
   "menu.collisions": "Colisiones",
   "menu.resetScores": "Reiniciar puntuación",
   "language.title": "Idioma",
   "language.aria": "Idioma del juego",
+  "language.detectingTitle": "Preparando idioma",
+  "language.detectingBody": "Ajustando la mejor forma de empezar.",
+  "language.detectingProgress": "Progreso de preparación del idioma",
+  "language.regionEnabled":
+    "La ayuda por región está activa para sugerir idioma.",
+  "language.regionDisabled":
+    "La ayuda por región está apagada. Se usará el idioma del navegador.",
+  "language.reviewRegion": "Usar región para idioma",
+  "language.disableRegion": "Dejar de usar región",
   "appearance.aria": "Apariencia del juego",
   "appearance.theme": "Tema visual",
   "appearance.images": "Imágenes",
@@ -371,8 +412,13 @@ const ES_419_MESSAGES: TranslationCatalog = {
   "consent.title": "Antes de jugar",
   "consent.body.storage":
     "Tu puntuación, récords y preferencias quedan en este dispositivo para que la próxima partida esté lista.",
+  "consent.body.location":
+    "Puedes permitir región aproximada una vez para sugerir el idioma del juego. Las coordenadas no se guardan.",
   "consent.body.ads":
     "Esta versión no muestra anuncios reales. Puedes revisar esta elección en el menú.",
+  "consent.locationLabel": "Usar región para sugerir idioma",
+  "consent.locationHint":
+    "Si omites esta opción, se usará el idioma del navegador.",
   "consent.accept": "Aceptar y jugar",
   "status.updateTitle": "Actualizando juego",
   "status.updateProgress": "Progreso de actualización",

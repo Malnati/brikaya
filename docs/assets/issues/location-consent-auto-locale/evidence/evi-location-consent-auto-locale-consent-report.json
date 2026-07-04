@@ -1,0 +1,64 @@
+{
+  "ok": true,
+  "publicUrl": "https://brikaya.com/",
+  "checkedAt": "2026-07-04T08:18:40.602Z",
+  "firstVisitState": {
+    "hasDialog": true,
+    "dialogText": "BrikayaAntes de jogarSua pontuação, recordes e preferências ficam neste aparelho para manter sua próxima partida pronta.Você pode permitir região aproximada uma vez para sugerir o idioma do jogo. Coordenadas não ficam salvas.Esta versão não mostra anúncios reais. Você pode revisar esta escolha no menu.Usar região para sugerir idiomaSe você pular esta opção, o idioma do navegador será usado.Aceitar e jogar",
+    "hasAcceptButton": true,
+    "acceptButtonText": "Aceitar e jogar",
+    "hasCinematicOverlay": false,
+    "bodyHasForbiddenCopy": false,
+    "storedRecord": null,
+    "storedKeys": []
+  },
+  "acceptedState": {
+    "hasDialog": false,
+    "dialogText": "",
+    "hasAcceptButton": false,
+    "acceptButtonText": "",
+    "hasCinematicOverlay": false,
+    "bodyHasForbiddenCopy": false,
+    "storedRecord": {
+      "version": "2026-07-03-offline-play",
+      "acceptedAt": "2026-07-04T08:18:35.639Z",
+      "scope": "offline_play_privacy_base"
+    },
+    "storedKeys": [
+      "version",
+      "acceptedAt",
+      "scope"
+    ]
+  },
+  "savedVisitState": {
+    "hasDialog": false,
+    "dialogText": "",
+    "hasAcceptButton": false,
+    "acceptButtonText": "",
+    "hasCinematicOverlay": true,
+    "bodyHasForbiddenCopy": false,
+    "storedRecord": {
+      "version": "2026-07-03-offline-play",
+      "acceptedAt": "2026-07-04T08:18:35.639Z",
+      "scope": "offline_play_privacy_base"
+    },
+    "storedKeys": [
+      "version",
+      "acceptedAt",
+      "scope"
+    ]
+  },
+  "revokedState": {
+    "hasDialog": true,
+    "dialogText": "BrikayaAntes de jogarSua pontuação, recordes e preferências ficam neste aparelho para manter sua próxima partida pronta.Você pode permitir região aproximada uma vez para sugerir o idioma do jogo. Coordenadas não ficam salvas.Esta versão não mostra anúncios reais. Você pode revisar esta escolha no menu.Usar região para sugerir idiomaSe você pular esta opção, o idioma do navegador será usado.Aceitar e jogar",
+    "hasAcceptButton": true,
+    "acceptButtonText": "Aceitar e jogar",
+    "hasCinematicOverlay": false,
+    "bodyHasForbiddenCopy": false,
+    "storedRecord": null,
+    "storedKeys": []
+  },
+  "externalRequests": [],
+  "failedRequests": [],
+  "screenshotPath": "docs/assets/issues/location-consent-auto-locale/evidence/evi-location-consent-auto-locale-consent-screen.png"
+}

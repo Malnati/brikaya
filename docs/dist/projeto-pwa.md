@@ -194,7 +194,8 @@ Regras permanentes de i18n:
 - Catálogo deve ser local/offline, tipado e versionado no repositório; não carregar tradução de serviço externo em runtime.
 - `en` é fallback obrigatório quando chave ou locale não estiver pronto.
 - `pt-BR` preserva intenção original, mas traduções devem adaptar tarefa, tom e contexto local.
-- Idioma inicial segue prioridade fixa: rota localizada, preferência manual salva, lista completa de idiomas do navegador, fuso horário do navegador como inferência offline de país e, por último, `pt-BR`; não usar geolocalização, IP, range de IP, serviço externo, biblioteca GeoIP em runtime ou recurso pago.
+- Idioma inicial segue prioridade fixa: rota localizada, preferência manual salva, região aproximada quando consentida, lista completa de idiomas do navegador, fuso horário do navegador como inferência offline de país e, por último, `pt-BR`; não usar IP, range de IP, serviço externo, biblioteca GeoIP em runtime ou recurso pago.
+- A região aproximada para idioma deve ser opcional, consentida em texto próprio, processada só no aparelho, sem salvar coordenadas, sem envio externo, sem bloquear jogo em caso de negativa e com opção de revogação no menu.
 - Preferência manual de idioma deve persistir localmente, sem conta obrigatória, e vencer a detecção automática do navegador/fuso; detecção automática não deve gravar uma preferência manual nem preservar locales legados sem marcador manual.
 - `html lang` deve refletir idioma ativo para acessibilidade, navegação e ferramentas do navegador.
 - QA deve validar que nenhum texto visível expõe infraestrutura, cache, framework, provedor, credencial, build ou ferramenta interna.
@@ -224,13 +225,13 @@ A primeira implementação de SEO ficou pequena e testável:
 4. nenhum script externo, analytics, tag de ads ou credencial foi adicionado;
 5. `npm run build` e QA publicado validam o domínio canônico;
 6. Search Console foi conferido no Chrome autenticado e o sitemap localizado foi reenviado;
-7. primeiro acesso sem rota ou preferência manual salva usa todos os valores de `navigator.languages` e depois `navigator.language` quando houver locale suportado, fuso horário local/offline quando o idioma não for suportado e `pt-BR` somente como fallback final.
+7. primeiro acesso sem rota ou preferência manual salva pode usar região aproximada quando consentida; se a permissão for negada, indisponível ou inconclusiva, usa todos os valores de `navigator.languages`, depois `navigator.language`, fuso horário local/offline quando o idioma não for suportado e `pt-BR` somente como fallback final.
 
 ### 8.5. Critérios de aceite para i18n + SEO
 
 - `pt-BR`, `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th` e `zh-CN` têm catálogo local/offline antes de ativar seleção pública de idioma.
 - `html lang` acompanha o idioma ativo.
-- Rota localizada vence preferência manual salva, preferência manual vence idioma do navegador, idioma suportado vence fuso horário e idioma/fuso não suportados caem em `pt-BR`.
+- Rota localizada vence preferência manual salva, preferência manual vence região consentida, região consentida vence idioma do navegador, idioma suportado vence fuso horário e idioma/fuso não suportados caem em `pt-BR`.
 - Fallback `en` funciona sem quebrar UI, HUD, menus, toasts, recordes ou logs.
 - Título, description, canonical, Open Graph, sitemap e robots usam somente domínio canônico e assets próprios.
 - `hreflang` aparece somente para URLs localizadas reais publicadas no domínio canônico.
@@ -253,6 +254,8 @@ A primeira implementação de SEO ficou pequena e testável:
 7. titularidade de pagamento definida: pessoa física ou pessoa jurídica.
 
 Estado atual da base de privacidade: Brikaya pode exigir aceite local para jogar offline, sem anúncios reais, sem CMP e sem chamadas externas. Essa base não autoriza monetização; ads reais continuam pendentes de aprovação, estados próprios e consentimento compatível com o país.
+
+Estado atual da sugestão de idioma por região: Brikaya pode pedir permissão opcional de região aproximada para sugerir idioma, desde que coordenadas não sejam salvas nem enviadas, a negativa não bloqueie o jogo e a política pública de privacidade/termos explique finalidade, retenção e revogação.
 
 ### 9.2. Formatos PWA permitidos no plano
 

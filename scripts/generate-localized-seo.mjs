@@ -8,8 +8,9 @@ const SITEMAP_FILE = 'sitemap.xml';
 const ROBOTS_FILE = 'robots.txt';
 const CANONICAL_ORIGIN = 'https://brikaya.com';
 const DEFAULT_LOCALE = 'pt-BR';
-const LASTMOD = '2026-07-03';
+const LASTMOD = '2026-07-04';
 const XML_HEADER = '<?xml version="1.0" encoding="UTF-8"?>';
+const STATIC_PUBLIC_PATHS = ['/privacy/', '/terms/'];
 const LOCALES = [
   'pt-BR',
   'en',
@@ -152,12 +153,19 @@ function replaceOrInsertHead(html, locale) {
 }
 
 function buildSitemap() {
-  const urls = LOCALES.map((locale) => [
+  const localizedUrls = LOCALES.map((locale) => [
     '  <url>',
     `    <loc>${canonicalUrl(locale)}</loc>`,
     `    <lastmod>${LASTMOD}</lastmod>`,
     '  </url>',
   ].join('\n')).join('\n');
+  const staticUrls = STATIC_PUBLIC_PATHS.map((path) => [
+    '  <url>',
+    `    <loc>${CANONICAL_ORIGIN}${path}</loc>`,
+    `    <lastmod>${LASTMOD}</lastmod>`,
+    '  </url>',
+  ].join('\n')).join('\n');
+  const urls = `${localizedUrls}\n${staticUrls}`;
   return `${XML_HEADER}\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
 }
 

@@ -43,6 +43,12 @@ Registros de marca, copyright/software, patente, modelo de utilidade, desenho in
 - Cadastro de webmaster gratuito para buscadores relevantes por idioma, quando não exigir conta paga, entidade local, representante, cartão, aprovação administrativa ou script runtime externo.
 - Cadastro gratuito de webmaster/ads somente quando não ativa custo, cobrança, campanha ou compra de tráfego.
 
+### 2.1.1. Autorização operacional via Chrome autenticado
+
+Para a execução assistida por Codex, o controlador informou que o Google Chrome do MacBook está aberto, autenticado e autorizado para acessar todos os serviços necessários ao escopo de Brikaya. O agente pode acessar e editar, via navegador, Search Console, Bing Webmaster Tools, Yandex Webmaster, Naver Search Advisor, Baidu Search Resource Platform, Cloudflare e painéis equivalentes sem nova solicitação de permissão quando a ação for necessária ao plano aprovado.
+
+A autorização não cobre custo, cobrança, upgrade, campanha ativa, compra de tráfego, serviço pago, cadastro fora do escopo, aceite de obrigação comercial/regulatória nova, alteração destrutiva nem modificação de contas/projetos que não pertençam ao escopo Brikaya. Se qualquer tela pedir cartão, saldo, overage, plano pago, aprovação administrativa, ICP, hospedagem China, script runtime externo, analytics/ads não aprovados ou dado sensível não necessário, a execução deve parar e registrar bloqueio.
+
 ### 2.2. Exclui
 
 - Registros pagos não obrigatórios.
@@ -109,7 +115,7 @@ A página oficial do MJSP separa mídia física, distribuição digital por down
 ### 4.4. Checklist de execução
 
 - Preparar `Resumo do conteúdo`: jogo arcade de quebra-blocos, sem narrativa adulta, sem chat, sem compra, sem prêmio real, sem aposta, sem multiplayer.
-- Preparar `Elementos interativos`: PWA offline, armazenamento local de pontuação/logs, sem interação com outros usuários, sem localização, sem compra digital.
+- Preparar `Elementos interativos`: PWA offline, armazenamento local de pontuação/logs, sem interação com outros usuários, sem localização compartilhada, com região aproximada opcional apenas para sugerir idioma e sem compra digital.
 - Preencher ficha técnica no CLASSIND ou registrar autoclassificação conforme rota aceita.
 - Publicar ou anexar link `https://brikaya.com/` como cópia acessível.
 - Registrar decisão no changelog/documento e manter símbolo/descritores coerentes.

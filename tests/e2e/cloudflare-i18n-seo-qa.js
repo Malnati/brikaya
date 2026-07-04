@@ -50,6 +50,8 @@ const LANGUAGE_SELECT_SELECTOR = "#game-language-select";
 const MENU_BUTTON_SELECTOR = ".dashboard-menu-button";
 const CONSENT_BUTTON_SELECTOR = ".consent-screen__button";
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
+const LANGUAGE_DETECTION_OVERLAY_SELECTOR =
+  '[data-testid="language-detection-overlay"]';
 const PRE_GAME_ACCEPT_BUTTON_LABEL = "Aceitar e jogar";
 const MENU_OPEN_ATTEMPTS = 3;
 const MENU_OPEN_RETRY_TIMEOUT_MS = 5000;
@@ -69,6 +71,7 @@ const LOCALE_SOURCE_STORAGE_KEY = "brikaya-locale-source";
 const MANUAL_LOCALE_SOURCE = "manual";
 const SITEMAP_PATH = "/sitemap.xml";
 const ROBOTS_PATH = "/robots.txt";
+const STATIC_PUBLIC_PATHS = ["/privacy/", "/terms/"];
 const REPORT_JSON_SPACES = 2;
 
 function env(name, fallback) {
@@ -152,6 +155,12 @@ async function validateSitemapAndRobots(baseUrl) {
       `sitemap sem ${locale}`,
     );
   }
+  for (const path of STATIC_PUBLIC_PATHS) {
+    assert(
+      sitemap.body.includes(`<loc>${new URL(path, baseUrl).href}</loc>`),
+      `sitemap sem ${path}`,
+    );
+  }
   assert(robots.body.includes(`Sitemap: ${sitemapUrl}`), "robots sem sitemap");
 
   return {
@@ -200,6 +209,12 @@ async function acceptPreGamePromptIfVisible(page) {
 }
 
 async function waitForCinematicOverlayToClear(page) {
+  await page
+    .waitForSelector(LANGUAGE_DETECTION_OVERLAY_SELECTOR, {
+      hidden: true,
+      timeout: PAGE_TIMEOUT_MS,
+    })
+    .catch(() => null);
   await page
     .waitForSelector(CINEMATIC_OVERLAY_SELECTOR, {
       hidden: true,

@@ -4,9 +4,11 @@ export const PRIVACY_CONSENT_STORAGE_KEY = "brikaya-privacy-consent";
 const PRIVACY_CONSENT_VERSION = "2026-07-03-offline-play";
 const PRIVACY_CONSENT_SCOPE = "offline_play_privacy_base";
 const PRIVACY_CONSENT_ACCEPT_LABEL = "Aceitar e jogar";
+const LANGUAGE_DETECTION_OVERLAY_SELECTOR =
+  '[data-testid="language-detection-overlay"]';
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const CONSENT_READY_TIMEOUT_MS = 1500;
-const INITIAL_COUNTDOWN_TIMEOUT_MS = 4000;
+const INITIAL_COUNTDOWN_TIMEOUT_MS = 7000;
 
 export async function acceptPrivacyConsentIfPresent(page) {
   let didAccept = await clickPrivacyConsentButton(page);
@@ -64,6 +66,10 @@ export async function seedPrivacyConsent(page) {
 }
 
 export async function waitForInitialCountdownToFinish(page) {
+  await page.waitForSelector(LANGUAGE_DETECTION_OVERLAY_SELECTOR, {
+    hidden: true,
+    timeout: INITIAL_COUNTDOWN_TIMEOUT_MS,
+  });
   await page.waitForSelector(CINEMATIC_OVERLAY_SELECTOR, {
     hidden: true,
     timeout: INITIAL_COUNTDOWN_TIMEOUT_MS,
