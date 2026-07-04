@@ -17,6 +17,8 @@ const DEFAULT_IPHONE15_OCEAN_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-iphone15-ocean.png";
 const DEFAULT_IPHONE15_RUBY_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-iphone15-ruby.png";
+const DEFAULT_IPHONE15_METRO_SCREENSHOT =
+  "tmp/screenshots/cloudflare-theme-iphone15-metro.png";
 const DEFAULT_DESKTOP_CONTRAST_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-desktop-contrast.png";
 const DEFAULT_DESKTOP_SUNSET_SCREENSHOT =
@@ -25,6 +27,8 @@ const DEFAULT_DESKTOP_OCEAN_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-desktop-ocean.png";
 const DEFAULT_DESKTOP_RUBY_SCREENSHOT =
   "tmp/screenshots/cloudflare-theme-desktop-ruby.png";
+const DEFAULT_DESKTOP_METRO_SCREENSHOT =
+  "tmp/screenshots/cloudflare-theme-desktop-metro.png";
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const CAPTURE_SCREENSHOTS_ENV_KEY = "BRICKBREAKER_THEME_QA_CAPTURE_SCREENSHOTS";
@@ -48,9 +52,11 @@ const THEME_CRT_HIGH_CONTRAST = "crt-high-contrast";
 const THEME_PIXEL_SUNSET = "pixel-sunset";
 const THEME_OCEAN_NIGHT = "ocean-night";
 const THEME_RUBY_DEPTH = "ruby-depth";
+const THEME_REAL_METRO_NIGHT = "real-metro-night";
 const IMAGE_SET_RETRO_DEFAULT = "retro-default";
 const IMAGE_SET_HIGH_CONTRAST = "high-contrast";
 const IMAGE_SET_SUNSET_CABINET = "sunset-cabinet";
+const IMAGE_SET_REAL_METRO_TUNNEL = "real-metro-tunnel";
 const FONT_SET_ARCADE_UI = "arcade-ui";
 const FONT_SET_CRT_MONO = "crt-mono";
 const FONT_SET_BLOCK_PIXEL = "block-pixel";
@@ -73,11 +79,21 @@ const THEME_OPTION_IDS = [
   "electric-plum",
   "lime-graphite",
   THEME_RUBY_DEPTH,
+  THEME_REAL_METRO_NIGHT,
+  "real-auto-garage",
+  "real-bio-lab",
+  "real-ancient-temple",
+  "real-orbital-station",
 ];
 const IMAGE_SET_OPTION_IDS = [
   IMAGE_SET_RETRO_DEFAULT,
   IMAGE_SET_HIGH_CONTRAST,
   IMAGE_SET_SUNSET_CABINET,
+  IMAGE_SET_REAL_METRO_TUNNEL,
+  "real-workshop-steel",
+  "real-bio-lab-glass",
+  "real-temple-stone",
+  "real-orbital-deck",
 ];
 const FONT_SET_OPTION_IDS = [
   FONT_SET_ARCADE_UI,
@@ -726,6 +742,32 @@ async function validateViewport(
     await page.screenshot({ path: screenshots.ruby, fullPage: true });
   }
 
+  logProgress(`${viewportName}: aplicar Metrô noturno realista`);
+  await clickAppearanceOptionById(page, THEME_REAL_METRO_NIGHT);
+  await clickAppearanceOptionById(page, IMAGE_SET_REAL_METRO_TUNNEL);
+  await page.waitForFunction(
+    ({ theme, imageSet }) =>
+      document.documentElement.dataset.theme === theme &&
+      document.documentElement.dataset.imageSet === imageSet,
+    {},
+    {
+      theme: THEME_REAL_METRO_NIGHT,
+      imageSet: IMAGE_SET_REAL_METRO_TUNNEL,
+    },
+  );
+  const metroState = await collectState(page);
+  assertBaseState(metroState, `${viewportName}/metro-noturno-realista`, true);
+  assert(
+    metroState.theme === THEME_REAL_METRO_NIGHT &&
+      metroState.imageSet === IMAGE_SET_REAL_METRO_TUNNEL &&
+      metroState.storedTheme === THEME_REAL_METRO_NIGHT &&
+      metroState.storedImageSet === IMAGE_SET_REAL_METRO_TUNNEL,
+    `${viewportName}: tema/conjunto Metrô noturno realista não aplicado/persistido.`,
+  );
+  if (captureScreenshots) {
+    await page.screenshot({ path: screenshots.metro, fullPage: true });
+  }
+
   return {
     initialState,
     contrastState,
@@ -733,6 +775,7 @@ async function validateViewport(
     sunsetState,
     oceanState,
     rubyState,
+    metroState,
   };
 }
 
@@ -764,6 +807,10 @@ async function run() {
         "BRICKBREAKER_THEME_QA_IPHONE15_RUBY_SCREENSHOT",
         DEFAULT_IPHONE15_RUBY_SCREENSHOT,
       ),
+      metro: env(
+        "BRICKBREAKER_THEME_QA_IPHONE15_METRO_SCREENSHOT",
+        DEFAULT_IPHONE15_METRO_SCREENSHOT,
+      ),
     },
     desktop: {
       contrast: env(
@@ -781,6 +828,10 @@ async function run() {
       ruby: env(
         "BRICKBREAKER_THEME_QA_DESKTOP_RUBY_SCREENSHOT",
         DEFAULT_DESKTOP_RUBY_SCREENSHOT,
+      ),
+      metro: env(
+        "BRICKBREAKER_THEME_QA_DESKTOP_METRO_SCREENSHOT",
+        DEFAULT_DESKTOP_METRO_SCREENSHOT,
       ),
     },
   };

@@ -75,11 +75,21 @@ const THEME_OPTION_IDS = [
   "electric-plum",
   "lime-graphite",
   "ruby-depth",
+  "real-metro-night",
+  "real-auto-garage",
+  "real-bio-lab",
+  "real-ancient-temple",
+  "real-orbital-station",
 ];
 const IMAGE_SET_OPTION_IDS = [
   "retro-default",
   "high-contrast",
   "sunset-cabinet",
+  "real-metro-tunnel",
+  "real-workshop-steel",
+  "real-bio-lab-glass",
+  "real-temple-stone",
+  "real-orbital-deck",
 ];
 const FONT_SET_OPTION_IDS = ["arcade-ui", "crt-mono", "block-pixel"];
 const APPEARANCE_OPTION_IDS = [
@@ -330,8 +340,7 @@ async function readIndexedDbSummary(page) {
         latestPaddleMove:
           events
             .filter((event) => event?.type === "paddle_move")
-            .sort((left, right) => right.timestamp - left.timestamp)[0] ||
-          null,
+            .sort((left, right) => right.timestamp - left.timestamp)[0] || null,
       };
     },
     REQUIRED_DATABASE_NAMES,
@@ -747,7 +756,7 @@ async function run() {
     await page.screenshot({ path: screenshotPath, fullPage: true });
 
     assert(
-layoutState.title === EXPECTED_PUBLIC_TITLE,
+      layoutState.title === EXPECTED_PUBLIC_TITLE,
       "Título inesperado no app publicado.",
     );
     assert(
