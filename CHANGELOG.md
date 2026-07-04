@@ -23,6 +23,19 @@
 - RED: `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" npm test -- src/utils/audioManager.test.ts --runInBand -t "pausa música"` falhou após mutação temporária de `isMusicMuted`.
 - GREEN: `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" npm test -- src/utils/audioManager.test.ts --runInBand -t "pausa música"` → 1 teste.
 - Auditoria de cobertura das linhas executáveis alteradas em `src/App.tsx`, `src/components/MusicToggle.tsx`, `src/hooks/useAudioPreference.ts`, `src/storage/gameLogger.ts` e `src/utils/audioManager.ts` → 46 linhas executáveis alteradas, 0 descobertas.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" npm test -- --runInBand --silent` → 44 suites / 248 testes.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" npm run test:semantic-file-names` → governed=867 após versionar as evidências finais.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" npm run test:svg-assets` → runtime=139, codex=2.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" npm run test:audio-assets` → ids=39, mp3=91.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" npm run build`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" make cloudflare-deploy`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-audio-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa`.
+- Evidências: `docs/assets/issues/branch-consolidation/evidence/evi-branch-consolidation-qa-receipt.json`, relatórios JSON de áudio/mobile/dashboard/tema e screenshots mobile/menu/dashboard na mesma pasta.
+- Varredura textual das evidências e arquivos alterados não encontrou token, chave privada ou credencial real.
 
 ## [1.32.21] - 2026-07-04
 ### Adicionado

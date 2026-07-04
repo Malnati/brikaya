@@ -1,0 +1,94 @@
+{
+  "generatedAtUtc": "2026-07-04T09:12:39.279Z",
+  "branch": "chore/consolidate-all-branches",
+  "commit": "cdaecc7daa011b3afe49ef90bcbee8647be34daa",
+  "publicUrl": "https://brikaya.com/",
+  "nodeVersion": "v23.5.0",
+  "validations": [
+    {
+      "command": "make help",
+      "status": "passed"
+    },
+    {
+      "command": "npm test -- --runInBand --silent",
+      "status": "passed",
+      "result": "44 suites / 248 tests"
+    },
+    {
+      "command": "npm run test:semantic-file-names",
+      "status": "passed",
+      "result": "governed=859"
+    },
+    {
+      "command": "npm run test:svg-assets",
+      "status": "passed",
+      "result": "runtime=139 codex=2"
+    },
+    {
+      "command": "npm run test:audio-assets",
+      "status": "passed",
+      "result": "ids=39 mp3=91"
+    },
+    {
+      "command": "node --check tests/e2e/cloudflare-*.js altered files",
+      "status": "passed"
+    },
+    {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    {
+      "command": "make cloudflare-env-check",
+      "status": "passed"
+    },
+    {
+      "command": "make cloudflare-build",
+      "status": "passed"
+    },
+    {
+      "command": "make cloudflare-deploy",
+      "status": "passed"
+    },
+    {
+      "command": "BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check",
+      "status": "passed"
+    },
+    {
+      "command": "BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-audio-qa",
+      "status": "passed",
+      "evidence": "evi-branch-consolidation-audio-report.json"
+    },
+    {
+      "command": "BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa",
+      "status": "passed",
+      "evidence": "evi-branch-consolidation-mobile-report.json"
+    },
+    {
+      "command": "BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa",
+      "status": "passed",
+      "evidence": "evi-branch-consolidation-dashboard-report.json"
+    },
+    {
+      "command": "BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa",
+      "status": "passed",
+      "evidence": "evi-branch-consolidation-theme-report.json"
+    }
+  ],
+  "coverageAudit": {
+    "status": "passed",
+    "executableChangedLines": 46,
+    "uncoveredExecutableChangedLines": 0,
+    "files": [
+      "src/App.tsx",
+      "src/components/MusicToggle.tsx",
+      "src/hooks/useAudioPreference.ts",
+      "src/storage/gameLogger.ts",
+      "src/utils/audioManager.ts"
+    ]
+  },
+  "screenshots": [
+    "evi-branch-consolidation-mobile-screen.png",
+    "evi-branch-consolidation-menu-screen.png",
+    "evi-branch-consolidation-dashboard-screen.png"
+  ]
+}

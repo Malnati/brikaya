@@ -1,0 +1,2444 @@
+{
+  "url": "https://brikaya.com/",
+  "viewportMatrixPath": "tests/e2e/responsiveViewportMatrix.json",
+  "screenshotPath": "tmp/screenshots/cloudflare-dashboard-layout.png",
+  "tabletScreenshotPath": "tmp/screenshots/cloudflare-dashboard-layout-tablet.png",
+  "desktopScreenshotPath": "tmp/screenshots/cloudflare-dashboard-layout-desktop.png",
+  "landscapeScreenshotPath": "tmp/screenshots/cloudflare-dashboard-layout-landscape.png",
+  "results": [
+    {
+      "viewport": {
+        "name": "iphone-15-16-default",
+        "width": 393,
+        "height": 852,
+        "scrollWidth": 393,
+        "scrollHeight": 852,
+        "bodyScrollWidth": 393,
+        "bodyScrollHeight": 852
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 393,
+        "height": 852,
+        "right": 393,
+        "bottom": 852
+      },
+      "appShell": {
+        "x": 4,
+        "y": 4,
+        "width": 385,
+        "height": 369.328125,
+        "right": 389,
+        "bottom": 373.328125
+      },
+      "dashboard": {
+        "x": 4,
+        "y": 4,
+        "width": 385,
+        "height": 369.328125,
+        "right": 389,
+        "bottom": 373.328125
+      },
+      "dashboardLayout": {
+        "x": 13,
+        "y": 111,
+        "width": 367,
+        "height": 245.328125,
+        "right": 380,
+        "bottom": 356.328125
+      },
+      "playColumn": {
+        "x": 13,
+        "y": 111,
+        "width": 367,
+        "height": 245.328125,
+        "right": 380,
+        "bottom": 356.328125
+      },
+      "gameSurface": {
+        "x": 13,
+        "y": 111,
+        "width": 367,
+        "height": 245.328125,
+        "right": 380,
+        "bottom": 356.328125
+      },
+      "boardFrame": {
+        "x": 13,
+        "y": 111,
+        "width": 367,
+        "height": 245.328125,
+        "right": 380,
+        "bottom": 356.328125
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": false,
+      "heading": "Brikaya",
+      "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+      "canvas": {
+        "x": 13,
+        "y": 111,
+        "width": 367,
+        "height": 245.328125,
+        "right": 380,
+        "bottom": 356.328125
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 367,
+        "height": 90,
+        "right": 380,
+        "bottom": 103
+      },
+      "titleGroup": {
+        "x": 13,
+        "y": 57.5,
+        "width": 1,
+        "height": 1,
+        "right": 14,
+        "bottom": 58.5
+      },
+      "titleGroupVisible": true,
+      "scoreHud": {
+        "x": 49.84375,
+        "y": 65,
+        "width": 293.296875,
+        "height": 38,
+        "right": 343.140625,
+        "bottom": 103
+      },
+      "topControls": {
+        "x": 13,
+        "y": 13,
+        "width": 140,
+        "height": 44,
+        "right": 153,
+        "bottom": 57
+      },
+      "boardControls": null,
+      "buttons": [
+        {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 13,
+          "y": 13,
+          "right": 57,
+          "bottom": 57,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♫",
+          "ariaLabel": "Música",
+          "title": "Música",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 61,
+          "y": 13,
+          "right": 105,
+          "bottom": 57,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 109,
+          "y": 13,
+          "right": 153,
+          "bottom": 57,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "settingsAction": "",
+          "width": 68,
+          "height": 44,
+          "x": 312,
+          "y": 13,
+          "right": 380,
+          "bottom": 57,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": null,
+      "bottomSlot": null,
+      "sideSlotVisible": false,
+      "bottomSlotVisible": false,
+      "adSlotCount": 0,
+      "publicityTextPresent": false,
+      "sideAdDistance": null,
+      "bottomAdDistance": null,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-15-16-default-landscape",
+        "width": 852,
+        "height": 393,
+        "scrollWidth": 852,
+        "scrollHeight": 393,
+        "bodyScrollWidth": 852,
+        "bodyScrollHeight": 393
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 852,
+        "height": 393,
+        "right": 852,
+        "bottom": 393
+      },
+      "appShell": {
+        "x": 6,
+        "y": 4,
+        "width": 840,
+        "height": 385,
+        "right": 846,
+        "bottom": 389
+      },
+      "dashboard": {
+        "x": 6,
+        "y": 4,
+        "width": 840,
+        "height": 385,
+        "right": 846,
+        "bottom": 389
+      },
+      "dashboardLayout": {
+        "x": 6,
+        "y": 52,
+        "width": 840,
+        "height": 337,
+        "right": 846,
+        "bottom": 389
+      },
+      "playColumn": {
+        "x": 6,
+        "y": 52,
+        "width": 840,
+        "height": 337,
+        "right": 846,
+        "bottom": 389
+      },
+      "gameSurface": {
+        "x": 6,
+        "y": 52,
+        "width": 840,
+        "height": 337,
+        "right": 846,
+        "bottom": 389
+      },
+      "boardFrame": {
+        "x": 6,
+        "y": 52,
+        "width": 840,
+        "height": 337,
+        "right": 846,
+        "bottom": 389
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": true,
+      "heading": "Brikaya",
+      "scoreHudText": "Fase 1|Score 10|Total 0|Recorde 0",
+      "canvas": {
+        "x": 6,
+        "y": 52,
+        "width": 840,
+        "height": 339.390625,
+        "right": 846,
+        "bottom": 391.390625
+      },
+      "header": {
+        "x": 6,
+        "y": 4,
+        "width": 840,
+        "height": 44,
+        "right": 846,
+        "bottom": 48
+      },
+      "titleGroup": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "titleGroupVisible": false,
+      "scoreHud": {
+        "x": 295.15625,
+        "y": 10,
+        "width": 261.671875,
+        "height": 32,
+        "right": 556.828125,
+        "bottom": 42
+      },
+      "topControls": {
+        "x": 6,
+        "y": 4,
+        "width": 140,
+        "height": 44,
+        "right": 146,
+        "bottom": 48
+      },
+      "boardControls": null,
+      "buttons": [
+        {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 6,
+          "y": 4,
+          "right": 50,
+          "bottom": 48,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♫",
+          "ariaLabel": "Música",
+          "title": "Música",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 54,
+          "y": 4,
+          "right": 98,
+          "bottom": 48,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 102,
+          "y": 4,
+          "right": 146,
+          "bottom": 48,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "settingsAction": "",
+          "width": 68,
+          "height": 44,
+          "x": 778,
+          "y": 4,
+          "right": 846,
+          "bottom": 48,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": null,
+      "bottomSlot": null,
+      "sideSlotVisible": false,
+      "bottomSlotVisible": false,
+      "adSlotCount": 0,
+      "publicityTextPresent": false,
+      "sideAdDistance": null,
+      "bottomAdDistance": null,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-16e-default",
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "scrollHeight": 844,
+        "bodyScrollWidth": 390,
+        "bodyScrollHeight": 844
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "right": 390,
+        "bottom": 844
+      },
+      "appShell": {
+        "x": 4,
+        "y": 4,
+        "width": 382,
+        "height": 367.328125,
+        "right": 386,
+        "bottom": 371.328125
+      },
+      "dashboard": {
+        "x": 4,
+        "y": 4,
+        "width": 382,
+        "height": 367.328125,
+        "right": 386,
+        "bottom": 371.328125
+      },
+      "dashboardLayout": {
+        "x": 13,
+        "y": 111,
+        "width": 364,
+        "height": 243.328125,
+        "right": 377,
+        "bottom": 354.328125
+      },
+      "playColumn": {
+        "x": 13,
+        "y": 111,
+        "width": 364,
+        "height": 243.328125,
+        "right": 377,
+        "bottom": 354.328125
+      },
+      "gameSurface": {
+        "x": 13,
+        "y": 111,
+        "width": 364,
+        "height": 243.328125,
+        "right": 377,
+        "bottom": 354.328125
+      },
+      "boardFrame": {
+        "x": 13,
+        "y": 111,
+        "width": 364,
+        "height": 243.328125,
+        "right": 377,
+        "bottom": 354.328125
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": false,
+      "heading": "Brikaya",
+      "scoreHudText": "Fase 1|Score 10|Total 0|Recorde 0",
+      "canvas": {
+        "x": 13,
+        "y": 111,
+        "width": 364,
+        "height": 243.328125,
+        "right": 377,
+        "bottom": 354.328125
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 364,
+        "height": 90,
+        "right": 377,
+        "bottom": 103
+      },
+      "titleGroup": {
+        "x": 13,
+        "y": 57.5,
+        "width": 1,
+        "height": 1,
+        "right": 14,
+        "bottom": 58.5
+      },
+      "titleGroupVisible": true,
+      "scoreHud": {
+        "x": 45.171875,
+        "y": 65,
+        "width": 299.640625,
+        "height": 38,
+        "right": 344.8125,
+        "bottom": 103
+      },
+      "topControls": {
+        "x": 13,
+        "y": 13,
+        "width": 140,
+        "height": 44,
+        "right": 153,
+        "bottom": 57
+      },
+      "boardControls": null,
+      "buttons": [
+        {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 13,
+          "y": 13,
+          "right": 57,
+          "bottom": 57,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♫",
+          "ariaLabel": "Música",
+          "title": "Música",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 61,
+          "y": 13,
+          "right": 105,
+          "bottom": 57,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 109,
+          "y": 13,
+          "right": 153,
+          "bottom": 57,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "settingsAction": "",
+          "width": 68,
+          "height": 44,
+          "x": 309,
+          "y": 13,
+          "right": 377,
+          "bottom": 57,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": null,
+      "bottomSlot": null,
+      "sideSlotVisible": false,
+      "bottomSlotVisible": false,
+      "adSlotCount": 0,
+      "publicityTextPresent": false,
+      "sideAdDistance": null,
+      "bottomAdDistance": null,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-16e-default-landscape",
+        "width": 844,
+        "height": 390,
+        "scrollWidth": 844,
+        "scrollHeight": 390,
+        "bodyScrollWidth": 844,
+        "bodyScrollHeight": 390
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 390,
+        "right": 844,
+        "bottom": 390
+      },
+      "appShell": {
+        "x": 6,
+        "y": 4,
+        "width": 832,
+        "height": 382,
+        "right": 838,
+        "bottom": 386
+      },
+      "dashboard": {
+        "x": 6,
+        "y": 4,
+        "width": 832,
+        "height": 382,
+        "right": 838,
+        "bottom": 386
+      },
+      "dashboardLayout": {
+        "x": 6,
+        "y": 52,
+        "width": 832,
+        "height": 334,
+        "right": 838,
+        "bottom": 386
+      },
+      "playColumn": {
+        "x": 6,
+        "y": 52,
+        "width": 832,
+        "height": 334,
+        "right": 838,
+        "bottom": 386
+      },
+      "gameSurface": {
+        "x": 6,
+        "y": 52,
+        "width": 832,
+        "height": 334,
+        "right": 838,
+        "bottom": 386
+      },
+      "boardFrame": {
+        "x": 6,
+        "y": 52,
+        "width": 832,
+        "height": 334,
+        "right": 838,
+        "bottom": 386
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": true,
+      "heading": "Brikaya",
+      "scoreHudText": "Fase 1|Score 10|Total 0|Recorde 0",
+      "canvas": {
+        "x": 6,
+        "y": 52,
+        "width": 832,
+        "height": 336.390625,
+        "right": 838,
+        "bottom": 388.390625
+      },
+      "header": {
+        "x": 6,
+        "y": 4,
+        "width": 832,
+        "height": 44,
+        "right": 838,
+        "bottom": 48
+      },
+      "titleGroup": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "titleGroupVisible": false,
+      "scoreHud": {
+        "x": 291.15625,
+        "y": 10,
+        "width": 261.671875,
+        "height": 32,
+        "right": 552.828125,
+        "bottom": 42
+      },
+      "topControls": {
+        "x": 6,
+        "y": 4,
+        "width": 140,
+        "height": 44,
+        "right": 146,
+        "bottom": 48
+      },
+      "boardControls": null,
+      "buttons": [
+        {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 6,
+          "y": 4,
+          "right": 50,
+          "bottom": 48,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♫",
+          "ariaLabel": "Música",
+          "title": "Música",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 54,
+          "y": 4,
+          "right": 98,
+          "bottom": 48,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 102,
+          "y": 4,
+          "right": 146,
+          "bottom": 48,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "settingsAction": "",
+          "width": 68,
+          "height": 44,
+          "x": 770,
+          "y": 4,
+          "right": 838,
+          "bottom": 48,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": null,
+      "bottomSlot": null,
+      "sideSlotVisible": false,
+      "bottomSlotVisible": false,
+      "adSlotCount": 0,
+      "publicityTextPresent": false,
+      "sideAdDistance": null,
+      "bottomAdDistance": null,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-17-default",
+        "width": 402,
+        "height": 874,
+        "scrollWidth": 402,
+        "scrollHeight": 874,
+        "bodyScrollWidth": 402,
+        "bodyScrollHeight": 874
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 402,
+        "height": 874,
+        "right": 402,
+        "bottom": 874
+      },
+      "appShell": {
+        "x": 4,
+        "y": 4,
+        "width": 394,
+        "height": 375.328125,
+        "right": 398,
+        "bottom": 379.328125
+      },
+      "dashboard": {
+        "x": 4,
+        "y": 4,
+        "width": 394,
+        "height": 375.328125,
+        "right": 398,
+        "bottom": 379.328125
+      },
+      "dashboardLayout": {
+        "x": 13,
+        "y": 111,
+        "width": 376,
+        "height": 251.328125,
+        "right": 389,
+        "bottom": 362.328125
+      },
+      "playColumn": {
+        "x": 13,
+        "y": 111,
+        "width": 376,
+        "height": 251.328125,
+        "right": 389,
+        "bottom": 362.328125
+      },
+      "gameSurface": {
+        "x": 13,
+        "y": 111,
+        "width": 376,
+        "height": 251.328125,
+        "right": 389,
+        "bottom": 362.328125
+      },
+      "boardFrame": {
+        "x": 13,
+        "y": 111,
+        "width": 376,
+        "height": 251.328125,
+        "right": 389,
+        "bottom": 362.328125
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": false,
+      "heading": "Brikaya",
+      "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+      "canvas": {
+        "x": 13,
+        "y": 111,
+        "width": 376,
+        "height": 251.328125,
+        "right": 389,
+        "bottom": 362.328125
+      },
+      "header": {
+        "x": 13,
+        "y": 13,
+        "width": 376,
+        "height": 90,
+        "right": 389,
+        "bottom": 103
+      },
+      "titleGroup": {
+        "x": 13,
+        "y": 57.5,
+        "width": 1,
+        "height": 1,
+        "right": 14,
+        "bottom": 58.5
+      },
+      "titleGroupVisible": true,
+      "scoreHud": {
+        "x": 54.34375,
+        "y": 65,
+        "width": 293.296875,
+        "height": 38,
+        "right": 347.640625,
+        "bottom": 103
+      },
+      "topControls": {
+        "x": 13,
+        "y": 13,
+        "width": 140,
+        "height": 44,
+        "right": 153,
+        "bottom": 57
+      },
+      "boardControls": null,
+      "buttons": [
+        {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 13,
+          "y": 13,
+          "right": 57,
+          "bottom": 57,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♫",
+          "ariaLabel": "Música",
+          "title": "Música",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 61,
+          "y": 13,
+          "right": 105,
+          "bottom": 57,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 109,
+          "y": 13,
+          "right": 153,
+          "bottom": 57,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "settingsAction": "",
+          "width": 68,
+          "height": 44,
+          "x": 321,
+          "y": 13,
+          "right": 389,
+          "bottom": 57,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": null,
+      "bottomSlot": null,
+      "sideSlotVisible": false,
+      "bottomSlotVisible": false,
+      "adSlotCount": 0,
+      "publicityTextPresent": false,
+      "sideAdDistance": null,
+      "bottomAdDistance": null,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "iphone-17-default-landscape",
+        "width": 874,
+        "height": 402,
+        "scrollWidth": 874,
+        "scrollHeight": 402,
+        "bodyScrollWidth": 874,
+        "bodyScrollHeight": 402
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 874,
+        "height": 402,
+        "right": 874,
+        "bottom": 402
+      },
+      "appShell": {
+        "x": 6,
+        "y": 4,
+        "width": 862,
+        "height": 394,
+        "right": 868,
+        "bottom": 398
+      },
+      "dashboard": {
+        "x": 6,
+        "y": 4,
+        "width": 862,
+        "height": 394,
+        "right": 868,
+        "bottom": 398
+      },
+      "dashboardLayout": {
+        "x": 6,
+        "y": 52,
+        "width": 862,
+        "height": 346,
+        "right": 868,
+        "bottom": 398
+      },
+      "playColumn": {
+        "x": 6,
+        "y": 52,
+        "width": 862,
+        "height": 346,
+        "right": 868,
+        "bottom": 398
+      },
+      "gameSurface": {
+        "x": 6,
+        "y": 52,
+        "width": 862,
+        "height": 346,
+        "right": 868,
+        "bottom": 398
+      },
+      "boardFrame": {
+        "x": 6,
+        "y": 52,
+        "width": 862,
+        "height": 346,
+        "right": 868,
+        "bottom": 398
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": true,
+      "heading": "Brikaya",
+      "scoreHudText": "Fase 1|Score 10|Total 0|Recorde 0",
+      "canvas": {
+        "x": 6,
+        "y": 52,
+        "width": 862,
+        "height": 348.390625,
+        "right": 868,
+        "bottom": 400.390625
+      },
+      "header": {
+        "x": 6,
+        "y": 4,
+        "width": 862,
+        "height": 44,
+        "right": 868,
+        "bottom": 48
+      },
+      "titleGroup": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "titleGroupVisible": false,
+      "scoreHud": {
+        "x": 306.15625,
+        "y": 10,
+        "width": 261.671875,
+        "height": 32,
+        "right": 567.828125,
+        "bottom": 42
+      },
+      "topControls": {
+        "x": 6,
+        "y": 4,
+        "width": 140,
+        "height": 44,
+        "right": 146,
+        "bottom": 48
+      },
+      "boardControls": null,
+      "buttons": [
+        {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 6,
+          "y": 4,
+          "right": 50,
+          "bottom": 48,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♫",
+          "ariaLabel": "Música",
+          "title": "Música",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 54,
+          "y": 4,
+          "right": 98,
+          "bottom": 48,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 102,
+          "y": 4,
+          "right": 146,
+          "bottom": 48,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "settingsAction": "",
+          "width": 68,
+          "height": 44,
+          "x": 800,
+          "y": 4,
+          "right": 868,
+          "bottom": 48,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": null,
+      "bottomSlot": null,
+      "sideSlotVisible": false,
+      "bottomSlotVisible": false,
+      "adSlotCount": 0,
+      "publicityTextPresent": false,
+      "sideAdDistance": null,
+      "bottomAdDistance": null,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "ipad-11-a16-air-default",
+        "width": 820,
+        "height": 1180,
+        "scrollWidth": 820,
+        "scrollHeight": 1180,
+        "bodyScrollWidth": 820,
+        "bodyScrollHeight": 1180
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 820,
+        "height": 1180,
+        "right": 820,
+        "bottom": 1180
+      },
+      "appShell": {
+        "x": 8,
+        "y": 8,
+        "width": 804,
+        "height": 613.328125,
+        "right": 812,
+        "bottom": 621.328125
+      },
+      "dashboard": {
+        "x": 8,
+        "y": 8,
+        "width": 804,
+        "height": 613.328125,
+        "right": 812,
+        "bottom": 621.328125
+      },
+      "dashboardLayout": {
+        "x": 33,
+        "y": 85,
+        "width": 754,
+        "height": 503.328125,
+        "right": 787,
+        "bottom": 588.328125
+      },
+      "playColumn": {
+        "x": 33,
+        "y": 85,
+        "width": 754,
+        "height": 503.328125,
+        "right": 787,
+        "bottom": 588.328125
+      },
+      "gameSurface": {
+        "x": 33,
+        "y": 85,
+        "width": 754,
+        "height": 503.328125,
+        "right": 787,
+        "bottom": 588.328125
+      },
+      "boardFrame": {
+        "x": 33,
+        "y": 85,
+        "width": 754,
+        "height": 503.328125,
+        "right": 787,
+        "bottom": 588.328125
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": false,
+      "heading": "Brikaya",
+      "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+      "canvas": {
+        "x": 33,
+        "y": 85,
+        "width": 754,
+        "height": 503.328125,
+        "right": 787,
+        "bottom": 588.328125
+      },
+      "header": {
+        "x": 33,
+        "y": 33,
+        "width": 754,
+        "height": 44,
+        "right": 787,
+        "bottom": 77
+      },
+      "titleGroup": {
+        "x": 33,
+        "y": 54.5,
+        "width": 1,
+        "height": 1,
+        "right": 34,
+        "bottom": 55.5
+      },
+      "titleGroupVisible": true,
+      "scoreHud": {
+        "x": 266.90625,
+        "y": 37,
+        "width": 286.1875,
+        "height": 36,
+        "right": 553.09375,
+        "bottom": 73
+      },
+      "topControls": {
+        "x": 33,
+        "y": 33,
+        "width": 140,
+        "height": 44,
+        "right": 173,
+        "bottom": 77
+      },
+      "boardControls": null,
+      "buttons": [
+        {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 33,
+          "y": 33,
+          "right": 77,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♫",
+          "ariaLabel": "Música",
+          "title": "Música",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 81,
+          "y": 33,
+          "right": 125,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 129,
+          "y": 33,
+          "right": 173,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "settingsAction": "",
+          "width": 68,
+          "height": 44,
+          "x": 719,
+          "y": 33,
+          "right": 787,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": null,
+      "bottomSlot": null,
+      "sideSlotVisible": false,
+      "bottomSlotVisible": false,
+      "adSlotCount": 0,
+      "publicityTextPresent": false,
+      "sideAdDistance": null,
+      "bottomAdDistance": null,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "ipad-11-a16-air-default-landscape",
+        "width": 1180,
+        "height": 820,
+        "scrollWidth": 1180,
+        "scrollHeight": 820,
+        "bodyScrollWidth": 1180,
+        "bodyScrollHeight": 820
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 1180,
+        "height": 820,
+        "right": 1180,
+        "bottom": 820
+      },
+      "appShell": {
+        "x": 6,
+        "y": 4,
+        "width": 1168,
+        "height": 812,
+        "right": 1174,
+        "bottom": 816
+      },
+      "dashboard": {
+        "x": 6,
+        "y": 4,
+        "width": 1168,
+        "height": 812,
+        "right": 1174,
+        "bottom": 816
+      },
+      "dashboardLayout": {
+        "x": 6,
+        "y": 52,
+        "width": 1168,
+        "height": 764,
+        "right": 1174,
+        "bottom": 816
+      },
+      "playColumn": {
+        "x": 6,
+        "y": 52,
+        "width": 1168,
+        "height": 764,
+        "right": 1174,
+        "bottom": 816
+      },
+      "gameSurface": {
+        "x": 6,
+        "y": 52,
+        "width": 1168,
+        "height": 764,
+        "right": 1174,
+        "bottom": 816
+      },
+      "boardFrame": {
+        "x": 6,
+        "y": 63.28125,
+        "width": 1168,
+        "height": 741.4375,
+        "right": 1174,
+        "bottom": 804.71875
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": true,
+      "heading": "Brikaya",
+      "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+      "canvas": {
+        "x": 12,
+        "y": 63.28125,
+        "width": 1156,
+        "height": 741.4375,
+        "right": 1168,
+        "bottom": 804.71875
+      },
+      "header": {
+        "x": 6,
+        "y": 4,
+        "width": 1168,
+        "height": 44,
+        "right": 1174,
+        "bottom": 48
+      },
+      "titleGroup": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "titleGroupVisible": false,
+      "scoreHud": {
+        "x": 462.125,
+        "y": 10,
+        "width": 255.75,
+        "height": 32,
+        "right": 717.875,
+        "bottom": 42
+      },
+      "topControls": {
+        "x": 6,
+        "y": 4,
+        "width": 140,
+        "height": 44,
+        "right": 146,
+        "bottom": 48
+      },
+      "boardControls": null,
+      "buttons": [
+        {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 6,
+          "y": 4,
+          "right": 50,
+          "bottom": 48,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♫",
+          "ariaLabel": "Música",
+          "title": "Música",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 54,
+          "y": 4,
+          "right": 98,
+          "bottom": 48,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 102,
+          "y": 4,
+          "right": 146,
+          "bottom": 48,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "settingsAction": "",
+          "width": 68,
+          "height": 44,
+          "x": 1106,
+          "y": 4,
+          "right": 1174,
+          "bottom": 48,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": null,
+      "bottomSlot": null,
+      "sideSlotVisible": false,
+      "bottomSlotVisible": false,
+      "adSlotCount": 0,
+      "publicityTextPresent": false,
+      "sideAdDistance": null,
+      "bottomAdDistance": null,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "ipad-pro-11-m4-default",
+        "width": 834,
+        "height": 1210,
+        "scrollWidth": 834,
+        "scrollHeight": 1210,
+        "bodyScrollWidth": 834,
+        "bodyScrollHeight": 1210
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 834,
+        "height": 1210,
+        "right": 834,
+        "bottom": 1210
+      },
+      "appShell": {
+        "x": 8,
+        "y": 8,
+        "width": 818,
+        "height": 623.328125,
+        "right": 826,
+        "bottom": 631.328125
+      },
+      "dashboard": {
+        "x": 8,
+        "y": 8,
+        "width": 818,
+        "height": 623.328125,
+        "right": 826,
+        "bottom": 631.328125
+      },
+      "dashboardLayout": {
+        "x": 33,
+        "y": 85,
+        "width": 768,
+        "height": 513.328125,
+        "right": 801,
+        "bottom": 598.328125
+      },
+      "playColumn": {
+        "x": 33,
+        "y": 85,
+        "width": 768,
+        "height": 513.328125,
+        "right": 801,
+        "bottom": 598.328125
+      },
+      "gameSurface": {
+        "x": 33,
+        "y": 85,
+        "width": 768,
+        "height": 513.328125,
+        "right": 801,
+        "bottom": 598.328125
+      },
+      "boardFrame": {
+        "x": 33,
+        "y": 85,
+        "width": 768,
+        "height": 513.328125,
+        "right": 801,
+        "bottom": 598.328125
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": false,
+      "heading": "Brikaya",
+      "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+      "canvas": {
+        "x": 33,
+        "y": 85,
+        "width": 768,
+        "height": 513.328125,
+        "right": 801,
+        "bottom": 598.328125
+      },
+      "header": {
+        "x": 33,
+        "y": 33,
+        "width": 768,
+        "height": 44,
+        "right": 801,
+        "bottom": 77
+      },
+      "titleGroup": {
+        "x": 33,
+        "y": 54.5,
+        "width": 1,
+        "height": 1,
+        "right": 34,
+        "bottom": 55.5
+      },
+      "titleGroupVisible": true,
+      "scoreHud": {
+        "x": 273.90625,
+        "y": 37,
+        "width": 286.1875,
+        "height": 36,
+        "right": 560.09375,
+        "bottom": 73
+      },
+      "topControls": {
+        "x": 33,
+        "y": 33,
+        "width": 140,
+        "height": 44,
+        "right": 173,
+        "bottom": 77
+      },
+      "boardControls": null,
+      "buttons": [
+        {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 33,
+          "y": 33,
+          "right": 77,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♫",
+          "ariaLabel": "Música",
+          "title": "Música",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 81,
+          "y": 33,
+          "right": 125,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 129,
+          "y": 33,
+          "right": 173,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "settingsAction": "",
+          "width": 68,
+          "height": 44,
+          "x": 733,
+          "y": 33,
+          "right": 801,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": null,
+      "bottomSlot": null,
+      "sideSlotVisible": false,
+      "bottomSlotVisible": false,
+      "adSlotCount": 0,
+      "publicityTextPresent": false,
+      "sideAdDistance": null,
+      "bottomAdDistance": null,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "ipad-pro-11-m4-default-landscape",
+        "width": 1210,
+        "height": 834,
+        "scrollWidth": 1210,
+        "scrollHeight": 834,
+        "bodyScrollWidth": 1210,
+        "bodyScrollHeight": 907
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 1210,
+        "height": 834,
+        "right": 1210,
+        "bottom": 834
+      },
+      "appShell": {
+        "x": 8,
+        "y": 8,
+        "width": 1194,
+        "height": 749.328125,
+        "right": 1202,
+        "bottom": 757.328125
+      },
+      "dashboard": {
+        "x": 8,
+        "y": 8,
+        "width": 1194,
+        "height": 749.328125,
+        "right": 1202,
+        "bottom": 757.328125
+      },
+      "dashboardLayout": {
+        "x": 33,
+        "y": 85,
+        "width": 1144,
+        "height": 639.328125,
+        "right": 1177,
+        "bottom": 724.328125
+      },
+      "playColumn": {
+        "x": 33,
+        "y": 85,
+        "width": 1144,
+        "height": 639.328125,
+        "right": 1177,
+        "bottom": 724.328125
+      },
+      "gameSurface": {
+        "x": 33,
+        "y": 85,
+        "width": 1144,
+        "height": 639.328125,
+        "right": 1177,
+        "bottom": 724.328125
+      },
+      "boardFrame": {
+        "x": 33,
+        "y": 85,
+        "width": 1144,
+        "height": 639.328125,
+        "right": 1177,
+        "bottom": 724.328125
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": false,
+      "heading": "Brikaya",
+      "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+      "canvas": {
+        "x": 126.5,
+        "y": 85,
+        "width": 957,
+        "height": 639.328125,
+        "right": 1083.5,
+        "bottom": 724.328125
+      },
+      "header": {
+        "x": 33,
+        "y": 33,
+        "width": 1144,
+        "height": 44,
+        "right": 1177,
+        "bottom": 77
+      },
+      "titleGroup": {
+        "x": 33,
+        "y": 54.5,
+        "width": 1,
+        "height": 1,
+        "right": 34,
+        "bottom": 55.5
+      },
+      "titleGroupVisible": true,
+      "scoreHud": {
+        "x": 461.90625,
+        "y": 37,
+        "width": 286.1875,
+        "height": 36,
+        "right": 748.09375,
+        "bottom": 73
+      },
+      "topControls": {
+        "x": 33,
+        "y": 33,
+        "width": 140,
+        "height": 44,
+        "right": 173,
+        "bottom": 77
+      },
+      "boardControls": null,
+      "buttons": [
+        {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 33,
+          "y": 33,
+          "right": 77,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♫",
+          "ariaLabel": "Música",
+          "title": "Música",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 81,
+          "y": 33,
+          "right": 125,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 129,
+          "y": 33,
+          "right": 173,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "settingsAction": "",
+          "width": 68,
+          "height": 44,
+          "x": 1109,
+          "y": 33,
+          "right": 1177,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": null,
+      "bottomSlot": null,
+      "sideSlotVisible": false,
+      "bottomSlotVisible": false,
+      "adSlotCount": 0,
+      "publicityTextPresent": false,
+      "sideAdDistance": null,
+      "bottomAdDistance": null,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "desktop-compact",
+        "width": 1366,
+        "height": 768,
+        "scrollWidth": 1366,
+        "scrollHeight": 768,
+        "bodyScrollWidth": 1366,
+        "bodyScrollHeight": 768
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 1366,
+        "height": 768,
+        "right": 1366,
+        "bottom": 768
+      },
+      "appShell": {
+        "x": 8,
+        "y": 8,
+        "width": 1350,
+        "height": 683.328125,
+        "right": 1358,
+        "bottom": 691.328125
+      },
+      "dashboard": {
+        "x": 8,
+        "y": 8,
+        "width": 1350,
+        "height": 683.328125,
+        "right": 1358,
+        "bottom": 691.328125
+      },
+      "dashboardLayout": {
+        "x": 33,
+        "y": 85,
+        "width": 1300,
+        "height": 573.328125,
+        "right": 1333,
+        "bottom": 658.328125
+      },
+      "playColumn": {
+        "x": 33,
+        "y": 85,
+        "width": 1300,
+        "height": 573.328125,
+        "right": 1333,
+        "bottom": 658.328125
+      },
+      "gameSurface": {
+        "x": 33,
+        "y": 85,
+        "width": 1300,
+        "height": 573.328125,
+        "right": 1333,
+        "bottom": 658.328125
+      },
+      "boardFrame": {
+        "x": 33,
+        "y": 85,
+        "width": 1300,
+        "height": 573.328125,
+        "right": 1333,
+        "bottom": 658.328125
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": false,
+      "heading": "Brikaya",
+      "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+      "canvas": {
+        "x": 254,
+        "y": 85,
+        "width": 858,
+        "height": 573.328125,
+        "right": 1112,
+        "bottom": 658.328125
+      },
+      "header": {
+        "x": 33,
+        "y": 33,
+        "width": 1300,
+        "height": 44,
+        "right": 1333,
+        "bottom": 77
+      },
+      "titleGroup": {
+        "x": 33,
+        "y": 54.5,
+        "width": 1,
+        "height": 1,
+        "right": 34,
+        "bottom": 55.5
+      },
+      "titleGroupVisible": true,
+      "scoreHud": {
+        "x": 539.90625,
+        "y": 37,
+        "width": 286.1875,
+        "height": 36,
+        "right": 826.09375,
+        "bottom": 73
+      },
+      "topControls": {
+        "x": 33,
+        "y": 33,
+        "width": 140,
+        "height": 44,
+        "right": 173,
+        "bottom": 77
+      },
+      "boardControls": null,
+      "buttons": [
+        {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 33,
+          "y": 33,
+          "right": 77,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♫",
+          "ariaLabel": "Música",
+          "title": "Música",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 81,
+          "y": 33,
+          "right": 125,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 129,
+          "y": 33,
+          "right": 173,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "settingsAction": "",
+          "width": 68,
+          "height": 44,
+          "x": 1265,
+          "y": 33,
+          "right": 1333,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": null,
+      "bottomSlot": null,
+      "sideSlotVisible": false,
+      "bottomSlotVisible": false,
+      "adSlotCount": 0,
+      "publicityTextPresent": false,
+      "sideAdDistance": null,
+      "bottomAdDistance": null,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "desktop-laptop",
+        "width": 1440,
+        "height": 900,
+        "scrollWidth": 1440,
+        "scrollHeight": 900,
+        "bodyScrollWidth": 1440,
+        "bodyScrollHeight": 900
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 900,
+        "right": 1440,
+        "bottom": 900
+      },
+      "appShell": {
+        "x": 8,
+        "y": 8,
+        "width": 1424,
+        "height": 815.328125,
+        "right": 1432,
+        "bottom": 823.328125
+      },
+      "dashboard": {
+        "x": 8,
+        "y": 8,
+        "width": 1424,
+        "height": 815.328125,
+        "right": 1432,
+        "bottom": 823.328125
+      },
+      "dashboardLayout": {
+        "x": 33,
+        "y": 85,
+        "width": 1374,
+        "height": 705.328125,
+        "right": 1407,
+        "bottom": 790.328125
+      },
+      "playColumn": {
+        "x": 33,
+        "y": 85,
+        "width": 1374,
+        "height": 705.328125,
+        "right": 1407,
+        "bottom": 790.328125
+      },
+      "gameSurface": {
+        "x": 33,
+        "y": 85,
+        "width": 1374,
+        "height": 705.328125,
+        "right": 1407,
+        "bottom": 790.328125
+      },
+      "boardFrame": {
+        "x": 33,
+        "y": 85,
+        "width": 1374,
+        "height": 705.328125,
+        "right": 1407,
+        "bottom": 790.328125
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": false,
+      "heading": "Brikaya",
+      "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+      "canvas": {
+        "x": 192,
+        "y": 85,
+        "width": 1056,
+        "height": 705.328125,
+        "right": 1248,
+        "bottom": 790.328125
+      },
+      "header": {
+        "x": 33,
+        "y": 33,
+        "width": 1374,
+        "height": 44,
+        "right": 1407,
+        "bottom": 77
+      },
+      "titleGroup": {
+        "x": 33,
+        "y": 54.5,
+        "width": 1,
+        "height": 1,
+        "right": 34,
+        "bottom": 55.5
+      },
+      "titleGroupVisible": true,
+      "scoreHud": {
+        "x": 576.90625,
+        "y": 37,
+        "width": 286.1875,
+        "height": 36,
+        "right": 863.09375,
+        "bottom": 73
+      },
+      "topControls": {
+        "x": 33,
+        "y": 33,
+        "width": 140,
+        "height": 44,
+        "right": 173,
+        "bottom": 77
+      },
+      "boardControls": null,
+      "buttons": [
+        {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 33,
+          "y": 33,
+          "right": 77,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♫",
+          "ariaLabel": "Música",
+          "title": "Música",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 81,
+          "y": 33,
+          "right": 125,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 129,
+          "y": 33,
+          "right": 173,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "settingsAction": "",
+          "width": 68,
+          "height": 44,
+          "x": 1339,
+          "y": 33,
+          "right": 1407,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": null,
+      "bottomSlot": null,
+      "sideSlotVisible": false,
+      "bottomSlotVisible": false,
+      "adSlotCount": 0,
+      "publicityTextPresent": false,
+      "sideAdDistance": null,
+      "bottomAdDistance": null,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    },
+    {
+      "viewport": {
+        "name": "desktop-fhd",
+        "width": 1920,
+        "height": 1080,
+        "scrollWidth": 1920,
+        "scrollHeight": 1080,
+        "bodyScrollWidth": 1920,
+        "bodyScrollHeight": 1080
+      },
+      "root": {
+        "x": 0,
+        "y": 0,
+        "width": 1920,
+        "height": 1080,
+        "right": 1920,
+        "bottom": 1080
+      },
+      "appShell": {
+        "x": 8,
+        "y": 8,
+        "width": 1904,
+        "height": 995.328125,
+        "right": 1912,
+        "bottom": 1003.328125
+      },
+      "dashboard": {
+        "x": 8,
+        "y": 8,
+        "width": 1904,
+        "height": 995.328125,
+        "right": 1912,
+        "bottom": 1003.328125
+      },
+      "dashboardLayout": {
+        "x": 33,
+        "y": 85,
+        "width": 1854,
+        "height": 885.328125,
+        "right": 1887,
+        "bottom": 970.328125
+      },
+      "playColumn": {
+        "x": 33,
+        "y": 85,
+        "width": 1854,
+        "height": 885.328125,
+        "right": 1887,
+        "bottom": 970.328125
+      },
+      "gameSurface": {
+        "x": 33,
+        "y": 85,
+        "width": 1854,
+        "height": 885.328125,
+        "right": 1887,
+        "bottom": 970.328125
+      },
+      "boardFrame": {
+        "x": 33,
+        "y": 85,
+        "width": 1854,
+        "height": 885.328125,
+        "right": 1887,
+        "bottom": 970.328125
+      },
+      "buildVersion": null,
+      "isLandscapeImmersive": false,
+      "heading": "Brikaya",
+      "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+      "canvas": {
+        "x": 297,
+        "y": 85,
+        "width": 1326,
+        "height": 885.328125,
+        "right": 1623,
+        "bottom": 970.328125
+      },
+      "header": {
+        "x": 33,
+        "y": 33,
+        "width": 1854,
+        "height": 44,
+        "right": 1887,
+        "bottom": 77
+      },
+      "titleGroup": {
+        "x": 33,
+        "y": 54.5,
+        "width": 1,
+        "height": 1,
+        "right": 34,
+        "bottom": 55.5
+      },
+      "titleGroupVisible": true,
+      "scoreHud": {
+        "x": 816.90625,
+        "y": 37,
+        "width": 286.1875,
+        "height": 36,
+        "right": 1103.09375,
+        "bottom": 73
+      },
+      "topControls": {
+        "x": 33,
+        "y": 33,
+        "width": 140,
+        "height": 44,
+        "right": 173,
+        "bottom": 77
+      },
+      "boardControls": null,
+      "buttons": [
+        {
+          "text": "×",
+          "ariaLabel": "Sem som",
+          "title": "Sem som",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 33,
+          "y": 33,
+          "right": 77,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "♫",
+          "ariaLabel": "Música",
+          "title": "Música",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 81,
+          "y": 33,
+          "right": 125,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "↻",
+          "ariaLabel": "Reiniciar",
+          "title": "Reiniciar",
+          "settingsAction": "",
+          "width": 44,
+          "height": 44,
+          "x": 129,
+          "y": 33,
+          "right": 173,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        },
+        {
+          "text": "Menu",
+          "ariaLabel": "",
+          "title": "",
+          "settingsAction": "",
+          "width": 68,
+          "height": 44,
+          "x": 1819,
+          "y": 33,
+          "right": 1887,
+          "bottom": 77,
+          "visibleInViewport": true,
+          "hasTouchTarget": true,
+          "inDrawer": false
+        }
+      ],
+      "sideSlot": null,
+      "bottomSlot": null,
+      "sideSlotVisible": false,
+      "bottomSlotVisible": false,
+      "adSlotCount": 0,
+      "publicityTextPresent": false,
+      "sideAdDistance": null,
+      "bottomAdDistance": null,
+      "minSideAdDistance": 150,
+      "minBottomAdDistance": 24,
+      "hasHorizontalOverflow": false
+    }
+  ],
+  "orientationEvents": {
+    "before": {
+      "count": 1,
+      "byType": {
+        "game_start": 1
+      }
+    },
+    "after": {
+      "count": 2,
+      "byType": {
+        "game_start": 1,
+        "collision": 1
+      }
+    }
+  },
+  "consoleProblems": []
+}
