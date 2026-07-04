@@ -72,7 +72,7 @@ export interface GameEvent {
     targetPosition?: { x: number; y: number; width?: number; height?: number };
     brickIndex?: { col: number; row: number };
     brickColorIndex?: number;
-    wallType?: 'left' | 'right';
+    wallType?: 'left' | 'right' | 'radial';
     hitPosition?: number; // Para colisão com paddle (0-1)
     collisionAngle?: number; // Ângulo da colisão
     velocityBefore?: { dx: number; dy: number };

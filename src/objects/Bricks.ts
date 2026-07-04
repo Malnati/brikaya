@@ -13,6 +13,13 @@ import {
   type GameVisualAssetRole,
   type VisualAssetPathResolver,
 } from "../utils/visualAssetResolver";
+import {
+  calculateRadialBrickSegment,
+  isCircleIntersectingRadialSegment,
+  type RadialBrickSegment,
+  type RadialPlayfieldGeometry,
+  type RectBounds,
+} from "../utils/radialGeometry";
 
 const BRICK_ACTIVE = 1;
 const BRICK_DESTROYED = 0;
@@ -33,6 +40,18 @@ const EVASIVE_BRICK_REAPPEAR_PROGRESS = 0.5;
 const EVASIVE_BRICK_MIN_SCALE = 0.08;
 const EVASIVE_BRICK_FULL_VISIBILITY = 1;
 const CENTER_DIVISOR = 2;
+const RADIAL_BRICK_FALLBACK_COLORS = [
+  "#ff5d73",
+  "#45d7ff",
+  "#45f08f",
+  "#ffd166",
+  "#b873ff",
+] as const;
+const RADIAL_BRICK_METAL_COLOR = "#aeb7c2";
+const RADIAL_BRICK_STROKE_COLOR = "rgba(255, 255, 255, 0.42)";
+const RADIAL_BRICK_SHADOW_COLOR = "rgba(0, 212, 255, 0.22)";
+const RADIAL_BRICK_SHADOW_BLUR = 8;
+const RADIAL_BRICK_LINE_WIDTH = 1.4;
 const BRICK_ASSET_ROLES = [
   GAME_VISUAL_ASSET_ROLES.brickRed,
   GAME_VISUAL_ASSET_ROLES.brickBlue,
@@ -79,6 +98,7 @@ export class Bricks {
     private onMaxRowsReached?: () => void,
     private resolveAssetPath: VisualAssetPathResolver = DEFAULT_GAME_VISUAL_ASSET_RESOLVER,
     private random: () => number = Math.random,
+    private geometry?: RadialPlayfieldGeometry,
   ) {
     this.dimensions = dimensions;
     this.rows = dimensions.brickRows;
@@ -107,14 +127,9 @@ export class Bricks {
     // Atualizar as posições dos blocos imediatamente após a criação
     for (let c = 0; c < dimensions.brickCols; c++) {
       for (let r = 0; r < this.rows; r++) {
-        const brickX =
-          c * (dimensions.brickWidth + dimensions.brickPadding) +
-          dimensions.brickOffsetLeft;
-        const brickY =
-          r * (dimensions.brickHeight + dimensions.brickPadding) +
-          dimensions.brickOffsetTop;
-        this.bricks[c][r].x = brickX;
-        this.bricks[c][r].y = brickY;
+        const bounds = this.getBrickBounds(c, r);
+        this.bricks[c][r].x = bounds.x;
+        this.bricks[c][r].y = bounds.y;
       }
     }
     this.assignRandomMetalBricks();
@@ -149,10 +164,11 @@ export class Bricks {
           const brickY =
             r * (this.dimensions.brickHeight + this.dimensions.brickPadding) +
             this.dimensions.brickOffsetTop;
-          b.x = brickX;
-          b.y = brickY;
+          const bounds = this.getBrickBounds(c, r);
+          b.x = bounds.x;
+          b.y = bounds.y;
 
-          this.drawBrick(ctx, b, brickX, brickY);
+          this.drawBrick(ctx, b, brickX, brickY, c, r);
         }
       }
     }
@@ -184,19 +200,25 @@ export class Bricks {
     this.rows += 1;
   }
 
-  resize(dimensions: DynamicGameDimensions, maxRows?: number) {
+  resize(
+    dimensions: DynamicGameDimensions,
+    maxRows?: number,
+    geometry?: RadialPlayfieldGeometry,
+  ) {
     this.dimensions = {
       ...dimensions,
       brickCols: this.bricks.length,
       brickRows: this.rows,
     };
     this.maxRows = Math.max(this.rows, maxRows ?? this.maxRows);
+    this.geometry = geometry ?? this.geometry;
   }
 
   async collide(
     ball: {
       position: { x: number; y: number; radius: number };
       bounceY: () => void;
+      bounceFromRadialBrick?: (targetX: number, targetY: number) => void;
       registerBrickHit: () => void;
       getVelocity: () => { dx: number; dy: number };
       getSpeedStateSnapshot: () => LoggedGameState["speedState"];
@@ -210,22 +232,20 @@ export class Bricks {
       for (let r = 0; r < this.rows; r++) {
         const b = this.bricks[c][r];
         if (b.status === BRICK_ACTIVE) {
-          // Verificar colisão considerando o raio da bola
-          const ballLeft = ball.position.x - ball.position.radius;
-          const ballRight = ball.position.x + ball.position.radius;
-          const ballTop = ball.position.y - ball.position.radius;
-          const ballBottom = ball.position.y + ball.position.radius;
-
-          const brickLeft = b.x;
-          const brickRight = b.x + this.dimensions.brickWidth;
-          const brickTop = b.y;
-          const brickBottom = b.y + this.dimensions.brickHeight;
-
-          const isOverlapping =
-            ballRight > brickLeft &&
-            ballLeft < brickRight &&
-            ballBottom > brickTop &&
-            ballTop < brickBottom;
+          const segment = this.getRadialBrickSegment(c, r);
+          const targetPosition = segment?.bounds ?? {
+            x: b.x,
+            y: b.y,
+            width: this.dimensions.brickWidth,
+            height: this.dimensions.brickHeight,
+          };
+          const isOverlapping = segment
+            ? isCircleIntersectingRadialSegment(
+                ball.position,
+                segment,
+                this.geometry!,
+              )
+            : this.isRectangularBrickOverlapping(ball.position, targetPosition);
 
           if (!isOverlapping) {
             b.isTouching = false;
@@ -241,7 +261,11 @@ export class Bricks {
 
           {
             const ballVelocityBefore = ball.getVelocity();
-            ball.bounceY();
+            if (segment && typeof ball.bounceFromRadialBrick === "function") {
+              ball.bounceFromRadialBrick(segment.centerX, segment.centerY);
+            } else {
+              ball.bounceY();
+            }
             const isDestroyed = this.hitBrick(b);
             if (isDestroyed) {
               ball.registerBrickHit();
@@ -271,12 +295,7 @@ export class Bricks {
                   {
                     type: "brick",
                     ballPosition: ball.position,
-                    targetPosition: {
-                      x: b.x,
-                      y: b.y,
-                      width: this.dimensions.brickWidth,
-                      height: this.dimensions.brickHeight,
-                    },
+                    targetPosition,
                     brickIndex: { col: c, row: r },
                     brickColorIndex: b.colorIndex,
                     velocityBefore: ballVelocityBefore,
@@ -292,12 +311,7 @@ export class Bricks {
                   ball.position,
                   ballVelocityAfter,
                   hitGameState,
-                  {
-                    x: b.x,
-                    y: b.y,
-                    width: this.dimensions.brickWidth,
-                    height: this.dimensions.brickHeight,
-                  },
+                  targetPosition,
                   { col: c, row: r },
                   b.colorIndex,
                   null,
@@ -328,12 +342,7 @@ export class Bricks {
                     },
                   ],
                   { x: 0, y: 0, width: 0, height: 0 }, // Paddle position será atualizada pelo GameEngine
-                  {
-                    x: b.x,
-                    y: b.y,
-                    width: this.dimensions.brickWidth,
-                    height: this.dimensions.brickHeight,
-                  },
+                  targetPosition,
                   { col: c, row: r },
                   b.colorIndex,
                   ball.position,
@@ -350,12 +359,7 @@ export class Bricks {
                   ball.position,
                   ballVelocityAfter,
                   updatedGameState,
-                  {
-                    x: b.x,
-                    y: b.y,
-                    width: this.dimensions.brickWidth,
-                    height: this.dimensions.brickHeight,
-                  },
+                  targetPosition,
                   { col: c, row: r },
                   b.colorIndex,
                   speedReduction,
@@ -527,17 +531,28 @@ export class Bricks {
     brick: Brick,
     brickX: number,
     brickY: number,
+    col: number,
+    row: number,
   ) {
     const brickAssetRole = this.getBrickAssetRole(brick);
     const brickImage = AssetLoader.getOrLoadImage(
       this.resolveAssetPath(brickAssetRole),
     );
+    const segment = this.getRadialBrickSegment(col, row);
     if (!this.isBrickEvasionAnimating(brick)) {
-      this.drawBrickImage(ctx, brickImage, brickX, brickY);
+      this.drawBrickImage(ctx, brick, brickImage, brickX, brickY, segment);
       return;
     }
 
     const visibility = this.getBrickEvasionVisibility(brick);
+    if (segment) {
+      ctx.save();
+      ctx.globalAlpha = visibility;
+      this.drawBrickImage(ctx, brick, brickImage, brickX, brickY, segment);
+      ctx.restore();
+      return;
+    }
+
     const scale =
       EVASIVE_BRICK_MIN_SCALE +
       (EVASIVE_BRICK_FULL_VISIBILITY - EVASIVE_BRICK_MIN_SCALE) * visibility;
@@ -550,19 +565,28 @@ export class Bricks {
     ctx.scale(scale, scale);
     this.drawBrickImage(
       ctx,
+      brick,
       brickImage,
       -this.dimensions.brickWidth / CENTER_DIVISOR,
       -this.dimensions.brickHeight / CENTER_DIVISOR,
+      segment,
     );
     ctx.restore();
   }
 
   private drawBrickImage(
     ctx: CanvasRenderingContext2D,
+    brick: Brick,
     brickImage: HTMLImageElement | null,
     brickX: number,
     brickY: number,
+    segment?: RadialBrickSegment,
   ) {
+    if (segment) {
+      this.drawRadialBrickImage(ctx, brick, brickImage, segment);
+      return;
+    }
+
     if (brickImage) {
       ctx.drawImage(
         brickImage,
@@ -580,6 +604,77 @@ export class Bricks {
         this.dimensions.brickHeight,
       );
     }
+  }
+
+  private drawRadialBrickImage(
+    ctx: CanvasRenderingContext2D,
+    brick: Brick,
+    brickImage: HTMLImageElement | null,
+    segment: RadialBrickSegment,
+  ) {
+    if (!this.geometry) return;
+
+    ctx.save();
+    this.traceRadialBrickPath(ctx, segment);
+    ctx.shadowColor = RADIAL_BRICK_SHADOW_COLOR;
+    ctx.shadowBlur = RADIAL_BRICK_SHADOW_BLUR;
+    ctx.clip();
+    if (brickImage) {
+      ctx.drawImage(
+        brickImage,
+        segment.bounds.x,
+        segment.bounds.y,
+        segment.bounds.width,
+        segment.bounds.height,
+      );
+    } else {
+      ctx.fillStyle = this.getRadialBrickColor(brick);
+      ctx.fillRect(
+        segment.bounds.x,
+        segment.bounds.y,
+        segment.bounds.width,
+        segment.bounds.height,
+      );
+    }
+    ctx.restore();
+
+    ctx.save();
+    this.traceRadialBrickPath(ctx, segment);
+    ctx.lineWidth = RADIAL_BRICK_LINE_WIDTH;
+    ctx.strokeStyle = RADIAL_BRICK_STROKE_COLOR;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  private traceRadialBrickPath(
+    ctx: CanvasRenderingContext2D,
+    segment: RadialBrickSegment,
+  ) {
+    if (!this.geometry) return;
+
+    ctx.beginPath();
+    ctx.arc(
+      this.geometry.centerX,
+      this.geometry.centerY,
+      segment.outerRadius,
+      segment.startAngle,
+      segment.endAngle,
+    );
+    ctx.arc(
+      this.geometry.centerX,
+      this.geometry.centerY,
+      segment.innerRadius,
+      segment.endAngle,
+      segment.startAngle,
+      true,
+    );
+    ctx.closePath();
+  }
+
+  private getRadialBrickColor(brick: Brick): string {
+    if (brick.kind === BRICK_KIND_METAL) return RADIAL_BRICK_METAL_COLOR;
+
+    return RADIAL_BRICK_FALLBACK_COLORS[brick.colorIndex] ?? RADIAL_BRICK_FALLBACK_COLORS[FIRST_INDEX];
   }
 
   private isBrickEvasionAnimating(brick: Brick): boolean {
@@ -748,28 +843,71 @@ export class Bricks {
     return activeBricks;
   }
 
+  private getBrickBounds(col: number, row: number): RectBounds {
+    const segment = this.getRadialBrickSegment(col, row);
+    if (segment) return segment.bounds;
+
+    return {
+      x:
+        col * (this.dimensions.brickWidth + this.dimensions.brickPadding) +
+        this.dimensions.brickOffsetLeft,
+      y:
+        row * (this.dimensions.brickHeight + this.dimensions.brickPadding) +
+        this.dimensions.brickOffsetTop,
+      width: this.dimensions.brickWidth,
+      height: this.dimensions.brickHeight,
+    };
+  }
+
+  private getRadialBrickSegment(
+    col: number,
+    row: number,
+  ): RadialBrickSegment | undefined {
+    if (!this.geometry) return undefined;
+
+    return calculateRadialBrickSegment(
+      this.geometry,
+      this.dimensions,
+      col,
+      row,
+      this.rows,
+    );
+  }
+
+  private isRectangularBrickOverlapping(
+    ballPosition: { x: number; y: number; radius: number },
+    bounds: RectBounds,
+  ): boolean {
+    const ballLeft = ballPosition.x - ballPosition.radius;
+    const ballRight = ballPosition.x + ballPosition.radius;
+    const ballTop = ballPosition.y - ballPosition.radius;
+    const ballBottom = ballPosition.y + ballPosition.radius;
+
+    return (
+      ballRight > bounds.x &&
+      ballLeft < bounds.x + bounds.width &&
+      ballBottom > bounds.y &&
+      ballTop < bounds.y + bounds.height
+    );
+  }
+
   private snapshotBrick(
     col: number,
     row: number,
     brick: Brick,
   ): DestroyedBrickSnapshot {
-    const x =
-      col * (this.dimensions.brickWidth + this.dimensions.brickPadding) +
-      this.dimensions.brickOffsetLeft;
-    const y =
-      row * (this.dimensions.brickHeight + this.dimensions.brickPadding) +
-      this.dimensions.brickOffsetTop;
-    brick.x = x;
-    brick.y = y;
+    const bounds = this.getBrickBounds(col, row);
+    brick.x = bounds.x;
+    brick.y = bounds.y;
 
     return {
       col,
       row,
       colorIndex: brick.colorIndex,
-      x,
-      y,
-      width: this.dimensions.brickWidth,
-      height: this.dimensions.brickHeight,
+      x: bounds.x,
+      y: bounds.y,
+      width: bounds.width,
+      height: bounds.height,
     };
   }
 }
