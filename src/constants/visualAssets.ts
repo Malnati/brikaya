@@ -14,6 +14,8 @@ export const sprBrickBasicYellowNormal =
   "/assets/visual/bricks/spr-brick-basic-yellow-normal.svg";
 export const sprBrickBasicPurpleNormal =
   "/assets/visual/bricks/spr-brick-basic-purple-normal.svg";
+export const sprBrickMetalSteelNormal =
+  "/assets/visual/bricks/spr-brick-metal-steel-normal.svg";
 export const vfxCountdownCircleOverlay =
   "/assets/visual/vfx/vfx-countdown-circle-overlay.svg";
 export const vfxCountdownSparkOverlay =
@@ -49,6 +51,8 @@ export const sprBrickBasicYellowHighContrastNormal =
   "/assets/visual/bricks/spr-brick-basic-yellow-high-contrast-normal.svg";
 export const sprBrickBasicPurpleHighContrastNormal =
   "/assets/visual/bricks/spr-brick-basic-purple-high-contrast-normal.svg";
+export const sprBrickMetalSteelHighContrastNormal =
+  "/assets/visual/bricks/spr-brick-metal-steel-high-contrast-normal.svg";
 export const vfxCountdownCircleHighContrastOverlay =
   "/assets/visual/vfx/vfx-countdown-circle-high-contrast-overlay.svg";
 export const vfxCountdownSparkHighContrastOverlay =
@@ -81,6 +85,8 @@ export const sprBrickBasicYellowSunsetNormal =
   "/assets/visual/bricks/spr-brick-basic-yellow-sunset-normal.svg";
 export const sprBrickBasicPurpleSunsetNormal =
   "/assets/visual/bricks/spr-brick-basic-purple-sunset-normal.svg";
+export const sprBrickMetalSteelSunsetNormal =
+  "/assets/visual/bricks/spr-brick-metal-steel-sunset-normal.svg";
 export const vfxCountdownCircleSunsetOverlay =
   "/assets/visual/vfx/vfx-countdown-circle-sunset-overlay.svg";
 export const vfxCountdownSparkSunsetOverlay =
@@ -282,6 +288,7 @@ export const VISUAL_ASSET_PATHS = {
   sprBrickBasicGreenNormal,
   sprBrickBasicYellowNormal,
   sprBrickBasicPurpleNormal,
+  sprBrickMetalSteelNormal,
   vfxCountdownCircleOverlay,
   vfxCountdownSparkOverlay,
   vfxLevelUpStarOverlay,
@@ -300,6 +307,7 @@ export const VISUAL_ASSET_PATHS = {
   sprBrickBasicGreenHighContrastNormal,
   sprBrickBasicYellowHighContrastNormal,
   sprBrickBasicPurpleHighContrastNormal,
+  sprBrickMetalSteelHighContrastNormal,
   vfxCountdownCircleHighContrastOverlay,
   vfxCountdownSparkHighContrastOverlay,
   vfxLevelUpStarHighContrastOverlay,
@@ -316,6 +324,7 @@ export const VISUAL_ASSET_PATHS = {
   sprBrickBasicGreenSunsetNormal,
   sprBrickBasicYellowSunsetNormal,
   sprBrickBasicPurpleSunsetNormal,
+  sprBrickMetalSteelSunsetNormal,
   vfxCountdownCircleSunsetOverlay,
   vfxCountdownSparkSunsetOverlay,
   vfxLevelUpStarSunsetOverlay,
@@ -484,6 +493,17 @@ export const VISUAL_ASSET_CATALOG = [
     width: 48,
     height: 20,
     usage: "Bloco básico roxo",
+  },
+  {
+    id: "spr-brick-metal-steel-normal",
+    variableName: "sprBrickMetalSteelNormal",
+    path: sprBrickMetalSteelNormal,
+    group: "brick",
+    semanticRole: "brick-metal-steel",
+    state: "normal",
+    width: 48,
+    height: 20,
+    usage: "Bloco metálico resistente",
   },
   {
     id: "vfx-countdown-circle-overlay",
@@ -684,6 +704,17 @@ export const VISUAL_ASSET_CATALOG = [
     usage: "Bloco roxo alto contraste",
   },
   {
+    id: "spr-brick-metal-steel-high-contrast-normal",
+    variableName: "sprBrickMetalSteelHighContrastNormal",
+    path: sprBrickMetalSteelHighContrastNormal,
+    group: "brick",
+    semanticRole: "brick-metal-steel-high-contrast",
+    state: "normal",
+    width: 48,
+    height: 20,
+    usage: "Bloco metálico resistente alto contraste",
+  },
+  {
     id: "vfx-countdown-circle-high-contrast-overlay",
     variableName: "vfxCountdownCircleHighContrastOverlay",
     path: vfxCountdownCircleHighContrastOverlay,
@@ -858,6 +889,17 @@ export const VISUAL_ASSET_CATALOG = [
     width: 48,
     height: 20,
     usage: "Bloco roxo sunset",
+  },
+  {
+    id: "spr-brick-metal-steel-sunset-normal",
+    variableName: "sprBrickMetalSteelSunsetNormal",
+    path: sprBrickMetalSteelSunsetNormal,
+    group: "brick",
+    semanticRole: "brick-metal-steel-sunset",
+    state: "normal",
+    width: 48,
+    height: 20,
+    usage: "Bloco metálico resistente sunset",
   },
   {
     id: "vfx-countdown-circle-sunset-overlay",

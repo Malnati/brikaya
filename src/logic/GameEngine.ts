@@ -55,11 +55,14 @@ const SINGLE_BRICK_QA_SCENARIO = "single-brick-phase-clear";
 const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
 const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
 const LASER_FAN_QA_SCENARIO = "laser-fan";
+const METAL_BLOCK_QA_SCENARIO = "metal-block";
 const LATE_PHASE_STABILITY_LEVEL = 11;
 const LATE_PHASE_STABILITY_Y_RATIO = 0.35;
 const CINEMATIC_RIP_X_RATIO = 0.12;
 const CINEMATIC_RIP_Y_OFFSET = 2;
 const LASER_FAN_QA_POWER_UP_Y_OFFSET = 64;
+const METAL_BLOCK_QA_RANDOM_VALUES = [0, 0.99] as const;
+const METAL_BLOCK_QA_RANDOM_FALLBACK = 0.99;
 const COMBO_WINDOW_MS = 1200;
 const COMBO_COOLDOWN_MS = 500;
 const COMBO_SMALL_THRESHOLD = 3;
@@ -157,6 +160,7 @@ export type GameQaScenario =
   | typeof LATE_PHASE_STABILITY_QA_SCENARIO
   | typeof CINEMATIC_RIP_QA_SCENARIO
   | typeof LASER_FAN_QA_SCENARIO
+  | typeof METAL_BLOCK_QA_SCENARIO
   | typeof AUDIO_QA_SCENARIO;
 
 export class GameEngine {
@@ -294,10 +298,7 @@ export class GameEngine {
     canvasHeight: number,
   ): DynamicGameDimensions {
     const dimensions = calculateDynamicDimensions(canvasWidth, canvasHeight);
-    if (
-      this.qaScenario === SINGLE_BRICK_QA_SCENARIO &&
-      !this.qaScenarioConsumed
-    ) {
+    if (this.isSingleBrickQaScenario() && !this.qaScenarioConsumed) {
       return {
         ...dimensions,
         brickCols: 1,
@@ -406,6 +407,18 @@ export class GameEngine {
   }
 
   private createBricks(): Bricks {
+    const metalBlockQaRandom = this.createMetalBlockQaRandom();
+    if (metalBlockQaRandom) {
+      return new Bricks(
+        this.dimensions,
+        this.onBrickDestroyed.bind(this),
+        this.maxBrickRows,
+        undefined,
+        this.resolveAssetPath,
+        metalBlockQaRandom,
+      );
+    }
+
     return new Bricks(
       this.dimensions,
       this.onBrickDestroyed.bind(this),
@@ -415,9 +428,29 @@ export class GameEngine {
     );
   }
 
+  private isSingleBrickQaScenario(): boolean {
+    return (
+      this.qaScenario === SINGLE_BRICK_QA_SCENARIO ||
+      this.qaScenario === METAL_BLOCK_QA_SCENARIO
+    );
+  }
+
+  private createMetalBlockQaRandom(): (() => number) | null {
+    if (
+      this.qaScenario !== METAL_BLOCK_QA_SCENARIO ||
+      this.qaScenarioConsumed
+    ) {
+      return null;
+    }
+
+    let index = 0;
+    return () =>
+      METAL_BLOCK_QA_RANDOM_VALUES[index++] ?? METAL_BLOCK_QA_RANDOM_FALLBACK;
+  }
+
   private prepareQaBall() {
     if (
-      this.qaScenario !== SINGLE_BRICK_QA_SCENARIO ||
+      !this.isSingleBrickQaScenario() ||
       this.qaScenarioConsumed ||
       this.balls.length === 0
     )
@@ -596,10 +629,7 @@ export class GameEngine {
     nextSpeedMultiplier: number,
   ) {
     this.level = nextLevel;
-    if (
-      this.qaScenario === SINGLE_BRICK_QA_SCENARIO &&
-      !this.qaScenarioConsumed
-    ) {
+    if (this.isSingleBrickQaScenario() && !this.qaScenarioConsumed) {
       this.qaScenarioConsumed = true;
       this.dimensions = this.createDimensions(
         this.canvasSize.width,
@@ -1360,7 +1390,7 @@ export class GameEngine {
 
   private getExpectedInitialBrickCountForLevel(level: number): number {
     if (
-      this.qaScenario === SINGLE_BRICK_QA_SCENARIO &&
+      this.isSingleBrickQaScenario() &&
       !this.qaScenarioConsumed &&
       level > this.level
     ) {

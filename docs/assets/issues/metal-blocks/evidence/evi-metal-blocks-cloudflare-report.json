@@ -1,0 +1,108 @@
+{
+  "url": "https://brikaya.com/?qaScenario=metal-block",
+  "screenshotPath": "docs/assets/issues/metal-blocks/evidence/evi-metal-blocks-cloudflare-proof.png",
+  "byType": {
+    "game_start": 1,
+    "collision": 4,
+    "brick_destroyed": 1,
+    "score_update": 1,
+    "level_complete": 1,
+    "level_start": 1
+  },
+  "eventTypes": [
+    "game_start",
+    "collision",
+    "collision",
+    "collision",
+    "collision",
+    "brick_destroyed",
+    "score_update",
+    "level_complete",
+    "level_start"
+  ],
+  "brickCollisions": [
+    {
+      "index": 1,
+      "type": "collision",
+      "timestamp": 1783149040670,
+      "score": 0,
+      "bricksRemaining": 1,
+      "successfulBrickHits": 0,
+      "pointsAdded": null,
+      "reason": null,
+      "brickIndex": {
+        "col": 0,
+        "row": 0
+      }
+    },
+    {
+      "index": 3,
+      "type": "collision",
+      "timestamp": 1783149042484,
+      "score": 0,
+      "bricksRemaining": 1,
+      "successfulBrickHits": 0,
+      "pointsAdded": null,
+      "reason": null,
+      "brickIndex": {
+        "col": 0,
+        "row": 0
+      }
+    }
+  ],
+  "preDestroyBrickCollisions": [
+    {
+      "index": 1,
+      "type": "collision",
+      "timestamp": 1783149040670,
+      "score": 0,
+      "bricksRemaining": 1,
+      "successfulBrickHits": 0,
+      "pointsAdded": null,
+      "reason": null,
+      "brickIndex": {
+        "col": 0,
+        "row": 0
+      }
+    },
+    {
+      "index": 3,
+      "type": "collision",
+      "timestamp": 1783149042484,
+      "score": 0,
+      "bricksRemaining": 1,
+      "successfulBrickHits": 0,
+      "pointsAdded": null,
+      "reason": null,
+      "brickIndex": {
+        "col": 0,
+        "row": 0
+      }
+    }
+  ],
+  "firstBrickDestroyed": {
+    "index": 5,
+    "type": "brick_destroyed",
+    "timestamp": 1783149044283,
+    "score": 0,
+    "bricksRemaining": 0,
+    "successfulBrickHits": 1,
+    "pointsAdded": null,
+    "reason": null,
+    "brickIndex": {
+      "col": 0,
+      "row": 0
+    }
+  },
+  "firstScoreUpdate": {
+    "index": 6,
+    "type": "score_update",
+    "timestamp": 1783149044286,
+    "score": 10,
+    "bricksRemaining": 0,
+    "successfulBrickHits": 1,
+    "pointsAdded": 10,
+    "reason": "brick_destroyed"
+  },
+  "consoleProblems": []
+}

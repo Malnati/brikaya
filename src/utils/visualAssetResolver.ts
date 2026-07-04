@@ -20,6 +20,7 @@ export const GAME_VISUAL_ASSET_ROLES = {
   brickGreen: "brickGreen",
   brickYellow: "brickYellow",
   brickPurple: "brickPurple",
+  brickMetal: "brickMetal",
   powerupMultiball: "powerupMultiball",
   powerupWidePaddle: "powerupWidePaddle",
   powerupSlowBall: "powerupSlowBall",
@@ -49,6 +50,7 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
     [GAME_VISUAL_ASSET_ROLES.brickGreen]: "sprBrickBasicGreenNormal",
     [GAME_VISUAL_ASSET_ROLES.brickYellow]: "sprBrickBasicYellowNormal",
     [GAME_VISUAL_ASSET_ROLES.brickPurple]: "sprBrickBasicPurpleNormal",
+    [GAME_VISUAL_ASSET_ROLES.brickMetal]: "sprBrickMetalSteelNormal",
     [GAME_VISUAL_ASSET_ROLES.powerupMultiball]: "sprPowerupMultiballOrb",
     [GAME_VISUAL_ASSET_ROLES.powerupWidePaddle]: "sprPowerupWidePaddle",
     [GAME_VISUAL_ASSET_ROLES.powerupSlowBall]: "sprPowerupSlowBall",
@@ -73,6 +75,8 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
       "sprBrickBasicYellowHighContrastNormal",
     [GAME_VISUAL_ASSET_ROLES.brickPurple]:
       "sprBrickBasicPurpleHighContrastNormal",
+    [GAME_VISUAL_ASSET_ROLES.brickMetal]:
+      "sprBrickMetalSteelHighContrastNormal",
     [GAME_VISUAL_ASSET_ROLES.powerupMultiball]:
       "sprPowerupMultiballOrbHighContrast",
     [GAME_VISUAL_ASSET_ROLES.powerupWidePaddle]:
@@ -100,6 +104,7 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
     [GAME_VISUAL_ASSET_ROLES.brickGreen]: "sprBrickBasicGreenSunsetNormal",
     [GAME_VISUAL_ASSET_ROLES.brickYellow]: "sprBrickBasicYellowSunsetNormal",
     [GAME_VISUAL_ASSET_ROLES.brickPurple]: "sprBrickBasicPurpleSunsetNormal",
+    [GAME_VISUAL_ASSET_ROLES.brickMetal]: "sprBrickMetalSteelSunsetNormal",
     [GAME_VISUAL_ASSET_ROLES.powerupMultiball]: "sprPowerupMultiballOrbSunset",
     [GAME_VISUAL_ASSET_ROLES.powerupWidePaddle]: "sprPowerupWidePaddleSunset",
     [GAME_VISUAL_ASSET_ROLES.powerupSlowBall]: "sprPowerupSlowBallSunset",
@@ -123,6 +128,7 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
     [GAME_VISUAL_ASSET_ROLES.brickGreen]: "sprBrickBasicGreenMetroRealNormal",
     [GAME_VISUAL_ASSET_ROLES.brickYellow]: "sprBrickBasicYellowMetroRealNormal",
     [GAME_VISUAL_ASSET_ROLES.brickPurple]: "sprBrickBasicPurpleMetroRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.brickMetal]: "sprBrickMetalSteelNormal",
     [GAME_VISUAL_ASSET_ROLES.powerupMultiball]:
       "sprPowerupMultiballOrbMetroReal",
     [GAME_VISUAL_ASSET_ROLES.powerupWidePaddle]:
@@ -151,6 +157,7 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
       "sprBrickBasicYellowGarageRealNormal",
     [GAME_VISUAL_ASSET_ROLES.brickPurple]:
       "sprBrickBasicPurpleGarageRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.brickMetal]: "sprBrickMetalSteelNormal",
     [GAME_VISUAL_ASSET_ROLES.powerupMultiball]:
       "sprPowerupMultiballOrbGarageReal",
     [GAME_VISUAL_ASSET_ROLES.powerupWidePaddle]:
@@ -177,6 +184,8 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
     [GAME_VISUAL_ASSET_ROLES.brickGreen]: "sprBrickBasicGreenLabRealNormal",
     [GAME_VISUAL_ASSET_ROLES.brickYellow]: "sprBrickBasicYellowLabRealNormal",
     [GAME_VISUAL_ASSET_ROLES.brickPurple]: "sprBrickBasicPurpleLabRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.brickMetal]:
+      "sprBrickMetalSteelHighContrastNormal",
     [GAME_VISUAL_ASSET_ROLES.powerupMultiball]: "sprPowerupMultiballOrbLabReal",
     [GAME_VISUAL_ASSET_ROLES.powerupWidePaddle]: "sprPowerupWidePaddleLabReal",
     [GAME_VISUAL_ASSET_ROLES.powerupSlowBall]: "sprPowerupSlowBallLabReal",
@@ -203,6 +212,7 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
       "sprBrickBasicYellowTempleRealNormal",
     [GAME_VISUAL_ASSET_ROLES.brickPurple]:
       "sprBrickBasicPurpleTempleRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.brickMetal]: "sprBrickMetalSteelSunsetNormal",
     [GAME_VISUAL_ASSET_ROLES.powerupMultiball]:
       "sprPowerupMultiballOrbTempleReal",
     [GAME_VISUAL_ASSET_ROLES.powerupWidePaddle]:
@@ -231,6 +241,8 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
       "sprBrickBasicYellowOrbitalRealNormal",
     [GAME_VISUAL_ASSET_ROLES.brickPurple]:
       "sprBrickBasicPurpleOrbitalRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.brickMetal]:
+      "sprBrickMetalSteelHighContrastNormal",
     [GAME_VISUAL_ASSET_ROLES.powerupMultiball]:
       "sprPowerupMultiballOrbOrbitalReal",
     [GAME_VISUAL_ASSET_ROLES.powerupWidePaddle]:
