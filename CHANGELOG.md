@@ -3,6 +3,25 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.21] - 2026-07-04
+### Adicionado
+- Ícone independente de música no topo do jogo, ao lado do ícone de som, para pausar ou retomar somente a trilha de fundo.
+- Preferência local `brickbreaker-music-muted` preserva o estado da música entre sessões.
+
+### Alterado
+- O mute geral continua controlando todos os sons, enquanto o novo controle de música bloqueia apenas BGM/menu/gameplay/intense layer e mantém efeitos sonoros ativos.
+- QAs publicados de áudio, mobile, dashboard e tema passam a exigir o ícone de música no conjunto principal de controles.
+
+### Testado
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version` → `v23.5.0`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make help`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/utils/audioManager.test.ts src/hooks/useAudioPreference.test.ts src/App.test.tsx --runInBand` → 3 suites / 36 testes.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --check ...` nos quatro QAs E2E alterados: áudio, mobile, dashboard e tema.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand` → 43 suites / 241 testes.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:semantic-file-names` → governed=845.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:audio-assets` → ids=39 mp3=91.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`.
+
 ## [1.32.20] - 2026-07-04
 ### Alterado
 - Área invisível de navegação touch da raquete passa de 2 para 3 polegadas de altura, preservando o topo atual e estendendo a zona apenas para baixo.
@@ -11,23 +30,16 @@
 ### Testado
 - `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" node --version` → `v23.5.0`.
 - `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" make help`.
-- Baseline publicado antes da correção: `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa` mediu a faixa touch em 192px.
+- RED retroativo: `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" npm test -- src/components/Game.test.tsx --runInBand -t "usa 3 polegadas"` falhou quando a altura foi temporariamente revertida para 2 polegadas.
+- GREEN: `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" npm test -- src/components/Game.test.tsx --runInBand -t "usa 3 polegadas"` → 1 teste.
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" npm test -- src/components/Game.test.tsx --runInBand` → 8 testes.
 - `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" node --check tests/e2e/cloudflare-mobile-qa.js`.
-- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" node --check tests/e2e/cloudflare-theme-qa.js`.
-- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" npm test -- src/components/Game.test.tsx --runInBand` → 1 suite / 5 testes.
-- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" npm test -- --runInBand` → 43 suites / 240 testes.
-- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" npx prettier --check CHANGELOG.md src/components/Game.tsx src/components/Game.test.tsx tests/e2e/cloudflare-mobile-qa.js`.
-- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" npm run test:semantic-file-names` → governed=854.
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" npm test -- --runInBand --silent` → 43 suites / 240 testes.
 - `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" npm run build`.
-- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" make cloudflare-deploy` → deploy `https://3459a745.malnati-brickbreaker.pages.dev` e domínio canônico atualizado em `https://brikaya.com/`.
-- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
-- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ BRICKBREAKER_MOBILE_QA_SCREENSHOT=docs/assets/issues/paddle-touch-zone-extra-inch/evidence/evi-paddle-touch-zone-extra-inch-mobile.png BRICKBREAKER_MOBILE_MENU_SCREENSHOT=docs/assets/issues/paddle-touch-zone-extra-inch/evidence/evi-paddle-touch-zone-extra-inch-menu.png BRICKBREAKER_MOBILE_QA_REPORT=docs/assets/issues/paddle-touch-zone-extra-inch/evidence/evi-paddle-touch-zone-extra-inch-public-qa.json npm run test:cloudflare-mobile` mediu a faixa touch em 288px, com topo preservado em 260.65625px e borda inferior em 548.65625px.
-- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-no-score-reset`.
-- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-phase-transition-qa`.
-- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`.
-- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa`.
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" make cloudflare-deploy`.
+- `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`.
+- Evidências: `docs/assets/issues/paddle-touch-zone-extra-inch/evidence/evi-paddle-touch-zone-extra-inch-public-qa.json`, `docs/assets/issues/paddle-touch-zone-extra-inch/evidence/evi-paddle-touch-zone-extra-inch-mobile.png`, `docs/assets/issues/paddle-touch-zone-extra-inch/evidence/evi-paddle-touch-zone-extra-inch-menu.png`.
 - Varredura textual das evidências e arquivos alterados não encontrou token, chave privada ou credencial real.
-- Evidências: `docs/assets/issues/paddle-touch-zone-extra-inch/evidence/evi-paddle-touch-zone-extra-inch-mobile.png`, `docs/assets/issues/paddle-touch-zone-extra-inch/evidence/evi-paddle-touch-zone-extra-inch-menu.png` e `docs/assets/issues/paddle-touch-zone-extra-inch/evidence/evi-paddle-touch-zone-extra-inch-public-qa.json`.
 
 ## [1.32.19] - 2026-07-04
 ### Adicionado

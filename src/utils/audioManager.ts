@@ -70,6 +70,7 @@ interface AudioWindow extends Window {
   __brickbreakerRunAudioTour?: () => Promise<AudioId[]>;
   __brickbreakerAudioState?: () => {
     muted: boolean;
+    musicMuted: boolean;
     unlocked: boolean;
     contextState: string;
     lastUnlockResult: AudioUnlockResult;
@@ -104,6 +105,7 @@ class BrickBreakerAudioManager {
   private loadingBuffers = new Map<string, Promise<AudioBuffer | null>>();
   private activeMusic = new Map<AudioId, ActiveMusicNode>();
   private muted = true;
+  private musicMuted = false;
   private unlocked = false;
   private activeSfxCount = 0;
   private duckingTimer: ReturnType<typeof setTimeout> | null = null;
@@ -123,6 +125,17 @@ class BrickBreakerAudioManager {
 
   isMuted(): boolean {
     return this.muted;
+  }
+
+  setMusicMuted(muted: boolean): void {
+    this.musicMuted = muted;
+    if (muted) {
+      this.stopMusic();
+    }
+  }
+
+  isMusicMuted(): boolean {
+    return this.musicMuted;
   }
 
   isUnlocked(): boolean {
@@ -227,7 +240,7 @@ class BrickBreakerAudioManager {
       return;
     }
 
-    if (this.muted) {
+    if (this.muted || this.musicMuted) {
       this.recordEvent(id, AUDIO_EVENT_MUTED_STATUS, path);
       return;
     }
@@ -317,6 +330,7 @@ class BrickBreakerAudioManager {
     audioWindow.__brickbreakerRunAudioTour = () => this.runQaTour();
     audioWindow.__brickbreakerAudioState = () => ({
       muted: this.muted,
+      musicMuted: this.musicMuted,
       unlocked: this.unlocked,
       contextState: this.audioContext?.state || AUDIO_CONTEXT_MISSING_STATE,
       lastUnlockResult: this.lastUnlockResult,

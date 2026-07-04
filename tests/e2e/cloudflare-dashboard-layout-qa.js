@@ -757,6 +757,9 @@ async function run() {
           const audioIcon = mainButtons.find((button) =>
             ["Som", "Sem som"].includes(button.ariaLabel),
           );
+          const musicIcon = mainButtons.find((button) =>
+            ["Música", "Sem música"].includes(button.ariaLabel),
+          );
           const restartIcon = mainButtons.find(
             (button) =>
               /reiniciar|jogar de novo/i.test(button.ariaLabel) &&
@@ -771,10 +774,18 @@ async function run() {
             `${viewport.name}: estado inicial do som não começou mudo.`,
           );
           assert(
+            musicIcon,
+            `${viewport.name}: ícone de música ausente na tela principal.`,
+          );
+          assert(
+            musicIcon.ariaLabel === "Música" && musicIcon.text === "♫",
+            `${viewport.name}: estado inicial da música não começou ativo.`,
+          );
+          assert(
             restartIcon,
             `${viewport.name}: ícone Reiniciar/Jogar de novo ausente na tela principal.`,
           );
-          for (const button of [audioIcon, restartIcon]) {
+          for (const button of [audioIcon, musicIcon, restartIcon]) {
             assert(
               button.bottom <= state.canvas.y,
               `${viewport.name}: ícone ${button.ariaLabel} não ficou no topo da tela.`,

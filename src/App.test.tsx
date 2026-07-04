@@ -170,6 +170,7 @@ describe("App theme selector", () => {
 
     expect(screen.getByRole("button", { name: "Menu" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Sem som" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Música" })).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Reiniciar" }),
     ).toBeInTheDocument();
@@ -591,10 +592,13 @@ describe("App theme selector", () => {
     await renderApp();
 
     const audioButton = screen.getByRole("button", { name: "Sem som" });
+    const musicButton = screen.getByRole("button", { name: "Música" });
     const restartButton = screen.getByRole("button", { name: "Reiniciar" });
 
     expect(audioButton).toHaveTextContent("×");
     expect(audioButton).not.toHaveTextContent("Sem som");
+    expect(musicButton).toHaveTextContent("♫");
+    expect(musicButton).not.toHaveTextContent("Música");
     expect(restartButton).toHaveTextContent("↻");
     expect(restartButton).not.toHaveTextContent("Reiniciar");
   });
@@ -618,9 +622,12 @@ describe("App theme selector", () => {
     expect(within(topControls).getByRole("button", { name: "Sem som" })).toBe(
       screen.getByRole("button", { name: "Sem som" }),
     );
-    expect(within(topControls).getByRole("button", { name: "Reiniciar" })).toBe(
-      screen.getByRole("button", { name: "Reiniciar" }),
+    expect(within(topControls).getByRole("button", { name: "Música" })).toBe(
+      screen.getByRole("button", { name: "Música" }),
     );
+    expect(
+      within(topControls).getByRole("button", { name: "Reiniciar" }),
+    ).toBe(screen.getByRole("button", { name: "Reiniciar" }));
     expect(mockLastGameProps?.boardControls).toBeUndefined();
   });
 
@@ -644,6 +651,46 @@ describe("App theme selector", () => {
     const audioButton = await screen.findByRole("button", { name: "Som" });
     expect(audioButton).toHaveAttribute("aria-pressed", "true");
     expect(audioButton).toHaveTextContent("♪");
+    expect(playMusic).toHaveBeenCalled();
+  });
+
+  it("alterna música sem desligar o controle geral de som", async () => {
+    mockSystemTheme(true);
+    const user = userEvent.setup();
+
+    jest.spyOn(audioManager, "unlock").mockResolvedValue(true);
+    const playMusic = jest
+      .spyOn(audioManager, "playMusic")
+      .mockResolvedValue(undefined);
+    const setMusicMuted = jest.spyOn(audioManager, "setMusicMuted");
+
+    await renderApp();
+
+    await user.click(screen.getByRole("button", { name: "Sem som" }));
+    expect(await screen.findByRole("button", { name: "Som" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+
+    await user.click(screen.getByRole("button", { name: "Música" }));
+
+    const musicOffButton = await screen.findByRole("button", {
+      name: "Sem música",
+    });
+    expect(screen.getByRole("button", { name: "Som" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(musicOffButton).toHaveAttribute("aria-pressed", "false");
+    expect(musicOffButton).toHaveTextContent("×");
+    expect(setMusicMuted).toHaveBeenLastCalledWith(true);
+
+    await user.click(musicOffButton);
+
+    const musicOnButton = await screen.findByRole("button", { name: "Música" });
+    expect(musicOnButton).toHaveAttribute("aria-pressed", "true");
+    expect(musicOnButton).toHaveTextContent("♫");
+    expect(setMusicMuted).toHaveBeenLastCalledWith(false);
     expect(playMusic).toHaveBeenCalled();
   });
 
