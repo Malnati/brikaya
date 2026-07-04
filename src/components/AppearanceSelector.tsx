@@ -11,6 +11,8 @@ import {
 } from '../constants/appearance';
 import { useI18n, type TranslationKey } from '../i18n';
 
+const APPEARANCE_OPTION_TEST_ID_PREFIX = 'appearance-option';
+
 interface AppearanceSelectorProps {
   selection: AppearanceSelection;
   onThemeChange: (themeId: ThemeId) => void;
@@ -50,6 +52,8 @@ function AppearanceOptionGroup<T extends string>({
             key={option.id}
             type="button"
             className={`appearance-selector__button ${selectedId === option.id ? 'appearance-selector__button--active' : ''}`}
+            data-appearance-option-id={option.id}
+            data-testid={`${APPEARANCE_OPTION_TEST_ID_PREFIX}-${option.id}`}
             aria-pressed={selectedId === option.id}
             onClick={() => onChange(option.id)}
           >

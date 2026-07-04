@@ -62,26 +62,32 @@ const APPEARANCE_STORAGE_KEYS = [
   IMAGE_SET_STORAGE_KEY,
   FONT_SET_STORAGE_KEY,
 ];
-const THEME_BUTTON_LABELS = [
-  "Arcade neon",
-  "CRT alto contraste",
-  "Pôr do sol pixelado",
-  "Oceano noturno",
-  "Selva laser",
-  "Âmbar retrô",
-  "Gelo cósmico",
-  "Ameixa elétrica",
-  "Lima grafite",
-  "Rubi profundo",
+const THEME_OPTION_IDS = [
+  THEME_NEON_ARCADE,
+  THEME_CRT_HIGH_CONTRAST,
+  THEME_PIXEL_SUNSET,
+  THEME_OCEAN_NIGHT,
+  "jungle-laser",
+  "amber-retro",
+  "cosmic-ice",
+  "electric-plum",
+  "lime-graphite",
+  THEME_RUBY_DEPTH,
 ];
-const APPEARANCE_BUTTON_LABELS = [
-  ...THEME_BUTTON_LABELS,
-  "Retrô padrão",
-  "Alto contraste",
-  "Cabine pôr do sol",
-  "Arcade",
-  "CRT mono",
-  "Blocos pixelados",
+const IMAGE_SET_OPTION_IDS = [
+  IMAGE_SET_RETRO_DEFAULT,
+  IMAGE_SET_HIGH_CONTRAST,
+  IMAGE_SET_SUNSET_CABINET,
+];
+const FONT_SET_OPTION_IDS = [
+  FONT_SET_ARCADE_UI,
+  FONT_SET_CRT_MONO,
+  FONT_SET_BLOCK_PIXEL,
+];
+const APPEARANCE_OPTION_IDS = [
+  ...THEME_OPTION_IDS,
+  ...IMAGE_SET_OPTION_IDS,
+  ...FONT_SET_OPTION_IDS,
 ];
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
@@ -220,6 +226,8 @@ async function clickButton(page, matcher, missingMessage) {
           text: node.textContent?.trim() || "",
           ariaLabel: node.getAttribute("aria-label") || "",
           title: node.getAttribute("title") || "",
+          appearanceOptionId:
+            node.getAttribute("data-appearance-option-id") || "",
           visible:
             rect.width > 0 &&
             rect.height > 0 &&
@@ -261,11 +269,11 @@ async function clickButton(page, matcher, missingMessage) {
   throw new Error(missingMessage);
 }
 
-async function clickButtonByText(page, label) {
+async function clickAppearanceOptionById(page, optionId) {
   await clickButton(
     page,
-    (labels) => labels.text === label,
-    `Botão não encontrado: ${label}`,
+    (labels) => labels.appearanceOptionId === optionId,
+    `Opção de aparência não encontrada: ${optionId}`,
   );
 }
 
@@ -327,6 +335,8 @@ async function collectState(page) {
             text: button.textContent?.trim() || "",
             ariaLabel: button.getAttribute("aria-label") || "",
             title: button.getAttribute("title") || "",
+            appearanceOptionId:
+              button.getAttribute("data-appearance-option-id") || "",
             width: rect.width,
             height: rect.height,
             visibleInViewport:
@@ -365,8 +375,10 @@ async function collectState(page) {
           document.querySelectorAll(".appearance-selector__group"),
         ).map((group) => ({
           title: group.querySelector("h4")?.textContent?.trim() || "",
-          buttons: Array.from(group.querySelectorAll("button")).map(
-            (button) => button.textContent?.trim() || "",
+          optionIds: Array.from(
+            group.querySelectorAll("[data-appearance-option-id]"),
+          ).map(
+            (button) => button.getAttribute("data-appearance-option-id") || "",
           ),
         })),
         menuOpen: Boolean(document.querySelector(".settings-drawer")),
@@ -430,10 +442,10 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
       state.appearanceSelector,
       `${viewportName}: seletor de aparência ausente.`,
     );
-    for (const label of APPEARANCE_BUTTON_LABELS) {
+    for (const optionId of APPEARANCE_OPTION_IDS) {
       assert(
-        state.buttons.some((button) => button.text === label),
-        `${viewportName}: botão ${label} ausente.`,
+        state.buttons.some((button) => button.appearanceOptionId === optionId),
+        `${viewportName}: opção de aparência ${optionId} ausente.`,
       );
     }
     const themeGroup = state.appearanceGroups.find(
@@ -441,13 +453,13 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
     );
     assert(themeGroup, `${viewportName}: grupo Tema visual ausente.`);
     assert(
-      themeGroup.buttons.length === THEME_BUTTON_LABELS.length,
-      `${viewportName}: Tema visual deveria ter ${THEME_BUTTON_LABELS.length} botões, recebeu ${themeGroup.buttons.length}.`,
+      themeGroup.optionIds.length === THEME_OPTION_IDS.length,
+      `${viewportName}: Tema visual deveria ter ${THEME_OPTION_IDS.length} botões, recebeu ${themeGroup.optionIds.length}.`,
     );
-    for (const label of THEME_BUTTON_LABELS) {
+    for (const optionId of THEME_OPTION_IDS) {
       assert(
-        themeGroup.buttons.includes(label),
-        `${viewportName}: tema ${label} ausente no grupo Tema visual.`,
+        themeGroup.optionIds.includes(optionId),
+        `${viewportName}: tema ${optionId} ausente no grupo Tema visual.`,
       );
     }
     for (const heading of ["Aparência", "Tema visual", "Imagens", "Fonte"]) {
@@ -484,10 +496,10 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
       !state.appearanceSelector,
       `${viewportName}: seletor de aparência apareceu fora do menu.`,
     );
-    for (const label of APPEARANCE_BUTTON_LABELS) {
+    for (const optionId of APPEARANCE_OPTION_IDS) {
       assert(
-        !state.buttons.some((button) => button.text === label),
-        `${viewportName}: botão ${label} apareceu fora do menu.`,
+        !state.buttons.some((button) => button.appearanceOptionId === optionId),
+        `${viewportName}: opção de aparência ${optionId} apareceu fora do menu.`,
       );
     }
     assert(
@@ -584,9 +596,9 @@ async function validateViewport(
 
   await openMenu(page);
   logProgress(`${viewportName}: aplicar CRT alto contraste`);
-  await clickButtonByText(page, "CRT alto contraste");
-  await clickButtonByText(page, "Alto contraste");
-  await clickButtonByText(page, "CRT mono");
+  await clickAppearanceOptionById(page, THEME_CRT_HIGH_CONTRAST);
+  await clickAppearanceOptionById(page, IMAGE_SET_HIGH_CONTRAST);
+  await clickAppearanceOptionById(page, FONT_SET_CRT_MONO);
   await page.waitForFunction(
     ({ theme, imageSet, fontSet }) =>
       document.documentElement.dataset.theme === theme &&
@@ -639,9 +651,9 @@ async function validateViewport(
 
   await openMenu(page);
   logProgress(`${viewportName}: aplicar Pôr do sol pixelado`);
-  await clickButtonByText(page, "Pôr do sol pixelado");
-  await clickButtonByText(page, "Cabine pôr do sol");
-  await clickButtonByText(page, "Blocos pixelados");
+  await clickAppearanceOptionById(page, THEME_PIXEL_SUNSET);
+  await clickAppearanceOptionById(page, IMAGE_SET_SUNSET_CABINET);
+  await clickAppearanceOptionById(page, FONT_SET_BLOCK_PIXEL);
   await page.waitForFunction(
     ({ theme, imageSet, fontSet }) =>
       document.documentElement.dataset.theme === theme &&
@@ -679,7 +691,7 @@ async function validateViewport(
   }
 
   logProgress(`${viewportName}: aplicar Oceano noturno`);
-  await clickButtonByText(page, "Oceano noturno");
+  await clickAppearanceOptionById(page, THEME_OCEAN_NIGHT);
   await page.waitForFunction(
     (theme) => document.documentElement.dataset.theme === theme,
     {},
@@ -697,7 +709,7 @@ async function validateViewport(
   }
 
   logProgress(`${viewportName}: aplicar Rubi profundo`);
-  await clickButtonByText(page, "Rubi profundo");
+  await clickAppearanceOptionById(page, THEME_RUBY_DEPTH);
   await page.waitForFunction(
     (theme) => document.documentElement.dataset.theme === theme,
     {},

@@ -44,6 +44,9 @@ const TEST_LEVEL_TRANSITION_PAYLOAD: LevelTransitionPayload = {
   nextReductionPerBrick: 0.336,
   nextInitialBrickCount: 15,
 };
+const SETTINGS_ACTION_LOGS_TEST_ID = "settings-action-logs";
+const SETTINGS_ACTION_COLLISIONS_TEST_ID = "settings-action-collisions";
+const SETTINGS_ACTION_RESET_SCORE_TEST_ID = "settings-action-reset-score";
 const COUNTDOWN_STEP_MS = 600;
 const COUNTDOWN_TOTAL_MS = 1800;
 const LEVEL_UP_OVERLAY_VISIBLE_MS = 1200;
@@ -411,12 +414,22 @@ describe("App theme selector", () => {
     expect(
       screen.getByRole("button", { name: /histórico/i }),
     ).toBeInTheDocument();
+    expect(screen.getByTestId(SETTINGS_ACTION_LOGS_TEST_ID)).toHaveAttribute(
+      "data-settings-action",
+      "logs",
+    );
     expect(
       screen.getByRole("button", { name: /colisões/i }),
     ).toBeInTheDocument();
     expect(
+      screen.getByTestId(SETTINGS_ACTION_COLLISIONS_TEST_ID),
+    ).toHaveAttribute("data-settings-action", "collisions");
+    expect(
       screen.getByRole("button", { name: /zerar pontuação/i }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByTestId(SETTINGS_ACTION_RESET_SCORE_TEST_ID),
+    ).toHaveAttribute("data-settings-action", "reset-score");
   });
 
   it("pausa a partida enquanto o menu lateral está aberto", async () => {
