@@ -5,13 +5,7 @@ import {
   type GameEvent,
   type GameStatsSummary
 } from '../storage/gameLogger';
-
-const SPEED_LABEL_CURRENT = 'Velocidade atual';
-const SPEED_LABEL_MAX = 'Velocidade máxima';
-const SPEED_LABEL_MIN = 'Velocidade mínima';
-const SPEED_LABEL_REDUCTION = 'Redução por bloco';
-const SPEED_LABEL_HITS = 'Blocos atingidos';
-const SPEED_LABEL_TIME = 'Tempo da fase';
+import { useI18n } from '../i18n';
 
 interface GameLogViewerProps {
   isVisible?: boolean;
@@ -19,6 +13,7 @@ interface GameLogViewerProps {
 }
 
 const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose }) => {
+  const { locale, t } = useI18n();
   const [events, setEvents] = useState<GameEvent[]>([]);
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState<string>('all');
@@ -26,20 +21,20 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
   const [stats, setStats] = useState<GameStatsSummary | null>(null);
 
   const eventTypeLabels: Record<string, string> = {
-    'game_start': '🎮 Início do Jogo',
-    'game_end': '🏁 Fim do Jogo',
-    'score_update': '📊 Atualização de Pontuação',
-    'ball_lost': '💀 Bola Perdida',
-    'ball_added': '⚽ Bola Adicionada',
-    'brick_destroyed': '🧱 Bloco Destruído',
-    'brick_added': '🏗️ Bloco Adicionado',
-    'paddle_move': '🏓 Movimento da Raquete',
-    'collision': '💥 Colisão',
-    'power_up': '⚡ Power-up',
-    'level_complete': '🎯 Nível Completo',
-    'level_start': '▶️ Início da Fase',
-    'game_state_change': '🔄 Mudança de Estado',
-    'restart_game': '🔄 Reiniciar Jogo'
+    'game_start': t("logs.event.game_start"),
+    'game_end': t("logs.event.game_end"),
+    'score_update': t("logs.event.score_update"),
+    'ball_lost': t("logs.event.ball_lost"),
+    'ball_added': t("logs.event.ball_added"),
+    'brick_destroyed': t("logs.event.brick_destroyed"),
+    'brick_added': t("logs.event.brick_added"),
+    'paddle_move': t("logs.event.paddle_move"),
+    'collision': t("logs.event.collision"),
+    'power_up': t("logs.event.power_up"),
+    'level_complete': t("logs.event.level_complete"),
+    'level_start': t("logs.event.level_start"),
+    'game_state_change': t("logs.event.game_state_change"),
+    'restart_game': t("logs.event.restart_game")
   };
 
   const eventTypeColors: Record<string, string> = {
@@ -68,20 +63,20 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
       const gameStats = await gameLogger.getGameStats();
       setStats(gameStats);
     } catch (error) {
-      console.error('Erro ao carregar eventos:', error);
+      console.error(t("logs.loadError"), error);
     } finally {
       setLoading(false);
     }
   };
 
   const clearEvents = async () => {
-    if (window.confirm('Tem certeza que deseja limpar todos os logs?')) {
+    if (window.confirm(t("logs.clearConfirm"))) {
       try {
         await gameLogger.clearAllEvents();
         setEvents([]);
         setStats(null);
       } catch (error) {
-        console.error('Erro ao limpar eventos:', error);
+        console.error(t("logs.clearError"), error);
       }
     }
   };
@@ -99,7 +94,7 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Erro ao exportar dados:', error);
+      console.error(t("logs.exportError"), error);
     }
   };
 
@@ -111,7 +106,7 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
   };
 
   const formatTimestamp = (timestamp: number) => {
-    return new Date(timestamp).toLocaleString('pt-BR');
+    return new Date(timestamp).toLocaleString(locale);
   };
 
   const formatPosition = (pos: { x: number; y: number }) => {
@@ -148,72 +143,72 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
     <div className="game-log-viewer">
       {onClose && (
         <button onClick={onClose} className="close-button">
-          ✕ Fechar
+          ✕ {t("logs.close")}
         </button>
       )}
       <div className="header">
-        <h2>📊 Visualizador de Logs do Jogo</h2>
+        <h2>📊 {t("logs.title")}</h2>
         <div className="controls">
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
             className="filter-select"
           >
-            <option value="all">Todos os Eventos</option>
+            <option value="all">{t("logs.allEvents")}</option>
             {Object.entries(eventTypeLabels).map(([type, label]) => (
               <option key={type} value={type}>{label}</option>
             ))}
           </select>
           <button onClick={loadEvents} className="refresh-button">
-            🔄 Atualizar
+            🔄 {t("logs.refresh")}
           </button>
           <button onClick={exportData} className="export-button">
-            📤 Exportar
+            📤 {t("logs.export")}
           </button>
           <button onClick={clearEvents} className="clear-button">
-            🗑️ Limpar
+            🗑️ {t("logs.clear")}
           </button>
         </div>
       </div>
 
       {stats && (
         <div className="stats-panel">
-          <h3>📈 Estatísticas Gerais</h3>
+          <h3>📈 {t("logs.statsTitle")}</h3>
           <div className="stats-grid">
             <div className="stat-item">
-              <span className="stat-label">Total de Jogos:</span>
+              <span className="stat-label">{t("logs.totalGames")}</span>
               <span className="stat-value">{stats.totalGames}</span>
             </div>
             <div className="stat-item">
-              <span className="stat-label">Total de Eventos:</span>
+              <span className="stat-label">{t("logs.totalEvents")}</span>
               <span className="stat-value">{stats.totalEvents}</span>
             </div>
             <div className="stat-item">
-              <span className="stat-label">Pontuação Média:</span>
+              <span className="stat-label">{t("logs.averageScore")}</span>
               <span className="stat-value">{stats.averageScore.toFixed(0)}</span>
             </div>
             <div className="stat-item">
-              <span className="stat-label">Jogos Vencidos:</span>
+              <span className="stat-label">{t("logs.gamesWon")}</span>
               <span className="stat-value">{stats.gamesWon}</span>
             </div>
             <div className="stat-item">
-              <span className="stat-label">Jogos Perdidos:</span>
+              <span className="stat-label">{t("logs.gamesLost")}</span>
               <span className="stat-value">{stats.gamesLost}</span>
             </div>
             <div className="stat-item">
-              <span className="stat-label">Duração Média:</span>
+              <span className="stat-label">{t("logs.averageDuration")}</span>
               <span className="stat-value">{Math.round(stats.averageGameDuration / 1000)}s</span>
             </div>
             <div className="stat-item">
-              <span className="stat-label">Blocos Destruídos:</span>
+              <span className="stat-label">{t("logs.totalBricks")}</span>
               <span className="stat-value">{stats.totalBricksDestroyed}</span>
             </div>
             <div className="stat-item">
-              <span className="stat-label">Total de Colisões:</span>
+              <span className="stat-label">{t("logs.totalCollisions")}</span>
               <span className="stat-value">{stats.totalCollisions}</span>
             </div>
             <div className="stat-item">
-              <span className="stat-label">Última Velocidade:</span>
+              <span className="stat-label">{t("logs.latestSpeed")}</span>
               <span className="stat-value">
                 {stats.latestSpeedState ? formatSpeed(stats.latestSpeedState.currentSpeed) : '—'}
               </span>
@@ -292,12 +287,12 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
                         <div>Nível: {event.gameState.level}</div>
                         <div>Vitória: {event.gameState.gameWon ? 'Sim' : 'Não'}</div>
                         <div>Game Over: {event.gameState.gameOver ? 'Sim' : 'Não'}</div>
-                        <div>{SPEED_LABEL_CURRENT}: {formatSpeed(event.gameState.speedState.currentSpeed)}</div>
-                        <div>{SPEED_LABEL_MAX}: {formatSpeed(event.gameState.speedState.maxSpeed)}</div>
-                        <div>{SPEED_LABEL_MIN}: {formatSpeed(event.gameState.speedState.minSpeed)}</div>
-                        <div>{SPEED_LABEL_REDUCTION}: {formatSpeed(event.gameState.speedState.reductionPerBrick)}</div>
-                        <div>{SPEED_LABEL_HITS}: {event.gameState.speedState.successfulBrickHits}</div>
-                        <div>{SPEED_LABEL_TIME}: {formatElapsedLevelMs(event.gameState.speedState.elapsedLevelMs)}</div>
+                        <div>{t("logs.speed.current")}: {formatSpeed(event.gameState.speedState.currentSpeed)}</div>
+                        <div>{t("logs.speed.max")}: {formatSpeed(event.gameState.speedState.maxSpeed)}</div>
+                        <div>{t("logs.speed.min")}: {formatSpeed(event.gameState.speedState.minSpeed)}</div>
+                        <div>{t("logs.speed.reduction")}: {formatSpeed(event.gameState.speedState.reductionPerBrick)}</div>
+                        <div>{t("logs.speed.hits")}: {event.gameState.speedState.successfulBrickHits}</div>
+                        <div>{t("logs.speed.time")}: {formatElapsedLevelMs(event.gameState.speedState.elapsedLevelMs)}</div>
                       </div>
                     </div>
 

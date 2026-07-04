@@ -63,9 +63,9 @@ const APPEARANCE_STORAGE_KEYS = [
   FONT_SET_STORAGE_KEY,
 ];
 const THEME_BUTTON_LABELS = [
-  "Neon Arcade",
+  "Arcade neon",
   "CRT alto contraste",
-  "Pixel Sunset",
+  "Pôr do sol pixelado",
   "Oceano noturno",
   "Selva laser",
   "Âmbar retrô",
@@ -76,12 +76,12 @@ const THEME_BUTTON_LABELS = [
 ];
 const APPEARANCE_BUTTON_LABELS = [
   ...THEME_BUTTON_LABELS,
-  "Retro padrão",
+  "Retrô padrão",
   "Alto contraste",
-  "Cabine Sunset",
+  "Cabine pôr do sol",
   "Arcade",
   "CRT mono",
-  "Blocos pixel",
+  "Blocos pixelados",
 ];
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
@@ -468,8 +468,8 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
       `${viewportName}: seção Partida ainda aparece no menu.`,
     );
     assert(
-      state.buttons.some((button) => /logs/i.test(button.text)),
-      `${viewportName}: logs inacessível no menu.`,
+      state.buttons.some((button) => /histórico/i.test(button.text)),
+      `${viewportName}: histórico inacessível no menu.`,
     );
     assert(
       state.buttons.some((button) => /colisões/i.test(button.text)),
@@ -497,8 +497,8 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
       `${viewportName}: reiniciar apareceu fora do menu.`,
     );
     assert(
-      !state.buttons.some((button) => /logs/i.test(button.text)),
-      `${viewportName}: logs apareceu fora do menu.`,
+      !state.buttons.some((button) => /histórico/i.test(button.text)),
+      `${viewportName}: histórico apareceu fora do menu.`,
     );
     assert(
       !state.buttons.some((button) => /colisões/i.test(button.text)),
@@ -570,12 +570,12 @@ async function validateViewport(
   assertBaseState(initialState, `${viewportName}/inicial`);
   assert(
     initialState.theme === THEME_NEON_ARCADE,
-    `${viewportName}: tema inicial sem preferência salva deveria ser Neon Arcade.`,
+    `${viewportName}: tema inicial sem preferência salva deveria ser Arcade neon.`,
   );
 
   assert(
     initialState.imageSet === IMAGE_SET_RETRO_DEFAULT,
-    `${viewportName}: conjunto visual inicial não é Retro padrão.`,
+    `${viewportName}: conjunto visual inicial não é Retrô padrão.`,
   );
   assert(
     initialState.fontSet === FONT_SET_ARCADE_UI,
@@ -638,10 +638,10 @@ async function validateViewport(
   );
 
   await openMenu(page);
-  logProgress(`${viewportName}: aplicar Pixel Sunset`);
-  await clickButtonByText(page, "Pixel Sunset");
-  await clickButtonByText(page, "Cabine Sunset");
-  await clickButtonByText(page, "Blocos pixel");
+  logProgress(`${viewportName}: aplicar Pôr do sol pixelado`);
+  await clickButtonByText(page, "Pôr do sol pixelado");
+  await clickButtonByText(page, "Cabine pôr do sol");
+  await clickButtonByText(page, "Blocos pixelados");
   await page.waitForFunction(
     ({ theme, imageSet, fontSet }) =>
       document.documentElement.dataset.theme === theme &&
@@ -658,21 +658,21 @@ async function validateViewport(
   assertBaseState(sunsetState, `${viewportName}/pixel-sunset`, true);
   assert(
     sunsetState.theme === THEME_PIXEL_SUNSET,
-    `${viewportName}: tema Pixel Sunset não aplicado.`,
+    `${viewportName}: tema Pôr do sol pixelado não aplicado.`,
   );
   assert(
     sunsetState.imageSet === IMAGE_SET_SUNSET_CABINET,
-    `${viewportName}: imagens Cabine Sunset não aplicadas.`,
+    `${viewportName}: imagens Cabine pôr do sol não aplicadas.`,
   );
   assert(
     sunsetState.fontSet === FONT_SET_BLOCK_PIXEL,
-    `${viewportName}: fonte Blocos pixel não aplicada.`,
+    `${viewportName}: fonte Blocos pixelados não aplicada.`,
   );
   assert(
     sunsetState.storedTheme === THEME_PIXEL_SUNSET &&
       sunsetState.storedImageSet === IMAGE_SET_SUNSET_CABINET &&
       sunsetState.storedFontSet === FONT_SET_BLOCK_PIXEL,
-    `${viewportName}: aparência Pixel Sunset não persistida.`,
+    `${viewportName}: aparência Pôr do sol pixelado não persistida.`,
   );
   if (captureScreenshots) {
     await page.screenshot({ path: screenshots.sunset, fullPage: true });

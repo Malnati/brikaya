@@ -73,6 +73,7 @@ const PUBLIC_INDEX_CHECK_PARAM = 'qaPublicIndexCheck';
 const PUBLIC_INDEX_TITLE_PATTERN = /<title>(.*?)<\/title>/i;
 const PUBLIC_INDEX_SCRIPT_PATTERN = /assets\/index-[^"']+\.js/i;
 const PUBLIC_INDEX_STYLE_PATTERN = /assets\/index-[^"']+\.css/i;
+const PURGE_CACHE_EVERYTHING = true;
 const RULE_ENABLED = true;
 const CLOUDFLARE_AUTHENTICATION_ERROR = 'Authentication error';
 const REQUIRED_ENV_KEYS = [
@@ -108,6 +109,7 @@ const COMMANDS = new Set([
   'ensure-domain',
   'redirect-state',
   'ensure-pages-dev-redirect',
+  'purge-public-cache',
   'verify-public-index',
   'deploy'
 ]);
@@ -301,6 +303,10 @@ function buildRulesListItemsPath(envValues, listId) {
 
 function buildRulesListBulkOperationPath(envValues, operationId) {
   return `/accounts/${envValues[ACCOUNT_ID_KEY]}/rules/lists/bulk_operations/${operationId}`;
+}
+
+function buildPurgeCachePath(zoneId) {
+  return `/zones/${zoneId}/purge_cache`;
 }
 
 function buildRulesetsPath(envValues) {
@@ -696,6 +702,28 @@ async function createDnsRecord(envValues, zoneId) {
   console.log(`DNS criado: ${envValues[CUSTOM_DOMAIN_KEY]} -> ${buildPagesDevHost(envValues)}`);
 }
 
+async function purgePublicCache(envValues) {
+  const zone = await getPrimaryZone(envValues);
+  try {
+    await requestCloudflareApi(
+      buildPurgeCachePath(getZoneId(zone)),
+      {
+        method: HTTP_POST,
+        body: JSON.stringify({ purge_everything: PURGE_CACHE_EVERYTHING })
+      },
+      envValues
+    );
+    console.log(`Cache público limpo para ${envValues[CUSTOM_DOMAIN_KEY]}.`);
+  } catch (error) {
+    if (isCloudflareAuthenticationError(error)) {
+      console.log('WARN Cache purge API sem permissão; cache público não foi limpo via API.');
+      return;
+    }
+
+    throw error;
+  }
+}
+
 async function ensureDnsRecord(envValues) {
   let zone;
   let records;
@@ -1046,6 +1074,11 @@ async function run() {
 
   if (command === 'ensure-pages-dev-redirect') {
     await ensurePagesDevRedirect(envValues);
+    return;
+  }
+
+  if (command === 'purge-public-cache') {
+    await purgePublicCache(envValues);
     return;
   }
 

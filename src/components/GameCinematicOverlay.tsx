@@ -9,6 +9,7 @@ import {
   resolveGameVisualAssetPath,
   type GameVisualAssetRole,
 } from "../utils/visualAssetResolver";
+import { useI18n } from "../i18n";
 
 import type { ComponentPropsWithoutRef, CSSProperties, ReactNode } from "react";
 
@@ -53,14 +54,6 @@ const LEVEL_UP_CLASS_NAME =
 const RIP_CLASS_NAME = "game-cinematic-overlay game-cinematic-overlay--rip";
 const TEST_ID = "game-cinematic-overlay";
 const LEVEL_UP_TEST_ID = "level-toast";
-const COUNTDOWN_ARIA_LABEL = "Contagem inicial";
-const LEVEL_UP_ARIA_LABEL = "Subida de fase";
-const RIP_ARIA_LABEL = "Fim de jogo";
-const LEVEL_UP_EYEBROW = "Subindo de nível";
-const LEVEL_UP_TITLE_PREFIX = "Fase";
-const LEVEL_UP_SPEED_PREFIX = "Velocidade";
-const RIP_TITLE = "RIP";
-const RIP_HINT = "Recomeçando...";
 const MEDIA_CLASS_NAME = `${BASE_CLASS_NAME}__media`;
 const STAGE_CLASS_NAME = `${BASE_CLASS_NAME}__stage`;
 const CONTENT_CLASS_NAME = `${BASE_CLASS_NAME}__content`;
@@ -146,11 +139,16 @@ function renderContent(children: ReactNode) {
 
 function overlayProps(
   state: Exclude<GameCinematicOverlayState, null>,
+  labels: {
+    countdown: string;
+    levelUp: string;
+    rip: string;
+  },
 ): OverlayAttributes {
   if (state.type === "countdown") {
     return {
       className: COUNTDOWN_CLASS_NAME,
-      "aria-label": COUNTDOWN_ARIA_LABEL,
+      "aria-label": labels.countdown,
       "data-cinematic-type": state.type,
       "data-testid": TEST_ID,
     };
@@ -159,7 +157,7 @@ function overlayProps(
   if (state.type === "levelUp") {
     return {
       className: LEVEL_UP_CLASS_NAME,
-      "aria-label": LEVEL_UP_ARIA_LABEL,
+      "aria-label": labels.levelUp,
       "data-cinematic-type": state.type,
       "data-testid": LEVEL_UP_TEST_ID,
     };
@@ -167,7 +165,7 @@ function overlayProps(
 
   return {
     className: RIP_CLASS_NAME,
-    "aria-label": RIP_ARIA_LABEL,
+    "aria-label": labels.rip,
     "data-cinematic-type": state.type,
     "data-testid": TEST_ID,
   };
@@ -178,11 +176,18 @@ export function GameCinematicOverlay({
   imageSetId = IMAGE_SET_RETRO_DEFAULT,
   boardRect = null,
 }: GameCinematicOverlayProps) {
+  const { t } = useI18n();
+  const labels = {
+    countdown: t("cinematic.countdownAria"),
+    levelUp: t("cinematic.levelUpAria"),
+    rip: t("cinematic.gameOverAria"),
+  };
+
   if (!state) return null;
 
   if (state.type === "countdown") {
     return (
-      <div {...overlayProps(state)} role="status" aria-live="assertive">
+      <div {...overlayProps(state, labels)} role="status" aria-live="assertive">
         {renderStage(
           <>
             {renderMediaLayers(state, imageSetId)}
@@ -196,18 +201,18 @@ export function GameCinematicOverlay({
 
   if (state.type === "levelUp") {
     return (
-      <div {...overlayProps(state)} role="status" aria-live="polite">
+      <div {...overlayProps(state, labels)} role="status" aria-live="polite">
         {renderStage(
           <>
             {renderMediaLayers(state, imageSetId)}
             <span className={`${BASE_CLASS_NAME}__eyebrow`}>
-              {LEVEL_UP_EYEBROW}
+              {t("cinematic.levelUpEyebrow")}
             </span>
             <span className={`${BASE_CLASS_NAME}__title`}>
-              {LEVEL_UP_TITLE_PREFIX} {state.nextLevel}
+              {t("cinematic.levelPrefix")} {state.nextLevel}
             </span>
             <span className={`${BASE_CLASS_NAME}__detail`}>
-              {LEVEL_UP_SPEED_PREFIX} {state.speedLabel}
+              {t("cinematic.speedPrefix")} {state.speedLabel}
             </span>
           </>,
           boardRect,
@@ -217,14 +222,18 @@ export function GameCinematicOverlay({
   }
 
   return (
-    <div {...overlayProps(state)} role="status" aria-live="assertive">
+    <div {...overlayProps(state, labels)} role="status" aria-live="assertive">
       {renderStage(
         <>
           {renderMediaLayers(state, imageSetId)}
           {renderContent(
             <>
-              <span className={`${BASE_CLASS_NAME}__title`}>{RIP_TITLE}</span>
-              <span className={`${BASE_CLASS_NAME}__detail`}>{RIP_HINT}</span>
+              <span className={`${BASE_CLASS_NAME}__title`}>
+                {t("cinematic.ripTitle")}
+              </span>
+              <span className={`${BASE_CLASS_NAME}__detail`}>
+                {t("cinematic.ripHint")}
+              </span>
             </>,
           )}
         </>,

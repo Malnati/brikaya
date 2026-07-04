@@ -1,5 +1,12 @@
 // src/App.tsx
-import { useState, useCallback, useEffect, useMemo, useRef } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  type ChangeEvent,
+} from "react";
 import Game, { type GameBoardRect } from "./components/Game";
 import { AppearanceSelector } from "./components/AppearanceSelector";
 import { AudioToggle } from "./components/AudioToggle";
@@ -42,8 +49,6 @@ import {
 } from "./registerServiceWorker";
 import {
   BUILD_VERSION_LABEL,
-  BUILD_VERSION_ARIA_LABEL,
-  BUILD_VERSION_MENU_LABEL,
 } from "./constants/buildVersion";
 import { LOG } from "./utils/logger";
 import { audioManager } from "./utils/audioManager";
@@ -51,6 +56,12 @@ import { GameQaScenario } from "./logic/GameEngine";
 import { useAppearancePreference } from "./hooks/useAppearancePreference";
 import { useAudioPreference } from "./hooks/useAudioPreference";
 import { usePrivacyConsent } from "./hooks/usePrivacyConsent";
+import {
+  SUPPORTED_LOCALES,
+  useI18n,
+  type AppLocale,
+  type TranslationKey,
+} from "./i18n";
 
 LOG("🚦 App.tsx carregado");
 
@@ -66,10 +77,6 @@ const UPDATE_PROGRESS_MIN = 0;
 const UPDATE_PROGRESS_MAX = 100;
 const UPDATE_PROGRESS_COMPLETE = 100;
 const UPDATE_PROGRESS_COMPLETE_STAGE = "reloading";
-const UPDATE_PROGRESS_TITLE = "Atualizando jogo";
-const UPDATE_PROGRESS_LABEL = "Progresso da atualização";
-const UPDATE_INSTALLED_PREFIX = "Versão";
-const UPDATE_INSTALLED_SUFFIX = "instalada";
 const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
 const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
 const LASER_FAN_QA_SCENARIO = "laser-fan";
@@ -78,11 +85,8 @@ const COUNTDOWN_NEXT_STEP_INDEX = 1;
 const COUNTDOWN_TIMER_OFFSET = 1;
 const SPEED_LABEL_FRACTION_DIGITS = 2;
 const SPEED_LABEL_SUFFIX = "×";
-const HIGH_SCORE_PANEL_ARIA_LABEL = "Recordes gerais";
-const HIGH_SCORE_BEST_LABEL = "Melhor partida";
-const HIGH_SCORE_EMPTY_TEXT = "Ainda sem recordes";
-const HIGH_SCORE_RANK_SUFFIX = "º";
 const HIGH_SCORE_KEY_SEPARATOR = "-";
+const LANGUAGE_SELECT_ID = "game-language-select";
 const INITIAL_COUNTDOWN_OVERLAY: GameCinematicOverlayState = {
   type: "countdown",
   value: CINEMATIC_COUNTDOWN_STEPS[COUNTDOWN_FIRST_STEP_INDEX],
@@ -92,15 +96,8 @@ interface UpdateProgressState {
   progress: number;
 }
 
-function formatHighScoreBest(scoreValue: number) {
-  return `${HIGH_SCORE_BEST_LABEL} ${scoreValue}`;
-}
-
-function formatHighScoreRank(index: number, scoreValue: number) {
-  return `${index + 1}${HIGH_SCORE_RANK_SUFFIX} ${scoreValue}`;
-}
-
 export default function App() {
+  const { locale, setLocale, t } = useI18n();
   const [score, setScore] = useState(0);
   const scoreRef = useRef(0);
   const [totalScore, setTotalScore] = useState(0);
@@ -539,6 +536,14 @@ export default function App() {
     [audioSink, selectFontSet],
   );
 
+  const handleLocaleChange = useCallback(
+    (event: ChangeEvent<HTMLSelectElement>) => {
+      audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+      setLocale(event.target.value as AppLocale);
+    },
+    [audioSink, setLocale],
+  );
+
   const handleAudioToggle = useCallback(async () => {
     if (!isAudioMuted) {
       audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
@@ -581,19 +586,19 @@ export default function App() {
     setLevel(nextLevel);
   }, []);
 
-  const restartLabel = gameWon || gameOver ? "Jogar de novo" : "Reiniciar";
+  const restartLabel = gameWon || gameOver ? t("controls.playAgain") : t("controls.restart");
 
   return (
     <main className="app-shell">
-      <section className="game-dashboard" aria-label="Jogo Brikaya">
+      <section className="game-dashboard" aria-label={t("app.dashboardAria")}>
         <header className="dashboard-header">
           <div className="dashboard-title-group">
-            <p className="dashboard-eyebrow">Arcade clássico</p>
+            <p className="dashboard-eyebrow">{t("app.eyebrow")}</p>
             <h1>Brikaya</h1>
           </div>
           <div
             className="dashboard-primary-controls"
-            aria-label="Controles principais"
+            aria-label={t("controls.primaryAria")}
           >
             <AudioToggle
               muted={isAudioMuted}
@@ -613,20 +618,28 @@ export default function App() {
               </span>
             </button>
           </div>
-          <div className="score-hud" aria-label="Painel de pontuação">
-            <span className="score-hud__segment">Fase {level}</span>
+          <div className="score-hud" aria-label={t("hud.aria")}>
+            <span className="score-hud__segment">
+              {t("hud.level", { level })}
+            </span>
             <span className="score-hud__separator" aria-hidden="true">
               |
             </span>
-            <span className="score-hud__segment">Score {score}</span>
+            <span className="score-hud__segment">
+              {t("hud.score", { score })}
+            </span>
             <span className="score-hud__separator" aria-hidden="true">
               |
             </span>
-            <span className="score-hud__segment">Total {totalScore}</span>
+            <span className="score-hud__segment">
+              {t("hud.total", { total: totalScore })}
+            </span>
             <span className="score-hud__separator" aria-hidden="true">
               |
             </span>
-            <span className="score-hud__segment">Recorde {highScore}</span>
+            <span className="score-hud__segment">
+              {t("hud.highScore", { score: highScore })}
+            </span>
           </div>
           <div className="dashboard-header-controls">
             <button
@@ -636,7 +649,7 @@ export default function App() {
               aria-controls="game-settings-menu"
               onClick={handleOpenMenu}
             >
-              Menu
+              {t("controls.menu")}
             </button>
           </div>
         </header>
@@ -646,20 +659,20 @@ export default function App() {
             <button
               type="button"
               className="settings-drawer-backdrop"
-              aria-label="Fechar menu"
+              aria-label={t("controls.closeMenu")}
               onClick={handleCloseMenu}
             />
             <aside
               id="game-settings-menu"
               className="settings-drawer"
-              aria-label="Menu do jogo"
+              aria-label={t("menu.gameAria")}
             >
               <div className="settings-drawer__header">
-                <h2>Menu</h2>
+                <h2>{t("controls.menu")}</h2>
                 <button
                   type="button"
                   className="settings-drawer__close"
-                  aria-label="Fechar menu"
+                  aria-label={t("controls.closeMenu")}
                   onClick={handleCloseMenu}
                 >
                   ×
@@ -667,12 +680,32 @@ export default function App() {
               </div>
               <p
                 className="settings-drawer__version"
-                aria-label={BUILD_VERSION_ARIA_LABEL}
+                aria-label={t("menu.versionAria", {
+                  version: BUILD_VERSION_LABEL,
+                })}
               >
-                {BUILD_VERSION_MENU_LABEL}
+                {t("menu.version", { version: BUILD_VERSION_LABEL })}
               </p>
               <div className="settings-drawer__section">
-                <h3>Aparência</h3>
+                <h3>{t("language.title")}</h3>
+                <label className="language-selector" htmlFor={LANGUAGE_SELECT_ID}>
+                  <span>{t("language.aria")}</span>
+                  <select
+                    id={LANGUAGE_SELECT_ID}
+                    value={locale}
+                    onChange={handleLocaleChange}
+                    aria-label={t("language.aria")}
+                  >
+                    {SUPPORTED_LOCALES.map((supportedLocale) => (
+                      <option key={supportedLocale} value={supportedLocale}>
+                        {t(`language.option.${supportedLocale}` as TranslationKey)}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <div className="settings-drawer__section">
+                <h3>{t("menu.appearance")}</h3>
                 <AppearanceSelector
                   selection={selection}
                   onThemeChange={handleThemeChange}
@@ -682,11 +715,11 @@ export default function App() {
               </div>
               <div
                 className="settings-drawer__section high-scores-panel"
-                aria-label={HIGH_SCORE_PANEL_ARIA_LABEL}
+                aria-label={t("highScores.panelAria")}
               >
-                <h3>Recordes</h3>
+                <h3>{t("menu.highScores")}</h3>
                 <p className="high-scores-panel__best">
-                  {formatHighScoreBest(highScore)}
+                  {t("highScores.best", { score: highScore })}
                 </p>
                 {highScores.length > 0 ? (
                   <ol className="high-scores-panel__list">
@@ -694,18 +727,21 @@ export default function App() {
                       <li
                         key={`${scoreValue}${HIGH_SCORE_KEY_SEPARATOR}${index}`}
                       >
-                        {formatHighScoreRank(index, scoreValue)}
+                        {t("highScores.rank", {
+                          rank: index + 1,
+                          score: scoreValue,
+                        })}
                       </li>
                     ))}
                   </ol>
                 ) : (
                   <p className="high-scores-panel__empty">
-                    {HIGH_SCORE_EMPTY_TEXT}
+                    {t("highScores.empty")}
                   </p>
                 )}
               </div>
               <div className="settings-drawer__section">
-                <h3>Privacidade</h3>
+                <h3>{t("menu.privacy")}</h3>
                 <button
                   type="button"
                   onClick={handleReviewPrivacyConsent}
@@ -714,11 +750,11 @@ export default function App() {
                   <span aria-hidden="true" className="button-icon">
                     ✓
                   </span>
-                  Revisar consentimento
+                  {t("menu.reviewConsent")}
                 </button>
               </div>
               <div className="settings-drawer__section">
-                <h3>Ferramentas</h3>
+                <h3>{t("menu.tools")}</h3>
                 <button
                   type="button"
                   onClick={handleOpenLogs}
@@ -727,7 +763,7 @@ export default function App() {
                   <span aria-hidden="true" className="button-icon">
                     ≡
                   </span>
-                  Logs
+                  {t("menu.logs")}
                 </button>
                 <button
                   type="button"
@@ -737,7 +773,7 @@ export default function App() {
                   <span aria-hidden="true" className="button-icon">
                     ◈
                   </span>
-                  Colisões
+                  {t("menu.collisions")}
                 </button>
                 <button
                   type="button"
@@ -747,7 +783,7 @@ export default function App() {
                   <span aria-hidden="true" className="button-icon">
                     0
                   </span>
-                  Zerar pontuação
+                  {t("menu.resetScores")}
                 </button>
               </div>
             </aside>
@@ -778,11 +814,11 @@ export default function App() {
         <div className="game-status-region" aria-live="polite">
           {updateProgress && (
             <div className="app-update-message">
-              <p>{UPDATE_PROGRESS_TITLE}</p>
+              <p>{t("status.updateTitle")}</p>
               <div
                 className="app-update-message__track"
                 role="progressbar"
-                aria-label={UPDATE_PROGRESS_LABEL}
+                aria-label={t("status.updateProgress")}
                 aria-valuemin={UPDATE_PROGRESS_MIN}
                 aria-valuemax={UPDATE_PROGRESS_MAX}
                 aria-valuenow={updateProgress.progress}
@@ -797,26 +833,27 @@ export default function App() {
           {isUpdateInstalledVisible && (
             <div className="update-installed-message">
               <p>
-                {UPDATE_INSTALLED_PREFIX} {BUILD_VERSION_LABEL}{" "}
-                {UPDATE_INSTALLED_SUFFIX}
+                {t("status.versionInstalled", {
+                  version: BUILD_VERSION_LABEL,
+                })}
               </p>
             </div>
           )}
           {isOfflineReadyVisible && (
             <div className="offline-ready-message">
-              <p>Pronto para jogar offline</p>
+              <p>{t("status.offlineReady")}</p>
             </div>
           )}
           {gameWon && (
             <div className="victory-message">
-              <h2>Fase concluída</h2>
-              <p>Pontuação final: {score}</p>
+              <h2>{t("status.levelComplete")}</h2>
+              <p>{t("status.finalScore", { score })}</p>
             </div>
           )}
           {gameOver && (
             <div className="game-over-message">
-              <h2>Fim de jogo</h2>
-              <p>Pontuação final: {score}</p>
+              <h2>{t("status.gameOver")}</h2>
+              <p>{t("status.finalScore", { score })}</p>
             </div>
           )}
         </div>

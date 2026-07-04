@@ -3,6 +3,41 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.0] - 2026-07-04
+### Adicionado
+- Catálogo local/offline de i18n para 15 locales: `pt-BR`, `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th` e `zh-CN`.
+- Seletor de idioma no menu, persistência local da preferência e atualização de `html lang`, canonical e metadados SEO por idioma.
+- Geração pós-build de páginas localizadas, `hreflang`, `sitemap.xml` com URLs canônicas localizadas e `robots.txt` no domínio `brikaya.com`.
+- QA publicado `make cloudflare-i18n-seo-qa`, evidência JSON e screenshot do menu localizado.
+
+### Alterado
+- UI principal, consentimento, HUD, status, menu, aparência, recordes, logs e colisões passam a consumir o catálogo de tradução.
+- Opções de aparência visíveis no menu passam a ter rótulos localizados, sem fallback visual para inglês em locales não ingleses.
+- Rótulos visíveis de histórico/dados do jogo usam linguagem de produto, sem expor termos técnicos como "logs" ou "tools" na interface final.
+- Search Console foi conferido no Chrome autenticado e o sitemap localizado foi reenviado sem ativar serviço pago.
+- Documentação PWA e registros passam a refletir o estado implementado de i18n/SEO e o reprocessamento pendente do Google para novas URLs.
+
+### Corrigido
+- Build localizado converte caminhos gerados pelo Vite para assets/manifest absolutos em rotas aninhadas, evitando quebra em `/en/`, `/es-419/` e demais páginas.
+- QA mobile publicado aceita título SEO atualizado quando ele corresponde ao `index.html` local.
+- QA publicado de i18n reabre o menu de idioma após consentimento/prompt inicial, cobrindo a regressão encontrada durante validação publicada.
+- Tradução `pt-BR` repõe rótulos de aparência e velocidade, evitando regressão em QAs mobile, tema e dashboard.
+- Cobertura i18n bloqueia regressão de copy técnica visível no menu e no painel de histórico.
+
+### Testado
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version && npm --version && make help`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make cloudflare-env-check && make cloudflare-deploy`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-i18n-seo-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-no-score-reset`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-phase-transition-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa`
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-offline-pwa-qa`
+- Search Console: propriedade `sc-domain:brikaya.com` conferida; `https://brikaya.com/sitemap.xml` reenviado com sitemap publicado contendo 15 URLs canônicas; reprocessamento das novas URLs fica pendente do Google.
+
 ## [1.31.4] - 2026-07-04
 ### Corrigido
 - Cards de publicidade deixam de ser renderizados enquanto não houver anúncio real aprovado em escopo.
@@ -53,6 +88,7 @@
 - `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`
 - `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa`
 - `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-no-score-reset`
+
 
 ## [1.31.2] - 2026-07-03
 ### Adicionado

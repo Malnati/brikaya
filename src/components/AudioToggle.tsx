@@ -1,4 +1,6 @@
 // src/components/AudioToggle.tsx
+import { useI18n } from "../i18n";
+
 interface AudioToggleProps {
   muted: boolean;
   onToggle: () => void;
@@ -6,8 +8,6 @@ interface AudioToggleProps {
   className?: string;
 }
 
-const AUDIO_ON_LABEL = "Som";
-const AUDIO_OFF_LABEL = "Sem som";
 const AUDIO_ON_ICON = "♪";
 const AUDIO_OFF_ICON = "×";
 
@@ -17,7 +17,8 @@ export function AudioToggle({
   iconOnly = false,
   className = "",
 }: AudioToggleProps) {
-  const label = muted ? AUDIO_OFF_LABEL : AUDIO_ON_LABEL;
+  const { t } = useI18n();
+  const label = muted ? t("audio.off") : t("audio.on");
   const icon = muted ? AUDIO_OFF_ICON : AUDIO_ON_ICON;
   const buttonClassName = [
     "dashboard-button",
