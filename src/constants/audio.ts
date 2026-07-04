@@ -925,6 +925,7 @@ export const MENU_MUSIC_AUDIO_ID: AudioId = 'bgm-menu-loop-main';
 export const HIGH_INTENSITY_MUSIC_AUDIO_ID: AudioId = 'bgm-gameplay-intense-layer';
 export const AUDIO_QA_SCENARIO = 'audio-event-tour';
 export const AUDIO_STORAGE_MUTED_KEY = 'brickbreaker-audio-muted';
+export const MUSIC_STORAGE_MUTED_KEY = 'brickbreaker-music-muted';
 export const AUDIO_STORAGE_ENABLED_VALUE = '0';
 export const AUDIO_STORAGE_MUTED_VALUE = '1';
 export const AUDIO_MASTER_VOLUME = 0.7;
