@@ -23,6 +23,8 @@ const CHINESE_LOCALE: AppLocale = "zh-CN";
 const HINDI_LOCALE: AppLocale = "hi-IN";
 const ENGLISH_LOCALE: AppLocale = "en";
 const GERMAN_LOCALE: AppLocale = "de";
+const UNSUPPORTED_DUTCH_LANGUAGE = "nl-NL";
+const GERMAN_BROWSER_LANGUAGE = "de-DE";
 const CANONICAL_ROOT = "https://brikaya.com/";
 const SPANISH_CANONICAL = "https://brikaya.com/es-419/";
 const CHINESE_TITLE = "Brikaya — 打砖块街机";
@@ -155,7 +157,11 @@ describe("i18n offline do Brikaya", () => {
 
   it("preserva parâmetros de campanha na navegação e mantém canonical limpo", async () => {
     const user = userEvent.setup();
-    window.history.replaceState(null, "", `${TEST_ROUTE}${TEST_CAMPAIGN_SEARCH}`);
+    window.history.replaceState(
+      null,
+      "",
+      `${TEST_ROUTE}${TEST_CAMPAIGN_SEARCH}`,
+    );
 
     render(
       <I18nProvider>
@@ -207,8 +213,12 @@ describe("i18n offline do Brikaya", () => {
   });
 
   it("mantém preferência salva acima do idioma do navegador", () => {
-    (window.localStorage.getItem as jest.Mock).mockImplementation((key: string) =>
-      key === LOCALE_STORAGE_KEY ? HINDI_LOCALE : null,
+    (window.localStorage.getItem as jest.Mock).mockImplementation(
+      (key: string) => {
+        if (key === LOCALE_STORAGE_KEY) return HINDI_LOCALE;
+        if (key === LOCALE_SOURCE_STORAGE_KEY) return MANUAL_LOCALE_SOURCE;
+        return null;
+      },
     );
     setNavigatorLocale(["es-MX"], "es-MX");
 
@@ -222,8 +232,44 @@ describe("i18n offline do Brikaya", () => {
     expect(window.location.pathname).toBe(getLocalePath(HINDI_LOCALE));
   });
 
+  it("ignora locale legado não manual e usa idioma atual do navegador", () => {
+    (window.localStorage.getItem as jest.Mock).mockImplementation(
+      (key: string) => (key === LOCALE_STORAGE_KEY ? HINDI_LOCALE : null),
+    );
+    setNavigatorLocale([GERMAN_BROWSER_LANGUAGE], GERMAN_BROWSER_LANGUAGE);
+
+    render(
+      <I18nProvider>
+        <LocaleProbe />
+      </I18nProvider>,
+    );
+
+    expect(screen.getByText(GERMAN_LOCALE)).toBeInTheDocument();
+    expect(window.location.pathname).toBe(getLocalePath(GERMAN_LOCALE));
+  });
+
+  it("avalia todos os idiomas do navegador antes de usar fuso horário", () => {
+    setNavigatorLocale(
+      [UNSUPPORTED_DUTCH_LANGUAGE, GERMAN_BROWSER_LANGUAGE],
+      UNSUPPORTED_DUTCH_LANGUAGE,
+    );
+    setBrowserTimeZone(MEXICO_TIME_ZONE);
+
+    render(
+      <I18nProvider>
+        <LocaleProbe />
+      </I18nProvider>,
+    );
+
+    expect(screen.getByText(GERMAN_LOCALE)).toBeInTheDocument();
+    expect(window.location.pathname).toBe(getLocalePath(GERMAN_LOCALE));
+  });
+
   it("usa fuso horário do navegador quando o idioma não é suportado", () => {
-    setNavigatorLocale(["nl-NL"], "nl-NL");
+    setNavigatorLocale(
+      [UNSUPPORTED_DUTCH_LANGUAGE],
+      UNSUPPORTED_DUTCH_LANGUAGE,
+    );
     setBrowserTimeZone(GERMANY_TIME_ZONE);
 
     render(
@@ -242,8 +288,8 @@ describe("i18n offline do Brikaya", () => {
   });
 
   it("ignora pt-BR legado automático e usa fuso horário quando não há preferência manual", () => {
-    (window.localStorage.getItem as jest.Mock).mockImplementation((key: string) =>
-      key === LOCALE_STORAGE_KEY ? PORTUGUESE_LOCALE : null,
+    (window.localStorage.getItem as jest.Mock).mockImplementation(
+      (key: string) => (key === LOCALE_STORAGE_KEY ? PORTUGUESE_LOCALE : null),
     );
     setNavigatorLocale(["nl-NL"], "nl-NL");
     setBrowserTimeZone(MEXICO_TIME_ZONE);
@@ -259,11 +305,13 @@ describe("i18n offline do Brikaya", () => {
   });
 
   it("mantém pt-BR manual acima do fuso horário", () => {
-    (window.localStorage.getItem as jest.Mock).mockImplementation((key: string) => {
-      if (key === LOCALE_STORAGE_KEY) return PORTUGUESE_LOCALE;
-      if (key === LOCALE_SOURCE_STORAGE_KEY) return MANUAL_LOCALE_SOURCE;
-      return null;
-    });
+    (window.localStorage.getItem as jest.Mock).mockImplementation(
+      (key: string) => {
+        if (key === LOCALE_STORAGE_KEY) return PORTUGUESE_LOCALE;
+        if (key === LOCALE_SOURCE_STORAGE_KEY) return MANUAL_LOCALE_SOURCE;
+        return null;
+      },
+    );
     setNavigatorLocale(["nl-NL"], "nl-NL");
     setBrowserTimeZone(MEXICO_TIME_ZONE);
 
@@ -293,8 +341,8 @@ describe("i18n offline do Brikaya", () => {
 
   it("mantém rota pública acima da preferência salva e do navegador", () => {
     window.history.replaceState(null, "", getLocalePath(ENGLISH_LOCALE));
-    (window.localStorage.getItem as jest.Mock).mockImplementation((key: string) =>
-      key === LOCALE_STORAGE_KEY ? HINDI_LOCALE : null,
+    (window.localStorage.getItem as jest.Mock).mockImplementation(
+      (key: string) => (key === LOCALE_STORAGE_KEY ? HINDI_LOCALE : null),
     );
     setNavigatorLocale(["es-MX"], "es-MX");
 
