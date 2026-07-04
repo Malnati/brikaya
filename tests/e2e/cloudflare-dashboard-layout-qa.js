@@ -51,8 +51,9 @@ const MIN_IMMERSIVE_BOARD_AREA_USAGE_RATIO = 0.9;
 const MIN_FULL_WIDTH_CANVAS_RATIO = 0.98;
 const MIN_FULL_WIDTH_BOARD_RATIO = 0.95;
 const MIN_MOBILE_FOCUSED_CANVAS_ASPECT_RATIO = 0.98;
+const MIN_MOBILE_LANDSCAPE_FOCUSED_CANVAS_HEIGHT_RATIO = 0.94;
 const MOBILE_FOCUSED_MAX_VIEWPORT_WIDTH = 480;
-const MOBILE_FOCUSED_CORNER_OFFSET_PX = 18;
+const MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX = 18;
 const MIN_HEIGHT_CONSTRAINED_CANVAS_VIEWPORT_WIDTH_RATIO = 0.6;
 const MAX_CANVAS_OVERLAP_PX = 2;
 const IMMERSIVE_ROOT_CLASS = "bb-landscape-immersive";
@@ -105,6 +106,10 @@ function isMobilePortraitFocusedState(state) {
     state.viewport.width <= MOBILE_FOCUSED_MAX_VIEWPORT_WIDTH &&
     state.viewport.width <= state.viewport.height
   );
+}
+
+function isMobileLandscapeFocusedViewport(viewport) {
+  return viewport.category === "mobile" && viewport.orientation === "landscape";
 }
 
 function publicUrl() {
@@ -336,6 +341,7 @@ async function collectLayoutState(page, viewportName) {
         : "";
       const scoreHudElement = document.querySelector(".score-hud");
       const scoreHud = rectOf(scoreHudElement);
+      const scoreHudDisplay = displayOf(scoreHudElement);
       const topControls = rectOf(
         document.querySelector(".dashboard-primary-controls"),
       );
@@ -421,6 +427,12 @@ async function collectLayoutState(page, viewportName) {
           titleGroup.width > 0 &&
           titleGroup.height > 0,
         scoreHud,
+        scoreHudDisplay,
+        scoreHudVisible:
+          scoreHudDisplay !== "none" &&
+          Boolean(scoreHud) &&
+          scoreHud.width > 0 &&
+          scoreHud.height > 0,
         topControls,
         boardControls,
         buttons,
@@ -690,6 +702,10 @@ async function run() {
           );
           const isImmersiveLandscape = state.isLandscapeImmersive;
           const isMobilePortraitFocused = isMobilePortraitFocusedState(state);
+          const isMobileLandscapeFocused =
+            isMobileLandscapeFocusedViewport(viewport);
+          const usesMobileControlsBottom =
+            isMobilePortraitFocused || isMobileLandscapeFocused;
           assert(
             !isImmersiveLandscape ||
               state.canvas.bottom <= state.viewport.height,
@@ -720,6 +736,13 @@ async function run() {
               state.canvas.height / state.canvas.width >=
                 MIN_MOBILE_FOCUSED_CANVAS_ASPECT_RATIO,
               `${viewport.name}: canvas mobile portrait não ficou quadrado.`,
+            );
+          }
+          if (isMobileLandscapeFocused) {
+            assert(
+              state.canvas.height / state.viewport.height >=
+                MIN_MOBILE_LANDSCAPE_FOCUSED_CANVAS_HEIGHT_RATIO,
+              `${viewport.name}: canvas mobile landscape não usa altura full-height.`,
             );
           }
           assert(
@@ -803,12 +826,13 @@ async function run() {
             restartIcon,
             `${viewport.name}: ícone Reiniciar/Jogar de novo ausente na tela principal.`,
           );
-          if (isMobilePortraitFocused) {
+          if (usesMobileControlsBottom) {
             assert(
               state.topControls &&
-                state.topControls.x <= MOBILE_FOCUSED_CORNER_OFFSET_PX &&
-                state.topControls.y <= MOBILE_FOCUSED_CORNER_OFFSET_PX,
-              `${viewport.name}: controles principais não ficaram no canto superior esquerdo.`,
+                state.topControls.x <= MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX &&
+                state.topControls.bottom >=
+                  state.viewport.height - MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX,
+              `${viewport.name}: controles principais não ficaram na base esquerda.`,
             );
             const menuButton = mainButtons.find((button) =>
               MENU_BUTTON_NAME.test(button.text),
@@ -816,16 +840,13 @@ async function run() {
             assert(
               menuButton &&
                 menuButton.right >=
-                  state.viewport.width - MOBILE_FOCUSED_CORNER_OFFSET_PX &&
-                menuButton.y <= MOBILE_FOCUSED_CORNER_OFFSET_PX,
+                  state.viewport.width - MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX &&
+                menuButton.y <= MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX,
               `${viewport.name}: menu não ficou no canto superior direito.`,
             );
             assert(
-              state.scoreHud &&
-                state.scoreHud.x <= MOBILE_FOCUSED_CORNER_OFFSET_PX &&
-                state.scoreHud.bottom >=
-                  state.viewport.height - MOBILE_FOCUSED_CORNER_OFFSET_PX,
-              `${viewport.name}: HUD não ficou compacto no canto inferior.`,
+              !state.scoreHudVisible,
+              `${viewport.name}: HUD deveria ficar oculto no mobile.`,
             );
           } else {
             for (const button of [audioIcon, musicIcon, restartIcon]) {
@@ -926,42 +947,44 @@ async function run() {
                   MIN_IMMERSIVE_BOARD_AREA_USAGE_RATIO,
               `${viewport.name}: canvas não usa 90% da área útil do tabuleiro.`,
             );
-            assert(
-              !rectsIntersect(
-                state.canvas,
-                state.header,
-                MAX_CANVAS_OVERLAP_PX,
-              ),
-              `${viewport.name}: HUD sobrepôs o canvas.`,
-            );
-            assert(
-              !rectsIntersect(
-                state.canvas,
-                state.scoreHud,
-                MAX_CANVAS_OVERLAP_PX,
-              ),
-              `${viewport.name}: pontuação/fase sobrepôs o canvas.`,
-            );
-            assert(
-              !state.boardControls ||
+            if (!isMobileLandscapeFocused) {
+              assert(
                 !rectsIntersect(
                   state.canvas,
-                  state.boardControls,
+                  state.header,
                   MAX_CANVAS_OVERLAP_PX,
                 ),
-              `${viewport.name}: controles principais antigos sobrepuseram o canvas.`,
-            );
-            const canvasOverlappingButtons = state.buttons
-              .filter((button) => !button.inDrawer)
-              .filter((button) =>
-                rectsIntersect(state.canvas, button, MAX_CANVAS_OVERLAP_PX),
+                `${viewport.name}: HUD sobrepôs o canvas.`,
               );
-            assert(
-              canvasOverlappingButtons.length === 0,
-              `${viewport.name}: botões sobrepostos ao canvas: ${canvasOverlappingButtons
-                .map(describeButton)
-                .join(", ")}.`,
-            );
+              assert(
+                !rectsIntersect(
+                  state.canvas,
+                  state.scoreHud,
+                  MAX_CANVAS_OVERLAP_PX,
+                ),
+                `${viewport.name}: pontuação/fase sobrepôs o canvas.`,
+              );
+              assert(
+                !state.boardControls ||
+                  !rectsIntersect(
+                    state.canvas,
+                    state.boardControls,
+                    MAX_CANVAS_OVERLAP_PX,
+                  ),
+                `${viewport.name}: controles principais antigos sobrepuseram o canvas.`,
+              );
+              const canvasOverlappingButtons = state.buttons
+                .filter((button) => !button.inDrawer)
+                .filter((button) =>
+                  rectsIntersect(state.canvas, button, MAX_CANVAS_OVERLAP_PX),
+                );
+              assert(
+                canvasOverlappingButtons.length === 0,
+                `${viewport.name}: botões sobrepostos ao canvas: ${canvasOverlappingButtons
+                  .map(describeButton)
+                  .join(", ")}.`,
+              );
+            }
             assert(
               !state.titleGroupVisible,
               `${viewport.name}: título/eyebrow continuam ocupando espaço.`,

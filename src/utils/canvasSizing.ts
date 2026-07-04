@@ -36,6 +36,8 @@ export interface ResponsiveCanvasSize {
 const ASPECT_RATIO = CANVAS_WIDTH / CANVAS_HEIGHT;
 const MOBILE_PORTRAIT_FOCUSED_MAX_WIDTH = 480;
 const MOBILE_PORTRAIT_FOCUSED_UI_RESERVED_BLOCK = 0;
+const MOBILE_LANDSCAPE_FOCUSED_MAX_HEIGHT = 500;
+const MOBILE_LANDSCAPE_FOCUSED_UI_RESERVED_BLOCK = 0;
 
 function resolveViewportWidth(metrics: ResponsiveCanvasMetrics): number {
   return metrics.visualViewportWidth || metrics.viewportWidth;
@@ -76,6 +78,9 @@ export function calculateResponsiveCanvasSize(
   const isLandscapeImmersive = isImmersiveLandscape(metrics);
   const isPortraitFocused =
     !isLandscapeImmersive && isMobilePortraitFocused(metrics);
+  const isLandscapeFocused =
+    isLandscapeImmersive &&
+    resolveViewportHeight(metrics) <= MOBILE_LANDSCAPE_FOCUSED_MAX_HEIGHT;
   const minCanvasWidth = isLandscapeImmersive
     ? IMMERSIVE_LANDSCAPE_MIN_CANVAS_WIDTH
     : MIN_CANVAS_WIDTH;
@@ -84,8 +89,10 @@ export function calculateResponsiveCanvasSize(
     : MIN_CANVAS_HEIGHT;
   const viewportWidth = resolveViewportWidth(metrics);
   const viewportHeight = resolveViewportHeight(metrics);
-  const immersiveUiReservedBlock =
-    metrics.immersiveUiReservedBlock ?? IMMERSIVE_LANDSCAPE_UI_RESERVED_BLOCK;
+  const immersiveUiReservedBlock = isLandscapeFocused
+    ? MOBILE_LANDSCAPE_FOCUSED_UI_RESERVED_BLOCK
+    : (metrics.immersiveUiReservedBlock ??
+      IMMERSIVE_LANDSCAPE_UI_RESERVED_BLOCK);
   const responsiveUiReservedBlock = isPortraitFocused
     ? MOBILE_PORTRAIT_FOCUSED_UI_RESERVED_BLOCK
     : RESPONSIVE_CANVAS_UI_RESERVED_BLOCK;
