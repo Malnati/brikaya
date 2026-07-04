@@ -77,33 +77,38 @@ const WIDE_PADDLE_SCALE = 1.45;
 const SLOW_BALL_MULTIPLIER = 0.75;
 const MULTIBALL_ANGLE_OFFSET = 0.42;
 const HIGH_INTENSITY_SPEED_MULTIPLIER = 1.6;
-const LASER_FAN_CENTER_X_RATIO = 0.5;
-const LASER_FAN_CENTER_Y_RATIO = 0.78;
-const LASER_FAN_RAY_ALPHA = 0.82;
-const LASER_FAN_RAY_LINE_WIDTH = 3;
-const LASER_FAN_RAY_COUNT = 9;
-const LASER_FAN_RAY_START_ANGLE = Math.PI * 1.12;
-const LASER_FAN_RAY_END_ANGLE = Math.PI * 1.88;
-const LASER_FAN_RAY_COLOR = "rgba(245, 247, 255, 0.82)";
 const LASER_FAN_MIN_PROGRESS = 0;
 const LASER_FAN_MAX_PROGRESS = 1;
-const LASER_FAN_SWEEP_SPEED = 1.35;
-const LASER_FAN_TARGET_STAGGER_PROGRESS = 0.08;
-const LASER_FAN_TARGET_REACH_WINDOW = 0.45;
-const LASER_FAN_PULSE_INTERVAL_MS = 80;
-const LASER_FAN_TARGET_WAVE_OFFSET = 0.75;
-const LASER_FAN_PULSE_MIN_ALPHA_RATIO = 0.65;
-const LASER_FAN_PULSE_MAX_ALPHA_RATIO = 0.35;
-const LASER_FAN_FADE_ALPHA_RATIO = 0.35;
-const LASER_FAN_LINE_WIDTH_MIN_RATIO = 0.8;
-const LASER_FAN_LINE_WIDTH_PULSE_RATIO = 0.8;
-const LASER_FAN_CORE_WIDTH_RATIO = 0.45;
-const LASER_FAN_CORE_ALPHA_RATIO = 1.12;
-const LASER_FAN_IMPACT_START_PROGRESS = 0.55;
-const LASER_FAN_IMPACT_FADE_RATIO = 0.35;
-const LASER_FAN_IMPACT_RADIUS_RATIO = 0.34;
-const LASER_FAN_IMPACT_MIN_RADIUS = 4;
-const LASER_FAN_IMPACT_MAX_ALPHA = 0.75;
+const LASER_FAN_TARGET_COUNT = 5;
+const LASER_FAN_TARGET_STAGGER_PROGRESS = 0.12;
+const LASER_FAN_TARGET_PROGRESS_WINDOW = 0.72;
+const LASER_FAN_CRACK_START_PROGRESS = 0.12;
+const LASER_FAN_GLOW_START_PROGRESS = 0.24;
+const LASER_FAN_EXPLOSION_START_PROGRESS = 0.72;
+const LASER_FAN_CRACK_MIN_LINES = 2;
+const LASER_FAN_CRACK_LINE_VARIANTS = 3;
+const LASER_FAN_CRACK_LINE_WIDTH = 2.1;
+const LASER_FAN_CRACK_LINE_WIDTH_PROGRESS_RATIO = 0.6;
+const LASER_FAN_CRACK_LINE_WIDTH_SEED_RATIO = 0.35;
+const LASER_FAN_CRACK_LINE_ALPHA = 0.92;
+const LASER_FAN_CRACK_LINE_COLOR = "rgba(255, 248, 199, 0.92)";
+const LASER_FAN_CRACK_SHADOW_COLOR = "rgba(97, 232, 255, 0.78)";
+const LASER_FAN_GLOW_COLOR = "rgba(245, 247, 255, 0.34)";
+const LASER_FAN_GLOW_MAX_ALPHA = 0.76;
+const LASER_FAN_GLOW_RADIUS_RATIO = 0.72;
+const LASER_FAN_EXPLOSION_PARTICLE_COUNT = 6;
+const LASER_FAN_EXPLOSION_RADIUS_RATIO = 0.82;
+const LASER_FAN_EXPLOSION_PARTICLE_RADIUS_RATIO = 0.08;
+const LASER_FAN_EXPLOSION_MIN_PARTICLE_RADIUS = 1.5;
+const LASER_FAN_EXPLOSION_ALPHA = 0.88;
+const LASER_FAN_SEED_COL_MULTIPLIER = 73_856_093;
+const LASER_FAN_SEED_ROW_MULTIPLIER = 19_349_663;
+const LASER_FAN_SEED_COLOR_MULTIPLIER = 83_492_791;
+const LASER_FAN_SEED_INDEX_MULTIPLIER = 2_654_435_761;
+const LASER_FAN_SEED_MODULO = 997;
+const LASER_FAN_SEED_NORMALIZER = 997;
+const LASER_FAN_CRACK_EDGE_PADDING_RATIO = 0.16;
+const LASER_FAN_CRACK_BRANCH_LENGTH_RATIO = 0.36;
 const LASER_FAN_LINE_CAP: CanvasLineCap = "round";
 const FULL_CIRCLE_RADIANS = Math.PI * 2;
 const BRICK_COLOR_AUDIO_IDS: AudioId[] = [
@@ -132,11 +137,19 @@ interface CanvasSize {
 }
 
 interface LaserFanEffectTarget {
+  col: number;
+  row: number;
+  colorIndex: number;
   x: number;
   y: number;
   width: number;
   height: number;
   index: number;
+  seed: number;
+}
+
+interface LaserFanResolution {
+  targets: DestroyedBrickSnapshot[];
 }
 
 export type GameQaScenario =
@@ -184,6 +197,7 @@ export class GameEngine {
   private laserFanEffectUntil = 0;
   private laserFanEffectTargets: LaserFanEffectTarget[] = [];
   private laserFanEffectTimer: ReturnType<typeof setTimeout> | null = null;
+  private laserFanResolution: LaserFanResolution | null = null;
   private readonly handleKeyDown = (event: KeyboardEvent) =>
     this.paddle.onKeyDown(event);
   private readonly handleKeyUp = (event: KeyboardEvent) =>
@@ -370,10 +384,11 @@ export class GameEngine {
 
   private calculateMaxBrickRows(dimensions: DynamicGameDimensions): number {
     const availableHeight =
-      this.canvasSize.height - dimensions.paddleHeight - dimensions.brickOffsetTop;
+      this.canvasSize.height -
+      dimensions.paddleHeight -
+      dimensions.brickOffsetTop;
     const computedRows = Math.floor(
-      availableHeight /
-        (dimensions.brickHeight + dimensions.brickPadding),
+      availableHeight / (dimensions.brickHeight + dimensions.brickPadding),
     );
 
     return Math.max(dimensions.brickRows, computedRows);
@@ -950,8 +965,23 @@ export class GameEngine {
 
   private async activateLaserFanPowerUp(activationAudioId: AudioId) {
     this.audioSink.playAudio(activationAudioId);
-    const destroyedBricks = this.bricks.destroyAllActive();
-    this.showLaserFanEffect(destroyedBricks);
+    const selectedBricks = this.bricks.selectRandomActive(
+      LASER_FAN_TARGET_COUNT,
+    );
+    this.showLaserFanEffect(selectedBricks);
+    this.laserFanResolution = { targets: selectedBricks };
+    if (selectedBricks.length === 0) return;
+  }
+
+  private async finishLaserFanPowerUp() {
+    const resolution = this.laserFanResolution;
+    this.resetLaserFanEffectState();
+    if (!resolution) return;
+
+    const destroyedBricks = this.bricks.destroySelectedActive(
+      resolution.targets,
+    );
+    this.laserFanResolution = null;
     if (destroyedBricks.length === 0) return;
 
     const scoreDelta = POINTS_PER_BRICK * destroyedBricks.length;
@@ -1039,19 +1069,28 @@ export class GameEngine {
       this.buildLaserFanEffectTargets(destroyedBricks);
     if (this.laserFanEffectTimer) clearTimeout(this.laserFanEffectTimer);
     this.laserFanEffectTimer = setTimeout(() => {
-      this.laserFanEffectStartedAt = 0;
-      this.laserFanEffectUntil = 0;
-      this.laserFanEffectTargets = [];
-      this.laserFanEffectTimer = null;
+      void this.finishLaserFanPowerUp();
     }, LASER_FAN_EFFECT_VISIBLE_MS);
   }
 
   private clearLaserFanEffect() {
     if (this.laserFanEffectTimer) clearTimeout(this.laserFanEffectTimer);
+    this.resetLaserFanEffectState();
+    this.laserFanResolution = null;
+  }
+
+  private resetLaserFanEffectState() {
     this.laserFanEffectTimer = null;
     this.laserFanEffectStartedAt = 0;
     this.laserFanEffectUntil = 0;
     this.laserFanEffectTargets = [];
+  }
+
+  private isLaserFanEffectActive() {
+    return (
+      this.laserFanEffectStartedAt !== 0 &&
+      Date.now() <= this.laserFanEffectUntil
+    );
   }
 
   private drawLaserFanEffect() {
@@ -1059,67 +1098,26 @@ export class GameEngine {
     if (now > this.laserFanEffectUntil || this.laserFanEffectStartedAt === 0)
       return;
 
-    const centerX = this.canvasSize.width * LASER_FAN_CENTER_X_RATIO;
-    const centerY = this.canvasSize.height * LASER_FAN_CENTER_Y_RATIO;
-    const radius = Math.hypot(this.canvasSize.width, this.canvasSize.height);
     const elapsedMs = Math.max(0, now - this.laserFanEffectStartedAt);
     const progress = this.clampLaserFanProgress(
       elapsedMs / LASER_FAN_EFFECT_VISIBLE_MS,
     );
-    const sweepProgress = this.clampLaserFanProgress(
-      progress * LASER_FAN_SWEEP_SPEED,
-    );
-    const step =
-      (LASER_FAN_RAY_END_ANGLE - LASER_FAN_RAY_START_ANGLE) /
-      Math.max(1, LASER_FAN_RAY_COUNT - 1);
-    const targets =
-      this.laserFanEffectTargets.length > 0
-        ? this.laserFanEffectTargets
-        : this.buildLaserFanFallbackTargets(centerX, centerY, radius, step);
-    const baseLineWidth =
-      LASER_FAN_RAY_LINE_WIDTH * Math.min(this.scaleX, this.scaleY);
+    if (this.laserFanEffectTargets.length === 0) return;
 
     this.ctx.save();
-    this.ctx.strokeStyle = LASER_FAN_RAY_COLOR;
-    this.ctx.fillStyle = LASER_FAN_RAY_COLOR;
     this.ctx.lineCap = LASER_FAN_LINE_CAP;
+    this.ctx.strokeStyle = LASER_FAN_CRACK_LINE_COLOR;
+    this.ctx.fillStyle = LASER_FAN_GLOW_COLOR;
 
-    for (const target of targets) {
+    for (const target of this.laserFanEffectTargets) {
       const stagger =
         (target.index * LASER_FAN_TARGET_STAGGER_PROGRESS) /
-        Math.max(1, targets.length);
+        Math.max(1, this.laserFanEffectTargets.length);
       const targetProgress = this.clampLaserFanProgress(
-        (sweepProgress - stagger) / LASER_FAN_TARGET_REACH_WINDOW,
+        (progress - stagger) / LASER_FAN_TARGET_PROGRESS_WINDOW,
       );
-      const wave =
-        Math.sin(
-          elapsedMs / LASER_FAN_PULSE_INTERVAL_MS +
-            target.index * LASER_FAN_TARGET_WAVE_OFFSET,
-        ) + 1;
-      const pulse =
-        LASER_FAN_PULSE_MIN_ALPHA_RATIO +
-        (LASER_FAN_PULSE_MAX_ALPHA_RATIO * wave) / CENTER_DIVISOR;
-      const alpha =
-        LASER_FAN_RAY_ALPHA *
-        pulse *
-        (LASER_FAN_MAX_PROGRESS - progress * LASER_FAN_FADE_ALPHA_RATIO);
-      const lineWidth =
-        baseLineWidth *
-        (LASER_FAN_LINE_WIDTH_MIN_RATIO +
-          LASER_FAN_LINE_WIDTH_PULSE_RATIO * targetProgress * pulse);
-      const endX = centerX + (target.x - centerX) * targetProgress;
-      const endY = centerY + (target.y - centerY) * targetProgress;
 
-      this.drawLaserFanRay(centerX, centerY, endX, endY, lineWidth, alpha);
-      this.drawLaserFanRay(
-        centerX,
-        centerY,
-        endX,
-        endY,
-        Math.max(1, lineWidth * LASER_FAN_CORE_WIDTH_RATIO),
-        Math.min(LASER_FAN_MAX_PROGRESS, alpha * LASER_FAN_CORE_ALPHA_RATIO),
-      );
-      this.drawLaserFanImpact(target, targetProgress, pulse);
+      this.drawLaserFanTargetEffect(target, targetProgress);
     }
     this.ctx.restore();
   }
@@ -1128,83 +1126,189 @@ export class GameEngine {
     destroyedBricks: DestroyedBrickSnapshot[],
   ): LaserFanEffectTarget[] {
     return destroyedBricks.map((brick, index) => ({
+      col: brick.col,
+      row: brick.row,
+      colorIndex: brick.colorIndex,
       x: brick.x + brick.width / CENTER_DIVISOR,
       y: brick.y + brick.height / CENTER_DIVISOR,
       width: brick.width,
       height: brick.height,
       index,
+      seed: this.buildLaserFanTargetSeed(brick, index),
     }));
   }
 
-  private buildLaserFanFallbackTargets(
-    centerX: number,
-    centerY: number,
-    radius: number,
-    step: number,
-  ): LaserFanEffectTarget[] {
-    return Array.from({ length: LASER_FAN_RAY_COUNT }, (_, index) => {
-      const angle = LASER_FAN_RAY_START_ANGLE + step * index;
-      return {
-        x: centerX + Math.cos(angle) * radius,
-        y: centerY + Math.sin(angle) * radius,
-        width: 0,
-        height: 0,
-        index,
-      };
-    });
-  }
-
-  private drawLaserFanRay(
-    startX: number,
-    startY: number,
-    endX: number,
-    endY: number,
-    lineWidth: number,
-    alpha: number,
+  private buildLaserFanTargetSeed(
+    brick: DestroyedBrickSnapshot,
+    index: number,
   ) {
-    this.ctx.globalAlpha = alpha;
-    this.ctx.lineWidth = lineWidth;
-    this.ctx.beginPath();
-    this.ctx.moveTo(startX, startY);
-    this.ctx.lineTo(endX, endY);
-    this.ctx.stroke();
+    return Math.abs(
+      brick.col * LASER_FAN_SEED_COL_MULTIPLIER +
+        brick.row * LASER_FAN_SEED_ROW_MULTIPLIER +
+        brick.colorIndex * LASER_FAN_SEED_COLOR_MULTIPLIER +
+        index * LASER_FAN_SEED_INDEX_MULTIPLIER,
+    );
   }
 
-  private drawLaserFanImpact(
+  private drawLaserFanTargetEffect(
     target: LaserFanEffectTarget,
     targetProgress: number,
-    pulse: number,
   ) {
-    if (
-      target.width === 0 ||
-      targetProgress < LASER_FAN_IMPACT_START_PROGRESS
-    ) {
-      return;
-    }
+    if (targetProgress < LASER_FAN_CRACK_START_PROGRESS) return;
 
-    const impactProgress = this.clampLaserFanProgress(
-      (targetProgress - LASER_FAN_IMPACT_START_PROGRESS) /
-        (LASER_FAN_MAX_PROGRESS - LASER_FAN_IMPACT_START_PROGRESS),
+    const crackProgress = this.clampLaserFanProgress(
+      (targetProgress - LASER_FAN_CRACK_START_PROGRESS) /
+        (LASER_FAN_MAX_PROGRESS - LASER_FAN_CRACK_START_PROGRESS),
     );
-    const impactRadius = Math.max(
-      LASER_FAN_IMPACT_MIN_RADIUS,
-      Math.min(target.width, target.height) * LASER_FAN_IMPACT_RADIUS_RATIO,
-    );
+    this.drawLaserFanGlow(target, targetProgress);
+    this.drawLaserFanCracks(target, crackProgress);
+    this.drawLaserFanExplosion(target, targetProgress);
+  }
 
-    this.ctx.globalAlpha =
-      LASER_FAN_IMPACT_MAX_ALPHA *
-      pulse *
-      (LASER_FAN_MAX_PROGRESS -
-        impactProgress * LASER_FAN_IMPACT_FADE_RATIO);
-      this.ctx.beginPath();
+  private drawLaserFanGlow(
+    target: LaserFanEffectTarget,
+    targetProgress: number,
+  ) {
+    if (targetProgress < LASER_FAN_GLOW_START_PROGRESS) return;
+
+    const glowProgress = this.clampLaserFanProgress(
+      (targetProgress - LASER_FAN_GLOW_START_PROGRESS) /
+        (LASER_FAN_MAX_PROGRESS - LASER_FAN_GLOW_START_PROGRESS),
+    );
+    const glowRadius =
+      Math.max(target.width, target.height) *
+      LASER_FAN_GLOW_RADIUS_RATIO *
+      glowProgress;
+
+    this.ctx.globalAlpha = LASER_FAN_GLOW_MAX_ALPHA * glowProgress;
+    this.ctx.fillStyle = LASER_FAN_GLOW_COLOR;
+    this.ctx.beginPath();
     this.ctx.arc(
       target.x,
       target.y,
-      impactRadius,
+      glowRadius,
       LASER_FAN_MIN_PROGRESS,
       FULL_CIRCLE_RADIANS,
     );
     this.ctx.fill();
+  }
+
+  private drawLaserFanCracks(
+    target: LaserFanEffectTarget,
+    crackProgress: number,
+  ) {
+    const lineCount =
+      LASER_FAN_CRACK_MIN_LINES + (target.seed % LASER_FAN_CRACK_LINE_VARIANTS);
+    const edgePadding =
+      Math.min(target.width, target.height) *
+      LASER_FAN_CRACK_EDGE_PADDING_RATIO;
+    const baseLineWidth =
+      LASER_FAN_CRACK_LINE_WIDTH * Math.min(this.scaleX, this.scaleY);
+
+    this.ctx.strokeStyle = LASER_FAN_CRACK_LINE_COLOR;
+    this.ctx.shadowColor = LASER_FAN_CRACK_SHADOW_COLOR;
+    this.ctx.globalAlpha = LASER_FAN_CRACK_LINE_ALPHA * crackProgress;
+
+    for (let lineIndex = 0; lineIndex < lineCount; lineIndex++) {
+      const startRatio = this.laserFanUnitValue(target.seed, lineIndex);
+      const endRatio = this.laserFanUnitValue(
+        target.seed,
+        lineIndex + lineCount,
+      );
+      const branchRatio = this.laserFanUnitValue(
+        target.seed,
+        lineIndex + lineCount * CENTER_DIVISOR,
+      );
+      const lineWidth =
+        baseLineWidth *
+        (LASER_FAN_MAX_PROGRESS +
+          LASER_FAN_CRACK_LINE_WIDTH_PROGRESS_RATIO * crackProgress +
+          LASER_FAN_CRACK_LINE_WIDTH_SEED_RATIO * branchRatio);
+      const startX =
+        target.x -
+        target.width / CENTER_DIVISOR +
+        edgePadding +
+        (target.width - edgePadding * CENTER_DIVISOR) * startRatio;
+      const startY =
+        target.y -
+        target.height / CENTER_DIVISOR +
+        edgePadding +
+        (target.height - edgePadding * CENTER_DIVISOR) * branchRatio;
+      const endX =
+        target.x -
+        target.width / CENTER_DIVISOR +
+        edgePadding +
+        (target.width - edgePadding * CENTER_DIVISOR) * endRatio;
+      const endY =
+        target.y +
+        target.height *
+          LASER_FAN_CRACK_BRANCH_LENGTH_RATIO *
+          (branchRatio - LASER_FAN_MAX_PROGRESS / CENTER_DIVISOR);
+
+      this.ctx.lineWidth = lineWidth;
+      this.ctx.shadowBlur = lineWidth * CENTER_DIVISOR;
+      this.ctx.beginPath();
+      this.ctx.moveTo(startX, startY);
+      this.ctx.lineTo(
+        startX + (endX - startX) * crackProgress,
+        startY + (endY - startY) * crackProgress,
+      );
+      this.ctx.stroke();
+    }
+  }
+
+  private drawLaserFanExplosion(
+    target: LaserFanEffectTarget,
+    targetProgress: number,
+  ) {
+    if (targetProgress < LASER_FAN_EXPLOSION_START_PROGRESS) return;
+
+    const explosionProgress = this.clampLaserFanProgress(
+      (targetProgress - LASER_FAN_EXPLOSION_START_PROGRESS) /
+        (LASER_FAN_MAX_PROGRESS - LASER_FAN_EXPLOSION_START_PROGRESS),
+    );
+    const explosionRadius =
+      Math.max(target.width, target.height) *
+      LASER_FAN_EXPLOSION_RADIUS_RATIO *
+      explosionProgress;
+    const particleRadius = Math.max(
+      LASER_FAN_EXPLOSION_MIN_PARTICLE_RADIUS,
+      Math.min(target.width, target.height) *
+        LASER_FAN_EXPLOSION_PARTICLE_RADIUS_RATIO *
+        (LASER_FAN_MAX_PROGRESS - explosionProgress),
+    );
+
+    this.ctx.globalAlpha =
+      LASER_FAN_EXPLOSION_ALPHA * (LASER_FAN_MAX_PROGRESS - explosionProgress);
+    this.ctx.fillStyle = LASER_FAN_CRACK_LINE_COLOR;
+
+    for (
+      let particleIndex = 0;
+      particleIndex < LASER_FAN_EXPLOSION_PARTICLE_COUNT;
+      particleIndex++
+    ) {
+      const angle =
+        (FULL_CIRCLE_RADIANS / LASER_FAN_EXPLOSION_PARTICLE_COUNT) *
+        particleIndex;
+
+      this.ctx.beginPath();
+      this.ctx.arc(
+        target.x + Math.cos(angle) * explosionRadius,
+        target.y + Math.sin(angle) * explosionRadius,
+        particleRadius,
+        LASER_FAN_MIN_PROGRESS,
+        FULL_CIRCLE_RADIANS,
+      );
+      this.ctx.fill();
+    }
+  }
+
+  private laserFanUnitValue(seed: number, salt: number) {
+    return (
+      ((seed + salt * LASER_FAN_SEED_INDEX_MULTIPLIER) %
+        LASER_FAN_SEED_MODULO) /
+      LASER_FAN_SEED_NORMALIZER
+    );
   }
 
   private clampLaserFanProgress(value: number) {
@@ -1453,12 +1557,15 @@ export class GameEngine {
       // Normal game rendering
       try {
         this.bricks.draw(this.ctx);
+        const isLaserFanAnimating = this.isLaserFanEffectActive();
         this.paddle.update();
-        this.updatePowerUp();
+        if (!isLaserFanAnimating) {
+          this.updatePowerUp();
+        }
         this.paddle.draw(this.ctx);
         this.activePowerUp?.draw(this.ctx);
         this.drawLaserFanEffect();
-        if (this.isLevelTransitioning) {
+        if (this.isLevelTransitioning || isLaserFanAnimating) {
           this.balls.forEach((ball) => ball.draw(this.ctx));
         } else {
           for (let i = this.balls.length - 1; i >= 0; i--) {

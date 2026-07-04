@@ -135,6 +135,8 @@ jest.mock("../objects/Bricks", () => ({
       isAllDestroyed: jest.fn(() => mockBricksAllDestroyed),
       isBrickActive: jest.fn(() => mockBrickActiveValue),
       getRows: jest.fn(() => mockBricksRows),
+      selectRandomActive: jest.fn(() => mockDestroyedLaserBricks),
+      destroySelectedActive: jest.fn(() => mockDestroyedLaserBricks),
       destroyAllActive: jest.fn(() => mockDestroyedLaserBricks),
       collide: jest.fn(),
       draw: jest.fn(),
@@ -636,15 +638,17 @@ describe("GameEngine", () => {
     expect(mockGameLogger.logBallAdded.mock.calls[1][0].ballsCount).toBe(3);
   });
 
-  it("ativa laser em leque destruindo todos os blocos e iniciando transição uma vez", async () => {
+  it("ativa laser escolhendo cinco blocos e destruindo ao fim da animação", async () => {
     jest.useFakeTimers();
     mockDestroyedLaserBricks = [
       { col: 0, row: 0, colorIndex: 0, x: 10, y: 20, width: 50, height: 20 },
       { col: 1, row: 0, colorIndex: 1, x: 70, y: 20, width: 50, height: 20 },
       { col: 2, row: 0, colorIndex: 2, x: 130, y: 20, width: 50, height: 20 },
+      { col: 3, row: 0, colorIndex: 3, x: 190, y: 20, width: 50, height: 20 },
+      { col: 4, row: 0, colorIndex: 4, x: 250, y: 20, width: 50, height: 20 },
     ];
-    mockBricksAllDestroyed = true;
-    mockBrickActiveValue = false;
+    mockBricksAllDestroyed = false;
+    mockBrickActiveValue = true;
     const playAudio = jest.fn();
     const audioSink: GameAudioSink = {
       playAudio,
@@ -666,28 +670,36 @@ describe("GameEngine", () => {
 
     await (engine as any).activatePowerUp("laser_fan");
 
-    expect(mockBricksInstances[0].destroyAllActive).toHaveBeenCalledTimes(1);
-    expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_BRICK * 3);
-    expect(mockGameLogger.logScoreUpdate).toHaveBeenCalledTimes(1);
-    expect(mockGameLogger.logLevelComplete).toHaveBeenCalledTimes(1);
-    expect(onLevelTransition).toHaveBeenCalledTimes(1);
+    expect(mockBricksInstances[0].selectRandomActive).toHaveBeenCalledWith(5);
+    expect(mockBricksInstances[0].destroySelectedActive).not.toHaveBeenCalled();
+    expect(onScoreUpdate).not.toHaveBeenCalled();
+    expect(mockGameLogger.logScoreUpdate).not.toHaveBeenCalled();
+    expect(mockGameLogger.logLevelComplete).not.toHaveBeenCalled();
+    expect(onLevelTransition).not.toHaveBeenCalled();
     expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.POWERUP_COLLECT);
     expect(playAudio).toHaveBeenCalledWith(
       GAME_AUDIO_IDS.POWERUP_ACTIVATE_LASER_FAN,
     );
     expect((engine as any).laserFanEffectStartedAt).toBeGreaterThan(0);
-    expect((engine as any).laserFanEffectTargets).toEqual([
-      { x: 35, y: 30, width: 50, height: 20, index: 0 },
-      { x: 95, y: 30, width: 50, height: 20, index: 1 },
-      { x: 155, y: 30, width: 50, height: 20, index: 2 },
-    ]);
-    expect(LASER_FAN_EFFECT_VISIBLE_MS).toBeGreaterThanOrEqual(2000);
-    expect((engine as any).laserFanEffectUntil - Date.now()).toBeGreaterThanOrEqual(
-      2000,
+    expect((engine as any).laserFanEffectTargets).toHaveLength(5);
+    expect((engine as any).laserFanEffectTargets[0]).toEqual(
+      expect.objectContaining({ col: 0, row: 0, x: 35, y: 30, index: 0 }),
     );
-    jest.advanceTimersByTime(1999);
+    expect(LASER_FAN_EFFECT_VISIBLE_MS).toBeGreaterThanOrEqual(2000);
+    expect(
+      (engine as any).laserFanEffectUntil - Date.now(),
+    ).toBeGreaterThanOrEqual(2000);
+    jest.advanceTimersByTime(LASER_FAN_EFFECT_VISIBLE_MS - 1);
     expect((engine as any).laserFanEffectUntil).toBeGreaterThan(Date.now());
-    jest.advanceTimersByTime(1);
+    expect(mockBricksInstances[0].destroySelectedActive).not.toHaveBeenCalled();
+    await jest.advanceTimersByTimeAsync(1);
+    expect(mockBricksInstances[0].destroySelectedActive).toHaveBeenCalledWith(
+      mockDestroyedLaserBricks,
+    );
+    expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_BRICK * 5);
+    expect(mockGameLogger.logScoreUpdate).toHaveBeenCalledTimes(1);
+    expect(mockGameLogger.logLevelComplete).not.toHaveBeenCalled();
+    expect(onLevelTransition).not.toHaveBeenCalled();
     expect((engine as any).laserFanEffectStartedAt).toBe(0);
     expect((engine as any).laserFanEffectUntil).toBe(0);
     expect((engine as any).laserFanEffectTargets).toEqual([]);
@@ -695,35 +707,68 @@ describe("GameEngine", () => {
     expect(mockGameLogger.logGameStart).not.toHaveBeenCalled();
   });
 
-  it("desenha laser em frames diferentes até o impacto nos tijolos", () => {
-    jest.useFakeTimers().setSystemTime(
-      new Date("2026-07-04T00:00:00.000Z"),
+  it("completa fase quando os blocos aleatórios do laser esgotam o tabuleiro", async () => {
+    jest.useFakeTimers();
+    mockDestroyedLaserBricks = [
+      { col: 0, row: 0, colorIndex: 0, x: 10, y: 20, width: 50, height: 20 },
+      { col: 1, row: 0, colorIndex: 1, x: 70, y: 20, width: 50, height: 20 },
+      { col: 2, row: 0, colorIndex: 2, x: 130, y: 20, width: 50, height: 20 },
+      { col: 3, row: 0, colorIndex: 3, x: 190, y: 20, width: 50, height: 20 },
+    ];
+    mockBricksAllDestroyed = true;
+    const engine = new GameEngine(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      onLevelTransition,
     );
+    const mockGameLogger = require("../storage/gameLogger").gameLogger;
+
+    await (engine as any).activatePowerUp("laser_fan");
+    await jest.advanceTimersByTimeAsync(LASER_FAN_EFFECT_VISIBLE_MS);
+
+    expect(mockBricksInstances[0].selectRandomActive).toHaveBeenCalledWith(5);
+    expect(mockBricksInstances[0].destroySelectedActive).toHaveBeenCalledWith(
+      mockDestroyedLaserBricks,
+    );
+    expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_BRICK * 4);
+    expect(mockGameLogger.logScoreUpdate).toHaveBeenCalledTimes(1);
+    expect(mockGameLogger.logLevelComplete).toHaveBeenCalledTimes(1);
+    expect(onLevelTransition).toHaveBeenCalledTimes(1);
+  });
+
+  it("desenha rachaduras e brilho por bloco no lugar do leque antigo", () => {
+    jest.useFakeTimers().setSystemTime(new Date("2026-07-04T00:00:00.000Z"));
     const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+    const strokeLineWidths: number[] = [];
     const laserTargets = [
       { col: 0, row: 0, colorIndex: 0, x: 10, y: 20, width: 50, height: 20 },
       { col: 1, row: 0, colorIndex: 1, x: 70, y: 20, width: 50, height: 20 },
     ];
+    (mockContext.stroke as jest.Mock).mockImplementation(() => {
+      strokeLineWidths.push(Number(mockContext.lineWidth.toFixed(3)));
+    });
 
     (engine as any).showLaserFanEffect(laserTargets);
 
-    jest.advanceTimersByTime(250);
+    jest.advanceTimersByTime(650);
     (engine as any).drawLaserFanEffect();
-    const firstFrameLine = [
-      ...(mockContext.lineTo as jest.Mock).mock.calls[0],
-    ];
+    const firstFrameMove = [...(mockContext.moveTo as jest.Mock).mock.calls[0]];
 
     (mockContext.lineTo as jest.Mock).mockClear();
     (mockContext.arc as jest.Mock).mockClear();
 
     jest.advanceTimersByTime(450);
     (engine as any).drawLaserFanEffect();
-    const secondFrameLine = [
-      ...(mockContext.lineTo as jest.Mock).mock.calls[0],
-    ];
 
-    expect(secondFrameLine).not.toEqual(firstFrameLine);
+    expect(firstFrameMove[0]).toBeLessThan(70);
+    expect((mockContext.lineTo as jest.Mock).mock.calls.length).toBeGreaterThan(
+      0,
+    );
     expect((mockContext.arc as jest.Mock).mock.calls.length).toBeGreaterThan(0);
+    expect(new Set(strokeLineWidths).size).toBeGreaterThan(1);
   });
 
   it("limita laser em leque a dois spawns por fase e continua outros power-ups", () => {

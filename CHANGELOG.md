@@ -3,6 +3,22 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.10] - 2026-07-04
+### Alterado
+- Item especial laser passa a escolher aleatoriamente até cinco blocos ativos, mantendo-os visíveis durante a animação de rachadura, brilho e explosão antes da destruição.
+- Animação antiga de raios em leque foi substituída por efeito individual por bloco no canvas, com pontuação e logs aplicados somente ao final visual.
+
+### Testado
+- `node --version` → `v23.5.0`.
+- `make help`.
+- `npm test -- src/logic/GameEngine.test.ts src/objects/Bricks.test.ts --runInBand`.
+- `npm test -- --runInBand` → 40 suites / 206 testes.
+- `npx prettier --check src/logic/GameEngine.ts src/objects/Bricks.ts src/logic/GameEngine.test.ts src/objects/Bricks.test.ts tests/e2e/cloudflare-laser-powerup-qa.js`.
+- `node --check tests/e2e/cloudflare-laser-powerup-qa.js`.
+- `npm run test:semantic-file-names`.
+- `npm run test:svg-assets`.
+- `npm run build`.
+
 ## [1.32.9] - 2026-07-04
 ### Corrigido
 - Primeiro acesso sem rota localizada ou preferência manual agora usa idioma do navegador quando suportado e, quando não suportado, infere o locale pelo fuso horário do navegador sem GeoIP, localização, serviço externo ou recurso pago.
