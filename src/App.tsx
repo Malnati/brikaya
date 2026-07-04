@@ -125,8 +125,14 @@ export default function App() {
     useState<UpdateProgressState | null>(null);
   const [isUpdateInstalledVisible, setIsUpdateInstalledVisible] =
     useState(false);
-  const { selection, selectTheme, selectImageSet, selectFontSet } =
-    useAppearancePreference();
+  const {
+    selection,
+    selectTheme,
+    selectAutomaticTheme,
+    advanceAutoTheme,
+    selectImageSet,
+    selectFontSet,
+  } = useAppearancePreference();
   const { isAudioMuted, toggleAudio } = useAudioPreference();
   const levelTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cinematicTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -524,6 +530,11 @@ export default function App() {
     [audioSink, selectTheme],
   );
 
+  const handleAutomaticThemeChange = useCallback(() => {
+    audioSink.playAudio(GAME_AUDIO_IDS.THEME_TOGGLE);
+    selectAutomaticTheme();
+  }, [audioSink, selectAutomaticTheme]);
+
   const handleImageSetChange = useCallback(
     (nextImageSet: Parameters<typeof selectImageSet>[0]) => {
       audioSink.playAudio(GAME_AUDIO_IDS.THEME_TOGGLE);
@@ -564,6 +575,7 @@ export default function App() {
 
   const handleLevelTransition = useCallback(
     (payload: LevelTransitionPayload) => {
+      advanceAutoTheme();
       audioSink.playAudio(GAME_AUDIO_IDS.LEVEL_UP_OVERLAY);
       setCinematicOverlay({
         type: "levelUp",
@@ -583,7 +595,7 @@ export default function App() {
         setLevel(payload.nextLevel);
       }, payload.pauseMs);
     },
-    [audioSink],
+    [advanceAutoTheme, audioSink],
   );
 
   const handleLevelChange = useCallback((nextLevel: number) => {
@@ -719,6 +731,7 @@ export default function App() {
                 <AppearanceSelector
                   selection={selection}
                   onThemeChange={handleThemeChange}
+                  onAutomaticThemeChange={handleAutomaticThemeChange}
                   onImageSetChange={handleImageSetChange}
                   onFontSetChange={handleFontSetChange}
                 />

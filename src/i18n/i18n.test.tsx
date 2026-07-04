@@ -45,6 +45,7 @@ const INDIA_TIME_ZONE = "Asia/Kolkata";
 const UNSUPPORTED_TIME_ZONE = "Europe/Amsterdam";
 const ENGLISH_LOCALES = new Set<AppLocale>(["en", "en-IN"]);
 const LOCALIZED_APPEARANCE_KEYS: TranslationKey[] = [
+  "appearance.option.auto-by-level",
   "appearance.option.neon-arcade",
   "appearance.option.retro-default",
   "appearance.option.sunset-cabinet",

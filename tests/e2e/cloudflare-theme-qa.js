@@ -5,7 +5,10 @@ import { dirname, join, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
 import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
-import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
+import {
+  PRIVACY_CONSENT_STORAGE_KEY,
+  acceptPrivacyConsentIfPresent,
+} from "./consentHelpers.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-theme-qa.json";
@@ -53,6 +56,9 @@ const THEME_PIXEL_SUNSET = "pixel-sunset";
 const THEME_OCEAN_NIGHT = "ocean-night";
 const THEME_RUBY_DEPTH = "ruby-depth";
 const THEME_REAL_METRO_NIGHT = "real-metro-night";
+const THEME_AUTO_OPTION_ID = "auto-by-level";
+const THEME_MODE_AUTO = "auto";
+const THEME_MODE_MANUAL = "manual";
 const IMAGE_SET_RETRO_DEFAULT = "retro-default";
 const IMAGE_SET_HIGH_CONTRAST = "high-contrast";
 const IMAGE_SET_SUNSET_CABINET = "sunset-cabinet";
@@ -61,10 +67,16 @@ const FONT_SET_ARCADE_UI = "arcade-ui";
 const FONT_SET_CRT_MONO = "crt-mono";
 const FONT_SET_BLOCK_PIXEL = "block-pixel";
 const THEME_STORAGE_KEY = "brickbreaker-theme";
+const THEME_MODE_STORAGE_KEY = "brickbreaker-theme-mode";
+const AUTO_THEME_SEQUENCE_STORAGE_KEY = "brickbreaker-auto-theme-sequence";
+const AUTO_THEME_INDEX_STORAGE_KEY = "brickbreaker-auto-theme-index";
 const IMAGE_SET_STORAGE_KEY = "brickbreaker-image-set";
 const FONT_SET_STORAGE_KEY = "brickbreaker-font-set";
 const APPEARANCE_STORAGE_KEYS = [
   THEME_STORAGE_KEY,
+  THEME_MODE_STORAGE_KEY,
+  AUTO_THEME_SEQUENCE_STORAGE_KEY,
+  AUTO_THEME_INDEX_STORAGE_KEY,
   IMAGE_SET_STORAGE_KEY,
   FONT_SET_STORAGE_KEY,
 ];
@@ -101,6 +113,7 @@ const FONT_SET_OPTION_IDS = [
   FONT_SET_BLOCK_PIXEL,
 ];
 const APPEARANCE_OPTION_IDS = [
+  THEME_AUTO_OPTION_ID,
   ...THEME_OPTION_IDS,
   ...IMAGE_SET_OPTION_IDS,
   ...FONT_SET_OPTION_IDS,
@@ -145,6 +158,12 @@ function env(name, fallback) {
 
 function publicUrl() {
   return env("BRICKBREAKER_PUBLIC_URL", DEFAULT_PUBLIC_URL);
+}
+
+function withQaScenario(url) {
+  const pageUrl = new URL(url);
+  pageUrl.searchParams.set("qaScenario", "single-brick-phase-clear");
+  return pageUrl.toString();
 }
 
 function ensureParentDirectory(filePath) {
@@ -200,6 +219,22 @@ async function installInitialPageState(page, resetFlag) {
       reloadGuardValue: RELOAD_GUARD_VALUE,
       intervalMs: RELOAD_GUARD_INTERVAL_MS,
       durationMs: RELOAD_GUARD_DURATION_MS,
+    },
+  );
+}
+
+async function resetAppearanceState(page, options = {}) {
+  await page.evaluate(
+    ({ storageKeys, consentStorageKey, clearConsent }) => {
+      for (const storageKey of storageKeys) {
+        window.localStorage.removeItem(storageKey);
+      }
+      if (clearConsent) window.localStorage.removeItem(consentStorageKey);
+    },
+    {
+      storageKeys: APPEARANCE_STORAGE_KEYS,
+      consentStorageKey: PRIVACY_CONSENT_STORAGE_KEY,
+      clearConsent: options.includeConsent === true,
     },
   );
 }
@@ -379,6 +414,15 @@ async function collectState(page) {
       return {
         theme: document.documentElement.dataset.theme || "",
         storedTheme: window.localStorage.getItem("brickbreaker-theme"),
+        storedThemeMode: window.localStorage.getItem(
+          "brickbreaker-theme-mode",
+        ),
+        storedAutoThemeSequence: window.localStorage.getItem(
+          "brickbreaker-auto-theme-sequence",
+        ),
+        storedAutoThemeIndex: window.localStorage.getItem(
+          "brickbreaker-auto-theme-index",
+        ),
         heading: document.querySelector("h1")?.textContent || "",
         imageSet: document.documentElement.dataset.imageSet || "",
         fontSet: document.documentElement.dataset.fontSet || "",
@@ -469,8 +513,12 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
     );
     assert(themeGroup, `${viewportName}: grupo Tema visual ausente.`);
     assert(
-      themeGroup.optionIds.length === THEME_OPTION_IDS.length,
-      `${viewportName}: Tema visual deveria ter ${THEME_OPTION_IDS.length} botões, recebeu ${themeGroup.optionIds.length}.`,
+      themeGroup.optionIds.length === THEME_OPTION_IDS.length + 1,
+      `${viewportName}: Tema visual deveria ter ${THEME_OPTION_IDS.length + 1} botões, recebeu ${themeGroup.optionIds.length}.`,
+    );
+    assert(
+      themeGroup.optionIds.includes(THEME_AUTO_OPTION_ID),
+      `${viewportName}: opção automática ausente no grupo Tema visual.`,
     );
     for (const optionId of THEME_OPTION_IDS) {
       assert(
@@ -574,6 +622,135 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
   );
 }
 
+function parseStoredAutoThemeSequence(state, viewportName) {
+  try {
+    const sequence = JSON.parse(state.storedAutoThemeSequence || "[]");
+    assert(
+      Array.isArray(sequence),
+      `${viewportName}: sequência automática salva não é lista.`,
+    );
+    return sequence;
+  } catch {
+    throw new Error(
+      `${viewportName}: sequência automática salva não é JSON válido.`,
+    );
+  }
+}
+
+async function validateAutomaticThemeProgression(page, targetUrl, viewportName) {
+  await resetAppearanceState(page, { includeConsent: true });
+  await page.goto(withQaScenario(targetUrl), {
+    waitUntil: "networkidle0",
+    timeout: 60000,
+  });
+  await page.waitForSelector("canvas", { timeout: 30000 });
+
+  const automaticInitialState = await collectState(page);
+  assert(
+    automaticInitialState.theme === THEME_NEON_ARCADE,
+    `${viewportName}: tema automático inicial deveria começar em Arcade neon.`,
+  );
+  await acceptPrivacyConsentIfPresent(page);
+  await page.waitForSelector('[data-testid="level-toast"]', {
+    timeout: 30000,
+  });
+  await page.waitForFunction(
+    () =>
+      document
+        .querySelector('[data-testid="level-toast"]')
+        ?.textContent?.includes("Fase 2"),
+    { timeout: 30000 },
+  );
+  await page.waitForFunction(
+    (initialTheme) => document.documentElement.dataset.theme !== initialTheme,
+    { timeout: 10000 },
+    automaticInitialState.theme,
+  );
+
+  const automaticLevelState = await collectState(page);
+  const storedSequence = parseStoredAutoThemeSequence(
+    automaticLevelState,
+    viewportName,
+  );
+  assert(
+    automaticLevelState.theme !== automaticInitialState.theme,
+    `${viewportName}: tema automático não mudou na nova fase.`,
+  );
+  assert(
+    automaticLevelState.storedTheme === automaticLevelState.theme,
+    `${viewportName}: tema automático corrente não foi persistido.`,
+  );
+  assert(
+    automaticLevelState.storedThemeMode === THEME_MODE_AUTO,
+    `${viewportName}: modo automático não foi persistido.`,
+  );
+  assert(
+    storedSequence.length === THEME_OPTION_IDS.length,
+    `${viewportName}: sequência automática deveria cobrir todos os temas.`,
+  );
+  assert(
+    new Set(storedSequence).size === THEME_OPTION_IDS.length,
+    `${viewportName}: sequência automática contém tema repetido.`,
+  );
+  assert(
+    automaticLevelState.storedAutoThemeIndex === "1",
+    `${viewportName}: índice automático deveria avançar para 1 na Fase 2.`,
+  );
+
+  return { automaticInitialState, automaticLevelState };
+}
+
+async function validateManualThemeLock(page, targetUrl, viewportName) {
+  await resetAppearanceState(page, { includeConsent: true });
+  await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
+  await page.waitForSelector("canvas", { timeout: 30000 });
+  await acceptPrivacyConsentIfPresent(page);
+  await waitForCinematicOverlayToClear(page);
+  await openMenu(page);
+  await clickAppearanceOptionById(page, THEME_PIXEL_SUNSET);
+  await page.waitForFunction(
+    (theme) => document.documentElement.dataset.theme === theme,
+    {},
+    THEME_PIXEL_SUNSET,
+  );
+
+  const manualInitialState = await collectState(page);
+  assert(
+    manualInitialState.storedThemeMode === THEME_MODE_MANUAL,
+    `${viewportName}: escolha manual não persistiu antes da fase.`,
+  );
+
+  await page.goto(withQaScenario(targetUrl), {
+    waitUntil: "networkidle0",
+    timeout: 60000,
+  });
+  await page.waitForSelector("canvas", { timeout: 30000 });
+  await acceptPrivacyConsentIfPresent(page);
+  await page.waitForSelector('[data-testid="level-toast"]', {
+    timeout: 30000,
+  });
+  await page.waitForFunction(
+    () =>
+      document
+        .querySelector('[data-testid="level-toast"]')
+        ?.textContent?.includes("Fase 2"),
+    { timeout: 30000 },
+  );
+
+  const manualLevelState = await collectState(page);
+  assert(
+    manualLevelState.theme === THEME_PIXEL_SUNSET,
+    `${viewportName}: tema manual mudou automaticamente na Fase 2.`,
+  );
+  assert(
+    manualLevelState.storedTheme === THEME_PIXEL_SUNSET &&
+      manualLevelState.storedThemeMode === THEME_MODE_MANUAL,
+    `${viewportName}: tema manual não permaneceu persistido na Fase 2.`,
+  );
+
+  return { manualInitialState, manualLevelState };
+}
+
 async function validateViewport(
   page,
   targetUrl,
@@ -609,6 +786,24 @@ async function validateViewport(
     initialState.fontSet === FONT_SET_ARCADE_UI,
     `${viewportName}: fonte inicial não é Arcade.`,
   );
+
+  logProgress(`${viewportName}: validar tema automático por fase`);
+  const automaticProgressionState = await validateAutomaticThemeProgression(
+    page,
+    targetUrl,
+    viewportName,
+  );
+  logProgress(`${viewportName}: validar tema manual fixo por fase`);
+  const manualThemeLockState = await validateManualThemeLock(
+    page,
+    targetUrl,
+    viewportName,
+  );
+  await resetAppearanceState(page);
+  await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
+  await page.waitForSelector("canvas", { timeout: 30000 });
+  await acceptPrivacyConsentIfPresent(page);
+  await waitForCinematicOverlayToClear(page);
 
   await openMenu(page);
   logProgress(`${viewportName}: aplicar CRT alto contraste`);
@@ -776,6 +971,8 @@ async function validateViewport(
     oceanState,
     rubyState,
     metroState,
+    automaticProgressionState,
+    manualThemeLockState,
   };
 }
 

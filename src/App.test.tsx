@@ -403,6 +403,11 @@ describe("App theme selector", () => {
     expect(within(appearanceGroup).getByText("Imagens")).toBeInTheDocument();
     expect(within(appearanceGroup).getByText("Fonte")).toBeInTheDocument();
     expect(
+      within(appearanceGroup).getByRole("button", {
+        name: "Automático por fase",
+      }),
+    ).toBeInTheDocument();
+    expect(
       within(appearanceGroup).getByRole("button", { name: "Arcade neon" }),
     ).toBeInTheDocument();
     expect(
@@ -509,6 +514,10 @@ describe("App theme selector", () => {
       "crt-high-contrast",
     );
     expect(window.localStorage.setItem).toHaveBeenCalledWith(
+      "brickbreaker-theme-mode",
+      "manual",
+    );
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(
       "brickbreaker-image-set",
       "high-contrast",
     );
@@ -523,6 +532,13 @@ describe("App theme selector", () => {
     expect(window.localStorage.setItem).toHaveBeenCalledWith(
       "brickbreaker-theme",
       "pixel-sunset",
+    );
+
+    await user.click(screen.getByRole("button", { name: "Automático por fase" }));
+
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(
+      "brickbreaker-theme-mode",
+      "auto",
     );
   });
 
@@ -671,6 +687,7 @@ describe("App theme selector", () => {
     act(() => {
       jest.advanceTimersByTime(COUNTDOWN_TOTAL_MS);
     });
+    const initialTheme = document.documentElement.dataset.theme;
     act(() => {
       mockLastGameProps?.onLevelTransition?.(TEST_LEVEL_TRANSITION_PAYLOAD);
     });
@@ -680,11 +697,40 @@ describe("App theme selector", () => {
     );
     expect(screen.getByTestId("level-toast")).toHaveTextContent("Fase 2");
     expect(screen.queryByText("3")).not.toBeInTheDocument();
+    expect(document.documentElement.dataset.theme).not.toBe(initialTheme);
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(
+      "brickbreaker-theme-mode",
+      "auto",
+    );
 
     act(() => {
       jest.advanceTimersByTime(LEVEL_UP_OVERLAY_VISIBLE_MS);
     });
     expect(screen.queryByTestId("level-toast")).not.toBeInTheDocument();
+  });
+
+  it("mantém tema manual durante subida de fase", async () => {
+    jest.useFakeTimers();
+    mockSystemTheme(true);
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+
+    await renderApp();
+
+    await user.click(screen.getByRole("button", { name: "Menu" }));
+    await user.click(screen.getByRole("button", { name: "Pôr do sol pixelado" }));
+    const drawer = screen.getByRole("complementary", { name: "Menu do jogo" });
+    await user.click(within(drawer).getByRole("button", { name: "Fechar menu" }));
+    act(() => {
+      jest.advanceTimersByTime(COUNTDOWN_TOTAL_MS);
+      mockLastGameProps?.onLevelTransition?.(TEST_LEVEL_TRANSITION_PAYLOAD);
+    });
+
+    expect(document.documentElement.dataset.theme).toBe("pixel-sunset");
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(
+      "brickbreaker-theme-mode",
+      "manual",
+    );
+    expect(screen.getByTestId("level-toast")).toHaveTextContent("Fase 2");
   });
 
   it("ancora mensagem de subida de fase no tabuleiro informado pelo jogo", async () => {
