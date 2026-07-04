@@ -3,6 +3,33 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.26] - 2026-07-04
+### Alterado
+- Raquete passa a usar 17% da largura do canvas, com limites mínimo e máximo reduzidos em 15%.
+- Arena radial passa a usar raio máximo do centro do canvas até a borda superior, ampliando a área útil de jogo.
+- QA mobile publicado passa a validar a nova largura proporcional da raquete.
+
+### Adicionado
+- Cobertura unitária para a nova largura/clamps da raquete e para o raio da arena tocando topo e base do canvas.
+- Evidências publicadas da alteração em `docs/assets/issues/paddle-playfield-radius/evidence/`.
+
+### Testado
+- `node --version` → `v23.5.0`.
+- `make help`.
+- `npm test -- src/constants/game.test.ts src/utils/radialGeometry.test.ts src/objects/Ball.test.ts --runInBand` → 3 suites / 29 testes.
+- `node --check tests/e2e/cloudflare-mobile-qa.js`.
+- `npm test -- --runInBand --silent` → 47 suites / 278 testes.
+- `npm run build`.
+- `make cloudflare-env-check`.
+- `make cloudflare-build`.
+- `make cloudflare-deploy` → domínio público `https://brikaya.com/` atualizado.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-no-score-reset`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ npm run test:cloudflare-gameplay-basic`.
+- Varredura textual das evidências e arquivos alterados não encontrou token, chave privada ou credencial real.
+
 ## [1.1.0] - 2026-07-04
 ### Alterado
 - Arena principal passa a usar forma radial: parede circular, raquete em arco inferior e blocos distribuídos em segmentos no arco superior.

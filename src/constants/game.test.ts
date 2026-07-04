@@ -4,7 +4,12 @@ import { describe, expect, it } from '@jest/globals';
 import {
   FIRST_LEVEL_MIN_SPEED_DIVISOR,
   FIRST_LEVEL_BASE_SPEED_MULTIPLIER,
+  PADDLE_HEIGHT_WIDTH_RATIO,
+  PADDLE_WIDTH_CANVAS_RATIO,
+  PADDLE_WIDTH_MAX,
+  PADDLE_WIDTH_MIN,
   calculateClampedSpeed,
+  calculateDynamicDimensions,
   calculateInitialBallSpeed,
   calculateLevelInitialSpawnSpeed,
   calculateLevelBrickRows,
@@ -23,6 +28,11 @@ const PHASE_FIVE = 5;
 const INITIAL_BRICK_COUNT = 10;
 const BASE_BRICK_ROWS = 2;
 const MAX_BRICK_ROWS = 5;
+const SMALL_CANVAS_WIDTH = 240;
+const MOBILE_CANVAS_WIDTH = 390;
+const DEFAULT_CANVAS_WIDTH = 480;
+const WIDE_CANVAS_WIDTH = 900;
+const DIMENSION_TEST_CANVAS_HEIGHT = 320;
 
 describe('game speed helpers', () => {
   it('calcula velocidade máxima da fase 1 a partir da nova base 3x', () => {
@@ -113,5 +123,44 @@ describe('game speed helpers', () => {
     expect(calculateLevelBrickRows(BASE_BRICK_ROWS, MAX_BRICK_ROWS, PHASE_ONE)).toBe(BASE_BRICK_ROWS);
     expect(calculateLevelBrickRows(BASE_BRICK_ROWS, MAX_BRICK_ROWS, PHASE_TWO)).toBe(BASE_BRICK_ROWS + 1);
     expect(calculateLevelBrickRows(BASE_BRICK_ROWS, MAX_BRICK_ROWS, PHASE_FIVE)).toBe(MAX_BRICK_ROWS);
+  });
+
+  it('reduz a raquete em quinze por cento mantendo altura proporcional', () => {
+    const mobileDimensions = calculateDynamicDimensions(
+      MOBILE_CANVAS_WIDTH,
+      DIMENSION_TEST_CANVAS_HEIGHT,
+    );
+    const defaultDimensions = calculateDynamicDimensions(
+      DEFAULT_CANVAS_WIDTH,
+      DIMENSION_TEST_CANVAS_HEIGHT,
+    );
+
+    expect(mobileDimensions.paddleWidth).toBeCloseTo(
+      MOBILE_CANVAS_WIDTH * PADDLE_WIDTH_CANVAS_RATIO,
+      5,
+    );
+    expect(defaultDimensions.paddleWidth).toBeCloseTo(
+      DEFAULT_CANVAS_WIDTH * PADDLE_WIDTH_CANVAS_RATIO,
+      5,
+    );
+    expect(mobileDimensions.paddleHeight).toBeCloseTo(
+      mobileDimensions.paddleWidth * PADDLE_HEIGHT_WIDTH_RATIO,
+      5,
+    );
+  });
+
+  it('preserva clamps reduzidos da raquete', () => {
+    expect(
+      calculateDynamicDimensions(
+        SMALL_CANVAS_WIDTH,
+        DIMENSION_TEST_CANVAS_HEIGHT,
+      ).paddleWidth,
+    ).toBe(PADDLE_WIDTH_MIN);
+    expect(
+      calculateDynamicDimensions(
+        WIDE_CANVAS_WIDTH,
+        DIMENSION_TEST_CANVAS_HEIGHT,
+      ).paddleWidth,
+    ).toBe(PADDLE_WIDTH_MAX);
   });
 });

@@ -1,0 +1,83 @@
+{
+  "ok": true,
+  "publicUrl": "https://brikaya.com/",
+  "checkedAt": "2026-07-04T14:59:26.405Z",
+  "state": {
+    "title": "Brikaya — arcade de quebrar blocos",
+    "heading": "Brikaya",
+    "hasCanvas": true,
+    "canvas": {
+      "x": 13,
+      "y": 111,
+      "width": 367,
+      "height": 244,
+      "right": 380,
+      "bottom": 355
+    },
+    "scoreHudText": "Fase 1|Score 30|Total 0|Recorde 0",
+    "score": 30,
+    "buttons": [
+      {
+        "text": "×",
+        "ariaLabel": "Sem som",
+        "title": "Sem som",
+        "width": 44,
+        "height": 44,
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "♫",
+        "ariaLabel": "Música",
+        "title": "Música",
+        "width": 44,
+        "height": 44,
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "↻",
+        "ariaLabel": "Reiniciar",
+        "title": "Reiniciar",
+        "width": 44,
+        "height": 44,
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      },
+      {
+        "text": "Menu",
+        "ariaLabel": "",
+        "title": "",
+        "width": 68,
+        "height": 44,
+        "visibleInViewport": true,
+        "hasTouchTarget": true
+      }
+    ],
+    "bodyHasInternalCopy": false,
+    "viewport": {
+      "width": 393,
+      "height": 852,
+      "scrollWidth": 393,
+      "scrollHeight": 852
+    }
+  },
+  "eventSummary": {
+    "game_start": 1,
+    "paddle_move": 8,
+    "brick_destroyed": 3,
+    "score_update": 3,
+    "collision": 1
+  },
+  "eventTypes": [
+    "game_start",
+    "paddle_move",
+    "brick_destroyed",
+    "score_update",
+    "collision"
+  ],
+  "externalRequests": [],
+  "failedRequests": [],
+  "consoleProblems": [],
+  "screenshotPath": "docs/assets/issues/paddle-playfield-radius/evidence/evi-paddle-playfield-gameplay-screen.png"
+}

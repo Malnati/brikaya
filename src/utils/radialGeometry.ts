@@ -2,9 +2,6 @@
 import type { DynamicGameDimensions } from "../constants/game";
 
 const CENTER_RATIO = 0.5;
-const PLAYFIELD_RADIUS_RATIO = 0.47;
-const PLAYFIELD_RADIUS_INSET = 6;
-const MIN_PLAYFIELD_RADIUS = 96;
 const BRICK_ARC_START_ANGLE = (-Math.PI * 5) / 6;
 const BRICK_ARC_END_ANGLE = -Math.PI / 6;
 const BRICK_RING_START_RADIUS_RATIO = 0.28;
@@ -81,11 +78,7 @@ export function calculateRadialPlayfieldGeometry(
   canvasHeight: number,
   _dimensions: DynamicGameDimensions,
 ): RadialPlayfieldGeometry {
-  const radius = Math.max(
-    MIN_PLAYFIELD_RADIUS,
-    Math.min(canvasWidth, canvasHeight) * PLAYFIELD_RADIUS_RATIO -
-      PLAYFIELD_RADIUS_INSET,
-  );
+  const radius = canvasHeight * CENTER_RATIO;
 
   return {
     centerX: canvasWidth * CENTER_RATIO,

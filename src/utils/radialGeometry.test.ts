@@ -45,6 +45,18 @@ describe("radialGeometry", () => {
     expect(segment.bounds.height).toBeGreaterThan(0);
   });
 
+  it("usa o raio máximo do centro até a borda superior do canvas", () => {
+    const geometry = calculateRadialPlayfieldGeometry(
+      TEST_CANVAS_WIDTH,
+      TEST_CANVAS_HEIGHT,
+      TEST_DIMENSIONS,
+    );
+
+    expect(geometry.radius).toBe(TEST_CANVAS_HEIGHT / 2);
+    expect(geometry.centerY - geometry.radius).toBe(0);
+    expect(geometry.centerY + geometry.radius).toBe(TEST_CANVAS_HEIGHT);
+  });
+
   it("detecta colisão circular dentro de segmento radial", () => {
     const geometry = calculateRadialPlayfieldGeometry(
       TEST_CANVAS_WIDTH,
