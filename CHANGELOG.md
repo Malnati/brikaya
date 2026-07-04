@@ -7,6 +7,7 @@
 ### Adicionado
 - Ícone independente de música no topo do jogo, ao lado do ícone de som, para pausar ou retomar somente a trilha de fundo.
 - Preferência local `brickbreaker-music-muted` preserva o estado da música entre sessões.
+- Cobertura unitária direta do `MusicToggle` valida rótulos acessíveis, ícones e acionamento, incluindo modo somente ícone pausado.
 
 ### Alterado
 - O mute geral continua controlando todos os sons, enquanto o novo controle de música bloqueia apenas BGM/menu/gameplay/intense layer e mantém efeitos sonoros ativos.
@@ -15,10 +16,10 @@
 ### Testado
 - `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version` → `v23.5.0`.
 - `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make help`.
-- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/utils/audioManager.test.ts src/hooks/useAudioPreference.test.ts src/App.test.tsx --runInBand` → 3 suites / 36 testes.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/utils/audioManager.test.ts src/hooks/useAudioPreference.test.ts src/components/MusicToggle.test.tsx src/App.test.tsx --runInBand` → 4 suites / 39 testes.
 - `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --check ...` nos quatro QAs E2E alterados: áudio, mobile, dashboard e tema.
-- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand` → 43 suites / 241 testes.
-- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:semantic-file-names` → governed=845.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand` → 44 suites / 247 testes.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:semantic-file-names` → governed=859.
 - `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:audio-assets` → ids=39 mp3=91.
 - `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`.
 
