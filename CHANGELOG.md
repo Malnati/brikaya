@@ -3,6 +3,35 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.19] - 2026-07-04
+### Adicionado
+- Seletor de “Conjuntos prontos” com quinze opções nomeadas que aplicam cor e imagens juntas, incluindo os cinco conjuntos realistas já existentes.
+- Cobertura automatizada para o contrato de conjunto pronto, estado ativo do seletor, persistência e aplicação conjunta de cor/imagem.
+
+### Alterado
+- “Automático por fase” agora troca o conjunto completo da fase, mantendo cor e imagens sincronizadas.
+- Menu de aparência passa a separar “Conjuntos prontos”, “Cores”, “Imagens” e “Fonte”, permitindo montagem manual sem perder as opções separadas.
+- QA publicado de tema valida conjunto pronto, troca automática com imagens sincronizadas e controles separados preservando a escolha complementar.
+
+### Testado
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version` → `v23.5.0`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make help`.
+- RED retroativo: `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/constants/appearance.test.ts --runInBand -t "mapeia cada tema"` falhou quando `resolveVisualThemePresetByTheme` foi temporariamente quebrado.
+- GREEN: `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/constants/appearance.test.ts --runInBand -t "mapeia cada tema"` → 1 teste.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/App.test.tsx src/constants/appearance.test.ts src/hooks/useAppearancePreference.test.tsx src/components/AppearanceSelector.test.tsx src/i18n/i18n.test.tsx --runInBand` → 5 suites / 62 testes.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --check tests/e2e/cloudflare-theme-qa.js` e `node --check tests/e2e/cloudflare-mobile-qa.js`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:semantic-file-names` → governed=851.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:svg-assets` → runtime=139, codex=2.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand --silent` → 43 suites / 240 testes.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make cloudflare-deploy`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ BRICKBREAKER_THEME_QA_CAPTURE_SCREENSHOTS=true make cloudflare-theme-qa`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-svg-assets-qa`.
+- Evidências: `docs/assets/issues/asset-theme-presets/evidence/evi-asset-theme-presets-cloudflare-theme-report.json` e screenshots `docs/assets/issues/asset-theme-presets/evidence/evi-asset-theme-presets-*.png`.
+- Varredura textual das evidências e arquivos alterados não encontrou token, chave privada ou credencial real.
+
 ## [1.32.18] - 2026-07-04
 ### Adicionado
 - Cobertura unitária do catálogo visual valida os seis assets metálicos amassados, seus estados `damaged`/`critical`, paths SVG locais e metadados de tijolo.

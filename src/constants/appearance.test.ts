@@ -8,13 +8,17 @@ import {
   THEME_MODE_AUTO,
   THEME_MODE_MANUAL,
   THEME_OPTIONS,
+  VISUAL_THEME_PRESET_OPTIONS,
   createAutoThemeSequence,
   isFontSetId,
   isImageSetId,
   isThemeId,
+  isVisualThemePresetId,
   migrateStoredThemeId,
   resolveNextAutoThemeState,
   resolveAppearanceSelection,
+  resolveVisualThemePresetByTheme,
+  resolveVisualThemePresetForSelection,
 } from "./appearance";
 
 const TECHNICAL_COPY_PATTERN =
@@ -52,6 +56,57 @@ const EXPECTED_THEME_LABELS = [
   "Laboratório clínico",
   "Templo antigo",
   "Estação orbital",
+] as const;
+const EXPECTED_VISUAL_PRESET_IDS = [
+  "preset-neon-arcade",
+  "preset-crt-high-contrast",
+  "preset-pixel-sunset",
+  "preset-ocean-night",
+  "preset-jungle-laser",
+  "preset-amber-retro",
+  "preset-cosmic-ice",
+  "preset-electric-plum",
+  "preset-lime-graphite",
+  "preset-ruby-depth",
+  "preset-real-metro-night",
+  "preset-real-auto-garage",
+  "preset-real-bio-lab",
+  "preset-real-ancient-temple",
+  "preset-real-orbital-station",
+] as const;
+const EXPECTED_VISUAL_PRESET_LABELS = [
+  "Arcade neon",
+  "CRT alto contraste",
+  "Pôr do sol pixelado",
+  "Oceano noturno",
+  "Selva laser",
+  "Âmbar retrô",
+  "Gelo cósmico",
+  "Ameixa elétrica",
+  "Lima grafite",
+  "Rubi profundo",
+  "Metrô noturno",
+  "Oficina mecânica",
+  "Laboratório clínico",
+  "Templo antigo",
+  "Estação orbital",
+] as const;
+const EXPECTED_PRESET_IMAGE_SETS = [
+  "retro-default",
+  "high-contrast",
+  "sunset-cabinet",
+  "retro-default",
+  "retro-default",
+  "retro-default",
+  "retro-default",
+  "retro-default",
+  "retro-default",
+  "retro-default",
+  "real-metro-tunnel",
+  "real-workshop-steel",
+  "real-bio-lab-glass",
+  "real-temple-stone",
+  "real-orbital-deck",
 ] as const;
 
 describe("appearance contract", () => {
@@ -108,6 +163,36 @@ describe("appearance contract", () => {
     expect(isFontSetId("crt-mono")).toBe(true);
     expect(isFontSetId("block-pixel")).toBe(true);
     expect(isFontSetId("google-fonts")).toBe(false);
+
+    expect(isVisualThemePresetId("preset-real-metro-night")).toBe(true);
+    expect(isVisualThemePresetId("real-metro-night")).toBe(false);
+  });
+
+  it("mapeia cada tema para um conjunto pronto de cor e imagem", () => {
+    expect(VISUAL_THEME_PRESET_OPTIONS).toHaveLength(THEME_IDS.length);
+    expect(VISUAL_THEME_PRESET_OPTIONS.map((option) => option.id)).toEqual(
+      EXPECTED_VISUAL_PRESET_IDS,
+    );
+    expect(VISUAL_THEME_PRESET_OPTIONS.map((option) => option.themeId)).toEqual(
+      EXPECTED_THEME_IDS,
+    );
+    expect(VISUAL_THEME_PRESET_OPTIONS.map((option) => option.label)).toEqual(
+      EXPECTED_VISUAL_PRESET_LABELS,
+    );
+    expect(
+      VISUAL_THEME_PRESET_OPTIONS.map((option) => option.imageSetId),
+    ).toEqual(EXPECTED_PRESET_IMAGE_SETS);
+
+    for (const themeId of THEME_IDS) {
+      const preset = resolveVisualThemePresetByTheme(themeId);
+      expect(preset.themeId).toBe(themeId);
+      expect(
+        resolveVisualThemePresetForSelection({
+          themeId: preset.themeId,
+          imageSetId: preset.imageSetId,
+        })?.id,
+      ).toBe(preset.id);
+    }
   });
 
   it("migra temas antigos claro/escuro sem quebrar preferência salva", () => {
@@ -191,11 +276,13 @@ describe("appearance contract", () => {
 
   it("usa labels finais sem termos técnicos internos", () => {
     const labels = [
+      ...VISUAL_THEME_PRESET_OPTIONS,
       ...THEME_OPTIONS,
       ...IMAGE_SET_OPTIONS,
       ...FONT_SET_OPTIONS,
     ].map((option) => option.label);
     expect(labels).toEqual([
+      ...EXPECTED_VISUAL_PRESET_LABELS,
       ...EXPECTED_THEME_LABELS,
       "Retro padrão",
       "Alto contraste",

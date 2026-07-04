@@ -64,6 +64,8 @@ const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
 const SPEED_CURRENT_LABEL = "Velocidade atual";
 const LEVEL_TIME_LABEL = "Tempo da fase";
 const SPEED_REDUCTIONS_LABEL = "Reduções aplicadas";
+const THEME_AUTO_OPTION_ID = "auto-by-level";
+const VISUAL_THEME_PRESET_PREFIX = "preset-";
 const THEME_OPTION_IDS = [
   "neon-arcade",
   "crt-high-contrast",
@@ -91,8 +93,13 @@ const IMAGE_SET_OPTION_IDS = [
   "real-temple-stone",
   "real-orbital-deck",
 ];
+const VISUAL_THEME_PRESET_OPTION_IDS = THEME_OPTION_IDS.map(
+  (themeId) => `${VISUAL_THEME_PRESET_PREFIX}${themeId}`,
+);
 const FONT_SET_OPTION_IDS = ["arcade-ui", "crt-mono", "block-pixel"];
 const APPEARANCE_OPTION_IDS = [
+  THEME_AUTO_OPTION_ID,
+  ...VISUAL_THEME_PRESET_OPTION_IDS,
   ...THEME_OPTION_IDS,
   ...IMAGE_SET_OPTION_IDS,
   ...FONT_SET_OPTION_IDS,
@@ -953,7 +960,7 @@ async function run() {
       menuState.text.includes("Aparência"),
       "Menu lateral sem seção Aparência.",
     );
-    for (const label of ["Tema visual", "Imagens", "Fonte"]) {
+    for (const label of ["Conjuntos prontos", "Cores", "Imagens", "Fonte"]) {
       assert(menuState.text.includes(label), `Menu lateral sem ${label}.`);
     }
     for (const optionId of APPEARANCE_OPTION_IDS) {

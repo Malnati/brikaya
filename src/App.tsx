@@ -145,6 +145,7 @@ export default function App() {
   const {
     selection,
     selectTheme,
+    selectVisualThemePreset,
     selectAutomaticTheme,
     advanceAutoTheme,
     selectImageSet,
@@ -626,6 +627,14 @@ export default function App() {
     [audioSink, selectTheme],
   );
 
+  const handleVisualThemePresetChange = useCallback(
+    (nextPreset: Parameters<typeof selectVisualThemePreset>[0]) => {
+      audioSink.playAudio(GAME_AUDIO_IDS.THEME_TOGGLE);
+      selectVisualThemePreset(nextPreset);
+    },
+    [audioSink, selectVisualThemePreset],
+  );
+
   const handleAutomaticThemeChange = useCallback(() => {
     audioSink.playAudio(GAME_AUDIO_IDS.THEME_TOGGLE);
     selectAutomaticTheme();
@@ -826,6 +835,7 @@ export default function App() {
                 <h3>{t("menu.appearance")}</h3>
                 <AppearanceSelector
                   selection={selection}
+                  onVisualThemePresetChange={handleVisualThemePresetChange}
                   onThemeChange={handleThemeChange}
                   onAutomaticThemeChange={handleAutomaticThemeChange}
                   onImageSetChange={handleImageSetChange}

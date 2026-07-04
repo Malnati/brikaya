@@ -57,6 +57,8 @@ const THEME_OCEAN_NIGHT = "ocean-night";
 const THEME_RUBY_DEPTH = "ruby-depth";
 const THEME_REAL_METRO_NIGHT = "real-metro-night";
 const THEME_AUTO_OPTION_ID = "auto-by-level";
+const VISUAL_THEME_PRESET_PREFIX = "preset-";
+const VISUAL_THEME_PRESET_REAL_METRO_NIGHT = `${VISUAL_THEME_PRESET_PREFIX}${THEME_REAL_METRO_NIGHT}`;
 const THEME_MODE_AUTO = "auto";
 const THEME_MODE_MANUAL = "manual";
 const IMAGE_SET_RETRO_DEFAULT = "retro-default";
@@ -107,6 +109,26 @@ const IMAGE_SET_OPTION_IDS = [
   "real-temple-stone",
   "real-orbital-deck",
 ];
+const VISUAL_THEME_PRESET_OPTION_IDS = THEME_OPTION_IDS.map(
+  (themeId) => `${VISUAL_THEME_PRESET_PREFIX}${themeId}`,
+);
+const IMAGE_SET_BY_THEME = {
+  [THEME_NEON_ARCADE]: IMAGE_SET_RETRO_DEFAULT,
+  [THEME_CRT_HIGH_CONTRAST]: IMAGE_SET_HIGH_CONTRAST,
+  [THEME_PIXEL_SUNSET]: IMAGE_SET_SUNSET_CABINET,
+  [THEME_OCEAN_NIGHT]: IMAGE_SET_RETRO_DEFAULT,
+  "jungle-laser": IMAGE_SET_RETRO_DEFAULT,
+  "amber-retro": IMAGE_SET_RETRO_DEFAULT,
+  "cosmic-ice": IMAGE_SET_RETRO_DEFAULT,
+  "electric-plum": IMAGE_SET_RETRO_DEFAULT,
+  "lime-graphite": IMAGE_SET_RETRO_DEFAULT,
+  [THEME_RUBY_DEPTH]: IMAGE_SET_RETRO_DEFAULT,
+  [THEME_REAL_METRO_NIGHT]: IMAGE_SET_REAL_METRO_TUNNEL,
+  "real-auto-garage": "real-workshop-steel",
+  "real-bio-lab": "real-bio-lab-glass",
+  "real-ancient-temple": "real-temple-stone",
+  "real-orbital-station": "real-orbital-deck",
+};
 const FONT_SET_OPTION_IDS = [
   FONT_SET_ARCADE_UI,
   FONT_SET_CRT_MONO,
@@ -114,6 +136,7 @@ const FONT_SET_OPTION_IDS = [
 ];
 const APPEARANCE_OPTION_IDS = [
   THEME_AUTO_OPTION_ID,
+  ...VISUAL_THEME_PRESET_OPTION_IDS,
   ...THEME_OPTION_IDS,
   ...IMAGE_SET_OPTION_IDS,
   ...FONT_SET_OPTION_IDS,
@@ -414,9 +437,7 @@ async function collectState(page) {
       return {
         theme: document.documentElement.dataset.theme || "",
         storedTheme: window.localStorage.getItem("brickbreaker-theme"),
-        storedThemeMode: window.localStorage.getItem(
-          "brickbreaker-theme-mode",
-        ),
+        storedThemeMode: window.localStorage.getItem("brickbreaker-theme-mode"),
         storedAutoThemeSequence: window.localStorage.getItem(
           "brickbreaker-auto-theme-sequence",
         ),
@@ -508,25 +529,46 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
         `${viewportName}: opção de aparência ${optionId} ausente.`,
       );
     }
+    const presetGroup = state.appearanceGroups.find(
+      (group) => group.title === "Conjuntos prontos",
+    );
+    assert(presetGroup, `${viewportName}: grupo Conjuntos prontos ausente.`);
+    assert(
+      presetGroup.optionIds.length ===
+        VISUAL_THEME_PRESET_OPTION_IDS.length + 1,
+      `${viewportName}: Conjuntos prontos deveria ter ${VISUAL_THEME_PRESET_OPTION_IDS.length + 1} botões, recebeu ${presetGroup.optionIds.length}.`,
+    );
+    assert(
+      presetGroup.optionIds.includes(THEME_AUTO_OPTION_ID),
+      `${viewportName}: opção automática ausente no grupo Conjuntos prontos.`,
+    );
+    for (const optionId of VISUAL_THEME_PRESET_OPTION_IDS) {
+      assert(
+        presetGroup.optionIds.includes(optionId),
+        `${viewportName}: conjunto pronto ${optionId} ausente no grupo Conjuntos prontos.`,
+      );
+    }
     const themeGroup = state.appearanceGroups.find(
-      (group) => group.title === "Tema visual",
+      (group) => group.title === "Cores",
     );
-    assert(themeGroup, `${viewportName}: grupo Tema visual ausente.`);
+    assert(themeGroup, `${viewportName}: grupo Cores ausente.`);
     assert(
-      themeGroup.optionIds.length === THEME_OPTION_IDS.length + 1,
-      `${viewportName}: Tema visual deveria ter ${THEME_OPTION_IDS.length + 1} botões, recebeu ${themeGroup.optionIds.length}.`,
-    );
-    assert(
-      themeGroup.optionIds.includes(THEME_AUTO_OPTION_ID),
-      `${viewportName}: opção automática ausente no grupo Tema visual.`,
+      themeGroup.optionIds.length === THEME_OPTION_IDS.length,
+      `${viewportName}: Cores deveria ter ${THEME_OPTION_IDS.length} botões, recebeu ${themeGroup.optionIds.length}.`,
     );
     for (const optionId of THEME_OPTION_IDS) {
       assert(
         themeGroup.optionIds.includes(optionId),
-        `${viewportName}: tema ${optionId} ausente no grupo Tema visual.`,
+        `${viewportName}: cor ${optionId} ausente no grupo Cores.`,
       );
     }
-    for (const heading of ["Aparência", "Tema visual", "Imagens", "Fonte"]) {
+    for (const heading of [
+      "Aparência",
+      "Conjuntos prontos",
+      "Cores",
+      "Imagens",
+      "Fonte",
+    ]) {
       assert(
         state.bodyText.includes(heading),
         `${viewportName}: seção ${heading} ausente.`,
@@ -637,7 +679,11 @@ function parseStoredAutoThemeSequence(state, viewportName) {
   }
 }
 
-async function validateAutomaticThemeProgression(page, targetUrl, viewportName) {
+async function validateAutomaticThemeProgression(
+  page,
+  targetUrl,
+  viewportName,
+) {
   await resetAppearanceState(page, { includeConsent: true });
   await page.goto(withQaScenario(targetUrl), {
     waitUntil: "networkidle0",
@@ -681,6 +727,15 @@ async function validateAutomaticThemeProgression(page, targetUrl, viewportName) 
     `${viewportName}: tema automático corrente não foi persistido.`,
   );
   assert(
+    automaticLevelState.imageSet ===
+      IMAGE_SET_BY_THEME[automaticLevelState.theme],
+    `${viewportName}: imagem automática não acompanhou o conjunto do tema ${automaticLevelState.theme}.`,
+  );
+  assert(
+    automaticLevelState.storedImageSet === automaticLevelState.imageSet,
+    `${viewportName}: imagem automática corrente não foi persistida.`,
+  );
+  assert(
     automaticLevelState.storedThemeMode === THEME_MODE_AUTO,
     `${viewportName}: modo automático não foi persistido.`,
   );
@@ -707,17 +762,27 @@ async function validateManualThemeLock(page, targetUrl, viewportName) {
   await acceptPrivacyConsentIfPresent(page);
   await waitForCinematicOverlayToClear(page);
   await openMenu(page);
+  await clickAppearanceOptionById(page, IMAGE_SET_REAL_METRO_TUNNEL);
   await clickAppearanceOptionById(page, THEME_PIXEL_SUNSET);
   await page.waitForFunction(
-    (theme) => document.documentElement.dataset.theme === theme,
+    ({ theme, imageSet }) =>
+      document.documentElement.dataset.theme === theme &&
+      document.documentElement.dataset.imageSet === imageSet,
     {},
-    THEME_PIXEL_SUNSET,
+    {
+      theme: THEME_PIXEL_SUNSET,
+      imageSet: IMAGE_SET_REAL_METRO_TUNNEL,
+    },
   );
 
   const manualInitialState = await collectState(page);
   assert(
     manualInitialState.storedThemeMode === THEME_MODE_MANUAL,
     `${viewportName}: escolha manual não persistiu antes da fase.`,
+  );
+  assert(
+    manualInitialState.imageSet === IMAGE_SET_REAL_METRO_TUNNEL,
+    `${viewportName}: seleção manual de cor alterou imagem escolhida separadamente.`,
   );
 
   await page.goto(withQaScenario(targetUrl), {
@@ -743,9 +808,14 @@ async function validateManualThemeLock(page, targetUrl, viewportName) {
     `${viewportName}: tema manual mudou automaticamente na Fase 2.`,
   );
   assert(
+    manualLevelState.imageSet === IMAGE_SET_REAL_METRO_TUNNEL,
+    `${viewportName}: imagem manual mudou automaticamente na Fase 2.`,
+  );
+  assert(
     manualLevelState.storedTheme === THEME_PIXEL_SUNSET &&
-      manualLevelState.storedThemeMode === THEME_MODE_MANUAL,
-    `${viewportName}: tema manual não permaneceu persistido na Fase 2.`,
+      manualLevelState.storedThemeMode === THEME_MODE_MANUAL &&
+      manualLevelState.storedImageSet === IMAGE_SET_REAL_METRO_TUNNEL,
+    `${viewportName}: aparência manual não permaneceu persistida na Fase 2.`,
   );
 
   return { manualInitialState, manualLevelState };
@@ -937,9 +1007,8 @@ async function validateViewport(
     await page.screenshot({ path: screenshots.ruby, fullPage: true });
   }
 
-  logProgress(`${viewportName}: aplicar Metrô noturno realista`);
-  await clickAppearanceOptionById(page, THEME_REAL_METRO_NIGHT);
-  await clickAppearanceOptionById(page, IMAGE_SET_REAL_METRO_TUNNEL);
+  logProgress(`${viewportName}: aplicar conjunto Metrô noturno realista`);
+  await clickAppearanceOptionById(page, VISUAL_THEME_PRESET_REAL_METRO_NIGHT);
   await page.waitForFunction(
     ({ theme, imageSet }) =>
       document.documentElement.dataset.theme === theme &&
@@ -963,6 +1032,58 @@ async function validateViewport(
     await page.screenshot({ path: screenshots.metro, fullPage: true });
   }
 
+  logProgress(`${viewportName}: validar cor separada preservando imagem`);
+  await clickAppearanceOptionById(page, THEME_PIXEL_SUNSET);
+  await page.waitForFunction(
+    ({ theme, imageSet }) =>
+      document.documentElement.dataset.theme === theme &&
+      document.documentElement.dataset.imageSet === imageSet,
+    {},
+    {
+      theme: THEME_PIXEL_SUNSET,
+      imageSet: IMAGE_SET_REAL_METRO_TUNNEL,
+    },
+  );
+  const manualColorState = await collectState(page);
+  assertBaseState(
+    manualColorState,
+    `${viewportName}/cor-separada-imagem-preservada`,
+    true,
+  );
+  assert(
+    manualColorState.theme === THEME_PIXEL_SUNSET &&
+      manualColorState.imageSet === IMAGE_SET_REAL_METRO_TUNNEL &&
+      manualColorState.storedTheme === THEME_PIXEL_SUNSET &&
+      manualColorState.storedImageSet === IMAGE_SET_REAL_METRO_TUNNEL,
+    `${viewportName}: controle de cor separado não preservou imagem.`,
+  );
+
+  logProgress(`${viewportName}: validar imagem separada preservando cor`);
+  await clickAppearanceOptionById(page, IMAGE_SET_SUNSET_CABINET);
+  await page.waitForFunction(
+    ({ theme, imageSet }) =>
+      document.documentElement.dataset.theme === theme &&
+      document.documentElement.dataset.imageSet === imageSet,
+    {},
+    {
+      theme: THEME_PIXEL_SUNSET,
+      imageSet: IMAGE_SET_SUNSET_CABINET,
+    },
+  );
+  const manualImageState = await collectState(page);
+  assertBaseState(
+    manualImageState,
+    `${viewportName}/imagem-separada-cor-preservada`,
+    true,
+  );
+  assert(
+    manualImageState.theme === THEME_PIXEL_SUNSET &&
+      manualImageState.imageSet === IMAGE_SET_SUNSET_CABINET &&
+      manualImageState.storedTheme === THEME_PIXEL_SUNSET &&
+      manualImageState.storedImageSet === IMAGE_SET_SUNSET_CABINET,
+    `${viewportName}: controle de imagem separado não preservou cor.`,
+  );
+
   return {
     initialState,
     contrastState,
@@ -971,6 +1092,8 @@ async function validateViewport(
     oceanState,
     rubyState,
     metroState,
+    manualColorState,
+    manualImageState,
     automaticProgressionState,
     manualThemeLockState,
   };
