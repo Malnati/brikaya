@@ -151,6 +151,7 @@ export default function App() {
     useState(false);
   const [isResetPreferencesErrorVisible, setIsResetPreferencesErrorVisible] =
     useState(false);
+  const [isResetPreferencesBusy, setIsResetPreferencesBusy] = useState(false);
   const {
     selection,
     selectTheme,
@@ -512,10 +513,12 @@ export default function App() {
   }, [audioSink]);
 
   const handleResetPreferences = useCallback(async () => {
+    if (isResetPreferencesBusy) return;
     if (!window.confirm(t("menu.resetPreferencesConfirm"))) return;
 
     audioSink.playAudio(GAME_AUDIO_IDS.RESET_SCORE);
     setIsResetPreferencesErrorVisible(false);
+    setIsResetPreferencesBusy(true);
 
     try {
       await resetLocalAppState();
@@ -523,8 +526,10 @@ export default function App() {
     } catch {
       setIsResetPreferencesErrorVisible(true);
       audioSink.playAudio(GAME_AUDIO_IDS.ERROR_SOFT);
+    } finally {
+      setIsResetPreferencesBusy(false);
     }
-  }, [audioSink, t]);
+  }, [audioSink, isResetPreferencesBusy, t]);
 
   const handleOpenMenu = useCallback(() => {
     audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
@@ -995,6 +1000,7 @@ export default function App() {
                   type="button"
                   onClick={handleResetPreferences}
                   className="dashboard-button dashboard-button--secondary"
+                  disabled={isResetPreferencesBusy}
                   data-settings-action={SETTINGS_ACTION_RESET_PREFERENCES}
                   data-testid={`settings-action-${SETTINGS_ACTION_RESET_PREFERENCES}`}
                 >

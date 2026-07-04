@@ -42,9 +42,7 @@ const BRICK_ASSET_ROLES = [
 ] as const satisfies readonly GameVisualAssetRole[];
 
 type BrickKind =
-  | typeof BRICK_KIND_BASIC
-  | typeof BRICK_KIND_METAL
-  | typeof BRICK_KIND_EVASIVE;
+  typeof BRICK_KIND_BASIC | typeof BRICK_KIND_METAL | typeof BRICK_KIND_EVASIVE;
 
 interface Brick {
   x: number;
@@ -502,10 +500,7 @@ export class Bricks {
     for (let c = 0; c < this.dimensions.brickCols; c++) {
       for (let r = 0; r < this.rows; r++) {
         const brick = this.bricks[c][r];
-        if (
-          brick.status !== BRICK_ACTIVE ||
-          brick.kind !== BRICK_KIND_EVASIVE
-        )
+        if (brick.status !== BRICK_ACTIVE || brick.kind !== BRICK_KIND_EVASIVE)
           continue;
 
         evasiveBricks.push(this.snapshotBrick(c, r, brick));
@@ -617,8 +612,12 @@ export class Bricks {
 
   private assignRandomMetalBricks() {
     const activeBricks = this.getActiveBrickSnapshots();
+    const availableMetalSlots = Math.max(
+      BRICK_DESTROYED,
+      activeBricks.length - EVASIVE_BRICK_COUNT,
+    );
     const metalCount = Math.min(
-      activeBricks.length,
+      availableMetalSlots,
       Math.floor(
         this.random() *
           (METAL_BRICK_MAX_COUNT -
@@ -725,10 +724,7 @@ export class Bricks {
     for (let c = 0; c < this.dimensions.brickCols; c++) {
       for (let r = 0; r < this.rows; r++) {
         const brick = this.bricks[c][r];
-        if (
-          brick.status !== BRICK_ACTIVE ||
-          brick.kind !== BRICK_KIND_BASIC
-        )
+        if (brick.status !== BRICK_ACTIVE || brick.kind !== BRICK_KIND_BASIC)
           continue;
 
         activeBricks.push(this.snapshotBrick(c, r, brick));

@@ -39,11 +39,19 @@ const GAME_LOG_DB_VERSION = 2;
 const EXPECTED_QA_SCENARIO = "evasive-blocks";
 const EXPECTED_HOSTNAME = "brikaya.com";
 const PAGES_PREVIEW_HOST_SUFFIX = ".pages.dev";
+const EVENT_GAME_START = "game_start";
 const EVENT_COLLISION = "collision";
+const EVENT_BRICK_DESTROYED = "brick_destroyed";
+const EVENT_SCORE_UPDATE = "score_update";
+const EVENT_LEVEL_COMPLETE = "level_complete";
+const EVENT_LEVEL_START = "level_start";
+const EVENT_RESTART_GAME = "restart_game";
 const COLLISION_TARGET_BRICK = "brick";
-const EXPECTED_INITIAL_SCORE = 0;
-const EXPECTED_INITIAL_BRICKS_REMAINING = 3;
+const EXPECTED_EVASIVE_BLOCK_COUNT = 3;
+const EXPECTED_GAME_START_COUNT = 1;
+const EXPECTED_SCORE_POINTS = 10;
 const MAX_WAIT_FOR_COLLISION_MS = 30000;
+const MAX_WAIT_FOR_COMPLETION_MS = 60000;
 const POLL_INTERVAL_MS = 500;
 const BROWSER_CLOSE_SETTLE_MS = 500;
 const BROWSER_CLOSE_TIMEOUT_MS = 3000;
@@ -84,7 +92,8 @@ function withQaScenario(url) {
 
 function isAllowedPublishedHost(hostname) {
   return (
-    hostname === EXPECTED_HOSTNAME || hostname.endsWith(PAGES_PREVIEW_HOST_SUFFIX)
+    hostname === EXPECTED_HOSTNAME ||
+    hostname.endsWith(PAGES_PREVIEW_HOST_SUFFIX)
   );
 }
 
@@ -164,7 +173,29 @@ async function readGameEvents(page) {
 function isBrickCollision(event) {
   return (
     event.type === EVENT_COLLISION &&
-    (!event.collisionInfo || event.collisionInfo?.type === COLLISION_TARGET_BRICK)
+    (!event.collisionInfo ||
+      event.collisionInfo?.type === COLLISION_TARGET_BRICK)
+  );
+}
+
+function getBrickIndex(event) {
+  return (
+    event.collisionInfo?.brickIndex ??
+    event.metadata?.brickIndex ??
+    event.metadata?.brickPosition ??
+    null
+  );
+}
+
+function getBrickKey(event) {
+  const brickIndex = getBrickIndex(event);
+  if (!brickIndex) return null;
+  return `${brickIndex.col}:${brickIndex.row}`;
+}
+
+function uniqueBrickKeys(events) {
+  return Array.from(
+    new Set(events.map(getBrickKey).filter((key) => key !== null)),
   );
 }
 
@@ -182,6 +213,38 @@ function compactEvent(event, index) {
     score: event.gameState?.score ?? null,
     bricksRemaining: event.gameState?.bricksRemaining ?? null,
     collisionType: event.collisionInfo?.type ?? null,
+    pointsAdded: event.metadata?.pointsAdded ?? null,
+    brickIndex: getBrickIndex(event),
+  };
+}
+
+function analyzeEvasiveEvents(events) {
+  const brickCollisionEntries = events
+    .map((event, index) => ({ event, index }))
+    .filter(({ event }) => isBrickCollision(event));
+  const brickDestroyedEntries = events
+    .map((event, index) => ({ event, index }))
+    .filter(({ event }) => event.type === EVENT_BRICK_DESTROYED);
+  const scoreUpdateEntries = events
+    .map((event, index) => ({ event, index }))
+    .filter(({ event }) => event.type === EVENT_SCORE_UPDATE);
+
+  return {
+    byType: summarizeEvents(events),
+    firstCollisionIndex: events.findIndex(isBrickCollision),
+    brickCollisionEntries,
+    brickDestroyedEntries,
+    scoreUpdateEntries,
+    uniqueCollisionKeys: uniqueBrickKeys(
+      brickCollisionEntries.map(({ event }) => event),
+    ),
+    uniqueDestroyedKeys: uniqueBrickKeys(
+      brickDestroyedEntries.map(({ event }) => event),
+    ),
+    hasLevelComplete: events.some(
+      (event) => event.type === EVENT_LEVEL_COMPLETE,
+    ),
+    hasLevelStart: events.some((event) => event.type === EVENT_LEVEL_START),
   };
 }
 
@@ -201,11 +264,33 @@ async function waitForBrickCollision(page) {
   );
 }
 
-function isEvasiveFirstCollision(event) {
-  return (
-    isBrickCollision(event) &&
-    event.gameState?.score === EXPECTED_INITIAL_SCORE &&
-    event.gameState?.bricksRemaining === EXPECTED_INITIAL_BRICKS_REMAINING
+async function waitForEvasiveScenarioCompletion(page) {
+  const start = Date.now();
+  let latestEvents = [];
+  while (Date.now() - start < MAX_WAIT_FOR_COMPLETION_MS) {
+    latestEvents = await readGameEvents(page);
+    const analysis = analyzeEvasiveEvents(latestEvents);
+    if (
+      analysis.uniqueCollisionKeys.length >= EXPECTED_EVASIVE_BLOCK_COUNT &&
+      analysis.uniqueDestroyedKeys.length >= EXPECTED_EVASIVE_BLOCK_COUNT &&
+      analysis.scoreUpdateEntries.length >= EXPECTED_EVASIVE_BLOCK_COUNT &&
+      analysis.hasLevelComplete &&
+      analysis.hasLevelStart
+    ) {
+      return latestEvents;
+    }
+    await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
+  }
+
+  const latestAnalysis = analyzeEvasiveEvents(latestEvents);
+  throw new Error(
+    `Evasive scenario did not complete after ${MAX_WAIT_FOR_COMPLETION_MS}ms; analysis=${JSON.stringify(
+      {
+        byType: latestAnalysis.byType,
+        uniqueCollisionKeys: latestAnalysis.uniqueCollisionKeys,
+        uniqueDestroyedKeys: latestAnalysis.uniqueDestroyedKeys,
+      },
+    )}`,
   );
 }
 
@@ -238,21 +323,35 @@ async function main() {
     await clearOriginState(page, origin);
     await page.goto(pageUrl, { waitUntil: "networkidle0" });
     await acceptPrivacyConsentIfPresent(page);
-    await page.waitForSelector("canvas", { timeout: MAX_WAIT_FOR_COLLISION_MS });
+    await page.waitForSelector("canvas", {
+      timeout: MAX_WAIT_FOR_COLLISION_MS,
+    });
 
-    const events = await waitForBrickCollision(page);
-    const firstCollisionIndex = events.findIndex(isBrickCollision);
-    const evasiveCollisionIndex = events.findIndex(isEvasiveFirstCollision);
+    const firstCollisionEvents = await waitForBrickCollision(page);
+    const firstCollisionAnalysis = analyzeEvasiveEvents(firstCollisionEvents);
 
     ensureParentDirectory(screenshotPath());
     await page.screenshot({ path: screenshotPath(), fullPage: true });
 
+    const events = await waitForEvasiveScenarioCompletion(page);
+    const analysis = analyzeEvasiveEvents(events);
     const report = {
       publicUrl: pageUrl,
       qaScenario: EXPECTED_QA_SCENARIO,
-      eventSummary: summarizeEvents(events),
-      firstCollisionIndex,
-      evasiveCollisionIndex,
+      eventSummary: analysis.byType,
+      firstCollisionIndex: analysis.firstCollisionIndex,
+      firstCollisionEventSummary: firstCollisionAnalysis.byType,
+      uniqueCollisionKeys: analysis.uniqueCollisionKeys,
+      uniqueDestroyedKeys: analysis.uniqueDestroyedKeys,
+      brickCollisions: analysis.brickCollisionEntries.map(({ event, index }) =>
+        compactEvent(event, index),
+      ),
+      brickDestroyed: analysis.brickDestroyedEntries.map(({ event, index }) =>
+        compactEvent(event, index),
+      ),
+      scoreUpdates: analysis.scoreUpdateEntries.map(({ event, index }) =>
+        compactEvent(event, index),
+      ),
       recentEvents: events.map(compactEvent).slice(-25),
       consoleProblems,
       screenshot: screenshotPath(),
@@ -260,10 +359,43 @@ async function main() {
     ensureParentDirectory(reportPath());
     writeFileSync(reportPath(), `${JSON.stringify(report, null, 2)}\n`);
 
-    assert(firstCollisionIndex >= 0, "Expected brick collision event");
     assert(
-      evasiveCollisionIndex >= 0,
-      "Expected first evasive collision without score update or brick loss",
+      (analysis.byType[EVENT_GAME_START] || 0) === EXPECTED_GAME_START_COUNT,
+      `Motor reiniciou durante blocos desviantes: game_start=${analysis.byType[EVENT_GAME_START] || 0}.`,
+    );
+    assert(
+      (analysis.byType[EVENT_RESTART_GAME] || 0) === 0,
+      "restart_game apareceu sem ação humana.",
+    );
+    assert(analysis.firstCollisionIndex >= 0, "Expected brick collision event");
+    assert(
+      analysis.uniqueCollisionKeys.length === EXPECTED_EVASIVE_BLOCK_COUNT,
+      `Expected ${EXPECTED_EVASIVE_BLOCK_COUNT} first evasive collisions; got ${analysis.uniqueCollisionKeys.length}`,
+    );
+    assert(
+      analysis.uniqueDestroyedKeys.length === EXPECTED_EVASIVE_BLOCK_COUNT,
+      `Expected ${EXPECTED_EVASIVE_BLOCK_COUNT} destroyed evasive blocks; got ${analysis.uniqueDestroyedKeys.length}`,
+    );
+    assert(
+      analysis.scoreUpdateEntries.length >= EXPECTED_EVASIVE_BLOCK_COUNT,
+      `Expected at least ${EXPECTED_EVASIVE_BLOCK_COUNT} score updates; got ${analysis.scoreUpdateEntries.length}`,
+    );
+    for (const { event } of analysis.scoreUpdateEntries.slice(
+      0,
+      EXPECTED_EVASIVE_BLOCK_COUNT,
+    )) {
+      assert(
+        event.metadata?.pointsAdded === EXPECTED_SCORE_POINTS,
+        `Expected score update of ${EXPECTED_SCORE_POINTS} points.`,
+      );
+    }
+    assert(
+      analysis.hasLevelComplete,
+      "level_complete não apareceu após destruir os três blocos desviantes.",
+    );
+    assert(
+      analysis.hasLevelStart,
+      "level_start não apareceu após destruir os três blocos desviantes.",
     );
     assert(consoleProblems.length === 0, "Console problems detected");
     console.log(`cloudflare-evasive-blocks-qa ok: ${reportPath()}`);

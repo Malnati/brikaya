@@ -157,6 +157,15 @@ async function renderApp() {
   return result;
 }
 
+function createDeferredPromise() {
+  let resolvePromise: () => void = () => {};
+  const promise = new Promise<void>((resolve) => {
+    resolvePromise = resolve;
+  });
+
+  return { promise, resolve: resolvePromise };
+}
+
 describe("App theme selector", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -530,12 +539,46 @@ describe("App theme selector", () => {
     await renderApp();
 
     await user.click(screen.getByRole("button", { name: "Menu" }));
-    await user.click(screen.getByTestId(SETTINGS_ACTION_RESET_PREFERENCES_TEST_ID));
+    await user.click(
+      screen.getByTestId(SETTINGS_ACTION_RESET_PREFERENCES_TEST_ID),
+    );
 
     expect(confirmSpy).toHaveBeenCalledWith(RESET_PREFERENCES_CONFIRM_TEXT);
     await waitFor(() => expect(resetLocalAppState).toHaveBeenCalledTimes(1));
     expect(refreshAppAfterLocalReset).toHaveBeenCalledTimes(1);
     expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.RESET_SCORE);
+  });
+
+  it("bloqueia restauração padrão repetida enquanto a limpeza está em andamento", async () => {
+    mockSystemTheme(true);
+    const user = userEvent.setup();
+    const confirmSpy = jest.spyOn(window, "confirm").mockReturnValue(true);
+    const resetDeferred = createDeferredPromise();
+    (resetLocalAppState as jest.Mock).mockReturnValueOnce(
+      resetDeferred.promise,
+    );
+
+    await renderApp();
+
+    await user.click(screen.getByRole("button", { name: "Menu" }));
+    const resetButton = screen.getByTestId(
+      SETTINGS_ACTION_RESET_PREFERENCES_TEST_ID,
+    );
+
+    await user.click(resetButton);
+    await user.click(resetButton);
+
+    expect(resetButton).toBeDisabled();
+    expect(confirmSpy).toHaveBeenCalledTimes(1);
+    expect(resetLocalAppState).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      resetDeferred.resolve();
+      await resetDeferred.promise;
+    });
+    await waitFor(() =>
+      expect(refreshAppAfterLocalReset).toHaveBeenCalledTimes(1),
+    );
   });
 
   it("mostra erro quando não consegue restaurar padrão", async () => {
@@ -552,7 +595,9 @@ describe("App theme selector", () => {
     await renderApp();
 
     await user.click(screen.getByRole("button", { name: "Menu" }));
-    await user.click(screen.getByTestId(SETTINGS_ACTION_RESET_PREFERENCES_TEST_ID));
+    await user.click(
+      screen.getByTestId(SETTINGS_ACTION_RESET_PREFERENCES_TEST_ID),
+    );
 
     expect(refreshAppAfterLocalReset).not.toHaveBeenCalled();
     expect(
@@ -570,7 +615,9 @@ describe("App theme selector", () => {
     await renderApp();
 
     await user.click(screen.getByRole("button", { name: "Menu" }));
-    await user.click(screen.getByTestId(SETTINGS_ACTION_RESET_PREFERENCES_TEST_ID));
+    await user.click(
+      screen.getByTestId(SETTINGS_ACTION_RESET_PREFERENCES_TEST_ID),
+    );
 
     expect(resetLocalAppState).not.toHaveBeenCalled();
     expect(refreshAppAfterLocalReset).not.toHaveBeenCalled();
@@ -723,9 +770,9 @@ describe("App theme selector", () => {
     expect(within(topControls).getByRole("button", { name: "Música" })).toBe(
       screen.getByRole("button", { name: "Música" }),
     );
-    expect(
-      within(topControls).getByRole("button", { name: "Reiniciar" }),
-    ).toBe(screen.getByRole("button", { name: "Reiniciar" }));
+    expect(within(topControls).getByRole("button", { name: "Reiniciar" })).toBe(
+      screen.getByRole("button", { name: "Reiniciar" }),
+    );
     expect(mockLastGameProps?.boardControls).toBeUndefined();
   });
 
