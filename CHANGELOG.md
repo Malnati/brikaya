@@ -3,6 +3,28 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.1] - 2026-07-04
+### Adicionado
+- Bing Webmaster Tools e Yandex Webmaster passam a ter recibo operacional zero-custo com verificação DNS e envio de sitemap.
+- Naver Search Advisor passa a ter arquivo HTML público oficial de verificação publicado no domínio canônico, sem script externo e com token redigido em documentação/evidência.
+
+### Alterado
+- Evidência de registros multilíngues diferencia conclusão validada, fila de processamento e bloqueio por CAPTCHA obrigatório.
+- Documentação de registros passa a registrar que Naver ficou bloqueado antes da confirmação final por exigir CAPTCHA.
+
+### Testado
+- `PATH="/opt/homebrew/bin:$PATH" node --version`
+- `PATH="/opt/homebrew/bin:$PATH" make help`
+- `PATH="/opt/homebrew/bin:$PATH" make cloudflare-env-check`
+- `PATH="/opt/homebrew/bin:$PATH" npm run build`
+- `PATH="/opt/homebrew/bin:$PATH" make cloudflare-deploy`
+- `curl -L https://brikaya.com/`
+- `curl -L https://brikaya.com/robots.txt`
+- `curl -L https://brikaya.com/sitemap.xml`
+- `curl -L https://brikaya.com/naver[REDACTED].html`
+- DNS público: CNAME Bing e TXT Yandex conferidos com valores redigidos.
+- Chrome: Bing verificado com sitemap `Submitted/Processing`; Yandex verificado como Owner e sitemap em fila; Naver bloqueado por CAPTCHA obrigatório após arquivo público 200.
+
 ## [1.32.0] - 2026-07-04
 ### Adicionado
 - Catálogo local/offline de i18n para 15 locales: `pt-BR`, `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th` e `zh-CN`.
