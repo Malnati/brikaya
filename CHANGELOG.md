@@ -14,16 +14,23 @@
 - GREEN: `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/App.test.tsx --runInBand --testNamePattern='bloqueia restauração padrão repetida'` → 1 teste.
 - RED: `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/objects/Bricks.test.ts --runInBand --testNamePattern='reserva três blocos desviantes'` falhou com 0 blocos desviantes quando o sorteio tentava metalizar a grade inteira.
 - GREEN: `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/objects/Bricks.test.ts --runInBand --testNamePattern='reserva três blocos desviantes'` → 1 teste.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version` → `v23.5.0`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make help`.
 - `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --check tests/e2e/cloudflare-evasive-blocks-qa.js`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --check tests/e2e/cloudflare-reset-preferences-qa.js`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/App.test.tsx src/objects/Bricks.test.ts --runInBand` → 2 suites / 43 testes.
 - `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/objects/Bricks.test.ts --runInBand` → 13 testes.
-- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand --silent`.
-- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:semantic-file-names`.
-- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:svg-assets`.
-- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:audio-assets`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand --silent` → 46 suites / 268 testes.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:semantic-file-names` → governed=886.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:svg-assets` → runtime=139, codex=2.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:audio-assets` → ids=39, mp3=91.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npx prettier --check src/App.tsx src/App.test.tsx src/objects/Bricks.ts src/objects/Bricks.test.ts tests/e2e/cloudflare-evasive-blocks-qa.js`.
 - `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`.
 - `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make cloudflare-deploy`.
 - `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
-- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-evasive-blocks-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ BRICKBREAKER_RESET_PREFERENCES_QA_REPORT=docs/assets/issues/reset-preferences-single-submit/evidence/evi-reset-preferences-single-submit-default-state-report.json BRICKBREAKER_RESET_PREFERENCES_QA_SCREENSHOT=docs/assets/issues/reset-preferences-single-submit/evidence/evi-reset-preferences-single-submit-default-state.png npm run test:cloudflare-reset-preferences`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ BRICKBREAKER_EVASIVE_QA_REPORT=docs/assets/issues/evasive-blocks-coverage/evidence/evi-evasive-blocks-coverage-report.json BRICKBREAKER_EVASIVE_QA_SCREENSHOT=docs/assets/issues/evasive-blocks-coverage/evidence/evi-evasive-blocks-coverage-screen.png npm run test:cloudflare-evasive-blocks`.
+- Varredura textual das evidências e arquivos alterados não encontrou token, chave privada ou credencial real.
 - Evidências de cobertura final: `docs/assets/issues/evasive-blocks-coverage/evidence/evi-evasive-blocks-coverage-screen.png`, `docs/assets/issues/evasive-blocks-coverage/evidence/evi-evasive-blocks-coverage-report.json`, `docs/assets/issues/reset-preferences-single-submit/evidence/evi-reset-preferences-single-submit-default-state.png` e `docs/assets/issues/reset-preferences-single-submit/evidence/evi-reset-preferences-single-submit-default-state-report.json`.
 
 ## [1.32.24] - 2026-07-04
