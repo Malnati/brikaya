@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "validatedAtUtc": "2026-07-04T01:02:38Z",
+  "validatedAtUtc": "2026-07-04T01:17:27Z",
   "canonicalUrl": "https://brikaya.com/",
   "zeroCostPolicy": {
     "paidActionsAttempted": false,
@@ -9,7 +9,8 @@
     "destructiveActionsPerformed": false,
     "thirdPartyRuntimeScriptsAdded": false,
     "publicVerificationFileAdded": true,
-    "paidOrAdminApprovalScreensAccepted": false
+    "paidOrAdminApprovalScreensAccepted": false,
+    "captchaSolvedByAgent": false
   },
   "publishedSeoState": {
     "homeHttpStatus": 200,
@@ -79,20 +80,23 @@
       "tokenRedacted": true
     },
     "naverSearchAdvisor": {
-      "status": "blocked_captcha_required",
+      "status": "done",
       "site": "https://brikaya.com/",
       "accountAuthenticated": true,
       "freeTermsAccepted": true,
       "siteAdded": true,
-      "verificationMethodPrepared": "HTML file upload",
       "verificationFilePathRedacted": "public/naver[REDACTED].html",
       "verificationFilePublicHttpStatus": 200,
-      "ownershipVerificationClicked": true,
-      "captchaRequired": true,
-      "sitemapSubmitted": false,
+      "captchaRequired": false,
+      "sitemapSubmitted": true,
       "costBlock": false,
-      "nextSafeAction": "Resolver CAPTCHA somente com confirmação explícita do usuário; depois concluir propriedade e enviar https://brikaya.com/sitemap.xml.",
-      "tokenRedacted": true
+      "nextSafeAction": "Aguardar processamento/coleta do Naver; manter sem scripts externos, ads ou serviços pagos.",
+      "tokenRedacted": true,
+      "verificationMethod": "HTML file upload",
+      "ownershipVerified": true,
+      "sitemapSubmittedPath": "sitemap.xml",
+      "sitemapSubmittedUrl": "https://brikaya.com/sitemap.xml",
+      "sitemapRegistrationDateDisplayed": "26.07.04 10:16:30"
     },
     "baiduSearchResourcePlatform": {
       "status": "not_executed_account_required",
@@ -122,7 +126,8 @@
     "dnsChecks": {
       "bingCname": "ok redacted",
       "yandexTxt": "ok redacted"
-    }
+    },
+    "naverSearchAdvisorSitemap": "submitted listed as sitemap.xml"
   },
   "freeTrademarkSearch": {
     "status": "documented_for_execution",
