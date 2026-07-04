@@ -5,6 +5,7 @@ import {
   AUDIO_STORAGE_ENABLED_VALUE,
   AUDIO_STORAGE_MUTED_KEY,
   AUDIO_STORAGE_MUTED_VALUE,
+  MUSIC_STORAGE_MUTED_KEY,
 } from "../constants/audio";
 import { audioManager } from "../utils/audioManager";
 import { useAudioPreference } from "./useAudioPreference";
@@ -18,6 +19,7 @@ describe("useAudioPreference", () => {
     jest.clearAllMocks();
     mockGetItem(null);
     jest.spyOn(audioManager, "setMuted");
+    jest.spyOn(audioManager, "setMusicMuted");
     jest.spyOn(audioManager, "unlock").mockResolvedValue(true);
   });
 
@@ -38,6 +40,8 @@ describe("useAudioPreference", () => {
       ),
     );
     expect(audioManager.setMuted).toHaveBeenCalledWith(true);
+    expect(result.current.isMusicMuted).toBe(false);
+    expect(audioManager.setMusicMuted).toHaveBeenCalledWith(false);
   });
 
   it("mantém som ligado quando a preferência salva é enabled", () => {
@@ -105,9 +109,40 @@ describe("useAudioPreference", () => {
       unlocked: false,
     });
     expect(result.current.isAudioMuted).toBe(true);
-    expect(window.localStorage.setItem).toHaveBeenLastCalledWith(
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(
       AUDIO_STORAGE_MUTED_KEY,
       AUDIO_STORAGE_MUTED_VALUE,
     );
+  });
+
+  it("salva pausa da música sem mutar o som geral", async () => {
+    mockGetItem(AUDIO_STORAGE_ENABLED_VALUE);
+    const { result } = renderHook(() => useAudioPreference());
+
+    await act(async () => {
+      expect(result.current.toggleMusic()).toEqual({
+        changed: true,
+        muted: true,
+      });
+    });
+
+    expect(result.current.isAudioMuted).toBe(false);
+    expect(result.current.isMusicMuted).toBe(true);
+    expect(audioManager.setMusicMuted).toHaveBeenLastCalledWith(true);
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(
+      MUSIC_STORAGE_MUTED_KEY,
+      AUDIO_STORAGE_MUTED_VALUE,
+    );
+  });
+
+  it("restaura música pausada quando a preferência salva é muted", () => {
+    (window.localStorage.getItem as jest.Mock).mockImplementation((key: string) =>
+      key === MUSIC_STORAGE_MUTED_KEY ? AUDIO_STORAGE_MUTED_VALUE : null,
+    );
+
+    const { result } = renderHook(() => useAudioPreference());
+
+    expect(result.current.isAudioMuted).toBe(true);
+    expect(result.current.isMusicMuted).toBe(true);
   });
 });

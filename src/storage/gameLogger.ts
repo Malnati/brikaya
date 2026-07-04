@@ -685,6 +685,10 @@ class GameLogger {
 
   async clearAllEvents(): Promise<void> {
     if (!this.db) {
+      await this.initialize();
+    }
+
+    if (!this.db) {
       WARN('⚠️ IndexedDB não inicializado');
       return;
     }
@@ -696,6 +700,8 @@ class GameLogger {
 
       request.onsuccess = () => {
         LOG('🗑️ Todos os eventos foram removidos do IndexedDB');
+        this.currentGameId = null;
+        this.gameStartTime = null;
         resolve();
       };
 

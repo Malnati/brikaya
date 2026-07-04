@@ -1,10 +1,13 @@
 // src/utils/audioManager.test.ts
-import { GAME_AUDIO_IDS, SILENT_AUDIO_ID } from '../constants/audio';
+import { GAMEPLAY_MUSIC_AUDIO_ID, GAME_AUDIO_IDS, SILENT_AUDIO_ID } from '../constants/audio';
 import { audioManager } from './audioManager';
 
 interface TestAudioWindow extends Window {
   __brickbreakerAudioEvents?: Array<{ id: string; status: string; path: string | null }>;
-  __brickbreakerAudioState?: () => { events: Array<{ id: string; status: string; path: string | null }> };
+  __brickbreakerAudioState?: () => {
+    musicMuted: boolean;
+    events: Array<{ id: string; status: string; path: string | null }>;
+  };
 }
 
 function testWindow(): TestAudioWindow {
@@ -16,6 +19,7 @@ describe('audioManager', () => {
     testWindow().__brickbreakerAudioEvents = [];
     audioManager.exposeQaApi();
     audioManager.setMuted(true);
+    audioManager.setMusicMuted(false);
     global.fetch = jest.fn().mockResolvedValue({
       arrayBuffer: jest.fn().mockResolvedValue(new ArrayBuffer(1)),
     }) as jest.Mock;
@@ -91,5 +95,60 @@ describe('audioManager', () => {
         lastUnlockResult: expect.objectContaining({ unlocked: true }),
       }),
     );
+  });
+
+  it('pausa música sem mutar efeitos sonoros', async () => {
+    const connect = jest.fn();
+    const createBufferSource = jest.fn(() => ({
+      buffer: null,
+      connect,
+      start: jest.fn(),
+      onended: null,
+    }));
+    const createGain = jest.fn(() => ({
+      connect,
+      gain: {
+        value: 1,
+        cancelScheduledValues: jest.fn(),
+        setValueAtTime: jest.fn(),
+        linearRampToValueAtTime: jest.fn(),
+      },
+    }));
+
+    class MockAudioContext {
+      state = 'running';
+      destination = {};
+      currentTime = 0;
+      sampleRate = 44100;
+      createBuffer = jest.fn(() => ({ length: 1 }));
+      createBufferSource = createBufferSource;
+      createGain = createGain;
+      decodeAudioData = jest.fn().mockResolvedValue({ duration: 1 });
+      resume = jest.fn().mockResolvedValue(undefined);
+    }
+
+    Object.defineProperty(window, 'AudioContext', {
+      configurable: true,
+      value: MockAudioContext,
+    });
+
+    await audioManager.unlock();
+    audioManager.setMuted(false);
+    audioManager.setMusicMuted(true);
+    expect(audioManager.isMusicMuted()).toBe(true);
+
+    await audioManager.playMusic(GAMEPLAY_MUSIC_AUDIO_ID);
+    await audioManager.play(GAME_AUDIO_IDS.BUTTON_PRESS);
+
+    const events = testWindow().__brickbreakerAudioState?.().events || [];
+    expect(testWindow().__brickbreakerAudioState?.().musicMuted).toBe(true);
+    expect(events).toContainEqual(expect.objectContaining({
+      id: GAMEPLAY_MUSIC_AUDIO_ID,
+      status: 'muted',
+    }));
+    expect(events).toContainEqual(expect.objectContaining({
+      id: GAME_AUDIO_IDS.BUTTON_PRESS,
+      status: 'played',
+    }));
   });
 });
