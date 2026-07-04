@@ -5,11 +5,15 @@ import {
   FONT_SET_OPTIONS,
   IMAGE_SET_OPTIONS,
   THEME_IDS,
+  THEME_MODE_AUTO,
+  THEME_MODE_MANUAL,
   THEME_OPTIONS,
+  createAutoThemeSequence,
   isFontSetId,
   isImageSetId,
   isThemeId,
   migrateStoredThemeId,
+  resolveNextAutoThemeState,
   resolveAppearanceSelection,
 } from "./appearance";
 
@@ -54,10 +58,20 @@ describe("appearance contract", () => {
   it("define escolhas padrão humanas e persistíveis", () => {
     expect(DEFAULT_APPEARANCE_SELECTION).toEqual({
       themeId: "neon-arcade",
+      themeMode: THEME_MODE_AUTO,
+      autoThemeSequence: EXPECTED_THEME_IDS,
+      autoThemeIndex: 0,
       imageSetId: "retro-default",
       fontSetId: "arcade-ui",
     });
     expect(APPEARANCE_STORAGE_KEYS.theme).toBe("brickbreaker-theme");
+    expect(APPEARANCE_STORAGE_KEYS.themeMode).toBe("brickbreaker-theme-mode");
+    expect(APPEARANCE_STORAGE_KEYS.autoThemeSequence).toBe(
+      "brickbreaker-auto-theme-sequence",
+    );
+    expect(APPEARANCE_STORAGE_KEYS.autoThemeIndex).toBe(
+      "brickbreaker-auto-theme-index",
+    );
     expect(APPEARANCE_STORAGE_KEYS.imageSet).toBe("brickbreaker-image-set");
     expect(APPEARANCE_STORAGE_KEYS.fontSet).toBe("brickbreaker-font-set");
   });
@@ -107,11 +121,15 @@ describe("appearance contract", () => {
     expect(
       resolveAppearanceSelection({
         themeId: "pixel-sunset",
+        themeMode: THEME_MODE_MANUAL,
         imageSetId: "sunset-cabinet",
         fontSetId: "block-pixel",
       }),
     ).toEqual({
       themeId: "pixel-sunset",
+      themeMode: THEME_MODE_MANUAL,
+      autoThemeSequence: EXPECTED_THEME_IDS,
+      autoThemeIndex: 0,
       imageSetId: "sunset-cabinet",
       fontSetId: "block-pixel",
     });
@@ -122,6 +140,53 @@ describe("appearance contract", () => {
         fontSetId: "remote-font",
       }),
     ).toEqual(DEFAULT_APPEARANCE_SELECTION);
+  });
+
+  it("mantém tema salvo antigo como escolha manual", () => {
+    expect(
+      resolveAppearanceSelection({
+        themeId: "pixel-sunset",
+        imageSetId: null,
+        fontSetId: null,
+      }),
+    ).toEqual({
+      ...DEFAULT_APPEARANCE_SELECTION,
+      themeId: "pixel-sunset",
+      themeMode: THEME_MODE_MANUAL,
+    });
+  });
+
+  it("avança tema automático sem repetir antes de fechar ciclo", () => {
+    let autoThemeState = {
+      themeId: "neon-arcade" as const,
+      autoThemeSequence: createAutoThemeSequence("neon-arcade", () => 0),
+      autoThemeIndex: 0,
+    };
+    const visitedThemes = new Set([autoThemeState.themeId]);
+
+    for (let count = 1; count < THEME_IDS.length; count += 1) {
+      const previousThemeId = autoThemeState.themeId;
+      autoThemeState = resolveNextAutoThemeState({
+        currentThemeId: autoThemeState.themeId,
+        autoThemeSequence: autoThemeState.autoThemeSequence,
+        autoThemeIndex: autoThemeState.autoThemeIndex,
+        random: () => 0,
+      });
+
+      expect(autoThemeState.themeId).not.toBe(previousThemeId);
+      expect(visitedThemes.has(autoThemeState.themeId)).toBe(false);
+      visitedThemes.add(autoThemeState.themeId);
+    }
+
+    expect(visitedThemes.size).toBe(THEME_IDS.length);
+    expect(
+      resolveNextAutoThemeState({
+        currentThemeId: autoThemeState.themeId,
+        autoThemeSequence: autoThemeState.autoThemeSequence,
+        autoThemeIndex: autoThemeState.autoThemeIndex,
+        random: () => 0,
+      }).themeId,
+    ).not.toBe(autoThemeState.themeId);
   });
 
   it("usa labels finais sem termos técnicos internos", () => {

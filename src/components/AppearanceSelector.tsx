@@ -1,5 +1,7 @@
 // src/components/AppearanceSelector.tsx
 import {
+  THEME_AUTO_OPTION_ID,
+  THEME_MODE_AUTO,
   FONT_SET_OPTIONS,
   IMAGE_SET_OPTIONS,
   THEME_OPTIONS,
@@ -16,6 +18,7 @@ const APPEARANCE_OPTION_TEST_ID_PREFIX = 'appearance-option';
 interface AppearanceSelectorProps {
   selection: AppearanceSelection;
   onThemeChange: (themeId: ThemeId) => void;
+  onAutomaticThemeChange: () => void;
   onImageSetChange: (imageSetId: ImageSetId) => void;
   onFontSetChange: (fontSetId: FontSetId) => void;
 }
@@ -65,9 +68,63 @@ function AppearanceOptionGroup<T extends string>({
   );
 }
 
+interface ThemeOptionGroupProps {
+  selection: AppearanceSelection;
+  onThemeChange: (themeId: ThemeId) => void;
+  onAutomaticThemeChange: () => void;
+  getOptionLabel: (option: AppearanceOption<string>) => string;
+  title: string;
+}
+
+function ThemeOptionGroup({
+  selection,
+  onThemeChange,
+  onAutomaticThemeChange,
+  getOptionLabel,
+  title,
+}: ThemeOptionGroupProps) {
+  const isAutomaticTheme = selection.themeMode === THEME_MODE_AUTO;
+  const automaticThemeOption = {
+    id: THEME_AUTO_OPTION_ID,
+    label: THEME_AUTO_OPTION_ID,
+  };
+
+  return (
+    <div className="appearance-selector__group appearance-selector__group--compact">
+      <h4>{title}</h4>
+      <div className="appearance-selector__options">
+        <button
+          type="button"
+          className={`appearance-selector__button ${isAutomaticTheme ? 'appearance-selector__button--active' : ''}`}
+          data-appearance-option-id={THEME_AUTO_OPTION_ID}
+          data-testid={`${APPEARANCE_OPTION_TEST_ID_PREFIX}-${THEME_AUTO_OPTION_ID}`}
+          aria-pressed={isAutomaticTheme}
+          onClick={onAutomaticThemeChange}
+        >
+          {getOptionLabel(automaticThemeOption)}
+        </button>
+        {THEME_OPTIONS.map((option) => (
+          <button
+            key={option.id}
+            type="button"
+            className={`appearance-selector__button ${!isAutomaticTheme && selection.themeId === option.id ? 'appearance-selector__button--active' : ''}`}
+            data-appearance-option-id={option.id}
+            data-testid={`${APPEARANCE_OPTION_TEST_ID_PREFIX}-${option.id}`}
+            aria-pressed={!isAutomaticTheme && selection.themeId === option.id}
+            onClick={() => onThemeChange(option.id)}
+          >
+            {getOptionLabel(option)}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function AppearanceSelector({
   selection,
   onThemeChange,
+  onAutomaticThemeChange,
   onImageSetChange,
   onFontSetChange,
 }: AppearanceSelectorProps) {
@@ -77,13 +134,12 @@ export function AppearanceSelector({
 
   return (
     <div className="appearance-selector" aria-label={t("appearance.aria")}>
-      <AppearanceOptionGroup
+      <ThemeOptionGroup
         title={t("appearance.theme")}
-        options={THEME_OPTIONS}
-        selectedId={selection.themeId}
-        compact
+        selection={selection}
         getOptionLabel={getOptionLabel}
-        onChange={onThemeChange}
+        onThemeChange={onThemeChange}
+        onAutomaticThemeChange={onAutomaticThemeChange}
       />
       <AppearanceOptionGroup
         title={t("appearance.images")}

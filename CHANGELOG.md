@@ -3,6 +3,29 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.15] - 2026-07-04
+### Adicionado
+- Modo “Automático por fase” passa a ser o padrão de tema visual, alternando para um tema diferente a cada nova fase.
+- A sequência automática embaralhada percorre todos os quinze temas atuais sem repetir antes de reiniciar o ciclo.
+
+### Alterado
+- Selecionar um tema no menu fixa a escolha manualmente; selecionar “Automático por fase” reativa a alternância automática.
+- QA de tema publicado passa a validar troca automática por fase e manutenção do tema manual em `qaScenario=single-brick-phase-clear`.
+- Cobertura de tema passa a validar ciclo automático persistido, fim de rodada sem repetição imediata, índice inválido, estado acessível do seletor e tema manual travado durante subida de fase.
+
+### Testado
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version` → `v23.5.0`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make help`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --check tests/e2e/cloudflare-theme-qa.js`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/constants/appearance.test.ts src/hooks/useAppearancePreference.test.tsx src/components/AppearanceSelector.test.tsx src/App.test.tsx src/i18n/i18n.test.tsx --runInBand` → 5 suites / 58 testes.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand` → 40 suites / 220 testes.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make cloudflare-deploy`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ BRICKBREAKER_THEME_QA_CAPTURE_SCREENSHOTS=true make cloudflare-theme-qa`.
+- Evidências: `docs/assets/issues/auto-theme-per-level/evidence/evi-auto-theme-per-level-cloudflare-theme-report.json` e screenshots `docs/assets/issues/auto-theme-per-level/evidence/evi-auto-theme-per-level-*.png`.
+- Varredura textual das evidências e arquivos alterados não encontrou token, chave privada ou credencial real.
+
 ## [1.32.14] - 2026-07-04
 ### Alterado
 - Cobertura de i18n passa a validar `navigator.language` quando `navigator.languages` não está disponível, preservando fallback por fuso somente depois dos idiomas do navegador.
