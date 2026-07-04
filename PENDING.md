@@ -1,5 +1,6 @@
 <!-- PENDING.md -->
 
+- [x] Corrigir alinhamento RIP no navegador mobile real e ampliar cobertura publicada para composição, área útil e matriz mobile/tablet/desktop.
 - [x] Implementar i18n/SEO PWA-only com 15 locales, sitemap localizado e reenviar sitemap no Search Console sem custo.
 - [ ] Implementar etapa futura de CMP certificada, estados `ads_disabled`/`ads_test`/`ads_live` e aprovação explícita antes de qualquer anúncio real.
 

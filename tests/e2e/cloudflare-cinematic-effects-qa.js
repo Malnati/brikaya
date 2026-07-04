@@ -79,6 +79,9 @@ const MEDIA_READY_TIMEOUT_MS = 5000;
 const TITLE_SELECTOR = '.game-cinematic-overlay__title';
 const DETAIL_SELECTOR = '.game-cinematic-overlay__detail';
 const CONTENT_SELECTOR = '[data-testid="game-cinematic-content"]';
+const RIP_COMPOSITION_SELECTOR = '[data-testid="game-cinematic-rip-composition"]';
+const RIP_BROWSER_CHROME_INSET_PARAM = 'qaViewportBottomInset';
+const RIP_MOBILE_BROWSER_CHROME_BOTTOM_INSET_PX = 104;
 const FILE_NAME_EXTENSION_PATTERN = /[^/]+(\.[^.]+)$/;
 
 function viewportByName(name) {
@@ -107,10 +110,11 @@ function screenshotPathForViewport(basePath, viewportName, index) {
   const viewportSuffix =
     RIP_SCREENSHOT_VIEWPORT_SUFFIXES.get(viewportName) || viewportName;
 
-  return basePath.replace(
-    FILE_NAME_EXTENSION_PATTERN,
-    `${RIP_SCREENSHOT_SHORT_STEM}-${viewportSuffix}$1`,
-  );
+  return basePath.replace(FILE_NAME_EXTENSION_PATTERN, (fileName, extension) => {
+    const baseStem = fileName.slice(0, -extension.length);
+
+    return `${baseStem}-${RIP_SCREENSHOT_SHORT_STEM}-${viewportSuffix}${extension}`;
+  });
 }
 
 function env(name, fallback) {
@@ -125,10 +129,23 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-function scenarioUrl(baseUrl, scenario) {
+function scenarioUrl(baseUrl, scenario, searchParams = {}) {
   const url = new URL(baseUrl);
   url.searchParams.set('qaScenario', scenario);
+  for (const [name, value] of Object.entries(searchParams)) {
+    url.searchParams.set(name, String(value));
+  }
   return url.toString();
+}
+
+function ripScenarioUrl(baseUrl, viewportName) {
+  if (viewportName !== VIEWPORT_NAME_IPHONE_PORTRAIT) {
+    return scenarioUrl(baseUrl, CINEMATIC_RIP_QA_SCENARIO);
+  }
+
+  return scenarioUrl(baseUrl, CINEMATIC_RIP_QA_SCENARIO, {
+    [RIP_BROWSER_CHROME_INSET_PARAM]: RIP_MOBILE_BROWSER_CHROME_BOTTOM_INSET_PX,
+  });
 }
 
 async function clearOfflineState(page) {
@@ -182,11 +199,12 @@ async function prepareControlledPage(page, publicUrl) {
 }
 
 async function overlaySnapshot(page, selector) {
-  return page.evaluate(({ targetSelector, stageSelector, canvasSelector, titleSelector, detailSelector, contentSelector }) => {
+  return page.evaluate(({ targetSelector, stageSelector, canvasSelector, titleSelector, detailSelector, contentSelector, compositionSelector, browserChromeInsetParam }) => {
     const overlay = document.querySelector(targetSelector);
     const stage = overlay?.querySelector(stageSelector);
     const canvas = document.querySelector(canvasSelector);
     const content = overlay?.querySelector(contentSelector);
+    const composition = overlay?.querySelector(compositionSelector);
     const title = overlay?.querySelector(titleSelector);
     const detail = overlay?.querySelector(detailSelector);
     function rectOf(element) {
@@ -207,6 +225,11 @@ async function overlaySnapshot(page, selector) {
     const viewportHeight = visualViewport?.height || window.innerHeight;
     const viewportOffsetX = visualViewport?.offsetLeft || 0;
     const viewportOffsetY = visualViewport?.offsetTop || 0;
+    const requestedBottomInset = Number(new URLSearchParams(window.location.search).get(browserChromeInsetParam) || 0);
+    const browserChromeBottomInset = Number.isFinite(requestedBottomInset) && requestedBottomInset > 0
+      ? requestedBottomInset
+      : 0;
+    const usableViewportHeight = Math.max(0, viewportHeight - browserChromeBottomInset);
 
     return {
       text: overlay?.textContent?.trim() || '',
@@ -215,6 +238,7 @@ async function overlaySnapshot(page, selector) {
       stageRect: rectOf(stage),
       canvasRect: rectOf(canvas),
       contentRect: rectOf(content),
+      compositionRect: rectOf(composition),
       titleRect: rectOf(title),
       detailRect: rectOf(detail),
       viewport: {
@@ -230,6 +254,17 @@ async function overlaySnapshot(page, selector) {
         centerY: viewportOffsetY + viewportHeight / 2,
         right: viewportOffsetX + viewportWidth,
         bottom: viewportOffsetY + viewportHeight,
+      },
+      usableVisualViewport: {
+        x: viewportOffsetX,
+        y: viewportOffsetY,
+        width: viewportWidth,
+        height: usableViewportHeight,
+        centerX: viewportOffsetX + viewportWidth / 2,
+        centerY: viewportOffsetY + usableViewportHeight / 2,
+        right: viewportOffsetX + viewportWidth,
+        bottom: viewportOffsetY + usableViewportHeight,
+        browserChromeBottomInset,
       },
       hasBodyScroll:
         document.documentElement.scrollHeight > window.innerHeight ||
@@ -249,6 +284,8 @@ async function overlaySnapshot(page, selector) {
     titleSelector: TITLE_SELECTOR,
     detailSelector: DETAIL_SELECTOR,
     contentSelector: CONTENT_SELECTOR,
+    compositionSelector: RIP_COMPOSITION_SELECTOR,
+    browserChromeInsetParam: RIP_BROWSER_CHROME_INSET_PARAM,
   });
 }
 
@@ -303,16 +340,20 @@ function assertRectInsideVisualViewport(rect, viewport, label) {
 }
 
 function assertRipViewportCentering(snapshot, label) {
-  const viewport = snapshot.visualViewport;
+  const viewport = snapshot.usableVisualViewport || snapshot.visualViewport;
 
   assert(snapshot.stageRect, `${label}: palco do RIP ausente.`);
   assert(snapshot.contentRect, `${label}: bloco textual do RIP ausente.`);
+  assert(snapshot.compositionRect, `${label}: composição visual do RIP ausente.`);
   assert(snapshot.stageRect.width >= viewport.width * MIN_RIP_STAGE_VIEWPORT_COVERAGE_RATIO, `${label}: palco do RIP não cobre a largura da viewport.`);
   assert(snapshot.stageRect.height >= viewport.height * MIN_RIP_STAGE_VIEWPORT_COVERAGE_RATIO, `${label}: palco do RIP não cobre a altura da viewport.`);
   assert(Math.abs(snapshot.stageRect.centerX - viewport.centerX) <= MAX_RIP_VIEWPORT_CENTER_OFFSET_PX, `${label}: palco do RIP fora do centro X da viewport.`);
   assert(Math.abs(snapshot.stageRect.centerY - viewport.centerY) <= MAX_RIP_VIEWPORT_CENTER_OFFSET_PX, `${label}: palco do RIP fora do centro Y da viewport.`);
+  assert(Math.abs(snapshot.compositionRect.centerX - viewport.centerX) <= MAX_RIP_VIEWPORT_CENTER_OFFSET_PX, `${label}: composição do RIP fora do centro X da viewport.`);
+  assert(Math.abs(snapshot.compositionRect.centerY - viewport.centerY) <= MAX_RIP_VIEWPORT_CENTER_OFFSET_PX, `${label}: composição do RIP fora do centro Y da viewport.`);
   assert(Math.abs(snapshot.contentRect.centerX - viewport.centerX) <= MAX_RIP_VIEWPORT_CENTER_OFFSET_PX, `${label}: texto do RIP fora do centro X da viewport.`);
   assert(Math.abs(snapshot.contentRect.centerY - viewport.centerY) <= MAX_RIP_VIEWPORT_CENTER_OFFSET_PX, `${label}: texto do RIP fora do centro Y da viewport.`);
+  assertRectInsideVisualViewport(snapshot.compositionRect, viewport, `${label}: composição RIP`);
   assertRectInsideVisualViewport(snapshot.titleRect, viewport, `${label}: título RIP`);
   assertRectInsideVisualViewport(snapshot.detailRect, viewport, `${label}: detalhe RIP`);
 
@@ -320,6 +361,7 @@ function assertRipViewportCentering(snapshot, label) {
     assert(item.rect, `${label}: mídia sem retângulo visual ${item.id}.`);
     assert(Math.abs(item.rect.centerX - viewport.centerX) <= MAX_RIP_VIEWPORT_CENTER_OFFSET_PX, `${label}: mídia ${item.id} fora do centro X da viewport.`);
     assert(Math.abs(item.rect.centerY - viewport.centerY) <= MAX_RIP_VIEWPORT_CENTER_OFFSET_PX, `${label}: mídia ${item.id} fora do centro Y da viewport.`);
+    assertRectInsideVisualViewport(item.rect, viewport, `${label}: mídia ${item.id}`);
   }
 }
 
@@ -472,7 +514,7 @@ async function run() {
       });
       ripPage.on('pageerror', error => consoleProblems.push({ type: 'pageerror', text: error.message }));
 
-      await ripPage.goto(scenarioUrl(publicUrl, CINEMATIC_RIP_QA_SCENARIO), {
+      await ripPage.goto(ripScenarioUrl(publicUrl, viewportName), {
         waitUntil: 'domcontentloaded',
         timeout: NAVIGATION_TIMEOUT_MS,
       });
