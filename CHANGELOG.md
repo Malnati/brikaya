@@ -6,6 +6,8 @@
 ## [1.32.22] - 2026-07-04
 ### Adicionado
 - Cobertura unitária para `clearAllEvents`, validando inicialização sob demanda do IndexedDB e limpeza do estado do jogo ativo após remover eventos.
+- Cobertura direta para `MusicToggle`, validando rótulo visível, modo ícone, estado acessível e callback de alternância.
+- Cobertura explícita para `isMusicMuted`, garantindo que a preferência de música pausada seja observável por testes.
 
 ### Alterado
 - `clearAllEvents` passa a inicializar o IndexedDB quando necessário antes de limpar eventos.
@@ -16,6 +18,11 @@
 - RED: `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" npm test -- src/storage/gameLogger.test.ts --runInBand -t clearAllEvents` falhou com `mockStore.clear` não chamado e `currentGameId` ainda ativo.
 - GREEN: `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" npm test -- src/storage/gameLogger.test.ts --runInBand -t clearAllEvents` → 2 testes.
 - `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" npm test -- src/storage/gameLogger.test.ts --runInBand` → 11 testes.
+- RED: `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" npm test -- src/components/MusicToggle.test.tsx --runInBand` falhou após mutação temporária que forçou `iconOnly=true` no padrão.
+- GREEN: `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" npm test -- src/components/MusicToggle.test.tsx --runInBand` → 2 testes.
+- RED: `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" npm test -- src/utils/audioManager.test.ts --runInBand -t "pausa música"` falhou após mutação temporária de `isMusicMuted`.
+- GREEN: `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" npm test -- src/utils/audioManager.test.ts --runInBand -t "pausa música"` → 1 teste.
+- Auditoria de cobertura das linhas executáveis alteradas em `src/App.tsx`, `src/components/MusicToggle.tsx`, `src/hooks/useAudioPreference.ts`, `src/storage/gameLogger.ts` e `src/utils/audioManager.ts` → 46 linhas executáveis alteradas, 0 descobertas.
 
 ## [1.32.21] - 2026-07-04
 ### Adicionado

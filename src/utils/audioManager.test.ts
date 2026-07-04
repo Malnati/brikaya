@@ -135,6 +135,7 @@ describe('audioManager', () => {
     await audioManager.unlock();
     audioManager.setMuted(false);
     audioManager.setMusicMuted(true);
+    expect(audioManager.isMusicMuted()).toBe(true);
 
     await audioManager.playMusic(GAMEPLAY_MUSIC_AUDIO_ID);
     await audioManager.play(GAME_AUDIO_IDS.BUTTON_PRESS);
