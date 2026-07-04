@@ -12,7 +12,7 @@
 - `node --version` → `v23.5.0`.
 - `make help`.
 - `npm test -- src/constants/appearance.test.ts src/utils/visualAssetResolver.test.ts src/constants/assetNaming.test.ts src/i18n/i18n.test.tsx --runInBand`.
-- `npm test -- --runInBand` → 40 suites / 206 testes.
+- `npm test -- --runInBand --silent` → 40 suites / 208 testes.
 - `npx prettier --check src/constants/appearance.ts src/constants/appearance.test.ts src/constants/visualAssets.ts src/i18n/messages.ts src/styles/index.css src/utils/visualAssetResolver.ts src/utils/visualAssetResolver.test.ts tests/e2e/cloudflare-mobile-qa.js tests/e2e/cloudflare-theme-qa.js`.
 - `node --check tests/e2e/cloudflare-theme-qa.js` e `node --check tests/e2e/cloudflare-mobile-qa.js`.
 - `npm run test:semantic-file-names`.
