@@ -3,6 +3,20 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+
+## [1.32.8] - 2026-07-04
+### Adicionado
+- Documento `docs/dist/redes-sociais.md` define o master plan operacional para registrar Brikaya em redes sociais, comunidades e canais de descoberta sem custo, sem campanha paga e sem exposição pública de perfil pessoal.
+
+### Alterado
+- Pendências de cadastros sociais passam a ter fonte versionada em `docs/dist/redes-sociais.md`, com matriz por plataforma, bloqueios de custo, regras de evidência sanitizada e próximos passos seguros.
+
+### Testado
+- `node --version` → `v23.5.0`.
+- `make help`.
+- `npm run build`.
+- Varredura textual dos arquivos alterados não encontrou token, chave privada, telefone ou credencial real.
+
 ## [1.32.7] - 2026-07-04
 ### Adicionado
 - Documento `docs/dist/pendencias-publicacao-impulsionamento.md` registra pendências globais por país/locale, cadastros de marketing externos, bloqueios pagos e teto futuro de R$500 sem publicidade no jogo.
