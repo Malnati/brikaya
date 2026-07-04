@@ -26,7 +26,7 @@ Este documento é a base operacional PWA-only. O documento `docs/dist/projeto.md
 | Instalação | Navegador pode oferecer instalação quando critérios PWA forem atendidos. | Instalação é vantagem, não requisito para jogar. |
 | Offline | Jogo deve funcionar offline após primeiro carregamento. | Ads reais, métricas externas e consentimento online precisam ser opcionais e não podem quebrar gameplay offline. |
 | Monetização | Web ads futuros: AdSense e, se aprovado, H5 Games Ads. | AdMob/SDK nativo ficam fora da rota PWA-only. |
-| Impulsionamento pago | Bloqueado até autorização explícita de orçamento. | Google Ads pode ser planejado, mas não ativado. |
+| Impulsionamento pago | Preparado como caminho externo, bloqueado até autorização explícita de gasto. | Google Ads, Meta Ads, Reddit Ads e TikTok Ads podem ter cadastros/rascunhos sem cobrança; teto futuro documentado: R$500. |
 | Licenciamento | Código, assets, textos e traduções precisam permitir uso comercial gratuito. | Sem asset pago, royalty, assinatura ou licença NC/ND. |
 | Dados sensíveis | Nenhum ID real, conta privada, credencial ou valor de ambiente no Git. | Documentar só nomes lógicos e decisões. |
 
@@ -151,6 +151,7 @@ PWA depende de navegador e plataforma. Chrome/Android tende a ser rota forte par
 | Diretórios web gratuitos | Submeter somente onde não houver cobrança ou licença restritiva. | Sem custo direto. | Validar qualidade para evitar tráfego inválido. |
 | QR/link físico | Cartão, apresentação ou evento local. | Custo só se imprimir. | Pode ser útil no Brasil/Paraguai. |
 | PWA install prompt | Deixar navegador oferecer instalação quando critérios forem cumpridos. | Sem custo direto. | Não forçar instalação antes de jogar. |
+| Impulsionamento externo preparado | Criar rascunhos e links com UTM para serviços de marketing sem ativar campanha. | Sem custo até o ponto anterior a cartão/saldo/cobrança. | Sem publicidade no jogo; orçamento futuro máximo R$500 em `docs/dist/pendencias-publicacao-impulsionamento.md`. |
 
 ### 7.2. Canais fora de escopo
 
@@ -161,7 +162,7 @@ PWA depende de navegador e plataforma. Chrome/Android tende a ser rota forte par
 | AdMob | SDK/app nativo fora da rota PWA-only. |
 | App Campaigns | Foco app store/app install; fora da rota inicial sem loja. |
 | Loja alternativa APK | Fora do objetivo: PWA por URL. |
-| Compra de tráfego | Custo bloqueado até autorização explícita. |
+| Compra de tráfego | Custo bloqueado até autorização explícita; preparação documental e links UTM são permitidos. |
 
 ## 8. Plano PWA-only de i18n e SEO
 
@@ -312,10 +313,11 @@ A rota PWA-only não reduz obrigações de licenciamento. Ela só remove loja/ap
 | 1 | SEO mínimo PWA | Title/description/canonical/Open Graph/sitemap/robots/Search Console publicados e validados. | Sem ads reais, sem IDs sensíveis e sem URLs `.pages.dev` públicas. |
 | 2 | i18n P0/P1/P2 inicial | 15 locales com rotas públicas, fallback `en`, `html lang`, preferência local e catálogo offline. | QA publicado obrigatório; revisão cultural continua antes de ads ou campanhas. |
 | 3 | Medição zero-custo permitida | Decidir métricas locais/privacidade sem serviço pago. | Não quebrar offline. |
-| 4 | Preparar ads PWA | Base local de privacidade sem ads reais; política offline+ads, CMP quando exigida e estados `ads_disabled`/`ads_test`/`ads_live` em etapa futura. | Aprovação explícita necessária. |
-| 5 | Solicitar AdSense/H5 | Site maduro, conteúdo original, privacidade, titularidade PF/PJ definida. | Acesso não garantido. |
-| 6 | Ativar ads reais | Só após aprovação, consentimento e QA publicado. | Nunca como dependência para jogar. |
-| 7 | Otimizar i18n por dados | Ajustar copy, países e futuras páginas por dados reais de acesso/retensão. | Sem campanha paga e sem ads reais sem aprovação própria. |
+| 4 | Preparar impulsionamento externo | Documentar pendências, orçamento R$500, links UTM e cadastros possíveis sem contratação. | Parar antes de cartão, saldo, campanha ativa ou cobrança. |
+| 5 | Preparar ads PWA | Base local de privacidade sem ads reais; política offline+ads, CMP quando exigida e estados `ads_disabled`/`ads_test`/`ads_live` em etapa futura. | Aprovação explícita necessária. |
+| 6 | Solicitar AdSense/H5 | Site maduro, conteúdo original, privacidade, titularidade PF/PJ definida. | Acesso não garantido. |
+| 7 | Ativar ads reais | Só após aprovação, consentimento e QA publicado. | Nunca como dependência para jogar. |
+| 8 | Otimizar i18n por dados | Ajustar copy, países e futuras páginas por dados reais de acesso/retensão. | Sem campanha paga e sem ads reais sem aprovação própria. |
 
 ## 12. Decisão recomendada PWA-only
 
@@ -338,6 +340,7 @@ Para decidir agora, sem loja, a recomendação é:
 - O plano usa SEO, Search Console, link direto, comunidades e instalação por navegador como distribuição principal.
 - A seção de i18n/SEO separa auditoria atual, regras permanentes, canonical, `hreflang`, sitemap, robots e Search Console.
 - O documento declara que a implementação atual não adiciona ads, scripts externos, métricas externas ou credenciais versionadas.
+- O documento referencia a preparação de impulsionamento externo sem publicidade no jogo e sem contratação automática.
 - Monetização é AdSense/H5 Games Ads futura, sem AdMob ou SDK nativo.
 - O conflito offline x ads é explicado como anúncios online opcionais.
 - PF/PJ e Brasil/Paraguai são tratados como titularidade de pagamento, não como exigência por país-alvo.

@@ -14,6 +14,8 @@ import {
 import { EN_MESSAGES, I18N_MESSAGES, type TranslationKey } from "./messages";
 
 const TEST_ROUTE = "/";
+const TEST_CAMPAIGN_SEARCH =
+  "?utm_source=google&utm_medium=paid-search&utm_campaign=brikaya-p0-latam-test";
 const TEST_TITLE_KEY = "seo.title";
 const PORTUGUESE_LOCALE: AppLocale = "pt-BR";
 const SPANISH_LOCALE: AppLocale = "es-419";
@@ -123,6 +125,26 @@ describe("i18n offline do Brikaya", () => {
       SPANISH_CANONICAL,
     );
     expect(window.location.pathname).toBe(getLocalePath(SPANISH_LOCALE));
+  });
+
+  it("preserva parâmetros de campanha na navegação e mantém canonical limpo", async () => {
+    const user = userEvent.setup();
+    window.history.replaceState(null, "", `${TEST_ROUTE}${TEST_CAMPAIGN_SEARCH}`);
+
+    render(
+      <I18nProvider>
+        <LocaleProbe />
+      </I18nProvider>,
+    );
+
+    await user.click(screen.getByRole("button", { name: BUTTON_LABEL }));
+
+    expect(window.location.search).toBe(TEST_CAMPAIGN_SEARCH);
+    expect(window.location.pathname).toBe(getLocalePath(SPANISH_LOCALE));
+    expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute(
+      "href",
+      SPANISH_CANONICAL,
+    );
   });
 
   it("reconhece locale zh-CN em rota pública localizada", () => {

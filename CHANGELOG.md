@@ -3,6 +3,33 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.7] - 2026-07-04
+### Adicionado
+- Documento `docs/dist/pendencias-publicacao-impulsionamento.md` registra pendências globais por país/locale, cadastros de marketing externos, bloqueios pagos e teto futuro de R$500 sem publicidade no jogo.
+- Presets canônicos de links UTM para Google, Meta, Reddit, TikTok reservado e compartilhamentos orgânicos foram adicionados sem script externo, pixel, anúncio ou credencial.
+- Metadados sociais passam a apontar para o ícone SVG local do PWA em `brikaya.com`, preparando compartilhamento/impulsionamento externo.
+
+### Alterado
+- Documentação de distribuição, registros e monetização separa impulsionamento externo de anúncios dentro do jogo e bloqueia qualquer cartão, saldo, campanha ativa ou cobrança sem nova decisão.
+- Navegação localizada passa a ter cobertura para preservar parâmetros UTM enquanto mantém canonical limpo.
+
+### Testado
+- `node --version` → `v23.5.0`.
+- `make help`.
+- `npm test -- tests/unit/campaignLinks.test.ts src/i18n/i18n.test.tsx tests/unit/seoMetadata.test.ts --runInBand` → 3 suites / 16 testes.
+- `npm test -- --runInBand` → 40 suites / 197 testes.
+- `npm run test:semantic-file-names`.
+- `npm run test:svg-assets`.
+- `npm run build`.
+- `make cloudflare-env-check`, `make cloudflare-build` e `make cloudflare-deploy`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-i18n-seo-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-offline-pwa-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`.
+- `curl`/HTML público confirmou `og:image`, `twitter:image` e bundle novo em `https://brikaya.com/`.
+- Varredura textual dos arquivos alterados de marketing não encontrou IDs de ads, slots, tokens ou secrets.
+
+
 ## [1.32.6] - 2026-07-04
 ### Adicionado
 - Recibo operacional documenta a consolidação de branches locais/remotas em `main`, com inventário de patch-equivalência, conflitos superseded e backup de segurança.

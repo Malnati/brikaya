@@ -279,6 +279,14 @@ Não usar eCPM, RPM, CTR de anúncio ou receita estimada antes de ads aprovados.
 
 Não instalar analytics pago ou ferramenta que quebre offline nesta fase. Qualquer medição futura precisa respeitar zero-custo, privacidade, consentimento e funcionamento do jogo sem rede.
 
+### 12.1. Impulsionamento externo sem publicidade no jogo
+
+Impulsionar Brikaya fora do jogo não muda o estado `ads_disabled`. Google Ads, Meta Ads, Reddit Ads ou TikTok Ads podem ser preparados como canais de aquisição externa, mas não podem inserir anúncio, pixel, tag, SDK, cookie de terceiros, publisher ID, slot ou script no runtime do jogo.
+
+O plano operacional e o teto futuro de R$500 ficam registrados em `docs/dist/pendencias-publicacao-impulsionamento.md`. Qualquer cadastro deve parar antes de cartão, saldo, campanha ativa, cobrança, assinatura, upgrade, crédito ou obrigação financeira.
+
+Parâmetros UTM são permitidos nos links de campanha para diferenciar origem manualmente, desde que canonical, `hreflang`, sitemap e metadados públicos continuem apontando para URLs limpas no domínio `https://brikaya.com/`.
+
 ## 13. Gate de ativação futura
 
 Antes de sair de `ads_disabled`, todos os itens abaixo precisam estar verdadeiros:
@@ -323,7 +331,7 @@ A decisão final P0 é:
 4. preparar conteúdo próprio, privacidade, consentimento e SEO;
 5. medir retenção, origem de tráfego e uso por país/idioma;
 6. decidir titularidade PF/PJ antes de qualquer conta/receita real;
-7. não comprar tráfego;
+7. não comprar tráfego sem nova decisão; impulsionamento externo fica apenas preparado e documentado com teto futuro de R$500;
 8. não inserir AdMob, app store, WebView monetizado ou SDK nativo;
 9. só depois solicitar/ativar monetização, em PR técnico separado, com autorização explícita.
 
@@ -340,6 +348,7 @@ A decisão final P0 é:
 - PF/PJ Brasil, PF Paraguai e EAS Paraguai estão explicados.
 - País da audiência está separado do país fiscal do recebedor.
 - Métricas P0 antes de ads estão listadas sem prometer receita.
+- Impulsionamento externo está separado de publicidade no jogo e referencia `docs/dist/pendencias-publicacao-impulsionamento.md`.
 - Riscos P0 têm mitigação documental.
 - Fontes oficiais estão linkadas.
 - Nenhum ID real, chave, token, secret, slot, publisher ID ou placeholder sensível foi incluído.
