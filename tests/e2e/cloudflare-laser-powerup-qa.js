@@ -46,9 +46,11 @@ const LASER_EFFECT_CENTER_X_RATIO = 0.5;
 const LASER_EFFECT_CENTER_Y_RATIO = 0.78;
 const LASER_EFFECT_MIN_PIXEL_BRIGHTNESS = 180;
 const LASER_EFFECT_STROKE_COLOR_FRAGMENT = "245, 247, 255";
-const LASER_EFFECT_MIN_ALPHA = 0.8;
-const LASER_EFFECT_MAX_ALPHA = 0.84;
 const LASER_EFFECT_MIN_DRAW_COUNT = 9;
+const LASER_EFFECT_MIN_DRAW_SPAN_MS = 1000;
+const LASER_EFFECT_MIN_UNIQUE_ALPHA_COUNT = 2;
+const LASER_EFFECT_MIN_UNIQUE_LINE_WIDTH_COUNT = 2;
+const LASER_EFFECT_VALUE_PRECISION = 3;
 const POWER_UP_BRICK_WIDTH_RATIO = 0.7;
 const POWER_UP_MIN_SIZE = 24;
 const POWER_UP_MAX_SIZE = 56;
@@ -246,18 +248,48 @@ async function installPowerUpDrawProbe(page) {
 
 async function installLaserDrawProbe(page) {
   await page.evaluateOnNewDocument(
-    ({ colorFragment, minAlpha, maxAlpha, xRatio, yRatio }) => {
+    ({ colorFragment, xRatio, yRatio, valuePrecision }) => {
       window.__brickbreakerLaserFanDraws = [];
+      window.__brickbreakerLaserFanPath = null;
+      const originalMoveTo = CanvasRenderingContext2D.prototype.moveTo;
+      const originalLineTo = CanvasRenderingContext2D.prototype.lineTo;
       const originalStroke = CanvasRenderingContext2D.prototype.stroke;
+
+      CanvasRenderingContext2D.prototype.moveTo = function laserMoveProbe(
+        x,
+        y,
+        ...args
+      ) {
+        window.__brickbreakerLaserFanPath = {
+          startX: x,
+          startY: y,
+          endX: x,
+          endY: y,
+        };
+
+        return originalMoveTo.call(this, x, y, ...args);
+      };
+
+      CanvasRenderingContext2D.prototype.lineTo = function laserLineProbe(
+        x,
+        y,
+        ...args
+      ) {
+        window.__brickbreakerLaserFanPath = {
+          ...(window.__brickbreakerLaserFanPath || {}),
+          endX: x,
+          endY: y,
+        };
+
+        return originalLineTo.call(this, x, y, ...args);
+      };
+
       CanvasRenderingContext2D.prototype.stroke = function laserStrokeProbe(
         ...args
       ) {
         const strokeStyle = String(this.strokeStyle);
         const alpha = this.globalAlpha;
-        const isLaserStroke =
-          strokeStyle.includes(colorFragment) &&
-          alpha >= minAlpha &&
-          alpha <= maxAlpha;
+        const isLaserStroke = strokeStyle.includes(colorFragment);
         const result = originalStroke.apply(this, args);
         if (isLaserStroke) {
           const sampleX = Math.floor(this.canvas.width * xRatio);
@@ -272,6 +304,9 @@ async function installLaserDrawProbe(page) {
             strokeStyle,
             alpha,
             lineWidth: this.lineWidth,
+            roundedAlpha: Number(alpha.toFixed(valuePrecision)),
+            roundedLineWidth: Number(this.lineWidth.toFixed(valuePrecision)),
+            path: window.__brickbreakerLaserFanPath || null,
             pixel: {
               red,
               green,
@@ -288,10 +323,9 @@ async function installLaserDrawProbe(page) {
     },
     {
       colorFragment: LASER_EFFECT_STROKE_COLOR_FRAGMENT,
-      minAlpha: LASER_EFFECT_MIN_ALPHA,
-      maxAlpha: LASER_EFFECT_MAX_ALPHA,
       xRatio: LASER_EFFECT_CENTER_X_RATIO,
       yRatio: LASER_EFFECT_CENTER_Y_RATIO,
+      valuePrecision: LASER_EFFECT_VALUE_PRECISION,
     },
   );
 }
@@ -305,22 +339,36 @@ async function waitForPowerUpDraw(page) {
   return page.evaluate(() => (window.__brickbreakerPowerUpDraws || [])[0]);
 }
 
-async function waitForLaserDrawSample(page) {
+async function waitForLaserDrawSample(page, screenshotPath) {
   await page.waitForFunction(
     (minDrawCount) =>
       (window.__brickbreakerLaserFanDraws || []).length >= minDrawCount,
     { timeout: MAX_WAIT_FOR_LASER_MS },
     LASER_EFFECT_MIN_DRAW_COUNT,
   );
+  if (screenshotPath) {
+    await page.screenshot({ path: screenshotPath });
+  }
+  await new Promise((resolve) =>
+    setTimeout(resolve, LASER_EFFECT_SAMPLE_DELAY_MS),
+  );
 
   return page.evaluate(() => {
     const draws = window.__brickbreakerLaserFanDraws || [];
     const first = draws[0] || null;
     const last = draws[draws.length - 1] || null;
+    const uniqueAlphaCount = new Set(
+      draws.map((draw) => draw.roundedAlpha),
+    ).size;
+    const uniqueLineWidthCount = new Set(
+      draws.map((draw) => draw.roundedLineWidth),
+    ).size;
     return {
       first,
       last,
       count: draws.length,
+      uniqueAlphaCount,
+      uniqueLineWidthCount,
       spanMs: first && last ? last.timestamp - first.timestamp : 0,
     };
   });
@@ -517,7 +565,7 @@ async function run() {
     await new Promise((resolve) => setTimeout(resolve, 120));
     await page.screenshot({ path: outItemScreenshot });
 
-    const laserDrawWindow = await waitForLaserDrawSample(page);
+    const laserDrawWindow = await waitForLaserDrawSample(page, outScreenshot);
     const laserEffectPixel =
       laserDrawWindow.last?.pixel || (await sampleLaserEffectPixel(page));
     await waitForLaserCompletion(page);
@@ -557,7 +605,6 @@ async function run() {
     );
 
     const layoutState = await collectLayoutState(page);
-    await page.screenshot({ path: outScreenshot });
     const events = await readGameEvents(page);
     const proofEvents = eventsThroughFirstLevelComplete(events);
     const byType = summarizeEvents(proofEvents);
@@ -637,6 +684,20 @@ async function run() {
     assert(
       report.laserEffect.drawWindow.count >= LASER_EFFECT_MIN_DRAW_COUNT,
       "Laser não desenhou o leque visual mínimo.",
+    );
+    assert(
+      report.laserEffect.drawWindow.spanMs >= LASER_EFFECT_MIN_DRAW_SPAN_MS,
+      "Laser não permaneceu animado pelo intervalo mínimo.",
+    );
+    assert(
+      report.laserEffect.drawWindow.uniqueAlphaCount >=
+        LASER_EFFECT_MIN_UNIQUE_ALPHA_COUNT,
+      "Laser não variou transparência entre frames.",
+    );
+    assert(
+      report.laserEffect.drawWindow.uniqueLineWidthCount >=
+        LASER_EFFECT_MIN_UNIQUE_LINE_WIDTH_COUNT,
+      "Laser não variou espessura entre frames.",
     );
     assert(firstPowerUpDraw, "Item especial não foi desenhado no canvas.");
     assert(

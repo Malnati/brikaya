@@ -675,6 +675,12 @@ describe("GameEngine", () => {
     expect(playAudio).toHaveBeenCalledWith(
       GAME_AUDIO_IDS.POWERUP_ACTIVATE_LASER_FAN,
     );
+    expect((engine as any).laserFanEffectStartedAt).toBeGreaterThan(0);
+    expect((engine as any).laserFanEffectTargets).toEqual([
+      { x: 35, y: 30, width: 50, height: 20, index: 0 },
+      { x: 95, y: 30, width: 50, height: 20, index: 1 },
+      { x: 155, y: 30, width: 50, height: 20, index: 2 },
+    ]);
     expect(LASER_FAN_EFFECT_VISIBLE_MS).toBeGreaterThanOrEqual(2000);
     expect((engine as any).laserFanEffectUntil - Date.now()).toBeGreaterThanOrEqual(
       2000,
@@ -682,9 +688,42 @@ describe("GameEngine", () => {
     jest.advanceTimersByTime(1999);
     expect((engine as any).laserFanEffectUntil).toBeGreaterThan(Date.now());
     jest.advanceTimersByTime(1);
+    expect((engine as any).laserFanEffectStartedAt).toBe(0);
     expect((engine as any).laserFanEffectUntil).toBe(0);
+    expect((engine as any).laserFanEffectTargets).toEqual([]);
     expect(mockGameLogger.logRestartGame).not.toHaveBeenCalled();
     expect(mockGameLogger.logGameStart).not.toHaveBeenCalled();
+  });
+
+  it("desenha laser em frames diferentes até o impacto nos tijolos", () => {
+    jest.useFakeTimers().setSystemTime(
+      new Date("2026-07-04T00:00:00.000Z"),
+    );
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+    const laserTargets = [
+      { col: 0, row: 0, colorIndex: 0, x: 10, y: 20, width: 50, height: 20 },
+      { col: 1, row: 0, colorIndex: 1, x: 70, y: 20, width: 50, height: 20 },
+    ];
+
+    (engine as any).showLaserFanEffect(laserTargets);
+
+    jest.advanceTimersByTime(250);
+    (engine as any).drawLaserFanEffect();
+    const firstFrameLine = [
+      ...(mockContext.lineTo as jest.Mock).mock.calls[0],
+    ];
+
+    (mockContext.lineTo as jest.Mock).mockClear();
+    (mockContext.arc as jest.Mock).mockClear();
+
+    jest.advanceTimersByTime(450);
+    (engine as any).drawLaserFanEffect();
+    const secondFrameLine = [
+      ...(mockContext.lineTo as jest.Mock).mock.calls[0],
+    ];
+
+    expect(secondFrameLine).not.toEqual(firstFrameLine);
+    expect((mockContext.arc as jest.Mock).mock.calls.length).toBeGreaterThan(0);
   });
 
   it("limita laser em leque a dois spawns por fase e continua outros power-ups", () => {

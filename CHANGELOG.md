@@ -26,6 +26,24 @@
 - `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-offline-pwa-qa`.
 - Varredura textual das evidências e arquivos alterados não encontrou token, chave privada ou credencial real.
 
+## [1.32.9] - 2026-07-04
+### Corrigido
+- Laser em leque deixa de parecer imagem estática e passa a animar raios progressivos da raquete até os tijolos destruídos, com pulsação e impacto visual no canvas.
+
+### Alterado
+- QA publicado de power-ups passa a exigir variação temporal de transparência e espessura do laser, além de manter a prova de pontuação, eventos e ausência de requests externos.
+
+### Testado
+- `node --version` → `v23.5.0`.
+- `make help`.
+- `npm run test:svg-assets`.
+- `npm run test:semantic-file-names`.
+- `npm test -- --runInBand` → 40 suites / 198 testes.
+- `npm run build`.
+- `make cloudflare-deploy`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-powerups-qa`.
+- Evidências: `docs/assets/issues/animated-laser-fan-effect/evidence/evi-animated-laser-fan-effect-cloudflare-proof.png` e `docs/assets/issues/animated-laser-fan-effect/evidence/evi-animated-laser-fan-effect-cloudflare-report.json`.
+
 ## [1.32.8] - 2026-07-04
 ### Adicionado
 - Documento `docs/dist/redes-sociais.md` define o master plan operacional para registrar Brikaya em redes sociais, comunidades e canais de descoberta sem custo, sem campanha paga e sem exposição pública de perfil pessoal.
