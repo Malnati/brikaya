@@ -3,6 +3,30 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.23] - 2026-07-04
+### Adicionado
+- Botão “Restaurar padrão” no menu para apagar dados locais do jogo com confirmação antes da ação.
+- Utilitário de reset local que limpa preferências, idioma manual, consentimentos, pontuações, recordes, histórico de eventos, colisões e logs antes de reabrir o app na rota inicial.
+- QA publicado `test:cloudflare-reset-preferences` com semeadura de dados locais, confirmação do reset, validação da tela inicial e evidência visual.
+
+### Alterado
+- Menu de dados do jogo passa a oferecer reset total separado de “Zerar pontuação”.
+- Fluxo de restauração tenta buscar atualização disponível antes de reabrir o app, preservando o suporte offline.
+
+### Testado
+- `node --version` → `v23.5.0`.
+- `make help`.
+- `npm test -- src/utils/localAppReset.test.ts src/App.test.tsx --runInBand` → 2 suites / 29 testes.
+- `npm test -- --runInBand --silent` → 45 suites / 253 testes.
+- `node --check tests/e2e/cloudflare-reset-preferences-qa.js`.
+- `npm run test:semantic-file-names` → governed=869.
+- `npm run test:svg-assets` → runtime=139, codex=2.
+- `npm run build`.
+- `make cloudflare-deploy`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ BRICKBREAKER_RESET_PREFERENCES_QA_REPORT=docs/assets/issues/reset-preferences/evidence/evi-reset-preferences-default-state-report.json BRICKBREAKER_RESET_PREFERENCES_QA_SCREENSHOT=docs/assets/issues/reset-preferences/evidence/evi-reset-preferences-default-state.png npm run test:cloudflare-reset-preferences`.
+- Evidências: `docs/assets/issues/reset-preferences/evidence/evi-reset-preferences-default-state.png` e `docs/assets/issues/reset-preferences/evidence/evi-reset-preferences-default-state-report.json`.
+
 ## [1.32.22] - 2026-07-04
 ### Adicionado
 - Cobertura unitária para `clearAllEvents`, validando inicialização sob demanda do IndexedDB e limpeza do estado do jogo ativo após remover eventos.

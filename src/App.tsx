@@ -52,6 +52,10 @@ import {
 import { BUILD_VERSION_LABEL } from "./constants/buildVersion";
 import { LOG } from "./utils/logger";
 import { audioManager } from "./utils/audioManager";
+import {
+  refreshAppAfterLocalReset,
+  resetLocalAppState,
+} from "./utils/localAppReset";
 import { GameQaScenario } from "./logic/GameEngine";
 import { useAppearancePreference } from "./hooks/useAppearancePreference";
 import { useAudioPreference } from "./hooks/useAudioPreference";
@@ -94,6 +98,7 @@ const LANGUAGE_SELECT_ID = "game-language-select";
 const SETTINGS_ACTION_LOGS = "logs";
 const SETTINGS_ACTION_COLLISIONS = "collisions";
 const SETTINGS_ACTION_RESET_SCORE = "reset-score";
+const SETTINGS_ACTION_RESET_PREFERENCES = "reset-preferences";
 const INITIAL_COUNTDOWN_OVERLAY: GameCinematicOverlayState = {
   type: "countdown",
   value: CINEMATIC_COUNTDOWN_STEPS[COUNTDOWN_FIRST_STEP_INDEX],
@@ -142,6 +147,8 @@ export default function App() {
   const [updateProgress, setUpdateProgress] =
     useState<UpdateProgressState | null>(null);
   const [isUpdateInstalledVisible, setIsUpdateInstalledVisible] =
+    useState(false);
+  const [isResetPreferencesErrorVisible, setIsResetPreferencesErrorVisible] =
     useState(false);
   const {
     selection,
@@ -500,6 +507,21 @@ export default function App() {
       audioSink.playAudio(GAME_AUDIO_IDS.ERROR_SOFT);
     }
   }, [audioSink]);
+
+  const handleResetPreferences = useCallback(async () => {
+    if (!window.confirm(t("menu.resetPreferencesConfirm"))) return;
+
+    audioSink.playAudio(GAME_AUDIO_IDS.RESET_SCORE);
+    setIsResetPreferencesErrorVisible(false);
+
+    try {
+      await resetLocalAppState();
+      await refreshAppAfterLocalReset();
+    } catch {
+      setIsResetPreferencesErrorVisible(true);
+      audioSink.playAudio(GAME_AUDIO_IDS.ERROR_SOFT);
+    }
+  }, [audioSink, t]);
 
   const handleOpenMenu = useCallback(() => {
     audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
@@ -966,6 +988,18 @@ export default function App() {
                   </span>
                   {t("menu.resetScores")}
                 </button>
+                <button
+                  type="button"
+                  onClick={handleResetPreferences}
+                  className="dashboard-button dashboard-button--secondary"
+                  data-settings-action={SETTINGS_ACTION_RESET_PREFERENCES}
+                  data-testid={`settings-action-${SETTINGS_ACTION_RESET_PREFERENCES}`}
+                >
+                  <span aria-hidden="true" className="button-icon">
+                    ↺
+                  </span>
+                  {t("menu.resetPreferences")}
+                </button>
               </div>
             </aside>
           </>
@@ -1024,6 +1058,11 @@ export default function App() {
                   version: BUILD_VERSION_LABEL,
                 })}
               </p>
+            </div>
+          )}
+          {isResetPreferencesErrorVisible && (
+            <div className="app-update-message">
+              <p>{t("menu.resetPreferencesError")}</p>
             </div>
           )}
           {isOfflineReadyVisible && (

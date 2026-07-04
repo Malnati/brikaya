@@ -224,6 +224,10 @@ class DebugLogger {
   }
 
   async clearAllLogs(): Promise<void> {
+    if (!this.db) {
+      await this.initialize();
+    }
+
     if (!this.db) return;
 
     return new Promise((resolve, reject) => {
