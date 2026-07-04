@@ -16,6 +16,8 @@ import {
 
 const BRICK_ACTIVE = 1;
 const BRICK_DESTROYED = 0;
+const RANDOM_SELECTION_OFFSET = 1;
+const FIRST_INDEX = 0;
 const BRICK_ASSET_ROLES = [
   GAME_VISUAL_ASSET_ROLES.brickRed,
   GAME_VISUAL_ASSET_ROLES.brickBlue,
@@ -312,6 +314,44 @@ export class Bricks {
     return this.bricks[col][row].status === BRICK_ACTIVE;
   }
 
+  selectRandomActive(limit: number): DestroyedBrickSnapshot[] {
+    const activeBricks = this.getActiveBrickSnapshots();
+    for (
+      let index = activeBricks.length - RANDOM_SELECTION_OFFSET;
+      index > FIRST_INDEX;
+      index--
+    ) {
+      const swapIndex = Math.floor(
+        Math.random() * (index + RANDOM_SELECTION_OFFSET),
+      );
+      const current = activeBricks[index];
+      activeBricks[index] = activeBricks[swapIndex];
+      activeBricks[swapIndex] = current;
+    }
+
+    return activeBricks.slice(FIRST_INDEX, limit);
+  }
+
+  destroySelectedActive(
+    selectedBricks: DestroyedBrickSnapshot[],
+  ): DestroyedBrickSnapshot[] {
+    const destroyed: DestroyedBrickSnapshot[] = [];
+    for (const selectedBrick of selectedBricks) {
+      if (!this.isBrickActive(selectedBrick.col, selectedBrick.row)) continue;
+
+      const brick = this.bricks[selectedBrick.col][selectedBrick.row];
+      const snapshot = this.snapshotBrick(
+        selectedBrick.col,
+        selectedBrick.row,
+        brick,
+      );
+      brick.status = BRICK_DESTROYED;
+      destroyed.push(snapshot);
+    }
+
+    return destroyed;
+  }
+
   destroyAllActive(): DestroyedBrickSnapshot[] {
     const destroyed: DestroyedBrickSnapshot[] = [];
     for (let c = 0; c < this.dimensions.brickCols; c++) {
@@ -319,27 +359,51 @@ export class Bricks {
         const brick = this.bricks[c][r];
         if (brick.status !== BRICK_ACTIVE) continue;
 
-        const x =
-          c * (this.dimensions.brickWidth + this.dimensions.brickPadding) +
-          this.dimensions.brickOffsetLeft;
-        const y =
-          r * (this.dimensions.brickHeight + this.dimensions.brickPadding) +
-          this.dimensions.brickOffsetTop;
-        brick.x = x;
-        brick.y = y;
+        const snapshot = this.snapshotBrick(c, r, brick);
         brick.status = BRICK_DESTROYED;
-        destroyed.push({
-          col: c,
-          row: r,
-          colorIndex: brick.colorIndex,
-          x,
-          y,
-          width: this.dimensions.brickWidth,
-          height: this.dimensions.brickHeight,
-        });
+        destroyed.push(snapshot);
       }
     }
 
     return destroyed;
+  }
+
+  private getActiveBrickSnapshots(): DestroyedBrickSnapshot[] {
+    const activeBricks: DestroyedBrickSnapshot[] = [];
+    for (let c = 0; c < this.dimensions.brickCols; c++) {
+      for (let r = 0; r < this.rows; r++) {
+        const brick = this.bricks[c][r];
+        if (brick.status !== BRICK_ACTIVE) continue;
+
+        activeBricks.push(this.snapshotBrick(c, r, brick));
+      }
+    }
+
+    return activeBricks;
+  }
+
+  private snapshotBrick(
+    col: number,
+    row: number,
+    brick: Brick,
+  ): DestroyedBrickSnapshot {
+    const x =
+      col * (this.dimensions.brickWidth + this.dimensions.brickPadding) +
+      this.dimensions.brickOffsetLeft;
+    const y =
+      row * (this.dimensions.brickHeight + this.dimensions.brickPadding) +
+      this.dimensions.brickOffsetTop;
+    brick.x = x;
+    brick.y = y;
+
+    return {
+      col,
+      row,
+      colorIndex: brick.colorIndex,
+      x,
+      y,
+      width: this.dimensions.brickWidth,
+      height: this.dimensions.brickHeight,
+    };
   }
 }

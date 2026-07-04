@@ -32,6 +32,11 @@ const TEST_DIMENSIONS: DynamicGameDimensions = {
   paddleHeight: 10,
   ballRadius: 8,
 };
+const FOUR_BRICK_DIMENSIONS: DynamicGameDimensions = {
+  ...TEST_DIMENSIONS,
+  brickRows: 2,
+  brickCols: 2,
+};
 
 describe("Bricks laser fan helpers", () => {
   it("destrói todos os blocos ativos e retorna snapshots determinísticos", () => {
@@ -58,5 +63,40 @@ describe("Bricks laser fan helpers", () => {
     bricks.destroyAllActive();
 
     expect(bricks.destroyAllActive()).toEqual([]);
+  });
+
+  it("seleciona cinco blocos aleatórios sem destruir antes da resolução", () => {
+    const bricks = new Bricks(TEST_DIMENSIONS);
+
+    const selected = bricks.selectRandomActive(5);
+
+    expect(selected).toHaveLength(5);
+    expect(bricks.isAllDestroyed()).toBe(false);
+    expect(bricks.destroySelectedActive(selected)).toHaveLength(5);
+    expect(bricks.destroySelectedActive(selected)).toEqual([]);
+    expect(bricks.isAllDestroyed()).toBe(false);
+  });
+
+  it("retorna todos os blocos ativos quando restam menos de cinco", () => {
+    const bricks = new Bricks(FOUR_BRICK_DIMENSIONS);
+
+    const selected = bricks.selectRandomActive(5);
+
+    expect(selected).toHaveLength(4);
+    expect(bricks.destroySelectedActive(selected)).toHaveLength(4);
+    expect(bricks.isAllDestroyed()).toBe(true);
+  });
+
+  it("usa escolha aleatória sem repetir blocos selecionados", () => {
+    const randomSpy = jest.spyOn(Math, "random").mockReturnValue(0);
+    const bricks = new Bricks(TEST_DIMENSIONS);
+
+    const selected = bricks.selectRandomActive(5);
+    const coordinates = selected.map((brick) => `${brick.col}:${brick.row}`);
+
+    expect(new Set(coordinates).size).toBe(5);
+    expect(coordinates).not.toEqual(["0:0", "0:1", "1:0", "1:1", "2:0"]);
+
+    randomSpy.mockRestore();
   });
 });

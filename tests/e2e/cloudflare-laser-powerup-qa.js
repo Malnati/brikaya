@@ -42,10 +42,7 @@ const GAME_LOG_DB_VERSION = 2;
 const MAX_WAIT_FOR_LASER_MS = 30000;
 const LASER_EFFECT_MIN_VISIBLE_MS = 2000;
 const LASER_EFFECT_SAMPLE_DELAY_MS = 1900;
-const LASER_EFFECT_CENTER_X_RATIO = 0.5;
-const LASER_EFFECT_CENTER_Y_RATIO = 0.78;
-const LASER_EFFECT_MIN_PIXEL_BRIGHTNESS = 180;
-const LASER_EFFECT_STROKE_COLOR_FRAGMENT = "245, 247, 255";
+const LASER_EFFECT_STROKE_COLOR_FRAGMENT = "255, 248, 199";
 const LASER_EFFECT_MIN_DRAW_COUNT = 9;
 const LASER_EFFECT_MIN_DRAW_SPAN_MS = 1000;
 const LASER_EFFECT_MIN_UNIQUE_ALPHA_COUNT = 2;
@@ -57,16 +54,16 @@ const POWER_UP_MAX_SIZE = 56;
 const POWER_UP_SIZE_TOLERANCE_PX = 1;
 const EXPECTED_QA_SCENARIO = "laser-fan";
 const EXPECTED_SCORE_REASON = "laser_fan";
-const EXPECTED_MIN_SCORE = 10;
+const EXPECTED_LASER_TARGET_COUNT = 5;
+const EXPECTED_LASER_SCORE = 50;
 const LEVEL_COMPLETE_EVENT_TYPE = "level_complete";
-const EVENT_WINDOW_THROUGH_FIRST_LEVEL_COMPLETE =
-  "through_first_level_complete";
+const EVENT_WINDOW_THROUGH_FIRST_LASER_SCORE =
+  "through_first_laser_score_update";
 const REQUIRED_EVENT_TYPES = [
   "game_start",
   "power_up",
   "brick_destroyed",
   "score_update",
-  LEVEL_COMPLETE_EVENT_TYPE,
 ];
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
@@ -76,6 +73,8 @@ const BROWSER_CLOSE_TIMEOUT_MESSAGE = "browser close timeout";
 const BROWSER_KILL_SIGNAL = "SIGKILL";
 const BLANK_PAGE_URL = "about:blank";
 const BLANK_PAGE_WAIT_UNTIL = "domcontentloaded";
+const CANONICAL_HOST = "brikaya.com";
+const PAGES_PREVIEW_HOST_SUFFIX = ".pages.dev";
 
 function env(name, fallback) {
   return process.env[name] || fallback;
@@ -112,6 +111,12 @@ function withQaScenario(url) {
   const pageUrl = new URL(url);
   pageUrl.searchParams.set("qaScenario", EXPECTED_QA_SCENARIO);
   return pageUrl.toString();
+}
+
+function isAllowedPublishedHost(hostname) {
+  return (
+    hostname === CANONICAL_HOST || hostname.endsWith(PAGES_PREVIEW_HOST_SUFFIX)
+  );
 }
 
 function qaViewport() {
@@ -204,9 +209,11 @@ function summarizeEvents(events) {
   }, {});
 }
 
-function eventsThroughFirstLevelComplete(events) {
+function eventsThroughFirstLaserScore(events) {
   const completionIndex = events.findIndex(
-    (event) => event.type === LEVEL_COMPLETE_EVENT_TYPE,
+    (event) =>
+      event.type === "score_update" &&
+      event.metadata?.reason === EXPECTED_SCORE_REASON,
   );
 
   if (completionIndex === -1) return events;
@@ -248,7 +255,7 @@ async function installPowerUpDrawProbe(page) {
 
 async function installLaserDrawProbe(page) {
   await page.evaluateOnNewDocument(
-    ({ colorFragment, xRatio, yRatio, valuePrecision }) => {
+    ({ colorFragment, valuePrecision }) => {
       window.__brickbreakerLaserFanDraws = [];
       window.__brickbreakerLaserFanPath = null;
       const originalMoveTo = CanvasRenderingContext2D.prototype.moveTo;
@@ -292,14 +299,6 @@ async function installLaserDrawProbe(page) {
         const isLaserStroke = strokeStyle.includes(colorFragment);
         const result = originalStroke.apply(this, args);
         if (isLaserStroke) {
-          const sampleX = Math.floor(this.canvas.width * xRatio);
-          const sampleY = Math.floor(this.canvas.height * yRatio);
-          const [red, green, blue, alphaChannel] = this.getImageData(
-            sampleX,
-            sampleY,
-            1,
-            1,
-          ).data;
           window.__brickbreakerLaserFanDraws.push({
             strokeStyle,
             alpha,
@@ -307,13 +306,6 @@ async function installLaserDrawProbe(page) {
             roundedAlpha: Number(alpha.toFixed(valuePrecision)),
             roundedLineWidth: Number(this.lineWidth.toFixed(valuePrecision)),
             path: window.__brickbreakerLaserFanPath || null,
-            pixel: {
-              red,
-              green,
-              blue,
-              alpha: alphaChannel,
-              brightness: red + green + blue,
-            },
             timestamp: Date.now(),
           });
         }
@@ -323,8 +315,6 @@ async function installLaserDrawProbe(page) {
     },
     {
       colorFragment: LASER_EFFECT_STROKE_COLOR_FRAGMENT,
-      xRatio: LASER_EFFECT_CENTER_X_RATIO,
-      yRatio: LASER_EFFECT_CENTER_Y_RATIO,
       valuePrecision: LASER_EFFECT_VALUE_PRECISION,
     },
   );
@@ -357,11 +347,17 @@ async function waitForLaserDrawSample(page, screenshotPath) {
     const draws = window.__brickbreakerLaserFanDraws || [];
     const first = draws[0] || null;
     const last = draws[draws.length - 1] || null;
-    const uniqueAlphaCount = new Set(
-      draws.map((draw) => draw.roundedAlpha),
-    ).size;
+    const uniqueAlphaCount = new Set(draws.map((draw) => draw.roundedAlpha))
+      .size;
     const uniqueLineWidthCount = new Set(
       draws.map((draw) => draw.roundedLineWidth),
+    ).size;
+    const uniqueTargetPathCount = new Set(
+      draws.map((draw) =>
+        draw.path
+          ? `${Math.round(draw.path.startX)}:${Math.round(draw.path.startY)}`
+          : "missing",
+      ),
     ).size;
     return {
       first,
@@ -369,6 +365,7 @@ async function waitForLaserDrawSample(page, screenshotPath) {
       count: draws.length,
       uniqueAlphaCount,
       uniqueLineWidthCount,
+      uniqueTargetPathCount,
       spanMs: first && last ? last.timestamp - first.timestamp : 0,
     };
   });
@@ -478,38 +475,12 @@ async function collectLayoutState(page) {
   });
 }
 
-async function sampleLaserEffectPixel(page) {
-  return page.evaluate(
-    ({ xRatio, yRatio }) => {
-      const canvas = document.querySelector("canvas");
-      if (!canvas) return null;
-      const context = canvas.getContext("2d");
-      if (!context) return null;
-      const x = Math.floor(canvas.width * xRatio);
-      const y = Math.floor(canvas.height * yRatio);
-      const [red, green, blue, alpha] = context.getImageData(x, y, 1, 1).data;
-
-      return {
-        red,
-        green,
-        blue,
-        alpha,
-        brightness: red + green + blue,
-      };
-    },
-    {
-      xRatio: LASER_EFFECT_CENTER_X_RATIO,
-      yRatio: LASER_EFFECT_CENTER_Y_RATIO,
-    },
-  );
-}
-
 async function run() {
   const targetUrl = withQaScenario(publicUrl());
   const parsed = new URL(targetUrl);
   assert(
-    parsed.hostname === "brikaya.com",
-    `URL precisa ser brikaya.com: ${targetUrl}`,
+    isAllowedPublishedHost(parsed.hostname),
+    `URL publicada inválida: ${targetUrl}`,
   );
 
   const outReport = reportPath();
@@ -566,47 +537,11 @@ async function run() {
     await page.screenshot({ path: outItemScreenshot });
 
     const laserDrawWindow = await waitForLaserDrawSample(page, outScreenshot);
-    const laserEffectPixel =
-      laserDrawWindow.last?.pixel || (await sampleLaserEffectPixel(page));
     await waitForLaserCompletion(page);
-    await page.waitForFunction(
-      async ({ dbName, storeName, dbVersion }) => {
-        const events = await new Promise((resolve) => {
-          const request = indexedDB.open(dbName, dbVersion);
-          request.onerror = () => resolve([]);
-          request.onsuccess = () => {
-            const db = request.result;
-            if (!db.objectStoreNames.contains(storeName)) {
-              db.close();
-              resolve([]);
-              return;
-            }
-            const tx = db.transaction([storeName], "readonly");
-            const store = tx.objectStore(storeName);
-            const allRequest = store.getAll();
-            allRequest.onerror = () => {
-              db.close();
-              resolve([]);
-            };
-            allRequest.onsuccess = () => {
-              db.close();
-              resolve(allRequest.result || []);
-            };
-          };
-        });
-        return events.some((event) => event.type === "level_complete");
-      },
-      { timeout: MAX_WAIT_FOR_LASER_MS },
-      {
-        dbName: GAME_LOG_DB_NAME,
-        storeName: GAME_LOG_STORE_NAME,
-        dbVersion: GAME_LOG_DB_VERSION,
-      },
-    );
 
     const layoutState = await collectLayoutState(page);
     const events = await readGameEvents(page);
-    const proofEvents = eventsThroughFirstLevelComplete(events);
+    const proofEvents = eventsThroughFirstLaserScore(events);
     const byType = summarizeEvents(proofEvents);
     const scoreEvents = proofEvents.filter(
       (event) => event.type === "score_update",
@@ -621,7 +556,7 @@ async function run() {
         event.metadata?.powerUpType === "laser_fan" &&
         event.metadata?.action === "activate",
     );
-    const levelCompleteEvents = proofEvents.filter(
+    const levelCompleteEvents = events.filter(
       (event) => event.type === LEVEL_COMPLETE_EVENT_TYPE,
     );
     const report = {
@@ -631,7 +566,7 @@ async function run() {
       byType,
       eventTypes: proofEvents.map((event) => event.type),
       allEventTypes: events.map((event) => event.type),
-      eventWindow: EVENT_WINDOW_THROUGH_FIRST_LEVEL_COMPLETE,
+      eventWindow: EVENT_WINDOW_THROUGH_FIRST_LASER_SCORE,
       laserScoreEvent: laserScoreEvent?.metadata || null,
       laserScoreEvents: laserScoreEvents.length,
       activatedPowerUpEvents: activatedPowerUpEvents.length,
@@ -639,7 +574,6 @@ async function run() {
       laserEffect: {
         minVisibleMs: LASER_EFFECT_MIN_VISIBLE_MS,
         sampleDelayMs: LASER_EFFECT_SAMPLE_DELAY_MS,
-        pixel: laserEffectPixel,
         drawWindow: laserDrawWindow,
       },
       powerUpItem: {
@@ -669,21 +603,20 @@ async function run() {
       "Laser não registrou ativação de power_up.",
     );
     assert(
-      (laserScoreEvent?.metadata?.pointsAdded || 0) >= EXPECTED_MIN_SCORE,
-      "Laser não somou pontos suficientes.",
+      laserScoreEvent?.metadata?.pointsAdded === EXPECTED_LASER_SCORE,
+      "Laser não somou a pontuação dos cinco blocos.",
     );
     assert(
-      laserScoreEvent?.metadata?.bricksRemaining === 0,
-      "Laser não removeu todos os blocos.",
+      (byType.brick_destroyed || 0) >= EXPECTED_LASER_TARGET_COUNT,
+      "Laser não registrou os cinco blocos destruídos.",
     );
     assert(
-      levelCompleteEvents.length === 1,
-      "Laser disparou level_complete duplicado ou ausente.",
+      levelCompleteEvents.length === 0,
+      "Laser completou a fase removendo mais do que cinco blocos.",
     );
-    assert(laserEffectPixel, "Laser não gerou amostra visual no canvas.");
     assert(
       report.laserEffect.drawWindow.count >= LASER_EFFECT_MIN_DRAW_COUNT,
-      "Laser não desenhou o leque visual mínimo.",
+      "Laser não desenhou rachaduras visuais suficientes.",
     );
     assert(
       report.laserEffect.drawWindow.spanMs >= LASER_EFFECT_MIN_DRAW_SPAN_MS,
@@ -699,6 +632,11 @@ async function run() {
         LASER_EFFECT_MIN_UNIQUE_LINE_WIDTH_COUNT,
       "Laser não variou espessura entre frames.",
     );
+    assert(
+      report.laserEffect.drawWindow.uniqueTargetPathCount >=
+        EXPECTED_LASER_TARGET_COUNT,
+      "Laser não animou cinco blocos distintos.",
+    );
     assert(firstPowerUpDraw, "Item especial não foi desenhado no canvas.");
     assert(
       targetPowerUpSize,
@@ -713,10 +651,6 @@ async function run() {
       Math.abs(firstPowerUpDraw.height - targetPowerUpSize) <=
         POWER_UP_SIZE_TOLERANCE_PX,
       "Item especial não respeitou altura proporcional ao bloco.",
-    );
-    assert(
-      laserEffectPixel.brightness >= LASER_EFFECT_MIN_PIXEL_BRIGHTNESS,
-      `Laser não permaneceu visualmente ativo por pelo menos ${LASER_EFFECT_MIN_VISIBLE_MS}ms.`,
     );
     assert((byType.restart_game || 0) === 0, "Laser registrou restart_game.");
     assert((byType.game_start || 0) === 1, "Laser gerou game_start extra.");
