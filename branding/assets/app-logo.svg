@@ -1,0 +1,12 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">APP marca genérica</title>
+  <desc id="desc">Logotipo neutro com as letras APP em negrito dentro de um círculo.</desc>
+  <defs>
+    <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F766E" />
+      <stop offset="100%" stop-color="#22C55E" />
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="56" fill="url(#brandGradient)" />
+  <text x="50%" y="55%" text-anchor="middle" font-family="'Manrope', 'Inter', sans-serif" font-size="40" font-weight="700" fill="#ECFDF3" letter-spacing="2">APP</text>
+</svg>

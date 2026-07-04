@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Fumaça de fim de jogo">
+  <path d="M69 178c-25-6-42-27-39-51 3-25 26-42 51-39 7-33 40-55 74-46 32 8 52 39 46 70 23 6 38 27 35 50-4 27-28 45-56 41H79c-3 0-7 0-10-1z" fill="#1d2433" stroke="#8b95a7" stroke-width="8" opacity="0.92"/>
+  <path d="M76 149c19 12 44 14 66 6 16-6 35-4 50 6" fill="none" stroke="#c7d0df" stroke-width="9" stroke-linecap="round" opacity="0.42"/>
+  <path d="M92 106c14-20 44-26 65-11" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" opacity="0.25"/>
+</svg>

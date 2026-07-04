@@ -1,0 +1,6 @@
+<!-- public/assets/visual/vfx/vfx-game-over-rip-high-contrast-smoke.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="Fumaça de fim de jogo">
+  <path d="M51 137c-18-7-24-31-9-45 8-8 20-10 30-5 5-24 38-34 57-16 12 11 14 27 6 40 17 1 28 18 22 34-5 15-21 22-37 17-18 10-44 9-62-4-3-8-5-14-7-21z" fill="#f8f7ff" opacity="0.78"/>
+  <path d="M59 128c27 13 62 12 87-4" fill="none" stroke="#02040a" stroke-width="7" stroke-linecap="round" opacity="0.38"/>
+  <path d="M72 93l36 36M108 93l-36 36" stroke="#ff5c7a" stroke-width="8" stroke-linecap="round"/>
+</svg>

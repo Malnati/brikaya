@@ -1,0 +1,11 @@
+<!-- public/assets/visual/bricks/spr-brick-metal-steel-high-contrast-dented-one.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Tijolo metálico alto contraste com um amassado">
+  <rect x="4" y="5" width="88" height="38" rx="8" fill="#dce6ef" stroke="#ffffff" stroke-width="4"/>
+  <path d="M10 14h76" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+  <path d="M12 36h72" stroke="#050816" stroke-width="6" stroke-linecap="round" opacity="0.82"/>
+  <ellipse cx="43" cy="25" rx="18" ry="10" fill="#121826" opacity="0.72"/>
+  <path d="M28 24c8-8 23-8 31-1" fill="none" stroke="#facc15" stroke-width="4" stroke-linecap="round"/>
+  <path d="M30 9v30M48 12v24M66 9v30" stroke="#050816" stroke-width="4" opacity="0.5"/>
+  <circle cx="18" cy="24" r="3.5" fill="#050816"/>
+  <circle cx="78" cy="24" r="3.5" fill="#050816"/>
+</svg>

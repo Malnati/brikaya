@@ -1,0 +1,18 @@
+<!-- public/assets/visual/bricks/spr-brick-metal-steel-high-contrast-normal.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Tijolo metálico">
+  <defs>
+    <linearGradient id="metal-steel-high-contrast-normal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.25" stop-color="#c6d4e6"/>
+      <stop offset="0.52" stop-color="#f8fbff"/>
+      <stop offset="0.8" stop-color="#435466"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="5" width="88" height="38" rx="8" fill="url(#metal-steel-high-contrast-normal)" stroke="#ffffff" stroke-width="4"/>
+  <path d="M12 15h72" stroke="#ffffff" stroke-width="5" stroke-linecap="round" opacity="0.62"/>
+  <path d="M13 36h70" stroke="#02040a" stroke-width="5" stroke-linecap="round" opacity="0.56"/>
+  <path d="M30 9v30M48 7v34M66 9v30" stroke="#02040a" stroke-width="3" opacity="0.42"/>
+  <circle cx="18" cy="24" r="3" fill="#02040a" opacity="0.9"/>
+  <circle cx="78" cy="24" r="3" fill="#02040a" opacity="0.9"/>
+</svg>

@@ -1,0 +1,14 @@
+---
+description: Regras operacionais do Brikaya
+alwaysApply: true
+---
+
+# Brikaya
+
+- Use Node.js v23.x para build, teste e publicação.
+- Mantenha o jogo principal offline-first após o primeiro carregamento.
+- Use apenas assets visuais SVG locais no runtime.
+- Não exponha detalhes internos na UI final.
+- Não aceite cobrança, plano pago, overage, cartão ou campanha ativa sem aprovação explícita.
+- Validação local mínima: `node --version`, `make help`, `npm run test:semantic-file-names`, `npm run test:svg-assets`, `npm run build`.
+- Validação publicada deve usar `https://brikaya.com/` ou `BRIKAYA_PUBLIC_URL` quando apontar para preview autorizado.
