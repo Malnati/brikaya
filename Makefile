@@ -11,7 +11,7 @@ DIST_DIR=dist
 
 # Cloudflare Pages zero-cost configuration
 MALNATI_ENV_FILE=/Users/mal/GitHub/malnati/.env
-BRIKAYA_CLOUDFLARE_PAGES_PROJECT_NAME=brikaya
+BRIKAYA_CLOUDFLARE_PAGES_PROJECT_NAME=brikaya-live
 BRIKAYA_CLOUDFLARE_PAGES_BRANCH=main
 BRIKAYA_CLOUDFLARE_PAGES_OUTPUT_DIR=dist
 BRIKAYA_CLOUDFLARE_PAGES_CUSTOM_DOMAIN=brikaya.com
@@ -81,6 +81,7 @@ cloudflare-deploy: cloudflare-env-check cloudflare-build
 	@node scripts/cloudflare-pages.js ensure-pages-dev-redirect
 	@node scripts/cloudflare-pages.js purge-public-cache
 	@node scripts/cloudflare-pages.js verify-public-index
+	@npm run test:trace-guard:public
 
 # Limpar cache público do domínio canônico sem alterar dados de origem
 cloudflare-purge-cache: cloudflare-env-check
@@ -89,6 +90,7 @@ cloudflare-purge-cache: cloudflare-env-check
 # Validar que o domínio canônico serve o build estático local
 cloudflare-public-check:
 	@node scripts/cloudflare-pages.js verify-public-index
+	@npm run test:trace-guard:public
 
 # Validar layout, logs e estatísticas contra o app publicado no Cloudflare Pages
 cloudflare-mobile-qa:
