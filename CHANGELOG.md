@@ -3,6 +3,20 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.3] - 2026-07-04
+### Adicionado
+- Primeiro acesso sem rota localizada ou preferência salva passa a escolher automaticamente idioma suportado a partir de `navigator.languages`/`navigator.language`, sem geolocalização ou IP.
+- QA publicado de i18n/SEO passa a validar o redirecionamento local do runtime para `es-419` quando o navegador declara `es-MX`.
+- Evidência sanitizada registra reconferência Chrome autenticada de Google Search Console, Bing, Yandex, Naver e Cloudflare sem custo, CAPTCHA ativo, aprovação administrativa ou produto pago aceito.
+
+### Alterado
+- Documentação PWA e registros passam a declarar a prioridade de idioma: rota localizada, preferência salva, idioma do navegador e fallback `pt-BR`.
+- Recibo zero-custo passa a apontar a reconferência atual dos cadastros de sitemap e mantém Google Cloud Branding fora do escopo.
+
+### Testado
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/i18n/i18n.test.tsx --runInBand`
+- Chrome autenticado: Search Console, Bing, Yandex e Naver lidos em modo verificação sem ação paga/destrutiva.
+
 ## [1.32.2] - 2026-07-04
 ### Alterado
 - Recibo operacional do Naver Search Advisor passa de bloqueado por CAPTCHA para concluído, com propriedade confirmada e sitemap enviado.

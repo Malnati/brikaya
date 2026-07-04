@@ -90,8 +90,28 @@ function readStoredLocale(): AppLocale | null {
   }
 }
 
+function readBrowserLocale(): AppLocale | null {
+  const browserLanguages = Array.isArray(window.navigator.languages)
+    ? [...window.navigator.languages]
+    : [];
+  const browserLanguage = window.navigator.language;
+  if (browserLanguage) browserLanguages.push(browserLanguage);
+
+  for (const language of browserLanguages) {
+    const locale = normalizeLocale(language);
+    if (locale) return locale;
+  }
+
+  return null;
+}
+
 function readInitialLocale(): AppLocale {
-  return readLocaleFromPath() ?? readStoredLocale() ?? DEFAULT_LOCALE;
+  return (
+    readLocaleFromPath() ??
+    readStoredLocale() ??
+    readBrowserLocale() ??
+    DEFAULT_LOCALE
+  );
 }
 
 function persistLocale(locale: AppLocale) {
@@ -137,6 +157,7 @@ export function I18nProvider({ children }: I18nProviderProps) {
   useEffect(() => {
     applySeoMetadata(locale);
     persistLocale(locale);
+    updateLocalizedPath(locale);
   }, [locale]);
 
   const contextValue = useMemo<I18nContextValue>(

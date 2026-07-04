@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-07-04T00:48:53.986Z",
+  "checkedAt": "2026-07-04T02:00:52.151Z",
   "baseUrl": "https://brikaya.com/",
   "localesChecked": [
     "pt-BR",
@@ -61,6 +61,11 @@
     "canonical": "https://brikaya.com/zh-CN/",
     "path": "/zh-CN/",
     "visibleChinese": true
+  },
+  "browserLocaleRuntime": {
+    "lang": "es-419",
+    "canonical": "https://brikaya.com/es-419/",
+    "path": "/es-419/"
   },
   "screenshot": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-localized-menu.png"
 }
