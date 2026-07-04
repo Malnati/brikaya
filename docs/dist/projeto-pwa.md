@@ -193,7 +193,8 @@ Regras permanentes de i18n:
 - Catálogo deve ser local/offline, tipado e versionado no repositório; não carregar tradução de serviço externo em runtime.
 - `en` é fallback obrigatório quando chave ou locale não estiver pronto.
 - `pt-BR` preserva intenção original, mas traduções devem adaptar tarefa, tom e contexto local.
-- Preferência de idioma deve persistir localmente, sem conta obrigatória.
+- Idioma inicial segue prioridade fixa: rota localizada, preferência salva, idioma do navegador e, por último, `pt-BR`; não usar geolocalização nem IP.
+- Preferência de idioma deve persistir localmente, sem conta obrigatória, e vencer a detecção automática do navegador.
 - `html lang` deve refletir idioma ativo para acessibilidade, navegação e ferramentas do navegador.
 - QA deve validar que nenhum texto visível expõe infraestrutura, cache, framework, provedor, credencial, build ou ferramenta interna.
 - QA deve ocorrer no domínio publicado, porque PWA, service worker, cache e instalação dependem do comportamento real do navegador.
@@ -221,12 +222,14 @@ A primeira implementação de SEO ficou pequena e testável:
 3. `https://brikaya.com/` permanece como único destino público;
 4. nenhum script externo, analytics, tag de ads ou credencial foi adicionado;
 5. `npm run build` e QA publicado validam o domínio canônico;
-6. Search Console foi conferido no Chrome autenticado e o sitemap localizado foi reenviado.
+6. Search Console foi conferido no Chrome autenticado e o sitemap localizado foi reenviado;
+7. primeiro acesso sem rota ou preferência salva usa `navigator.languages`/`navigator.language` quando houver locale suportado.
 
 ### 8.5. Critérios de aceite para i18n + SEO
 
 - `pt-BR`, `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th` e `zh-CN` têm catálogo local/offline antes de ativar seleção pública de idioma.
 - `html lang` acompanha o idioma ativo.
+- Rota localizada vence preferência salva, preferência salva vence idioma do navegador e idioma não suportado cai em `pt-BR`.
 - Fallback `en` funciona sem quebrar UI, HUD, menus, toasts, recordes ou logs.
 - Título, description, canonical, Open Graph, sitemap e robots usam somente domínio canônico e assets próprios.
 - `hreflang` aparece somente para URLs localizadas reais publicadas no domínio canônico.

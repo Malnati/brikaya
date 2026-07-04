@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "validatedAtUtc": "2026-07-04T01:58:08Z",
+  "canonicalUrl": "https://brikaya.com/",
+  "scope": "i18n automatic browser locale plus free webmaster sitemap verification",
+  "autoLocalePolicy": {
+    "priority": [
+      "localized public path",
+      "saved brikaya-locale preference",
+      "navigator.languages / navigator.language",
+      "pt-BR default"
+    ],
+    "usesGeoIpOrLocation": false,
+    "manualPreferenceWinsBrowserLanguage": true,
+    "unsupportedBrowserLanguageFallback": "pt-BR"
+  },
+  "chromeAuthenticatedVerification": {
+    "googleSearchConsole": {
+      "status": "verified_read_only",
+      "property": "sc-domain:brikaya.com",
+      "sitemap": "https://brikaya.com/sitemap.xml",
+      "visibleState": "Processado; 1 página exibida no painel no momento da leitura; reprocessamento de 15 URLs localizadas segue externo ao Google.",
+      "captchaObserved": false,
+      "paidOrAdminApprovalObserved": false
+    },
+    "bingWebmasterTools": {
+      "status": "verified_read_only",
+      "site": "https://brikaya.com",
+      "sitemap": "https://brikaya.com/sitemap.xml",
+      "visibleState": "Submitted / Processing; 0 erros e 0 warnings no painel.",
+      "captchaObserved": false,
+      "paidOrAdminApprovalObserved": false
+    },
+    "yandexWebmaster": {
+      "status": "verified_read_only",
+      "site": "https://brikaya.com",
+      "sitemap": "https://brikaya.com/sitemap.xml",
+      "visibleState": "Processing queue; painel informa que atualização pode levar 1-2 semanas.",
+      "captchaObserved": false,
+      "paidOrAdminApprovalObserved": false,
+      "metricsOrTagsActivated": false
+    },
+    "naverSearchAdvisor": {
+      "status": "verified_read_only",
+      "site": "https://brikaya.com",
+      "sitemap": "https://brikaya.com/sitemap.xml",
+      "visibleState": "Submitted sitemap; linha sitemap.xml visível no painel.",
+      "captchaObserved": false,
+      "paidOrAdminApprovalObserved": false,
+      "runtimeScriptAdded": false
+    },
+    "cloudflareCache": {
+      "status": "checked_read_only",
+      "zone": "brikaya.com",
+      "cachePurgeTriggeredThisRun": false,
+      "paidProductEnabledThisRun": false
+    }
+  },
+  "zeroCostPolicy": {
+    "paidActionsAttempted": false,
+    "adsOrCampaignsActivated": false,
+    "paymentMethodRequestedOrSaved": false,
+    "destructiveActionsPerformed": false,
+    "thirdPartyRuntimeScriptsAdded": false,
+    "googleCloudBrandingUsed": false,
+    "captchaSolvedByAgent": false
+  },
+  "secrets": {
+    "verificationTokensPrinted": false,
+    "personalEmailsRecorded": false,
+    "credentialsStored": false
+  }
+}

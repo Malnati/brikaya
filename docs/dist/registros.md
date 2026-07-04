@@ -1,7 +1,7 @@
 <!-- docs/dist/registros.md -->
 # Registros P0 para Brikaya PWA-only
 
-Pesquisa atualizada em 2026-07-03. Este documento é operacional para decisão de produto, não substitui parecer jurídico, fiscal ou contábil. A base de escopo é `docs/dist/projeto-pwa.md`; `docs/dist/projeto.md` permanece como histórico amplo.
+Pesquisa atualizada em 2026-07-04. Este documento é operacional para decisão de produto, não substitui parecer jurídico, fiscal ou contábil. A base de escopo é `docs/dist/projeto-pwa.md`; `docs/dist/projeto.md` permanece como histórico amplo.
 
 ## 1. Resumo executivo P0
 
@@ -128,7 +128,7 @@ Enviar consulta curta ao canal oficial se houver dúvida sobre a hipótese “br
 | Requisitos | Conta Google; controle de `brikaya.com`; DNS TXT recomendado para propriedade de domínio; sitemap publicado. |
 | Evidência esperada | Propriedade verificada; sitemap enviado; URL principal inspecionada. |
 | Risco | Tokens de verificação não devem expor credenciais; preferir DNS TXT quando possível. |
-| Estado operacional | Concluído em 2026-07-03: propriedade `sc-domain:brikaya.com` verificada por DNS TXT; sitemap original processado com 1 página; sitemap localizado com 15 URLs canônicas reenviado no Chrome autenticado; reprocessamento das novas URLs fica pendente do Google. |
+| Estado operacional | Concluído em 2026-07-03 e reconferido em 2026-07-04 no Chrome autenticado: propriedade `sc-domain:brikaya.com` verificada por DNS TXT; sitemap localizado com 15 URLs canônicas reenviado; painel ainda mostra processamento externo do Google para as novas URLs. |
 
 ### 5.2. Bing Webmaster Tools
 
@@ -152,6 +152,8 @@ Enviar consulta curta ao canal oficial se houver dúvida sobre a hipótese “br
 | Baidu Search Resource Platform | Chinês simplificado/`zh-CN`. | Pendente por conta Baidu autorizada. | Sem ICP, China Network, hospedagem China, app store, monetização ou serviço pago. |
 
 Rotas localizadas publicadas em 2026-07-04 (`/en/`, `/zh-CN/` e demais) já têm HTML/metadados localizados, canonical próprio, sitemap multilíngue e `hreflang`. Os cadastros Bing/Yandex usam o mesmo `https://brikaya.com/sitemap.xml`, agora com 15 URLs canônicas.
+
+Em 2026-07-04, as telas autenticadas de Google Search Console, Bing Webmaster Tools, Yandex Webmaster e Naver Search Advisor foram reconferidas em modo leitura. Nenhum CAPTCHA, pedido de pagamento, aprovação administrativa, tag externa, analytics ou produto pago foi aceito nesta reconferência.
 
 ### 5.4. Buscas gratuitas de marca/nome
 

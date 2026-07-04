@@ -51,6 +51,10 @@ const MENU_OPEN_ATTEMPTS = 3;
 const MENU_OPEN_RETRY_TIMEOUT_MS = 5000;
 const CHINESE_MENU_TEXT = "隐私";
 const ROOT_CANONICAL = "https://brikaya.com/";
+const BROWSER_AUTO_LANGUAGE = "es-MX";
+const BROWSER_AUTO_LANGUAGES = ["es-MX", "en-US"];
+const BROWSER_AUTO_EXPECTED_LOCALE = "es-419";
+const BROWSER_AUTO_EXPECTED_PATH = "/es-419/";
 const SITEMAP_PATH = "/sitemap.xml";
 const ROBOTS_PATH = "/robots.txt";
 const REPORT_JSON_SPACES = 2;
@@ -242,6 +246,58 @@ async function validateRuntimeLanguageSwitch(baseUrl, outputScreenshotPath) {
   }
 }
 
+async function validateRuntimeBrowserLocale(baseUrl) {
+  const userDataDir = mkdtempSync(`${tmpdir()}/${USER_DATA_DIR_PREFIX}`);
+  const browser = await puppeteer.launch({
+    headless: "new",
+    executablePath: CHROME_EXECUTABLE_PATH,
+    userDataDir,
+    args: buildChromeLaunchArgs(["--no-sandbox", "--disable-setuid-sandbox"]),
+  });
+
+  try {
+    const page = await browser.newPage();
+    await page.evaluateOnNewDocument((languages, language) => {
+      Object.defineProperty(window.navigator, "languages", {
+        configurable: true,
+        get: () => languages,
+      });
+      Object.defineProperty(window.navigator, "language", {
+        configurable: true,
+        get: () => language,
+      });
+      localStorage.clear();
+      sessionStorage.clear();
+    }, BROWSER_AUTO_LANGUAGES, BROWSER_AUTO_LANGUAGE);
+    await page.goto(baseUrl, { waitUntil: "networkidle2", timeout: PAGE_TIMEOUT_MS });
+    await page.waitForFunction(
+      (locale) => document.documentElement.lang === locale,
+      { timeout: PAGE_TIMEOUT_MS },
+      BROWSER_AUTO_EXPECTED_LOCALE,
+    );
+    await page.waitForFunction(
+      (path) => window.location.pathname === path,
+      { timeout: PAGE_TIMEOUT_MS },
+      BROWSER_AUTO_EXPECTED_PATH,
+    );
+
+    const runtimeState = await page.evaluate(() => ({
+      lang: document.documentElement.lang,
+      canonical: document.querySelector('link[rel="canonical"]')?.getAttribute("href"),
+      path: window.location.pathname,
+    }));
+    assert(
+      runtimeState.canonical === new URL(BROWSER_AUTO_EXPECTED_PATH, baseUrl).href,
+      "canonical não acompanhou idioma automático do navegador",
+    );
+
+    return runtimeState;
+  } finally {
+    await closeBrowser(browser);
+    rmSync(userDataDir, { recursive: true, force: true });
+  }
+}
+
 async function run() {
   const baseUrl = publicUrl();
   const htmlResults = [];
@@ -250,6 +306,7 @@ async function run() {
   }
   const sitemapRobots = await validateSitemapAndRobots(baseUrl);
   const runtime = await validateRuntimeLanguageSwitch(baseUrl, screenshotPath());
+  const browserLocaleRuntime = await validateRuntimeBrowserLocale(baseUrl);
   const report = {
     checkedAt: new Date().toISOString(),
     baseUrl,
@@ -258,6 +315,7 @@ async function run() {
     htmlResults,
     sitemapRobots,
     runtime,
+    browserLocaleRuntime,
     screenshot: screenshotPath(),
   };
 

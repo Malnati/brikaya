@@ -18,6 +18,8 @@ const TEST_TITLE_KEY = "seo.title";
 const PORTUGUESE_LOCALE: AppLocale = "pt-BR";
 const SPANISH_LOCALE: AppLocale = "es-419";
 const CHINESE_LOCALE: AppLocale = "zh-CN";
+const HINDI_LOCALE: AppLocale = "hi-IN";
+const ENGLISH_LOCALE: AppLocale = "en";
 const CANONICAL_ROOT = "https://brikaya.com/";
 const SPANISH_CANONICAL = "https://brikaya.com/es-419/";
 const CHINESE_TITLE = "Brikaya — 打砖块街机";
@@ -25,6 +27,9 @@ const MENU_LABEL = "Menú";
 const LIME_GRAPHITE_LABEL = "Lima grafite";
 const COLLISION_SPEED_LABEL = "Velocidade atual:";
 const BUTTON_LABEL = "switch";
+const LOCALE_STORAGE_KEY = "brikaya-locale";
+const NAVIGATOR_LANGUAGES_PROPERTY = "languages";
+const NAVIGATOR_LANGUAGE_PROPERTY = "language";
 const ENGLISH_LOCALES = new Set<AppLocale>(["en", "en-IN"]);
 const LOCALIZED_APPEARANCE_KEYS: TranslationKey[] = [
   "appearance.option.neon-arcade",
@@ -61,10 +66,23 @@ function LocaleProbe() {
   );
 }
 
+function setNavigatorLocale(languages: readonly string[], language: string) {
+  Object.defineProperty(window.navigator, NAVIGATOR_LANGUAGES_PROPERTY, {
+    configurable: true,
+    value: languages,
+  });
+  Object.defineProperty(window.navigator, NAVIGATOR_LANGUAGE_PROPERTY, {
+    configurable: true,
+    value: language,
+  });
+}
+
 describe("i18n offline do Brikaya", () => {
   beforeEach(() => {
     window.history.replaceState(null, "", TEST_ROUTE);
     window.localStorage.clear();
+    (window.localStorage.getItem as jest.Mock).mockReturnValue(null);
+    setNavigatorLocale([PORTUGUESE_LOCALE], PORTUGUESE_LOCALE);
   });
 
   it("publica metadados para todos os locales planejados", () => {
@@ -119,6 +137,66 @@ describe("i18n offline do Brikaya", () => {
     expect(screen.getByText(CHINESE_LOCALE)).toBeInTheDocument();
     expect(screen.getByText(CHINESE_TITLE)).toBeInTheDocument();
     expect(document.documentElement.lang).toBe(CHINESE_LOCALE);
+  });
+
+  it("usa locale do navegador quando não há rota nem preferência salva", () => {
+    setNavigatorLocale(["es-MX", "en-US"], "es-MX");
+
+    render(
+      <I18nProvider>
+        <LocaleProbe />
+      </I18nProvider>,
+    );
+
+    expect(screen.getByText(SPANISH_LOCALE)).toBeInTheDocument();
+    expect(window.location.pathname).toBe(getLocalePath(SPANISH_LOCALE));
+    expect(document.documentElement.lang).toBe(SPANISH_LOCALE);
+  });
+
+  it("mantém preferência salva acima do idioma do navegador", () => {
+    (window.localStorage.getItem as jest.Mock).mockImplementation((key: string) =>
+      key === LOCALE_STORAGE_KEY ? HINDI_LOCALE : null,
+    );
+    setNavigatorLocale(["es-MX"], "es-MX");
+
+    render(
+      <I18nProvider>
+        <LocaleProbe />
+      </I18nProvider>,
+    );
+
+    expect(screen.getByText(HINDI_LOCALE)).toBeInTheDocument();
+    expect(window.location.pathname).toBe(getLocalePath(HINDI_LOCALE));
+  });
+
+  it("mantém rota pública acima da preferência salva e do navegador", () => {
+    window.history.replaceState(null, "", getLocalePath(ENGLISH_LOCALE));
+    (window.localStorage.getItem as jest.Mock).mockImplementation((key: string) =>
+      key === LOCALE_STORAGE_KEY ? HINDI_LOCALE : null,
+    );
+    setNavigatorLocale(["es-MX"], "es-MX");
+
+    render(
+      <I18nProvider>
+        <LocaleProbe />
+      </I18nProvider>,
+    );
+
+    expect(screen.getByText(ENGLISH_LOCALE)).toBeInTheDocument();
+    expect(window.location.pathname).toBe(getLocalePath(ENGLISH_LOCALE));
+  });
+
+  it("usa pt-BR quando o idioma do navegador não é suportado", () => {
+    setNavigatorLocale(["nl-NL"], "nl-NL");
+
+    render(
+      <I18nProvider>
+        <LocaleProbe />
+      </I18nProvider>,
+    );
+
+    expect(screen.getByText(PORTUGUESE_LOCALE)).toBeInTheDocument();
+    expect(window.location.pathname).toBe(getLocalePath(PORTUGUESE_LOCALE));
   });
 
   it("mantém opções de aparência localizadas sem fallback visual em inglês", () => {

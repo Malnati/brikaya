@@ -1,7 +1,7 @@
 <!-- docs/dist/registros-execucao-zero-custo.md -->
 # Execução zero-custo dos registros multilíngues Brikaya
 
-Data UTC: 2026-07-04 01:17:27. Escopo: domínio canônico `https://brikaya.com/`, PWA-only, todos os idiomas planejados/traduzidos e nenhuma ação com custo.
+Data UTC: 2026-07-04 01:58:08. Escopo: domínio canônico `https://brikaya.com/`, PWA-only, todos os idiomas planejados/traduzidos e nenhuma ação com custo.
 
 ## Resultado operacional
 
@@ -16,6 +16,8 @@ Data UTC: 2026-07-04 01:17:27. Escopo: domínio canônico `https://brikaya.com/`
 | CLASSIND Brasil | Dossiê preparado | Conteúdo e critérios estão documentados em `docs/dist/registros.md`; submissão exige gov.br/CLASSIND e dados do requerente/titular. | Submeter com conta gov.br/CLASSIND autorizada; parar se aparecer qualquer custo. |
 | Buscas gratuitas de marca | Parcial/documentado | Busca web geral não mostrou colisão oficial evidente para `Brikaya`; apareceu risco fonético público `Brekiya`, exigindo busca oficial antes de depósito pago futuro. | Executar bases oficiais nominativas quando login/captcha permitir; não depositar marca. |
 
+Reconferência Chrome autenticada em 2026-07-04: Google Search Console, Bing, Yandex e Naver exibiram o sitemap de `brikaya.com` sem CAPTCHA ativo, cobrança, aprovação administrativa, tag externa ou produto pago aceito nesta rodada. Cloudflare foi usado apenas como leitura de cache/estado; nenhum purge ou mudança de plano foi acionado nesta reconferência.
+
 ## Decisões aplicadas
 
 - A propriedade de domínio no Google cobre todos os caminhos futuros (`/en/`, `/zh-CN/`, etc.); não é necessário registrar cada idioma separadamente no Search Console.
@@ -28,6 +30,7 @@ Data UTC: 2026-07-04 01:17:27. Escopo: domínio canônico `https://brikaya.com/`
 ## Evidência
 
 - JSON operacional: `docs/assets/issues/multilingual-zero-cost-registrations/evidence/evi-multilingual-zero-cost-registration-status.json`.
+- JSON de reconferência + i18n automático: `docs/assets/issues/auto-locale-webmaster/evidence/evi-brikaya-auto-locale-webmaster-verification.json`.
 - Evidência anterior de Search Console: `docs/assets/issues/search-console-seo/evidence/evi-search-console-seo-public-validation.json`.
 
 ## Fontes operacionais
