@@ -3,6 +3,27 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.12] - 2026-07-04
+### Adicionado
+- Cinco temas realistas adicionados ao menu de aparência: Metrô noturno, Oficina mecânica, Laboratório clínico, Templo antigo e Estação orbital.
+- Cinco conjuntos de imagens SVG locais adicionados para gameplay, blocos, power-ups e VFX: Metrô realista, Oficina realista, Laboratório realista, Templo realista e Órbita realista.
+
+### Testado
+- `node --version` → `v23.5.0`.
+- `make help`.
+- `npm test -- src/constants/appearance.test.ts src/utils/visualAssetResolver.test.ts src/constants/assetNaming.test.ts src/i18n/i18n.test.tsx --runInBand`.
+- `npm test -- --runInBand` → 40 suites / 206 testes.
+- `npx prettier --check src/constants/appearance.ts src/constants/appearance.test.ts src/constants/visualAssets.ts src/i18n/messages.ts src/styles/index.css src/utils/visualAssetResolver.ts src/utils/visualAssetResolver.test.ts tests/e2e/cloudflare-mobile-qa.js tests/e2e/cloudflare-theme-qa.js`.
+- `node --check tests/e2e/cloudflare-theme-qa.js` e `node --check tests/e2e/cloudflare-mobile-qa.js`.
+- `npm run test:semantic-file-names`.
+- `npm run test:svg-assets`.
+- `npm run build`.
+- `make cloudflare-deploy`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ BRICKBREAKER_THEME_QA_CAPTURE_SCREENSHOTS=true make cloudflare-theme-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-svg-assets-qa`.
+- Evidências: `docs/assets/issues/cinco-temas-realistas/evidence/evi-cinco-temas-realistas-report.json` e screenshots `evi-cinco-temas-realistas-*.png`.
+
 ## [1.32.11] - 2026-07-04
 ### Corrigido
 - Idioma automático deixa de reutilizar locale legado sem marcador manual, permitindo que o primeiro acesso volte a seguir a localidade atual do navegador.

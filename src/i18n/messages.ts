@@ -56,9 +56,19 @@ export const EN_MESSAGES = {
   "appearance.option.electric-plum": "Electric plum",
   "appearance.option.lime-graphite": "Lime graphite",
   "appearance.option.ruby-depth": "Ruby depth",
+  "appearance.option.real-metro-night": "Night metro",
+  "appearance.option.real-auto-garage": "Mechanic garage",
+  "appearance.option.real-bio-lab": "Clinical lab",
+  "appearance.option.real-ancient-temple": "Ancient temple",
+  "appearance.option.real-orbital-station": "Orbital station",
   "appearance.option.retro-default": "Default retro",
   "appearance.option.high-contrast": "High contrast",
   "appearance.option.sunset-cabinet": "Sunset cabinet",
+  "appearance.option.real-metro-tunnel": "Realistic metro",
+  "appearance.option.real-workshop-steel": "Realistic garage",
+  "appearance.option.real-bio-lab-glass": "Realistic lab",
+  "appearance.option.real-temple-stone": "Realistic temple",
+  "appearance.option.real-orbital-deck": "Realistic orbit",
   "appearance.option.arcade-ui": "Arcade",
   "appearance.option.crt-mono": "CRT mono",
   "appearance.option.block-pixel": "Pixel blocks",
@@ -68,8 +78,10 @@ export const EN_MESSAGES = {
   "highScores.rank": "{{rank}}. {{score}}",
   "consent.title": "Before playing",
   "consent.brand": "Brikaya",
-  "consent.body.storage": "Your score, records, and preferences stay on this device so your next game is ready.",
-  "consent.body.ads": "This version does not show real ads. You can review this choice in the menu.",
+  "consent.body.storage":
+    "Your score, records, and preferences stay on this device so your next game is ready.",
+  "consent.body.ads":
+    "This version does not show real ads. You can review this choice in the menu.",
   "consent.accept": "Accept and play",
   "status.updateTitle": "Updating game",
   "status.updateProgress": "Update progress",
@@ -143,8 +155,10 @@ export const EN_MESSAGES = {
   "collision.recentTitle": "Recent collisions:",
   "collision.speed": "Speed: {{speed}}",
   "seo.title": "Brikaya — block breaker arcade",
-  "seo.description": "Play Brikaya, a free block breaker arcade in your browser, with progress saved on your device and offline play after the first visit.",
-  "seo.ogDescription": "Break blocks, advance levels, and play in your browser with progress saved on your device."
+  "seo.description":
+    "Play Brikaya, a free block breaker arcade in your browser, with progress saved on your device and offline play after the first visit.",
+  "seo.ogDescription":
+    "Break blocks, advance levels, and play in your browser with progress saved on your device.",
 } as const;
 
 export type TranslationKey = keyof typeof EN_MESSAGES;
@@ -193,9 +207,19 @@ const PT_BR_MESSAGES: TranslationCatalog = {
   "appearance.option.electric-plum": "Ameixa elétrica",
   "appearance.option.lime-graphite": "Lima grafite",
   "appearance.option.ruby-depth": "Rubi profundo",
+  "appearance.option.real-metro-night": "Metrô noturno",
+  "appearance.option.real-auto-garage": "Oficina mecânica",
+  "appearance.option.real-bio-lab": "Laboratório clínico",
+  "appearance.option.real-ancient-temple": "Templo antigo",
+  "appearance.option.real-orbital-station": "Estação orbital",
   "appearance.option.retro-default": "Retrô padrão",
   "appearance.option.high-contrast": "Alto contraste",
   "appearance.option.sunset-cabinet": "Cabine pôr do sol",
+  "appearance.option.real-metro-tunnel": "Metrô realista",
+  "appearance.option.real-workshop-steel": "Oficina realista",
+  "appearance.option.real-bio-lab-glass": "Laboratório realista",
+  "appearance.option.real-temple-stone": "Templo realista",
+  "appearance.option.real-orbital-deck": "Órbita realista",
   "appearance.option.arcade-ui": "Arcade",
   "appearance.option.crt-mono": "CRT mono",
   "appearance.option.block-pixel": "Blocos pixelados",
@@ -204,8 +228,10 @@ const PT_BR_MESSAGES: TranslationCatalog = {
   "highScores.empty": "Ainda sem recordes",
   "highScores.rank": "{{rank}}º {{score}}",
   "consent.title": "Antes de jogar",
-  "consent.body.storage": "Sua pontuação, recordes e preferências ficam neste aparelho para manter sua próxima partida pronta.",
-  "consent.body.ads": "Esta versão não mostra anúncios reais. Você pode revisar esta escolha no menu.",
+  "consent.body.storage":
+    "Sua pontuação, recordes e preferências ficam neste aparelho para manter sua próxima partida pronta.",
+  "consent.body.ads":
+    "Esta versão não mostra anúncios reais. Você pode revisar esta escolha no menu.",
   "consent.accept": "Aceitar e jogar",
   "status.updateTitle": "Atualizando jogo",
   "status.updateProgress": "Progresso da atualização",
@@ -271,8 +297,10 @@ const PT_BR_MESSAGES: TranslationCatalog = {
   "collision.recentTitle": "Colisões Recentes:",
   "collision.speed": "Velocidade: {{speed}}",
   "seo.title": "Brikaya — arcade de quebrar blocos",
-  "seo.description": "Jogue Brikaya, um arcade gratuito de quebrar blocos no navegador, com progresso salvo no seu aparelho e partida disponível mesmo sem conexão depois do primeiro acesso.",
-  "seo.ogDescription": "Destrua blocos, avance fases e jogue no navegador com progresso salvo no seu aparelho."
+  "seo.description":
+    "Jogue Brikaya, um arcade gratuito de quebrar blocos no navegador, com progresso salvo no seu aparelho e partida disponível mesmo sem conexão depois do primeiro acesso.",
+  "seo.ogDescription":
+    "Destrua blocos, avance fases e jogue no navegador com progresso salvo no seu aparelho.",
 };
 
 const ES_419_MESSAGES: TranslationCatalog = {
@@ -328,8 +356,10 @@ const ES_419_MESSAGES: TranslationCatalog = {
   "highScores.empty": "Aún no hay récords",
   "highScores.rank": "{{rank}}. {{score}}",
   "consent.title": "Antes de jugar",
-  "consent.body.storage": "Tu puntuación, récords y preferencias quedan en este dispositivo para que la próxima partida esté lista.",
-  "consent.body.ads": "Esta versión no muestra anuncios reales. Puedes revisar esta elección en el menú.",
+  "consent.body.storage":
+    "Tu puntuación, récords y preferencias quedan en este dispositivo para que la próxima partida esté lista.",
+  "consent.body.ads":
+    "Esta versión no muestra anuncios reales. Puedes revisar esta elección en el menú.",
   "consent.accept": "Aceptar y jugar",
   "status.updateTitle": "Actualizando juego",
   "status.updateProgress": "Progreso de actualización",
@@ -378,15 +408,19 @@ const ES_419_MESSAGES: TranslationCatalog = {
   "collision.recentTitle": "Colisiones recientes:",
   "collision.speed": "Velocidad: {{speed}}",
   "seo.title": "Brikaya — arcade de romper bloques",
-  "seo.description": "Juega Brikaya, un arcade gratuito de romper bloques en el navegador, con progreso guardado en tu dispositivo y juego sin conexión después del primer acceso.",
-  "seo.ogDescription": "Rompe bloques, avanza niveles y juega en el navegador con progreso guardado en tu dispositivo."
+  "seo.description":
+    "Juega Brikaya, un arcade gratuito de romper bloques en el navegador, con progreso guardado en tu dispositivo y juego sin conexión después del primer acceso.",
+  "seo.ogDescription":
+    "Rompe bloques, avanza niveles y juega en el navegador con progreso guardado en tu dispositivo.",
 };
 
 const EN_IN_MESSAGES: TranslationCatalog = {
   ...EN_MESSAGES,
   "seo.title": "Brikaya — block breaker arcade for India",
-  "seo.description": "Play Brikaya in your browser, a free block breaker arcade with device-saved progress and offline play after the first visit.",
-  "seo.ogDescription": "Break blocks, clear levels, and keep playing in your browser with progress saved on your device."
+  "seo.description":
+    "Play Brikaya in your browser, a free block breaker arcade with device-saved progress and offline play after the first visit.",
+  "seo.ogDescription":
+    "Break blocks, clear levels, and keep playing in your browser with progress saved on your device.",
 };
 
 const HI_IN_MESSAGES: TranslationCatalog = {
@@ -442,8 +476,10 @@ const HI_IN_MESSAGES: TranslationCatalog = {
   "highScores.best": "सर्वश्रेष्ठ खेल {{score}}",
   "highScores.empty": "अभी कोई रिकॉर्ड नहीं",
   "consent.title": "खेलने से पहले",
-  "consent.body.storage": "आपका स्कोर, रिकॉर्ड और पसंद इस डिवाइस पर रहते हैं ताकि अगला खेल तैयार रहे।",
-  "consent.body.ads": "यह संस्करण वास्तविक विज्ञापन नहीं दिखाता। आप मेनू में यह चुनाव फिर देख सकते हैं।",
+  "consent.body.storage":
+    "आपका स्कोर, रिकॉर्ड और पसंद इस डिवाइस पर रहते हैं ताकि अगला खेल तैयार रहे।",
+  "consent.body.ads":
+    "यह संस्करण वास्तविक विज्ञापन नहीं दिखाता। आप मेनू में यह चुनाव फिर देख सकते हैं।",
   "consent.accept": "स्वीकार करें और खेलें",
   "status.updateTitle": "गेम अपडेट हो रहा है",
   "status.updateProgress": "अपडेट प्रगति",
@@ -476,8 +512,10 @@ const HI_IN_MESSAGES: TranslationCatalog = {
   "collision.clearAll": "सभी टकराव साफ़ करें",
   "collision.recentTitle": "हाल के टकराव:",
   "seo.title": "Brikaya — ब्लॉक ब्रेकर आर्केड",
-  "seo.description": "ब्राउज़र में Brikaya खेलें: मुफ्त ब्लॉक ब्रेकर आर्केड, प्रगति आपके डिवाइस पर सेव और पहले उपयोग के बाद ऑफ़लाइन खेल।",
-  "seo.ogDescription": "ब्लॉक तोड़ें, लेवल बढ़ाएँ और ब्राउज़र में खेलें, प्रगति आपके डिवाइस पर सेव रहती है।"
+  "seo.description":
+    "ब्राउज़र में Brikaya खेलें: मुफ्त ब्लॉक ब्रेकर आर्केड, प्रगति आपके डिवाइस पर सेव और पहले उपयोग के बाद ऑफ़लाइन खेल।",
+  "seo.ogDescription":
+    "ब्लॉक तोड़ें, लेवल बढ़ाएँ और ब्राउज़र में खेलें, प्रगति आपके डिवाइस पर सेव रहती है।",
 };
 
 const DE_MESSAGES: TranslationCatalog = {
@@ -532,8 +570,10 @@ const DE_MESSAGES: TranslationCatalog = {
   "highScores.best": "Beste Runde {{score}}",
   "highScores.empty": "Noch keine Bestwerte",
   "consent.title": "Vor dem Spielen",
-  "consent.body.storage": "Deine Punkte, Bestwerte und Einstellungen bleiben auf diesem Gerät, damit die nächste Runde bereit ist.",
-  "consent.body.ads": "Diese Version zeigt keine echten Anzeigen. Du kannst diese Auswahl im Menü prüfen.",
+  "consent.body.storage":
+    "Deine Punkte, Bestwerte und Einstellungen bleiben auf diesem Gerät, damit die nächste Runde bereit ist.",
+  "consent.body.ads":
+    "Diese Version zeigt keine echten Anzeigen. Du kannst diese Auswahl im Menü prüfen.",
   "consent.accept": "Akzeptieren und spielen",
   "status.updateTitle": "Spiel wird aktualisiert",
   "status.updateProgress": "Aktualisierungsfortschritt",
@@ -564,8 +604,10 @@ const DE_MESSAGES: TranslationCatalog = {
   "collision.hideRecent": "Aktuelle Kollisionen ausblenden",
   "collision.clearAll": "Alle Kollisionen löschen",
   "seo.title": "Brikaya — Blockbreaker-Arcade",
-  "seo.description": "Spiele Brikaya, ein kostenloses Blockbreaker-Arcade im Browser, mit lokal gespeichertem Fortschritt und Offline-Spiel nach dem ersten Besuch.",
-  "seo.ogDescription": "Zerstöre Blöcke, steige Level auf und spiele im Browser mit lokal gespeichertem Fortschritt."
+  "seo.description":
+    "Spiele Brikaya, ein kostenloses Blockbreaker-Arcade im Browser, mit lokal gespeichertem Fortschritt und Offline-Spiel nach dem ersten Besuch.",
+  "seo.ogDescription":
+    "Zerstöre Blöcke, steige Level auf und spiele im Browser mit lokal gespeichertem Fortschritt.",
 };
 
 const FR_MESSAGES: TranslationCatalog = {
@@ -620,8 +662,10 @@ const FR_MESSAGES: TranslationCatalog = {
   "highScores.best": "Meilleure partie {{score}}",
   "highScores.empty": "Aucun record pour le moment",
   "consent.title": "Avant de jouer",
-  "consent.body.storage": "Votre score, vos records et vos préférences restent sur cet appareil pour préparer votre prochaine partie.",
-  "consent.body.ads": "Cette version n'affiche pas de vraies publicités. Vous pouvez revoir ce choix dans le menu.",
+  "consent.body.storage":
+    "Votre score, vos records et vos préférences restent sur cet appareil pour préparer votre prochaine partie.",
+  "consent.body.ads":
+    "Cette version n'affiche pas de vraies publicités. Vous pouvez revoir ce choix dans le menu.",
   "consent.accept": "Accepter et jouer",
   "status.updateTitle": "Mise à jour du jeu",
   "status.updateProgress": "Progression de la mise à jour",
@@ -652,8 +696,10 @@ const FR_MESSAGES: TranslationCatalog = {
   "collision.hideRecent": "Masquer les collisions récentes",
   "collision.clearAll": "Effacer toutes les collisions",
   "seo.title": "Brikaya — arcade casse-briques",
-  "seo.description": "Jouez à Brikaya, un arcade casse-briques gratuit dans le navigateur, avec progression enregistrée sur votre appareil et jeu hors connexion après la première visite.",
-  "seo.ogDescription": "Cassez des blocs, progressez dans les niveaux et jouez dans le navigateur avec votre progression enregistrée sur l'appareil."
+  "seo.description":
+    "Jouez à Brikaya, un arcade casse-briques gratuit dans le navigateur, avec progression enregistrée sur votre appareil et jeu hors connexion après la première visite.",
+  "seo.ogDescription":
+    "Cassez des blocs, progressez dans les niveaux et jouez dans le navigateur avec votre progression enregistrée sur l'appareil.",
 };
 
 const IT_MESSAGES: TranslationCatalog = {
@@ -708,8 +754,10 @@ const IT_MESSAGES: TranslationCatalog = {
   "highScores.best": "Migliore partita {{score}}",
   "highScores.empty": "Ancora nessun record",
   "consent.title": "Prima di giocare",
-  "consent.body.storage": "Punteggio, record e preferenze restano su questo dispositivo per preparare la prossima partita.",
-  "consent.body.ads": "Questa versione non mostra annunci reali. Puoi rivedere questa scelta nel menu.",
+  "consent.body.storage":
+    "Punteggio, record e preferenze restano su questo dispositivo per preparare la prossima partita.",
+  "consent.body.ads":
+    "Questa versione non mostra annunci reali. Puoi rivedere questa scelta nel menu.",
   "consent.accept": "Accetta e gioca",
   "status.updateTitle": "Aggiornamento del gioco",
   "status.updateProgress": "Avanzamento aggiornamento",
@@ -726,8 +774,10 @@ const IT_MESSAGES: TranslationCatalog = {
   "cinematic.speedPrefix": "Velocità",
   "cinematic.ripHint": "Riavvio...",
   "seo.title": "Brikaya — arcade rompi blocchi",
-  "seo.description": "Gioca a Brikaya, un arcade gratuito rompi blocchi nel browser, con progressi salvati sul dispositivo e gioco offline dopo il primo accesso.",
-  "seo.ogDescription": "Rompi blocchi, supera livelli e gioca nel browser con progressi salvati sul dispositivo."
+  "seo.description":
+    "Gioca a Brikaya, un arcade gratuito rompi blocchi nel browser, con progressi salvati sul dispositivo e gioco offline dopo il primo accesso.",
+  "seo.ogDescription":
+    "Rompi blocchi, supera livelli e gioca nel browser con progressi salvati sul dispositivo.",
 };
 
 const JA_MESSAGES: TranslationCatalog = {
@@ -782,8 +832,10 @@ const JA_MESSAGES: TranslationCatalog = {
   "highScores.best": "ベストプレイ {{score}}",
   "highScores.empty": "まだ記録がありません",
   "consent.title": "プレイ前に",
-  "consent.body.storage": "スコア、記録、設定はこの端末に保存され、次のプレイをすぐ始められます。",
-  "consent.body.ads": "このバージョンでは実際の広告を表示しません。この選択はメニューで確認できます。",
+  "consent.body.storage":
+    "スコア、記録、設定はこの端末に保存され、次のプレイをすぐ始められます。",
+  "consent.body.ads":
+    "このバージョンでは実際の広告を表示しません。この選択はメニューで確認できます。",
   "consent.accept": "同意して遊ぶ",
   "status.updateTitle": "ゲームを更新中",
   "status.updateProgress": "更新の進行状況",
@@ -814,8 +866,10 @@ const JA_MESSAGES: TranslationCatalog = {
   "collision.hideRecent": "最近の衝突を隠す",
   "collision.clearAll": "すべての衝突を消去",
   "seo.title": "Brikaya — ブロック崩しアーケード",
-  "seo.description": "ブラウザで無料のブロック崩しアーケード Brikaya をプレイ。進行状況は端末に保存され、初回アクセス後はオフラインでも遊べます。",
-  "seo.ogDescription": "ブロックを壊し、レベルを進め、進行状況を端末に保存してブラウザで遊べます。"
+  "seo.description":
+    "ブラウザで無料のブロック崩しアーケード Brikaya をプレイ。進行状況は端末に保存され、初回アクセス後はオフラインでも遊べます。",
+  "seo.ogDescription":
+    "ブロックを壊し、レベルを進め、進行状況を端末に保存してブラウザで遊べます。",
 };
 
 const KO_MESSAGES: TranslationCatalog = {
@@ -870,8 +924,10 @@ const KO_MESSAGES: TranslationCatalog = {
   "highScores.best": "최고 플레이 {{score}}",
   "highScores.empty": "아직 기록이 없습니다",
   "consent.title": "플레이 전 안내",
-  "consent.body.storage": "점수, 기록, 설정은 이 기기에 저장되어 다음 플레이를 바로 시작할 수 있습니다.",
-  "consent.body.ads": "이 버전은 실제 광고를 표시하지 않습니다. 이 선택은 메뉴에서 다시 확인할 수 있습니다.",
+  "consent.body.storage":
+    "점수, 기록, 설정은 이 기기에 저장되어 다음 플레이를 바로 시작할 수 있습니다.",
+  "consent.body.ads":
+    "이 버전은 실제 광고를 표시하지 않습니다. 이 선택은 메뉴에서 다시 확인할 수 있습니다.",
   "consent.accept": "동의하고 플레이",
   "status.updateTitle": "게임 업데이트 중",
   "status.updateProgress": "업데이트 진행률",
@@ -888,8 +944,10 @@ const KO_MESSAGES: TranslationCatalog = {
   "cinematic.speedPrefix": "속도",
   "cinematic.ripHint": "다시 시작 중...",
   "seo.title": "Brikaya — 블록 브레이커 아케이드",
-  "seo.description": "브라우저에서 무료 블록 브레이커 아케이드 Brikaya를 플레이하세요. 진행 상황은 기기에 저장되고 첫 방문 후 오프라인으로도 플레이할 수 있습니다.",
-  "seo.ogDescription": "블록을 깨고 레벨을 진행하며 기기에 저장된 진행 상황으로 브라우저에서 플레이하세요."
+  "seo.description":
+    "브라우저에서 무료 블록 브레이커 아케이드 Brikaya를 플레이하세요. 진행 상황은 기기에 저장되고 첫 방문 후 오프라인으로도 플레이할 수 있습니다.",
+  "seo.ogDescription":
+    "블록을 깨고 레벨을 진행하며 기기에 저장된 진행 상황으로 브라우저에서 플레이하세요.",
 };
 
 const ID_MESSAGES: TranslationCatalog = {
@@ -944,8 +1002,10 @@ const ID_MESSAGES: TranslationCatalog = {
   "highScores.best": "Permainan terbaik {{score}}",
   "highScores.empty": "Belum ada rekor",
   "consent.title": "Sebelum bermain",
-  "consent.body.storage": "Skor, rekor, dan preferensi Anda tetap di perangkat ini agar permainan berikutnya siap.",
-  "consent.body.ads": "Versi ini tidak menampilkan iklan sungguhan. Anda dapat meninjau pilihan ini di menu.",
+  "consent.body.storage":
+    "Skor, rekor, dan preferensi Anda tetap di perangkat ini agar permainan berikutnya siap.",
+  "consent.body.ads":
+    "Versi ini tidak menampilkan iklan sungguhan. Anda dapat meninjau pilihan ini di menu.",
   "consent.accept": "Setuju dan main",
   "status.updateTitle": "Memperbarui game",
   "status.updateProgress": "Progres pembaruan",
@@ -957,8 +1017,10 @@ const ID_MESSAGES: TranslationCatalog = {
   "cinematic.levelPrefix": "Level",
   "cinematic.speedPrefix": "Kecepatan",
   "seo.title": "Brikaya — arkade pemecah blok",
-  "seo.description": "Mainkan Brikaya, arkade pemecah blok gratis di browser, dengan progres tersimpan di perangkat dan permainan offline setelah kunjungan pertama.",
-  "seo.ogDescription": "Pecahkan blok, naik level, dan main di browser dengan progres tersimpan di perangkat."
+  "seo.description":
+    "Mainkan Brikaya, arkade pemecah blok gratis di browser, dengan progres tersimpan di perangkat dan permainan offline setelah kunjungan pertama.",
+  "seo.ogDescription":
+    "Pecahkan blok, naik level, dan main di browser dengan progres tersimpan di perangkat.",
 };
 
 const VI_MESSAGES: TranslationCatalog = {
@@ -1013,8 +1075,10 @@ const VI_MESSAGES: TranslationCatalog = {
   "highScores.best": "Lượt chơi tốt nhất {{score}}",
   "highScores.empty": "Chưa có kỷ lục",
   "consent.title": "Trước khi chơi",
-  "consent.body.storage": "Điểm, kỷ lục và tùy chọn của bạn được lưu trên thiết bị này để lượt chơi sau luôn sẵn sàng.",
-  "consent.body.ads": "Phiên bản này không hiển thị quảng cáo thật. Bạn có thể xem lại lựa chọn này trong menu.",
+  "consent.body.storage":
+    "Điểm, kỷ lục và tùy chọn của bạn được lưu trên thiết bị này để lượt chơi sau luôn sẵn sàng.",
+  "consent.body.ads":
+    "Phiên bản này không hiển thị quảng cáo thật. Bạn có thể xem lại lựa chọn này trong menu.",
   "consent.accept": "Đồng ý và chơi",
   "status.updateTitle": "Đang cập nhật trò chơi",
   "status.updateProgress": "Tiến độ cập nhật",
@@ -1026,8 +1090,10 @@ const VI_MESSAGES: TranslationCatalog = {
   "cinematic.levelPrefix": "Màn",
   "cinematic.speedPrefix": "Tốc độ",
   "seo.title": "Brikaya — arcade phá khối",
-  "seo.description": "Chơi Brikaya, trò arcade phá khối miễn phí trên trình duyệt, lưu tiến trình trên thiết bị và chơi ngoại tuyến sau lần truy cập đầu tiên.",
-  "seo.ogDescription": "Phá khối, vượt màn và chơi trong trình duyệt với tiến trình lưu trên thiết bị."
+  "seo.description":
+    "Chơi Brikaya, trò arcade phá khối miễn phí trên trình duyệt, lưu tiến trình trên thiết bị và chơi ngoại tuyến sau lần truy cập đầu tiên.",
+  "seo.ogDescription":
+    "Phá khối, vượt màn và chơi trong trình duyệt với tiến trình lưu trên thiết bị.",
 };
 
 const FIL_MESSAGES: TranslationCatalog = {
@@ -1082,8 +1148,10 @@ const FIL_MESSAGES: TranslationCatalog = {
   "highScores.best": "Pinakamahusay na laro {{score}}",
   "highScores.empty": "Wala pang rekord",
   "consent.title": "Bago maglaro",
-  "consent.body.storage": "Ang iyong iskor, rekord, at mga kagustuhan ay mananatili sa device na ito para handa ang susunod na laro.",
-  "consent.body.ads": "Hindi nagpapakita ng totoong ads ang bersyong ito. Maaari mong suriin ang pagpiling ito sa menu.",
+  "consent.body.storage":
+    "Ang iyong iskor, rekord, at mga kagustuhan ay mananatili sa device na ito para handa ang susunod na laro.",
+  "consent.body.ads":
+    "Hindi nagpapakita ng totoong ads ang bersyong ito. Maaari mong suriin ang pagpiling ito sa menu.",
   "consent.accept": "Tanggapin at maglaro",
   "status.updateTitle": "Ina-update ang laro",
   "status.updateProgress": "Progreso ng update",
@@ -1095,8 +1163,10 @@ const FIL_MESSAGES: TranslationCatalog = {
   "cinematic.levelPrefix": "Antas",
   "cinematic.speedPrefix": "Bilis",
   "seo.title": "Brikaya — block breaker arcade",
-  "seo.description": "Maglaro ng Brikaya, libreng block breaker arcade sa browser, may progreso na naka-save sa device at puwedeng laruin offline pagkatapos ng unang bisita.",
-  "seo.ogDescription": "Basagin ang blocks, umakyat ng antas, at maglaro sa browser habang naka-save ang progreso sa device."
+  "seo.description":
+    "Maglaro ng Brikaya, libreng block breaker arcade sa browser, may progreso na naka-save sa device at puwedeng laruin offline pagkatapos ng unang bisita.",
+  "seo.ogDescription":
+    "Basagin ang blocks, umakyat ng antas, at maglaro sa browser habang naka-save ang progreso sa device.",
 };
 
 const TH_MESSAGES: TranslationCatalog = {
@@ -1151,8 +1221,10 @@ const TH_MESSAGES: TranslationCatalog = {
   "highScores.best": "เกมที่ดีที่สุด {{score}}",
   "highScores.empty": "ยังไม่มีสถิติ",
   "consent.title": "ก่อนเล่น",
-  "consent.body.storage": "คะแนน สถิติ และค่าตั้งค่าของคุณจะอยู่บนอุปกรณ์นี้เพื่อให้เกมถัดไปพร้อมเล่น",
-  "consent.body.ads": "เวอร์ชันนี้ไม่แสดงโฆษณาจริง คุณตรวจสอบตัวเลือกนี้ได้ในเมนู",
+  "consent.body.storage":
+    "คะแนน สถิติ และค่าตั้งค่าของคุณจะอยู่บนอุปกรณ์นี้เพื่อให้เกมถัดไปพร้อมเล่น",
+  "consent.body.ads":
+    "เวอร์ชันนี้ไม่แสดงโฆษณาจริง คุณตรวจสอบตัวเลือกนี้ได้ในเมนู",
   "consent.accept": "ยอมรับและเล่น",
   "status.updateTitle": "กำลังอัปเดตเกม",
   "status.updateProgress": "ความคืบหน้าอัปเดต",
@@ -1164,8 +1236,10 @@ const TH_MESSAGES: TranslationCatalog = {
   "cinematic.levelPrefix": "ด่าน",
   "cinematic.speedPrefix": "ความเร็ว",
   "seo.title": "Brikaya — อาร์เคดทำลายบล็อก",
-  "seo.description": "เล่น Brikaya เกมอาร์เคดทำลายบล็อกฟรีบนเบราว์เซอร์ บันทึกความคืบหน้าในอุปกรณ์และเล่นออฟไลน์ได้หลังเข้าใช้งานครั้งแรก",
-  "seo.ogDescription": "ทำลายบล็อก ผ่านด่าน และเล่นในเบราว์เซอร์พร้อมบันทึกความคืบหน้าไว้ในอุปกรณ์"
+  "seo.description":
+    "เล่น Brikaya เกมอาร์เคดทำลายบล็อกฟรีบนเบราว์เซอร์ บันทึกความคืบหน้าในอุปกรณ์และเล่นออฟไลน์ได้หลังเข้าใช้งานครั้งแรก",
+  "seo.ogDescription":
+    "ทำลายบล็อก ผ่านด่าน และเล่นในเบราว์เซอร์พร้อมบันทึกความคืบหน้าไว้ในอุปกรณ์",
 };
 
 const ZH_CN_MESSAGES: TranslationCatalog = {
@@ -1220,7 +1294,8 @@ const ZH_CN_MESSAGES: TranslationCatalog = {
   "highScores.best": "最佳对局 {{score}}",
   "highScores.empty": "暂无记录",
   "consent.title": "开始前",
-  "consent.body.storage": "你的得分、记录和偏好会保存在此设备上，方便下次继续游玩。",
+  "consent.body.storage":
+    "你的得分、记录和偏好会保存在此设备上，方便下次继续游玩。",
   "consent.body.ads": "此版本不显示真实广告。你可以在菜单中查看此选择。",
   "consent.accept": "同意并开始",
   "status.updateTitle": "正在更新游戏",
@@ -1252,8 +1327,9 @@ const ZH_CN_MESSAGES: TranslationCatalog = {
   "collision.hideRecent": "隐藏最近碰撞",
   "collision.clearAll": "清除全部碰撞",
   "seo.title": "Brikaya — 打砖块街机",
-  "seo.description": "在浏览器中游玩免费的打砖块街机 Brikaya，进度保存在你的设备上，首次访问后可离线游玩。",
-  "seo.ogDescription": "击碎砖块、推进关卡，并在浏览器中保存进度继续游玩。"
+  "seo.description":
+    "在浏览器中游玩免费的打砖块街机 Brikaya，进度保存在你的设备上，首次访问后可离线游玩。",
+  "seo.ogDescription": "击碎砖块、推进关卡，并在浏览器中保存进度继续游玩。",
 };
 
 export const SUPPORTED_LOCALES = [
