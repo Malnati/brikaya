@@ -65,9 +65,15 @@
 - Cards de publicidade deixam de ser renderizados enquanto não houver anúncio real aprovado em escopo.
 - Layout principal não reserva espaço para publicidade oculta.
 
+### Adicionado
+- Cobertura unitária para a faixa touch mobile garantir que `touchstart`, `touchmove`, `touchend` e `touchcancel` acionem o motor sem recriar a partida.
+- Cobertura unitária para a validação do `index.html` publicado no Cloudflare, verificando título, bundle JS, CSS, status HTTP, URL cache-busted e mensagem de divergência.
+
 ### Alterado
 - QA mobile e dashboard passam a bloquear regressão quando `Publicidade` ou `.ad-slot` aparecem sem anúncio real.
 - Documentação de QA e Design System passa a exigir publicidade oculta, sem placeholder visual.
+- Script de publicação Cloudflare passa a expor helpers puros apenas para testes e mantém execução CLI protegida contra importação acidental.
+- QA cinematográfico passa a gerar evidências adicionais de RIP com nomes semânticos curtos, cobrindo mobile paisagem, tablet e desktop sem quebrar a guarda de nomes.
 
 ### Testado
 - `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version && npm --version && make help`
@@ -91,6 +97,11 @@
 - `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-audio-qa`
 - `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-svg-assets-qa`
 - `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-runtime-update-qa`
+- RED: `npm test -- src/hooks/useGameLoop.test.tsx --runInBand` falhou quando o encaminhamento touch foi desativado temporariamente.
+- GREEN: `npm test -- src/hooks/useGameLoop.test.tsx --runInBand`
+- RED: `npm test -- tests/unit/cloudflarePagesPublicIndex.test.ts --runInBand` falhou antes dos helpers testáveis do script Cloudflare.
+- GREEN: `npm test -- tests/unit/cloudflarePagesPublicIndex.test.ts --runInBand`
+- CORREÇÃO: `npm run test:semantic-file-names` flagrou 3 evidências RIP com stems acima de 64 caracteres; os nomes gerados foram encurtados e a guarda voltou a passar.
 
 ## [1.31.3] - 2026-07-03
 ### Corrigido

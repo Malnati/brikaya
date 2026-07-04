@@ -3,8 +3,10 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { resolve4 } from 'node:dns/promises';
+import { fileURLToPath } from 'node:url';
 
 const COMMAND_INDEX = 2;
+const SCRIPT_PATH_INDEX = 1;
 const DEFAULT_COMMAND = 'env-check';
 const ROOT_ENV_FILE = '/Users/mal/GitHub/malnati/.env';
 const PROJECT_ENV_FILE = resolve(process.cwd(), '.env');
@@ -1090,7 +1092,22 @@ async function run() {
   deploy(envValues);
 }
 
-run().catch(error => {
-  console.error(error.message);
-  process.exitCode = 1;
-});
+function isDirectInvocation() {
+  const scriptPath = process.argv[SCRIPT_PATH_INDEX];
+
+  return Boolean(scriptPath) && fileURLToPath(import.meta.url) === resolve(scriptPath);
+}
+
+export const __testables = {
+  readLocalPublicIndexExpectation,
+  buildPublicIndexCheckUrl,
+  isPublicIndexCurrent,
+  buildPublicIndexMismatchMessage
+};
+
+if (isDirectInvocation()) {
+  run().catch(error => {
+    console.error(error.message);
+    process.exitCode = 1;
+  });
+}
