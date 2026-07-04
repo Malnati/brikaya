@@ -51,9 +51,10 @@ const BLANK_PAGE_WAIT_UNTIL = "domcontentloaded";
 const REQUIRED_EVENT_TYPES = ["game_start"];
 const REQUIRED_DATABASE_NAMES = ["BrickBreakerGameLog"];
 const MENU_BUTTON_NAME = /menu/i;
-const LOGS_BUTTON_NAME = /histórico/i;
-const COLLISIONS_BUTTON_NAME = /colisões/i;
 const CLOSE_BUTTON_NAME = /fechar|×|✕/i;
+const SETTINGS_ACTION_LOGS = "logs";
+const SETTINGS_ACTION_COLLISIONS = "collisions";
+const SETTINGS_ACTION_RESET_SCORE = "reset-score";
 const PRE_GAME_ACCEPT_BUTTON_LABEL = "Aceitar e jogar";
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const AD_SLOT_SELECTOR = ".ad-slot";
@@ -63,17 +64,28 @@ const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
 const SPEED_CURRENT_LABEL = "Velocidade atual";
 const LEVEL_TIME_LABEL = "Tempo da fase";
 const SPEED_REDUCTIONS_LABEL = "Reduções aplicadas";
-const THEME_BUTTON_LABELS = [
-  "Arcade neon",
-  "CRT alto contraste",
-  "Pôr do sol pixelado",
-  "Oceano noturno",
-  "Selva laser",
-  "Âmbar retrô",
-  "Gelo cósmico",
-  "Ameixa elétrica",
-  "Lima grafite",
-  "Rubi profundo",
+const THEME_OPTION_IDS = [
+  "neon-arcade",
+  "crt-high-contrast",
+  "pixel-sunset",
+  "ocean-night",
+  "jungle-laser",
+  "amber-retro",
+  "cosmic-ice",
+  "electric-plum",
+  "lime-graphite",
+  "ruby-depth",
+];
+const IMAGE_SET_OPTION_IDS = [
+  "retro-default",
+  "high-contrast",
+  "sunset-cabinet",
+];
+const FONT_SET_OPTION_IDS = ["arcade-ui", "crt-mono", "block-pixel"];
+const APPEARANCE_OPTION_IDS = [
+  ...THEME_OPTION_IDS,
+  ...IMAGE_SET_OPTION_IDS,
+  ...FONT_SET_OPTION_IDS,
 ];
 const RESPONSIVE_VIEWPORT_MATRIX = JSON.parse(
   readFileSync(RESPONSIVE_VIEWPORT_MATRIX_PATH, "utf8"),
@@ -208,6 +220,16 @@ async function clickButtonByPattern(page, pattern) {
     },
     { source: pattern.source, flags: pattern.flags },
   );
+}
+
+async function clickSettingsAction(page, settingsAction) {
+  return page.evaluate((action) => {
+    const button = document.querySelector(`[data-settings-action="${action}"]`);
+    if (!(button instanceof HTMLElement)) return false;
+    button.scrollIntoView({ block: "center", inline: "center" });
+    button.click();
+    return true;
+  }, settingsAction);
 }
 
 async function openFirstEventDetails(
@@ -399,6 +421,7 @@ async function collectLayoutState(page) {
             text: button.textContent?.trim() || "",
             ariaLabel: button.getAttribute("aria-label") || "",
             title: button.getAttribute("title") || "",
+            settingsAction: button.getAttribute("data-settings-action") || "",
             rect: {
               x: rect.x,
               y: rect.y,
@@ -529,6 +552,12 @@ async function collectDrawerState(page) {
 
     return {
       text: drawer?.textContent || "",
+      appearanceOptionIds: Array.from(
+        drawer?.querySelectorAll("[data-appearance-option-id]") || [],
+      ).map((option) => option.getAttribute("data-appearance-option-id") || ""),
+      settingsActions: Array.from(
+        drawer?.querySelectorAll("[data-settings-action]") || [],
+      ).map((option) => option.getAttribute("data-settings-action") || ""),
       drawer: drawerRect
         ? {
             x: drawerRect.x,
@@ -815,12 +844,14 @@ layoutState.title === EXPECTED_PUBLIC_TITLE,
       }
     }
     assert(
-      !layoutState.buttons.some((button) => LOGS_BUTTON_NAME.test(button.text)),
+      !layoutState.buttons.some(
+        (button) => button.settingsAction === SETTINGS_ACTION_LOGS,
+      ),
       "Logs aparece fora do menu lateral.",
     );
     assert(
-      !layoutState.buttons.some((button) =>
-        COLLISIONS_BUTTON_NAME.test(button.text),
+      !layoutState.buttons.some(
+        (button) => button.settingsAction === SETTINGS_ACTION_COLLISIONS,
       ),
       "Colisões aparece fora do menu lateral.",
     );
@@ -831,8 +862,8 @@ layoutState.title === EXPECTED_PUBLIC_TITLE,
       "Reiniciar aparece fora do menu lateral.",
     );
     assert(
-      !layoutState.buttons.some((button) =>
-        /zerar pontuação/i.test(button.text),
+      !layoutState.buttons.some(
+        (button) => button.settingsAction === SETTINGS_ACTION_RESET_SCORE,
       ),
       "Zerar pontuação aparece fora do menu lateral.",
     );
@@ -913,29 +944,25 @@ layoutState.title === EXPECTED_PUBLIC_TITLE,
       menuState.text.includes("Aparência"),
       "Menu lateral sem seção Aparência.",
     );
-    for (const label of [
-      "Tema visual",
-      "Imagens",
-      "Fonte",
-      ...THEME_BUTTON_LABELS,
-      "Retrô padrão",
-      "Alto contraste",
-      "Cabine pôr do sol",
-      "Arcade",
-      "CRT mono",
-      "Blocos pixelados",
-    ]) {
+    for (const label of ["Tema visual", "Imagens", "Fonte"]) {
       assert(menuState.text.includes(label), `Menu lateral sem ${label}.`);
     }
-    assert(menuState.text.includes("Histórico"), "Menu lateral sem opção Histórico.");
-    assert(
-      menuState.text.includes("Colisões"),
-      "Menu lateral sem opção Colisões.",
-    );
-    assert(
-      menuState.text.includes("Zerar pontuação"),
-      "Menu lateral sem opção Zerar pontuação.",
-    );
+    for (const optionId of APPEARANCE_OPTION_IDS) {
+      assert(
+        menuState.appearanceOptionIds.includes(optionId),
+        `Menu lateral sem opção de aparência ${optionId}.`,
+      );
+    }
+    for (const action of [
+      SETTINGS_ACTION_LOGS,
+      SETTINGS_ACTION_COLLISIONS,
+      SETTINGS_ACTION_RESET_SCORE,
+    ]) {
+      assert(
+        menuState.settingsActions.includes(action),
+        `Menu lateral sem ação ${action}.`,
+      );
+    }
     assert(
       menuPauseState.scoreStable,
       `Score mudou com menu aberto: ${menuPauseState.beforeScoreHudText} ` +
@@ -945,7 +972,7 @@ layoutState.title === EXPECTED_PUBLIC_TITLE,
       menuPauseState.canvasFrameStable,
       "Canvas continuou renderizando com menu aberto.",
     );
-    const openedLogs = await clickButtonByPattern(page, LOGS_BUTTON_NAME);
+    const openedLogs = await clickSettingsAction(page, SETTINGS_ACTION_LOGS);
     assert(openedLogs, "Botão de histórico não encontrado.");
     await page.waitForFunction(
       () => document.body.textContent?.includes("Histórico do jogo"),
@@ -971,9 +998,9 @@ layoutState.title === EXPECTED_PUBLIC_TITLE,
     );
     assert(openedMenuForCollisions, "Menu lateral não reabriu para colisões.");
     await page.waitForSelector(".settings-drawer", { timeout: 10000 });
-    const openedCollisions = await clickButtonByPattern(
+    const openedCollisions = await clickSettingsAction(
       page,
-      COLLISIONS_BUTTON_NAME,
+      SETTINGS_ACTION_COLLISIONS,
     );
     assert(openedCollisions, "Botão de colisões não encontrado.");
     await page.waitForFunction(

@@ -71,13 +71,14 @@ const RECOVERABLE_BROWSER_ERROR_PATTERNS = [
 const BLANK_PAGE_URL = "about:blank";
 const BLANK_PAGE_WAIT_UNTIL = "domcontentloaded";
 const MENU_BUTTON_NAME = /menu/i;
-const LOGS_BUTTON_NAME = /histórico/i;
-const COLLISIONS_BUTTON_NAME = /colisões/i;
 const CLOSE_BUTTON_NAME = /fechar|×|✕/i;
 const AD_SLOT_SELECTOR = ".ad-slot";
 const AD_SLOT_SIDE_SELECTOR = ".ad-slot--side";
 const AD_SLOT_BOTTOM_SELECTOR = ".ad-slot--bottom";
 const PUBLICITY_LABEL = "Publicidade";
+const SETTINGS_ACTION_LOGS = "logs";
+const SETTINGS_ACTION_COLLISIONS = "collisions";
+const SETTINGS_ACTION_RESET_SCORE = "reset-score";
 const SPEED_CURRENT_LABEL = "Velocidade atual";
 const LEVEL_TIME_LABEL = "Tempo da fase";
 const COLLISIONS_PANEL_TITLE = "Estatísticas de Colisões";
@@ -345,6 +346,7 @@ async function collectLayoutState(page, viewportName) {
             text: button.textContent?.trim() || "",
             ariaLabel: button.getAttribute("aria-label") || "",
             title: button.getAttribute("title") || "",
+            settingsAction: button.getAttribute("data-settings-action") || "",
             width: rect.width,
             height: rect.height,
             x: rect.x,
@@ -537,6 +539,16 @@ async function clickButtonByPattern(page, pattern) {
     },
     { source: pattern.source, flags: pattern.flags },
   );
+}
+
+async function clickSettingsAction(page, settingsAction) {
+  return page.evaluate((action) => {
+    const button = document.querySelector(`[data-settings-action="${action}"]`);
+    if (!(button instanceof HTMLElement)) return false;
+    button.scrollIntoView({ block: "center", inline: "center" });
+    button.click();
+    return true;
+  }, settingsAction);
 }
 
 async function openFirstEventDetails(
@@ -769,12 +781,15 @@ async function run() {
             );
           }
           assert(
-            !state.buttons.some((button) => LOGS_BUTTON_NAME.test(button.text)),
+            !state.buttons.some(
+              (button) => button.settingsAction === SETTINGS_ACTION_LOGS,
+            ),
             `${viewport.name}: histórico apareceu fora do menu.`,
           );
           assert(
-            !state.buttons.some((button) =>
-              COLLISIONS_BUTTON_NAME.test(button.text),
+            !state.buttons.some(
+              (button) =>
+                button.settingsAction === SETTINGS_ACTION_COLLISIONS,
             ),
             `${viewport.name}: colisões apareceu fora do menu.`,
           );
@@ -785,8 +800,9 @@ async function run() {
             `${viewport.name}: reiniciar apareceu fora do menu.`,
           );
           assert(
-            !state.buttons.some((button) =>
-              /zerar pontuação/i.test(button.text),
+            !state.buttons.some(
+              (button) =>
+                button.settingsAction === SETTINGS_ACTION_RESET_SCORE,
             ),
             `${viewport.name}: zerar pontuação apareceu fora do menu.`,
           );
@@ -920,9 +936,9 @@ async function run() {
               !menuOverlayState.hasHorizontalOverflow,
               `${viewport.name}: menu gerou overflow horizontal ${menuOverlayState.scrollWidth} > ${menuOverlayState.viewportWidth}.`,
             );
-            const openedLogs = await clickButtonByPattern(
+            const openedLogs = await clickSettingsAction(
               page,
-              LOGS_BUTTON_NAME,
+              SETTINGS_ACTION_LOGS,
             );
             assert(openedLogs, `${viewport.name}: não abriu painel de histórico.`);
             await page.waitForFunction(
@@ -961,9 +977,9 @@ async function run() {
               `${viewport.name}: não abriu menu para colisões.`,
             );
             await page.waitForSelector(".settings-drawer", { timeout: 10000 });
-            const openedCollisions = await clickButtonByPattern(
+            const openedCollisions = await clickSettingsAction(
               page,
-              COLLISIONS_BUTTON_NAME,
+              SETTINGS_ACTION_COLLISIONS,
             );
             assert(
               openedCollisions,

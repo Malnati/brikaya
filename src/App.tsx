@@ -87,6 +87,9 @@ const SPEED_LABEL_FRACTION_DIGITS = 2;
 const SPEED_LABEL_SUFFIX = "×";
 const HIGH_SCORE_KEY_SEPARATOR = "-";
 const LANGUAGE_SELECT_ID = "game-language-select";
+const SETTINGS_ACTION_LOGS = "logs";
+const SETTINGS_ACTION_COLLISIONS = "collisions";
+const SETTINGS_ACTION_RESET_SCORE = "reset-score";
 const INITIAL_COUNTDOWN_OVERLAY: GameCinematicOverlayState = {
   type: "countdown",
   value: CINEMATIC_COUNTDOWN_STEPS[COUNTDOWN_FIRST_STEP_INDEX],
@@ -759,6 +762,8 @@ export default function App() {
                   type="button"
                   onClick={handleOpenLogs}
                   className="dashboard-button dashboard-button--secondary"
+                  data-settings-action={SETTINGS_ACTION_LOGS}
+                  data-testid={`settings-action-${SETTINGS_ACTION_LOGS}`}
                 >
                   <span aria-hidden="true" className="button-icon">
                     ≡
@@ -769,6 +774,8 @@ export default function App() {
                   type="button"
                   onClick={handleOpenCollisionStats}
                   className="dashboard-button dashboard-button--secondary"
+                  data-settings-action={SETTINGS_ACTION_COLLISIONS}
+                  data-testid={`settings-action-${SETTINGS_ACTION_COLLISIONS}`}
                 >
                   <span aria-hidden="true" className="button-icon">
                     ◈
@@ -779,6 +786,8 @@ export default function App() {
                   type="button"
                   onClick={handleResetScores}
                   className="dashboard-button dashboard-button--secondary"
+                  data-settings-action={SETTINGS_ACTION_RESET_SCORE}
+                  data-testid={`settings-action-${SETTINGS_ACTION_RESET_SCORE}`}
                 >
                   <span aria-hidden="true" className="button-icon">
                     0

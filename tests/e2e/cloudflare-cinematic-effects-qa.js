@@ -33,6 +33,12 @@ const RIP_VIEWPORT_NAMES = [
   VIEWPORT_NAME_IPAD_PORTRAIT,
   VIEWPORT_NAME_DESKTOP,
 ];
+const RIP_SCREENSHOT_VIEWPORT_SUFFIXES = new Map([
+  [VIEWPORT_NAME_IPHONE_LANDSCAPE, 'iphone-land'],
+  [VIEWPORT_NAME_IPAD_PORTRAIT, 'ipad'],
+  [VIEWPORT_NAME_DESKTOP, 'desktop'],
+]);
+const RIP_SCREENSHOT_SHORT_STEM = 'evi-cinematic-rip';
 const VIEWPORT = viewportByName(VIEWPORT_NAME_IPHONE_PORTRAIT);
 const COUNTDOWN_MAX_DURATION_MS = 2000;
 const RIP_MAX_DURATION_MS = 2000;
@@ -73,7 +79,7 @@ const MEDIA_READY_TIMEOUT_MS = 5000;
 const TITLE_SELECTOR = '.game-cinematic-overlay__title';
 const DETAIL_SELECTOR = '.game-cinematic-overlay__detail';
 const CONTENT_SELECTOR = '[data-testid="game-cinematic-content"]';
-const FILE_EXTENSION_SUFFIX_PATTERN = /(\.[^.]+)$/;
+const FILE_NAME_EXTENSION_PATTERN = /[^/]+(\.[^.]+)$/;
 
 function viewportByName(name) {
   const viewport = RESPONSIVE_VIEWPORT_MATRIX.viewports.find(
@@ -98,9 +104,12 @@ function puppeteerViewport(viewport) {
 
 function screenshotPathForViewport(basePath, viewportName, index) {
   if (index === 0) return basePath;
+  const viewportSuffix =
+    RIP_SCREENSHOT_VIEWPORT_SUFFIXES.get(viewportName) || viewportName;
+
   return basePath.replace(
-    FILE_EXTENSION_SUFFIX_PATTERN,
-    `-${viewportName}$1`,
+    FILE_NAME_EXTENSION_PATTERN,
+    `${RIP_SCREENSHOT_SHORT_STEM}-${viewportSuffix}$1`,
   );
 }
 
