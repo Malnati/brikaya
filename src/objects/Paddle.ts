@@ -1,7 +1,6 @@
 // src/objects/Paddle.ts
 import {
   PADDLE_SPEED,
-  GAME_COLOR,
   DynamicGameDimensions,
   calculateLevelInitialSpawnSpeed,
   calculateLevelMaxSpeed,
@@ -17,31 +16,53 @@ import {
 } from '../utils/visualAssetResolver';
 import { gameLogger } from '../storage/gameLogger';
 import { ERROR } from '../utils/logger';
+import {
+  calculatePaddleAngleFromCanvasX,
+  calculateRadialPaddleBounds,
+  calculateRadialPlayfieldGeometry,
+  type RadialPlayfieldGeometry,
+} from '../utils/radialGeometry';
 
 const KEY_LEFT = 'ArrowLeft';
 const KEY_RIGHT = 'ArrowRight';
 const PADDLE_MIN_SCALE = 1;
 const PADDLE_MAX_SCALE = 1.8;
 const PADDLE_DEFAULT_SCALE = 1;
+const PADDLE_START_CENTER_ANGLE = Math.PI / 2;
+const RADIAL_PADDLE_LINE_CAP: CanvasLineCap = 'round';
+const RADIAL_PADDLE_STROKE_COLOR = '#f8fbff';
+const RADIAL_PADDLE_SHADOW_COLOR = 'rgba(0, 212, 255, 0.58)';
+const RADIAL_PADDLE_SHADOW_BLUR = 14;
+const RADIAL_PADDLE_FILL_COLOR = '#00d4ff';
+const RADIAL_PADDLE_EDGE_COLOR = '#7df9ff';
+const RADIAL_PADDLE_DX_TO_ANGLE_RATIO = 1;
 
 export class Paddle {
-  private x: number;
   private dx = 0;
   private width: number;
   private baseWidth: number;
   private height: number;
   private previousPosition: { x: number; y: number } | null = null;
+  private centerAngle = PADDLE_START_CENTER_ANGLE;
+  private controlCenterX: number;
+  private widthScale = PADDLE_DEFAULT_SCALE;
+  private geometry: RadialPlayfieldGeometry;
+  private dimensions: DynamicGameDimensions;
 
   constructor(
     private canvasWidth: number,
     private canvasHeight: number,
     dimensions: DynamicGameDimensions,
-    private resolveAssetPath: VisualAssetPathResolver = DEFAULT_GAME_VISUAL_ASSET_RESOLVER
+    private resolveAssetPath: VisualAssetPathResolver = DEFAULT_GAME_VISUAL_ASSET_RESOLVER,
+    geometry?: RadialPlayfieldGeometry
   ) {
+    this.dimensions = dimensions;
     this.baseWidth = dimensions.paddleWidth;
     this.width = dimensions.paddleWidth;
     this.height = dimensions.paddleHeight;
-    this.x = (canvasWidth - this.width) / 2;
+    this.controlCenterX = canvasWidth / 2;
+    this.geometry =
+      geometry ?? calculateRadialPlayfieldGeometry(canvasWidth, canvasHeight, dimensions);
     this.previousPosition = this.position;
   }
 
@@ -61,13 +82,14 @@ export class Paddle {
   }
 
   setPosition(x: number) {
-    // Centralizar a raquete na posição do touch
     this.previousPosition = this.position;
-    this.x = x - this.width / 2;
-    
-    // Manter dentro dos limites do canvas
-    if (this.x < 0) this.x = 0;
-    if (this.x + this.width > this.canvasWidth) this.x = this.canvasWidth - this.width;
+    this.controlCenterX = x;
+    this.centerAngle = calculatePaddleAngleFromCanvasX(
+      x,
+      this.canvasWidth,
+      this.position,
+    );
+    this.syncRectFromRadialPosition(false);
     
     // Log do movimento da raquete por touch
     this.logPaddleMove('touch');
@@ -75,67 +97,103 @@ export class Paddle {
 
   reset() {
     this.dx = 0;
-    this.width = this.baseWidth;
-    this.x = (this.canvasWidth - this.width) / 2;
+    this.widthScale = PADDLE_DEFAULT_SCALE;
+    this.centerAngle = PADDLE_START_CENTER_ANGLE;
+    this.controlCenterX = this.canvasWidth / 2;
+    this.syncRectFromRadialPosition();
     this.previousPosition = this.position;
   }
 
   setWidthScale(scale: number) {
     const nextScale = Math.max(PADDLE_MIN_SCALE, Math.min(PADDLE_MAX_SCALE, scale));
-    const centerX = this.x + this.width / 2;
-    this.width = this.baseWidth * nextScale;
-    this.x = centerX - this.width / 2;
-    if (this.x < 0) this.x = 0;
-    if (this.x + this.width > this.canvasWidth) this.x = this.canvasWidth - this.width;
+    this.widthScale = nextScale;
+    this.syncRectFromRadialPosition();
     this.previousPosition = this.position;
   }
 
-  resize(canvasWidth: number, canvasHeight: number, dimensions: DynamicGameDimensions) {
-    const centerRatio = this.canvasWidth > 0 ? (this.x + this.width / 2) / this.canvasWidth : 0.5;
+  resize(canvasWidth: number, canvasHeight: number, dimensions: DynamicGameDimensions, geometry?: RadialPlayfieldGeometry) {
     const activeScale = this.baseWidth > 0 ? this.width / this.baseWidth : PADDLE_DEFAULT_SCALE;
+    const previousCanvasWidth = this.canvasWidth;
 
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
     this.baseWidth = dimensions.paddleWidth;
     this.height = dimensions.paddleHeight;
-    this.width = this.baseWidth * activeScale;
-    this.x = centerRatio * canvasWidth - this.width / 2;
+    this.dimensions = dimensions;
+    this.widthScale = activeScale;
+    this.geometry =
+      geometry ?? calculateRadialPlayfieldGeometry(canvasWidth, canvasHeight, dimensions);
+    this.controlCenterX =
+      (this.controlCenterX / Math.max(1, previousCanvasWidth)) * canvasWidth;
 
-    if (this.x < 0) this.x = 0;
-    if (this.x + this.width > this.canvasWidth) this.x = this.canvasWidth - this.width;
+    this.syncRectFromRadialPosition(false);
     this.previousPosition = this.position;
   }
 
   update() {
     this.previousPosition = this.position;
-    this.x += this.dx;
-    if (this.x < 0) this.x = 0;
-    if (this.x + this.width > this.canvasWidth) this.x = this.canvasWidth - this.width;
-  }
-
-  draw(ctx: CanvasRenderingContext2D) {
-    const paddleImage = AssetLoader.getOrLoadImage(
-      this.resolveAssetPath(GAME_VISUAL_ASSET_ROLES.paddle)
-    );
-    
-    if (paddleImage) {
-      // Draw image at paddle position
-      ctx.drawImage(
-        paddleImage,
-        this.x,
-        this.canvasHeight - this.height,
-        this.width,
-        this.height
-      );
-    } else {
-      // Fallback to original rectangle rendering
-      ctx.fillStyle = GAME_COLOR;
-      ctx.fillRect(this.x, this.canvasHeight - this.height, this.width, this.height);
+    if (this.dx !== 0) {
+      this.centerAngle -=
+        (this.dx / this.geometry.paddleRadius) * RADIAL_PADDLE_DX_TO_ANGLE_RATIO;
+      this.syncRectFromRadialPosition();
     }
   }
 
+  draw(ctx: CanvasRenderingContext2D) {
+    AssetLoader.getOrLoadImage(this.resolveAssetPath(GAME_VISUAL_ASSET_ROLES.paddle));
+    const paddleBounds = this.position;
+
+    ctx.save();
+    ctx.lineCap = RADIAL_PADDLE_LINE_CAP;
+    ctx.lineWidth = paddleBounds.radial.thickness;
+    ctx.strokeStyle = RADIAL_PADDLE_FILL_COLOR;
+    ctx.shadowColor = RADIAL_PADDLE_SHADOW_COLOR;
+    ctx.shadowBlur = RADIAL_PADDLE_SHADOW_BLUR;
+    ctx.beginPath();
+    ctx.arc(
+      paddleBounds.radial.centerX,
+      paddleBounds.radial.centerY,
+      paddleBounds.radial.radius,
+      paddleBounds.radial.startAngle,
+      paddleBounds.radial.endAngle,
+    );
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.lineWidth = Math.max(1, paddleBounds.radial.thickness * 0.18);
+    ctx.strokeStyle = RADIAL_PADDLE_EDGE_COLOR;
+    ctx.stroke();
+    ctx.lineWidth = Math.max(1, paddleBounds.radial.thickness * 0.08);
+    ctx.strokeStyle = RADIAL_PADDLE_STROKE_COLOR;
+    ctx.stroke();
+    ctx.restore();
+  }
+
   get position() {
-    return { x: this.x, y: this.canvasHeight - this.height, width: this.width, height: this.height };
+    const paddleBounds = calculateRadialPaddleBounds(
+      this.geometry,
+      this.dimensions,
+      this.centerAngle,
+      this.widthScale,
+    );
+
+    return {
+      ...paddleBounds,
+      x: this.controlCenterX - paddleBounds.width / 2,
+    };
+  }
+
+  private syncRectFromRadialPosition(updateControlCenter = true) {
+    const paddleBounds = calculateRadialPaddleBounds(
+      this.geometry,
+      this.dimensions,
+      this.centerAngle,
+      this.widthScale,
+    );
+    this.centerAngle = paddleBounds.radial.centerAngle;
+    if (updateControlCenter) {
+      this.controlCenterX = paddleBounds.x + paddleBounds.width / 2;
+    }
+    this.width = paddleBounds.width;
   }
 
   private logPaddleMove(direction: 'left' | 'right' | 'touch') {

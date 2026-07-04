@@ -633,10 +633,10 @@ select {
 }
 
 canvas {
-  border: 2px solid var(--color-accent);
-  border-radius: 5px;
-  background-color: var(--bb-color-board);
-  box-shadow: var(--bb-shadow-accent);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background-color: transparent;
+  box-shadow: none;
   box-sizing: border-box;
   display: block;
   margin-inline: auto;

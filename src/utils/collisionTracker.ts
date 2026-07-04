@@ -270,7 +270,7 @@ class CollisionTracker {
     ballPosition: { x: number; y: number },
     ballVelocity: { dx: number; dy: number },
     gameState: CollisionEvent['gameState'],
-    wallType: 'left' | 'right'
+    wallType: 'left' | 'right' | 'radial'
   ): Promise<void> {
     await this.logCollision({
       type: 'wall',

@@ -3,6 +3,37 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.1.0] - 2026-07-04
+### Alterado
+- Arena principal passa a usar forma radial: parede circular, raquete em arco inferior e blocos distribuídos em segmentos no arco superior.
+- Colisões da bolinha passam a respeitar a borda circular, a saída inferior protegida pela raquete e os segmentos radiais dos blocos.
+- Canvas remove a moldura retangular visível para destacar a arena circular desenhada no próprio jogo.
+
+### Adicionado
+- Utilitário de geometria radial para cálculo de arena, raquete, blocos e colisão polar.
+- Cobertura unitária para geometria radial, rebote em raquete curva, perda no arco inferior, parede circular e colisão com blocos radiais.
+
+### Testado
+- `node --version` → `v23.5.0`.
+- `make help`.
+- `npm test -- --runInBand --silent` → 47 suites / 275 testes.
+- `npx tsc -p tsconfig.app.json --noEmit`.
+- `npm run test:semantic-file-names` → governed=887.
+- `npm run test:svg-assets` → runtime=139, codex=2.
+- `npm run test:audio-assets` → ids=39, mp3=91.
+- `npm run build`.
+- `make cloudflare-env-check`.
+- `make cloudflare-deploy` → deploy `https://242b2a7f.malnati-brickbreaker.pages.dev` e domínio público `https://brikaya.com/`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-svg-assets-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-no-score-reset` → `game_start=1`, `brick_destroyed=3`, `score_update=3`, sem reinício da bolinha.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-phase-transition-qa` → `level_complete=1`, `level_start=1`, pausa de 1805 ms.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa` → sem overflow horizontal, 2 movimentos de raquete registrados e 0 problemas de console.
+- Evidência visual publicada: `docs/assets/issues/radial-arena/evidence/evi-radial-arena-public-gameplay.png`.
+- Varredura textual das evidências e arquivos alterados não encontrou token, chave privada ou credencial real.
+
 ## [1.32.25] - 2026-07-04
 ### Alterado
 - Botão “Restaurar padrão” fica desabilitado enquanto a limpeza local está em andamento, impedindo confirmações/envios repetidos.

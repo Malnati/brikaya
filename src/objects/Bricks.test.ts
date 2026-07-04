@@ -3,6 +3,10 @@ import { Bricks } from "./Bricks";
 import type { DynamicGameDimensions } from "../constants/game";
 import { GAME_VISUAL_ASSET_ROLES } from "../utils/visualAssetResolver";
 import { AssetLoader } from "../utils/assetLoader";
+import {
+  calculateRadialBrickSegment,
+  calculateRadialPlayfieldGeometry,
+} from "../utils/radialGeometry";
 
 jest.mock("../storage/gameLogger", () => ({
   gameLogger: {
@@ -205,6 +209,38 @@ describe("Bricks laser fan helpers", () => {
     expect(bricks.isBrickActive(0, 0)).toBe(false);
     expect(ball.bounceY).toHaveBeenCalledTimes(1);
     expect(ball.registerBrickHit).toHaveBeenCalledTimes(1);
+    expect(onBrickDestroyed).toHaveBeenCalledTimes(1);
+  });
+
+  it("usa segmento radial para colisão quando a arena circular está ativa", async () => {
+    const geometry = calculateRadialPlayfieldGeometry(480, 480, TEST_DIMENSIONS);
+    const segment = calculateRadialBrickSegment(geometry, TEST_DIMENSIONS, 0, 0);
+    const onBrickDestroyed = jest.fn();
+    const radialBounce = jest.fn();
+    const bricks = new Bricks(
+      TEST_DIMENSIONS,
+      onBrickDestroyed,
+      undefined,
+      undefined,
+      undefined,
+      createRandom(BASIC_BRICK_RANDOM_VALUES),
+      geometry,
+    );
+    const ball = {
+      ...createBall(),
+      position: {
+        x: segment.centerX,
+        y: segment.centerY,
+        radius: TEST_DIMENSIONS.ballRadius,
+      },
+      bounceFromRadialBrick: radialBounce,
+    };
+
+    await bricks.collide(ball);
+
+    expect(bricks.isBrickActive(0, 0)).toBe(false);
+    expect(radialBounce).toHaveBeenCalledWith(segment.centerX, segment.centerY);
+    expect(ball.bounceY).not.toHaveBeenCalled();
     expect(onBrickDestroyed).toHaveBeenCalledTimes(1);
   });
 

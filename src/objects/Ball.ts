@@ -18,6 +18,15 @@ import { collisionTracker } from '../utils/collisionTracker';
 import { ERROR, LOG } from '../utils/logger';
 import { gameLogger, type LoggedGameState } from '../storage/gameLogger';
 import { GAME_AUDIO_IDS, type GameAudioSink } from '../constants/audio';
+import {
+  calculateRadialPlayfieldGeometry,
+  isAngleBetween,
+  isRadialPaddleBounds,
+  toPolar,
+  type RadialPaddleBounds,
+  type RadialPlayfieldGeometry,
+  type RectBounds,
+} from '../utils/radialGeometry';
 
 const BALL_INITIAL_Y_OFFSET = 30;
 const MAX_BOUNCE_ANGLE = Math.PI / 3; // 60 graus
@@ -25,6 +34,11 @@ const PADDLE_EDGE_ZONE_RATIO = 0.2;
 const MOTION_STEP_RADIUS_RATIO = 0.75;
 const MIN_MOTION_STEPS = 1;
 const CANVAS_POSITION_FALLBACK_RATIO = 0.5;
+const RADIAL_WALL_TYPE = 'radial';
+const VECTOR_LENGTH_FALLBACK = 1;
+const CENTER_RATIO = 0.5;
+
+type PaddlePosition = RectBounds | RadialPaddleBounds;
 
 export class Ball {
   private x: number;
@@ -50,13 +64,14 @@ export class Ball {
     private canvasHeight: number,
     private dimensions: DynamicGameDimensions,
     private speedMultiplier = 1,
-    private resolveAssetPath: VisualAssetPathResolver = DEFAULT_GAME_VISUAL_ASSET_RESOLVER
+    private resolveAssetPath: VisualAssetPathResolver = DEFAULT_GAME_VISUAL_ASSET_RESOLVER,
+    private geometry: RadialPlayfieldGeometry = calculateRadialPlayfieldGeometry(canvasWidth, canvasHeight, dimensions)
   ) {
     this.radius = this.dimensions.ballRadius;
     this.x = this.canvasWidth / 2;
     this.y = this.canvasHeight - BALL_INITIAL_Y_OFFSET;
     const initialSpeed = calculateInitialBallSpeed(this.canvasWidth) * this.speedMultiplier;
-    this.dx = initialSpeed;
+    this.dx = 0;
     this.dy = -initialSpeed;
     this.currentSpeed = initialSpeed;
     this.initialSpawnSpeed = initialSpeed;
@@ -77,11 +92,12 @@ export class Ball {
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
     this.dimensions = dimensions;
+    this.geometry = calculateRadialPlayfieldGeometry(canvasWidth, canvasHeight, dimensions);
     this.speedMultiplier = speedMultiplier;
     this.radius = dimensions.ballRadius;
     this.x = canvasWidth / 2;
     this.y = canvasHeight - BALL_INITIAL_Y_OFFSET;
-    this.dx = initialSpeed;
+    this.dx = 0;
     this.dy = -initialSpeed;
     this.currentSpeed = initialSpeed;
     this.initialSpawnSpeed = initialSpeed;
@@ -100,6 +116,7 @@ export class Ball {
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
     this.dimensions = dimensions;
+    this.geometry = calculateRadialPlayfieldGeometry(canvasWidth, canvasHeight, dimensions);
     this.radius = dimensions.ballRadius;
     this.x = Math.max(
       this.radius,
@@ -127,7 +144,7 @@ export class Ball {
   }
 
   async update(
-    paddle: { position: { x: number; y: number; width: number; height: number } },
+    paddle: { position: PaddlePosition },
     bricks: { 
       collide: (
         ball: Ball, 
@@ -144,9 +161,6 @@ export class Ball {
     for (let step = 0; step < motionSteps; step += 1) {
       this.x += this.dx / motionSteps;
       this.y += this.dy / motionSteps;
-
-      this.resolveWallCollision(paddle.position, gameState, audioSink);
-      this.resolveCeilingCollision(paddle.position, gameState, audioSink);
 
       if (!brickCollisionHandled) {
         brickCollisionHandled = await bricks.collide(this, gameState);
@@ -176,8 +190,8 @@ export class Ball {
     return Math.max(MIN_MOTION_STEPS, Math.ceil(this.getCurrentSpeedMagnitude() / maxStepDistance));
   }
 
-  private resolveWallCollision(
-    paddlePosition: { x: number; y: number; width: number; height: number },
+  private resolveRectangularWallCollision(
+    paddlePosition: RectBounds,
     gameState: LoggedGameState,
     audioSink?: GameAudioSink
   ) {
@@ -215,8 +229,8 @@ export class Ball {
     ).catch(error => ERROR('❌ Erro ao registrar colisão com parede:', error));
   }
 
-  private resolveCeilingCollision(
-    paddlePosition: { x: number; y: number; width: number; height: number },
+  private resolveRectangularCeilingCollision(
+    paddlePosition: RectBounds,
     gameState: LoggedGameState,
     audioSink?: GameAudioSink
   ) {
@@ -250,11 +264,22 @@ export class Ball {
   }
 
   private resolvePaddleCollisionOrLoss(
-    paddlePos: { x: number; y: number; width: number; height: number },
+    paddlePos: PaddlePosition,
     maxHeight: number,
     gameState: LoggedGameState,
     audioSink?: GameAudioSink
   ) {
+    if (isRadialPaddleBounds(paddlePos)) {
+      return this.resolveRadialBoundaryCollisionOrLoss(
+        paddlePos,
+        gameState,
+        audioSink,
+      );
+    }
+
+    this.resolveRectangularWallCollision(paddlePos, gameState, audioSink);
+    this.resolveRectangularCeilingCollision(paddlePos, gameState, audioSink);
+
     if (this.y + this.radius <= maxHeight) return true;
 
     if (this.x > paddlePos.x && this.x < paddlePos.x + paddlePos.width) {
@@ -321,7 +346,146 @@ export class Ball {
     return false;
   }
 
-  private handlePaddleCollision(paddlePos: { x: number; y: number; width: number; height: number }) {
+  private resolveRadialBoundaryCollisionOrLoss(
+    paddlePos: RadialPaddleBounds,
+    gameState: LoggedGameState,
+    audioSink?: GameAudioSink,
+  ) {
+    const polar = toPolar(this.position, this.geometry);
+    const boundaryRadius = this.geometry.radius - this.radius;
+
+    if (polar.radius < boundaryRadius) return true;
+
+    if (isAngleBetween(polar.angle, paddlePos.radial.startAngle, paddlePos.radial.endAngle)) {
+      const hitPosition = this.calculateRadialPaddleHitPosition(
+        polar.angle,
+        paddlePos,
+      );
+      const paddleAudioId = hitPosition <= PADDLE_EDGE_ZONE_RATIO || hitPosition >= 1 - PADDLE_EDGE_ZONE_RATIO
+        ? GAME_AUDIO_IDS.PADDLE_HIT_EDGE
+        : GAME_AUDIO_IDS.PADDLE_HIT_CENTER;
+      audioSink?.playAudio(paddleAudioId);
+
+      const velocityBefore = { dx: this.dx, dy: this.dy };
+      this.handleRadialPaddleCollision(paddlePos, hitPosition);
+      const velocityAfter = { dx: this.dx, dy: this.dy };
+
+      gameLogger.logCollision(
+        gameState,
+        [{ x: this.x, y: this.y, velocity: velocityAfter, radius: this.radius }],
+        paddlePos,
+        {
+          type: 'paddle',
+          ballPosition: { x: this.x, y: this.y },
+          targetPosition: paddlePos,
+          hitPosition,
+          velocityBefore,
+          velocityAfter
+        }
+      ).catch(error => ERROR('❌ Erro ao registrar colisão com raquete:', error));
+
+      collisionTracker.logPaddleCollision(
+        { x: this.x, y: this.y },
+        velocityAfter,
+        gameState,
+        paddlePos,
+        hitPosition
+      ).catch(error => ERROR('❌ Erro ao registrar colisão com raquete:', error));
+
+      this.paddleCollision = true;
+      return true;
+    }
+
+    if (
+      this.isMovingOutward(polar.angle) &&
+      isAngleBetween(polar.angle, paddlePos.radial.lossStartAngle, paddlePos.radial.lossEndAngle)
+    ) {
+      return this.logRadialBallLost(paddlePos, gameState, audioSink);
+    }
+
+    this.handleRadialWallCollision(paddlePos, polar.angle, gameState, audioSink);
+    return true;
+  }
+
+  private handleRadialWallCollision(
+    paddlePosition: RectBounds,
+    wallAngle: number,
+    gameState: LoggedGameState,
+    audioSink?: GameAudioSink,
+  ) {
+    audioSink?.playAudio(GAME_AUDIO_IDS.WALL_HIT);
+    const velocityBefore = { dx: this.dx, dy: this.dy };
+    const normalX = Math.cos(wallAngle);
+    const normalY = Math.sin(wallAngle);
+    const dot = this.dx * normalX + this.dy * normalY;
+
+    this.dx -= 2 * dot * normalX;
+    this.dy -= 2 * dot * normalY;
+    this.currentSpeed = roundSpeedValue(Math.sqrt(this.dx * this.dx + this.dy * this.dy));
+    this.clampInsideRadialBoundary();
+    const velocityAfter = { dx: this.dx, dy: this.dy };
+
+    gameLogger.logCollision(
+      gameState,
+      [{ x: this.x, y: this.y, velocity: velocityAfter, radius: this.radius }],
+      paddlePosition,
+      {
+        type: 'wall',
+        ballPosition: { x: this.x, y: this.y },
+        wallType: RADIAL_WALL_TYPE,
+        velocityBefore,
+        velocityAfter
+      }
+    ).catch((error) => ERROR('❌ Erro ao registrar colisão com parede:', error));
+
+    collisionTracker.logWallCollision(
+      { x: this.x, y: this.y },
+      velocityAfter,
+      gameState,
+      RADIAL_WALL_TYPE
+    ).catch(error => ERROR('❌ Erro ao registrar colisão com parede:', error));
+  }
+
+  private logRadialBallLost(
+    paddlePos: RadialPaddleBounds,
+    gameState: LoggedGameState,
+    audioSink?: GameAudioSink,
+  ) {
+    audioSink?.playAudio(GAME_AUDIO_IDS.BALL_LOST);
+    const lostBallVelocity = { dx: this.dx, dy: this.dy };
+
+    gameLogger.logBallLost(
+      gameState,
+      [{ x: this.x, y: this.y, velocity: lostBallVelocity, radius: this.radius }],
+      paddlePos,
+      { x: this.x, y: this.y },
+      lostBallVelocity
+    ).catch(error => ERROR('❌ Erro ao registrar bola perdida:', error));
+
+    collisionTracker.logBallLost(
+      { x: this.x, y: this.y },
+      lostBallVelocity,
+      gameState,
+      paddlePos
+    ).catch(error => ERROR('❌ Erro ao registrar bola perdida:', error));
+
+    return false;
+  }
+
+  private calculateRadialPaddleHitPosition(
+    angle: number,
+    paddlePos: RadialPaddleBounds,
+  ): number {
+    const span = paddlePos.radial.endAngle - paddlePos.radial.startAngle;
+    if (span <= 0) return PADDLE_EDGE_ZONE_RATIO;
+
+    return Math.max(
+      0,
+      Math.min(1, (angle - paddlePos.radial.startAngle) / span),
+    );
+  }
+
+  private handlePaddleCollision(paddlePos: RectBounds) {
     // Calcula onde na raquete a bolinha bateu (0 = borda esquerda, 1 = borda direita)
     const hitPosition = (this.x - paddlePos.x) / paddlePos.width;
     
@@ -339,6 +503,36 @@ export class Ball {
     
     // Garante que a bolinha não fique presa na raquete
     this.y = paddlePos.y - this.radius;
+  }
+
+  private handleRadialPaddleCollision(
+    paddlePos: RadialPaddleBounds,
+    hitPosition: number,
+  ) {
+    const desiredSpeed = this.getCurrentSpeedMagnitude();
+    const clampedSpeed = calculateClampedSpeed(desiredSpeed, this.minSpeed, this.maxSpeed);
+    const inwardAngle =
+      paddlePos.radial.centerAngle +
+      Math.PI +
+      (hitPosition - CENTER_RATIO) *
+        2 *
+        MAX_BOUNCE_ANGLE;
+
+    this.setVelocityFromVector(Math.cos(inwardAngle), Math.sin(inwardAngle), clampedSpeed);
+    this.clampInsideRadialBoundary();
+  }
+
+  private isMovingOutward(angle: number): boolean {
+    return this.dx * Math.cos(angle) + this.dy * Math.sin(angle) > 0;
+  }
+
+  private clampInsideRadialBoundary() {
+    const polar = toPolar(this.position, this.geometry);
+    const maxRadius = this.geometry.radius - this.radius;
+    if (polar.radius <= maxRadius) return;
+
+    this.x = this.geometry.centerX + Math.cos(polar.angle) * maxRadius;
+    this.y = this.geometry.centerY + Math.sin(polar.angle) * maxRadius;
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -383,6 +577,22 @@ export class Ball {
 
   bounceY() {
     this.dy = -this.dy;
+  }
+
+  bounceFromRadialBrick(targetX: number, targetY: number) {
+    const normalX = this.x - targetX;
+    const normalY = this.y - targetY;
+    const normalLength = Math.max(
+      VECTOR_LENGTH_FALLBACK,
+      Math.sqrt(normalX * normalX + normalY * normalY),
+    );
+    const unitX = normalX / normalLength;
+    const unitY = normalY / normalLength;
+    const dot = this.dx * unitX + this.dy * unitY;
+
+    this.dx -= 2 * dot * unitX;
+    this.dy -= 2 * dot * unitY;
+    this.currentSpeed = roundSpeedValue(Math.sqrt(this.dx * this.dx + this.dy * this.dy));
   }
 
   registerBrickHit() {
@@ -441,7 +651,8 @@ export class Ball {
       this.canvasHeight,
       this.dimensions,
       this.speedMultiplier,
-      this.resolveAssetPath
+      this.resolveAssetPath,
+      this.geometry
     );
     clone.x = this.x;
     clone.y = this.y;
@@ -472,6 +683,17 @@ export class Ball {
     this.currentSpeed = clampedSpeed;
     this.dx = clampedSpeed * Math.sin(angle);
     this.dy = -clampedSpeed * Math.cos(angle);
+  }
+
+  private setVelocityFromVector(vectorX: number, vectorY: number, speed: number) {
+    const vectorLength = Math.max(
+      VECTOR_LENGTH_FALLBACK,
+      Math.sqrt(vectorX * vectorX + vectorY * vectorY),
+    );
+    const clampedSpeed = calculateClampedSpeed(speed, this.minSpeed, this.maxSpeed);
+    this.currentSpeed = clampedSpeed;
+    this.dx = (vectorX / vectorLength) * clampedSpeed;
+    this.dy = (vectorY / vectorLength) * clampedSpeed;
   }
 
   private getCurrentAngle() {

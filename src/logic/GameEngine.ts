@@ -46,6 +46,10 @@ import {
   resolveGameVisualAssetPath,
   type GameVisualAssetRole,
 } from "../utils/visualAssetResolver";
+import {
+  calculateRadialPlayfieldGeometry,
+  type RadialPlayfieldGeometry,
+} from "../utils/radialGeometry";
 import { LOG, ERROR, WARN } from "../utils/logger";
 
 LOG("📦 GameEngine.ts carregado, gameLogger:", gameLogger);
@@ -143,6 +147,11 @@ const GAME_OVER_TEXT = "FIM DE JOGO!";
 const SCORE_TEXT_PREFIX = "Pontuação";
 const RESTART_HINT_TEXT = "Use ↻ para jogar novamente";
 const CENTER_DIVISOR = 2;
+const RADIAL_PLAYFIELD_FILL = "rgba(7, 14, 28, 0.92)";
+const RADIAL_PLAYFIELD_STROKE = "rgba(125, 249, 255, 0.72)";
+const RADIAL_PLAYFIELD_INNER_STROKE = "rgba(255, 255, 255, 0.18)";
+const RADIAL_PLAYFIELD_STROKE_WIDTH = 2;
+const RADIAL_PLAYFIELD_INNER_RADIUS_RATIO = 0.74;
 const NOOP_AUDIO_SINK: GameAudioSink = {
   playAudio: () => {},
   startGameplayMusic: () => {},
@@ -192,6 +201,7 @@ export class GameEngine {
   private gameOver = false;
   private canvasSize: CanvasSize;
   private dimensions: DynamicGameDimensions;
+  private radialGeometry: RadialPlayfieldGeometry;
   private scaleX = 1;
   private scaleY = 1;
   private isStopped = true;
@@ -262,6 +272,11 @@ export class GameEngine {
       this.canvasSize.width,
       this.canvasSize.height,
     );
+    this.radialGeometry = calculateRadialPlayfieldGeometry(
+      this.canvasSize.width,
+      this.canvasSize.height,
+      this.dimensions,
+    );
     this.baseBrickRows = this.dimensions.brickRows;
 
     LOG(
@@ -285,6 +300,7 @@ export class GameEngine {
       this.canvasSize.height,
       this.dimensions,
       this.resolveAssetPath,
+      this.radialGeometry,
     );
     this.balls.push(
       new Ball(
@@ -293,6 +309,7 @@ export class GameEngine {
         this.dimensions,
         calculateLevelSpeedMultiplier(this.level),
         this.resolveAssetPath,
+        this.radialGeometry,
       ),
     );
     this.prepareQaBall();
@@ -405,6 +422,11 @@ export class GameEngine {
       this.canvasSize.width,
       this.canvasSize.height,
     );
+    this.radialGeometry = calculateRadialPlayfieldGeometry(
+      this.canvasSize.width,
+      this.canvasSize.height,
+      this.dimensions,
+    );
     this.configureBrickRows();
     this.scaleX = this.canvasSize.width / CANVAS_WIDTH;
     this.scaleY = this.canvasSize.height / CANVAS_HEIGHT;
@@ -412,6 +434,7 @@ export class GameEngine {
       this.canvasSize.width,
       this.canvasSize.height,
       this.dimensions,
+      this.radialGeometry,
     );
     this.balls.forEach((ball) =>
       ball.resize(
@@ -420,7 +443,7 @@ export class GameEngine {
         this.dimensions,
       ),
     );
-    this.bricks.resize(this.dimensions, this.maxBrickRows);
+    this.bricks.resize(this.dimensions, this.maxBrickRows, this.radialGeometry);
     this.activePowerUp?.setSize(this.getPowerUpSize());
   }
 
@@ -467,6 +490,7 @@ export class GameEngine {
         undefined,
         this.resolveAssetPath,
         brickQaRandom,
+        this.radialGeometry,
       );
     }
 
@@ -476,6 +500,8 @@ export class GameEngine {
       this.maxBrickRows,
       undefined,
       this.resolveAssetPath,
+      undefined,
+      this.radialGeometry,
     );
   }
 
@@ -734,6 +760,11 @@ export class GameEngine {
       this.configureBrickRows();
     }
     this.applyLevelBrickRows(nextLevel);
+    this.radialGeometry = calculateRadialPlayfieldGeometry(
+      this.canvasSize.width,
+      this.canvasSize.height,
+      this.dimensions,
+    );
     this.paddle.reset();
     this.activePowerUp = null;
     this.resetLaserFanSpawnCounterForLevel();
@@ -745,6 +776,7 @@ export class GameEngine {
         this.dimensions,
         nextSpeedMultiplier,
         this.resolveAssetPath,
+        this.radialGeometry,
       ),
     ];
     this.prepareQaBall();
@@ -1681,6 +1713,7 @@ export class GameEngine {
     } else {
       // Normal game rendering
       try {
+        this.drawRadialPlayfield();
         this.bricks.draw(this.ctx);
         const isLaserFanAnimating = this.isLaserFanEffectActive();
         this.paddle.update();
@@ -1779,4 +1812,32 @@ export class GameEngine {
       this.animationFrame = requestAnimationFrame(this.loop);
     }
   };
+
+  private drawRadialPlayfield() {
+    this.ctx.save();
+    this.ctx.fillStyle = RADIAL_PLAYFIELD_FILL;
+    this.ctx.strokeStyle = RADIAL_PLAYFIELD_STROKE;
+    this.ctx.lineWidth = RADIAL_PLAYFIELD_STROKE_WIDTH;
+    this.ctx.beginPath();
+    this.ctx.arc(
+      this.radialGeometry.centerX,
+      this.radialGeometry.centerY,
+      this.radialGeometry.radius,
+      0,
+      FULL_CIRCLE_RADIANS,
+    );
+    this.ctx.fill();
+    this.ctx.stroke();
+    this.ctx.strokeStyle = RADIAL_PLAYFIELD_INNER_STROKE;
+    this.ctx.beginPath();
+    this.ctx.arc(
+      this.radialGeometry.centerX,
+      this.radialGeometry.centerY,
+      this.radialGeometry.radius * RADIAL_PLAYFIELD_INNER_RADIUS_RATIO,
+      0,
+      FULL_CIRCLE_RADIANS,
+    );
+    this.ctx.stroke();
+    this.ctx.restore();
+  }
 }

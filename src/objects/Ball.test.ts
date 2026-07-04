@@ -14,6 +14,10 @@ import {
   MAX_LEVEL_SPEED_MULTIPLIER,
   PhaseSpeedConfig
 } from '../constants/game';
+import {
+  calculateRadialPaddleBounds,
+  calculateRadialPlayfieldGeometry,
+} from '../utils/radialGeometry';
 
 jest.mock('../utils/assetLoader', () => ({
   AssetLoader: {
@@ -77,6 +81,20 @@ function buildPhaseSpeedConfig(level: number): PhaseSpeedConfig {
   };
 }
 
+function createGameState(ball: Ball, level: number = PHASE_ONE) {
+  return {
+    score: 0,
+    ballsCount: 1,
+    bricksRemaining: INITIAL_BRICK_COUNT,
+    gameWon: false,
+    gameOver: false,
+    level,
+    canvasSize: { width: CANVAS_WIDTH, height: CANVAS_HEIGHT },
+    gameDimensions: DIMENSIONS,
+    speedState: ball.getSpeedStateSnapshot(),
+  };
+}
+
 describe('Ball', () => {
   it('aplica multiplicador ao resetar para uma nova fase', () => {
     const multiplier = calculateLevelSpeedMultiplier(2);
@@ -86,7 +104,7 @@ describe('Ball', () => {
 
     const expectedSpeed = calculateInitialBallSpeed(CANVAS_WIDTH) * multiplier;
     expect(ball.position).toEqual({ x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT - 30, radius: DIMENSIONS.ballRadius });
-    expect(ball.getVelocity().dx).toBeCloseTo(expectedSpeed, 5);
+    expect(ball.getVelocity().dx).toBeCloseTo(0, 5);
     expect(ball.getVelocity().dy).toBeCloseTo(-expectedSpeed, 5);
   });
 
@@ -246,6 +264,81 @@ describe('Ball', () => {
 
     expect(ball.position.x).toBeLessThanOrEqual(CANVAS_WIDTH - DIMENSIONS.ballRadius);
     expect(ball.position.x).toBeGreaterThanOrEqual(DIMENSIONS.ballRadius);
+    expect(ball.getVelocity().dx).toBeLessThan(0);
+  });
+
+  it('rebate na raquete em arco na borda radial inferior', async () => {
+    const geometry = calculateRadialPlayfieldGeometry(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const paddle = {
+      position: calculateRadialPaddleBounds(geometry, DIMENSIONS, Math.PI / 2, 1),
+    };
+    const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const bricks = { collide: jest.fn().mockResolvedValue(false) };
+
+    ball.applyPhaseSpeedConfig(buildPhaseSpeedConfig(PHASE_ONE));
+    ball.setPosition(
+      geometry.centerX,
+      geometry.centerY + geometry.radius - DIMENSIONS.ballRadius - 1,
+    );
+    ball.setDirection(Math.PI);
+
+    const inPlay = await ball.update(
+      paddle,
+      bricks,
+      CANVAS_HEIGHT,
+      createGameState(ball),
+    );
+
+    expect(inPlay).toBe(true);
+    expect(ball.getVelocity().dy).toBeLessThan(0);
+  });
+
+  it('perde a bolinha no arco inferior quando a raquete radial não cobre a saída', async () => {
+    const geometry = calculateRadialPlayfieldGeometry(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const sidePaddle = calculateRadialPaddleBounds(geometry, DIMENSIONS, Math.PI * 0.22, 1);
+    const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const bricks = { collide: jest.fn().mockResolvedValue(false) };
+
+    ball.applyPhaseSpeedConfig(buildPhaseSpeedConfig(PHASE_ONE));
+    ball.setPosition(
+      geometry.centerX,
+      geometry.centerY + geometry.radius - DIMENSIONS.ballRadius - 1,
+    );
+    ball.setDirection(Math.PI);
+
+    const inPlay = await ball.update(
+      { position: sidePaddle },
+      bricks,
+      CANVAS_HEIGHT,
+      createGameState(ball),
+    );
+
+    expect(inPlay).toBe(false);
+  });
+
+  it('reflete na parede circular fora do arco de perda', async () => {
+    const geometry = calculateRadialPlayfieldGeometry(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const paddle = {
+      position: calculateRadialPaddleBounds(geometry, DIMENSIONS, Math.PI / 2, 1),
+    };
+    const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const bricks = { collide: jest.fn().mockResolvedValue(false) };
+
+    ball.applyPhaseSpeedConfig(buildPhaseSpeedConfig(PHASE_ONE));
+    ball.setPosition(
+      geometry.centerX + geometry.radius - DIMENSIONS.ballRadius - 1,
+      geometry.centerY,
+    );
+    ball.setDirection(Math.PI / 2);
+
+    const inPlay = await ball.update(
+      paddle,
+      bricks,
+      CANVAS_HEIGHT,
+      createGameState(ball),
+    );
+
+    expect(inPlay).toBe(true);
     expect(ball.getVelocity().dx).toBeLessThan(0);
   });
 });
