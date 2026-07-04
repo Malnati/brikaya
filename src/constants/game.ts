@@ -43,6 +43,10 @@ export const SPEED_PRECISION_FACTOR = 1000;
 export const PADDLE_WIDTH = 75;
 export const PADDLE_HEIGHT = 10;
 export const PADDLE_SPEED = 7;
+export const PADDLE_WIDTH_MIN = 51;
+export const PADDLE_WIDTH_MAX = 102;
+export const PADDLE_WIDTH_CANVAS_RATIO = 0.17;
+export const PADDLE_HEIGHT_WIDTH_RATIO = 0.15;
 
 // Dimensões base dos blocos (serão ajustadas dinamicamente)
 export const BRICK_WIDTH = 75;
@@ -255,8 +259,11 @@ export function calculateDynamicDimensions(
   const brickRows = Math.max(2, Math.min(5, maxRows)); // Entre 2 e 5 linhas
 
   // Calcular dimensões do paddle proporcionalmente
-  const paddleWidth = Math.max(60, Math.min(120, canvasWidth * 0.2));
-  const paddleHeight = paddleWidth * 0.15;
+  const paddleWidth = Math.max(
+    PADDLE_WIDTH_MIN,
+    Math.min(PADDLE_WIDTH_MAX, canvasWidth * PADDLE_WIDTH_CANVAS_RATIO),
+  );
+  const paddleHeight = paddleWidth * PADDLE_HEIGHT_WIDTH_RATIO;
 
   // Calcular raio da bola proporcionalmente
   const ballRadius = Math.max(8, Math.min(15, canvasWidth * 0.02));
