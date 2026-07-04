@@ -472,7 +472,7 @@ select {
 
 .dashboard-header {
   display: grid;
-  grid-template-columns: minmax(96px, 1fr) minmax(0, auto) minmax(68px, 1fr);
+  grid-template-columns: minmax(148px, 1fr) minmax(0, auto) minmax(68px, 1fr);
   align-items: center;
   gap: var(--space-2);
   margin-bottom: var(--space-2);
@@ -1202,6 +1202,10 @@ canvas {
   min-width: 96px;
 }
 
+.music-toggle {
+  min-width: 96px;
+}
+
 .button-icon {
   display: inline-grid;
   place-items: center;
@@ -1575,7 +1579,7 @@ canvas {
   }
 
   .dashboard-header {
-    grid-template-columns: minmax(88px, 1fr) minmax(0, auto) minmax(68px, 1fr);
+    grid-template-columns: minmax(148px, 1fr) minmax(0, auto) minmax(68px, 1fr);
     gap: var(--space-2);
   }
 
@@ -1707,7 +1711,7 @@ canvas {
   }
 
   .dashboard-header {
-    grid-template-columns: minmax(88px, 1fr) minmax(0, auto) minmax(68px, 1fr);
+    grid-template-columns: minmax(148px, 1fr) minmax(0, auto) minmax(68px, 1fr);
     align-items: center;
     flex: 0 0 auto;
     gap: var(--space-1);
@@ -1842,7 +1846,7 @@ html.bb-landscape-immersive .dashboard-header {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(88px, 1fr) minmax(0, auto) minmax(68px, 1fr);
+  grid-template-columns: minmax(148px, 1fr) minmax(0, auto) minmax(68px, 1fr);
   flex: 0 0 auto;
   align-items: center;
   gap: var(--space-1);
@@ -1964,7 +1968,9 @@ html.bb-landscape-immersive .game-status-region {
 }
 
 .dashboard-primary-controls .audio-toggle--icon,
-.game-corner-controls .audio-toggle--icon {
+.dashboard-primary-controls .music-toggle--icon,
+.game-corner-controls .audio-toggle--icon,
+.game-corner-controls .music-toggle--icon {
   min-width: 44px;
 }
 

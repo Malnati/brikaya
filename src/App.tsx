@@ -10,6 +10,7 @@ import {
 import Game, { type GameBoardRect } from "./components/Game";
 import { AppearanceSelector } from "./components/AppearanceSelector";
 import { AudioToggle } from "./components/AudioToggle";
+import { MusicToggle } from "./components/MusicToggle";
 import { ConsentScreen } from "./components/ConsentScreen";
 import { LanguageDetectionOverlay } from "./components/LanguageDetectionOverlay";
 import { CollisionStats } from "./components/CollisionStats";
@@ -150,7 +151,8 @@ export default function App() {
     selectImageSet,
     selectFontSet,
   } = useAppearancePreference();
-  const { isAudioMuted, toggleAudio } = useAudioPreference();
+  const { isAudioMuted, isMusicMuted, toggleAudio, toggleMusic } =
+    useAudioPreference();
   const levelTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cinematicTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const countdownTimerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -353,7 +355,7 @@ export default function App() {
   }, [audioSink, isInitialCountdownActive]);
 
   useEffect(() => {
-    if (isAudioMuted) return undefined;
+    if (isAudioMuted || isMusicMuted) return undefined;
     let didAttemptUnlock = false;
 
     const unlockAudio = () => {
@@ -377,7 +379,7 @@ export default function App() {
         window.removeEventListener(eventName, unlockAudio);
       }
     };
-  }, [isAudioMuted]);
+  }, [isAudioMuted, isMusicMuted]);
 
   useEffect(() => {
     if (!isMenuOpen) return undefined;
@@ -665,9 +667,20 @@ export default function App() {
     const result = await toggleAudio();
     if (result.changed && !result.muted && result.unlocked) {
       audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
-      audioSink.startGameplayMusic();
+      if (!isMusicMuted) {
+        audioSink.startGameplayMusic();
+      }
     }
-  }, [audioSink, isAudioMuted, toggleAudio]);
+  }, [audioSink, isAudioMuted, isMusicMuted, toggleAudio]);
+
+  const handleMusicToggle = useCallback(async () => {
+    audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+    const result = toggleMusic();
+    if (!result.muted && !isAudioMuted) {
+      const unlocked = await audioManager.unlock();
+      if (unlocked) audioSink.startGameplayMusic();
+    }
+  }, [audioSink, isAudioMuted, toggleMusic]);
 
   const handleLevelTransition = useCallback(
     (payload: LevelTransitionPayload) => {
@@ -718,6 +731,12 @@ export default function App() {
               onToggle={handleAudioToggle}
               iconOnly
               className="game-icon-control game-icon-control--audio"
+            />
+            <MusicToggle
+              muted={isMusicMuted}
+              onToggle={handleMusicToggle}
+              iconOnly
+              className="game-icon-control game-icon-control--music"
             />
             <button
               type="button"

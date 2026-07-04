@@ -491,6 +491,15 @@ function assertBaseState(state, viewportName, expectMenuOpen = false) {
     state.buttons.some(
       (button) =>
         !button.inDrawer &&
+        /^(Música|Sem música)$/.test(button.ariaLabel) &&
+        /^[♫×]$/.test(button.text),
+    ),
+    `${viewportName}: ícone de música ausente na tela principal.`,
+  );
+  assert(
+    state.buttons.some(
+      (button) =>
+        !button.inDrawer &&
         /reiniciar|jogar de novo/i.test(button.ariaLabel) &&
         button.text === "↻",
     ),

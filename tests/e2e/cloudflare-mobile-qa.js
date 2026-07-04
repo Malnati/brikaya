@@ -814,6 +814,9 @@ async function run() {
     const audioIcon = mainButtons.find((button) =>
       ["Som", "Sem som"].includes(button.ariaLabel),
     );
+    const musicIcon = mainButtons.find((button) =>
+      ["Música", "Sem música"].includes(button.ariaLabel),
+    );
     const restartIcon = mainButtons.find(
       (button) =>
         /reiniciar|jogar de novo/i.test(button.ariaLabel) &&
@@ -823,6 +826,11 @@ async function run() {
     assert(
       audioIcon.ariaLabel === "Sem som" && audioIcon.text === "×",
       "Estado inicial do som não começou mudo.",
+    );
+    assert(musicIcon, "Ícone de música não encontrado no canto principal.");
+    assert(
+      musicIcon.ariaLabel === "Música" && musicIcon.text === "♫",
+      "Estado inicial da música não começou ativo.",
     );
     assert(
       restartIcon,
@@ -840,7 +848,7 @@ async function run() {
       !layoutState.publicityTextPresent,
       "Texto Publicidade não deve aparecer enquanto não há anúncio real.",
     );
-    for (const button of [audioIcon, restartIcon]) {
+    for (const button of [audioIcon, musicIcon, restartIcon]) {
       assert(
         button.rect.bottom <= layoutState.canvas.y,
         `Ícone ${button.ariaLabel} não ficou no topo da tela.`,

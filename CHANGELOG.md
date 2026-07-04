@@ -3,6 +3,25 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.19] - 2026-07-04
+### Adicionado
+- Ícone independente de música no topo do jogo, ao lado do ícone de som, para pausar ou retomar somente a trilha de fundo.
+- Preferência local `brickbreaker-music-muted` preserva o estado da música entre sessões.
+
+### Alterado
+- O mute geral continua controlando todos os sons, enquanto o novo controle de música bloqueia apenas BGM/menu/gameplay/intense layer e mantém efeitos sonoros ativos.
+- QAs publicados de áudio, mobile, dashboard e tema passam a exigir o ícone de música no conjunto principal de controles.
+
+### Testado
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version` → `v23.5.0`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make help`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/utils/audioManager.test.ts src/hooks/useAudioPreference.test.ts src/App.test.tsx --runInBand` → 3 suites / 36 testes.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --check ...` nos quatro QAs E2E alterados: áudio, mobile, dashboard e tema.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand` → 43 suites / 241 testes.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:semantic-file-names` → governed=845.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:audio-assets` → ids=39 mp3=91.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`.
+
 ## [1.32.18] - 2026-07-04
 ### Adicionado
 - Cobertura unitária do catálogo visual valida os seis assets metálicos amassados, seus estados `damaged`/`critical`, paths SVG locais e metadados de tijolo.
