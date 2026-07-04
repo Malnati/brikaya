@@ -1,0 +1,28 @@
+{
+  "publicUrl": "https://brikaya.com/?qaScenario=evasive-blocks",
+  "qaScenario": "evasive-blocks",
+  "eventSummary": {
+    "game_start": 1,
+    "collision": 1
+  },
+  "firstCollisionIndex": 1,
+  "evasiveCollisionIndex": 1,
+  "recentEvents": [
+    {
+      "index": 0,
+      "type": "game_start",
+      "score": 0,
+      "bricksRemaining": 3,
+      "collisionType": null
+    },
+    {
+      "index": 1,
+      "type": "collision",
+      "score": 0,
+      "bricksRemaining": 3,
+      "collisionType": "brick"
+    }
+  ],
+  "consoleProblems": [],
+  "screenshot": "tmp/screenshots/cloudflare-evasive-blocks-qa.png"
+}

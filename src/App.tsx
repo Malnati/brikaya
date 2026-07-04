@@ -88,6 +88,7 @@ const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
 const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
 const LASER_FAN_QA_SCENARIO = "laser-fan";
 const METAL_BLOCK_QA_SCENARIO = "metal-block";
+const EVASIVE_BLOCKS_QA_SCENARIO = "evasive-blocks";
 const COUNTDOWN_FIRST_STEP_INDEX = 0;
 const COUNTDOWN_NEXT_STEP_INDEX = 1;
 const COUNTDOWN_TIMER_OFFSET = 1;
@@ -192,6 +193,8 @@ export default function App() {
       return CINEMATIC_RIP_QA_SCENARIO;
     if (scenario === LASER_FAN_QA_SCENARIO) return LASER_FAN_QA_SCENARIO;
     if (scenario === METAL_BLOCK_QA_SCENARIO) return METAL_BLOCK_QA_SCENARIO;
+    if (scenario === EVASIVE_BLOCKS_QA_SCENARIO)
+      return EVASIVE_BLOCKS_QA_SCENARIO;
     if (scenario === AUDIO_QA_SCENARIO) return AUDIO_QA_SCENARIO;
     return null;
   }, []);
