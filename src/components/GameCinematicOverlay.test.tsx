@@ -18,6 +18,8 @@ const TEST_BOARD_RECT = {
   height: 245,
 };
 const STAGE_TEST_ID = "game-cinematic-stage";
+const RIP_COMPOSITION_TEST_ID = "game-cinematic-rip-composition";
+const RIP_VIEWPORT_HEIGHT_PROPERTY = "--game-cinematic-rip-visible-height";
 
 function expectDecorativeMedia(container: HTMLElement, name: string, path: string) {
   const media = container.querySelector(
@@ -95,11 +97,27 @@ describe("GameCinematicOverlay media", () => {
     expectDecorativeMedia(container, "rip-smoke", RIP_SMOKE_PATH);
   });
 
+  it("agrupa texto e fumaça RIP em uma composição visual única", () => {
+    const { container } = render(<GameCinematicOverlay state={{ type: "rip" }} />);
+    const composition = screen.getByTestId(RIP_COMPOSITION_TEST_ID);
+
+    expect(composition).toHaveTextContent("RIP");
+    expect(composition).toContainElement(
+      container.querySelector('img[data-cinematic-media="rip-smoke"]'),
+    );
+  });
+
   it("mantém o RIP centralizado na viewport mesmo quando o tabuleiro informa retângulo", () => {
     render(
       <GameCinematicOverlay state={{ type: "rip" }} boardRect={TEST_BOARD_RECT} />,
     );
 
-    expect(screen.getByTestId(STAGE_TEST_ID)).not.toHaveAttribute("style");
+    const stage = screen.getByTestId(STAGE_TEST_ID);
+
+    expect(stage).not.toHaveStyle({ left: `${TEST_BOARD_RECT.x}px` });
+    expect(stage).not.toHaveStyle({ top: `${TEST_BOARD_RECT.y}px` });
+    expect(stage).not.toHaveStyle({ width: `${TEST_BOARD_RECT.width}px` });
+    expect(stage).not.toHaveStyle({ height: `${TEST_BOARD_RECT.height}px` });
+    expect(stage.style.getPropertyValue(RIP_VIEWPORT_HEIGHT_PROPERTY)).toBeTruthy();
   });
 });

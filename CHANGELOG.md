@@ -3,6 +3,21 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.5] - 2026-07-04
+### Corrigido
+- RIP de fim de jogo passa a agrupar texto, botão e fumaça em uma composição única centralizada na área útil do navegador mobile.
+- Palco RIP passa a respeitar `visualViewport` e reserva inferior simulável no QA, evitando que a nuvem caia atrás da barra inferior do navegador.
+
+### Alterado
+- QA publicado de efeitos cinematográficos passa a bloquear regressão quando a composição RIP ou sua mídia saem da área útil em iPhone, tablet ou desktop.
+- Geração de screenshots RIP responsivas preserva o stem base da evidência, evitando colisão semântica com evidências antigas.
+
+### Testado
+- RED: `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ npm run test:cloudflare-cinematic-effects` falhou contra v139 com `rip/iphone-17-default: composição visual do RIP ausente.`
+- GREEN: `PATH="/opt/homebrew/opt/node@23/bin:/opt/homebrew/bin:$PATH" npm test -- src/components/GameCinematicOverlay.test.tsx --runInBand`
+- GREEN: `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-cinematic-effects-qa`
+- CORREÇÃO: `npm run test:semantic-file-names` flagrou colisão de evidências RIP responsivas; o gerador passou a preservar o stem base e a guarda voltou a passar.
+
 ## [1.32.4] - 2026-07-04
 ### Adicionado
 - Recibo operacional do CLASSIND registra a inscrição processual de Brikaya enviada e recebida para triagem sem custo.

@@ -1,4 +1,6 @@
 // src/components/GameCinematicOverlay.tsx
+import { useEffect, useState } from "react";
+
 import { CINEMATIC_MEDIA_LAYERS } from "../constants/cinematicMedia";
 import {
   IMAGE_SET_RETRO_DEFAULT,
@@ -57,11 +59,20 @@ const LEVEL_UP_TEST_ID = "level-toast";
 const MEDIA_CLASS_NAME = `${BASE_CLASS_NAME}__media`;
 const STAGE_CLASS_NAME = `${BASE_CLASS_NAME}__stage`;
 const CONTENT_CLASS_NAME = `${BASE_CLASS_NAME}__content`;
+const RIP_COMPOSITION_CLASS_NAME = `${BASE_CLASS_NAME}__composition`;
 const MEDIA_ALT = "";
 const MEDIA_LOADING = "lazy";
 const MEDIA_DECODING = "async";
 const STAGE_TEST_ID = "game-cinematic-stage";
 const CONTENT_TEST_ID = "game-cinematic-content";
+const RIP_COMPOSITION_TEST_ID = "game-cinematic-rip-composition";
+const RIP_VIEWPORT_BOTTOM_INSET_PARAM = "qaViewportBottomInset";
+const RIP_BROWSER_CHROME_SAFE_BOTTOM_PX = 104;
+const RIP_MIN_VISIBLE_VIEWPORT_SIZE_PX = 240;
+const RIP_VIEWPORT_LEFT_PROPERTY = "--game-cinematic-rip-visible-left";
+const RIP_VIEWPORT_TOP_PROPERTY = "--game-cinematic-rip-visible-top";
+const RIP_VIEWPORT_WIDTH_PROPERTY = "--game-cinematic-rip-visible-width";
+const RIP_VIEWPORT_HEIGHT_PROPERTY = "--game-cinematic-rip-visible-height";
 const CINEMATIC_MEDIA_ROLES = {
   "countdown-circle": GAME_VISUAL_ASSET_ROLES.countdownCircleOverlay,
   "countdown-spark": GAME_VISUAL_ASSET_ROLES.countdownSparkOverlay,
@@ -69,6 +80,8 @@ const CINEMATIC_MEDIA_ROLES = {
   "level-up-star": GAME_VISUAL_ASSET_ROLES.levelUpStarOverlay,
   "rip-smoke": GAME_VISUAL_ASSET_ROLES.gameOverRipSmoke,
 } as const satisfies Record<string, GameVisualAssetRole>;
+
+type RipViewportStyle = CSSProperties & Record<string, string>;
 
 function resolveCinematicMediaPath(
   media: (typeof CINEMATIC_MEDIA_LAYERS)[keyof typeof CINEMATIC_MEDIA_LAYERS][number],
@@ -101,12 +114,94 @@ function renderMediaLayers(
   });
 }
 
-function stageStyle(
-  boardRect: GameCinematicBoardRect | null | undefined,
-): CSSProperties | undefined {
-  if (!boardRect) return undefined;
+function positiveNumber(value: string | null): number {
+  const parsed = Number(value);
+
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+}
+
+function isStandaloneDisplayMode(): boolean {
+  const standaloneNavigator = navigator as Navigator & { standalone?: boolean };
+
+  return (
+    window.matchMedia?.("(display-mode: standalone)").matches ||
+    standaloneNavigator.standalone === true
+  );
+}
+
+function shouldReserveMobileBrowserChrome(): boolean {
+  return (
+    window.matchMedia?.("(pointer: coarse) and (max-width: 600px)").matches ===
+      true && !isStandaloneDisplayMode()
+  );
+}
+
+function measuredRipViewportStyle(): RipViewportStyle {
+  const visualViewport = window.visualViewport;
+  const left = visualViewport?.offsetLeft || 0;
+  const top = visualViewport?.offsetTop || 0;
+  const width = visualViewport?.width || window.innerWidth;
+  const height = visualViewport?.height || window.innerHeight;
+  const detectedBottomInset = Math.max(0, window.innerHeight - (top + height));
+  const requestedBottomInset = positiveNumber(
+    new URLSearchParams(window.location.search).get(
+      RIP_VIEWPORT_BOTTOM_INSET_PARAM,
+    ),
+  );
+  const fallbackBottomInset =
+    detectedBottomInset > 0 || requestedBottomInset > 0
+      ? 0
+      : shouldReserveMobileBrowserChrome()
+        ? RIP_BROWSER_CHROME_SAFE_BOTTOM_PX
+        : 0;
+  const bottomInset = Math.max(requestedBottomInset, fallbackBottomInset);
+  const visibleHeight = Math.max(
+    RIP_MIN_VISIBLE_VIEWPORT_SIZE_PX,
+    height - bottomInset,
+  );
 
   return {
+    [RIP_VIEWPORT_LEFT_PROPERTY]: `${left}px`,
+    [RIP_VIEWPORT_TOP_PROPERTY]: `${top}px`,
+    [RIP_VIEWPORT_WIDTH_PROPERTY]: `${width}px`,
+    [RIP_VIEWPORT_HEIGHT_PROPERTY]: `${visibleHeight}px`,
+  };
+}
+
+function useRipViewportStyle(enabled: boolean): RipViewportStyle | undefined {
+  const [style, setStyle] = useState<RipViewportStyle | undefined>(undefined);
+
+  useEffect(() => {
+    if (!enabled || typeof window === "undefined") {
+      setStyle(undefined);
+      return undefined;
+    }
+
+    const updateStyle = () => setStyle(measuredRipViewportStyle());
+
+    updateStyle();
+    window.addEventListener("resize", updateStyle);
+    window.visualViewport?.addEventListener("resize", updateStyle);
+    window.visualViewport?.addEventListener("scroll", updateStyle);
+
+    return () => {
+      window.removeEventListener("resize", updateStyle);
+      window.visualViewport?.removeEventListener("resize", updateStyle);
+      window.visualViewport?.removeEventListener("scroll", updateStyle);
+    };
+  }, [enabled]);
+
+  return enabled ? style : undefined;
+}
+
+function stageStyle(
+  boardRect: GameCinematicBoardRect | null | undefined,
+  customStyle?: CSSProperties,
+): CSSProperties | undefined {
+  if (!boardRect) return customStyle;
+
+  return {
+    ...customStyle,
     left: boardRect.x,
     top: boardRect.y,
     width: boardRect.width,
@@ -117,12 +212,13 @@ function stageStyle(
 function renderStage(
   children: ReactNode,
   boardRect: GameCinematicBoardRect | null | undefined,
+  customStyle?: CSSProperties,
 ) {
   return (
     <div
       className={STAGE_CLASS_NAME}
       data-testid={STAGE_TEST_ID}
-      style={stageStyle(boardRect)}
+      style={stageStyle(boardRect, customStyle)}
     >
       {children}
     </div>
@@ -132,6 +228,17 @@ function renderStage(
 function renderContent(children: ReactNode) {
   return (
     <div className={CONTENT_CLASS_NAME} data-testid={CONTENT_TEST_ID}>
+      {children}
+    </div>
+  );
+}
+
+function renderRipComposition(children: ReactNode) {
+  return (
+    <div
+      className={RIP_COMPOSITION_CLASS_NAME}
+      data-testid={RIP_COMPOSITION_TEST_ID}
+    >
       {children}
     </div>
   );
@@ -177,6 +284,7 @@ export function GameCinematicOverlay({
   boardRect = null,
 }: GameCinematicOverlayProps) {
   const { t } = useI18n();
+  const ripViewportStyle = useRipViewportStyle(state?.type === "rip");
   const labels = {
     countdown: t("cinematic.countdownAria"),
     levelUp: t("cinematic.levelUpAria"),
@@ -224,20 +332,23 @@ export function GameCinematicOverlay({
   return (
     <div {...overlayProps(state, labels)} role="status" aria-live="assertive">
       {renderStage(
-        <>
-          {renderMediaLayers(state, imageSetId)}
-          {renderContent(
-            <>
-              <span className={`${BASE_CLASS_NAME}__title`}>
-                {t("cinematic.ripTitle")}
-              </span>
-              <span className={`${BASE_CLASS_NAME}__detail`}>
-                {t("cinematic.ripHint")}
-              </span>
-            </>,
-          )}
-        </>,
+        renderRipComposition(
+          <>
+            {renderMediaLayers(state, imageSetId)}
+            {renderContent(
+              <>
+                <span className={`${BASE_CLASS_NAME}__title`}>
+                  {t("cinematic.ripTitle")}
+                </span>
+                <span className={`${BASE_CLASS_NAME}__detail`}>
+                  {t("cinematic.ripHint")}
+                </span>
+              </>,
+            )}
+          </>,
+        ),
         null,
+        ripViewportStyle,
       )}
     </div>
   );
