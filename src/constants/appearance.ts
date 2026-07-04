@@ -28,6 +28,23 @@ export const IMAGE_SET_REAL_ORBITAL_DECK = "real-orbital-deck";
 export const FONT_SET_ARCADE_UI = "arcade-ui";
 export const FONT_SET_CRT_MONO = "crt-mono";
 export const FONT_SET_BLOCK_PIXEL = "block-pixel";
+export const VISUAL_THEME_PRESET_ARCADE_NEON = "preset-neon-arcade";
+export const VISUAL_THEME_PRESET_CRT_HIGH_CONTRAST = "preset-crt-high-contrast";
+export const VISUAL_THEME_PRESET_PIXEL_SUNSET = "preset-pixel-sunset";
+export const VISUAL_THEME_PRESET_OCEAN_NIGHT = "preset-ocean-night";
+export const VISUAL_THEME_PRESET_JUNGLE_LASER = "preset-jungle-laser";
+export const VISUAL_THEME_PRESET_AMBER_RETRO = "preset-amber-retro";
+export const VISUAL_THEME_PRESET_COSMIC_ICE = "preset-cosmic-ice";
+export const VISUAL_THEME_PRESET_ELECTRIC_PLUM = "preset-electric-plum";
+export const VISUAL_THEME_PRESET_LIME_GRAPHITE = "preset-lime-graphite";
+export const VISUAL_THEME_PRESET_RUBY_DEPTH = "preset-ruby-depth";
+export const VISUAL_THEME_PRESET_REAL_METRO_NIGHT = "preset-real-metro-night";
+export const VISUAL_THEME_PRESET_REAL_AUTO_GARAGE = "preset-real-auto-garage";
+export const VISUAL_THEME_PRESET_REAL_BIO_LAB = "preset-real-bio-lab";
+export const VISUAL_THEME_PRESET_REAL_ANCIENT_TEMPLE =
+  "preset-real-ancient-temple";
+export const VISUAL_THEME_PRESET_REAL_ORBITAL_STATION =
+  "preset-real-orbital-station";
 export const LEGACY_THEME_DARK = "dark";
 export const LEGACY_THEME_LIGHT = "light";
 
@@ -75,12 +92,31 @@ export const FONT_SET_IDS = [
   FONT_SET_BLOCK_PIXEL,
 ] as const;
 
+export const VISUAL_THEME_PRESET_IDS = [
+  VISUAL_THEME_PRESET_ARCADE_NEON,
+  VISUAL_THEME_PRESET_CRT_HIGH_CONTRAST,
+  VISUAL_THEME_PRESET_PIXEL_SUNSET,
+  VISUAL_THEME_PRESET_OCEAN_NIGHT,
+  VISUAL_THEME_PRESET_JUNGLE_LASER,
+  VISUAL_THEME_PRESET_AMBER_RETRO,
+  VISUAL_THEME_PRESET_COSMIC_ICE,
+  VISUAL_THEME_PRESET_ELECTRIC_PLUM,
+  VISUAL_THEME_PRESET_LIME_GRAPHITE,
+  VISUAL_THEME_PRESET_RUBY_DEPTH,
+  VISUAL_THEME_PRESET_REAL_METRO_NIGHT,
+  VISUAL_THEME_PRESET_REAL_AUTO_GARAGE,
+  VISUAL_THEME_PRESET_REAL_BIO_LAB,
+  VISUAL_THEME_PRESET_REAL_ANCIENT_TEMPLE,
+  VISUAL_THEME_PRESET_REAL_ORBITAL_STATION,
+] as const;
+
 export const THEME_MODE_IDS = [THEME_MODE_AUTO, THEME_MODE_MANUAL] as const;
 
 export type ThemeId = (typeof THEME_IDS)[number];
 export type ThemeMode = (typeof THEME_MODE_IDS)[number];
 export type ImageSetId = (typeof IMAGE_SET_IDS)[number];
 export type FontSetId = (typeof FONT_SET_IDS)[number];
+export type VisualThemePresetId = (typeof VISUAL_THEME_PRESET_IDS)[number];
 
 export interface AppearanceSelection {
   themeId: ThemeId;
@@ -94,6 +130,11 @@ export interface AppearanceSelection {
 export interface AppearanceOption<T extends string> {
   id: T;
   label: string;
+}
+
+export interface VisualThemePreset extends AppearanceOption<VisualThemePresetId> {
+  themeId: ThemeId;
+  imageSetId: ImageSetId;
 }
 
 export const DEFAULT_APPEARANCE_SELECTION = {
@@ -140,6 +181,99 @@ export const FONT_SET_OPTIONS = [
   { id: FONT_SET_BLOCK_PIXEL, label: "Blocos pixel" },
 ] as const satisfies readonly AppearanceOption<FontSetId>[];
 
+export const VISUAL_THEME_PRESET_OPTIONS = [
+  {
+    id: VISUAL_THEME_PRESET_ARCADE_NEON,
+    label: "Arcade neon",
+    themeId: THEME_NEON_ARCADE,
+    imageSetId: IMAGE_SET_RETRO_DEFAULT,
+  },
+  {
+    id: VISUAL_THEME_PRESET_CRT_HIGH_CONTRAST,
+    label: "CRT alto contraste",
+    themeId: THEME_CRT_HIGH_CONTRAST,
+    imageSetId: IMAGE_SET_HIGH_CONTRAST,
+  },
+  {
+    id: VISUAL_THEME_PRESET_PIXEL_SUNSET,
+    label: "Pôr do sol pixelado",
+    themeId: THEME_PIXEL_SUNSET,
+    imageSetId: IMAGE_SET_SUNSET_CABINET,
+  },
+  {
+    id: VISUAL_THEME_PRESET_OCEAN_NIGHT,
+    label: "Oceano noturno",
+    themeId: THEME_OCEAN_NIGHT,
+    imageSetId: IMAGE_SET_RETRO_DEFAULT,
+  },
+  {
+    id: VISUAL_THEME_PRESET_JUNGLE_LASER,
+    label: "Selva laser",
+    themeId: THEME_JUNGLE_LASER,
+    imageSetId: IMAGE_SET_RETRO_DEFAULT,
+  },
+  {
+    id: VISUAL_THEME_PRESET_AMBER_RETRO,
+    label: "Âmbar retrô",
+    themeId: THEME_AMBER_RETRO,
+    imageSetId: IMAGE_SET_RETRO_DEFAULT,
+  },
+  {
+    id: VISUAL_THEME_PRESET_COSMIC_ICE,
+    label: "Gelo cósmico",
+    themeId: THEME_COSMIC_ICE,
+    imageSetId: IMAGE_SET_RETRO_DEFAULT,
+  },
+  {
+    id: VISUAL_THEME_PRESET_ELECTRIC_PLUM,
+    label: "Ameixa elétrica",
+    themeId: THEME_ELECTRIC_PLUM,
+    imageSetId: IMAGE_SET_RETRO_DEFAULT,
+  },
+  {
+    id: VISUAL_THEME_PRESET_LIME_GRAPHITE,
+    label: "Lima grafite",
+    themeId: THEME_LIME_GRAPHITE,
+    imageSetId: IMAGE_SET_RETRO_DEFAULT,
+  },
+  {
+    id: VISUAL_THEME_PRESET_RUBY_DEPTH,
+    label: "Rubi profundo",
+    themeId: THEME_RUBY_DEPTH,
+    imageSetId: IMAGE_SET_RETRO_DEFAULT,
+  },
+  {
+    id: VISUAL_THEME_PRESET_REAL_METRO_NIGHT,
+    label: "Metrô noturno",
+    themeId: THEME_REAL_METRO_NIGHT,
+    imageSetId: IMAGE_SET_REAL_METRO_TUNNEL,
+  },
+  {
+    id: VISUAL_THEME_PRESET_REAL_AUTO_GARAGE,
+    label: "Oficina mecânica",
+    themeId: THEME_REAL_AUTO_GARAGE,
+    imageSetId: IMAGE_SET_REAL_WORKSHOP_STEEL,
+  },
+  {
+    id: VISUAL_THEME_PRESET_REAL_BIO_LAB,
+    label: "Laboratório clínico",
+    themeId: THEME_REAL_BIO_LAB,
+    imageSetId: IMAGE_SET_REAL_BIO_LAB_GLASS,
+  },
+  {
+    id: VISUAL_THEME_PRESET_REAL_ANCIENT_TEMPLE,
+    label: "Templo antigo",
+    themeId: THEME_REAL_ANCIENT_TEMPLE,
+    imageSetId: IMAGE_SET_REAL_TEMPLE_STONE,
+  },
+  {
+    id: VISUAL_THEME_PRESET_REAL_ORBITAL_STATION,
+    label: "Estação orbital",
+    themeId: THEME_REAL_ORBITAL_STATION,
+    imageSetId: IMAGE_SET_REAL_ORBITAL_DECK,
+  },
+] as const satisfies readonly VisualThemePreset[];
+
 export function isThemeId(value: unknown): value is ThemeId {
   return THEME_IDS.includes(value as ThemeId);
 }
@@ -154,6 +288,43 @@ export function isImageSetId(value: unknown): value is ImageSetId {
 
 export function isFontSetId(value: unknown): value is FontSetId {
   return FONT_SET_IDS.includes(value as FontSetId);
+}
+
+export function isVisualThemePresetId(
+  value: unknown,
+): value is VisualThemePresetId {
+  return VISUAL_THEME_PRESET_IDS.includes(value as VisualThemePresetId);
+}
+
+export function resolveVisualThemePreset(
+  presetId: VisualThemePresetId,
+): VisualThemePreset {
+  return (
+    VISUAL_THEME_PRESET_OPTIONS.find((option) => option.id === presetId) ??
+    VISUAL_THEME_PRESET_OPTIONS[0]
+  );
+}
+
+export function resolveVisualThemePresetByTheme(
+  themeId: ThemeId,
+): VisualThemePreset {
+  return (
+    VISUAL_THEME_PRESET_OPTIONS.find((option) => option.themeId === themeId) ??
+    VISUAL_THEME_PRESET_OPTIONS[0]
+  );
+}
+
+export function resolveVisualThemePresetForSelection(input: {
+  themeId: ThemeId;
+  imageSetId: ImageSetId;
+}): VisualThemePreset | null {
+  return (
+    VISUAL_THEME_PRESET_OPTIONS.find(
+      (option) =>
+        option.themeId === input.themeId &&
+        option.imageSetId === input.imageSetId,
+    ) ?? null
+  );
 }
 
 export function migrateStoredThemeId(value: unknown): ThemeId | null {
@@ -188,7 +359,7 @@ export function resolveAutoThemeSequence(
 export function parseStoredAutoThemeSequence(
   value: unknown,
 ): readonly ThemeId[] | null {
-  if (typeof value !== 'string') return resolveAutoThemeSequence(value);
+  if (typeof value !== "string") return resolveAutoThemeSequence(value);
 
   try {
     return resolveAutoThemeSequence(JSON.parse(value));
@@ -202,7 +373,7 @@ export function parseStoredAutoThemeIndex(
   sequenceLength: number = THEME_IDS.length,
 ): number {
   const parsedValue =
-    typeof value === 'number' ? value : Number.parseInt(String(value), 10);
+    typeof value === "number" ? value : Number.parseInt(String(value), 10);
 
   if (
     !Number.isInteger(parsedValue) ||
@@ -322,18 +493,22 @@ export function resolveAppearanceSelection(input: {
     : storedThemeId
       ? THEME_MODE_MANUAL
       : DEFAULT_APPEARANCE_SELECTION.themeMode;
+  const themeId =
+    themeMode === THEME_MODE_AUTO
+      ? autoThemeSequence[autoThemeIndex]
+      : (storedThemeId ?? DEFAULT_APPEARANCE_SELECTION.themeId);
 
   return {
-    themeId:
-      themeMode === THEME_MODE_AUTO
-        ? autoThemeSequence[autoThemeIndex]
-        : storedThemeId ?? DEFAULT_APPEARANCE_SELECTION.themeId,
+    themeId,
     themeMode,
     autoThemeSequence,
     autoThemeIndex,
-    imageSetId: isImageSetId(input.imageSetId)
-      ? input.imageSetId
-      : DEFAULT_APPEARANCE_SELECTION.imageSetId,
+    imageSetId:
+      themeMode === THEME_MODE_AUTO
+        ? resolveVisualThemePresetByTheme(themeId).imageSetId
+        : isImageSetId(input.imageSetId)
+          ? input.imageSetId
+          : DEFAULT_APPEARANCE_SELECTION.imageSetId,
     fontSetId: isFontSetId(input.fontSetId)
       ? input.fontSetId
       : DEFAULT_APPEARANCE_SELECTION.fontSetId,

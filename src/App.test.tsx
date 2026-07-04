@@ -437,8 +437,9 @@ describe("App theme selector", () => {
     expect(within(drawer).queryByText("Partida")).not.toBeInTheDocument();
     const appearanceGroup = screen.getByLabelText("Aparência do jogo");
     expect(
-      within(appearanceGroup).getByText("Tema visual"),
+      within(appearanceGroup).getByText("Conjuntos prontos"),
     ).toBeInTheDocument();
+    expect(within(appearanceGroup).getByText("Cores")).toBeInTheDocument();
     expect(within(appearanceGroup).getByText("Imagens")).toBeInTheDocument();
     expect(within(appearanceGroup).getByText("Fonte")).toBeInTheDocument();
     expect(
@@ -447,8 +448,8 @@ describe("App theme selector", () => {
       }),
     ).toBeInTheDocument();
     expect(
-      within(appearanceGroup).getByRole("button", { name: "Arcade neon" }),
-    ).toBeInTheDocument();
+      within(appearanceGroup).getAllByRole("button", { name: "Arcade neon" }),
+    ).toHaveLength(2);
     expect(
       within(appearanceGroup).getByRole("button", { name: "Retrô padrão" }),
     ).toBeInTheDocument();
@@ -541,9 +542,7 @@ describe("App theme selector", () => {
     expect(mockLastGameProps?.imageSetId).toBe("retro-default");
     await user.click(screen.getByRole("button", { name: "Menu" }));
 
-    await user.click(
-      screen.getByRole("button", { name: "CRT alto contraste" }),
-    );
+    await user.click(screen.getByTestId("appearance-option-crt-high-contrast"));
     await user.click(screen.getByRole("button", { name: "Alto contraste" }));
     await user.click(screen.getByRole("button", { name: "CRT mono" }));
 
@@ -568,9 +567,7 @@ describe("App theme selector", () => {
       "crt-mono",
     );
 
-    await user.click(
-      screen.getByRole("button", { name: "Pôr do sol pixelado" }),
-    );
+    await user.click(screen.getByTestId("appearance-option-pixel-sunset"));
 
     expect(document.documentElement.dataset.theme).toBe("pixel-sunset");
     expect(window.localStorage.setItem).toHaveBeenCalledWith(
@@ -765,9 +762,7 @@ describe("App theme selector", () => {
     await renderApp();
 
     await user.click(screen.getByRole("button", { name: "Menu" }));
-    await user.click(
-      screen.getByRole("button", { name: "Pôr do sol pixelado" }),
-    );
+    await user.click(screen.getByTestId("appearance-option-pixel-sunset"));
     const drawer = screen.getByRole("complementary", { name: "Menu do jogo" });
     await user.click(
       within(drawer).getByRole("button", { name: "Fechar menu" }),
