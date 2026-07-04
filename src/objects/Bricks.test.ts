@@ -37,9 +37,10 @@ const FIRST_TWO_BRICKS_METAL_RANDOM_VALUES = [
   0, 0, 0, 0, 0, 0, 0.5, 0.99, 0.99, 0.99, 0.99, 0.99,
 ];
 const FIRST_THREE_BRICKS_EVASIVE_RANDOM_VALUES = [
-  0, 0, 0, 0, 0, 0, 0, 0.99, 0.99, 0.99, 0.99, 0.99, 0.99, 0.99, 0.99,
-  0.99, 0.99,
+  0, 0, 0, 0, 0, 0, 0, 0.99, 0.99, 0.99, 0.99, 0.99, 0.99, 0.99, 0.99, 0.99,
+  0.99,
 ];
+const THREE_BRICKS_FORCE_METAL_RANDOM_VALUES = [0, 0, 0, 0.99, 0, 0, 0, 0];
 const BRICK_TOUCH_Y = 40;
 const SECOND_ROW_BRICK_TOUCH_Y = 70;
 const BRICK_SEPARATION_Y = 0;
@@ -118,6 +119,11 @@ const FOUR_BRICK_DIMENSIONS: DynamicGameDimensions = {
   ...TEST_DIMENSIONS,
   brickRows: 2,
   brickCols: 2,
+};
+const THREE_BRICK_DIMENSIONS: DynamicGameDimensions = {
+  ...TEST_DIMENSIONS,
+  brickRows: 3,
+  brickCols: 1,
 };
 
 describe("Bricks laser fan helpers", () => {
@@ -329,6 +335,25 @@ describe("Bricks laser fan helpers", () => {
     ]);
     expect(bricks.isBrickEvasive(-1, 0)).toBe(false);
     expect(bricks.hasBrickEvaded(0, 99)).toBe(false);
+  });
+
+  it("reserva três blocos desviantes mesmo quando o sorteio tentaria metalizar a grade inteira", () => {
+    const bricks = new Bricks(
+      THREE_BRICK_DIMENSIONS,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      createRandom(THREE_BRICKS_FORCE_METAL_RANDOM_VALUES),
+    );
+
+    expect(bricks.getEvasiveBrickSnapshots()).toHaveLength(3);
+    expect(bricks.isBrickEvasive(0, 0)).toBe(true);
+    expect(bricks.isBrickEvasive(0, 1)).toBe(true);
+    expect(bricks.isBrickEvasive(0, 2)).toBe(true);
+    expect(bricks.isBrickMetal(0, 0)).toBe(false);
+    expect(bricks.isBrickMetal(0, 1)).toBe(false);
+    expect(bricks.isBrickMetal(0, 2)).toBe(false);
   });
 
   it("faz o bloco desviante rebater sem destruir nem pontuar na primeira colisão", async () => {

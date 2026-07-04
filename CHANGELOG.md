@@ -3,6 +3,29 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.25] - 2026-07-04
+### Alterado
+- Botão “Restaurar padrão” fica desabilitado enquanto a limpeza local está em andamento, impedindo confirmações/envios repetidos.
+- Reserva de três blocos desviantes antes da distribuição de blocos metálicos, garantindo que grades com exatamente três blocos ainda tenham os três desviantes solicitados.
+- QA publicado de blocos desviantes passa a validar as três primeiras colisões evasivas, as três destruições posteriores, as três pontuações e a transição de fase.
+
+### Testado
+- RED: `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/App.test.tsx --runInBand --testNamePattern='bloqueia restauração padrão repetida'` falhou com botão ainda habilitado.
+- GREEN: `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/App.test.tsx --runInBand --testNamePattern='bloqueia restauração padrão repetida'` → 1 teste.
+- RED: `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/objects/Bricks.test.ts --runInBand --testNamePattern='reserva três blocos desviantes'` falhou com 0 blocos desviantes quando o sorteio tentava metalizar a grade inteira.
+- GREEN: `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/objects/Bricks.test.ts --runInBand --testNamePattern='reserva três blocos desviantes'` → 1 teste.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --check tests/e2e/cloudflare-evasive-blocks-qa.js`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/objects/Bricks.test.ts --runInBand` → 13 testes.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand --silent`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:semantic-file-names`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:svg-assets`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:audio-assets`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make cloudflare-deploy`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-evasive-blocks-qa`.
+- Evidências de cobertura final: `docs/assets/issues/evasive-blocks-coverage/evidence/evi-evasive-blocks-coverage-screen.png`, `docs/assets/issues/evasive-blocks-coverage/evidence/evi-evasive-blocks-coverage-report.json`, `docs/assets/issues/reset-preferences-single-submit/evidence/evi-reset-preferences-single-submit-default-state.png` e `docs/assets/issues/reset-preferences-single-submit/evidence/evi-reset-preferences-single-submit-default-state-report.json`.
+
 ## [1.32.24] - 2026-07-04
 ### Adicionado
 - Cobertura de `App` para garantir que uma preferência salva de música pausada não retome a trilha de fundo ao religar o som geral.

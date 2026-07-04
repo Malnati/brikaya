@@ -1,0 +1,307 @@
+{
+  "publicUrl": "https://brikaya.com/?qaScenario=evasive-blocks",
+  "qaScenario": "evasive-blocks",
+  "eventSummary": {
+    "game_start": 1,
+    "collision": 8,
+    "brick_destroyed": 3,
+    "score_update": 3,
+    "level_complete": 1,
+    "level_start": 1
+  },
+  "firstCollisionIndex": 1,
+  "firstCollisionEventSummary": {
+    "game_start": 1,
+    "collision": 1
+  },
+  "uniqueCollisionKeys": [
+    "0:2",
+    "0:1",
+    "0:0"
+  ],
+  "uniqueDestroyedKeys": [
+    "0:2",
+    "0:1",
+    "0:0"
+  ],
+  "brickCollisions": [
+    {
+      "index": 1,
+      "type": "collision",
+      "score": 0,
+      "bricksRemaining": 3,
+      "collisionType": "brick",
+      "pointsAdded": null,
+      "brickIndex": {
+        "col": 0,
+        "row": 2
+      }
+    },
+    {
+      "index": 6,
+      "type": "collision",
+      "score": 10,
+      "bricksRemaining": 2,
+      "collisionType": "brick",
+      "pointsAdded": null,
+      "brickIndex": {
+        "col": 0,
+        "row": 1
+      }
+    },
+    {
+      "index": 11,
+      "type": "collision",
+      "score": 20,
+      "bricksRemaining": 1,
+      "collisionType": "brick",
+      "pointsAdded": null,
+      "brickIndex": {
+        "col": 0,
+        "row": 0
+      }
+    }
+  ],
+  "brickDestroyed": [
+    {
+      "index": 3,
+      "type": "brick_destroyed",
+      "score": 0,
+      "bricksRemaining": 2,
+      "collisionType": "brick",
+      "pointsAdded": null,
+      "brickIndex": {
+        "col": 0,
+        "row": 2
+      }
+    },
+    {
+      "index": 8,
+      "type": "brick_destroyed",
+      "score": 10,
+      "bricksRemaining": 1,
+      "collisionType": "brick",
+      "pointsAdded": null,
+      "brickIndex": {
+        "col": 0,
+        "row": 1
+      }
+    },
+    {
+      "index": 13,
+      "type": "brick_destroyed",
+      "score": 20,
+      "bricksRemaining": 0,
+      "collisionType": "brick",
+      "pointsAdded": null,
+      "brickIndex": {
+        "col": 0,
+        "row": 0
+      }
+    }
+  ],
+  "scoreUpdates": [
+    {
+      "index": 4,
+      "type": "score_update",
+      "score": 10,
+      "bricksRemaining": 2,
+      "collisionType": null,
+      "pointsAdded": 10,
+      "brickIndex": null
+    },
+    {
+      "index": 9,
+      "type": "score_update",
+      "score": 20,
+      "bricksRemaining": 1,
+      "collisionType": null,
+      "pointsAdded": 10,
+      "brickIndex": null
+    },
+    {
+      "index": 14,
+      "type": "score_update",
+      "score": 30,
+      "bricksRemaining": 0,
+      "collisionType": null,
+      "pointsAdded": 10,
+      "brickIndex": null
+    }
+  ],
+  "recentEvents": [
+    {
+      "index": 0,
+      "type": "game_start",
+      "score": 0,
+      "bricksRemaining": 3,
+      "collisionType": null,
+      "pointsAdded": null,
+      "brickIndex": null
+    },
+    {
+      "index": 1,
+      "type": "collision",
+      "score": 0,
+      "bricksRemaining": 3,
+      "collisionType": "brick",
+      "pointsAdded": null,
+      "brickIndex": {
+        "col": 0,
+        "row": 2
+      }
+    },
+    {
+      "index": 2,
+      "type": "collision",
+      "score": 0,
+      "bricksRemaining": 3,
+      "collisionType": "paddle",
+      "pointsAdded": null,
+      "brickIndex": null
+    },
+    {
+      "index": 3,
+      "type": "brick_destroyed",
+      "score": 0,
+      "bricksRemaining": 2,
+      "collisionType": "brick",
+      "pointsAdded": null,
+      "brickIndex": {
+        "col": 0,
+        "row": 2
+      }
+    },
+    {
+      "index": 4,
+      "type": "score_update",
+      "score": 10,
+      "bricksRemaining": 2,
+      "collisionType": null,
+      "pointsAdded": 10,
+      "brickIndex": null
+    },
+    {
+      "index": 5,
+      "type": "collision",
+      "score": 10,
+      "bricksRemaining": 2,
+      "collisionType": "paddle",
+      "pointsAdded": null,
+      "brickIndex": null
+    },
+    {
+      "index": 6,
+      "type": "collision",
+      "score": 10,
+      "bricksRemaining": 2,
+      "collisionType": "brick",
+      "pointsAdded": null,
+      "brickIndex": {
+        "col": 0,
+        "row": 1
+      }
+    },
+    {
+      "index": 7,
+      "type": "collision",
+      "score": 10,
+      "bricksRemaining": 2,
+      "collisionType": "paddle",
+      "pointsAdded": null,
+      "brickIndex": null
+    },
+    {
+      "index": 8,
+      "type": "brick_destroyed",
+      "score": 10,
+      "bricksRemaining": 1,
+      "collisionType": "brick",
+      "pointsAdded": null,
+      "brickIndex": {
+        "col": 0,
+        "row": 1
+      }
+    },
+    {
+      "index": 9,
+      "type": "score_update",
+      "score": 20,
+      "bricksRemaining": 1,
+      "collisionType": null,
+      "pointsAdded": 10,
+      "brickIndex": null
+    },
+    {
+      "index": 10,
+      "type": "collision",
+      "score": 20,
+      "bricksRemaining": 1,
+      "collisionType": "paddle",
+      "pointsAdded": null,
+      "brickIndex": null
+    },
+    {
+      "index": 11,
+      "type": "collision",
+      "score": 20,
+      "bricksRemaining": 1,
+      "collisionType": "brick",
+      "pointsAdded": null,
+      "brickIndex": {
+        "col": 0,
+        "row": 0
+      }
+    },
+    {
+      "index": 12,
+      "type": "collision",
+      "score": 20,
+      "bricksRemaining": 1,
+      "collisionType": "paddle",
+      "pointsAdded": null,
+      "brickIndex": null
+    },
+    {
+      "index": 13,
+      "type": "brick_destroyed",
+      "score": 20,
+      "bricksRemaining": 0,
+      "collisionType": "brick",
+      "pointsAdded": null,
+      "brickIndex": {
+        "col": 0,
+        "row": 0
+      }
+    },
+    {
+      "index": 14,
+      "type": "score_update",
+      "score": 30,
+      "bricksRemaining": 0,
+      "collisionType": null,
+      "pointsAdded": 10,
+      "brickIndex": null
+    },
+    {
+      "index": 15,
+      "type": "level_complete",
+      "score": 30,
+      "bricksRemaining": 0,
+      "collisionType": null,
+      "pointsAdded": null,
+      "brickIndex": null
+    },
+    {
+      "index": 16,
+      "type": "level_start",
+      "score": 30,
+      "bricksRemaining": 4,
+      "collisionType": null,
+      "pointsAdded": null,
+      "brickIndex": null
+    }
+  ],
+  "consoleProblems": [],
+  "screenshot": "docs/assets/issues/evasive-blocks-coverage/evidence/evi-evasive-blocks-coverage-screen.png"
+}
