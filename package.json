@@ -39,6 +39,7 @@
     "test:cloudflare-i18n-seo": "node tests/e2e/cloudflare-i18n-seo-qa.js",
     "test:cloudflare-metal-blocks": "node tests/e2e/cloudflare-metal-blocks-qa.js",
     "test:trace-guard": "node scripts/validate-public-trace-guard.mjs",
+    "test:trace-guard:public": "node scripts/validate-public-trace-guard.mjs --public-url https://brikaya.com/",
     "test:trace-guard:unit": "node scripts/validate-public-trace-guard.test.mjs"
   },
   "dependencies": {
