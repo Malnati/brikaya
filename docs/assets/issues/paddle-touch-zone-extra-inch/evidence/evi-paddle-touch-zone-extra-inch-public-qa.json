@@ -1,0 +1,759 @@
+{
+  "publicUrl": "https://brikaya.com/",
+  "viewportMatrixPath": "tests/e2e/responsiveViewportMatrix.json",
+  "viewportName": "iphone-17-default",
+  "screenshotPath": "docs/assets/issues/paddle-touch-zone-extra-inch/evidence/evi-paddle-touch-zone-extra-inch-mobile.png",
+  "menuScreenshotPath": "docs/assets/issues/paddle-touch-zone-extra-inch/evidence/evi-paddle-touch-zone-extra-inch-menu.png",
+  "layoutState": {
+    "title": "Brikaya — arcade de quebrar blocos",
+    "heading": "Brikaya",
+    "viewport": {
+      "width": 402,
+      "height": 874,
+      "scrollWidth": 402,
+      "scrollHeight": 874
+    },
+    "buttons": [
+      {
+        "text": "×",
+        "ariaLabel": "Sem som",
+        "title": "Sem som",
+        "settingsAction": "",
+        "rect": {
+          "x": 13,
+          "y": 13,
+          "width": 44,
+          "height": 44,
+          "right": 57,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "↻",
+        "ariaLabel": "Reiniciar",
+        "title": "Reiniciar",
+        "settingsAction": "",
+        "rect": {
+          "x": 61,
+          "y": 13,
+          "width": 44,
+          "height": 44,
+          "right": 105,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "Menu",
+        "ariaLabel": "",
+        "title": "",
+        "settingsAction": "",
+        "rect": {
+          "x": 321,
+          "y": 13,
+          "width": 68,
+          "height": 44,
+          "right": 389,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      }
+    ],
+    "buildVersion": null,
+    "canvas": {
+      "x": 13,
+      "y": 111,
+      "width": 376,
+      "height": 251.328125,
+      "right": 389,
+      "bottom": 362.328125
+    },
+    "dashboardLayout": {
+      "x": 13,
+      "y": 111,
+      "width": 376,
+      "height": 251.328125,
+      "right": 389,
+      "bottom": 362.328125
+    },
+    "scoreHud": {
+      "x": 51.171875,
+      "y": 65,
+      "width": 299.640625,
+      "height": 38,
+      "right": 350.8125,
+      "bottom": 103
+    },
+    "scoreHudText": "Fase 1|Score 10|Total 0|Recorde 0",
+    "bottomSlot": null,
+    "adSlotCount": 0,
+    "publicityTextPresent": false,
+    "scoreValue": 10,
+    "hasHorizontalOverflow": false,
+    "bodyOverflow": "hidden auto"
+  },
+  "paddleTouchZoneState": {
+    "exists": true,
+    "rect": {
+      "x": 13,
+      "y": 260.65625,
+      "width": 376,
+      "height": 288,
+      "right": 389,
+      "bottom": 548.65625
+    },
+    "canvas": {
+      "x": 13,
+      "y": 111,
+      "width": 376,
+      "height": 251.328125,
+      "right": 389,
+      "bottom": 362.328125
+    },
+    "intrinsicCanvas": {
+      "width": 376,
+      "height": 250
+    },
+    "display": "block",
+    "pointerEvents": "auto",
+    "touchAction": "none",
+    "viewport": {
+      "width": 402,
+      "height": 874
+    }
+  },
+  "touchDragState": {
+    "startX": 88.2,
+    "endX": 313.8,
+    "y": 404.65625
+  },
+  "beforeTouchSummary": {
+    "databaseNames": [
+      "BrickBreakerCollisions",
+      "BrickBreakerGameLog",
+      "SystemDebugLog",
+      "breakout"
+    ],
+    "eventTypes": [
+      "game_start",
+      "brick_destroyed",
+      "score_update",
+      "collision",
+      "ball_lost",
+      "game_state_change",
+      "game_end",
+      "game_start"
+    ],
+    "hasRequiredDatabases": true,
+    "hasRequiredEvents": true,
+    "eventCount": 8,
+    "paddleMoveCount": 0,
+    "latestPaddleMove": null
+  },
+  "afterTouchSummary": {
+    "databaseNames": [
+      "BrickBreakerCollisions",
+      "BrickBreakerGameLog",
+      "SystemDebugLog",
+      "breakout"
+    ],
+    "eventTypes": [
+      "game_start",
+      "brick_destroyed",
+      "score_update",
+      "collision",
+      "ball_lost",
+      "game_state_change",
+      "game_end",
+      "game_start",
+      "paddle_move",
+      "paddle_move"
+    ],
+    "hasRequiredDatabases": true,
+    "hasRequiredEvents": true,
+    "eventCount": 10,
+    "paddleMoveCount": 2,
+    "latestPaddleMove": {
+      "type": "paddle_move",
+      "gameState": {
+        "score": 0,
+        "ballsCount": 1,
+        "bricksRemaining": 0,
+        "gameWon": false,
+        "gameOver": false,
+        "level": 1,
+        "canvasSize": {
+          "width": 376,
+          "height": 250
+        },
+        "gameDimensions": {
+          "brickWidth": 75,
+          "brickHeight": 20,
+          "brickCols": 5,
+          "brickRows": 3,
+          "paddleWidth": 75.2,
+          "paddleHeight": 11.28,
+          "ballRadius": 10
+        },
+        "speedState": {
+          "level": 1,
+          "initialBrickCount": 1,
+          "successfulBrickHits": 0,
+          "initialSpawnSpeed": 3.3,
+          "maxSpeed": 3.3,
+          "minSpeed": 0.825,
+          "currentSpeed": 3.3,
+          "reductionPerBrick": 2.475,
+          "previousLevelMaxSpeed": 3.3,
+          "levelStartedAt": 1783154875539,
+          "elapsedLevelMs": 0,
+          "minReached": false
+        }
+      },
+      "ballPositions": [
+        {
+          "x": 0,
+          "y": 0,
+          "velocity": {
+            "dx": 0,
+            "dy": 0
+          },
+          "radius": 10
+        }
+      ],
+      "paddlePosition": {
+        "x": 263.1999877929687,
+        "y": 238.72,
+        "width": 75.2,
+        "height": 11.28
+      },
+      "metadata": {
+        "direction": "touch",
+        "previousPosition": {
+          "x": 263.1999877929687,
+          "y": 238.72,
+          "width": 75.2,
+          "height": 11.28
+        },
+        "movementDistance": 0,
+        "paddleCenter": 300.79998779296875,
+        "speedState": {
+          "level": 1,
+          "initialBrickCount": 1,
+          "successfulBrickHits": 0,
+          "initialSpawnSpeed": 3.3,
+          "maxSpeed": 3.3,
+          "minSpeed": 0.825,
+          "currentSpeed": 3.3,
+          "reductionPerBrick": 2.475,
+          "previousLevelMaxSpeed": 3.3,
+          "levelStartedAt": 1783154875539,
+          "elapsedLevelMs": 0,
+          "minReached": false
+        }
+      },
+      "id": "1783154875541-6ogo57s46",
+      "timestamp": 1783154875541,
+      "gameId": "game-1783154875327-dopnju",
+      "gameStartTime": 1783154875327
+    }
+  },
+  "menuState": {
+    "text": "Menu×Versão v160IdiomaIdioma do jogoPortuguês (Brasil)EnglishEspañol latinoamericanoEnglish (India)हिन्दीDeutschFrançaisItaliano日本語한국어Bahasa IndonesiaTiếng ViệtFilipinoไทย简体中文AparênciaConjuntos prontosAutomático por faseArcade neonCRT alto contrastePôr do sol pixeladoOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoMetrô noturnoOficina mecânicaLaboratório clínicoTemplo antigoEstação orbitalCoresArcade neonCRT alto contrastePôr do sol pixeladoOceano noturnoSelva laserÂmbar retrôGelo cósmicoAmeixa elétricaLima grafiteRubi profundoMetrô noturnoOficina mecânicaLaboratório clínicoTemplo antigoEstação orbitalImagensRetrô padrãoAlto contrasteCabine pôr do solMetrô realistaOficina realistaLaboratório realistaTemplo realistaÓrbita realistaFonteArcadeCRT monoBlocos pixeladosRecordesMelhor partida 101º 10PrivacidadeA ajuda por região está desligada. O idioma do navegador será usado.◎Usar região para idiomaPolítica de privacidadeTermos✓Revisar consentimentoDados do jogo≡Histórico◈Colisões0Zerar pontuação",
+    "appearanceOptionIds": [
+      "auto-by-level",
+      "preset-neon-arcade",
+      "preset-crt-high-contrast",
+      "preset-pixel-sunset",
+      "preset-ocean-night",
+      "preset-jungle-laser",
+      "preset-amber-retro",
+      "preset-cosmic-ice",
+      "preset-electric-plum",
+      "preset-lime-graphite",
+      "preset-ruby-depth",
+      "preset-real-metro-night",
+      "preset-real-auto-garage",
+      "preset-real-bio-lab",
+      "preset-real-ancient-temple",
+      "preset-real-orbital-station",
+      "neon-arcade",
+      "crt-high-contrast",
+      "pixel-sunset",
+      "ocean-night",
+      "jungle-laser",
+      "amber-retro",
+      "cosmic-ice",
+      "electric-plum",
+      "lime-graphite",
+      "ruby-depth",
+      "real-metro-night",
+      "real-auto-garage",
+      "real-bio-lab",
+      "real-ancient-temple",
+      "real-orbital-station",
+      "retro-default",
+      "high-contrast",
+      "sunset-cabinet",
+      "real-metro-tunnel",
+      "real-workshop-steel",
+      "real-bio-lab-glass",
+      "real-temple-stone",
+      "real-orbital-deck",
+      "arcade-ui",
+      "crt-mono",
+      "block-pixel"
+    ],
+    "settingsActions": [
+      "logs",
+      "collisions",
+      "reset-score"
+    ],
+    "drawer": {
+      "x": 82,
+      "y": 0,
+      "width": 320,
+      "height": 874,
+      "right": 402,
+      "bottom": 874
+    },
+    "hasHorizontalOverflow": false
+  },
+  "menuPauseState": {
+    "beforeScoreHudText": "Fase 1|Score 0|Total 10|Recorde 10",
+    "afterScoreHudText": "Fase 1|Score 0|Total 10|Recorde 10",
+    "beforeScoreValue": 0,
+    "afterScoreValue": 0,
+    "beforeFrameLength": 30114,
+    "afterFrameLength": 30114,
+    "scoreStable": true,
+    "canvasFrameStable": true
+  },
+  "historyState": {
+    "title": "Brikaya — arcade de quebrar blocos",
+    "heading": "Brikaya",
+    "viewport": {
+      "width": 402,
+      "height": 874,
+      "scrollWidth": 402,
+      "scrollHeight": 1249
+    },
+    "buttons": [
+      {
+        "text": "×",
+        "ariaLabel": "Sem som",
+        "title": "Sem som",
+        "settingsAction": "",
+        "rect": {
+          "x": 13,
+          "y": 13,
+          "width": 44,
+          "height": 44,
+          "right": 57,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "↻",
+        "ariaLabel": "Reiniciar",
+        "title": "Reiniciar",
+        "settingsAction": "",
+        "rect": {
+          "x": 61,
+          "y": 13,
+          "width": 44,
+          "height": 44,
+          "right": 105,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "Menu",
+        "ariaLabel": "",
+        "title": "",
+        "settingsAction": "",
+        "rect": {
+          "x": 321,
+          "y": 13,
+          "width": 68,
+          "height": 44,
+          "right": 389,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "✕ Fechar",
+        "ariaLabel": "",
+        "title": "",
+        "settingsAction": "",
+        "rect": {
+          "x": 20,
+          "y": 411.328125,
+          "width": 92.109375,
+          "height": 44,
+          "right": 112.109375,
+          "bottom": 455.328125
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "🔄 Atualizar",
+        "ariaLabel": "",
+        "title": "",
+        "settingsAction": "",
+        "rect": {
+          "x": 20,
+          "y": 591.140625,
+          "width": 176,
+          "height": 44,
+          "right": 196,
+          "bottom": 635.140625
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "📤 Exportar",
+        "ariaLabel": "",
+        "title": "",
+        "settingsAction": "",
+        "rect": {
+          "x": 206,
+          "y": 591.140625,
+          "width": 176,
+          "height": 44,
+          "right": 382,
+          "bottom": 635.140625
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "🗑️ Limpar",
+        "ariaLabel": "",
+        "title": "",
+        "settingsAction": "",
+        "rect": {
+          "x": 20,
+          "y": 645.140625,
+          "width": 362,
+          "height": 44,
+          "right": 382,
+          "bottom": 689.140625
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      }
+    ],
+    "buildVersion": null,
+    "canvas": {
+      "x": 13,
+      "y": 111,
+      "width": 376,
+      "height": 251.328125,
+      "right": 389,
+      "bottom": 362.328125
+    },
+    "dashboardLayout": {
+      "x": 13,
+      "y": 111,
+      "width": 376,
+      "height": 251.328125,
+      "right": 389,
+      "bottom": 362.328125
+    },
+    "scoreHud": {
+      "x": 44.828125,
+      "y": 65,
+      "width": 312.34375,
+      "height": 38,
+      "right": 357.171875,
+      "bottom": 103
+    },
+    "scoreHudText": "Fase 1|Score 10|Total 10|Recorde 10",
+    "bottomSlot": null,
+    "adSlotCount": 0,
+    "publicityTextPresent": false,
+    "scoreValue": 10,
+    "hasHorizontalOverflow": false,
+    "bodyOverflow": "hidden auto"
+  },
+  "statsState": {
+    "title": "Brikaya — arcade de quebrar blocos",
+    "heading": "Brikaya",
+    "viewport": {
+      "width": 402,
+      "height": 874,
+      "scrollWidth": 402,
+      "scrollHeight": 874
+    },
+    "buttons": [
+      {
+        "text": "×",
+        "ariaLabel": "Sem som",
+        "title": "Sem som",
+        "settingsAction": "",
+        "rect": {
+          "x": 13,
+          "y": 13,
+          "width": 44,
+          "height": 44,
+          "right": 57,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "↻",
+        "ariaLabel": "Reiniciar",
+        "title": "Reiniciar",
+        "settingsAction": "",
+        "rect": {
+          "x": 61,
+          "y": 13,
+          "width": 44,
+          "height": 44,
+          "right": 105,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "Menu",
+        "ariaLabel": "",
+        "title": "",
+        "settingsAction": "",
+        "rect": {
+          "x": 321,
+          "y": 13,
+          "width": 68,
+          "height": 44,
+          "right": 389,
+          "bottom": 57
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "✕",
+        "ariaLabel": "",
+        "title": "",
+        "settingsAction": "",
+        "rect": {
+          "x": 324,
+          "y": 123.5,
+          "width": 44,
+          "height": 44,
+          "right": 368,
+          "bottom": 167.5
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "Mostrar Colisões Recentes",
+        "ariaLabel": "",
+        "title": "",
+        "settingsAction": "",
+        "rect": {
+          "x": 34,
+          "y": 640.5,
+          "width": 274.828125,
+          "height": 44,
+          "right": 308.828125,
+          "bottom": 684.5
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      },
+      {
+        "text": "Limpar Todas as Colisões",
+        "ariaLabel": "",
+        "title": "",
+        "settingsAction": "",
+        "rect": {
+          "x": 34,
+          "y": 694.5,
+          "width": 265.1875,
+          "height": 44,
+          "right": 299.1875,
+          "bottom": 738.5
+        },
+        "visibleInViewport": true,
+        "hasTouchTarget": true,
+        "inDrawer": false
+      }
+    ],
+    "buildVersion": null,
+    "canvas": {
+      "x": 13,
+      "y": 111,
+      "width": 376,
+      "height": 251.328125,
+      "right": 389,
+      "bottom": 362.328125
+    },
+    "dashboardLayout": {
+      "x": 13,
+      "y": 111,
+      "width": 376,
+      "height": 251.328125,
+      "right": 389,
+      "bottom": 362.328125
+    },
+    "scoreHud": {
+      "x": 44.828125,
+      "y": 65,
+      "width": 312.34375,
+      "height": 38,
+      "right": 357.171875,
+      "bottom": 103
+    },
+    "scoreHudText": "Fase 1|Score 10|Total 10|Recorde 10",
+    "bottomSlot": null,
+    "adSlotCount": 0,
+    "publicityTextPresent": false,
+    "scoreValue": 10,
+    "hasHorizontalOverflow": false,
+    "bodyOverflow": "hidden auto"
+  },
+  "indexedDbSummary": {
+    "databaseNames": [
+      "BrickBreakerCollisions",
+      "BrickBreakerGameLog",
+      "SystemDebugLog",
+      "breakout"
+    ],
+    "eventTypes": [
+      "game_start",
+      "brick_destroyed",
+      "score_update",
+      "collision",
+      "ball_lost",
+      "game_state_change",
+      "game_end",
+      "game_start",
+      "paddle_move",
+      "paddle_move",
+      "brick_destroyed",
+      "score_update"
+    ],
+    "hasRequiredDatabases": true,
+    "hasRequiredEvents": true,
+    "eventCount": 12,
+    "paddleMoveCount": 2,
+    "latestPaddleMove": {
+      "type": "paddle_move",
+      "gameState": {
+        "score": 0,
+        "ballsCount": 1,
+        "bricksRemaining": 0,
+        "gameWon": false,
+        "gameOver": false,
+        "level": 1,
+        "canvasSize": {
+          "width": 376,
+          "height": 250
+        },
+        "gameDimensions": {
+          "brickWidth": 75,
+          "brickHeight": 20,
+          "brickCols": 5,
+          "brickRows": 3,
+          "paddleWidth": 75.2,
+          "paddleHeight": 11.28,
+          "ballRadius": 10
+        },
+        "speedState": {
+          "level": 1,
+          "initialBrickCount": 1,
+          "successfulBrickHits": 0,
+          "initialSpawnSpeed": 3.3,
+          "maxSpeed": 3.3,
+          "minSpeed": 0.825,
+          "currentSpeed": 3.3,
+          "reductionPerBrick": 2.475,
+          "previousLevelMaxSpeed": 3.3,
+          "levelStartedAt": 1783154875539,
+          "elapsedLevelMs": 0,
+          "minReached": false
+        }
+      },
+      "ballPositions": [
+        {
+          "x": 0,
+          "y": 0,
+          "velocity": {
+            "dx": 0,
+            "dy": 0
+          },
+          "radius": 10
+        }
+      ],
+      "paddlePosition": {
+        "x": 263.1999877929687,
+        "y": 238.72,
+        "width": 75.2,
+        "height": 11.28
+      },
+      "metadata": {
+        "direction": "touch",
+        "previousPosition": {
+          "x": 263.1999877929687,
+          "y": 238.72,
+          "width": 75.2,
+          "height": 11.28
+        },
+        "movementDistance": 0,
+        "paddleCenter": 300.79998779296875,
+        "speedState": {
+          "level": 1,
+          "initialBrickCount": 1,
+          "successfulBrickHits": 0,
+          "initialSpawnSpeed": 3.3,
+          "maxSpeed": 3.3,
+          "minSpeed": 0.825,
+          "currentSpeed": 3.3,
+          "reductionPerBrick": 2.475,
+          "previousLevelMaxSpeed": 3.3,
+          "levelStartedAt": 1783154875539,
+          "elapsedLevelMs": 0,
+          "minReached": false
+        }
+      },
+      "id": "1783154875541-6ogo57s46",
+      "timestamp": 1783154875541,
+      "gameId": "game-1783154875327-dopnju",
+      "gameStartTime": 1783154875327
+    }
+  },
+  "consoleProblems": []
+}

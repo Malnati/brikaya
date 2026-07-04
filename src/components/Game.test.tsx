@@ -23,12 +23,15 @@ const TEST_BOARD_RECT = {
   top: 111,
   toJSON: jest.fn(),
 } as unknown as DOMRect;
+const EXPECTED_PADDLE_TOUCH_ZONE_HEIGHT = "3in";
+const EXPECTED_PADDLE_TOUCH_ZONE_TOP_OFFSET = "- 96px";
+const EXPECTED_PADDLE_TOUCH_ZONE_TRANSFORM = "none";
 
 describe("Game", () => {
   beforeEach(() => {
-    jest.spyOn(HTMLCanvasElement.prototype, "getBoundingClientRect").mockReturnValue(
-      TEST_BOARD_RECT,
-    );
+    jest
+      .spyOn(HTMLCanvasElement.prototype, "getBoundingClientRect")
+      .mockReturnValue(TEST_BOARD_RECT);
   });
 
   afterEach(() => {
@@ -62,12 +65,7 @@ describe("Game", () => {
   });
 
   it("propaga bloqueio de início para o loop do jogo", () => {
-    render(
-      <Game
-        onScoreUpdate={jest.fn()}
-        startBlocked
-      />,
-    );
+    render(<Game onScoreUpdate={jest.fn()} startBlocked />);
 
     expect(useGameLoop).toHaveBeenCalledWith(
       expect.anything(),
@@ -118,7 +116,13 @@ describe("Game", () => {
 
     expect(touchZone).toBeInTheDocument();
     expect(touchZone).toHaveAttribute("aria-hidden", "true");
-    expect(touchZone).toHaveStyle({ height: "2in" });
+    expect(touchZone.style.height).toBe(EXPECTED_PADDLE_TOUCH_ZONE_HEIGHT);
+    expect(touchZone.style.top).toContain(
+      EXPECTED_PADDLE_TOUCH_ZONE_TOP_OFFSET,
+    );
+    expect(touchZone.style.transform).toBe(
+      EXPECTED_PADDLE_TOUCH_ZONE_TRANSFORM,
+    );
     expect(touchZone).toHaveClass("game-paddle-touch-zone");
   });
 
@@ -126,10 +130,7 @@ describe("Game", () => {
     const onBoardRectChange = jest.fn();
 
     render(
-      <Game
-        onScoreUpdate={jest.fn()}
-        onBoardRectChange={onBoardRectChange}
-      />,
+      <Game onScoreUpdate={jest.fn()} onBoardRectChange={onBoardRectChange} />,
     );
 
     expect(onBoardRectChange).toHaveBeenCalledWith({

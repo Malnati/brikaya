@@ -53,7 +53,8 @@ const VISUAL_VIEWPORT_HEIGHT_CSS_VAR = "--bb-visual-viewport-height";
 const PIXEL_UNIT = "px";
 const PERCENT_UNIT = "%";
 const PERCENT_FACTOR = 100;
-const PADDLE_TOUCH_ZONE_HEIGHT = "2in";
+const PADDLE_TOUCH_ZONE_TOP_OFFSET = "1in";
+const PADDLE_TOUCH_ZONE_HEIGHT = "3in";
 const PADDLE_TOUCH_ZONE_TEST_ID = "paddle-touch-zone";
 const GAME_SURFACE_CLASS_NAME = "game-surface";
 const GAME_SURFACE_IMMERSIVE_CLASS_NAME =
@@ -275,8 +276,9 @@ export default function Game({
             data-testid={PADDLE_TOUCH_ZONE_TEST_ID}
             aria-hidden="true"
             style={{
-              top: `${paddleTouchZoneCenterPercent}${PERCENT_UNIT}`,
+              top: `calc(${paddleTouchZoneCenterPercent}${PERCENT_UNIT} - ${PADDLE_TOUCH_ZONE_TOP_OFFSET})`,
               height: PADDLE_TOUCH_ZONE_HEIGHT,
+              transform: "none",
             }}
           />
         </div>

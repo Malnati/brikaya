@@ -120,7 +120,13 @@ const EVENT_HEADER_SELECTOR = ".event-header";
 const EVENT_DETAILS_SELECTOR = ".event-details";
 const EVENT_DETAILS_WAIT_TIMEOUT_MS = 10000;
 const PADDLE_TOUCH_ZONE_SELECTOR = '[data-testid="paddle-touch-zone"]';
-const MIN_PADDLE_TOUCH_ZONE_HEIGHT = 192;
+const CSS_INCH_PX = 96;
+const MIN_PADDLE_TOUCH_ZONE_HEIGHT = CSS_INCH_PX * 3;
+const BASE_PADDLE_TOUCH_ZONE_HEIGHT = CSS_INCH_PX * 2;
+const PADDLE_WIDTH_MIN = 60;
+const PADDLE_WIDTH_MAX = 120;
+const PADDLE_WIDTH_CANVAS_RATIO = 0.2;
+const PADDLE_HEIGHT_WIDTH_RATIO = 0.15;
 const TOUCH_DRAG_START_RATIO = 0.2;
 const TOUCH_DRAG_END_RATIO = 0.8;
 const TOUCH_DRAG_SETTLE_MS = 120;
@@ -169,6 +175,25 @@ function extractRequiredMatch(content, pattern, label) {
   }
 
   return match;
+}
+
+function calculateExpectedPaddleTouchZoneTop(touchZoneState) {
+  const canvas = touchZoneState.canvas;
+  const intrinsicCanvas = touchZoneState.intrinsicCanvas;
+  const paddleWidth = Math.max(
+    PADDLE_WIDTH_MIN,
+    Math.min(
+      PADDLE_WIDTH_MAX,
+      intrinsicCanvas.width * PADDLE_WIDTH_CANVAS_RATIO,
+    ),
+  );
+  const paddleHeight = paddleWidth * PADDLE_HEIGHT_WIDTH_RATIO;
+  const paddleCenterY =
+    canvas.y +
+    ((intrinsicCanvas.height - paddleHeight / 2) / intrinsicCanvas.height) *
+      canvas.height;
+
+  return paddleCenterY - BASE_PADDLE_TOUCH_ZONE_HEIGHT / 2;
 }
 
 async function closeBrowser(browser) {
@@ -672,6 +697,13 @@ async function collectPaddleTouchZoneState(page) {
             bottom: canvasRect.bottom,
           }
         : null,
+      intrinsicCanvas:
+        canvas instanceof HTMLCanvasElement
+          ? {
+              width: canvas.width,
+              height: canvas.height,
+            }
+          : null,
       display: touchZoneStyle?.display || "",
       pointerEvents: touchZoneStyle?.pointerEvents || "",
       touchAction: touchZoneStyle?.touchAction || "",
@@ -890,6 +922,10 @@ async function run() {
     assert(paddleTouchZoneState.rect, "Faixa touch da raquete sem retângulo.");
     assert(paddleTouchZoneState.canvas, "Canvas ausente na validação touch.");
     assert(
+      paddleTouchZoneState.intrinsicCanvas,
+      "Canvas sem dimensão interna na validação touch.",
+    );
+    assert(
       paddleTouchZoneState.display !== "none",
       "Faixa touch da raquete não ficou ativa em mobile.",
     );
@@ -899,7 +935,14 @@ async function run() {
     );
     assert(
       paddleTouchZoneState.rect.height >= MIN_PADDLE_TOUCH_ZONE_HEIGHT,
-      `Faixa touch menor que 2in: ${paddleTouchZoneState.rect.height}px.`,
+      `Faixa touch menor que 3in: ${paddleTouchZoneState.rect.height}px.`,
+    );
+    const expectedPaddleTouchZoneTop =
+      calculateExpectedPaddleTouchZoneTop(paddleTouchZoneState);
+    assert(
+      Math.abs(paddleTouchZoneState.rect.y - expectedPaddleTouchZoneTop) <=
+        RECT_TOLERANCE_PX,
+      `Faixa touch moveu no topo: ${paddleTouchZoneState.rect.y}px != ${expectedPaddleTouchZoneTop}px.`,
     );
     assert(
       Math.abs(
