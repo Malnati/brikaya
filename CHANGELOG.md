@@ -3,6 +3,20 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.22] - 2026-07-04
+### Adicionado
+- Cobertura unitária para `clearAllEvents`, validando inicialização sob demanda do IndexedDB e limpeza do estado do jogo ativo após remover eventos.
+
+### Alterado
+- `clearAllEvents` passa a inicializar o IndexedDB quando necessário antes de limpar eventos.
+- Limpeza total dos eventos também zera `currentGameId` e `gameStartTime`, evitando continuidade fantasma após reset local.
+- Consolidação reúne a branch remota ativa de controle de música e prepara descarte seguro das branches locais antigas já aplicadas, equivalentes ou superadas por `main`.
+
+### Testado
+- RED: `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" npm test -- src/storage/gameLogger.test.ts --runInBand -t clearAllEvents` falhou com `mockStore.clear` não chamado e `currentGameId` ainda ativo.
+- GREEN: `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" npm test -- src/storage/gameLogger.test.ts --runInBand -t clearAllEvents` → 2 testes.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/opt/node@23/bin:$PATH" npm test -- src/storage/gameLogger.test.ts --runInBand` → 11 testes.
+
 ## [1.32.21] - 2026-07-04
 ### Adicionado
 - Ícone independente de música no topo do jogo, ao lado do ícone de som, para pausar ou retomar somente a trilha de fundo.

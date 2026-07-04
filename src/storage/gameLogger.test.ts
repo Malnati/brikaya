@@ -83,7 +83,22 @@ function createMockIndexedDB() {
     }),
     get: jest.fn(),
     getAll: jest.fn(),
-    clear: jest.fn(),
+    clear: jest.fn(() => {
+      const request = {
+        result: undefined,
+        error: null,
+        onsuccess: null,
+        onerror: null,
+      } as IDBRequest;
+
+      setTimeout(() => {
+        if (request.onsuccess) {
+          request.onsuccess(new Event('success') as any);
+        }
+      }, 0);
+
+      return request;
+    }),
   };
 
   const mockTransaction = {
@@ -552,6 +567,27 @@ describe('GameLogger', () => {
       const gameId = gameLogger.getCurrentGameId();
       // Pode ser null ou string dependendo do estado
       expect(typeof gameId === 'string' || gameId === null).toBe(true);
+    });
+  });
+
+  describe('clearAllEvents', () => {
+    it('deve inicializar IndexedDB antes de limpar eventos quando o DB não está pronto', async () => {
+      (gameLogger as any).db = null;
+
+      await gameLogger.clearAllEvents();
+
+      expect(mockIndexedDB.mockStore.clear).toHaveBeenCalled();
+    });
+
+    it('deve limpar o jogo ativo após remover todos os eventos', async () => {
+      (gameLogger as any).db = mockIndexedDB.mockDB;
+      (gameLogger as any).currentGameId = 'active-game';
+      (gameLogger as any).gameStartTime = 1_782_870_000_000;
+
+      await gameLogger.clearAllEvents();
+
+      expect(gameLogger.getCurrentGameId()).toBeNull();
+      expect((gameLogger as any).gameStartTime).toBeNull();
     });
   });
 });
