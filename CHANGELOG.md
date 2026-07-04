@@ -3,6 +3,19 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.6] - 2026-07-04
+### Adicionado
+- Recibo operacional documenta a consolidação de branches locais/remotas em `main`, com inventário de patch-equivalência, conflitos superseded e backup de segurança.
+
+### Alterado
+- Fluxo de limpeza passa a tratar branches antigas com patch unique conflitante como superseded quando `main` já contém implementação mais nova ou evidência com nomes semânticos atuais.
+
+### Testado
+- `PATH="/opt/homebrew/bin:$PATH" node --version` → `v23.5.0`.
+- `PATH="/opt/homebrew/bin:$PATH" make help`.
+- `PATH="/opt/homebrew/bin:$PATH" npm test -- --runInBand` → 39 suites / 193 testes.
+
+
 ## [1.32.5] - 2026-07-04
 ### Corrigido
 - RIP de fim de jogo passa a agrupar texto, botão e fumaça em uma composição única centralizada na área útil do navegador mobile.
