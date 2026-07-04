@@ -8,7 +8,7 @@ import {
 } from "./visualAssetResolver";
 
 const SVG_PATTERN = /^\/assets\/visual\/.+\.svg$/;
-const RUNTIME_VISUAL_ROLE_COUNT = 19;
+const RUNTIME_VISUAL_ROLE_COUNT = 21;
 const EXPECTED_IMAGE_SET_IDS = [
   "retro-default",
   "high-contrast",
@@ -40,9 +40,21 @@ describe("visual asset resolver", () => {
     expect(
       resolveGameVisualAssetPath(
         "retro-default",
-        GAME_VISUAL_ASSET_ROLES.brickMetal,
+        GAME_VISUAL_ASSET_ROLES.brickMetalIntact,
       ),
     ).toBe("/assets/visual/bricks/spr-brick-metal-steel-normal.svg");
+    expect(
+      resolveGameVisualAssetPath(
+        "retro-default",
+        GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne,
+      ),
+    ).toBe("/assets/visual/bricks/spr-brick-metal-steel-dented-one.svg");
+    expect(
+      resolveGameVisualAssetPath(
+        "retro-default",
+        GAME_VISUAL_ASSET_ROLES.brickMetalDentedTwo,
+      ),
+    ).toBe("/assets/visual/bricks/spr-brick-metal-steel-dented-two.svg");
   });
 
   it("resolve variantes SVG alto contraste e sunset", () => {
@@ -61,7 +73,7 @@ describe("visual asset resolver", () => {
     expect(
       resolveGameVisualAssetPath(
         "high-contrast",
-        GAME_VISUAL_ASSET_ROLES.brickMetal,
+        GAME_VISUAL_ASSET_ROLES.brickMetalIntact,
       ),
     ).toBe(
       "/assets/visual/bricks/spr-brick-metal-steel-high-contrast-normal.svg",
@@ -69,9 +81,9 @@ describe("visual asset resolver", () => {
     expect(
       resolveGameVisualAssetPath(
         "sunset-cabinet",
-        GAME_VISUAL_ASSET_ROLES.brickMetal,
+        GAME_VISUAL_ASSET_ROLES.brickMetalDentedTwo,
       ),
-    ).toBe("/assets/visual/bricks/spr-brick-metal-steel-sunset-normal.svg");
+    ).toBe("/assets/visual/bricks/spr-brick-metal-steel-sunset-dented-two.svg");
   });
 
   it("resolve cinco conjuntos realistas diferentes", () => {
@@ -109,9 +121,9 @@ describe("visual asset resolver", () => {
     expect(
       resolveGameVisualAssetPath(
         "real-workshop-steel",
-        GAME_VISUAL_ASSET_ROLES.brickMetal,
+        GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne,
       ),
-    ).toBe("/assets/visual/bricks/spr-brick-metal-steel-normal.svg");
+    ).toBe("/assets/visual/bricks/spr-brick-metal-steel-dented-one.svg");
   });
 
   it("lista somente SVGs sem repetição por conjunto", () => {

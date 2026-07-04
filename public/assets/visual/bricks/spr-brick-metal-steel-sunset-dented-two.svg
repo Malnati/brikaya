@@ -1,0 +1,30 @@
+<!-- public/assets/visual/bricks/spr-brick-metal-steel-sunset-dented-two.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Tijolo metálico sunset com dois amassados">
+  <defs>
+    <linearGradient id="metal-sunset-dented-two" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffe69a"/>
+      <stop offset="0.3" stop-color="#c97936"/>
+      <stop offset="0.6" stop-color="#8d9aac"/>
+      <stop offset="1" stop-color="#3b173e"/>
+    </linearGradient>
+    <radialGradient id="sunset-dent-two-a" cx="0.35" cy="0.45" r="0.34">
+      <stop offset="0" stop-color="#2b1838" stop-opacity="0.84"/>
+      <stop offset="0.58" stop-color="#7e4259" stop-opacity="0.48"/>
+      <stop offset="1" stop-color="#fff1b8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sunset-dent-two-b" cx="0.68" cy="0.58" r="0.3">
+      <stop offset="0" stop-color="#2b1838" stop-opacity="0.78"/>
+      <stop offset="0.58" stop-color="#7e4259" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#fff1b8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="4" y="5" width="88" height="38" rx="8" fill="url(#metal-sunset-dented-two)" stroke="#ffd166" stroke-width="4"/>
+  <path d="M12 15h72" stroke="#fff3bf" stroke-width="5" stroke-linecap="round" opacity="0.38"/>
+  <path d="M13 36h70" stroke="#2b1838" stroke-width="5" stroke-linecap="round" opacity="0.68"/>
+  <ellipse cx="35" cy="22" rx="16" ry="10" fill="url(#sunset-dent-two-a)"/>
+  <ellipse cx="63" cy="29" rx="13" ry="8" fill="url(#sunset-dent-two-b)"/>
+  <path d="M25 22c7-8 19-9 28-2M54 29c6-5 14-5 20 0" fill="none" stroke="#ffd166" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+  <path d="M31 10l-3 9 4 7-3 12M49 10l2 8-4 7 3 13M67 10l-2 9 3 8-2 11" stroke="#2b1838" stroke-width="3" stroke-linecap="round" opacity="0.58"/>
+  <circle cx="18" cy="24" r="3" fill="#2b1838" opacity="0.88"/>
+  <circle cx="78" cy="24" r="3" fill="#2b1838" opacity="0.88"/>
+</svg>

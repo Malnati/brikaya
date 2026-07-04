@@ -3,6 +3,37 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.16] - 2026-07-04
+### Adicionado
+- Blocos metálicos passam a exibir amassados progressivos individuais após cada colisão parcial da bolinha.
+- Estados SVG locais adicionados para metálico intacto, um amassado e dois amassados nos conjuntos visuais metálicos.
+
+### Alterado
+- Cada bloco metálico usa a própria vida restante para escolher a aparência; blocos não atingidos permanecem intactos.
+- QA publicado de blocos metálicos passa a validar carregamento dos assets amassados antes da destruição.
+
+### Testado
+- `node --version` → `v23.5.0`.
+- RED: `npm test -- src/objects/Bricks.test.ts src/utils/visualAssetResolver.test.ts --runInBand` falhou por papéis/metadados de amassado ainda ausentes.
+- GREEN: `npm test -- src/objects/Bricks.test.ts src/utils/visualAssetResolver.test.ts --runInBand` → 2 suites / 12 testes.
+- `node --check tests/e2e/cloudflare-metal-blocks-qa.js`.
+- `npm test -- src/objects/Bricks.test.ts src/constants/assets.test.ts src/utils/visualAssetResolver.test.ts src/logic/GameEngine.test.ts src/App.test.tsx --runInBand` → 5 suites / 60 testes.
+- `npm test -- --runInBand` → 40 suites / 221 testes.
+- `npx prettier --check CHANGELOG.md src/constants/visualAssets.ts src/objects/Bricks.ts src/objects/Bricks.test.ts src/utils/visualAssetResolver.ts src/utils/visualAssetResolver.test.ts tests/e2e/cloudflare-metal-blocks-qa.js`.
+- `npm run test:semantic-file-names` → governed=835.
+- `npm run test:svg-assets` → runtime=139, codex=2.
+- `npm run build`.
+- `make cloudflare-deploy` → deploy `https://7ab1bad7.malnati-brickbreaker.pages.dev` e domínio canônico atualizado em `https://brikaya.com/`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ npm run test:cloudflare-metal-blocks`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-no-score-reset`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-phase-transition-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-svg-assets-qa`.
+- Evidências: `docs/assets/issues/metal-blocks/evidence/evi-metal-blocks-cloudflare-proof.png` e `docs/assets/issues/metal-blocks/evidence/evi-metal-blocks-cloudflare-report.json`.
+
 ## [1.32.15] - 2026-07-04
 ### Adicionado
 - Modo “Automático por fase” passa a ser o padrão de tema visual, alternando para um tema diferente a cada nova fase.
