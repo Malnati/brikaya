@@ -25,6 +25,8 @@ const ENGLISH_LOCALE: AppLocale = "en";
 const GERMAN_LOCALE: AppLocale = "de";
 const UNSUPPORTED_DUTCH_LANGUAGE = "nl-NL";
 const GERMAN_BROWSER_LANGUAGE = "de-DE";
+const FRENCH_BROWSER_LANGUAGE = "fr-FR";
+const FRENCH_LOCALE: AppLocale = "fr";
 const CANONICAL_ROOT = "https://brikaya.com/";
 const SPANISH_CANONICAL = "https://brikaya.com/es-419/";
 const CHINESE_TITLE = "Brikaya — 打砖块街机";
@@ -46,6 +48,16 @@ const LOCALIZED_APPEARANCE_KEYS: TranslationKey[] = [
   "appearance.option.neon-arcade",
   "appearance.option.retro-default",
   "appearance.option.sunset-cabinet",
+  "appearance.option.real-metro-night",
+  "appearance.option.real-auto-garage",
+  "appearance.option.real-bio-lab",
+  "appearance.option.real-ancient-temple",
+  "appearance.option.real-orbital-station",
+  "appearance.option.real-metro-tunnel",
+  "appearance.option.real-workshop-steel",
+  "appearance.option.real-bio-lab-glass",
+  "appearance.option.real-temple-stone",
+  "appearance.option.real-orbital-deck",
   "appearance.option.block-pixel",
 ];
 const USER_COPY_KEYS: TranslationKey[] = [
@@ -263,6 +275,31 @@ describe("i18n offline do Brikaya", () => {
 
     expect(screen.getByText(GERMAN_LOCALE)).toBeInTheDocument();
     expect(window.location.pathname).toBe(getLocalePath(GERMAN_LOCALE));
+  });
+
+  it("usa navigator.language quando navigator.languages não está disponível", () => {
+    Object.defineProperty(window.navigator, NAVIGATOR_LANGUAGES_PROPERTY, {
+      configurable: true,
+      value: undefined,
+    });
+    Object.defineProperty(window.navigator, NAVIGATOR_LANGUAGE_PROPERTY, {
+      configurable: true,
+      value: FRENCH_BROWSER_LANGUAGE,
+    });
+    setBrowserTimeZone(MEXICO_TIME_ZONE);
+
+    render(
+      <I18nProvider>
+        <LocaleProbe />
+      </I18nProvider>,
+    );
+
+    expect(screen.getByText(FRENCH_LOCALE)).toBeInTheDocument();
+    expect(window.location.pathname).toBe(getLocalePath(FRENCH_LOCALE));
+    expect(window.localStorage.setItem).not.toHaveBeenCalledWith(
+      LOCALE_STORAGE_KEY,
+      FRENCH_LOCALE,
+    );
   });
 
   it("usa fuso horário do navegador quando o idioma não é suportado", () => {
