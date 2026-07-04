@@ -3,6 +3,15 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.2] - 2026-07-04
+### Alterado
+- Recibo operacional do Naver Search Advisor passa de bloqueado por CAPTCHA para concluído, com propriedade confirmada e sitemap enviado.
+- Evidência zero-custo registra a linha `sitemap.xml` listada no Naver, mantendo token público redigido fora do arquivo oficial exigido.
+
+### Testado
+- Chrome: Naver Search Advisor abriu o painel verificado de `https://brikaya.com` e listou `sitemap.xml` em `Submitted sitemap`.
+- `curl -L https://brikaya.com/sitemap.xml` validado nesta rodada com HTTP 200 e 15 URLs localizadas.
+
 ## [1.32.1] - 2026-07-04
 ### Adicionado
 - Bing Webmaster Tools e Yandex Webmaster passam a ter recibo operacional zero-custo com verificação DNS e envio de sitemap.
