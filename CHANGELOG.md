@@ -3,6 +3,33 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.24] - 2026-07-04
+### Adicionado
+- Cobertura de `App` para garantir que uma preferência salva de música pausada não retome a trilha de fundo ao religar o som geral.
+
+### Testado
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version` → `v23.5.0`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make help`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/App.test.tsx --runInBand -t "mantém música pausada"` → 1 teste.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- src/App.test.tsx src/components/MusicToggle.test.tsx src/utils/audioManager.test.ts src/utils/localAppReset.test.ts --runInBand` → 4 suites / 36 testes.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm test -- --runInBand --silent` → 45 suites / 254 testes.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --check tests/e2e/cloudflare-reset-preferences-qa.js`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:semantic-file-names` → governed=880 após versionar evidências.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:svg-assets` → runtime=139, codex=2.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run test:audio-assets` → ids=39, mp3=91.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" npm run build`.
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" make cloudflare-deploy`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-audio-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-no-score-reset`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-phase-transition-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-svg-assets-qa`.
+- Evidências: `docs/assets/issues/music-toggle-persisted-mute-coverage/evidence/evi-music-toggle-persisted-mute-audio-screen.png`, `docs/assets/issues/music-toggle-persisted-mute-coverage/evidence/evi-music-toggle-persisted-mute-mobile-screen.png`, `docs/assets/issues/music-toggle-persisted-mute-coverage/evidence/evi-music-toggle-persisted-mute-menu-screen.png` e relatórios JSON na mesma pasta.
+- Varredura textual das evidências e arquivos alterados não encontrou token, chave privada ou credencial real.
+
 ## [1.32.23] - 2026-07-04
 ### Adicionado
 - Botão “Restaurar padrão” no menu para apagar dados locais do jogo com confirmação antes da ação.
