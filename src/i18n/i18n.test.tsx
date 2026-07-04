@@ -22,6 +22,7 @@ const SPANISH_LOCALE: AppLocale = "es-419";
 const CHINESE_LOCALE: AppLocale = "zh-CN";
 const HINDI_LOCALE: AppLocale = "hi-IN";
 const ENGLISH_LOCALE: AppLocale = "en";
+const GERMAN_LOCALE: AppLocale = "de";
 const CANONICAL_ROOT = "https://brikaya.com/";
 const SPANISH_CANONICAL = "https://brikaya.com/es-419/";
 const CHINESE_TITLE = "Brikaya — 打砖块街机";
@@ -30,8 +31,14 @@ const LIME_GRAPHITE_LABEL = "Lima grafite";
 const COLLISION_SPEED_LABEL = "Velocidade atual:";
 const BUTTON_LABEL = "switch";
 const LOCALE_STORAGE_KEY = "brikaya-locale";
+const LOCALE_SOURCE_STORAGE_KEY = "brikaya-locale-source";
+const MANUAL_LOCALE_SOURCE = "manual";
 const NAVIGATOR_LANGUAGES_PROPERTY = "languages";
 const NAVIGATOR_LANGUAGE_PROPERTY = "language";
+const GERMANY_TIME_ZONE = "Europe/Berlin";
+const MEXICO_TIME_ZONE = "America/Mexico_City";
+const INDIA_TIME_ZONE = "Asia/Kolkata";
+const UNSUPPORTED_TIME_ZONE = "Europe/Amsterdam";
 const ENGLISH_LOCALES = new Set<AppLocale>(["en", "en-IN"]);
 const LOCALIZED_APPEARANCE_KEYS: TranslationKey[] = [
   "appearance.option.neon-arcade",
@@ -79,12 +86,27 @@ function setNavigatorLocale(languages: readonly string[], language: string) {
   });
 }
 
+function setBrowserTimeZone(timeZone: string) {
+  jest.spyOn(Intl, "DateTimeFormat").mockImplementation(
+    () =>
+      ({
+        resolvedOptions: () => ({ timeZone }),
+      }) as Intl.DateTimeFormat,
+  );
+}
+
 describe("i18n offline do Brikaya", () => {
   beforeEach(() => {
     window.history.replaceState(null, "", TEST_ROUTE);
     window.localStorage.clear();
     (window.localStorage.getItem as jest.Mock).mockReturnValue(null);
     setNavigatorLocale([PORTUGUESE_LOCALE], PORTUGUESE_LOCALE);
+    setBrowserTimeZone("America/Sao_Paulo");
+    (window.localStorage.setItem as jest.Mock).mockClear();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it("publica metadados para todos os locales planejados", () => {
@@ -120,6 +142,10 @@ describe("i18n offline do Brikaya", () => {
     expect(screen.getByText(SPANISH_LOCALE)).toBeInTheDocument();
     expect(screen.getByText(MENU_LABEL)).toBeInTheDocument();
     expect(document.documentElement.lang).toBe(SPANISH_LOCALE);
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(
+      LOCALE_SOURCE_STORAGE_KEY,
+      MANUAL_LOCALE_SOURCE,
+    );
     expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute(
       "href",
       SPANISH_CANONICAL,
@@ -162,6 +188,7 @@ describe("i18n offline do Brikaya", () => {
   });
 
   it("usa locale do navegador quando não há rota nem preferência salva", () => {
+    setBrowserTimeZone(GERMANY_TIME_ZONE);
     setNavigatorLocale(["es-MX", "en-US"], "es-MX");
 
     render(
@@ -173,6 +200,10 @@ describe("i18n offline do Brikaya", () => {
     expect(screen.getByText(SPANISH_LOCALE)).toBeInTheDocument();
     expect(window.location.pathname).toBe(getLocalePath(SPANISH_LOCALE));
     expect(document.documentElement.lang).toBe(SPANISH_LOCALE);
+    expect(window.localStorage.setItem).not.toHaveBeenCalledWith(
+      LOCALE_STORAGE_KEY,
+      SPANISH_LOCALE,
+    );
   });
 
   it("mantém preferência salva acima do idioma do navegador", () => {
@@ -189,6 +220,75 @@ describe("i18n offline do Brikaya", () => {
 
     expect(screen.getByText(HINDI_LOCALE)).toBeInTheDocument();
     expect(window.location.pathname).toBe(getLocalePath(HINDI_LOCALE));
+  });
+
+  it("usa fuso horário do navegador quando o idioma não é suportado", () => {
+    setNavigatorLocale(["nl-NL"], "nl-NL");
+    setBrowserTimeZone(GERMANY_TIME_ZONE);
+
+    render(
+      <I18nProvider>
+        <LocaleProbe />
+      </I18nProvider>,
+    );
+
+    expect(screen.getByText(GERMAN_LOCALE)).toBeInTheDocument();
+    expect(window.location.pathname).toBe(getLocalePath(GERMAN_LOCALE));
+    expect(document.documentElement.lang).toBe(GERMAN_LOCALE);
+    expect(window.localStorage.setItem).not.toHaveBeenCalledWith(
+      LOCALE_STORAGE_KEY,
+      GERMAN_LOCALE,
+    );
+  });
+
+  it("ignora pt-BR legado automático e usa fuso horário quando não há preferência manual", () => {
+    (window.localStorage.getItem as jest.Mock).mockImplementation((key: string) =>
+      key === LOCALE_STORAGE_KEY ? PORTUGUESE_LOCALE : null,
+    );
+    setNavigatorLocale(["nl-NL"], "nl-NL");
+    setBrowserTimeZone(MEXICO_TIME_ZONE);
+
+    render(
+      <I18nProvider>
+        <LocaleProbe />
+      </I18nProvider>,
+    );
+
+    expect(screen.getByText(SPANISH_LOCALE)).toBeInTheDocument();
+    expect(window.location.pathname).toBe(getLocalePath(SPANISH_LOCALE));
+  });
+
+  it("mantém pt-BR manual acima do fuso horário", () => {
+    (window.localStorage.getItem as jest.Mock).mockImplementation((key: string) => {
+      if (key === LOCALE_STORAGE_KEY) return PORTUGUESE_LOCALE;
+      if (key === LOCALE_SOURCE_STORAGE_KEY) return MANUAL_LOCALE_SOURCE;
+      return null;
+    });
+    setNavigatorLocale(["nl-NL"], "nl-NL");
+    setBrowserTimeZone(MEXICO_TIME_ZONE);
+
+    render(
+      <I18nProvider>
+        <LocaleProbe />
+      </I18nProvider>,
+    );
+
+    expect(screen.getByText(PORTUGUESE_LOCALE)).toBeInTheDocument();
+    expect(window.location.pathname).toBe(getLocalePath(PORTUGUESE_LOCALE));
+  });
+
+  it("mapeia fuso horário da Índia para inglês indiano quando o idioma não é suportado", () => {
+    setNavigatorLocale(["nl-NL"], "nl-NL");
+    setBrowserTimeZone(INDIA_TIME_ZONE);
+
+    render(
+      <I18nProvider>
+        <LocaleProbe />
+      </I18nProvider>,
+    );
+
+    expect(screen.getByText("en-IN")).toBeInTheDocument();
+    expect(window.location.pathname).toBe(getLocalePath("en-IN"));
   });
 
   it("mantém rota pública acima da preferência salva e do navegador", () => {
@@ -208,8 +308,9 @@ describe("i18n offline do Brikaya", () => {
     expect(window.location.pathname).toBe(getLocalePath(ENGLISH_LOCALE));
   });
 
-  it("usa pt-BR quando o idioma do navegador não é suportado", () => {
+  it("usa pt-BR quando idioma e fuso do navegador não são suportados", () => {
     setNavigatorLocale(["nl-NL"], "nl-NL");
+    setBrowserTimeZone(UNSUPPORTED_TIME_ZONE);
 
     render(
       <I18nProvider>

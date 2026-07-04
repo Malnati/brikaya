@@ -3,6 +3,28 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.9] - 2026-07-04
+### Corrigido
+- Primeiro acesso sem rota localizada ou preferência manual agora usa idioma do navegador quando suportado e, quando não suportado, infere o locale pelo fuso horário do navegador sem GeoIP, localização, serviço externo ou recurso pago.
+- Preferência manual de idioma passa a ser marcada separadamente para não transformar detecção automática em escolha permanente.
+
+### Alterado
+- QA publicado de i18n cobre fallback por fuso `Europe/Berlin` para `de`, canonical localizado e ausência de persistência automática.
+- Documento PWA registra a prioridade final: rota, preferência manual, idioma do navegador, fuso horário offline e `pt-BR`.
+
+### Testado
+- `PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" node --version` → `v23.5.0`.
+- `make help`.
+- RED: `npm test -- src/i18n/i18n.test.tsx --runInBand` falhou nos casos de marcador manual, persistência automática e fallback por fuso.
+- GREEN: `npm test -- src/i18n/i18n.test.tsx --runInBand` → 14 testes.
+- `node --check tests/e2e/cloudflare-i18n-seo-qa.js`.
+- `npm test -- --runInBand` → 40 suites / 201 testes.
+- `npm run build`.
+- `make cloudflare-env-check`, `make cloudflare-build` e `make cloudflare-deploy`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-i18n-seo-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-offline-pwa-qa`.
+- Varredura textual das evidências e arquivos alterados não encontrou token, chave privada ou credencial real.
 
 ## [1.32.8] - 2026-07-04
 ### Adicionado
