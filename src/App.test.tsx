@@ -12,6 +12,7 @@ import {
   BRICKBREAKER_UPDATE_PROGRESS_EVENT,
 } from "./registerServiceWorker";
 import {
+  LANGUAGE_LOCATION_CONSENT_STORAGE_KEY,
   PRIVACY_CONSENT_SCOPE,
   PRIVACY_CONSENT_STORAGE_KEY,
   PRIVACY_CONSENT_VERSION,
@@ -79,7 +80,9 @@ jest.mock("./components/Game", () => ({
         data-testid="mock-game"
         data-start-blocked={props.startBlocked}
         data-paused={
-          props.paused ? PAUSED_TRUE_ATTRIBUTE_VALUE : PAUSED_FALSE_ATTRIBUTE_VALUE
+          props.paused
+            ? PAUSED_TRUE_ATTRIBUTE_VALUE
+            : PAUSED_FALSE_ATTRIBUTE_VALUE
         }
       >
         <canvas aria-label="Tabuleiro do jogo" />
@@ -105,8 +108,8 @@ jest.mock("./utils/logger", () => ({
 }));
 
 function mockPrivacyConsent(value: string | null) {
-  (window.localStorage.getItem as jest.Mock).mockImplementation((key: string) =>
-    key === PRIVACY_CONSENT_STORAGE_KEY ? value : null,
+  (window.localStorage.getItem as jest.Mock).mockImplementation(
+    (key: string) => (key === PRIVACY_CONSENT_STORAGE_KEY ? value : null),
   );
 }
 
@@ -196,7 +199,9 @@ describe("App theme selector", () => {
     expect(
       screen.getByRole("dialog", { name: "Antes de jogar" }),
     ).toBeInTheDocument();
-    expect(screen.queryByTestId("game-cinematic-overlay")).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("game-cinematic-overlay"),
+    ).not.toBeInTheDocument();
     expect(screen.getByTestId("mock-game")).toHaveAttribute(
       "data-start-blocked",
       "true",
@@ -212,7 +217,30 @@ describe("App theme selector", () => {
       PRIVACY_CONSENT_STORAGE_KEY,
       expect.stringContaining(PRIVACY_CONSENT_SCOPE),
     );
-    expect(screen.queryByRole("dialog", { name: "Antes de jogar" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("dialog", { name: "Antes de jogar" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByTestId("language-detection-overlay")).toHaveTextContent(
+      "Preparando idioma",
+    );
+    expect(
+      screen.getByRole("progressbar", {
+        name: "Progresso do preparo do idioma",
+      }),
+    ).toHaveAttribute("aria-valuenow", "100");
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      DATA_PAUSED_ATTRIBUTE,
+      PAUSED_TRUE_ATTRIBUTE_VALUE,
+    );
+
+    await act(async () => {
+      jest.advanceTimersByTime(2000);
+      await Promise.resolve();
+    });
+
+    expect(
+      screen.queryByTestId("language-detection-overlay"),
+    ).not.toBeInTheDocument();
     expect(screen.getByTestId("game-cinematic-overlay")).toHaveTextContent("3");
     expect(screen.getByTestId("mock-game")).toHaveAttribute(
       DATA_PAUSED_ATTRIBUTE,
@@ -225,7 +253,9 @@ describe("App theme selector", () => {
 
     await renderApp();
 
-    expect(screen.queryByRole("dialog", { name: "Antes de jogar" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("dialog", { name: "Antes de jogar" }),
+    ).not.toBeInTheDocument();
     expect(screen.getByTestId("game-cinematic-overlay")).toHaveTextContent("3");
   });
 
@@ -238,7 +268,9 @@ describe("App theme selector", () => {
     await user.click(screen.getByRole("button", { name: "Menu" }));
 
     const drawer = screen.getByRole("complementary", { name: "Menu do jogo" });
-    expect(within(drawer).getByRole("heading", { name: "Privacidade" })).toBeInTheDocument();
+    expect(
+      within(drawer).getByRole("heading", { name: "Privacidade" }),
+    ).toBeInTheDocument();
 
     await user.click(
       within(drawer).getByRole("button", { name: "Revisar consentimento" }),
@@ -247,7 +279,12 @@ describe("App theme selector", () => {
     expect(window.localStorage.removeItem).toHaveBeenCalledWith(
       PRIVACY_CONSENT_STORAGE_KEY,
     );
-    expect(screen.queryByRole("complementary", { name: "Menu do jogo" })).not.toBeInTheDocument();
+    expect(window.localStorage.removeItem).toHaveBeenCalledWith(
+      LANGUAGE_LOCATION_CONSENT_STORAGE_KEY,
+    );
+    expect(
+      screen.queryByRole("complementary", { name: "Menu do jogo" }),
+    ).not.toBeInTheDocument();
     expect(
       screen.getByRole("dialog", { name: "Antes de jogar" }),
     ).toBeInTheDocument();
@@ -399,7 +436,9 @@ describe("App theme selector", () => {
     ).not.toBeInTheDocument();
     expect(within(drawer).queryByText("Partida")).not.toBeInTheDocument();
     const appearanceGroup = screen.getByLabelText("Aparência do jogo");
-    expect(within(appearanceGroup).getByText("Tema visual")).toBeInTheDocument();
+    expect(
+      within(appearanceGroup).getByText("Tema visual"),
+    ).toBeInTheDocument();
     expect(within(appearanceGroup).getByText("Imagens")).toBeInTheDocument();
     expect(within(appearanceGroup).getByText("Fonte")).toBeInTheDocument();
     expect(
@@ -466,7 +505,6 @@ describe("App theme selector", () => {
     );
   });
 
-
   it("mostra recordes gerais locais no menu", async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
@@ -482,7 +520,9 @@ describe("App theme selector", () => {
     await user.click(screen.getByRole("button", { name: "Menu" }));
 
     const drawer = screen.getByRole("complementary", { name: "Menu do jogo" });
-    expect(within(drawer).getByRole("heading", { name: "Recordes" })).toBeInTheDocument();
+    expect(
+      within(drawer).getByRole("heading", { name: "Recordes" }),
+    ).toBeInTheDocument();
     expect(within(drawer).getByText("Melhor partida 120")).toBeInTheDocument();
     expect(within(drawer).getByText("1º 120")).toBeInTheDocument();
     expect(within(drawer).getByText("2º 80")).toBeInTheDocument();
@@ -501,7 +541,9 @@ describe("App theme selector", () => {
     expect(mockLastGameProps?.imageSetId).toBe("retro-default");
     await user.click(screen.getByRole("button", { name: "Menu" }));
 
-    await user.click(screen.getByRole("button", { name: "CRT alto contraste" }));
+    await user.click(
+      screen.getByRole("button", { name: "CRT alto contraste" }),
+    );
     await user.click(screen.getByRole("button", { name: "Alto contraste" }));
     await user.click(screen.getByRole("button", { name: "CRT mono" }));
 
@@ -526,7 +568,9 @@ describe("App theme selector", () => {
       "crt-mono",
     );
 
-    await user.click(screen.getByRole("button", { name: "Pôr do sol pixelado" }));
+    await user.click(
+      screen.getByRole("button", { name: "Pôr do sol pixelado" }),
+    );
 
     expect(document.documentElement.dataset.theme).toBe("pixel-sunset");
     expect(window.localStorage.setItem).toHaveBeenCalledWith(
@@ -534,7 +578,9 @@ describe("App theme selector", () => {
       "pixel-sunset",
     );
 
-    await user.click(screen.getByRole("button", { name: "Automático por fase" }));
+    await user.click(
+      screen.getByRole("button", { name: "Automático por fase" }),
+    );
 
     expect(window.localStorage.setItem).toHaveBeenCalledWith(
       "brickbreaker-theme-mode",
@@ -575,9 +621,9 @@ describe("App theme selector", () => {
     expect(within(topControls).getByRole("button", { name: "Sem som" })).toBe(
       screen.getByRole("button", { name: "Sem som" }),
     );
-    expect(
-      within(topControls).getByRole("button", { name: "Reiniciar" }),
-    ).toBe(screen.getByRole("button", { name: "Reiniciar" }));
+    expect(within(topControls).getByRole("button", { name: "Reiniciar" })).toBe(
+      screen.getByRole("button", { name: "Reiniciar" }),
+    );
     expect(mockLastGameProps?.boardControls).toBeUndefined();
   });
 
@@ -622,7 +668,9 @@ describe("App theme selector", () => {
       "aria-pressed",
       "false",
     );
-    expect(screen.queryByRole("button", { name: "Som" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Som" }),
+    ).not.toBeInTheDocument();
     expect(playMusic).not.toHaveBeenCalled();
   });
 
@@ -717,9 +765,13 @@ describe("App theme selector", () => {
     await renderApp();
 
     await user.click(screen.getByRole("button", { name: "Menu" }));
-    await user.click(screen.getByRole("button", { name: "Pôr do sol pixelado" }));
+    await user.click(
+      screen.getByRole("button", { name: "Pôr do sol pixelado" }),
+    );
     const drawer = screen.getByRole("complementary", { name: "Menu do jogo" });
-    await user.click(within(drawer).getByRole("button", { name: "Fechar menu" }));
+    await user.click(
+      within(drawer).getByRole("button", { name: "Fechar menu" }),
+    );
     act(() => {
       jest.advanceTimersByTime(COUNTDOWN_TOTAL_MS);
       mockLastGameProps?.onLevelTransition?.(TEST_LEVEL_TRANSITION_PAYLOAD);

@@ -11,7 +11,8 @@ import {
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-consent-screen-qa.json";
-const DEFAULT_SCREENSHOT_PATH = "tmp/screenshots/cloudflare-consent-screen-qa.png";
+const DEFAULT_SCREENSHOT_PATH =
+  "tmp/screenshots/cloudflare-consent-screen-qa.png";
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const VIEWPORT = {
@@ -28,6 +29,7 @@ const CONSENT_DIALOG_NAME = "Antes de jogar";
 const ACCEPT_BUTTON_LABEL = "Aceitar e jogar";
 const MENU_BUTTON_LABEL = "Menu";
 const REVIEW_BUTTON_LABEL = "Revisar consentimento";
+const REGION_LANGUAGE_TEXT = "região aproximada";
 const FORBIDDEN_USER_COPY_PATTERN =
   /service worker|cache|runtime|dataset|localStorage|IndexedDB|PWA|CMP|AdSense|H5|adsbygoogle/i;
 const FORBIDDEN_CONSENT_FIELDS = [
@@ -82,7 +84,9 @@ async function clearRuntimeState(page) {
 
     if ("caches" in window) {
       const cacheNames = await caches.keys();
-      await Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName)));
+      await Promise.all(
+        cacheNames.map((cacheName) => caches.delete(cacheName)),
+      );
     }
 
     window.localStorage.clear();
@@ -216,6 +220,10 @@ async function run() {
       "CTA de aceite ausente.",
     );
     assert(
+      firstVisitState.dialogText.includes(REGION_LANGUAGE_TEXT),
+      "Texto de região para idioma ausente.",
+    );
+    assert(
       !firstVisitState.hasCinematicOverlay,
       "Contagem iniciou antes do aceite.",
     );
@@ -227,7 +235,10 @@ async function run() {
     await acceptPrivacyConsentIfPresent(page);
     const acceptedState = await collectConsentState(page);
 
-    assert(!acceptedState.hasDialog, "Tela de consentimento persistiu após aceite.");
+    assert(
+      !acceptedState.hasDialog,
+      "Tela de consentimento persistiu após aceite.",
+    );
     assert(acceptedState.storedRecord, "Aceite não foi gravado no aparelho.");
     assert(
       acceptedState.storedRecord.version === REQUIRED_CONSENT_VERSION,
@@ -255,7 +266,10 @@ async function run() {
       "Aceite contém campo não permitido.",
     );
 
-    await page.reload({ waitUntil: "networkidle0", timeout: MAX_NAVIGATION_MS });
+    await page.reload({
+      waitUntil: "networkidle0",
+      timeout: MAX_NAVIGATION_MS,
+    });
     await page.waitForSelector("canvas", { timeout: MAX_NAVIGATION_MS });
     const savedVisitState = await collectConsentState(page);
     assert(!savedVisitState.hasDialog, "Aceite salvo reapresentou a tela.");

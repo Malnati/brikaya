@@ -28,7 +28,10 @@ export { getCanonicalUrl, getLocalePath, getSeoMetadata } from "./metadata";
 
 const LOCALE_STORAGE_KEY = "brikaya-locale";
 const LOCALE_SOURCE_STORAGE_KEY = "brikaya-locale-source";
+const LOCALE_DETECTION_STORAGE_KEY = "brikaya-locale-detection";
+const LOCALE_DETECTION_VERSION = "2026-07-04-location";
 const MANUAL_LOCALE_SOURCE = "manual";
+const LOCATION_LOCALE_SOURCE = "location";
 const PATH_SEGMENT_SEPARATOR = "/";
 const EMPTY_STRING = "";
 const TEMPLATE_PATTERN = /\{\{(\w+)\}\}/g;
@@ -117,10 +120,12 @@ const TIME_ZONE_LOCALE_PREFIX_MAP: readonly (readonly [string, AppLocale])[] = [
 ];
 
 export type TranslationValues = Record<string, string | number>;
+export type LocaleDetectionSource = typeof LOCATION_LOCALE_SOURCE;
 
 interface I18nContextValue {
   locale: AppLocale;
   setLocale: (locale: AppLocale) => void;
+  setLocaleFromLocation: (locale: AppLocale) => void;
   t: (key: TranslationKey, values?: TranslationValues) => string;
 }
 
@@ -245,6 +250,25 @@ function persistManualLocale(locale: AppLocale) {
   }
 }
 
+function persistDetectedLocale(
+  locale: AppLocale,
+  source: LocaleDetectionSource,
+) {
+  try {
+    window.localStorage.setItem(
+      LOCALE_DETECTION_STORAGE_KEY,
+      JSON.stringify({
+        version: LOCALE_DETECTION_VERSION,
+        locale,
+        source,
+        detectedAt: new Date().toISOString(),
+      }),
+    );
+  } catch {
+    return;
+  }
+}
+
 function updateLocalizedPath(locale: AppLocale) {
   const nextPath = getLocalePath(locale);
   const nextUrl = `${nextPath}${window.location.search}${window.location.hash}`;
@@ -271,6 +295,12 @@ export function I18nProvider({ children }: I18nProviderProps) {
     updateLocalizedPath(nextLocale);
   }, []);
 
+  const setLocaleFromLocation = useCallback((nextLocale: AppLocale) => {
+    setLocaleState(nextLocale);
+    persistDetectedLocale(nextLocale, LOCATION_LOCALE_SOURCE);
+    updateLocalizedPath(nextLocale);
+  }, []);
+
   const t = useCallback(
     (key: TranslationKey, values?: TranslationValues) =>
       interpolate(getMessage(locale, key), values),
@@ -283,8 +313,8 @@ export function I18nProvider({ children }: I18nProviderProps) {
   }, [locale]);
 
   const contextValue = useMemo<I18nContextValue>(
-    () => ({ locale, setLocale, t }),
-    [locale, setLocale, t],
+    () => ({ locale, setLocale, setLocaleFromLocation, t }),
+    [locale, setLocale, setLocaleFromLocation, t],
   );
 
   return (
@@ -298,6 +328,7 @@ export function useI18n(): I18nContextValue {
     return {
       locale: DEFAULT_LOCALE,
       setLocale: () => undefined,
+      setLocaleFromLocation: () => undefined,
       t: (key, values) => interpolate(getMessage(DEFAULT_LOCALE, key), values),
     };
   }

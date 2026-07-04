@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "publicUrl": "https://brikaya.com/",
+  "checkedAt": "2026-07-04T08:18:47.773Z",
+  "expectedLocale": "de",
+  "expectedPath": "/de/",
+  "runtimeState": {
+    "lang": "de",
+    "path": "/de/",
+    "locationConsent": {
+      "version": "2026-07-04-language-location",
+      "acceptedAt": "2026-07-04T08:18:45.686Z",
+      "scope": "approximate_region_language_suggestion"
+    },
+    "localeDetection": {
+      "version": "2026-07-04-location",
+      "locale": "de",
+      "source": "location",
+      "detectedAt": "2026-07-04T08:18:47.687Z"
+    },
+    "storageSnapshot": "{\"brikaya-language-location-consent\":\"{\\\"version\\\":\\\"2026-07-04-language-location\\\",\\\"acceptedAt\\\":\\\"2026-07-04T08:18:45.686Z\\\",\\\"scope\\\":\\\"approximate_region_language_suggestion\\\"}\",\"brikaya-locale-detection\":\"{\\\"version\\\":\\\"2026-07-04-location\\\",\\\"locale\\\":\\\"de\\\",\\\"source\\\":\\\"location\\\",\\\"detectedAt\\\":\\\"2026-07-04T08:18:47.687Z\\\"}\",\"brikaya-privacy-consent\":\"{\\\"version\\\":\\\"2026-07-03-offline-play\\\",\\\"acceptedAt\\\":\\\"2026-07-04T08:18:45.684Z\\\",\\\"scope\\\":\\\"offline_play_privacy_base\\\"}\",\"brickbreaker-audio-muted\":\"1\"}"
+  },
+  "externalRequests": [],
+  "failedRequests": [],
+  "screenshotPath": "docs/assets/issues/location-consent-auto-locale/evidence/evi-location-consent-auto-locale-location-overlay.png"
+}

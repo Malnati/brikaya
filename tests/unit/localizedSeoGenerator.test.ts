@@ -9,6 +9,8 @@ const RELATIVE_ASSET_HREF_PATTERN = 'href="./assets/';
 const ABSOLUTE_ASSET_HREF_PATTERN = 'href="/assets/';
 const RELATIVE_ASSET_SRC_PATTERN = 'src="./assets/';
 const ABSOLUTE_ASSET_SRC_PATTERN = 'src="/assets/';
+const PRIVACY_PATH = "'/privacy/'";
+const TERMS_PATH = "'/terms/'";
 
 function readProjectFile(filePath: string): string {
   return readFileSync(resolve(process.cwd(), filePath), 'utf8');
@@ -24,5 +26,12 @@ describe('gerador SEO localizado', () => {
     expect(generator).toContain(ABSOLUTE_ASSET_HREF_PATTERN);
     expect(generator).toContain(RELATIVE_ASSET_SRC_PATTERN);
     expect(generator).toContain(ABSOLUTE_ASSET_SRC_PATTERN);
+  });
+
+  it('inclui páginas públicas de privacidade e termos no sitemap gerado', () => {
+    const generator = readProjectFile(GENERATOR_PATH);
+
+    expect(generator).toContain(PRIVACY_PATH);
+    expect(generator).toContain(TERMS_PATH);
   });
 });

@@ -36,6 +36,7 @@ const COLLISION_SPEED_LABEL = "Velocidade atual:";
 const BUTTON_LABEL = "switch";
 const LOCALE_STORAGE_KEY = "brikaya-locale";
 const LOCALE_SOURCE_STORAGE_KEY = "brikaya-locale-source";
+const LOCALE_DETECTION_STORAGE_KEY = "brikaya-locale-detection";
 const MANUAL_LOCALE_SOURCE = "manual";
 const NAVIGATOR_LANGUAGES_PROPERTY = "languages";
 const NAVIGATOR_LANGUAGE_PROPERTY = "language";
@@ -74,7 +75,7 @@ const USER_COPY_KEYS: TranslationKey[] = [
 const TECHNICAL_COPY_PATTERN = /\b(logs?|tools?)\b/i;
 
 function LocaleProbe() {
-  const { locale, setLocale, t } = useI18n();
+  const { locale, setLocale, setLocaleFromLocation, t } = useI18n();
 
   return (
     <div>
@@ -82,6 +83,12 @@ function LocaleProbe() {
       <p>{t(TEST_TITLE_KEY)}</p>
       <button type="button" onClick={() => setLocale(SPANISH_LOCALE)}>
         {BUTTON_LABEL}
+      </button>
+      <button
+        type="button"
+        onClick={() => setLocaleFromLocation(GERMAN_LOCALE)}
+      >
+        location
       </button>
       <p>{t("controls.menu")}</p>
       <p>{t("appearance.option.lime-graphite")}</p>
@@ -223,6 +230,34 @@ describe("i18n offline do Brikaya", () => {
       LOCALE_STORAGE_KEY,
       SPANISH_LOCALE,
     );
+  });
+
+  it("registra idioma sugerido por região sem salvar coordenadas", async () => {
+    jest.useFakeTimers().setSystemTime(new Date("2026-07-04T10:00:00.000Z"));
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+
+    render(
+      <I18nProvider>
+        <LocaleProbe />
+      </I18nProvider>,
+    );
+
+    await user.click(screen.getByRole("button", { name: "location" }));
+
+    expect(screen.getByText(GERMAN_LOCALE)).toBeInTheDocument();
+    expect(window.location.pathname).toBe(getLocalePath(GERMAN_LOCALE));
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(
+      LOCALE_DETECTION_STORAGE_KEY,
+      JSON.stringify({
+        version: "2026-07-04-location",
+        locale: GERMAN_LOCALE,
+        source: "location",
+        detectedAt: "2026-07-04T10:00:00.000Z",
+      }),
+    );
+    expect(
+      JSON.stringify((window.localStorage.setItem as jest.Mock).mock.calls),
+    ).not.toMatch(/latitude|longitude|-23\\.5505|-46\\.6333/i);
   });
 
   it("mantém preferência salva acima do idioma do navegador", () => {

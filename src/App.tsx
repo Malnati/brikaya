@@ -11,6 +11,7 @@ import Game, { type GameBoardRect } from "./components/Game";
 import { AppearanceSelector } from "./components/AppearanceSelector";
 import { AudioToggle } from "./components/AudioToggle";
 import { ConsentScreen } from "./components/ConsentScreen";
+import { LanguageDetectionOverlay } from "./components/LanguageDetectionOverlay";
 import { CollisionStats } from "./components/CollisionStats";
 import GameLogViewer from "./components/GameLogViewer";
 import {
@@ -53,6 +54,7 @@ import { audioManager } from "./utils/audioManager";
 import { GameQaScenario } from "./logic/GameEngine";
 import { useAppearancePreference } from "./hooks/useAppearancePreference";
 import { useAudioPreference } from "./hooks/useAudioPreference";
+import { useLanguageLocationConsent } from "./hooks/useLanguageLocationConsent";
 import { usePrivacyConsent } from "./hooks/usePrivacyConsent";
 import {
   SUPPORTED_LOCALES,
@@ -60,6 +62,7 @@ import {
   type AppLocale,
   type TranslationKey,
 } from "./i18n";
+import { requestLocaleFromDeviceLocation } from "./i18n/locationLocale";
 
 LOG("🚦 App.tsx carregado");
 
@@ -70,6 +73,7 @@ const FIRST_AUDIO_INTERACTION_EVENTS = [
   "touchend",
 ] as const;
 const OFFLINE_READY_VISIBLE_MS = 2400;
+const LANGUAGE_DETECTION_VISIBLE_MS = 2000;
 const UPDATE_INSTALLED_VISIBLE_MS = 5200;
 const UPDATE_PROGRESS_MIN = 0;
 const UPDATE_PROGRESS_MAX = 100;
@@ -99,7 +103,7 @@ interface UpdateProgressState {
 }
 
 export default function App() {
-  const { locale, setLocale, t } = useI18n();
+  const { locale, setLocale, setLocaleFromLocation, t } = useI18n();
   const [score, setScore] = useState(0);
   const scoreRef = useRef(0);
   const [totalScore, setTotalScore] = useState(0);
@@ -111,13 +115,26 @@ export default function App() {
   const [level, setLevel] = useState(1);
   const { hasPrivacyConsent, acceptPrivacyConsent, revokePrivacyConsent } =
     usePrivacyConsent();
+  const {
+    hasLanguageLocationConsent,
+    acceptLanguageLocationConsent,
+    revokeLanguageLocationConsent,
+  } = useLanguageLocationConsent();
+  const shouldStartWithLanguageDetection =
+    hasPrivacyConsent && hasLanguageLocationConsent;
   const [cinematicOverlay, setCinematicOverlay] =
     useState<GameCinematicOverlayState>(
-      hasPrivacyConsent ? INITIAL_COUNTDOWN_OVERLAY : null,
+      hasPrivacyConsent && !shouldStartWithLanguageDetection
+        ? INITIAL_COUNTDOWN_OVERLAY
+        : null,
     );
   const [boardRect, setBoardRect] = useState<GameBoardRect | null>(null);
-  const [isInitialCountdownActive, setIsInitialCountdownActive] =
-    useState(hasPrivacyConsent);
+  const [isInitialCountdownActive, setIsInitialCountdownActive] = useState(
+    hasPrivacyConsent && !shouldStartWithLanguageDetection,
+  );
+  const [isLanguageDetectionVisible, setIsLanguageDetectionVisible] = useState(
+    shouldStartWithLanguageDetection,
+  );
   const [isCinematicRipScenarioConsumed, setIsCinematicRipScenarioConsumed] =
     useState(false);
   const [isOfflineReadyVisible, setIsOfflineReadyVisible] = useState(false);
@@ -144,6 +161,11 @@ export default function App() {
   const updateInstalledTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
+  const languageDetectionTimerRef = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
+  const languageDetectionStartedRef = useRef(false);
+  const languageDetectionRunIdRef = useRef(0);
   const updateProgressSoundPlayedRef = useRef(false);
   const updateInstalledSoundPlayedRef = useRef(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -279,6 +301,8 @@ export default function App() {
         clearTimeout(offlineReadyTimerRef.current);
       if (updateInstalledTimerRef.current)
         clearTimeout(updateInstalledTimerRef.current);
+      if (languageDetectionTimerRef.current)
+        clearTimeout(languageDetectionTimerRef.current);
     },
     [],
   );
@@ -484,21 +508,93 @@ export default function App() {
     setIsMenuOpen(false);
   }, [audioSink]);
 
-  const handleAcceptPrivacyConsent = useCallback(() => {
-    audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
-    acceptPrivacyConsent();
+  const startInitialCountdown = useCallback(() => {
     setCinematicOverlay(INITIAL_COUNTDOWN_OVERLAY);
     setIsInitialCountdownActive(true);
     setIsMenuOpen(false);
-  }, [acceptPrivacyConsent, audioSink]);
+  }, []);
+
+  const runLanguageDetection = useCallback(
+    async (allowLanguageLocation: boolean) => {
+      languageDetectionStartedRef.current = true;
+      languageDetectionRunIdRef.current += 1;
+      const currentRunId = languageDetectionRunIdRef.current;
+      if (languageDetectionTimerRef.current)
+        clearTimeout(languageDetectionTimerRef.current);
+
+      setIsLanguageDetectionVisible(true);
+
+      const visibleDelay = new Promise<void>((resolve) => {
+        languageDetectionTimerRef.current = setTimeout(() => {
+          languageDetectionTimerRef.current = null;
+          resolve();
+        }, LANGUAGE_DETECTION_VISIBLE_MS);
+      });
+      const locationLocale = allowLanguageLocation
+        ? await requestLocaleFromDeviceLocation()
+        : null;
+
+      await visibleDelay;
+
+      if (currentRunId !== languageDetectionRunIdRef.current) return;
+      if (locationLocale) setLocaleFromLocation(locationLocale);
+      setIsLanguageDetectionVisible(false);
+      startInitialCountdown();
+    },
+    [setLocaleFromLocation, startInitialCountdown],
+  );
+
+  useEffect(() => {
+    if (!shouldStartWithLanguageDetection) return;
+    if (languageDetectionStartedRef.current) return;
+
+    void runLanguageDetection(true);
+  }, [runLanguageDetection, shouldStartWithLanguageDetection]);
+
+  const handleAcceptPrivacyConsent = useCallback(
+    (allowLanguageLocation: boolean) => {
+      audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+      acceptPrivacyConsent();
+      if (allowLanguageLocation) {
+        acceptLanguageLocationConsent();
+      } else {
+        revokeLanguageLocationConsent();
+      }
+      void runLanguageDetection(allowLanguageLocation);
+    },
+    [
+      acceptLanguageLocationConsent,
+      acceptPrivacyConsent,
+      audioSink,
+      revokeLanguageLocationConsent,
+      runLanguageDetection,
+    ],
+  );
 
   const handleReviewPrivacyConsent = useCallback(() => {
     audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
     revokePrivacyConsent();
+    revokeLanguageLocationConsent();
+    languageDetectionRunIdRef.current += 1;
+    if (languageDetectionTimerRef.current)
+      clearTimeout(languageDetectionTimerRef.current);
     setCinematicOverlay(null);
     setIsInitialCountdownActive(false);
+    setIsLanguageDetectionVisible(false);
     setIsMenuOpen(false);
-  }, [audioSink, revokePrivacyConsent]);
+  }, [audioSink, revokeLanguageLocationConsent, revokePrivacyConsent]);
+
+  const handleUseLanguageLocation = useCallback(() => {
+    audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+    acceptLanguageLocationConsent();
+    setIsMenuOpen(false);
+    void runLanguageDetection(true);
+  }, [acceptLanguageLocationConsent, audioSink, runLanguageDetection]);
+
+  const handleDisableLanguageLocation = useCallback(() => {
+    audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+    revokeLanguageLocationConsent();
+  }, [audioSink, revokeLanguageLocationConsent]);
 
   const handleOpenLogs = useCallback(() => {
     audioSink.playAudio(GAME_AUDIO_IDS.PANEL_OPEN);
@@ -765,6 +861,33 @@ export default function App() {
               </div>
               <div className="settings-drawer__section">
                 <h3>{t("menu.privacy")}</h3>
+                <p className="settings-drawer__hint">
+                  {hasLanguageLocationConsent
+                    ? t("language.regionEnabled")
+                    : t("language.regionDisabled")}
+                </p>
+                <button
+                  type="button"
+                  onClick={
+                    hasLanguageLocationConsent
+                      ? handleDisableLanguageLocation
+                      : handleUseLanguageLocation
+                  }
+                  className="dashboard-button dashboard-button--secondary"
+                >
+                  <span aria-hidden="true" className="button-icon">
+                    ◎
+                  </span>
+                  {hasLanguageLocationConsent
+                    ? t("language.disableRegion")
+                    : t("language.reviewRegion")}
+                </button>
+                <a className="settings-drawer__link" href="/privacy/">
+                  {t("menu.privacyPolicy")}
+                </a>
+                <a className="settings-drawer__link" href="/terms/">
+                  {t("menu.terms")}
+                </a>
                 <button
                   type="button"
                   onClick={handleReviewPrivacyConsent}
@@ -831,9 +954,15 @@ export default function App() {
                 onLevelChange={handleLevelChange}
                 qaScenario={effectiveQaScenario}
                 audioSink={audioSink}
-                startBlocked={!hasPrivacyConsent || isInitialCountdownActive}
+                startBlocked={
+                  !hasPrivacyConsent ||
+                  isLanguageDetectionVisible ||
+                  isInitialCountdownActive
+                }
                 imageSetId={selection.imageSetId}
-                paused={isMenuOpen || !hasPrivacyConsent}
+                paused={
+                  isMenuOpen || !hasPrivacyConsent || isLanguageDetectionVisible
+                }
                 onBoardRectChange={handleBoardRectChange}
               />
             </div>
@@ -897,6 +1026,7 @@ export default function App() {
         imageSetId={selection.imageSetId}
         boardRect={boardRect}
       />
+      {isLanguageDetectionVisible && <LanguageDetectionOverlay />}
       {!hasPrivacyConsent && (
         <ConsentScreen onAccept={handleAcceptPrivacyConsent} />
       )}

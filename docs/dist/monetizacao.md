@@ -230,9 +230,12 @@ A política de privacidade futura deve explicar, em linguagem de usuário:
 - dados salvos localmente pelo jogo;
 - funcionamento offline;
 - se há ou não cookies não essenciais;
+- uso opcional de região aproximada para sugerir idioma, sem salvar coordenadas e sem envio externo;
 - como anúncios futuros podem depender de rede/consentimento;
 - que jogar não depende de aceitar publicidade personalizada;
 - canal de contato/suporte.
+
+A página pública inicial de privacidade/termos deve existir antes de ativar sugestão de idioma por região. Essa página não autoriza ads reais, CMP ou scripts externos; ela só cobre dados locais, idioma e consentimento opcional de região.
 
 ## 11. Titularidade PF/PJ em P0
 
