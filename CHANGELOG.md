@@ -3,6 +3,20 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.18] - 2026-07-04
+### Adicionado
+- Cobertura unitária do catálogo visual valida os seis assets metálicos amassados, seus estados `damaged`/`critical`, paths SVG locais e metadados de tijolo.
+
+### Testado
+- `node --version` → `v23.5.0`.
+- RED por mutação temporária: `npm test -- src/constants/visualAssets.test.ts --runInBand` falhou quando o estado crítico de `sprBrickMetalSteelDentedTwo` foi alterado para `damaged`.
+- GREEN: `npm test -- src/constants/visualAssets.test.ts --runInBand` → 1 suite / 1 teste.
+- `npm test -- src/constants/visualAssets.test.ts src/objects/Bricks.test.ts src/utils/visualAssetResolver.test.ts --runInBand` → 3 suites / 13 testes.
+- `npm run test:semantic-file-names` → governed=840.
+- `npm run test:svg-assets` → runtime=139, codex=2.
+- `npm test -- --runInBand` → 43 suites / 237 testes.
+- `npm run build`.
+
 ## [1.32.17] - 2026-07-04
 ### Adicionado
 - Consentimento opcional de região aproximada para sugerir idioma, sem salvar coordenadas, sem envio externo e sem bloquear o jogo quando negado.
