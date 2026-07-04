@@ -184,6 +184,10 @@ class CollisionTracker {
 
   async clearAllCollisions(): Promise<void> {
     if (!this.db) {
+      await this.initialize();
+    }
+
+    if (!this.db) {
       WARN('⚠️ IndexedDB não inicializado');
       return;
     }

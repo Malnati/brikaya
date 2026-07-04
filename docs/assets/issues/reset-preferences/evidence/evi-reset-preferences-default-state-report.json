@@ -1,0 +1,38 @@
+{
+  "url": "https://brikaya.com/?qaResetPreferences=1",
+  "screenshotPath": "docs/assets/issues/reset-preferences/evidence/evi-reset-preferences-default-state.png",
+  "confirmMessage": "Esto borra puntuación, récords, historial y preferencias de este dispositivo. ¿Continuar?",
+  "state": {
+    "storageState": {
+      "privacyConsent": null,
+      "languageLocationConsent": null,
+      "locale": null,
+      "localeSource": null,
+      "localeDetection": null,
+      "theme": null,
+      "themeMode": null,
+      "imageSet": null,
+      "fontSet": null,
+      "audioMuted": "1",
+      "sentinel": null,
+      "hasConsentScreen": true,
+      "bodyHasInternalCopy": false,
+      "path": "/"
+    },
+    "scoreCount": 0,
+    "highScoreCount": 0,
+    "gameEventCount": 0,
+    "collisionCount": 0,
+    "debugMessages": [
+      "✅ IndexedDB inicializado para rastreamento de colisões",
+      "Service Worker registrado.",
+      "✅ GameLogger IndexedDB inicializado com sucesso",
+      "🗄️ Database:",
+      "✅ GameLogger inicializado com sucesso!",
+      "🗄️ Object stores:",
+      "🗄️ Version:"
+    ]
+  },
+  "externalRequests": [],
+  "consoleProblems": []
+}

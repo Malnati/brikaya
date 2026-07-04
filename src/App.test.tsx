@@ -1,10 +1,14 @@
 // src/App.test.tsx
 import React from "react";
-import { act, render, screen, within } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import App from "./App";
 import { audioManager } from "./utils/audioManager";
+import {
+  refreshAppAfterLocalReset,
+  resetLocalAppState,
+} from "./utils/localAppReset";
 import { GAME_AUDIO_IDS } from "./constants/audio";
 import type { LevelTransitionPayload } from "./constants/game";
 import {
@@ -48,6 +52,10 @@ const TEST_LEVEL_TRANSITION_PAYLOAD: LevelTransitionPayload = {
 const SETTINGS_ACTION_LOGS_TEST_ID = "settings-action-logs";
 const SETTINGS_ACTION_COLLISIONS_TEST_ID = "settings-action-collisions";
 const SETTINGS_ACTION_RESET_SCORE_TEST_ID = "settings-action-reset-score";
+const SETTINGS_ACTION_RESET_PREFERENCES_TEST_ID =
+  "settings-action-reset-preferences";
+const RESET_PREFERENCES_CONFIRM_TEXT =
+  "Isso apaga pontuação, recordes, histórico e preferências deste aparelho. Continuar?";
 const COUNTDOWN_STEP_MS = 600;
 const COUNTDOWN_TOTAL_MS = 1800;
 const LEVEL_UP_OVERLAY_VISIBLE_MS = 1200;
@@ -107,6 +115,11 @@ jest.mock("./utils/logger", () => ({
   WARN: jest.fn(),
 }));
 
+jest.mock("./utils/localAppReset", () => ({
+  refreshAppAfterLocalReset: jest.fn().mockResolvedValue(undefined),
+  resetLocalAppState: jest.fn().mockResolvedValue(undefined),
+}));
+
 function mockPrivacyConsent(value: string | null) {
   (window.localStorage.getItem as jest.Mock).mockImplementation(
     (key: string) => (key === PRIVACY_CONSENT_STORAGE_KEY ? value : null),
@@ -152,6 +165,8 @@ describe("App theme selector", () => {
     scoreStorage.getHighScores.mockResolvedValue([]);
     scoreStorage.saveHighScore.mockResolvedValue(undefined);
     scoreStorage.resetScores.mockResolvedValue(undefined);
+    (refreshAppAfterLocalReset as jest.Mock).mockResolvedValue(undefined);
+    (resetLocalAppState as jest.Mock).mockResolvedValue(undefined);
     mockLastGameProps = null;
     document.documentElement.removeAttribute("data-theme");
     window.localStorage.clear();
@@ -160,6 +175,7 @@ describe("App theme selector", () => {
   });
 
   afterEach(() => {
+    jest.restoreAllMocks();
     jest.useRealTimers();
   });
 
@@ -422,7 +438,7 @@ describe("App theme selector", () => {
     expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.UPDATE_INSTALLED);
   });
 
-  it("abre menu lateral com aparência, histórico, colisões e zerar pontuação", async () => {
+  it("abre menu lateral com aparência, histórico, colisões, zerar pontuação e restaurar padrão", async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
 
@@ -476,6 +492,45 @@ describe("App theme selector", () => {
     expect(
       screen.getByTestId(SETTINGS_ACTION_RESET_SCORE_TEST_ID),
     ).toHaveAttribute("data-settings-action", "reset-score");
+    expect(
+      screen.getByRole("button", { name: /restaurar padrão/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByTestId(SETTINGS_ACTION_RESET_PREFERENCES_TEST_ID),
+    ).toHaveAttribute("data-settings-action", "reset-preferences");
+  });
+
+  it("confirma, limpa dados locais e atualiza o app ao restaurar padrão", async () => {
+    mockSystemTheme(true);
+    const user = userEvent.setup();
+    const confirmSpy = jest.spyOn(window, "confirm").mockReturnValue(true);
+    const playAudio = jest
+      .spyOn(audioManager, "play")
+      .mockResolvedValue(undefined);
+
+    await renderApp();
+
+    await user.click(screen.getByRole("button", { name: "Menu" }));
+    await user.click(screen.getByTestId(SETTINGS_ACTION_RESET_PREFERENCES_TEST_ID));
+
+    expect(confirmSpy).toHaveBeenCalledWith(RESET_PREFERENCES_CONFIRM_TEXT);
+    await waitFor(() => expect(resetLocalAppState).toHaveBeenCalledTimes(1));
+    expect(refreshAppAfterLocalReset).toHaveBeenCalledTimes(1);
+    expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.RESET_SCORE);
+  });
+
+  it("não limpa dados locais quando restauração padrão é cancelada", async () => {
+    mockSystemTheme(true);
+    const user = userEvent.setup();
+    jest.spyOn(window, "confirm").mockReturnValue(false);
+
+    await renderApp();
+
+    await user.click(screen.getByRole("button", { name: "Menu" }));
+    await user.click(screen.getByTestId(SETTINGS_ACTION_RESET_PREFERENCES_TEST_ID));
+
+    expect(resetLocalAppState).not.toHaveBeenCalled();
+    expect(refreshAppAfterLocalReset).not.toHaveBeenCalled();
   });
 
   it("pausa a partida enquanto o menu lateral está aberto", async () => {
