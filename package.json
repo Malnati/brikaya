@@ -34,7 +34,8 @@
     "test:cloudflare-level-progression": "node tests/e2e/cloudflare-phase-transition-qa.js",
     "test:semantic-file-names": "node scripts/normalize-semantic-file-names.mjs --check",
     "normalize:semantic-file-names": "node scripts/normalize-semantic-file-names.mjs --write",
-    "test:cloudflare-i18n-seo": "node tests/e2e/cloudflare-i18n-seo-qa.js"
+    "test:cloudflare-i18n-seo": "node tests/e2e/cloudflare-i18n-seo-qa.js",
+    "test:cloudflare-metal-blocks": "node tests/e2e/cloudflare-metal-blocks-qa.js"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.4",

@@ -8,7 +8,7 @@ import {
 } from "./visualAssetResolver";
 
 const SVG_PATTERN = /^\/assets\/visual\/.+\.svg$/;
-const RUNTIME_VISUAL_ROLE_COUNT = 18;
+const RUNTIME_VISUAL_ROLE_COUNT = 19;
 const EXPECTED_IMAGE_SET_IDS = [
   "retro-default",
   "high-contrast",
@@ -37,6 +37,12 @@ describe("visual asset resolver", () => {
         GAME_VISUAL_ASSET_ROLES.brickRed,
       ),
     ).toBe("/assets/visual/bricks/spr-brick-basic-red-normal.svg");
+    expect(
+      resolveGameVisualAssetPath(
+        "retro-default",
+        GAME_VISUAL_ASSET_ROLES.brickMetal,
+      ),
+    ).toBe("/assets/visual/bricks/spr-brick-metal-steel-normal.svg");
   });
 
   it("resolve variantes SVG alto contraste e sunset", () => {
@@ -52,6 +58,20 @@ describe("visual asset resolver", () => {
         GAME_VISUAL_ASSET_ROLES.gameOverRipSmoke,
       ),
     ).toBe("/assets/visual/vfx/vfx-game-over-rip-sunset-smoke.svg");
+    expect(
+      resolveGameVisualAssetPath(
+        "high-contrast",
+        GAME_VISUAL_ASSET_ROLES.brickMetal,
+      ),
+    ).toBe(
+      "/assets/visual/bricks/spr-brick-metal-steel-high-contrast-normal.svg",
+    );
+    expect(
+      resolveGameVisualAssetPath(
+        "sunset-cabinet",
+        GAME_VISUAL_ASSET_ROLES.brickMetal,
+      ),
+    ).toBe("/assets/visual/bricks/spr-brick-metal-steel-sunset-normal.svg");
   });
 
   it("resolve cinco conjuntos realistas diferentes", () => {
@@ -86,6 +106,12 @@ describe("visual asset resolver", () => {
         GAME_VISUAL_ASSET_ROLES.countdownCircleOverlay,
       ),
     ).toBe("/assets/visual/vfx/vfx-countdown-circle-orbital-real-overlay.svg");
+    expect(
+      resolveGameVisualAssetPath(
+        "real-workshop-steel",
+        GAME_VISUAL_ASSET_ROLES.brickMetal,
+      ),
+    ).toBe("/assets/visual/bricks/spr-brick-metal-steel-normal.svg");
   });
 
   it("lista somente SVGs sem repetição por conjunto", () => {

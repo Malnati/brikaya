@@ -4,10 +4,11 @@ import {
   sprBrickBasicBlueNormal,
   sprBrickBasicGreenNormal,
   sprBrickBasicPurpleNormal,
+  sprBrickMetalSteelNormal,
   sprBrickBasicRedNormal,
   sprBrickBasicYellowNormal,
   sprPaddlePlayerDefault,
-} from './visualAssets';
+} from "./visualAssets";
 
 export const ASSET_PATHS = {
   BALL: sprBallPlayerDefault,
@@ -17,6 +18,7 @@ export const ASSET_PATHS = {
   BRICK_GREEN: sprBrickBasicGreenNormal,
   BRICK_YELLOW: sprBrickBasicYellowNormal,
   BRICK_PURPLE: sprBrickBasicPurpleNormal,
+  BRICK_METAL: sprBrickMetalSteelNormal,
 } as const;
 
 export const RUNTIME_IMAGE_ASSET_PATHS = Object.values(ASSET_PATHS);

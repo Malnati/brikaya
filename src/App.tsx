@@ -47,9 +47,7 @@ import {
   BRICKBREAKER_UPDATE_PROGRESS_EVENT,
   type BrickbreakerUpdateProgressDetail,
 } from "./registerServiceWorker";
-import {
-  BUILD_VERSION_LABEL,
-} from "./constants/buildVersion";
+import { BUILD_VERSION_LABEL } from "./constants/buildVersion";
 import { LOG } from "./utils/logger";
 import { audioManager } from "./utils/audioManager";
 import { GameQaScenario } from "./logic/GameEngine";
@@ -80,6 +78,7 @@ const UPDATE_PROGRESS_COMPLETE_STAGE = "reloading";
 const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
 const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
 const LASER_FAN_QA_SCENARIO = "laser-fan";
+const METAL_BLOCK_QA_SCENARIO = "metal-block";
 const COUNTDOWN_FIRST_STEP_INDEX = 0;
 const COUNTDOWN_NEXT_STEP_INDEX = 1;
 const COUNTDOWN_TIMER_OFFSET = 1;
@@ -126,7 +125,8 @@ export default function App() {
     useState<UpdateProgressState | null>(null);
   const [isUpdateInstalledVisible, setIsUpdateInstalledVisible] =
     useState(false);
-  const { selection, selectTheme, selectImageSet, selectFontSet } = useAppearancePreference();
+  const { selection, selectTheme, selectImageSet, selectFontSet } =
+    useAppearancePreference();
   const { isAudioMuted, toggleAudio } = useAudioPreference();
   const levelTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cinematicTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -153,6 +153,7 @@ export default function App() {
     if (scenario === CINEMATIC_RIP_QA_SCENARIO)
       return CINEMATIC_RIP_QA_SCENARIO;
     if (scenario === LASER_FAN_QA_SCENARIO) return LASER_FAN_QA_SCENARIO;
+    if (scenario === METAL_BLOCK_QA_SCENARIO) return METAL_BLOCK_QA_SCENARIO;
     if (scenario === AUDIO_QA_SCENARIO) return AUDIO_QA_SCENARIO;
     return null;
   }, []);
@@ -589,7 +590,8 @@ export default function App() {
     setLevel(nextLevel);
   }, []);
 
-  const restartLabel = gameWon || gameOver ? t("controls.playAgain") : t("controls.restart");
+  const restartLabel =
+    gameWon || gameOver ? t("controls.playAgain") : t("controls.restart");
 
   return (
     <main className="app-shell">
@@ -691,7 +693,10 @@ export default function App() {
               </p>
               <div className="settings-drawer__section">
                 <h3>{t("language.title")}</h3>
-                <label className="language-selector" htmlFor={LANGUAGE_SELECT_ID}>
+                <label
+                  className="language-selector"
+                  htmlFor={LANGUAGE_SELECT_ID}
+                >
                   <span>{t("language.aria")}</span>
                   <select
                     id={LANGUAGE_SELECT_ID}
@@ -701,7 +706,9 @@ export default function App() {
                   >
                     {SUPPORTED_LOCALES.map((supportedLocale) => (
                       <option key={supportedLocale} value={supportedLocale}>
-                        {t(`language.option.${supportedLocale}` as TranslationKey)}
+                        {t(
+                          `language.option.${supportedLocale}` as TranslationKey,
+                        )}
                       </option>
                     ))}
                   </select>

@@ -3,6 +3,33 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.13] - 2026-07-04
+### Adicionado
+- Blocos metálicos passam a ser sorteados em quantidade aleatória de zero a três por fase, com aparência metálica em todos os temas visuais.
+
+### Alterado
+- Blocos metálicos exigem três contatos distintos da bolinha para serem destruídos; pontuação, progresso de fase e redução de velocidade só acontecem no toque destrutivo.
+
+### Testado
+- `node --version` → `v23.5.0`.
+- `make help`.
+- `npm test -- src/objects/Bricks.test.ts src/constants/assets.test.ts src/utils/visualAssetResolver.test.ts src/logic/GameEngine.test.ts src/App.test.tsx --runInBand` → 5 suites / 58 testes.
+- `npm test -- --runInBand` → 40 suites / 210 testes.
+- `npx prettier --check CHANGELOG.md package.json src/App.tsx src/constants/assets.ts src/constants/assets.test.ts src/constants/visualAssets.ts src/logic/GameEngine.ts src/objects/Bricks.ts src/objects/Bricks.test.ts src/utils/visualAssetResolver.ts src/utils/visualAssetResolver.test.ts tests/e2e/cloudflare-metal-blocks-qa.js`.
+- `npm run test:semantic-file-names` → governed=818.
+- `npm run test:svg-assets` → runtime=133, codex=2.
+- `npm run build`.
+- `make cloudflare-env-check`, `make cloudflare-build` e `make cloudflare-deploy`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-public-check`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ npm run test:cloudflare-metal-blocks`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-no-score-reset`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-phase-transition-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-theme-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-svg-assets-qa`.
+- Evidências: `docs/assets/issues/metal-blocks/evidence/evi-metal-blocks-cloudflare-proof.png` e `docs/assets/issues/metal-blocks/evidence/evi-metal-blocks-cloudflare-report.json`.
+
 ## [1.32.12] - 2026-07-04
 ### Adicionado
 - Cinco temas realistas adicionados ao menu de aparência: Metrô noturno, Oficina mecânica, Laboratório clínico, Templo antigo e Estação orbital.
