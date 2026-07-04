@@ -11,11 +11,11 @@ Brikaya será distribuído como PWA/web 100% offline após o primeiro carregamen
 
 | Item | Por que entra no P0 | Custo direto | Decisão |
 | --- | --- | ---: | --- |
-| Brasil - Classificação Indicativa / CLASSIND | Jogo digital acessível no Brasil e instalável/offline; risco regulatório baixo de resolver porque não há taxa. | R$ 0 | Tratar como obrigatório/condicional conservador. Preparar autoclassificação, símbolos e dossiê. |
-| Google Search Console | Registro gratuito de propriedade para indexação, sitemap e diagnóstico SEO do domínio. | R$ 0 | Verificar domínio `brikaya.com` e enviar sitemap. |
-| Bing Webmaster Tools | Registro gratuito para Bing/Copilot/ecossistema Microsoft e importação/diagnóstico de sitemap. | R$ 0 | Verificar site ou importar do Search Console quando houver conta sem aprovação administrativa. |
-| Yandex Webmaster | Registro gratuito para descoberta em Yandex e leitura de sitemap. | R$ 0 | Fazer somente com conta autorizada e sem Yandex Metrica/tag externo. |
-| Naver Search Advisor | Registro gratuito para coreano/Naver, se houver conta Naver autorizada. | R$ 0 | Verificar site e sitemap sem script runtime. |
+| Brasil - Classificação Indicativa / CLASSIND | Jogo digital acessível no Brasil e instalável/offline; risco regulatório baixo de resolver porque não há taxa. | R$ 0 | Executado em 2026-07-04: inscrição processual enviada e recebida para triagem. |
+| Google Search Console | Registro gratuito de propriedade para indexação, sitemap e diagnóstico SEO do domínio. | R$ 0 | Concluído: domínio verificado e sitemap multilíngue enviado. |
+| Bing Webmaster Tools | Registro gratuito para Bing/Copilot/ecossistema Microsoft e importação/diagnóstico de sitemap. | R$ 0 | Concluído: site verificado por DNS CNAME e sitemap enviado. |
+| Yandex Webmaster | Registro gratuito para descoberta em Yandex e leitura de sitemap. | R$ 0 | Concluído: site verificado por DNS TXT e sitemap enviado sem Metrica/tag. |
+| Naver Search Advisor | Registro gratuito para coreano/Naver, se houver conta Naver autorizada. | R$ 0 | Concluído: site verificado por arquivo HTML público oficial e sitemap enviado sem script runtime. |
 | Baidu Search Resource Platform | Registro gratuito para descoberta em chinês, se houver conta Baidu autorizada. | R$ 0 | Tentar apenas domínio global; bloquear ICP, China Network, hospedagem China e serviço pago. |
 | Buscas gratuitas de marca/nome | Reduz risco de conflito antes de crescer internacionalmente sem criar custo de depósito. | R$ 0 | Pesquisar `Brikaya`, `BrickBreaker`, domínio, logotipo, transliterações e variações por idioma. |
 
@@ -65,7 +65,7 @@ Registros de marca, copyright/software, patente, modelo de utilidade, desenho in
 
 | País/região | Registro/cadastro | Status P0 | Custo direto | Quem pode fazer | Documentos/requisitos | Decisão |
 | --- | --- | --- | ---: | --- | --- | --- |
-| Brasil | CLASSIND / Classificação Indicativa | Obrigatório/condicional conservador | R$ 0 | Cidadão, titular de direitos ou representante; brasileiro via gov.br; estrangeiro via usuário/senha do CLASSIND. | Conta gov.br ou acesso CLASSIND; ficha técnica de autoclassificação; sinopse; link/cópia jogável; material de análise; símbolos e descritores corretos. | Preparar e executar como P0. Se MJSP confirmar isenção por browser-only sem armazenamento local, manter como autoclassificação gratuita/documentada. |
+| Brasil | CLASSIND / Classificação Indicativa | Executado; em triagem | R$ 0 | Cidadão, titular de direitos ou representante; brasileiro via gov.br; estrangeiro via usuário/senha do CLASSIND. | Conta gov.br ou acesso CLASSIND; ficha técnica; sinopse; link jogável; material de análise; símbolos e descritores corretos quando a classificação for concluída. | Inscrição processual de Brikaya enviada em 2026-07-04 no CLASSIND via gov.br/Safari; status exibido: Triagem; sem cobrança, cartão, upgrade ou serviço pago. |
 | Paraguai | Registro DINAPI de software/direito autoral | Opcional pago | 1 jornal + publicação de edicto, se solicitado | Autor, produtor ou representante autorizado. | Cédula; formulário; depósito da obra; código fonte/objeto; publicação por 3 dias. | Fora do P0: pago e não obrigatório para lançar PWA. |
 | Paraguai | Marca DINAPI | Opcional pago | 2 jornales + agente/AGPI + eventuais publicações | PF/PJ via agente de propriedade industrial. | FE-011; cédula autenticada ou docs PJ; poder, se aplicável; assinatura/selos. | Fora do P0: pago e não obrigatório. Fazer só busca gratuita. |
 | EUA/Canadá | ESRB | Voluntário para web self-host sem loja; exigido por muitos consoles/lojas/retailers. | R$ 0 via IARC apenas em storefront participante; fora disso pode haver custo/processo próprio. | Publisher/dev via loja participante ou ESRB. | Conteúdo do jogo, materiais de rating, formulário/questionário quando disponível. | Não executar. Sem loja, IARC não é acessível por conta própria. |
@@ -116,6 +116,10 @@ A página oficial do MJSP separa mídia física, distribuição digital por down
 ### 4.5. Confirmação recomendada
 
 Enviar consulta curta ao canal oficial se houver dúvida sobre a hipótese “browser-only”: Brikaya roda no navegador, mas usa service worker/cache para jogar offline e pode ser instalado como PWA. Se MJSP responder que isso não exige CLASSIND, rebaixar de obrigatório/condicional para opcional gratuito, mantendo a informação etária como boa prática.
+
+### 4.6. Execução validada em 2026-07-04
+
+A inscrição processual de Brikaya foi concluída no CLASSIND pelo Safari com conta gov.br autenticada. O sistema exibiu a confirmação "Inscrição processual completa" e, na listagem de processos, Brikaya apareceu com status "Triagem". O protocolo não ficou visível na listagem capturada. A sinopse anexada está versionada como `docs/assets/issues/multilingual-zero-cost-registrations/evidence/evi-classind-sinopse-brikaya-zero-custo.json`. Nenhuma tela de cobrança, cartão, upgrade, overage, aprovação administrativa, campanha, anúncio ou serviço pago apareceu durante a execução. Dados pessoais do requerente/titular foram usados apenas no formulário governamental e não foram registrados em docs/evidências.
 
 ## 5. Registros gratuitos não obrigatórios que entram no P0
 
@@ -233,13 +237,13 @@ Não faz parte do lançamento porque `docs/dist/projeto-pwa.md` mantém anúncio
 
 ### 8.1. Conteúdo CLASSIND
 
-- [ ] Confirmar URL pública canônica `https://brikaya.com/`.
-- [ ] Escrever sinopse curta do jogo.
-- [ ] Listar descritores ausentes/presentes.
-- [ ] Preparar resposta sobre PWA offline/cache: service worker, instalação pelo navegador e jogo offline.
+- [x] Confirmar URL pública canônica `https://brikaya.com/`.
+- [x] Escrever sinopse curta do jogo.
+- [x] Listar descritores ausentes/presentes.
+- [x] Preparar resposta sobre PWA offline/cache: service worker, instalação pelo navegador e jogo offline.
 - [ ] Preparar vídeo curto de gameplay se necessário.
-- [ ] Preencher ficha técnica/autoclassificação no CLASSIND ou registrar autoclassificação conforme rota aceita.
-- [ ] Aplicar símbolo/descritores no local público do site quando definido.
+- [x] Preencher ficha técnica/autoclassificação no CLASSIND ou registrar autoclassificação conforme rota aceita.
+- [ ] Aplicar símbolo/descritores no local público do site quando a triagem/classificação retornar.
 
 ### 8.2. Descoberta gratuita
 
@@ -248,8 +252,8 @@ Não faz parte do lançamento porque `docs/dist/projeto-pwa.md` mantém anúncio
 - [x] Reenviar sitemap localizado com 15 URLs canônicas no Google Search Console.
 - [x] Inspecionar URL principal e solicitar indexação inicial.
 - [x] Confirmar que sitemap multilíngue/`hreflang` foi publicado após rotas localizadas reais com metadados próprios.
-- [ ] Verificar/importar site no Bing Webmaster Tools com conta não bloqueada por aprovação administrativa.
-- [ ] Verificar site no Yandex Webmaster com conta autorizada.
+- [x] Verificar/importar site no Bing Webmaster Tools com conta não bloqueada por aprovação administrativa.
+- [x] Verificar site no Yandex Webmaster com conta autorizada.
 - [x] Verificar site no Naver Search Advisor com conta autorizada e enviar sitemap.
 - [ ] Verificar site no Baidu Search Resource Platform com conta autorizada e sem rota China paga.
 - [ ] Salvar resumo de busca gratuita de marca/nome por base oficial.

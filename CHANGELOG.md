@@ -3,6 +3,25 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.4] - 2026-07-04
+### Adicionado
+- Recibo operacional do CLASSIND registra a inscrição processual de Brikaya enviada e recebida para triagem sem custo.
+- Evidência sanitizada da sinopse anexada ao CLASSIND foi versionada em JSON, sem dados pessoais.
+
+### Alterado
+- Documentação de registros P0 passa a marcar CLASSIND, Bing, Yandex, Naver e Search Console como executados dentro do fluxo zero-custo.
+- Evidência JSON passa a registrar status CLASSIND `Triagem`, confirmação visual no Safari e ausência de cobrança, cartão, upgrade, anúncios ou serviço pago.
+
+### Testado
+- Safari/gov.br: CLASSIND exibiu "Inscrição processual completa" e listagem de Brikaya com status "Triagem".
+- `PATH="/opt/homebrew/bin:$PATH" node --version`
+- `PATH="/opt/homebrew/bin:$PATH" make help`
+- `PATH="/opt/homebrew/bin:$PATH" make cloudflare-env-check`
+- `PATH="/opt/homebrew/bin:$PATH" npm run build`
+- `curl -L https://brikaya.com/`
+- `curl -L https://brikaya.com/robots.txt`
+- `curl -L https://brikaya.com/sitemap.xml`
+
 ## [1.32.3] - 2026-07-04
 ### Adicionado
 - Primeiro acesso sem rota localizada ou preferência salva passa a escolher automaticamente idioma suportado a partir de `navigator.languages`/`navigator.language`, sem geolocalização ou IP.

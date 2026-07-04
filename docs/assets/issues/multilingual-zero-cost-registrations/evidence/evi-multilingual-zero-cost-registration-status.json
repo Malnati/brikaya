@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "validatedAtUtc": "2026-07-04T01:17:27Z",
+  "validatedAtUtc": "2026-07-04T02:11:17Z",
   "canonicalUrl": "https://brikaya.com/",
   "zeroCostPolicy": {
     "paidActionsAttempted": false,
@@ -105,10 +105,22 @@
       "nextSafeAction": "Apenas conta Baidu gratuita para domínio global; não ativar China Network, ICP, hospedagem China, app store, monetização ou serviço pago."
     },
     "classindBrasil": {
-      "status": "prepared_not_submitted",
-      "reason": "Dossiê de conteúdo preparado; submissão exige gov.br/CLASSIND e possível transmissão de dados do requerente/titular não disponível nos acessos autorizados deste run.",
+      "status": "submitted_triage",
+      "site": "https://brikaya.com/",
+      "portal": "CLASSIND/gov.br",
+      "segment": "Jogo Eletrônico e Aplicativo",
+      "titleNational": "Brikaya",
+      "titleOriginal": "Brikaya",
+      "intendedRating": "Livre",
+      "submissionCompletedDialogDisplayed": true,
+      "listStatusDisplayed": "Triagem",
+      "historyTimestampDisplayedLocal": "03/07/2026 23:06:38",
+      "protocolDisplayed": false,
+      "synopsisArtifact": "docs/assets/issues/multilingual-zero-cost-registrations/evidence/evi-classind-sinopse-brikaya-zero-custo.json",
       "costBlock": false,
-      "nextSafeAction": "Submeter pelo gov.br/CLASSIND quando conta autorizada estiver disponível; manter taxa zero e parar se houver custo."
+      "paymentOrUpgradePromptDisplayed": false,
+      "personalDataRedactedFromEvidence": true,
+      "nextSafeAction": "Aguardar análise/contato do CLASSIND; aplicar símbolo/descritores públicos quando houver resultado; não aceitar cobrança."
     }
   },
   "validation": {
@@ -116,18 +128,24 @@
     "makeHelp": "ok",
     "cloudflareEnvCheck": "ok",
     "npmRunBuild": "ok",
-    "cloudflareDeploy": "ok",
+    "cloudflareDeploy": "not_run_docs_only_no_public_runtime_change",
     "publicCurl": {
       "home": 200,
       "robots": 200,
       "sitemap": 200,
-      "naverVerificationFile": 200
+      "naverVerificationFile": 200,
+      "zhCN": 200
     },
     "dnsChecks": {
       "bingCname": "ok redacted",
       "yandexTxt": "ok redacted"
     },
-    "naverSearchAdvisorSitemap": "submitted listed as sitemap.xml"
+    "naverSearchAdvisorSitemap": "submitted listed as sitemap.xml",
+    "classindSafari": "submitted; completion modal displayed; process listed as Triagem",
+    "semanticFileNames": "ok",
+    "svgAssets": "ok via npm run build",
+    "jsonEvidence": "ok",
+    "secretPersonScan": "ok"
   },
   "freeTrademarkSearch": {
     "status": "documented_for_execution",
@@ -160,6 +178,7 @@
   "secrets": {
     "verificationTokensPrintedInDocsOrFinal": false,
     "personalEmailsRecorded": false,
-    "credentialsStored": false
+    "credentialsStored": false,
+    "personalNamesRecorded": false
   }
 }
