@@ -45,7 +45,7 @@ describe("calculateResponsiveCanvasSize", () => {
     expect(size.height / 337).toBeGreaterThanOrEqual(0.9);
   });
 
-  it("usa quase toda a largura útil no portrait mobile", () => {
+  it("usa canvas quadrado e quase toda a largura útil no portrait mobile", () => {
     const size = calculateResponsiveCanvasSize({
       containerWidth: 390,
       containerHeight: 760,
@@ -61,7 +61,7 @@ describe("calculateResponsiveCanvasSize", () => {
 
     expect(size.isImmersiveLandscape).toBe(false);
     expect(size.width).toBe(390);
-    expect(size.height).toBeGreaterThan(239);
+    expect(size.height).toBe(390);
   });
 
   it("preserva o canvas inteiro visível no desktop sem toque", () => {
@@ -190,6 +190,8 @@ describe("calculateResponsiveCanvasSize", () => {
     });
 
     expect(size.isImmersiveLandscape).toBe(false);
-    expect(size.height).toBeLessThanOrEqual(IPAD_PRO_LANDSCAPE_AVAILABLE_HEIGHT);
+    expect(size.height).toBeLessThanOrEqual(
+      IPAD_PRO_LANDSCAPE_AVAILABLE_HEIGHT,
+    );
   });
 });

@@ -34,6 +34,8 @@ export interface ResponsiveCanvasSize {
 }
 
 const ASPECT_RATIO = CANVAS_WIDTH / CANVAS_HEIGHT;
+const MOBILE_PORTRAIT_FOCUSED_MAX_WIDTH = 480;
+const MOBILE_PORTRAIT_FOCUSED_UI_RESERVED_BLOCK = 0;
 
 function resolveViewportWidth(metrics: ResponsiveCanvasMetrics): number {
   return metrics.visualViewportWidth || metrics.viewportWidth;
@@ -56,10 +58,24 @@ function isImmersiveLandscape(metrics: ResponsiveCanvasMetrics): boolean {
   );
 }
 
+function isMobilePortraitFocused(metrics: ResponsiveCanvasMetrics): boolean {
+  const viewportWidth = resolveViewportWidth(metrics);
+  const viewportHeight = resolveViewportHeight(metrics);
+  const hasMobilePointer = metrics.pointerCoarse || metrics.hoverNone;
+
+  return (
+    hasMobilePointer &&
+    viewportWidth <= MOBILE_PORTRAIT_FOCUSED_MAX_WIDTH &&
+    viewportWidth <= viewportHeight
+  );
+}
+
 export function calculateResponsiveCanvasSize(
   metrics: ResponsiveCanvasMetrics,
 ): ResponsiveCanvasSize {
   const isLandscapeImmersive = isImmersiveLandscape(metrics);
+  const isPortraitFocused =
+    !isLandscapeImmersive && isMobilePortraitFocused(metrics);
   const minCanvasWidth = isLandscapeImmersive
     ? IMMERSIVE_LANDSCAPE_MIN_CANVAS_WIDTH
     : MIN_CANVAS_WIDTH;
@@ -70,11 +86,12 @@ export function calculateResponsiveCanvasSize(
   const viewportHeight = resolveViewportHeight(metrics);
   const immersiveUiReservedBlock =
     metrics.immersiveUiReservedBlock ?? IMMERSIVE_LANDSCAPE_UI_RESERVED_BLOCK;
+  const responsiveUiReservedBlock = isPortraitFocused
+    ? MOBILE_PORTRAIT_FOCUSED_UI_RESERVED_BLOCK
+    : RESPONSIVE_CANVAS_UI_RESERVED_BLOCK;
   const responsiveContainerHeight = Math.max(
     minCanvasHeight,
-    viewportHeight -
-      metrics.rootPaddingBlock -
-      RESPONSIVE_CANVAS_UI_RESERVED_BLOCK,
+    viewportHeight - metrics.rootPaddingBlock - responsiveUiReservedBlock,
   );
   const containerWidth = isLandscapeImmersive
     ? Math.max(
@@ -96,12 +113,20 @@ export function calculateResponsiveCanvasSize(
       )
     : responsiveContainerHeight;
 
-  let newWidth = containerWidth;
+  let newWidth = isPortraitFocused
+    ? Math.min(containerWidth, containerHeight)
+    : containerWidth;
   let newHeight = isLandscapeImmersive
     ? containerHeight
-    : containerWidth / ASPECT_RATIO;
+    : isPortraitFocused
+      ? newWidth
+      : containerWidth / ASPECT_RATIO;
 
-  if (!isLandscapeImmersive && newHeight > containerHeight) {
+  if (
+    !isLandscapeImmersive &&
+    !isPortraitFocused &&
+    newHeight > containerHeight
+  ) {
     newHeight = containerHeight;
     newWidth = containerHeight * ASPECT_RATIO;
   }

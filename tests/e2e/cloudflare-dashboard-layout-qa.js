@@ -50,6 +50,9 @@ const MIN_IMMERSIVE_CANVAS_HEIGHT_RATIO = 0.68;
 const MIN_IMMERSIVE_BOARD_AREA_USAGE_RATIO = 0.9;
 const MIN_FULL_WIDTH_CANVAS_RATIO = 0.98;
 const MIN_FULL_WIDTH_BOARD_RATIO = 0.95;
+const MIN_MOBILE_FOCUSED_CANVAS_ASPECT_RATIO = 0.98;
+const MOBILE_FOCUSED_MAX_VIEWPORT_WIDTH = 480;
+const MOBILE_FOCUSED_CORNER_OFFSET_PX = 18;
 const MIN_HEIGHT_CONSTRAINED_CANVAS_VIEWPORT_WIDTH_RATIO = 0.6;
 const MAX_CANVAS_OVERLAP_PX = 2;
 const IMMERSIVE_ROOT_CLASS = "bb-landscape-immersive";
@@ -96,6 +99,13 @@ const OVERLAY_TARGET_VIEWPORTS = VIEWPORTS.filter(
 ).map((viewport) => viewport.name);
 const LANDSCAPE_VIEWPORT_NAME =
   viewportByScreenshotRole("landscape-default").name;
+
+function isMobilePortraitFocusedState(state) {
+  return (
+    state.viewport.width <= MOBILE_FOCUSED_MAX_VIEWPORT_WIDTH &&
+    state.viewport.width <= state.viewport.height
+  );
+}
 
 function publicUrl() {
   return process.env.BRICKBREAKER_PUBLIC_URL || DEFAULT_PUBLIC_URL;
@@ -679,6 +689,7 @@ async function run() {
             `${viewport.name}: canvas excede altura visível.`,
           );
           const isImmersiveLandscape = state.isLandscapeImmersive;
+          const isMobilePortraitFocused = isMobilePortraitFocusedState(state);
           assert(
             !isImmersiveLandscape ||
               state.canvas.bottom <= state.viewport.height,
@@ -702,6 +713,13 @@ async function run() {
                 state.boardFrame.width / state.dashboardLayout.width >=
                   MIN_FULL_WIDTH_BOARD_RATIO,
               `${viewport.name}: quadro do jogo não ocupa 95% da largura útil do dashboard.`,
+            );
+          }
+          if (isMobilePortraitFocused) {
+            assert(
+              state.canvas.height / state.canvas.width >=
+                MIN_MOBILE_FOCUSED_CANVAS_ASPECT_RATIO,
+              `${viewport.name}: canvas mobile portrait não ficou quadrado.`,
             );
           }
           assert(
@@ -785,11 +803,37 @@ async function run() {
             restartIcon,
             `${viewport.name}: ícone Reiniciar/Jogar de novo ausente na tela principal.`,
           );
-          for (const button of [audioIcon, musicIcon, restartIcon]) {
+          if (isMobilePortraitFocused) {
             assert(
-              button.bottom <= state.canvas.y,
-              `${viewport.name}: ícone ${button.ariaLabel} não ficou no topo da tela.`,
+              state.topControls &&
+                state.topControls.x <= MOBILE_FOCUSED_CORNER_OFFSET_PX &&
+                state.topControls.y <= MOBILE_FOCUSED_CORNER_OFFSET_PX,
+              `${viewport.name}: controles principais não ficaram no canto superior esquerdo.`,
             );
+            const menuButton = mainButtons.find((button) =>
+              MENU_BUTTON_NAME.test(button.text),
+            );
+            assert(
+              menuButton &&
+                menuButton.right >=
+                  state.viewport.width - MOBILE_FOCUSED_CORNER_OFFSET_PX &&
+                menuButton.y <= MOBILE_FOCUSED_CORNER_OFFSET_PX,
+              `${viewport.name}: menu não ficou no canto superior direito.`,
+            );
+            assert(
+              state.scoreHud &&
+                state.scoreHud.x <= MOBILE_FOCUSED_CORNER_OFFSET_PX &&
+                state.scoreHud.bottom >=
+                  state.viewport.height - MOBILE_FOCUSED_CORNER_OFFSET_PX,
+              `${viewport.name}: HUD não ficou compacto no canto inferior.`,
+            );
+          } else {
+            for (const button of [audioIcon, musicIcon, restartIcon]) {
+              assert(
+                button.bottom <= state.canvas.y,
+                `${viewport.name}: ícone ${button.ariaLabel} não ficou no topo da tela.`,
+              );
+            }
           }
           assert(
             !state.buttons.some(
@@ -799,8 +843,7 @@ async function run() {
           );
           assert(
             !state.buttons.some(
-              (button) =>
-                button.settingsAction === SETTINGS_ACTION_COLLISIONS,
+              (button) => button.settingsAction === SETTINGS_ACTION_COLLISIONS,
             ),
             `${viewport.name}: colisões apareceu fora do menu.`,
           );
@@ -812,8 +855,7 @@ async function run() {
           );
           assert(
             !state.buttons.some(
-              (button) =>
-                button.settingsAction === SETTINGS_ACTION_RESET_SCORE,
+              (button) => button.settingsAction === SETTINGS_ACTION_RESET_SCORE,
             ),
             `${viewport.name}: zerar pontuação apareceu fora do menu.`,
           );
@@ -951,7 +993,10 @@ async function run() {
               page,
               SETTINGS_ACTION_LOGS,
             );
-            assert(openedLogs, `${viewport.name}: não abriu painel de histórico.`);
+            assert(
+              openedLogs,
+              `${viewport.name}: não abriu painel de histórico.`,
+            );
             await page.waitForFunction(
               () => document.body.textContent?.includes("Histórico do jogo"),
               { timeout: 10000 },
@@ -976,7 +1021,10 @@ async function run() {
               page,
               CLOSE_BUTTON_NAME,
             );
-            assert(closedLogs, `${viewport.name}: não fechou painel de histórico.`);
+            assert(
+              closedLogs,
+              `${viewport.name}: não fechou painel de histórico.`,
+            );
 
             await waitForInitialCountdownToFinish(page);
             const openedMenuForCollisions = await clickButtonByPattern(

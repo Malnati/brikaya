@@ -134,6 +134,8 @@ const TOUCH_DRAG_EXPECTED_MOVE_COUNT = 2;
 const PADDLE_MOVE_WAIT_TIMEOUT_MS = 10000;
 const PADDLE_MOVE_POLL_MS = 250;
 const LOWER_CANVAS_BAND_RATIO = 0.85;
+const MOBILE_PORTRAIT_CANVAS_ASPECT_MIN = 0.98;
+const MOBILE_FOCUSED_CORNER_OFFSET_PX = 18;
 const RECT_TOLERANCE_PX = 2;
 
 function getPublicUrl() {
@@ -265,13 +267,32 @@ async function clickButtonByPattern(page, pattern) {
 }
 
 async function clickSettingsAction(page, settingsAction) {
-  return page.evaluate((action) => {
-    const button = document.querySelector(`[data-settings-action="${action}"]`);
+  const selector = `[data-settings-action="${settingsAction}"]`;
+  const hasAction = await page.$(selector);
+  if (!hasAction) {
+    const openedMenu = await clickButtonByPattern(page, MENU_BUTTON_NAME);
+    assert(openedMenu, "Menu lateral não reabriu para ação interna.");
+    await page.waitForSelector(".settings-drawer", {
+      timeout: EVENT_DETAILS_WAIT_TIMEOUT_MS,
+    });
+  }
+  await page.waitForSelector(selector, {
+    timeout: EVENT_DETAILS_WAIT_TIMEOUT_MS,
+  });
+
+  return page.evaluate((actionSelector) => {
+    const button = document.querySelector(actionSelector);
     if (!(button instanceof HTMLElement)) return false;
-    button.scrollIntoView({ block: "center", inline: "center" });
-    button.click();
+    button.scrollIntoView({ block: "center", inline: "nearest" });
+    button.dispatchEvent(
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+      }),
+    );
     return true;
-  }, settingsAction);
+  }, selector);
 }
 
 async function openFirstEventDetails(
@@ -816,6 +837,11 @@ async function run() {
         layoutState.canvas.width / layoutState.dashboardLayout.width >= 0.98,
       "Canvas não ocupa largura full-width no mobile default.",
     );
+    assert(
+      layoutState.canvas.height / layoutState.canvas.width >=
+        MOBILE_PORTRAIT_CANVAS_ASPECT_MIN,
+      "Canvas mobile portrait não ficou quadrado para maximizar a área útil.",
+    );
     assert(layoutState.scoreHud, "HUD único de pontuação não encontrado.");
     assert(
       layoutState.scoreHudText.includes("Fase") &&
@@ -887,12 +913,34 @@ async function run() {
       !layoutState.publicityTextPresent,
       "Texto Publicidade não deve aparecer enquanto não há anúncio real.",
     );
-    for (const button of [audioIcon, musicIcon, restartIcon]) {
-      assert(
-        button.rect.bottom <= layoutState.canvas.y,
-        `Ícone ${button.ariaLabel} não ficou no topo da tela.`,
-      );
-      if (layoutState.bottomSlot) {
+    assert(
+      audioIcon.rect.x <= MOBILE_FOCUSED_CORNER_OFFSET_PX &&
+        audioIcon.rect.y <= MOBILE_FOCUSED_CORNER_OFFSET_PX,
+      "Ícone de som não ficou no canto superior esquerdo.",
+    );
+    assert(
+      restartIcon.rect.y <= MOBILE_FOCUSED_CORNER_OFFSET_PX,
+      "Ícone Reiniciar não ficou no topo da tela.",
+    );
+    const menuButton = mainButtons.find((button) =>
+      MENU_BUTTON_NAME.test(button.text),
+    );
+    assert(
+      menuButton &&
+        menuButton.rect.right >=
+          layoutState.viewport.width - MOBILE_FOCUSED_CORNER_OFFSET_PX &&
+        menuButton.rect.y <= MOBILE_FOCUSED_CORNER_OFFSET_PX,
+      "Menu não ficou no canto superior direito.",
+    );
+    assert(
+      layoutState.scoreHud &&
+        layoutState.scoreHud.x <= MOBILE_FOCUSED_CORNER_OFFSET_PX &&
+        layoutState.scoreHud.bottom >=
+          layoutState.viewport.height - MOBILE_FOCUSED_CORNER_OFFSET_PX,
+      "HUD não ficou compacto no canto inferior.",
+    );
+    if (layoutState.bottomSlot) {
+      for (const button of [audioIcon, musicIcon, restartIcon]) {
         assert(
           button.rect.bottom <= layoutState.bottomSlot.y,
           `Ícone ${button.ariaLabel} invadiu a área de publicidade.`,

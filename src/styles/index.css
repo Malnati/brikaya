@@ -1676,6 +1676,118 @@ canvas {
   }
 }
 
+@media (max-width: 480px) and (orientation: portrait) {
+  #root {
+    padding: 0;
+  }
+
+  .app-shell {
+    min-height: var(--bb-visual-viewport-height);
+  }
+
+  .game-dashboard {
+    position: relative;
+    min-height: var(--bb-visual-viewport-height);
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .dashboard-header {
+    position: fixed;
+    inset: 0 auto auto 0;
+    z-index: 10;
+    display: block;
+    width: var(--bb-visual-viewport-width);
+    height: 0;
+    margin: 0;
+    pointer-events: none;
+  }
+
+  .dashboard-primary-controls,
+  .dashboard-header-controls,
+  .score-hud {
+    position: fixed;
+    z-index: 11;
+    pointer-events: auto;
+  }
+
+  .dashboard-primary-controls {
+    top: max(8px, env(safe-area-inset-top));
+    left: max(8px, env(safe-area-inset-left));
+    gap: 4px;
+  }
+
+  .dashboard-header-controls {
+    top: max(8px, env(safe-area-inset-top));
+    right: max(8px, env(safe-area-inset-right));
+  }
+
+  .score-hud {
+    bottom: max(8px, env(safe-area-inset-bottom));
+    left: max(8px, env(safe-area-inset-left));
+    max-width: calc(var(--bb-visual-viewport-width) - 16px);
+    min-height: 24px;
+    padding: 3px 8px;
+    background: color-mix(in srgb, var(--bb-color-panel) 72%, transparent);
+    font-size: 0.68rem;
+    line-height: 1;
+  }
+
+  .score-hud__separator {
+    padding-inline: 4px;
+  }
+
+  .dashboard-primary-controls .game-icon-control,
+  .dashboard-menu-button {
+    min-width: 44px;
+    min-height: 44px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+  }
+
+  .dashboard-primary-controls .game-icon-control {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    font-size: 0.82rem;
+  }
+
+  .dashboard-menu-button {
+    min-width: 56px;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+  }
+
+  .dashboard-layout,
+  .play-column,
+  .game-container,
+  .game-surface,
+  .game-board-frame {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .dashboard-layout {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .play-column,
+  .game-container,
+  .game-surface {
+    align-items: center;
+    gap: 0;
+  }
+
+  .game-board-playfield {
+    margin-inline: auto;
+  }
+}
+
 @media (max-height: 500px) and (orientation: landscape) {
   html,
   body,

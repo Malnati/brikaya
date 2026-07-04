@@ -3,6 +3,33 @@
 - Implementação completa do jogo Breakout com suporte offline
 - Resolvido conflitos para integrar mudancas da main
 
+## [1.32.27] - 2026-07-04
+### Alterado
+- Layout mobile em retrato reduz a moldura visual do painel, move controles principais para o canto superior esquerdo, move o botão Menu para o canto superior direito e fixa o HUD no canto inferior esquerdo.
+- Canvas mobile em retrato passa a usar largura total disponível em formato quadrado, ampliando a área útil de jogo sem reservar bloco vertical para mostradores.
+
+### Adicionado
+- Cobertura unitária para o cálculo de canvas quadrado no mobile em retrato.
+- QA publicado mobile/dashboard passa a validar canvas quadrado, controles nos cantos e ausência de overflow horizontal.
+- Evidências publicadas da alteração em `docs/assets/issues/mobile-playfield-focus/evidence/`.
+
+### Testado
+- `node --version` → `v23.5.0`.
+- `make help`.
+- `npm test -- tests/unit/canvasSizing.test.ts --runInBand`.
+- `node --check tests/e2e/cloudflare-mobile-qa.js`.
+- `node --check tests/e2e/cloudflare-dashboard-layout-qa.js`.
+- `npx tsc -p tsconfig.app.json --noEmit`.
+- `npm test -- --runInBand --silent`.
+- `npm run build`.
+- `make cloudflare-env-check`.
+- `make cloudflare-build`.
+- `make cloudflare-deploy` → domínio público `https://brikaya.com/` atualizado.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-mobile-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ make cloudflare-dashboard-layout-qa`.
+- `BRICKBREAKER_PUBLIC_URL=https://brikaya.com/ npm run test:cloudflare-gameplay-basic`.
+- Varredura textual das evidências e arquivos alterados não encontrou token, chave privada ou credencial real.
+
 ## [1.32.26] - 2026-07-04
 ### Alterado
 - Raquete passa a usar 17% da largura do canvas, com limites mínimo e máximo reduzidos em 15%.
