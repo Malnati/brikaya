@@ -24,7 +24,7 @@
     {
       "index": 1,
       "type": "collision",
-      "timestamp": 1783149040670,
+      "timestamp": 1783152597855,
       "score": 0,
       "bricksRemaining": 1,
       "successfulBrickHits": 0,
@@ -38,7 +38,7 @@
     {
       "index": 3,
       "type": "collision",
-      "timestamp": 1783149042484,
+      "timestamp": 1783152599669,
       "score": 0,
       "bricksRemaining": 1,
       "successfulBrickHits": 0,
@@ -54,7 +54,7 @@
     {
       "index": 1,
       "type": "collision",
-      "timestamp": 1783149040670,
+      "timestamp": 1783152597855,
       "score": 0,
       "bricksRemaining": 1,
       "successfulBrickHits": 0,
@@ -68,7 +68,7 @@
     {
       "index": 3,
       "type": "collision",
-      "timestamp": 1783149042484,
+      "timestamp": 1783152599669,
       "score": 0,
       "bricksRemaining": 1,
       "successfulBrickHits": 0,
@@ -83,7 +83,7 @@
   "firstBrickDestroyed": {
     "index": 5,
     "type": "brick_destroyed",
-    "timestamp": 1783149044283,
+    "timestamp": 1783152601467,
     "score": 0,
     "bricksRemaining": 0,
     "successfulBrickHits": 1,
@@ -97,12 +97,16 @@
   "firstScoreUpdate": {
     "index": 6,
     "type": "score_update",
-    "timestamp": 1783149044286,
+    "timestamp": 1783152601469,
     "score": 10,
     "bricksRemaining": 0,
     "successfulBrickHits": 1,
     "pointsAdded": 10,
     "reason": "brick_destroyed"
   },
+  "loadedMetalDamageAssets": [
+    "/assets/visual/bricks/spr-brick-metal-steel-dented-one.svg",
+    "/assets/visual/bricks/spr-brick-metal-steel-dented-two.svg"
+  ],
   "consoleProblems": []
 }

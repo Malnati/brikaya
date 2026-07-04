@@ -59,6 +59,14 @@ const REQUIRED_EVENT_TYPES = [
   EVENT_LEVEL_START,
 ];
 const REQUIRED_PRE_DESTROY_COLLISIONS = 2;
+const EXPECTED_DENTED_ONE_ASSET =
+  "/assets/visual/bricks/spr-brick-metal-steel-dented-one.svg";
+const EXPECTED_DENTED_TWO_ASSET =
+  "/assets/visual/bricks/spr-brick-metal-steel-dented-two.svg";
+const EXPECTED_VISUAL_DAMAGE_ASSETS = [
+  EXPECTED_DENTED_ONE_ASSET,
+  EXPECTED_DENTED_TWO_ASSET,
+];
 const EXPECTED_INITIAL_SCORE = 0;
 const EXPECTED_SCORE_POINTS = 10;
 const EXPECTED_INITIAL_BRICKS_REMAINING = 1;
@@ -300,6 +308,37 @@ async function waitForBrickCollisionCount(page, expectedCount) {
   );
 }
 
+async function waitForMetalDamageAssets(page) {
+  await page.waitForFunction(
+    ({ expectedAssets }) => {
+      const resourcePaths = performance
+        .getEntriesByType("resource")
+        .map((entry) => new URL(entry.name).pathname);
+
+      return expectedAssets.every((assetPath) =>
+        resourcePaths.includes(assetPath),
+      );
+    },
+    { timeout: MAX_WAIT_FOR_METAL_BLOCK_MS },
+    { expectedAssets: EXPECTED_VISUAL_DAMAGE_ASSETS },
+  );
+}
+
+async function readLoadedMetalDamageAssets(page) {
+  return page.evaluate(
+    ({ expectedAssets }) => {
+      const resourcePaths = performance
+        .getEntriesByType("resource")
+        .map((entry) => new URL(entry.name).pathname);
+
+      return expectedAssets.filter((assetPath) =>
+        resourcePaths.includes(assetPath),
+      );
+    },
+    { expectedAssets: EXPECTED_VISUAL_DAMAGE_ASSETS },
+  );
+}
+
 async function run() {
   const targetUrl = withQaScenario(publicUrl());
   const outReport = reportPath();
@@ -342,7 +381,9 @@ async function run() {
     await acceptPrivacyConsentIfPresent(page);
     await waitForEventType(page, EVENT_GAME_START);
     await waitForBrickCollisionCount(page, REQUIRED_PRE_DESTROY_COLLISIONS);
+    await waitForMetalDamageAssets(page);
     await page.screenshot({ path: outScreenshot, fullPage: true });
+    const loadedMetalDamageAssets = await readLoadedMetalDamageAssets(page);
     await waitForEventType(page, EVENT_LEVEL_START);
     await new Promise((resolve) => setTimeout(resolve, POST_DESTROY_SETTLE_MS));
 
@@ -381,6 +422,7 @@ async function run() {
       firstScoreUpdate: scoreUpdateEntry
         ? summarizeEvent(scoreUpdateEntry.event, scoreUpdateEntry.index)
         : null,
+      loadedMetalDamageAssets,
       consoleProblems,
     };
     writeFileSync(outReport, JSON.stringify(report, null, 2));
@@ -407,6 +449,12 @@ async function run() {
       preDestroyCollisionEntries.length >= REQUIRED_PRE_DESTROY_COLLISIONS,
       "Menos de dois toques foram registrados antes da destruição.",
     );
+    for (const expectedAsset of EXPECTED_VISUAL_DAMAGE_ASSETS) {
+      assert(
+        loadedMetalDamageAssets.includes(expectedAsset),
+        `Asset de amassado metálico não carregou: ${expectedAsset}`,
+      );
+    }
     const firstPreDestroyCollision = preDestroyCollisionEntries[0]?.event;
     const secondPreDestroyCollision = preDestroyCollisionEntries[1]?.event;
     assert(

@@ -22,6 +22,8 @@ const BRICK_KIND_BASIC = "basic";
 const BRICK_KIND_METAL = "metal";
 const BASIC_BRICK_HITS = 1;
 const METAL_BRICK_HITS = 3;
+const METAL_BRICK_DENTED_ONE_HITS = 2;
+const METAL_BRICK_DENTED_TWO_HITS = 1;
 const METAL_BRICK_MIN_COUNT = 0;
 const METAL_BRICK_MAX_COUNT = 3;
 const BRICK_ASSET_ROLES = [
@@ -512,12 +514,28 @@ export class Bricks {
 
   private getBrickAssetRole(brick: Brick): GameVisualAssetRole {
     if (brick.kind === BRICK_KIND_METAL) {
-      return GAME_VISUAL_ASSET_ROLES.brickMetal;
+      return this.getMetalBrickAssetRole(brick);
     }
 
     return (
       BRICK_ASSET_ROLES[brick.colorIndex] ?? GAME_VISUAL_ASSET_ROLES.brickRed
     );
+  }
+
+  private getMetalBrickAssetRole(brick: Brick): GameVisualAssetRole {
+    if (brick.hitsRemaining >= METAL_BRICK_HITS) {
+      return GAME_VISUAL_ASSET_ROLES.brickMetalIntact;
+    }
+
+    if (brick.hitsRemaining === METAL_BRICK_DENTED_ONE_HITS) {
+      return GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne;
+    }
+
+    if (brick.hitsRemaining <= METAL_BRICK_DENTED_TWO_HITS) {
+      return GAME_VISUAL_ASSET_ROLES.brickMetalDentedTwo;
+    }
+
+    return GAME_VISUAL_ASSET_ROLES.brickMetalIntact;
   }
 
   private hitBrick(brick: Brick): boolean {

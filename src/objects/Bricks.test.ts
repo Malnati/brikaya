@@ -1,6 +1,7 @@
 // src/objects/Bricks.test.ts
 import { Bricks } from "./Bricks";
 import type { DynamicGameDimensions } from "../constants/game";
+import { GAME_VISUAL_ASSET_ROLES } from "../utils/visualAssetResolver";
 
 jest.mock("../storage/gameLogger", () => ({
   gameLogger: {
@@ -15,6 +16,12 @@ jest.mock("../utils/collisionTracker", () => ({
   },
 }));
 
+jest.mock("../utils/assetLoader", () => ({
+  AssetLoader: {
+    getOrLoadImage: jest.fn(() => ({})),
+  },
+}));
+
 jest.mock("../utils/logger", () => ({
   ERROR: jest.fn(),
   LOG: jest.fn(),
@@ -25,7 +32,11 @@ const BASIC_BRICK_RANDOM_VALUES = [0, 0, 0, 0, 0, 0, 0];
 const FIRST_BRICK_METAL_RANDOM_VALUES = [
   0, 0, 0, 0, 0, 0, 0.25, 0.99, 0.99, 0.99, 0.99, 0.99,
 ];
+const FIRST_TWO_BRICKS_METAL_RANDOM_VALUES = [
+  0, 0, 0, 0, 0, 0, 0.5, 0.99, 0.99, 0.99, 0.99, 0.99,
+];
 const BRICK_TOUCH_Y = 40;
+const SECOND_ROW_BRICK_TOUCH_Y = 70;
 const BRICK_SEPARATION_Y = 0;
 
 function createRandom(values: number[]) {
@@ -55,6 +66,13 @@ function createBall() {
     })),
     getLastSpeedReduction: jest.fn(() => null),
   };
+}
+
+function createCanvasContext() {
+  return {
+    drawImage: jest.fn(),
+    fillRect: jest.fn(),
+  } as unknown as CanvasRenderingContext2D;
 }
 
 async function separateAndTouchBrick(
@@ -212,5 +230,68 @@ describe("Bricks laser fan helpers", () => {
     expect(ball.bounceY).toHaveBeenCalledTimes(3);
     expect(ball.registerBrickHit).toHaveBeenCalledTimes(1);
     expect(onBrickDestroyed).toHaveBeenCalledTimes(1);
+  });
+
+  it("amolda apenas o bloco metálico atingido a cada colisão", async () => {
+    const resolveAssetPath = jest.fn((role: string) => `/assets/${role}.svg`);
+    const bricks = new Bricks(
+      TEST_DIMENSIONS,
+      undefined,
+      undefined,
+      undefined,
+      resolveAssetPath,
+      createRandom(FIRST_TWO_BRICKS_METAL_RANDOM_VALUES),
+    );
+    const ball = createBall();
+
+    bricks.draw(createCanvasContext());
+
+    expect(bricks.isBrickMetal(0, 0)).toBe(true);
+    expect(bricks.isBrickMetal(0, 1)).toBe(true);
+    expect(resolveAssetPath).toHaveBeenCalledWith(
+      GAME_VISUAL_ASSET_ROLES.brickMetalIntact,
+    );
+
+    resolveAssetPath.mockClear();
+    await bricks.collide(ball);
+    bricks.draw(createCanvasContext());
+
+    expect(bricks.getBrickHitsRemaining(0, 0)).toBe(2);
+    expect(bricks.getBrickHitsRemaining(0, 1)).toBe(3);
+    expect(resolveAssetPath).toHaveBeenCalledWith(
+      GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne,
+    );
+    expect(resolveAssetPath).toHaveBeenCalledWith(
+      GAME_VISUAL_ASSET_ROLES.brickMetalIntact,
+    );
+    expect(resolveAssetPath).not.toHaveBeenCalledWith(
+      GAME_VISUAL_ASSET_ROLES.brickMetalDentedTwo,
+    );
+
+    resolveAssetPath.mockClear();
+    await separateAndTouchBrick(bricks, ball);
+    bricks.draw(createCanvasContext());
+
+    expect(bricks.getBrickHitsRemaining(0, 0)).toBe(1);
+    expect(bricks.getBrickHitsRemaining(0, 1)).toBe(3);
+    expect(resolveAssetPath).toHaveBeenCalledWith(
+      GAME_VISUAL_ASSET_ROLES.brickMetalDentedTwo,
+    );
+    expect(resolveAssetPath).toHaveBeenCalledWith(
+      GAME_VISUAL_ASSET_ROLES.brickMetalIntact,
+    );
+    expect(bricks.isBrickActive(0, 1)).toBe(true);
+
+    ball.position.y = BRICK_SEPARATION_Y;
+    await bricks.collide(ball);
+    ball.position.y = SECOND_ROW_BRICK_TOUCH_Y;
+    await bricks.collide(ball);
+    resolveAssetPath.mockClear();
+    bricks.draw(createCanvasContext());
+
+    expect(bricks.getBrickHitsRemaining(0, 1)).toBe(2);
+    expect(resolveAssetPath).toHaveBeenCalledWith(
+      GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne,
+    );
   });
 });

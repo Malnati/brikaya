@@ -16,6 +16,10 @@ export const sprBrickBasicPurpleNormal =
   "/assets/visual/bricks/spr-brick-basic-purple-normal.svg";
 export const sprBrickMetalSteelNormal =
   "/assets/visual/bricks/spr-brick-metal-steel-normal.svg";
+export const sprBrickMetalSteelDentedOne =
+  "/assets/visual/bricks/spr-brick-metal-steel-dented-one.svg";
+export const sprBrickMetalSteelDentedTwo =
+  "/assets/visual/bricks/spr-brick-metal-steel-dented-two.svg";
 export const vfxCountdownCircleOverlay =
   "/assets/visual/vfx/vfx-countdown-circle-overlay.svg";
 export const vfxCountdownSparkOverlay =
@@ -53,6 +57,10 @@ export const sprBrickBasicPurpleHighContrastNormal =
   "/assets/visual/bricks/spr-brick-basic-purple-high-contrast-normal.svg";
 export const sprBrickMetalSteelHighContrastNormal =
   "/assets/visual/bricks/spr-brick-metal-steel-high-contrast-normal.svg";
+export const sprBrickMetalSteelHighContrastDentedOne =
+  "/assets/visual/bricks/spr-brick-metal-steel-high-contrast-dented-one.svg";
+export const sprBrickMetalSteelHighContrastDentedTwo =
+  "/assets/visual/bricks/spr-brick-metal-steel-high-contrast-dented-two.svg";
 export const vfxCountdownCircleHighContrastOverlay =
   "/assets/visual/vfx/vfx-countdown-circle-high-contrast-overlay.svg";
 export const vfxCountdownSparkHighContrastOverlay =
@@ -87,6 +95,10 @@ export const sprBrickBasicPurpleSunsetNormal =
   "/assets/visual/bricks/spr-brick-basic-purple-sunset-normal.svg";
 export const sprBrickMetalSteelSunsetNormal =
   "/assets/visual/bricks/spr-brick-metal-steel-sunset-normal.svg";
+export const sprBrickMetalSteelSunsetDentedOne =
+  "/assets/visual/bricks/spr-brick-metal-steel-sunset-dented-one.svg";
+export const sprBrickMetalSteelSunsetDentedTwo =
+  "/assets/visual/bricks/spr-brick-metal-steel-sunset-dented-two.svg";
 export const vfxCountdownCircleSunsetOverlay =
   "/assets/visual/vfx/vfx-countdown-circle-sunset-overlay.svg";
 export const vfxCountdownSparkSunsetOverlay =
@@ -289,6 +301,8 @@ export const VISUAL_ASSET_PATHS = {
   sprBrickBasicYellowNormal,
   sprBrickBasicPurpleNormal,
   sprBrickMetalSteelNormal,
+  sprBrickMetalSteelDentedOne,
+  sprBrickMetalSteelDentedTwo,
   vfxCountdownCircleOverlay,
   vfxCountdownSparkOverlay,
   vfxLevelUpStarOverlay,
@@ -308,6 +322,8 @@ export const VISUAL_ASSET_PATHS = {
   sprBrickBasicYellowHighContrastNormal,
   sprBrickBasicPurpleHighContrastNormal,
   sprBrickMetalSteelHighContrastNormal,
+  sprBrickMetalSteelHighContrastDentedOne,
+  sprBrickMetalSteelHighContrastDentedTwo,
   vfxCountdownCircleHighContrastOverlay,
   vfxCountdownSparkHighContrastOverlay,
   vfxLevelUpStarHighContrastOverlay,
@@ -325,6 +341,8 @@ export const VISUAL_ASSET_PATHS = {
   sprBrickBasicYellowSunsetNormal,
   sprBrickBasicPurpleSunsetNormal,
   sprBrickMetalSteelSunsetNormal,
+  sprBrickMetalSteelSunsetDentedOne,
+  sprBrickMetalSteelSunsetDentedTwo,
   vfxCountdownCircleSunsetOverlay,
   vfxCountdownSparkSunsetOverlay,
   vfxLevelUpStarSunsetOverlay,
@@ -504,6 +522,28 @@ export const VISUAL_ASSET_CATALOG = [
     width: 48,
     height: 20,
     usage: "Bloco metálico resistente",
+  },
+  {
+    id: "spr-brick-metal-steel-dented-one",
+    variableName: "sprBrickMetalSteelDentedOne",
+    path: sprBrickMetalSteelDentedOne,
+    group: "brick",
+    semanticRole: "brick-metal-steel-dented-one",
+    state: "damaged",
+    width: 48,
+    height: 20,
+    usage: "Bloco metálico resistente com um amassado",
+  },
+  {
+    id: "spr-brick-metal-steel-dented-two",
+    variableName: "sprBrickMetalSteelDentedTwo",
+    path: sprBrickMetalSteelDentedTwo,
+    group: "brick",
+    semanticRole: "brick-metal-steel-dented-two",
+    state: "critical",
+    width: 48,
+    height: 20,
+    usage: "Bloco metálico resistente com dois amassados",
   },
   {
     id: "vfx-countdown-circle-overlay",
@@ -715,6 +755,28 @@ export const VISUAL_ASSET_CATALOG = [
     usage: "Bloco metálico resistente alto contraste",
   },
   {
+    id: "spr-brick-metal-steel-high-contrast-dented-one",
+    variableName: "sprBrickMetalSteelHighContrastDentedOne",
+    path: sprBrickMetalSteelHighContrastDentedOne,
+    group: "brick",
+    semanticRole: "brick-metal-steel-high-contrast-dented-one",
+    state: "damaged",
+    width: 48,
+    height: 20,
+    usage: "Bloco metálico resistente alto contraste com um amassado",
+  },
+  {
+    id: "spr-brick-metal-steel-high-contrast-dented-two",
+    variableName: "sprBrickMetalSteelHighContrastDentedTwo",
+    path: sprBrickMetalSteelHighContrastDentedTwo,
+    group: "brick",
+    semanticRole: "brick-metal-steel-high-contrast-dented-two",
+    state: "critical",
+    width: 48,
+    height: 20,
+    usage: "Bloco metálico resistente alto contraste com dois amassados",
+  },
+  {
     id: "vfx-countdown-circle-high-contrast-overlay",
     variableName: "vfxCountdownCircleHighContrastOverlay",
     path: vfxCountdownCircleHighContrastOverlay,
@@ -900,6 +962,28 @@ export const VISUAL_ASSET_CATALOG = [
     width: 48,
     height: 20,
     usage: "Bloco metálico resistente sunset",
+  },
+  {
+    id: "spr-brick-metal-steel-sunset-dented-one",
+    variableName: "sprBrickMetalSteelSunsetDentedOne",
+    path: sprBrickMetalSteelSunsetDentedOne,
+    group: "brick",
+    semanticRole: "brick-metal-steel-sunset-dented-one",
+    state: "damaged",
+    width: 48,
+    height: 20,
+    usage: "Bloco metálico resistente sunset com um amassado",
+  },
+  {
+    id: "spr-brick-metal-steel-sunset-dented-two",
+    variableName: "sprBrickMetalSteelSunsetDentedTwo",
+    path: sprBrickMetalSteelSunsetDentedTwo,
+    group: "brick",
+    semanticRole: "brick-metal-steel-sunset-dented-two",
+    state: "critical",
+    width: 48,
+    height: 20,
+    usage: "Bloco metálico resistente sunset com dois amassados",
   },
   {
     id: "vfx-countdown-circle-sunset-overlay",
