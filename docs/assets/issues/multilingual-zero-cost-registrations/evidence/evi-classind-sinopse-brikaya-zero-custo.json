@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "createdAtUtc": "2026-07-04T02:09:29Z",
+  "purpose": "Sanitized public evidence of the minimal synopsis uploaded to CLASSIND",
+  "uploadedToClassind": true,
+  "uploadedArtifactVersioned": false,
+  "uploadedArtifactReason": "Temporary PDF was used only for CLASSIND upload and is not versioned because repository evidence policy permits JSON/image/SVG evidence, not PDF.",
+  "title": "Brikaya",
+  "intendedRating": "Livre",
+  "canonicalUrl": "https://brikaya.com/",
+  "synopsisSummary": "Jogo eletrônico casual de quebra-blocos em PWA/web; jogador controla uma barra para rebater uma bola, destruir blocos e avançar fases.",
+  "absentContent": [
+    "violência realista",
+    "drogas",
+    "sexo",
+    "nudez",
+    "jogo de azar",
+    "compras",
+    "chat",
+    "interação entre usuários",
+    "prêmios reais"
+  ],
+  "personalDataRedacted": true,
+  "cost": "R$ 0"
+}

@@ -1,7 +1,7 @@
 <!-- docs/dist/registros-execucao-zero-custo.md -->
 # Execução zero-custo dos registros multilíngues Brikaya
 
-Data UTC: 2026-07-04 01:58:08. Escopo: domínio canônico `https://brikaya.com/`, PWA-only, todos os idiomas planejados/traduzidos e nenhuma ação com custo.
+Data UTC: 2026-07-04T02:11:17Z. Escopo: domínio canônico `https://brikaya.com/`, PWA-only, todos os idiomas planejados/traduzidos e nenhuma ação com custo.
 
 ## Resultado operacional
 
@@ -13,7 +13,7 @@ Data UTC: 2026-07-04 01:58:08. Escopo: domínio canônico `https://brikaya.com/`
 | Yandex Webmaster | Concluído | Site verificado por DNS TXT no Cloudflare; usuário ficou com papel Owner; sitemap enviado para a fila de processamento do Yandex. | Aguardar processamento do sitemap; não ativar Yandex Metrica, tag externo ou proteção/serviço pago. |
 | Naver Search Advisor | Concluído | Conta Naver autenticada; termo gratuito aceito; site `https://brikaya.com/` verificado por arquivo HTML público oficial; sitemap `https://brikaya.com/sitemap.xml` enviado e listado como `sitemap.xml` em 26.07.04 10:16:30. | Aguardar processamento/coleta do Naver; manter sem script runtime, ads ou serviço pago. |
 | Baidu Search Resource Platform | Não executado | Fonte oficial exige login para adicionar site. Conta Baidu/local não estava disponível. | Usar somente conta Baidu gratuita se disponível; não ativar ICP/China Network/hospedagem China/serviço pago. |
-| CLASSIND Brasil | Dossiê preparado | Conteúdo e critérios estão documentados em `docs/dist/registros.md`; submissão exige gov.br/CLASSIND e dados do requerente/titular. | Submeter com conta gov.br/CLASSIND autorizada; parar se aparecer qualquer custo. |
+| CLASSIND Brasil | Concluído; em triagem | Inscrição processual de Brikaya enviada no Safari/gov.br; confirmação "Inscrição processual completa" exibida; listagem mostra Brikaya com status "Triagem". Evidência sanitizada da sinopse anexada: `docs/assets/issues/multilingual-zero-cost-registrations/evidence/evi-classind-sinopse-brikaya-zero-custo.json`. | Aguardar análise/contato do CLASSIND; aplicar símbolo/descritores públicos quando houver resultado; continuar bloqueando qualquer cobrança. |
 | Buscas gratuitas de marca | Parcial/documentado | Busca web geral não mostrou colisão oficial evidente para `Brikaya`; apareceu risco fonético público `Brekiya`, exigindo busca oficial antes de depósito pago futuro. | Executar bases oficiais nominativas quando login/captcha permitir; não depositar marca. |
 
 Reconferência Chrome autenticada em 2026-07-04: Google Search Console, Bing, Yandex e Naver exibiram o sitemap de `brikaya.com` sem CAPTCHA ativo, cobrança, aprovação administrativa, tag externa ou produto pago aceito nesta rodada. Cloudflare foi usado apenas como leitura de cache/estado; nenhum purge ou mudança de plano foi acionado nesta reconferência.
@@ -23,14 +23,16 @@ Reconferência Chrome autenticada em 2026-07-04: Google Search Console, Bing, Ya
 - A propriedade de domínio no Google cobre todos os caminhos futuros (`/en/`, `/zh-CN/`, etc.); não é necessário registrar cada idioma separadamente no Search Console.
 - `hreflang` e sitemap multilíngue foram publicados após as rotas localizadas passarem a servir HTML/metadados próprios; os buscadores recebem o mesmo sitemap canônico.
 - China fica limitada a descoberta global sem custo. Cloudflare China Network/ICP/hospedagem local/licença/app store chinesa ficam bloqueados por custo/obrigações.
-- Nenhum anúncio, campanha, tag de analytics, script de terceiro, conta paga, cartão, depósito de PI ou aprovação administrativa foi acionado.
+- Nenhum anúncio, campanha, tag de analytics, script de terceiro, conta paga, cartão, depósito de PI, aprovação administrativa ou cobrança foi acionado.
 - O arquivo HTML público do Naver é exceção mínima de verificação de posse exigida pelo provedor; o token fica versionado apenas no arquivo público necessário, redigido em docs/evidências/chat.
 - CAPTCHA do Naver deixou de bloquear a sessão; a propriedade foi confirmada e o sitemap foi enviado sem custo.
+- CLASSIND foi submetido apenas após confirmação final explícita do usuário; a confirmação e o status de triagem foram verificados no Safari sem custo.
 
 ## Evidência
 
 - JSON operacional: `docs/assets/issues/multilingual-zero-cost-registrations/evidence/evi-multilingual-zero-cost-registration-status.json`.
 - JSON de reconferência + i18n automático: `docs/assets/issues/auto-locale-webmaster/evidence/evi-brikaya-auto-locale-webmaster-verification.json`.
+- Evidência sanitizada da sinopse anexada ao CLASSIND: `docs/assets/issues/multilingual-zero-cost-registrations/evidence/evi-classind-sinopse-brikaya-zero-custo.json`.
 - Evidência anterior de Search Console: `docs/assets/issues/search-console-seo/evidence/evi-search-console-seo-public-validation.json`.
 
 ## Fontes operacionais
