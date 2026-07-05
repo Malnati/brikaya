@@ -1,8 +1,8 @@
 {
   "levelTargetUrl": "https://brikaya.com/?qaScenario=single-brick-phase-clear",
   "ripTargetUrl": "https://brikaya.com/?qaScenario=cinematic-rip",
-  "countdownDurationMs": 1774,
-  "ripDurationMs": 1739,
+  "countdownDurationMs": 1784,
+  "ripDurationMs": 1734,
   "countdownState": {
     "text": "3",
     "type": "countdown",
@@ -20,11 +20,11 @@
       "x": 0,
       "y": 0,
       "width": 402,
-      "height": 770,
+      "height": 874,
       "right": 402,
-      "bottom": 770,
+      "bottom": 874,
       "centerX": 201,
-      "centerY": 385
+      "centerY": 437
     },
     "canvasRect": {
       "x": 0,
@@ -38,43 +38,43 @@
     },
     "contentRect": {
       "x": 24.125,
-      "y": 208.125,
+      "y": 260.125,
       "width": 353.75,
       "height": 353.75,
       "right": 377.875,
-      "bottom": 561.875,
+      "bottom": 613.875,
       "centerX": 201,
-      "centerY": 385
+      "centerY": 437
     },
     "compositionRect": {
       "x": 24.125,
-      "y": 208.125,
+      "y": 260.125,
       "width": 353.75,
       "height": 353.75,
       "right": 377.875,
-      "bottom": 561.875,
+      "bottom": 613.875,
       "centerX": 201,
-      "centerY": 385
+      "centerY": 437
     },
     "countdownCountRect": {
-      "x": 168.41140747070312,
-      "y": 334.2496337890625,
-      "width": 65.17720031738281,
-      "height": 101.500732421875,
-      "right": 233.58860778808594,
-      "bottom": 435.7503662109375,
-      "centerX": 201.00000762939453,
-      "centerY": 385
+      "x": 168.4091796875,
+      "y": 386.24615478515625,
+      "width": 65.181640625,
+      "height": 101.50765991210938,
+      "right": 233.5908203125,
+      "bottom": 487.7538146972656,
+      "centerX": 201,
+      "centerY": 436.99998474121094
     },
     "countdownHaloRect": {
-      "x": 56.31996154785156,
-      "y": 240.31996154785156,
-      "width": 289.360107421875,
-      "height": 289.360107421875,
-      "right": 345.68006896972656,
-      "bottom": 529.6800689697266,
-      "centerX": 201.00001525878906,
-      "centerY": 385.00001525878906
+      "x": 34.7421875,
+      "y": 270.7421875,
+      "width": 332.515625,
+      "height": 332.515625,
+      "right": 367.2578125,
+      "bottom": 603.2578125,
+      "centerX": 201,
+      "centerY": 437
     },
     "titleRect": null,
     "detailRect": null,
@@ -96,13 +96,27 @@
       "x": 0,
       "y": 0,
       "width": 402,
-      "height": 770,
+      "height": 874,
       "centerX": 201,
-      "centerY": 385,
+      "centerY": 437,
       "right": 402,
-      "bottom": 770,
+      "bottom": 874,
       "browserChromeTopInset": 0,
-      "browserChromeBottomInset": 104,
+      "browserChromeBottomInset": 0,
+      "browserChromeLeftInset": 0,
+      "browserChromeRightInset": 0
+    },
+    "cssVisibleViewport": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "centerX": 201,
+      "centerY": 437,
+      "right": 402,
+      "bottom": 874,
+      "browserChromeTopInset": 0,
+      "browserChromeBottomInset": 0,
       "browserChromeLeftInset": 0,
       "browserChromeRightInset": 0
     },
@@ -114,14 +128,14 @@
         "ariaHidden": "true",
         "alt": "",
         "rect": {
-          "x": 62.18289566040039,
-          "y": 246.18289184570312,
-          "width": 277.63421630859375,
-          "height": 277.6342468261719,
-          "right": 339.81711196899414,
-          "bottom": 523.817138671875,
-          "centerX": 201.00000381469727,
-          "centerY": 385.00001525878906
+          "x": 62.18335723876953,
+          "y": 298.183349609375,
+          "width": 277.63330078125,
+          "height": 277.63330078125,
+          "right": 339.81665802001953,
+          "bottom": 575.816650390625,
+          "centerX": 201.00000762939453,
+          "centerY": 437
         }
       },
       {
@@ -130,14 +144,42 @@
         "ariaHidden": "true",
         "alt": "",
         "rect": {
-          "x": 136.29306030273438,
-          "y": 320.2930603027344,
-          "width": 129.41387939453125,
-          "height": 129.41387939453125,
-          "right": 265.7069396972656,
-          "bottom": 449.7069396972656,
+          "x": 136.28871154785156,
+          "y": 372.2886962890625,
+          "width": 129.42259216308594,
+          "height": 129.422607421875,
+          "right": 265.7113037109375,
+          "bottom": 501.7113037109375,
+          "centerX": 201.00000762939453,
+          "centerY": 437
+        }
+      }
+    ],
+    "mediaLayers": [
+      {
+        "id": "countdown-circle",
+        "rect": {
+          "x": 80.7265625,
+          "y": 316.7265625,
+          "width": 240.546875,
+          "height": 240.546875,
+          "right": 321.2734375,
+          "bottom": 557.2734375,
           "centerX": 201,
-          "centerY": 385
+          "centerY": 437
+        }
+      },
+      {
+        "id": "countdown-spark",
+        "rect": {
+          "x": 119.640625,
+          "y": 355.640625,
+          "width": 162.71875,
+          "height": 162.71875,
+          "right": 282.359375,
+          "bottom": 518.359375,
+          "centerX": 201,
+          "centerY": 437
         }
       }
     ]
@@ -179,11 +221,11 @@
           "x": 0,
           "y": 0,
           "width": 402,
-          "height": 770,
+          "height": 874,
           "right": 402,
-          "bottom": 770,
+          "bottom": 874,
           "centerX": 201,
-          "centerY": 385
+          "centerY": 437
         },
         "canvasRect": {
           "x": 0,
@@ -197,43 +239,43 @@
         },
         "contentRect": {
           "x": 24.125,
-          "y": 208.125,
+          "y": 260.125,
           "width": 353.75,
           "height": 353.75,
           "right": 377.875,
-          "bottom": 561.875,
+          "bottom": 613.875,
           "centerX": 201,
-          "centerY": 385
+          "centerY": 437
         },
         "compositionRect": {
           "x": 24.125,
-          "y": 208.125,
+          "y": 260.125,
           "width": 353.75,
           "height": 353.75,
           "right": 377.875,
-          "bottom": 561.875,
+          "bottom": 613.875,
           "centerX": 201,
-          "centerY": 385
+          "centerY": 437
         },
         "countdownCountRect": {
-          "x": 168.41140747070312,
-          "y": 334.2496337890625,
-          "width": 65.17720031738281,
-          "height": 101.500732421875,
-          "right": 233.58860778808594,
-          "bottom": 435.7503662109375,
-          "centerX": 201.00000762939453,
-          "centerY": 385
+          "x": 168.4091796875,
+          "y": 386.24615478515625,
+          "width": 65.181640625,
+          "height": 101.50765991210938,
+          "right": 233.5908203125,
+          "bottom": 487.7538146972656,
+          "centerX": 201,
+          "centerY": 436.99998474121094
         },
         "countdownHaloRect": {
-          "x": 56.31996154785156,
-          "y": 240.31996154785156,
-          "width": 289.360107421875,
-          "height": 289.360107421875,
-          "right": 345.68006896972656,
-          "bottom": 529.6800689697266,
-          "centerX": 201.00001525878906,
-          "centerY": 385.00001525878906
+          "x": 34.7421875,
+          "y": 270.7421875,
+          "width": 332.515625,
+          "height": 332.515625,
+          "right": 367.2578125,
+          "bottom": 603.2578125,
+          "centerX": 201,
+          "centerY": 437
         },
         "titleRect": null,
         "detailRect": null,
@@ -255,173 +297,26 @@
           "x": 0,
           "y": 0,
           "width": 402,
-          "height": 770,
+          "height": 874,
           "centerX": 201,
-          "centerY": 385,
+          "centerY": 437,
           "right": 402,
-          "bottom": 770,
+          "bottom": 874,
           "browserChromeTopInset": 0,
-          "browserChromeBottomInset": 104,
+          "browserChromeBottomInset": 0,
           "browserChromeLeftInset": 0,
           "browserChromeRightInset": 0
         },
-        "hasBodyScroll": false,
-        "media": [
-          {
-            "id": "countdown-circle",
-            "src": "/assets/visual/vfx/vfx-countdown-circle-overlay.svg",
-            "ariaHidden": "true",
-            "alt": "",
-            "rect": {
-              "x": 62.18289566040039,
-              "y": 246.18289184570312,
-              "width": 277.63421630859375,
-              "height": 277.6342468261719,
-              "right": 339.81711196899414,
-              "bottom": 523.817138671875,
-              "centerX": 201.00000381469727,
-              "centerY": 385.00001525878906
-            }
-          },
-          {
-            "id": "countdown-spark",
-            "src": "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
-            "ariaHidden": "true",
-            "alt": "",
-            "rect": {
-              "x": 136.29306030273438,
-              "y": 320.2930603027344,
-              "width": 129.41387939453125,
-              "height": 129.41387939453125,
-              "right": 265.7069396972656,
-              "bottom": 449.7069396972656,
-              "centerX": 201,
-              "centerY": 385
-            }
-          }
-        ]
-      },
-      "countdownDurationMs": 1774,
-      "countdownScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-countdown.png"
-    },
-    {
-      "viewportName": "iphone-17-default-landscape",
-      "viewport": {
-        "name": "iphone-17-default-landscape",
-        "label": "iPhone 17 default landscape",
-        "models": [
-          "iPhone 17"
-        ],
-        "category": "mobile",
-        "orientation": "landscape",
-        "width": 874,
-        "height": 402,
-        "deviceScaleFactor": 3,
-        "isMobile": true,
-        "hasTouch": true,
-        "priority": "gameplay",
-        "smokeOverlays": false,
-        "screenshotRole": "landscape-default"
-      },
-      "countdownState": {
-        "text": "3",
-        "type": "countdown",
-        "rect": {
+        "cssVisibleViewport": {
           "x": 0,
           "y": 0,
-          "width": 874,
-          "height": 402,
-          "right": 874,
-          "bottom": 402,
-          "centerX": 437,
-          "centerY": 201
-        },
-        "stageRect": {
-          "x": 0,
-          "y": 236,
-          "width": 874,
-          "height": 166,
-          "right": 874,
-          "bottom": 402,
-          "centerX": 437,
-          "centerY": 319
-        },
-        "canvasRect": {
-          "x": 6,
-          "y": 4,
-          "width": 862,
-          "height": 394,
-          "right": 868,
-          "bottom": 398,
-          "centerX": 437,
-          "centerY": 201
-        },
-        "contentRect": {
-          "x": 374,
-          "y": 256,
-          "width": 126,
-          "height": 126,
-          "right": 500,
-          "bottom": 382,
-          "centerX": 437,
-          "centerY": 319
-        },
-        "compositionRect": {
-          "x": 374,
-          "y": 256,
-          "width": 126,
-          "height": 126,
-          "right": 500,
-          "bottom": 382,
-          "centerX": 437,
-          "centerY": 319
-        },
-        "countdownCountRect": {
-          "x": 416.09405517578125,
-          "y": 286.4387512207031,
-          "width": 41.8118896484375,
-          "height": 65.12249755859375,
-          "right": 457.90594482421875,
-          "bottom": 351.5612487792969,
-          "centerX": 437,
-          "centerY": 319
-        },
-        "countdownHaloRect": {
-          "x": 388.44061279296875,
-          "y": 270.44061279296875,
-          "width": 97.1187744140625,
-          "height": 97.1187744140625,
-          "right": 485.55938720703125,
-          "bottom": 367.55938720703125,
-          "centerX": 437,
-          "centerY": 319
-        },
-        "titleRect": null,
-        "detailRect": null,
-        "viewport": {
-          "width": 874,
-          "height": 402
-        },
-        "visualViewport": {
-          "x": 0,
-          "y": 0,
-          "width": 874,
-          "height": 402,
-          "centerX": 437,
-          "centerY": 201,
-          "right": 874,
-          "bottom": 402
-        },
-        "usableVisualViewport": {
-          "x": 0,
-          "y": 236,
-          "width": 874,
-          "height": 166,
-          "centerX": 437,
-          "centerY": 319,
-          "right": 874,
-          "bottom": 402,
-          "browserChromeTopInset": 236,
+          "width": 402,
+          "height": 874,
+          "centerX": 201,
+          "centerY": 437,
+          "right": 402,
+          "bottom": 874,
+          "browserChromeTopInset": 0,
           "browserChromeBottomInset": 0,
           "browserChromeLeftInset": 0,
           "browserChromeRightInset": 0
@@ -434,14 +329,14 @@
             "ariaHidden": "true",
             "alt": "",
             "rect": {
-              "x": 387.3416748046875,
-              "y": 269.3416748046875,
-              "width": 99.316650390625,
-              "height": 99.316650390625,
-              "right": 486.6583251953125,
-              "bottom": 368.6583251953125,
-              "centerX": 437,
-              "centerY": 319
+              "x": 62.18335723876953,
+              "y": 298.183349609375,
+              "width": 277.63330078125,
+              "height": 277.63330078125,
+              "right": 339.81665802001953,
+              "bottom": 575.816650390625,
+              "centerX": 201.00000762939453,
+              "centerY": 437
             }
           },
           {
@@ -450,20 +345,48 @@
             "ariaHidden": "true",
             "alt": "",
             "rect": {
-              "x": 416.1368713378906,
-              "y": 298.1368713378906,
-              "width": 41.72625732421875,
-              "height": 41.72625732421875,
-              "right": 457.8631286621094,
-              "bottom": 339.8631286621094,
-              "centerX": 437,
-              "centerY": 319
+              "x": 136.28871154785156,
+              "y": 372.2886962890625,
+              "width": 129.42259216308594,
+              "height": 129.422607421875,
+              "right": 265.7113037109375,
+              "bottom": 501.7113037109375,
+              "centerX": 201.00000762939453,
+              "centerY": 437
+            }
+          }
+        ],
+        "mediaLayers": [
+          {
+            "id": "countdown-circle",
+            "rect": {
+              "x": 80.7265625,
+              "y": 316.7265625,
+              "width": 240.546875,
+              "height": 240.546875,
+              "right": 321.2734375,
+              "bottom": 557.2734375,
+              "centerX": 201,
+              "centerY": 437
+            }
+          },
+          {
+            "id": "countdown-spark",
+            "rect": {
+              "x": 119.640625,
+              "y": 355.640625,
+              "width": 162.71875,
+              "height": 162.71875,
+              "right": 282.359375,
+              "bottom": 518.359375,
+              "centerX": 201,
+              "centerY": 437
             }
           }
         ]
       },
-      "countdownDurationMs": 1804,
-      "countdownScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-countdown-landscape.png"
+      "countdownDurationMs": 1784,
+      "countdownScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-countdown.png"
     }
   ],
   "levelUpState": {
@@ -550,46 +473,75 @@
       "x": 0,
       "y": 0,
       "width": 402,
-      "height": 770,
+      "height": 874,
       "centerX": 201,
-      "centerY": 385,
+      "centerY": 437,
       "right": 402,
-      "bottom": 770,
+      "bottom": 874,
       "browserChromeTopInset": 0,
-      "browserChromeBottomInset": 104,
+      "browserChromeBottomInset": 0,
       "browserChromeLeftInset": 0,
       "browserChromeRightInset": 0
     },
+    "cssVisibleViewport": null,
     "hasBodyScroll": false,
     "media": [
       {
         "id": "level-up-twirl",
-        "src": "/assets/visual/vfx/vfx-level-up-twirl-overlay.svg",
+        "src": "/assets/visual/vfx/vfx-level-up-twirl-garage-real-overlay.svg",
         "ariaHidden": "true",
         "alt": "",
         "rect": {
-          "x": 44.44622039794922,
-          "y": 44.44622039794922,
-          "width": 313.1075439453125,
-          "height": 313.1075439453125,
-          "right": 357.5537643432617,
-          "bottom": 357.5537643432617,
-          "centerX": 200.99999237060547,
-          "centerY": 200.99999237060547
+          "x": 47.188148498535156,
+          "y": 47.188148498535156,
+          "width": 307.62371826171875,
+          "height": 307.62371826171875,
+          "right": 354.8118667602539,
+          "bottom": 354.8118667602539,
+          "centerX": 201.00000762939453,
+          "centerY": 201.00000762939453
         }
       },
       {
         "id": "level-up-star",
-        "src": "/assets/visual/vfx/vfx-level-up-star-overlay.svg",
+        "src": "/assets/visual/vfx/vfx-level-up-star-garage-real-overlay.svg",
         "ariaHidden": "true",
         "alt": "",
         "rect": {
-          "x": 130.639892578125,
-          "y": 130.639892578125,
-          "width": 140.72021484375,
-          "height": 140.72021484375,
-          "right": 271.360107421875,
-          "bottom": 271.360107421875,
+          "x": 125.82876586914062,
+          "y": 125.82876586914062,
+          "width": 150.34246826171875,
+          "height": 150.34246826171875,
+          "right": 276.1712341308594,
+          "bottom": 276.1712341308594,
+          "centerX": 201,
+          "centerY": 201
+        }
+      }
+    ],
+    "mediaLayers": [
+      {
+        "id": "level-up-twirl",
+        "rect": {
+          "x": 64.3203125,
+          "y": 64.3203125,
+          "width": 273.359375,
+          "height": 273.359375,
+          "right": 337.6796875,
+          "bottom": 337.6796875,
+          "centerX": 201,
+          "centerY": 201
+        }
+      },
+      {
+        "id": "level-up-star",
+        "rect": {
+          "x": 108.546875,
+          "y": 108.546875,
+          "width": 184.90625,
+          "height": 184.90625,
+          "right": 293.453125,
+          "bottom": 293.453125,
           "centerX": 201,
           "centerY": 201
         }
@@ -699,22 +651,51 @@
       "browserChromeLeftInset": 0,
       "browserChromeRightInset": 0
     },
+    "cssVisibleViewport": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 770,
+      "centerX": 201,
+      "centerY": 385,
+      "right": 402,
+      "bottom": 770,
+      "browserChromeTopInset": 0,
+      "browserChromeBottomInset": 104,
+      "browserChromeLeftInset": 0,
+      "browserChromeRightInset": 0
+    },
     "hasBodyScroll": false,
     "media": [
       {
         "id": "rip-smoke",
-        "src": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+        "src": "/assets/visual/vfx/vfx-game-over-rip-garage-real-smoke.svg",
         "ariaHidden": "true",
         "alt": "",
         "rect": {
-          "x": 47.79048156738281,
-          "y": 221.2393341064453,
-          "width": 306.4190673828125,
-          "height": 327.5213623046875,
-          "right": 354.2095489501953,
-          "bottom": 548.7606964111328,
-          "centerX": 201.00001525878906,
-          "centerY": 385.00001525878906
+          "x": 47.31585693359375,
+          "y": 220.73202514648438,
+          "width": 307.3682861328125,
+          "height": 328.5359191894531,
+          "right": 354.68414306640625,
+          "bottom": 549.2679443359375,
+          "centerX": 201,
+          "centerY": 384.99998474121094
+        }
+      }
+    ],
+    "mediaLayers": [
+      {
+        "id": "rip-smoke",
+        "rect": {
+          "x": 28,
+          "y": 200.0859375,
+          "width": 346,
+          "height": 369.828125,
+          "right": 374,
+          "bottom": 569.9140625,
+          "centerX": 201,
+          "centerY": 385
         }
       }
     ]
@@ -842,27 +823,56 @@
           "browserChromeLeftInset": 0,
           "browserChromeRightInset": 0
         },
+        "cssVisibleViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 770,
+          "centerX": 201,
+          "centerY": 385,
+          "right": 402,
+          "bottom": 770,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 104,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
         "hasBodyScroll": false,
         "media": [
           {
             "id": "rip-smoke",
-            "src": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+            "src": "/assets/visual/vfx/vfx-game-over-rip-garage-real-smoke.svg",
             "ariaHidden": "true",
             "alt": "",
             "rect": {
-              "x": 47.79048156738281,
-              "y": 221.2393341064453,
-              "width": 306.4190673828125,
-              "height": 327.5213623046875,
-              "right": 354.2095489501953,
-              "bottom": 548.7606964111328,
-              "centerX": 201.00001525878906,
-              "centerY": 385.00001525878906
+              "x": 47.31585693359375,
+              "y": 220.73202514648438,
+              "width": 307.3682861328125,
+              "height": 328.5359191894531,
+              "right": 354.68414306640625,
+              "bottom": 549.2679443359375,
+              "centerX": 201,
+              "centerY": 384.99998474121094
+            }
+          }
+        ],
+        "mediaLayers": [
+          {
+            "id": "rip-smoke",
+            "rect": {
+              "x": 28,
+              "y": 200.0859375,
+              "width": 346,
+              "height": 369.828125,
+              "right": 374,
+              "bottom": 569.9140625,
+              "centerX": 201,
+              "centerY": 385
             }
           }
         ]
       },
-      "ripDurationMs": 1739,
+      "ripDurationMs": 1734,
       "ripAfterTimeoutState": {
         "text": "",
         "type": "",
@@ -912,8 +922,10 @@
           "browserChromeLeftInset": 0,
           "browserChromeRightInset": 0
         },
+        "cssVisibleViewport": null,
         "hasBodyScroll": false,
-        "media": []
+        "media": [],
+        "mediaLayers": []
       },
       "countdownAfterRip": false,
       "ripAudioIds": [
@@ -926,213 +938,6 @@
         "sfx-score-tick"
       ],
       "ripScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-rip.png"
-    },
-    {
-      "viewport": {
-        "name": "iphone-17-default-landscape",
-        "label": "iPhone 17 default landscape",
-        "models": [
-          "iPhone 17"
-        ],
-        "category": "mobile",
-        "orientation": "landscape",
-        "width": 874,
-        "height": 402,
-        "deviceScaleFactor": 3,
-        "isMobile": true,
-        "hasTouch": true,
-        "priority": "gameplay",
-        "smokeOverlays": false,
-        "screenshotRole": "landscape-default"
-      },
-      "viewportName": "iphone-17-default-landscape",
-      "ripState": {
-        "text": "RIPRecomeçando...",
-        "type": "rip",
-        "rect": {
-          "x": 0,
-          "y": 0,
-          "width": 874,
-          "height": 402,
-          "right": 874,
-          "bottom": 402,
-          "centerX": 437,
-          "centerY": 201
-        },
-        "stageRect": {
-          "x": 0,
-          "y": 0,
-          "width": 874,
-          "height": 402,
-          "right": 874,
-          "bottom": 402,
-          "centerX": 437,
-          "centerY": 201
-        },
-        "canvasRect": {
-          "x": 6,
-          "y": 4,
-          "width": 862,
-          "height": 394,
-          "right": 868,
-          "bottom": 398,
-          "centerX": 437,
-          "centerY": 201
-        },
-        "contentRect": {
-          "x": 252.078125,
-          "y": 88.1875,
-          "width": 369.828125,
-          "height": 225.625,
-          "right": 621.90625,
-          "bottom": 313.8125,
-          "centerX": 436.9921875,
-          "centerY": 201
-        },
-        "compositionRect": {
-          "x": 57,
-          "y": 16,
-          "width": 760,
-          "height": 370,
-          "right": 817,
-          "bottom": 386,
-          "centerX": 437,
-          "centerY": 201
-        },
-        "countdownCountRect": null,
-        "countdownHaloRect": null,
-        "titleRect": {
-          "x": 252.078125,
-          "y": 88.1875,
-          "width": 369.828125,
-          "height": 176.625,
-          "right": 621.90625,
-          "bottom": 264.8125,
-          "centerX": 436.9921875,
-          "centerY": 176.5
-        },
-        "detailRect": {
-          "x": 344.390625,
-          "y": 272.8125,
-          "width": 185.1875,
-          "height": 41,
-          "right": 529.578125,
-          "bottom": 313.8125,
-          "centerX": 436.984375,
-          "centerY": 293.3125
-        },
-        "viewport": {
-          "width": 874,
-          "height": 402
-        },
-        "visualViewport": {
-          "x": 0,
-          "y": 0,
-          "width": 874,
-          "height": 402,
-          "centerX": 437,
-          "centerY": 201,
-          "right": 874,
-          "bottom": 402
-        },
-        "usableVisualViewport": {
-          "x": 0,
-          "y": 0,
-          "width": 874,
-          "height": 402,
-          "centerX": 437,
-          "centerY": 201,
-          "right": 874,
-          "bottom": 402,
-          "browserChromeTopInset": 0,
-          "browserChromeBottomInset": 0,
-          "browserChromeLeftInset": 0,
-          "browserChromeRightInset": 0
-        },
-        "hasBodyScroll": false,
-        "media": [
-          {
-            "id": "rip-smoke",
-            "src": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
-            "ariaHidden": "true",
-            "alt": "",
-            "rect": {
-              "x": 270.14697265625,
-              "y": 48.27207946777344,
-              "width": 333.7060546875,
-              "height": 305.455810546875,
-              "right": 603.85302734375,
-              "bottom": 353.72789001464844,
-              "centerX": 437,
-              "centerY": 200.99998474121094
-            }
-          }
-        ]
-      },
-      "ripDurationMs": 1793,
-      "ripAfterTimeoutState": {
-        "text": "",
-        "type": "",
-        "rect": null,
-        "stageRect": null,
-        "canvasRect": {
-          "x": 6,
-          "y": 4,
-          "width": 862,
-          "height": 394,
-          "right": 868,
-          "bottom": 398,
-          "centerX": 437,
-          "centerY": 201
-        },
-        "contentRect": null,
-        "compositionRect": null,
-        "countdownCountRect": null,
-        "countdownHaloRect": null,
-        "titleRect": null,
-        "detailRect": null,
-        "viewport": {
-          "width": 874,
-          "height": 402
-        },
-        "visualViewport": {
-          "x": 0,
-          "y": 0,
-          "width": 874,
-          "height": 402,
-          "centerX": 437,
-          "centerY": 201,
-          "right": 874,
-          "bottom": 402
-        },
-        "usableVisualViewport": {
-          "x": 0,
-          "y": 0,
-          "width": 874,
-          "height": 402,
-          "centerX": 437,
-          "centerY": 201,
-          "right": 874,
-          "bottom": 402,
-          "browserChromeTopInset": 0,
-          "browserChromeBottomInset": 0,
-          "browserChromeLeftInset": 0,
-          "browserChromeRightInset": 0
-        },
-        "hasBodyScroll": false,
-        "media": []
-      },
-      "countdownAfterRip": false,
-      "ripAudioIds": [
-        "bgm-gameplay-loop-main",
-        "bgm-menu-loop-main",
-        "sfx-ball-lost",
-        "sfx-game-over",
-        "sfx-game-start",
-        "sfx-offline-ready",
-        "sfx-score-tick"
-      ],
-      "ripScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-rip-iphone-land.png"
     },
     {
       "viewport": {
@@ -1257,11 +1062,25 @@
           "browserChromeLeftInset": 0,
           "browserChromeRightInset": 0
         },
+        "cssVisibleViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 820,
+          "height": 1180,
+          "centerX": 410,
+          "centerY": 590,
+          "right": 820,
+          "bottom": 1180,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
         "hasBodyScroll": false,
         "media": [
           {
             "id": "rip-smoke",
-            "src": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+            "src": "/assets/visual/vfx/vfx-game-over-rip-garage-real-smoke.svg",
             "ariaHidden": "true",
             "alt": "",
             "rect": {
@@ -1275,9 +1094,24 @@
               "centerY": 589.9999694824219
             }
           }
+        ],
+        "mediaLayers": [
+          {
+            "id": "rip-smoke",
+            "rect": {
+              "x": 42,
+              "y": 222,
+              "width": 736,
+              "height": 736,
+              "right": 778,
+              "bottom": 958,
+              "centerX": 410,
+              "centerY": 590
+            }
+          }
         ]
       },
-      "ripDurationMs": 1804,
+      "ripDurationMs": 1805,
       "ripAfterTimeoutState": {
         "text": "",
         "type": "",
@@ -1327,8 +1161,10 @@
           "browserChromeLeftInset": 0,
           "browserChromeRightInset": 0
         },
+        "cssVisibleViewport": null,
         "hasBodyScroll": false,
-        "media": []
+        "media": [],
+        "mediaLayers": []
       },
       "countdownAfterRip": false,
       "ripAudioIds": [
@@ -1340,7 +1176,7 @@
         "sfx-offline-ready",
         "sfx-score-tick"
       ],
-      "ripScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-rip-ipad.png"
+      "ripScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-rip-ipad.png"
     },
     {
       "viewport": {
@@ -1464,27 +1300,56 @@
           "browserChromeLeftInset": 0,
           "browserChromeRightInset": 0
         },
+        "cssVisibleViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "centerX": 720,
+          "centerY": 450,
+          "right": 1440,
+          "bottom": 900,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
         "hasBodyScroll": false,
         "media": [
           {
             "id": "rip-smoke",
-            "src": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+            "src": "/assets/visual/vfx/vfx-game-over-rip-garage-real-smoke.svg",
             "ariaHidden": "true",
             "alt": "",
             "rect": {
-              "x": 395.12469482421875,
-              "y": 125.12469482421875,
-              "width": 649.7505493164062,
-              "height": 649.7506103515625,
-              "right": 1044.875244140625,
-              "bottom": 774.8753051757812,
+              "x": 395.1264343261719,
+              "y": 125.12643432617188,
+              "width": 649.7470703125,
+              "height": 649.7470703125,
+              "right": 1044.8735046386719,
+              "bottom": 774.8735046386719,
               "centerX": 719.9999694824219,
+              "centerY": 449.9999694824219
+            }
+          }
+        ],
+        "mediaLayers": [
+          {
+            "id": "rip-smoke",
+            "rect": {
+              "x": 352,
+              "y": 82,
+              "width": 736,
+              "height": 736,
+              "right": 1088,
+              "bottom": 818,
+              "centerX": 720,
               "centerY": 450
             }
           }
         ]
       },
-      "ripDurationMs": 1796,
+      "ripDurationMs": 1783,
       "ripAfterTimeoutState": {
         "text": "",
         "type": "",
@@ -1534,8 +1399,10 @@
           "browserChromeLeftInset": 0,
           "browserChromeRightInset": 0
         },
+        "cssVisibleViewport": null,
         "hasBodyScroll": false,
-        "media": []
+        "media": [],
+        "mediaLayers": []
       },
       "countdownAfterRip": false,
       "ripAudioIds": [
@@ -1552,7 +1419,7 @@
   ],
   "levelAudioIds": [
     "bgm-gameplay-loop-main",
-    "sfx-brick-break-red",
+    "sfx-brick-break-green",
     "sfx-brick-hit",
     "sfx-game-start",
     "sfx-level-complete",
