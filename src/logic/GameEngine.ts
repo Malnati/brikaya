@@ -1722,6 +1722,21 @@ export class GameEngine {
     this.isTouching = false;
   }
 
+  public setBallTurretControlVector(vectorX: number, vectorY: number) {
+    if (!this.isBallTurretMode()) return;
+
+    const magnitude = Math.hypot(vectorX, vectorY);
+    if (!Number.isFinite(magnitude) || magnitude === 0) return;
+
+    const normalizedX = vectorX / magnitude;
+    const normalizedY = vectorY / magnitude;
+
+    this.paddle.setPositionFromPoint(
+      this.radialGeometry.centerX + normalizedX * this.radialGeometry.radius,
+      this.radialGeometry.centerY + normalizedY * this.radialGeometry.radius,
+    );
+  }
+
   private movePaddleFromClientPoint(clientX: number, clientY?: number) {
     const rect = this.canvas.getBoundingClientRect();
     const touchX = clientX - rect.left;

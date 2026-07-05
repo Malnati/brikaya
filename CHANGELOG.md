@@ -1,6 +1,22 @@
 <!-- CHANGELOG.md -->
 # Changelog
 
+## 2026-07-05 — v1.2.3 — Joystick touch da Torreta
+
+- Adicionado joystick visível no modo Torreta para dispositivos de toque.
+- Posicionado o joystick abaixo do tabuleiro em portrait e à direita em landscape.
+- Ligado o joystick ao segmento ativo da cama elástica por ângulo direto em 360°.
+- Mantido o arraste direto no tabuleiro como controle alternativo.
+- Adicionada cobertura unitária e QA visual portrait/landscape para a Torreta.
+
+## 2026-07-05 — v1.2.2 — Torreta 360°
+
+- Expandida a Torreta para arena de 360°.
+- Distribuídos blocos por toda a circunferência.
+- Ajustados power-ups para saírem do centro em direção às bordas.
+- Ajustadas bolinhas para nascerem em pontos variados da borda.
+- Mantido o modo clássico sem alteração.
+
 ## 2026-07-05 — v1.2.1 — Torreta com cama elástica
 
 - Substituída a mira por uma cama elástica curva móvel no modo Torreta.

@@ -26,6 +26,8 @@ const TEST_BOARD_RECT = {
 const EXPECTED_PADDLE_TOUCH_ZONE_HEIGHT = "3in";
 const EXPECTED_PADDLE_TOUCH_ZONE_TOP_OFFSET = "- 96px";
 const EXPECTED_PADDLE_TOUCH_ZONE_TRANSFORM = "none";
+const BALL_TURRET_JOYSTICK_TEST_ID = "ball-turret-joystick";
+const BALL_TURRET_JOYSTICK_LABEL = "Controle da Torreta";
 
 describe("Game", () => {
   beforeEach(() => {
@@ -54,14 +56,16 @@ describe("Game", () => {
     );
 
     const boardFrame = container.querySelector(".game-board-frame");
+    const inputLayout = container.querySelector(".game-board-input-layout");
     const controlsFrame = container.querySelector(".game-board-controls");
     const controls = screen.getByLabelText("Controles principais");
 
     expect(boardFrame).toBeInTheDocument();
+    expect(inputLayout).toContainElement(boardFrame);
     expect(controlsFrame).toBeInTheDocument();
     expect(boardFrame).not.toContainElement(controls);
     expect(controlsFrame).toContainElement(controls);
-    expect(controlsFrame?.previousElementSibling).toBe(boardFrame);
+    expect(controlsFrame?.previousElementSibling).toBe(inputLayout);
   });
 
   it("propaga bloqueio de início para o loop do jogo", () => {
@@ -81,6 +85,7 @@ describe("Game", () => {
       "retro-default",
       false,
       "classic",
+      expect.anything(),
       expect.anything(),
     );
   });
@@ -108,6 +113,7 @@ describe("Game", () => {
       true,
       "classic",
       expect.anything(),
+      expect.anything(),
     );
   });
 
@@ -129,7 +135,32 @@ describe("Game", () => {
       false,
       "ball-turret",
       expect.anything(),
+      expect.anything(),
     );
+  });
+
+  it("renderiza joystick touch da torreta fora do playfield", () => {
+    const { container } = render(
+      <Game onScoreUpdate={jest.fn()} gameMode="ball-turret" />,
+    );
+
+    const joystick = screen.getByTestId(BALL_TURRET_JOYSTICK_TEST_ID);
+    const playfield = container.querySelector(".game-board-playfield");
+    const inputLayout = container.querySelector(".game-board-input-layout");
+
+    expect(joystick).toBeInTheDocument();
+    expect(joystick).toHaveAttribute("aria-label", BALL_TURRET_JOYSTICK_LABEL);
+    expect(joystick).toHaveClass("game-turret-joystick");
+    expect(playfield).not.toContainElement(joystick);
+    expect(inputLayout).toContainElement(joystick);
+  });
+
+  it("não renderiza joystick no modo clássico", () => {
+    render(<Game onScoreUpdate={jest.fn()} />);
+
+    expect(
+      screen.queryByTestId(BALL_TURRET_JOYSTICK_TEST_ID),
+    ).not.toBeInTheDocument();
   });
 
   it("renderiza faixa sensível invisível sobre a linha da raquete", () => {
