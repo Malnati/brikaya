@@ -997,12 +997,18 @@ describe("GameEngine", () => {
     jest.useFakeTimers().setSystemTime(new Date("2026-07-04T00:00:00.000Z"));
     const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
     const strokeLineWidths: number[] = [];
+    const strokeAlphas: number[] = [];
+    const fillAlphas: number[] = [];
     const laserTargets = [
       { col: 0, row: 0, colorIndex: 0, x: 10, y: 20, width: 50, height: 20 },
       { col: 1, row: 0, colorIndex: 1, x: 70, y: 20, width: 50, height: 20 },
     ];
     (mockContext.stroke as jest.Mock).mockImplementation(() => {
       strokeLineWidths.push(Number(mockContext.lineWidth.toFixed(3)));
+      strokeAlphas.push(Number(mockContext.globalAlpha.toFixed(3)));
+    });
+    (mockContext.fill as jest.Mock).mockImplementation(() => {
+      fillAlphas.push(Number(mockContext.globalAlpha.toFixed(3)));
     });
 
     (engine as any).showLaserFanEffect(laserTargets);
@@ -1023,6 +1029,8 @@ describe("GameEngine", () => {
     );
     expect((mockContext.arc as jest.Mock).mock.calls.length).toBeGreaterThan(0);
     expect(new Set(strokeLineWidths).size).toBeGreaterThan(1);
+    expect(Math.max(...strokeAlphas)).toBeLessThanOrEqual(0.28);
+    expect(Math.max(...fillAlphas)).toBeLessThanOrEqual(0.27);
   });
 
   it("limita laser em leque a dois spawns por fase e continua outros power-ups", () => {

@@ -1,0 +1,87 @@
+{
+  "url": "http://127.0.0.1:4174/?qaScenario=laser-fan",
+  "drawCount": 1213,
+  "maxAlpha": 0.2638690476190475,
+  "maxLineWidth": 5.062775611877441,
+  "lastSamples": [
+    {
+      "kind": "fill",
+      "style": "rgba(255, 248, 199, 0.275)",
+      "alpha": 0.22130952380952373,
+      "timestamp": 1783273985984
+    },
+    {
+      "kind": "fill",
+      "style": "rgba(245, 247, 255, 0.1)",
+      "alpha": 0.14758333333333334,
+      "timestamp": 1783273985984
+    },
+    {
+      "kind": "stroke",
+      "style": "rgba(255, 248, 199, 0.275)",
+      "alpha": 0.19192803030303035,
+      "lineWidth": 4.419894218444824,
+      "timestamp": 1783273985984
+    },
+    {
+      "kind": "stroke",
+      "style": "rgba(255, 248, 199, 0.275)",
+      "alpha": 0.19192803030303035,
+      "lineWidth": 4.444519996643066,
+      "timestamp": 1783273985984
+    },
+    {
+      "kind": "stroke",
+      "style": "rgba(255, 248, 199, 0.275)",
+      "alpha": 0.19192803030303035,
+      "lineWidth": 4.469145774841309,
+      "timestamp": 1783273985984
+    },
+    {
+      "kind": "stroke",
+      "style": "rgba(255, 248, 199, 0.275)",
+      "alpha": 0.19192803030303035,
+      "lineWidth": 4.493772029876709,
+      "timestamp": 1783273985984
+    },
+    {
+      "kind": "fill",
+      "style": "rgba(255, 248, 199, 0.275)",
+      "alpha": 0.25273809523809515,
+      "timestamp": 1783273985984
+    },
+    {
+      "kind": "fill",
+      "style": "rgba(255, 248, 199, 0.275)",
+      "alpha": 0.25273809523809515,
+      "timestamp": 1783273985984
+    },
+    {
+      "kind": "fill",
+      "style": "rgba(255, 248, 199, 0.275)",
+      "alpha": 0.25273809523809515,
+      "timestamp": 1783273985984
+    },
+    {
+      "kind": "fill",
+      "style": "rgba(255, 248, 199, 0.275)",
+      "alpha": 0.25273809523809515,
+      "timestamp": 1783273985984
+    },
+    {
+      "kind": "fill",
+      "style": "rgba(255, 248, 199, 0.275)",
+      "alpha": 0.25273809523809515,
+      "timestamp": 1783273985984
+    },
+    {
+      "kind": "fill",
+      "style": "rgba(255, 248, 199, 0.275)",
+      "alpha": 0.25273809523809515,
+      "timestamp": 1783273985984
+    }
+  ],
+  "bodyText": "\n    Arcade clássicoBrikaya×♫↻Fase 1|Score 0|Total 0|Recorde 0Menu\n  \n\n",
+  "screenshotPath": "docs/assets/issues/soften-brick-flash/evidence/evi-soften-brick-flash-laser-peak.png",
+  "consoleProblems": []
+}
