@@ -25,6 +25,7 @@ const PADDLE_COLLISION_TIMEOUT_MS = 10000;
 const MIN_TOUCH_TARGET_SIZE = 44;
 const REQUIRED_EVENT_TYPES = ["game_start", "brick_destroyed", "score_update"];
 const FORBIDDEN_EVENT_TYPES = ["restart_game", "game_end"];
+const SCORE_PROGRESS_QA_SCENARIO = "single-brick-phase-clear";
 const PADDLE_COLLISION_QA_SCENARIO = "paddle-collision";
 const PADDLE_COLLISION_TYPE = "paddle";
 const REQUIRED_BUTTON_PATTERNS = [/menu/i, /reiniciar/i];
@@ -296,7 +297,8 @@ async function run() {
 
   try {
     await page.setViewport(VIEWPORT);
-    await page.goto(targetUrl, {
+    const progressUrl = scenarioUrl(targetUrl, SCORE_PROGRESS_QA_SCENARIO);
+    await page.goto(progressUrl, {
       waitUntil: "networkidle0",
       timeout: MAX_NAVIGATION_MS,
     });
@@ -383,6 +385,7 @@ async function run() {
     const report = {
       ok: true,
       publicUrl: targetUrl,
+      progressUrl,
       checkedAt: new Date().toISOString(),
       state,
       eventSummary,
