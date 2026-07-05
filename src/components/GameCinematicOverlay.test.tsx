@@ -33,13 +33,13 @@ function resetLocationSearch() {
   window.history.replaceState({}, "", "/");
 }
 
-function mockMatchMedia(matches: boolean) {
+function mockMatchMedia(matchesQuery: (query: string) => boolean) {
   const originalMatchMedia = window.matchMedia;
   Object.defineProperty(window, "matchMedia", {
     configurable: true,
     writable: true,
     value: jest.fn().mockImplementation((query: string) => ({
-      matches: query.includes("orientation: landscape") ? matches : false,
+      matches: matchesQuery(query),
       media: query,
       onchange: null,
       addListener: jest.fn(),
@@ -55,6 +55,70 @@ function mockMatchMedia(matches: boolean) {
       configurable: true,
       writable: true,
       value: originalMatchMedia,
+    });
+  };
+}
+
+function mockMobileLandscapeBrowser() {
+  return mockMatchMedia((query) =>
+    query.includes("pointer: coarse") &&
+    query.includes("orientation: landscape") &&
+    query.includes("max-height: 600px"),
+  );
+}
+
+function mockVisualViewport({
+  offsetTop = 0,
+  offsetLeft = 0,
+  width = 667,
+  height = 500,
+}: {
+  offsetTop?: number;
+  offsetLeft?: number;
+  width?: number;
+  height?: number;
+}) {
+  const originalVisualViewport = window.visualViewport;
+  Object.defineProperty(window, "visualViewport", {
+    configurable: true,
+    value: {
+      offsetTop,
+      offsetLeft,
+      width,
+      height,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    },
+  });
+
+  return () => {
+    Object.defineProperty(window, "visualViewport", {
+      configurable: true,
+      value: originalVisualViewport,
+    });
+  };
+}
+
+function mockWindowSize({ width, height }: { width: number; height: number }) {
+  const originalInnerWidth = window.innerWidth;
+  const originalInnerHeight = window.innerHeight;
+  Object.defineProperty(window, "innerWidth", {
+    configurable: true,
+    value: width,
+  });
+  Object.defineProperty(window, "innerHeight", {
+    configurable: true,
+    value: height,
+  });
+
+  return () => {
+    Object.defineProperty(window, "innerWidth", {
+      configurable: true,
+      value: originalInnerWidth,
+    });
+    Object.defineProperty(window, "innerHeight", {
+      configurable: true,
+      value: originalInnerHeight,
     });
   };
 }
@@ -126,7 +190,12 @@ describe("GameCinematicOverlay media", () => {
   });
 
   it("não aplica deslocamento superior fixo em landscape quando o viewport visual já é a área útil", () => {
-    const restoreMatchMedia = mockMatchMedia(true);
+    const restoreMatchMedia = mockMobileLandscapeBrowser();
+    const restoreVisualViewport = mockVisualViewport({
+      offsetTop: 0,
+      width: 667,
+      height: 500,
+    });
 
     try {
       render(<GameCinematicOverlay state={{ type: "countdown", value: "2" }} />);
@@ -135,9 +204,50 @@ describe("GameCinematicOverlay media", () => {
 
       expect(stage.style.getPropertyValue(VISIBLE_TOP_PROPERTY)).toBe("0px");
       expect(stage.style.top).toBe("0px");
-      expect(stage.style.getPropertyValue(VISIBLE_HEIGHT_PROPERTY)).toBe("768px");
-      expect(stage.style.height).toBe("768px");
+      expect(stage.style.getPropertyValue(VISIBLE_HEIGHT_PROPERTY)).toBe("500px");
+      expect(stage.style.height).toBe("500px");
     } finally {
+      restoreVisualViewport();
+      restoreMatchMedia();
+    }
+  });
+
+  it("reserva automaticamente o topo do Safari mobile landscape quando o navegador sobrepõe a área do jogo", () => {
+    const restoreMatchMedia = mockMobileLandscapeBrowser();
+
+    try {
+      render(<GameCinematicOverlay state={{ type: "countdown", value: "1" }} />);
+
+      const stage = screen.getByTestId(STAGE_TEST_ID);
+
+      expect(stage.style.getPropertyValue(VISIBLE_TOP_PROPERTY)).toBe("236px");
+      expect(stage.style.top).toBe("236px");
+      expect(stage.style.getPropertyValue(VISIBLE_HEIGHT_PROPERTY)).toBe(
+        "532px",
+      );
+      expect(stage.style.height).toBe("532px");
+    } finally {
+      restoreMatchMedia();
+    }
+  });
+
+  it("calcula a reserva landscape proporcionalmente em viewport baixa de telefone", () => {
+    const restoreMatchMedia = mockMobileLandscapeBrowser();
+    const restoreWindowSize = mockWindowSize({ width: 874, height: 402 });
+
+    try {
+      render(<GameCinematicOverlay state={{ type: "countdown", value: "1" }} />);
+
+      const stage = screen.getByTestId(STAGE_TEST_ID);
+
+      expect(stage.style.getPropertyValue(VISIBLE_TOP_PROPERTY)).toBe("161px");
+      expect(stage.style.top).toBe("161px");
+      expect(stage.style.getPropertyValue(VISIBLE_HEIGHT_PROPERTY)).toBe(
+        "241px",
+      );
+      expect(stage.style.height).toBe("241px");
+    } finally {
+      restoreWindowSize();
       restoreMatchMedia();
     }
   });
