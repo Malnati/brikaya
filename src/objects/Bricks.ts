@@ -707,9 +707,11 @@ export class Bricks {
 
   private assignRandomMetalBricks() {
     const activeBricks = this.getActiveBrickSnapshots();
+    const reservedEvasiveSlots =
+      activeBricks.length >= EVASIVE_BRICK_COUNT ? EVASIVE_BRICK_COUNT : 0;
     const availableMetalSlots = Math.max(
       BRICK_DESTROYED,
-      activeBricks.length - EVASIVE_BRICK_COUNT,
+      activeBricks.length - reservedEvasiveSlots,
     );
     const metalCount = Math.min(
       availableMetalSlots,

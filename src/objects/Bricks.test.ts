@@ -129,6 +129,11 @@ const THREE_BRICK_DIMENSIONS: DynamicGameDimensions = {
   brickRows: 3,
   brickCols: 1,
 };
+const ONE_BRICK_DIMENSIONS: DynamicGameDimensions = {
+  ...TEST_DIMENSIONS,
+  brickRows: 1,
+  brickCols: 1,
+};
 
 describe("Bricks laser fan helpers", () => {
   it("destrói todos os blocos ativos e retorna snapshots determinísticos", () => {
@@ -390,6 +395,21 @@ describe("Bricks laser fan helpers", () => {
     expect(bricks.isBrickMetal(0, 0)).toBe(false);
     expect(bricks.isBrickMetal(0, 1)).toBe(false);
     expect(bricks.isBrickMetal(0, 2)).toBe(false);
+  });
+
+  it("permite bloco metálico quando a grade não comporta blocos desviantes", () => {
+    const bricks = new Bricks(
+      ONE_BRICK_DIMENSIONS,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      createRandom([0, 0.25]),
+    );
+
+    expect(bricks.getEvasiveBrickSnapshots()).toEqual([]);
+    expect(bricks.isBrickMetal(0, 0)).toBe(true);
+    expect(bricks.getBrickHitsRemaining(0, 0)).toBe(3);
   });
 
   it("faz o bloco desviante rebater sem destruir nem pontuar na primeira colisão", async () => {
