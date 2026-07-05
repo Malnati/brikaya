@@ -60,16 +60,29 @@ const MEDIA_CLASS_NAME = `${BASE_CLASS_NAME}__media`;
 const STAGE_CLASS_NAME = `${BASE_CLASS_NAME}__stage`;
 const CONTENT_CLASS_NAME = `${BASE_CLASS_NAME}__content`;
 const RIP_COMPOSITION_CLASS_NAME = `${BASE_CLASS_NAME}__composition`;
+const COUNTDOWN_HALO_CLASS_NAME = `${BASE_CLASS_NAME}__countdown-halo`;
 const MEDIA_ALT = "";
 const MEDIA_LOADING = "lazy";
 const MEDIA_DECODING = "async";
 const STAGE_TEST_ID = "game-cinematic-stage";
 const CONTENT_TEST_ID = "game-cinematic-content";
 const COUNTDOWN_COMPOSITION_TEST_ID = "game-cinematic-countdown-composition";
+const COUNTDOWN_HALO_TEST_ID = "game-cinematic-countdown-halo";
+const COUNTDOWN_COUNT_TEST_ID = "game-cinematic-countdown-count";
 const RIP_COMPOSITION_TEST_ID = "game-cinematic-rip-composition";
-const RIP_VIEWPORT_BOTTOM_INSET_PARAM = "qaViewportBottomInset";
+const VIEWPORT_TOP_INSET_PARAM = "qaViewportTopInset";
+const VIEWPORT_BOTTOM_INSET_PARAM = "qaViewportBottomInset";
+const VIEWPORT_LEFT_INSET_PARAM = "qaViewportLeftInset";
+const VIEWPORT_RIGHT_INSET_PARAM = "qaViewportRightInset";
 const RIP_BROWSER_CHROME_SAFE_BOTTOM_PX = 104;
+const COUNTDOWN_BROWSER_CHROME_SAFE_BOTTOM_PX = 104;
+const COUNTDOWN_LANDSCAPE_SAFE_TOP_PX = 236;
 const RIP_MIN_VISIBLE_VIEWPORT_SIZE_PX = 240;
+const COUNTDOWN_MIN_VISIBLE_VIEWPORT_SIZE_PX = 240;
+const VISIBLE_VIEWPORT_LEFT_PROPERTY = "--game-cinematic-visible-left";
+const VISIBLE_VIEWPORT_TOP_PROPERTY = "--game-cinematic-visible-top";
+const VISIBLE_VIEWPORT_WIDTH_PROPERTY = "--game-cinematic-visible-width";
+const VISIBLE_VIEWPORT_HEIGHT_PROPERTY = "--game-cinematic-visible-height";
 const RIP_VIEWPORT_LEFT_PROPERTY = "--game-cinematic-rip-visible-left";
 const RIP_VIEWPORT_TOP_PROPERTY = "--game-cinematic-rip-visible-top";
 const RIP_VIEWPORT_WIDTH_PROPERTY = "--game-cinematic-rip-visible-width";
@@ -83,6 +96,13 @@ const CINEMATIC_MEDIA_ROLES = {
 } as const satisfies Record<string, GameVisualAssetRole>;
 
 type RipViewportStyle = CSSProperties & Record<string, string>;
+type UsableViewportStyle = CSSProperties & Record<string, string>;
+
+const CENTERED_LAYER_STYLE: CSSProperties = {
+  left: "50%",
+  top: "50%",
+  transform: "translate(-50%, -50%)",
+};
 
 function resolveCinematicMediaPath(
   media: (typeof CINEMATIC_MEDIA_LAYERS)[keyof typeof CINEMATIC_MEDIA_LAYERS][number],
@@ -110,6 +130,7 @@ function renderMediaLayers(
         decoding={MEDIA_DECODING}
         aria-hidden="true"
         draggable={false}
+        style={CENTERED_LAYER_STYLE}
       />
     );
   });
@@ -137,40 +158,110 @@ function shouldReserveMobileBrowserChrome(): boolean {
   );
 }
 
-function measuredRipViewportStyle(): RipViewportStyle {
+function shouldReserveLandscapeBrowserChrome(): boolean {
+  return (
+    window.matchMedia?.(
+      "(pointer: coarse) and (orientation: landscape) and (max-height: 600px)",
+    ).matches === true && !isStandaloneDisplayMode()
+  );
+}
+
+interface UsableViewportStyleOptions {
+  includeRipLegacyProperties?: boolean;
+  reservePortraitBottomInset?: boolean;
+  reserveLandscapeTopInset?: boolean;
+  minVisibleSize: number;
+}
+
+function requestedInset(searchParams: URLSearchParams, name: string): number {
+  return positiveNumber(searchParams.get(name));
+}
+
+function measuredUsableViewportStyle({
+  includeRipLegacyProperties = false,
+  reservePortraitBottomInset = false,
+  reserveLandscapeTopInset = false,
+  minVisibleSize,
+}: UsableViewportStyleOptions): UsableViewportStyle {
   const visualViewport = window.visualViewport;
   const left = visualViewport?.offsetLeft || 0;
   const top = visualViewport?.offsetTop || 0;
   const width = visualViewport?.width || window.innerWidth;
   const height = visualViewport?.height || window.innerHeight;
+  const searchParams = new URLSearchParams(window.location.search);
+  const requestedTopInset = requestedInset(searchParams, VIEWPORT_TOP_INSET_PARAM);
+  const requestedBottomInset = requestedInset(
+    searchParams,
+    VIEWPORT_BOTTOM_INSET_PARAM,
+  );
+  const requestedLeftInset = requestedInset(searchParams, VIEWPORT_LEFT_INSET_PARAM);
+  const requestedRightInset = requestedInset(searchParams, VIEWPORT_RIGHT_INSET_PARAM);
   const detectedBottomInset = Math.max(0, window.innerHeight - (top + height));
-  const requestedBottomInset = positiveNumber(
-    new URLSearchParams(window.location.search).get(
-      RIP_VIEWPORT_BOTTOM_INSET_PARAM,
-    ),
+  const fallbackPortraitBottomInset =
+    reservePortraitBottomInset &&
+    detectedBottomInset === 0 &&
+    requestedBottomInset === 0 &&
+    shouldReserveMobileBrowserChrome()
+      ? COUNTDOWN_BROWSER_CHROME_SAFE_BOTTOM_PX
+      : 0;
+  const fallbackRipBottomInset =
+    includeRipLegacyProperties &&
+    detectedBottomInset === 0 &&
+    requestedBottomInset === 0 &&
+    shouldReserveMobileBrowserChrome()
+      ? RIP_BROWSER_CHROME_SAFE_BOTTOM_PX
+      : 0;
+  const fallbackLandscapeTopInset =
+    reserveLandscapeTopInset &&
+    top === 0 &&
+    requestedTopInset === 0 &&
+    shouldReserveLandscapeBrowserChrome()
+      ? COUNTDOWN_LANDSCAPE_SAFE_TOP_PX
+      : 0;
+  const usableTop = top + Math.max(requestedTopInset, fallbackLandscapeTopInset);
+  const usableLeft = left + requestedLeftInset;
+  const usableWidth = Math.max(
+    minVisibleSize,
+    width - requestedLeftInset - requestedRightInset,
   );
-  const fallbackBottomInset =
-    detectedBottomInset > 0 || requestedBottomInset > 0
-      ? 0
-      : shouldReserveMobileBrowserChrome()
-        ? RIP_BROWSER_CHROME_SAFE_BOTTOM_PX
-        : 0;
-  const bottomInset = Math.max(requestedBottomInset, fallbackBottomInset);
+  const bottomInset = Math.max(
+    detectedBottomInset,
+    requestedBottomInset,
+    fallbackPortraitBottomInset,
+    fallbackRipBottomInset,
+  );
   const visibleHeight = Math.max(
-    RIP_MIN_VISIBLE_VIEWPORT_SIZE_PX,
-    height - bottomInset,
+    minVisibleSize,
+    height - (usableTop - top) - bottomInset,
   );
-
-  return {
-    [RIP_VIEWPORT_LEFT_PROPERTY]: `${left}px`,
-    [RIP_VIEWPORT_TOP_PROPERTY]: `${top}px`,
-    [RIP_VIEWPORT_WIDTH_PROPERTY]: `${width}px`,
-    [RIP_VIEWPORT_HEIGHT_PROPERTY]: `${visibleHeight}px`,
+  const style: UsableViewportStyle = {
+    left: `${usableLeft}px`,
+    top: `${usableTop}px`,
+    width: `${usableWidth}px`,
+    height: `${visibleHeight}px`,
+    [VISIBLE_VIEWPORT_LEFT_PROPERTY]: `${usableLeft}px`,
+    [VISIBLE_VIEWPORT_TOP_PROPERTY]: `${usableTop}px`,
+    [VISIBLE_VIEWPORT_WIDTH_PROPERTY]: `${usableWidth}px`,
+    [VISIBLE_VIEWPORT_HEIGHT_PROPERTY]: `${visibleHeight}px`,
   };
+
+  if (includeRipLegacyProperties) {
+    style[RIP_VIEWPORT_LEFT_PROPERTY] = `${usableLeft}px`;
+    style[RIP_VIEWPORT_TOP_PROPERTY] = `${usableTop}px`;
+    style[RIP_VIEWPORT_WIDTH_PROPERTY] = `${usableWidth}px`;
+    style[RIP_VIEWPORT_HEIGHT_PROPERTY] = `${visibleHeight}px`;
+  }
+
+  return style;
 }
 
-function useRipViewportStyle(enabled: boolean): RipViewportStyle | undefined {
-  const [style, setStyle] = useState<RipViewportStyle | undefined>(undefined);
+function useUsableViewportStyle(
+  enabled: boolean,
+  options: UsableViewportStyleOptions,
+): UsableViewportStyle | undefined {
+  const [style, setStyle] = useState<UsableViewportStyle | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
     if (!enabled || typeof window === "undefined") {
@@ -178,7 +269,7 @@ function useRipViewportStyle(enabled: boolean): RipViewportStyle | undefined {
       return undefined;
     }
 
-    const updateStyle = () => setStyle(measuredRipViewportStyle());
+    const updateStyle = () => setStyle(measuredUsableViewportStyle(options));
 
     updateStyle();
     window.addEventListener("resize", updateStyle);
@@ -193,6 +284,21 @@ function useRipViewportStyle(enabled: boolean): RipViewportStyle | undefined {
   }, [enabled]);
 
   return enabled ? style : undefined;
+}
+
+function useCountdownViewportStyle(enabled: boolean): UsableViewportStyle | undefined {
+  return useUsableViewportStyle(enabled, {
+    minVisibleSize: COUNTDOWN_MIN_VISIBLE_VIEWPORT_SIZE_PX,
+    reserveLandscapeTopInset: true,
+    reservePortraitBottomInset: true,
+  });
+}
+
+function useRipViewportStyle(enabled: boolean): RipViewportStyle | undefined {
+  return useUsableViewportStyle(enabled, {
+    includeRipLegacyProperties: true,
+    minVisibleSize: RIP_MIN_VISIBLE_VIEWPORT_SIZE_PX,
+  });
 }
 
 function stageStyle(
@@ -249,6 +355,17 @@ function renderCountdownComposition(children: ReactNode) {
   return renderComposition(children, COUNTDOWN_COMPOSITION_TEST_ID);
 }
 
+function renderCountdownHalo() {
+  return (
+    <span
+      className={COUNTDOWN_HALO_CLASS_NAME}
+      data-testid={COUNTDOWN_HALO_TEST_ID}
+      aria-hidden="true"
+      style={CENTERED_LAYER_STYLE}
+    />
+  );
+}
+
 function renderRipComposition(children: ReactNode) {
   return renderComposition(children, RIP_COMPOSITION_TEST_ID);
 }
@@ -293,6 +410,9 @@ export function GameCinematicOverlay({
   boardRect = null,
 }: GameCinematicOverlayProps) {
   const { t } = useI18n();
+  const countdownViewportStyle = useCountdownViewportStyle(
+    state?.type === "countdown",
+  );
   const ripViewportStyle = useRipViewportStyle(state?.type === "rip");
   const labels = {
     countdown: t("cinematic.countdownAria"),
@@ -308,15 +428,21 @@ export function GameCinematicOverlay({
         {renderStage(
           renderCountdownComposition(
             <>
+              {renderCountdownHalo()}
               {renderMediaLayers(state, imageSetId)}
               {renderContent(
-                <span className={`${BASE_CLASS_NAME}__count`}>
+                <span
+                  className={`${BASE_CLASS_NAME}__count`}
+                  data-testid={COUNTDOWN_COUNT_TEST_ID}
+                  style={CENTERED_LAYER_STYLE}
+                >
                   {state.value}
                 </span>,
               )}
             </>,
           ),
-          boardRect,
+          null,
+          countdownViewportStyle,
         )}
       </div>
     );

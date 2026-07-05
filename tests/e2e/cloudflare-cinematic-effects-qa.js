@@ -11,6 +11,8 @@ const DEFAULT_REPORT_PATH =
   'docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-effects.json';
 const DEFAULT_COUNTDOWN_SCREENSHOT_PATH =
   'docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-countdown.png';
+const DEFAULT_COUNTDOWN_LANDSCAPE_SCREENSHOT_PATH =
+  'docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-countdown-landscape.png';
 const DEFAULT_LEVEL_UP_SCREENSHOT_PATH =
   'docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-level-up.png';
 const DEFAULT_RIP_SCREENSHOT_PATH =
@@ -40,6 +42,8 @@ const RIP_SCREENSHOT_VIEWPORT_SUFFIXES = new Map([
 ]);
 const RIP_SCREENSHOT_SHORT_STEM = 'evi-cinematic-rip';
 const VIEWPORT = viewportByName(VIEWPORT_NAME_IPHONE_PORTRAIT);
+const COUNTDOWN_PORTRAIT_BOTTOM_INSET_PX = 104;
+const COUNTDOWN_LANDSCAPE_TOP_INSET_PX = 236;
 const COUNTDOWN_MAX_DURATION_MS = 2000;
 const RIP_MAX_DURATION_MS = 2000;
 const RIP_OBSERVATION_BUFFER_MS = 300;
@@ -82,13 +86,35 @@ const MEDIA_READY_TIMEOUT_MS = 5000;
 const TITLE_SELECTOR = '.game-cinematic-overlay__title';
 const DETAIL_SELECTOR = '.game-cinematic-overlay__detail';
 const CONTENT_SELECTOR = '[data-testid="game-cinematic-content"]';
+const COUNTDOWN_COUNT_SELECTOR = '[data-testid="game-cinematic-countdown-count"]';
+const COUNTDOWN_HALO_SELECTOR = '[data-testid="game-cinematic-countdown-halo"]';
 const COUNTDOWN_COMPOSITION_SELECTOR =
   '[data-testid="game-cinematic-countdown-composition"]';
 const RIP_COMPOSITION_SELECTOR = '[data-testid="game-cinematic-rip-composition"]';
 const CINEMATIC_COMPOSITION_SELECTOR = `${COUNTDOWN_COMPOSITION_SELECTOR}, ${RIP_COMPOSITION_SELECTOR}`;
-const RIP_BROWSER_CHROME_INSET_PARAM = 'qaViewportBottomInset';
+const VIEWPORT_TOP_INSET_PARAM = 'qaViewportTopInset';
+const VIEWPORT_BOTTOM_INSET_PARAM = 'qaViewportBottomInset';
+const VIEWPORT_LEFT_INSET_PARAM = 'qaViewportLeftInset';
+const VIEWPORT_RIGHT_INSET_PARAM = 'qaViewportRightInset';
+const RIP_BROWSER_CHROME_INSET_PARAM = VIEWPORT_BOTTOM_INSET_PARAM;
 const RIP_MOBILE_BROWSER_CHROME_BOTTOM_INSET_PX = 104;
 const FILE_NAME_EXTENSION_PATTERN = /[^/]+(\.[^.]+)$/;
+const COUNTDOWN_VIEWPORT_CONFIGS = [
+  {
+    viewportName: VIEWPORT_NAME_IPHONE_PORTRAIT,
+    screenshotPath: DEFAULT_COUNTDOWN_SCREENSHOT_PATH,
+    searchParams: {
+      [VIEWPORT_BOTTOM_INSET_PARAM]: COUNTDOWN_PORTRAIT_BOTTOM_INSET_PX,
+    },
+  },
+  {
+    viewportName: VIEWPORT_NAME_IPHONE_LANDSCAPE,
+    screenshotPath: DEFAULT_COUNTDOWN_LANDSCAPE_SCREENSHOT_PATH,
+    searchParams: {
+      [VIEWPORT_TOP_INSET_PARAM]: COUNTDOWN_LANDSCAPE_TOP_INSET_PX,
+    },
+  },
+];
 
 function viewportByName(name) {
   const viewport = RESPONSIVE_VIEWPORT_MATRIX.viewports.find(
@@ -154,6 +180,10 @@ function ripScenarioUrl(baseUrl, viewportName) {
   });
 }
 
+function countdownScenarioUrl(baseUrl, config) {
+  return scenarioUrl(baseUrl, SINGLE_BRICK_QA_SCENARIO, config.searchParams);
+}
+
 async function clearOfflineState(page) {
   await page.evaluate(async () => {
     if ('serviceWorker' in navigator) {
@@ -205,11 +235,13 @@ async function prepareControlledPage(page, publicUrl) {
 }
 
 async function overlaySnapshot(page, selector) {
-  return page.evaluate(({ targetSelector, stageSelector, canvasSelector, titleSelector, detailSelector, contentSelector, compositionSelector, browserChromeInsetParam }) => {
+  return page.evaluate(({ targetSelector, stageSelector, canvasSelector, titleSelector, detailSelector, contentSelector, countSelector, haloSelector, compositionSelector, topInsetParam, bottomInsetParam, leftInsetParam, rightInsetParam }) => {
     const overlay = document.querySelector(targetSelector);
     const stage = overlay?.querySelector(stageSelector);
     const canvas = document.querySelector(canvasSelector);
     const content = overlay?.querySelector(contentSelector);
+    const count = overlay?.querySelector(countSelector);
+    const halo = overlay?.querySelector(haloSelector);
     const composition = overlay?.querySelector(compositionSelector);
     const title = overlay?.querySelector(titleSelector);
     const detail = overlay?.querySelector(detailSelector);
@@ -231,11 +263,19 @@ async function overlaySnapshot(page, selector) {
     const viewportHeight = visualViewport?.height || window.innerHeight;
     const viewportOffsetX = visualViewport?.offsetLeft || 0;
     const viewportOffsetY = visualViewport?.offsetTop || 0;
-    const requestedBottomInset = Number(new URLSearchParams(window.location.search).get(browserChromeInsetParam) || 0);
-    const browserChromeBottomInset = Number.isFinite(requestedBottomInset) && requestedBottomInset > 0
-      ? requestedBottomInset
-      : 0;
-    const usableViewportHeight = Math.max(0, viewportHeight - browserChromeBottomInset);
+    const searchParams = new URLSearchParams(window.location.search);
+    const inset = (paramName) => {
+      const parsed = Number(searchParams.get(paramName) || 0);
+      return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+    };
+    const browserChromeTopInset = inset(topInsetParam);
+    const browserChromeBottomInset = inset(bottomInsetParam);
+    const browserChromeLeftInset = inset(leftInsetParam);
+    const browserChromeRightInset = inset(rightInsetParam);
+    const usableViewportWidth = Math.max(0, viewportWidth - browserChromeLeftInset - browserChromeRightInset);
+    const usableViewportHeight = Math.max(0, viewportHeight - browserChromeTopInset - browserChromeBottomInset);
+    const usableViewportX = viewportOffsetX + browserChromeLeftInset;
+    const usableViewportY = viewportOffsetY + browserChromeTopInset;
 
     return {
       text: overlay?.textContent?.trim() || '',
@@ -245,6 +285,8 @@ async function overlaySnapshot(page, selector) {
       canvasRect: rectOf(canvas),
       contentRect: rectOf(content),
       compositionRect: rectOf(composition),
+      countdownCountRect: rectOf(count),
+      countdownHaloRect: rectOf(halo),
       titleRect: rectOf(title),
       detailRect: rectOf(detail),
       viewport: {
@@ -262,15 +304,18 @@ async function overlaySnapshot(page, selector) {
         bottom: viewportOffsetY + viewportHeight,
       },
       usableVisualViewport: {
-        x: viewportOffsetX,
-        y: viewportOffsetY,
-        width: viewportWidth,
+        x: usableViewportX,
+        y: usableViewportY,
+        width: usableViewportWidth,
         height: usableViewportHeight,
-        centerX: viewportOffsetX + viewportWidth / 2,
-        centerY: viewportOffsetY + usableViewportHeight / 2,
-        right: viewportOffsetX + viewportWidth,
-        bottom: viewportOffsetY + usableViewportHeight,
+        centerX: usableViewportX + usableViewportWidth / 2,
+        centerY: usableViewportY + usableViewportHeight / 2,
+        right: usableViewportX + usableViewportWidth,
+        bottom: usableViewportY + usableViewportHeight,
+        browserChromeTopInset,
         browserChromeBottomInset,
+        browserChromeLeftInset,
+        browserChromeRightInset,
       },
       hasBodyScroll:
         document.documentElement.scrollHeight > window.innerHeight ||
@@ -290,8 +335,13 @@ async function overlaySnapshot(page, selector) {
     titleSelector: TITLE_SELECTOR,
     detailSelector: DETAIL_SELECTOR,
     contentSelector: CONTENT_SELECTOR,
+    countSelector: COUNTDOWN_COUNT_SELECTOR,
+    haloSelector: COUNTDOWN_HALO_SELECTOR,
     compositionSelector: CINEMATIC_COMPOSITION_SELECTOR,
-    browserChromeInsetParam: RIP_BROWSER_CHROME_INSET_PARAM,
+    topInsetParam: VIEWPORT_TOP_INSET_PARAM,
+    bottomInsetParam: VIEWPORT_BOTTOM_INSET_PARAM,
+    leftInsetParam: VIEWPORT_LEFT_INSET_PARAM,
+    rightInsetParam: VIEWPORT_RIGHT_INSET_PARAM,
   });
 }
 
@@ -354,11 +404,13 @@ function assertBoardAnchoring(snapshot, label) {
 }
 
 function assertCountdownViewportCentering(snapshot, label) {
-  const viewport = snapshot.visualViewport;
+  const viewport = snapshot.usableVisualViewport || snapshot.visualViewport;
 
   assert(snapshot.stageRect, `${label}: palco cinematográfico ausente.`);
   assert(snapshot.contentRect, `${label}: conteúdo textual sem retângulo visual.`);
   assert(snapshot.compositionRect, `${label}: composição visual ausente.`);
+  assert(snapshot.countdownCountRect, `${label}: número da contagem sem retângulo visual.`);
+  assert(snapshot.countdownHaloRect, `${label}: halo da contagem sem retângulo visual.`);
   assert(snapshot.stageRect.width >= viewport.width * MIN_RIP_STAGE_VIEWPORT_COVERAGE_RATIO, `${label}: palco não cobre a largura da viewport.`);
   assert(snapshot.stageRect.height >= viewport.height * MIN_RIP_STAGE_VIEWPORT_COVERAGE_RATIO, `${label}: palco não cobre a altura da viewport.`);
   assert(Math.abs(snapshot.stageRect.centerX - viewport.centerX) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: palco fora do centro X da viewport.`);
@@ -367,11 +419,18 @@ function assertCountdownViewportCentering(snapshot, label) {
   assert(Math.abs(snapshot.compositionRect.centerY - viewport.centerY) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: composição fora do centro Y da viewport.`);
   assert(Math.abs(snapshot.contentRect.centerX - viewport.centerX) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: conteúdo fora do centro X da viewport.`);
   assert(Math.abs(snapshot.contentRect.centerY - viewport.centerY) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: conteúdo fora do centro Y da viewport.`);
+  assert(Math.abs(snapshot.countdownCountRect.centerX - viewport.centerX) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: número fora do centro X da área visível.`);
+  assert(Math.abs(snapshot.countdownCountRect.centerY - viewport.centerY) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: número fora do centro Y da área visível.`);
+  assert(Math.abs(snapshot.countdownHaloRect.centerX - viewport.centerX) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: halo fora do centro X da área visível.`);
+  assert(Math.abs(snapshot.countdownHaloRect.centerY - viewport.centerY) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: halo fora do centro Y da área visível.`);
+  assertRectInsideVisualViewport(snapshot.compositionRect, viewport, `${label}: composição countdown`);
+  assertRectInsideVisualViewport(snapshot.countdownHaloRect, viewport, `${label}: halo countdown`);
 
   for (const item of snapshot.media) {
     assert(item.rect, `${label}: mídia sem retângulo visual ${item.id}.`);
-    assert(Math.abs(item.rect.centerX - viewport.centerX) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: mídia ${item.id} fora do centro X da viewport.`);
-    assert(Math.abs(item.rect.centerY - viewport.centerY) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: mídia ${item.id} fora do centro Y da viewport.`);
+    assert(Math.abs(item.rect.centerX - viewport.centerX) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: mídia ${item.id} fora do centro X da viewport.`);
+    assert(Math.abs(item.rect.centerY - viewport.centerY) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: mídia ${item.id} fora do centro Y da viewport.`);
+    assertRectInsideVisualViewport(item.rect, viewport, `${label}: mídia ${item.id}`);
   }
 }
 
@@ -467,6 +526,10 @@ async function run() {
     'BRIKAYA_CINEMATIC_COUNTDOWN_SCREENSHOT',
     DEFAULT_COUNTDOWN_SCREENSHOT_PATH,
   );
+  const countdownLandscapeScreenshotPath = env(
+    'BRIKAYA_CINEMATIC_COUNTDOWN_LANDSCAPE_SCREENSHOT',
+    DEFAULT_COUNTDOWN_LANDSCAPE_SCREENSHOT_PATH,
+  );
   const levelUpScreenshotPath = env(
     'BRIKAYA_CINEMATIC_LEVEL_SCREENSHOT',
     DEFAULT_LEVEL_UP_SCREENSHOT_PATH,
@@ -477,8 +540,16 @@ async function run() {
   );
   ensureParentDirectory(reportPath);
   ensureParentDirectory(countdownScreenshotPath);
+  ensureParentDirectory(countdownLandscapeScreenshotPath);
   ensureParentDirectory(levelUpScreenshotPath);
   ensureParentDirectory(ripScreenshotPath);
+  const countdownViewportConfigs = COUNTDOWN_VIEWPORT_CONFIGS.map((config) => ({
+    ...config,
+    screenshotPath:
+      config.viewportName === VIEWPORT_NAME_IPHONE_LANDSCAPE
+        ? countdownLandscapeScreenshotPath
+        : countdownScreenshotPath,
+  }));
 
   const externalAudioRequests = [];
   const externalMediaRequests = [];
@@ -490,9 +561,8 @@ async function run() {
   });
 
   try {
-    const page = await browser.newPage();
-    await page.setViewport(puppeteerViewport(VIEWPORT));
-    page.on('request', request => {
+    const attachDiagnostics = (targetPage) => {
+      targetPage.on('request', request => {
       const requestUrl = new URL(request.url());
       if (requestUrl.pathname.endsWith('.mp3') && requestUrl.origin !== parsed.origin) {
         externalAudioRequests.push(request.url());
@@ -500,17 +570,23 @@ async function run() {
       if (MEDIA_EXTENSION_PATTERN.test(requestUrl.pathname) && requestUrl.origin !== parsed.origin) {
         externalMediaRequests.push(request.url());
       }
-    });
-    page.on('console', message => {
+      });
+      targetPage.on('console', message => {
       if (['error', 'warn'].includes(message.type())) {
         consoleProblems.push({ type: message.type(), text: message.text() });
       }
-    });
-    page.on('pageerror', error => consoleProblems.push({ type: 'pageerror', text: error.message }));
+      });
+      targetPage.on('pageerror', error => consoleProblems.push({ type: 'pageerror', text: error.message }));
+    };
+
+    const page = await browser.newPage();
+    await page.setViewport(puppeteerViewport(VIEWPORT));
+    attachDiagnostics(page);
 
     await prepareControlledPage(page, publicUrl);
     await seedPrivacyConsent(page);
-    await page.goto(scenarioUrl(publicUrl, SINGLE_BRICK_QA_SCENARIO), {
+    const primaryCountdownConfig = countdownViewportConfigs[0];
+    await page.goto(countdownScenarioUrl(publicUrl, primaryCountdownConfig), {
       waitUntil: 'domcontentloaded',
       timeout: NAVIGATION_TIMEOUT_MS,
     });
@@ -519,7 +595,7 @@ async function run() {
     await waitForCinematicMediaReady(page, COUNTDOWN_SELECTOR);
     const countdownStartedAt = Date.now();
     const countdownState = await overlaySnapshot(page, COUNTDOWN_SELECTOR);
-    await page.screenshot({ path: countdownScreenshotPath, fullPage: true });
+    await page.screenshot({ path: primaryCountdownConfig.screenshotPath, fullPage: true });
     await page.waitForSelector(COUNTDOWN_SELECTOR, {
       hidden: true,
       timeout: COUNTDOWN_MAX_DURATION_MS + 900,
@@ -535,6 +611,51 @@ async function run() {
     });
     const levelAudioIds = await audioIds(page);
     const countdownAfterLevel = await page.$(COUNTDOWN_SELECTOR);
+    const countdownResults = [
+      {
+        viewportName: primaryCountdownConfig.viewportName,
+        viewport: viewportByName(primaryCountdownConfig.viewportName),
+        countdownState,
+        countdownDurationMs,
+        countdownScreenshotPath: primaryCountdownConfig.screenshotPath,
+      },
+    ];
+
+    for (const config of countdownViewportConfigs.slice(1)) {
+      const countdownPage = await browser.newPage();
+      await countdownPage.setViewport(puppeteerViewport(viewportByName(config.viewportName)));
+      attachDiagnostics(countdownPage);
+      await countdownPage.goto(publicUrl, {
+        waitUntil: 'domcontentloaded',
+        timeout: NAVIGATION_TIMEOUT_MS,
+      });
+      await waitForServiceWorkerControl(countdownPage);
+      await seedPrivacyConsent(countdownPage);
+      await countdownPage.goto(countdownScenarioUrl(publicUrl, config), {
+        waitUntil: 'domcontentloaded',
+        timeout: NAVIGATION_TIMEOUT_MS,
+      });
+      await waitForServiceWorkerControl(countdownPage);
+      await countdownPage.waitForSelector(COUNTDOWN_SELECTOR, { timeout: 5000 });
+      await waitForCinematicMediaReady(countdownPage, COUNTDOWN_SELECTOR);
+      const secondaryCountdownStartedAt = Date.now();
+      const secondaryCountdownState = await overlaySnapshot(countdownPage, COUNTDOWN_SELECTOR);
+      ensureParentDirectory(config.screenshotPath);
+      await countdownPage.screenshot({ path: config.screenshotPath, fullPage: true });
+      await countdownPage.waitForSelector(COUNTDOWN_SELECTOR, {
+        hidden: true,
+        timeout: COUNTDOWN_MAX_DURATION_MS + 900,
+      });
+      const secondaryCountdownDurationMs = Date.now() - secondaryCountdownStartedAt;
+      await countdownPage.close({ runBeforeUnload: false });
+      countdownResults.push({
+        viewportName: config.viewportName,
+        viewport: viewportByName(config.viewportName),
+        countdownState: secondaryCountdownState,
+        countdownDurationMs: secondaryCountdownDurationMs,
+        countdownScreenshotPath: config.screenshotPath,
+      });
+    }
 
     const ripResults = [];
 
@@ -542,21 +663,7 @@ async function run() {
       const viewport = viewportByName(viewportName);
       const ripPage = await browser.newPage();
       await ripPage.setViewport(puppeteerViewport(viewport));
-      ripPage.on('request', request => {
-        const requestUrl = new URL(request.url());
-        if (requestUrl.pathname.endsWith('.mp3') && requestUrl.origin !== parsed.origin) {
-          externalAudioRequests.push(request.url());
-        }
-        if (MEDIA_EXTENSION_PATTERN.test(requestUrl.pathname) && requestUrl.origin !== parsed.origin) {
-          externalMediaRequests.push(request.url());
-        }
-      });
-      ripPage.on('console', message => {
-        if (['error', 'warn'].includes(message.type())) {
-          consoleProblems.push({ type: message.type(), text: message.text() });
-        }
-      });
-      ripPage.on('pageerror', error => consoleProblems.push({ type: 'pageerror', text: error.message }));
+      attachDiagnostics(ripPage);
 
       await ripPage.goto(ripScenarioUrl(publicUrl, viewportName), {
         waitUntil: 'domcontentloaded',
@@ -611,15 +718,18 @@ async function run() {
     const ripAfterTimeoutState = primaryRipResult.ripAfterTimeoutState;
     const cachedPaths = await cachedCinematicPaths(page);
 
-    assertFullViewport(countdownState, 'countdown');
     assertFullViewport(levelUpState, 'level-up');
     assertFullViewport(ripState, 'rip');
-    assertCountdownViewportCentering(countdownState, 'countdown');
     assertBoardAnchoring(levelUpState, 'level-up');
-    assertMedia(countdownState, REQUIRED_COUNTDOWN_MEDIA, 'countdown');
     assertMedia(levelUpState, REQUIRED_LEVEL_UP_MEDIA, 'level-up');
-    assert(countdownDurationMs <= COUNTDOWN_MAX_DURATION_MS + 900, `Countdown demorou demais: ${countdownDurationMs}ms.`);
-    assert(/3|2|1/.test(countdownState.text), 'Countdown não mostrou 3, 2 ou 1.');
+    for (const result of countdownResults) {
+      const label = `countdown/${result.viewportName}`;
+      assertFullViewport(result.countdownState, label);
+      assertCountdownViewportCentering(result.countdownState, label);
+      assertMedia(result.countdownState, REQUIRED_COUNTDOWN_MEDIA, label);
+      assert(result.countdownDurationMs <= COUNTDOWN_MAX_DURATION_MS + 900, `${label}: demorou demais: ${result.countdownDurationMs}ms.`);
+      assert(/3|2|1/.test(result.countdownState.text), `${label}: não mostrou 3, 2 ou 1.`);
+    }
     assert(levelUpState.text.includes('Subindo de nível'), 'Level-up não informou subida de nível.');
     assert(levelUpState.text.includes('Fase 2'), 'Level-up não informou fase 2.');
     assert(!countdownAfterLevel, 'Countdown reapareceu entre fases.');
@@ -653,6 +763,7 @@ async function run() {
       countdownDurationMs,
       ripDurationMs,
       countdownState,
+      countdownResults,
       levelUpState,
       ripState,
       ripResults,
@@ -660,6 +771,7 @@ async function run() {
       ripAudioIds,
       cachedPaths,
       countdownScreenshotPath,
+      countdownLandscapeScreenshotPath,
       levelUpScreenshotPath,
       ripScreenshotPath,
       externalAudioRequests,
