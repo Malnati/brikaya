@@ -41,9 +41,9 @@ const RIP_SCREENSHOT_VIEWPORT_SUFFIXES = new Map([
   [VIEWPORT_NAME_DESKTOP, 'desktop'],
 ]);
 const RIP_SCREENSHOT_SHORT_STEM = 'evi-cinematic-rip';
+const SEMANTIC_FILE_STEM_MAX_LENGTH = 64;
 const VIEWPORT = viewportByName(VIEWPORT_NAME_IPHONE_PORTRAIT);
 const COUNTDOWN_PORTRAIT_BOTTOM_INSET_PX = 104;
-const COUNTDOWN_LANDSCAPE_TOP_INSET_PX = 236;
 const COUNTDOWN_MAX_DURATION_MS = 2000;
 const RIP_MAX_DURATION_MS = 2000;
 const RIP_OBSERVATION_BUFFER_MS = 300;
@@ -112,9 +112,7 @@ const COUNTDOWN_VIEWPORT_CONFIGS = [
   {
     viewportName: VIEWPORT_NAME_IPHONE_LANDSCAPE,
     screenshotPath: DEFAULT_COUNTDOWN_LANDSCAPE_SCREENSHOT_PATH,
-    searchParams: {
-      [VIEWPORT_TOP_INSET_PARAM]: COUNTDOWN_LANDSCAPE_TOP_INSET_PX,
-    },
+    searchParams: {},
   },
 ];
 
@@ -144,8 +142,14 @@ function screenshotPathForViewport(basePath, viewportName, index) {
   const viewportSuffix =
     RIP_SCREENSHOT_VIEWPORT_SUFFIXES.get(viewportName) || viewportName;
 
-  return basePath.replace(FILE_NAME_EXTENSION_PATTERN, (_fileName, extension) => {
-    return `${RIP_SCREENSHOT_SHORT_STEM}-${viewportSuffix}${extension}`;
+  return basePath.replace(FILE_NAME_EXTENSION_PATTERN, (fileName, extension) => {
+    const baseStem = fileName.slice(0, -extension.length);
+    const uniqueStem = `${baseStem}-${viewportSuffix}`;
+    const stem = uniqueStem.length <= SEMANTIC_FILE_STEM_MAX_LENGTH
+      ? uniqueStem
+      : `${RIP_SCREENSHOT_SHORT_STEM}-${viewportSuffix}`;
+
+    return `${stem}${extension}`;
   });
 }
 
@@ -521,6 +525,19 @@ async function cachedCinematicPaths(page) {
 }
 
 
+async function requestCinematicPathsThroughServiceWorker(page, missingPaths) {
+  if (missingPaths.length === 0) return;
+
+  await page.evaluate(async ({ paths }) => {
+    if (!('serviceWorker' in navigator)) return;
+    await navigator.serviceWorker.ready;
+    await Promise.all(paths.map(async (path) => {
+      const response = await fetch(path, { cache: 'reload' });
+      if (!response.ok) throw new Error(`asset fetch failed: ${path}`);
+    }));
+  }, { paths: missingPaths });
+}
+
 async function waitForCachedCinematicPaths(page) {
   const deadline = Date.now() + CACHE_READY_TIMEOUT_MS;
   let cachedPaths = [];
@@ -529,6 +546,7 @@ async function waitForCachedCinematicPaths(page) {
     cachedPaths = await cachedCinematicPaths(page);
     const missingPaths = REQUIRED_CINEMATIC_MEDIA_PATHS.filter(path => !cachedPaths.includes(path));
     if (missingPaths.length === 0) return cachedPaths;
+    await requestCinematicPathsThroughServiceWorker(page, missingPaths);
     await delay(CACHE_READY_POLL_MS);
   } while (Date.now() < deadline);
 
