@@ -13,6 +13,7 @@ import { AudioToggle } from "./components/AudioToggle";
 import { MusicToggle } from "./components/MusicToggle";
 import { ConsentScreen } from "./components/ConsentScreen";
 import { LanguageDetectionOverlay } from "./components/LanguageDetectionOverlay";
+import { MobileOrientationBlocker } from "./components/MobileOrientationBlocker";
 import { CollisionStats } from "./components/CollisionStats";
 import GameLogViewer from "./components/GameLogViewer";
 import {
@@ -66,6 +67,7 @@ import { useAppearancePreference } from "./hooks/useAppearancePreference";
 import { useAudioPreference } from "./hooks/useAudioPreference";
 import { useGameModePreference } from "./hooks/useGameModePreference";
 import { useLanguageLocationConsent } from "./hooks/useLanguageLocationConsent";
+import { useMobileOrientationLock } from "./hooks/useMobileOrientationLock";
 import { usePrivacyConsent } from "./hooks/usePrivacyConsent";
 import {
   SUPPORTED_LOCALES,
@@ -131,6 +133,7 @@ interface UpdateProgressState {
 
 export default function App() {
   const { locale, setLocale, setLocaleFromLocation, t } = useI18n();
+  const mobileOrientationLock = useMobileOrientationLock();
   const [score, setScore] = useState(0);
   const scoreRef = useRef(0);
   const [totalScore, setTotalScore] = useState(0);
@@ -793,7 +796,13 @@ export default function App() {
     gameWon || gameOver ? t("controls.playAgain") : t("controls.restart");
 
   return (
-    <main className="app-shell">
+    <main
+      className={
+        mobileOrientationLock.isBlocked
+          ? "app-shell app-shell--orientation-blocked"
+          : "app-shell"
+      }
+    >
       <section className="game-dashboard" aria-label={t("app.dashboardAria")}>
         <header className="dashboard-header">
           <div className="dashboard-title-group">
@@ -1109,7 +1118,10 @@ export default function App() {
                 imageSetId={selection.imageSetId}
                 gameMode={activeGameMode}
                 paused={
-                  isMenuOpen || !hasPrivacyConsent || isLanguageDetectionVisible
+                  mobileOrientationLock.isBlocked ||
+                  isMenuOpen ||
+                  !hasPrivacyConsent ||
+                  isLanguageDetectionVisible
                 }
                 onBoardRectChange={handleBoardRectChange}
               />
@@ -1179,6 +1191,7 @@ export default function App() {
         imageSetId={selection.imageSetId}
         boardRect={cinematicOverlayBoardRect}
       />
+      {mobileOrientationLock.isBlocked && <MobileOrientationBlocker />}
       {isLanguageDetectionVisible && <LanguageDetectionOverlay />}
       {!hasPrivacyConsent && (
         <ConsentScreen onAccept={handleAcceptPrivacyConsent} />

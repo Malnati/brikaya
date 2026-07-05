@@ -87,6 +87,9 @@ const SPEED_CURRENT_LABEL = "Velocidade atual";
 const LEVEL_TIME_LABEL = "Tempo da fase";
 const COLLISIONS_PANEL_TITLE = "Estatísticas de Colisões";
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
+const ORIENTATION_BLOCKER_SELECTOR =
+  '[data-testid="mobile-orientation-blocker"]';
+const ORIENTATION_BLOCKER_MESSAGE = "Você precisa de espaço para o joystick";
 const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
 const EVENT_HEADER_SELECTOR = ".event-header";
 const EVENT_DETAILS_SELECTOR = ".event-details";
@@ -110,6 +113,14 @@ function isMobilePortraitFocusedState(state) {
 
 function isMobileLandscapeFocusedViewport(viewport) {
   return viewport.category === "mobile" && viewport.orientation === "landscape";
+}
+
+function isTouchLandscapeBlockedViewport(viewport) {
+  return (
+    ["mobile", "tablet"].includes(viewport.category) &&
+    viewport.orientation === "landscape" &&
+    viewport.hasTouch
+  );
 }
 
 function publicUrl() {
@@ -348,6 +359,12 @@ async function collectLayoutState(page, viewportName) {
       const boardControls = rectOf(
         document.querySelector(".game-board-controls"),
       );
+      const orientationBlockerElement = document.querySelector(
+        '[data-testid="mobile-orientation-blocker"]',
+      );
+      const orientationBlockerStyle = orientationBlockerElement
+        ? getComputedStyle(orientationBlockerElement)
+        : null;
       const sideSlotElement = document.querySelector(adSlotSideSelector);
       const bottomSlotElement = document.querySelector(adSlotBottomSelector);
       const sideSlot = rectOf(sideSlotElement);
@@ -416,6 +433,16 @@ async function collectLayoutState(page, viewportName) {
           : null,
         isLandscapeImmersive:
           document.documentElement.classList.contains(immersiveRootClass),
+        orientationBlocker: orientationBlockerElement
+          ? {
+              text: orientationBlockerElement.textContent?.trim() || "",
+              ariaLabel:
+                orientationBlockerElement.getAttribute("aria-label") || "",
+              role: orientationBlockerElement.getAttribute("role") || "",
+              rect: rectOf(orientationBlockerElement),
+              pointerEvents: orientationBlockerStyle?.pointerEvents || "",
+            }
+          : null,
         heading: document.querySelector("h1")?.textContent || "",
         scoreHudText: scoreHudElement?.textContent?.trim() || "",
         canvas,
@@ -691,6 +718,46 @@ async function run() {
             !state.hasHorizontalOverflow,
             `${viewport.name}: overflow horizontal ${state.viewport.scrollWidth} > ${state.viewport.width}.`,
           );
+          if (isTouchLandscapeBlockedViewport(viewport)) {
+            assert(
+              state.orientationBlocker,
+              `${viewport.name}: bloqueio portrait ausente em landscape touch.`,
+            );
+            assert(
+              state.orientationBlocker.text.includes(
+                ORIENTATION_BLOCKER_MESSAGE,
+              ),
+              `${viewport.name}: mensagem de bloqueio portrait incorreta.`,
+            );
+            assert(
+              state.orientationBlocker.ariaLabel ===
+                ORIENTATION_BLOCKER_MESSAGE,
+              `${viewport.name}: aria-label do bloqueio portrait incorreto.`,
+            );
+            assert(
+              state.orientationBlocker.role === "alertdialog",
+              `${viewport.name}: bloqueio portrait sem role alertdialog.`,
+            );
+            assert(
+              state.orientationBlocker.pointerEvents !== "none",
+              `${viewport.name}: bloqueio portrait não captura toque.`,
+            );
+            assert(
+              state.orientationBlocker.rect &&
+                state.orientationBlocker.rect.width >=
+                  state.viewport.width - 2 &&
+                state.orientationBlocker.rect.height >=
+                  state.viewport.height - 2,
+              `${viewport.name}: bloqueio portrait não cobre a viewport.`,
+            );
+            assert(
+              !state.isLandscapeImmersive,
+              `${viewport.name}: modo landscape imersivo não deve ativar em mobile/tablet.`,
+            );
+            viewportComplete = true;
+            trace(`viewport:end:${viewport.name}`);
+            continue;
+          }
           assert(state.canvas, `${viewport.name}: canvas ausente.`);
           assert(
             state.canvas.x >= 0 && state.canvas.right <= state.viewport.width,
@@ -1156,6 +1223,19 @@ async function run() {
         await page.waitForSelector("canvas", { timeout: 30000 });
         await acceptPrivacyConsentIfPresent(page);
         await waitForCinematicOverlayToClear(page);
+        await page.waitForSelector(ORIENTATION_BLOCKER_SELECTOR, {
+          timeout: 10000,
+        });
+        const landscapeState = await collectLayoutState(
+          page,
+          landscapeViewport.name,
+        );
+        assert(
+          landscapeState.orientationBlocker?.text.includes(
+            ORIENTATION_BLOCKER_MESSAGE,
+          ),
+          "Screenshot landscape não exibiu bloqueio portrait.",
+        );
         await new Promise((resolve) => setTimeout(resolve, 300));
         await page.screenshot({ path: outLandscapeScreenshot });
         trace("orientation:start");
@@ -1171,23 +1251,22 @@ async function run() {
           "game_start",
         );
         await setQaViewport(page, landscapeViewport);
-        await page.waitForFunction(
-          ({ minHeightRatio, minWidthRatio, immersiveRootClass }) => {
-            const canvas = document.querySelector("canvas");
-            if (!canvas) return false;
-            const rect = canvas.getBoundingClientRect();
-            return (
-              document.documentElement.classList.contains(immersiveRootClass) &&
-              rect.height / window.innerHeight >= minHeightRatio &&
-              rect.width / window.innerWidth >= minWidthRatio
-            );
-          },
-          { timeout: 10000 },
-          {
-            minHeightRatio: MIN_IMMERSIVE_CANVAS_HEIGHT_RATIO,
-            minWidthRatio: MIN_LANDSCAPE_CANVAS_WIDTH_RATIO,
-            immersiveRootClass: IMMERSIVE_ROOT_CLASS,
-          },
+        await page.waitForSelector(ORIENTATION_BLOCKER_SELECTOR, {
+          timeout: 10000,
+        });
+        const orientationLandscapeState = await collectLayoutState(
+          page,
+          landscapeViewport.name,
+        );
+        assert(
+          orientationLandscapeState.orientationBlocker?.text.includes(
+            ORIENTATION_BLOCKER_MESSAGE,
+          ),
+          "Rotação para landscape não exibiu bloqueio portrait.",
+        );
+        assert(
+          !orientationLandscapeState.isLandscapeImmersive,
+          "Rotação para landscape ainda ativou modo imersivo.",
         );
         await new Promise((resolve) => setTimeout(resolve, 800));
         afterOrientationEvents = await readEventCountsSince(

@@ -5,12 +5,9 @@ const DESKTOP_COMPACT_AVAILABLE_HEIGHT = 572;
 const DESKTOP_COMPACT_MIN_RECOVERED_WIDTH = 850;
 const DESKTOP_AVAILABLE_HEIGHT = 524;
 const IPAD_PRO_LANDSCAPE_AVAILABLE_HEIGHT = 638;
-const MOBILE_LANDSCAPE_FOCUSED_MIN_HEIGHT = 376;
-const MOBILE_LANDSCAPE_VISUAL_VIEWPORT_MIN_HEIGHT = 400;
-const TABLET_LANDSCAPE_RESERVED_MAX_HEIGHT = 700;
 
 describe("calculateResponsiveCanvasSize", () => {
-  it("usa visualViewport quase inteiro em mobile landscape imersivo", () => {
+  it("não ativa modo imersivo em mobile landscape porque o uso deve voltar para portrait", () => {
     const size = calculateResponsiveCanvasSize({
       containerWidth: 320,
       containerHeight: 180,
@@ -24,14 +21,12 @@ describe("calculateResponsiveCanvasSize", () => {
       hoverNone: true,
     });
 
-    expect(size.isImmersiveLandscape).toBe(true);
-    expect(size.width).toBeGreaterThanOrEqual(818);
-    expect(size.height).toBeGreaterThanOrEqual(
-      MOBILE_LANDSCAPE_FOCUSED_MIN_HEIGHT,
-    );
+    expect(size.isImmersiveLandscape).toBe(false);
+    expect(size.width).toBe(320);
+    expect(size.height).toBe(240);
   });
 
-  it("usa a altura real reservada ao tabuleiro no landscape imersivo", () => {
+  it("preserva canvas limitado por altura em mobile landscape bloqueado", () => {
     const size = calculateResponsiveCanvasSize({
       containerWidth: 840,
       containerHeight: 337,
@@ -45,8 +40,8 @@ describe("calculateResponsiveCanvasSize", () => {
       hoverNone: true,
     });
 
-    expect(size.isImmersiveLandscape).toBe(true);
-    expect(size.height / 337).toBeGreaterThanOrEqual(0.9);
+    expect(size.isImmersiveLandscape).toBe(false);
+    expect(size.height).toBe(240);
   });
 
   it("usa canvas quadrado e quase toda a largura útil no portrait mobile", () => {
@@ -86,7 +81,7 @@ describe("calculateResponsiveCanvasSize", () => {
     expect(size.height).toBeLessThanOrEqual(DESKTOP_AVAILABLE_HEIGHT);
   });
 
-  it("ativa modo imersivo por visualViewport quando barras do navegador mudam o tamanho interno", () => {
+  it("não ativa modo imersivo por visualViewport em landscape touch", () => {
     const size = calculateResponsiveCanvasSize({
       containerWidth: 420,
       containerHeight: 220,
@@ -100,13 +95,11 @@ describe("calculateResponsiveCanvasSize", () => {
       hoverNone: true,
     });
 
-    expect(size.isImmersiveLandscape).toBe(true);
-    expect(size.height).toBeGreaterThanOrEqual(
-      MOBILE_LANDSCAPE_VISUAL_VIEWPORT_MIN_HEIGHT,
-    );
+    expect(size.isImmersiveLandscape).toBe(false);
+    expect(size.height).toBe(240);
   });
 
-  it("ativa modo imersivo em tablet landscape com toque", () => {
+  it("não ativa modo imersivo em tablet landscape com toque", () => {
     const size = calculateResponsiveCanvasSize({
       containerWidth: 720,
       containerHeight: 420,
@@ -120,11 +113,9 @@ describe("calculateResponsiveCanvasSize", () => {
       hoverNone: true,
     });
 
-    expect(size.isImmersiveLandscape).toBe(true);
-    expect(size.height).toBeGreaterThanOrEqual(640);
-    expect(size.height).toBeLessThanOrEqual(
-      TABLET_LANDSCAPE_RESERVED_MAX_HEIGHT,
-    );
+    expect(size.isImmersiveLandscape).toBe(false);
+    expect(size.height).toBe(480);
+    expect(size.width).toBe(720);
   });
 
   it("não ativa modo imersivo em desktop landscape sem toque", () => {

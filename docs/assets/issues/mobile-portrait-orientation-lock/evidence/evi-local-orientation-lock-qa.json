@@ -1,0 +1,303 @@
+{
+  "url": "http://127.0.0.1:4173/",
+  "generatedAt": "2026-07-05T18:30:23.007Z",
+  "expectedMessage": "Você precisa de espaço para o joystick",
+  "screenshots": {
+    "mobilePortrait": "docs/assets/issues/mobile-portrait-orientation-lock/evidence/local/evi-mobile-portrait.png",
+    "mobileLandscape": "docs/assets/issues/mobile-portrait-orientation-lock/evidence/local/evi-mobile-landscape-blocked.png",
+    "mobileReturn": "docs/assets/issues/mobile-portrait-orientation-lock/evidence/local/evi-mobile-return-portrait.png",
+    "tabletPortrait": "docs/assets/issues/mobile-portrait-orientation-lock/evidence/local/evi-tablet-portrait.png",
+    "tabletLandscape": "docs/assets/issues/mobile-portrait-orientation-lock/evidence/local/evi-tablet-landscape-blocked.png",
+    "desktopLandscape": "docs/assets/issues/mobile-portrait-orientation-lock/evidence/local/evi-desktop-landscape.png",
+    "ballTurretLandscape": "docs/assets/issues/mobile-portrait-orientation-lock/evidence/local/evi-ball-turret-mobile-landscape-blocked.png",
+    "menuLandscape": "docs/assets/issues/mobile-portrait-orientation-lock/evidence/local/evi-menu-mobile-landscape-blocked.png"
+  },
+  "results": [
+    {
+      "label": "mobile portrait",
+      "url": "http://127.0.0.1:4173/",
+      "title": "Brikaya — arcade de quebrar blocos",
+      "viewport": {
+        "width": 402,
+        "height": 874,
+        "scrollWidth": 402,
+        "scrollHeight": 874
+      },
+      "maxTouchPoints": 1,
+      "pointerCoarse": true,
+      "hoverNone": true,
+      "heading": "Brikaya",
+      "blocker": null,
+      "hasHorizontalOverflow": false,
+      "hasLandscapeImmersiveClass": false,
+      "canvas": {
+        "x": 0,
+        "y": 0,
+        "width": 402,
+        "height": 402,
+        "right": 402,
+        "bottom": 402
+      },
+      "hasBallTurretJoystick": false
+    },
+    {
+      "label": "mobile landscape",
+      "url": "http://127.0.0.1:4173/",
+      "title": "Brikaya — arcade de quebrar blocos",
+      "viewport": {
+        "width": 874,
+        "height": 402,
+        "scrollWidth": 874,
+        "scrollHeight": 402
+      },
+      "maxTouchPoints": 1,
+      "pointerCoarse": true,
+      "hoverNone": true,
+      "heading": "Brikaya",
+      "blocker": {
+        "text": "Você precisa de espaço para o joystick",
+        "ariaLabel": "Você precisa de espaço para o joystick",
+        "role": "alertdialog",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "right": 874,
+          "bottom": 402
+        },
+        "display": "flex",
+        "pointerEvents": "auto"
+      },
+      "hasHorizontalOverflow": false,
+      "hasLandscapeImmersiveClass": false,
+      "canvas": {
+        "x": 257,
+        "y": 81,
+        "width": 360,
+        "height": 240,
+        "right": 617,
+        "bottom": 321
+      },
+      "hasBallTurretJoystick": false
+    },
+    {
+      "label": "mobile return portrait",
+      "url": "http://127.0.0.1:4173/",
+      "title": "Brikaya — arcade de quebrar blocos",
+      "viewport": {
+        "width": 402,
+        "height": 874,
+        "scrollWidth": 402,
+        "scrollHeight": 874
+      },
+      "maxTouchPoints": 1,
+      "pointerCoarse": true,
+      "hoverNone": true,
+      "heading": "Brikaya",
+      "blocker": null,
+      "hasHorizontalOverflow": false,
+      "hasLandscapeImmersiveClass": false,
+      "canvas": {
+        "x": 0,
+        "y": 0,
+        "width": 402,
+        "height": 402,
+        "right": 402,
+        "bottom": 402
+      },
+      "hasBallTurretJoystick": false
+    },
+    {
+      "label": "tablet portrait",
+      "url": "http://127.0.0.1:4173/",
+      "title": "Brikaya — arcade de quebrar blocos",
+      "viewport": {
+        "width": 820,
+        "height": 1180,
+        "scrollWidth": 820,
+        "scrollHeight": 1180
+      },
+      "maxTouchPoints": 1,
+      "pointerCoarse": true,
+      "hoverNone": true,
+      "heading": "Brikaya",
+      "blocker": null,
+      "hasHorizontalOverflow": false,
+      "hasLandscapeImmersiveClass": false,
+      "canvas": {
+        "x": 33,
+        "y": 85,
+        "width": 754,
+        "height": 502,
+        "right": 787,
+        "bottom": 587
+      },
+      "hasBallTurretJoystick": false
+    },
+    {
+      "label": "tablet landscape",
+      "url": "http://127.0.0.1:4173/",
+      "title": "Brikaya — arcade de quebrar blocos",
+      "viewport": {
+        "width": 1180,
+        "height": 820,
+        "scrollWidth": 1180,
+        "scrollHeight": 820
+      },
+      "maxTouchPoints": 1,
+      "pointerCoarse": true,
+      "hoverNone": true,
+      "heading": "Brikaya",
+      "blocker": {
+        "text": "Você precisa de espaço para o joystick",
+        "ariaLabel": "Você precisa de espaço para o joystick",
+        "role": "alertdialog",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1180,
+          "height": 820,
+          "right": 1180,
+          "bottom": 820
+        },
+        "display": "flex",
+        "pointerEvents": "auto"
+      },
+      "hasHorizontalOverflow": false,
+      "hasLandscapeImmersiveClass": false,
+      "canvas": {
+        "x": 122,
+        "y": 85,
+        "width": 936,
+        "height": 624,
+        "right": 1058,
+        "bottom": 709
+      },
+      "hasBallTurretJoystick": false
+    },
+    {
+      "label": "desktop landscape",
+      "url": "http://127.0.0.1:4173/",
+      "title": "Brikaya — arcade de quebrar blocos",
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "scrollWidth": 1440,
+        "scrollHeight": 900
+      },
+      "maxTouchPoints": 0,
+      "pointerCoarse": false,
+      "hoverNone": false,
+      "heading": "Brikaya",
+      "blocker": null,
+      "hasHorizontalOverflow": false,
+      "hasLandscapeImmersiveClass": false,
+      "canvas": {
+        "x": 192,
+        "y": 85,
+        "width": 1056,
+        "height": 704,
+        "right": 1248,
+        "bottom": 789
+      },
+      "hasBallTurretJoystick": false
+    },
+    {
+      "label": "ball turret mobile landscape",
+      "url": "http://127.0.0.1:4173/?qaScenario=ball-turret",
+      "title": "Brikaya — arcade de quebrar blocos",
+      "viewport": {
+        "width": 874,
+        "height": 402,
+        "scrollWidth": 874,
+        "scrollHeight": 402
+      },
+      "maxTouchPoints": 1,
+      "pointerCoarse": true,
+      "hoverNone": true,
+      "heading": "Brikaya",
+      "blocker": {
+        "text": "Você precisa de espaço para o joystick",
+        "ariaLabel": "Você precisa de espaço para o joystick",
+        "role": "alertdialog",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "right": 874,
+          "bottom": 402
+        },
+        "display": "flex",
+        "pointerEvents": "auto"
+      },
+      "hasHorizontalOverflow": false,
+      "hasLandscapeImmersiveClass": false,
+      "canvas": {
+        "x": 198,
+        "y": 81,
+        "width": 360,
+        "height": 240,
+        "right": 558,
+        "bottom": 321
+      },
+      "hasBallTurretJoystick": true
+    },
+    {
+      "label": "menu mobile landscape",
+      "url": "http://127.0.0.1:4173/",
+      "title": "Brikaya — arcade de quebrar blocos",
+      "viewport": {
+        "width": 874,
+        "height": 402,
+        "scrollWidth": 874,
+        "scrollHeight": 402
+      },
+      "maxTouchPoints": 1,
+      "pointerCoarse": true,
+      "hoverNone": true,
+      "heading": "Brikaya",
+      "blocker": {
+        "text": "Você precisa de espaço para o joystick",
+        "ariaLabel": "Você precisa de espaço para o joystick",
+        "role": "alertdialog",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "right": 874,
+          "bottom": 402
+        },
+        "display": "flex",
+        "pointerEvents": "auto"
+      },
+      "hasHorizontalOverflow": false,
+      "hasLandscapeImmersiveClass": false,
+      "canvas": {
+        "x": 257,
+        "y": 81,
+        "width": 360,
+        "height": 240,
+        "right": 617,
+        "bottom": 321
+      },
+      "hasBallTurretJoystick": false
+    }
+  ],
+  "orientationEvents": {
+    "landscape": {
+      "count": 0,
+      "byType": {}
+    },
+    "return": {
+      "count": 4,
+      "byType": {
+        "brick_destroyed": 2,
+        "score_update": 2
+      }
+    }
+  },
+  "consoleProblems": []
+}

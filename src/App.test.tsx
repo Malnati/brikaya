@@ -46,6 +46,17 @@ interface TestBoardRect {
   height: number;
 }
 
+interface MockViewportOptions {
+  width: number;
+  height: number;
+  maxTouchPoints?: number;
+}
+
+interface MockMediaOptions {
+  pointerCoarse?: boolean;
+  hoverNone?: boolean;
+}
+
 const TEST_LEVEL_TRANSITION_PAYLOAD: LevelTransitionPayload = {
   currentLevel: 1,
   nextLevel: 2,
@@ -138,11 +149,38 @@ function mockPrivacyConsent(value: string | null) {
   mockLocalStorageValues({ [PRIVACY_CONSENT_STORAGE_KEY]: value });
 }
 
-function mockSystemTheme(prefersDark: boolean) {
+function mockViewport({
+  width,
+  height,
+  maxTouchPoints = 0,
+}: MockViewportOptions) {
+  Object.defineProperty(window, "innerWidth", {
+    configurable: true,
+    writable: true,
+    value: width,
+  });
+  Object.defineProperty(window, "innerHeight", {
+    configurable: true,
+    writable: true,
+    value: height,
+  });
+  Object.defineProperty(navigator, "maxTouchPoints", {
+    configurable: true,
+    value: maxTouchPoints,
+  });
+}
+
+function mockSystemTheme(
+  prefersDark: boolean,
+  { pointerCoarse = false, hoverNone = false }: MockMediaOptions = {},
+) {
   Object.defineProperty(window, "matchMedia", {
     writable: true,
     value: jest.fn().mockImplementation((query: string) => ({
-      matches: prefersDark && query === "(prefers-color-scheme: dark)",
+      matches:
+        (prefersDark && query === "(prefers-color-scheme: dark)") ||
+        (pointerCoarse && query === "(pointer: coarse)") ||
+        (hoverNone && query === "(hover: none)"),
       media: query,
       onchange: null,
       addEventListener: jest.fn(),
@@ -199,6 +237,7 @@ describe("App theme selector", () => {
     window.localStorage.clear();
     window.sessionStorage.clear();
     window.history.replaceState(null, "", "/");
+    mockViewport({ width: 1024, height: 768, maxTouchPoints: 0 });
     mockPrivacyConsent(VALID_PRIVACY_CONSENT_RECORD);
   });
 
@@ -231,6 +270,111 @@ describe("App theme selector", () => {
     ).not.toBeInTheDocument();
     expect(screen.queryByLabelText("Publicidade")).not.toBeInTheDocument();
     expect(screen.queryByText("Publicidade")).not.toBeInTheDocument();
+  });
+
+  it("bloqueia telefone em landscape com mensagem fixa sobre o jogo", async () => {
+    mockViewport({ width: 852, height: 393, maxTouchPoints: 5 });
+    mockSystemTheme(true, { pointerCoarse: true, hoverNone: true });
+
+    await renderApp();
+
+    expect(
+      screen.getByRole("alertdialog", {
+        name: "Você precisa de espaço para o joystick",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("mobile-orientation-blocker")).toHaveTextContent(
+      "Você precisa de espaço para o joystick",
+    );
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      DATA_PAUSED_ATTRIBUTE,
+      PAUSED_TRUE_ATTRIBUTE_VALUE,
+    );
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      "data-start-blocked",
+      "true",
+    );
+  });
+
+  it("remove bloqueio quando telefone volta para portrait sem reiniciar o jogo", async () => {
+    mockViewport({ width: 852, height: 393, maxTouchPoints: 5 });
+    mockSystemTheme(true, { pointerCoarse: true, hoverNone: true });
+
+    await renderApp();
+
+    expect(screen.getByTestId("mobile-orientation-blocker")).toBeInTheDocument();
+
+    act(() => {
+      mockViewport({ width: 393, height: 852, maxTouchPoints: 5 });
+      window.dispatchEvent(new Event("resize"));
+    });
+
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId("mobile-orientation-blocker"),
+      ).not.toBeInTheDocument();
+    });
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      DATA_PAUSED_ATTRIBUTE,
+      PAUSED_FALSE_ATTRIBUTE_VALUE,
+    );
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      "data-start-blocked",
+      "true",
+    );
+  });
+
+  it("bloqueia tablet touch em landscape", async () => {
+    mockViewport({ width: 1180, height: 820, maxTouchPoints: 5 });
+    mockSystemTheme(true, { pointerCoarse: true, hoverNone: true });
+
+    await renderApp();
+
+    expect(
+      screen.getByRole("alertdialog", {
+        name: "Você precisa de espaço para o joystick",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("não bloqueia desktop landscape sem toque", async () => {
+    mockViewport({ width: 1440, height: 900, maxTouchPoints: 0 });
+    mockSystemTheme(true);
+
+    await renderApp();
+
+    expect(
+      screen.queryByText("Você precisa de espaço para o joystick"),
+    ).not.toBeInTheDocument();
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      DATA_PAUSED_ATTRIBUTE,
+      PAUSED_FALSE_ATTRIBUTE_VALUE,
+    );
+  });
+
+  it("mantém bloqueio acima do menu em mobile landscape", async () => {
+    mockViewport({ width: 393, height: 852, maxTouchPoints: 5 });
+    mockSystemTheme(true, { pointerCoarse: true, hoverNone: true });
+    const user = userEvent.setup();
+
+    await renderApp();
+    await user.click(screen.getByRole("button", { name: "Menu" }));
+
+    act(() => {
+      mockViewport({ width: 852, height: 393, maxTouchPoints: 5 });
+      window.dispatchEvent(new Event("resize"));
+    });
+
+    expect(
+      screen.getByRole("complementary", { name: "Menu do jogo" }),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("mobile-orientation-blocker")).toHaveTextContent(
+      "Você precisa de espaço para o joystick",
+    );
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      DATA_PAUSED_ATTRIBUTE,
+      PAUSED_TRUE_ATTRIBUTE_VALUE,
+    );
   });
 
   it("exige consentimento antes da primeira contagem", async () => {

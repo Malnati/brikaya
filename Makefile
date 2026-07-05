@@ -26,7 +26,7 @@ KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
 # Target padrão: mostrar help quando make é executado sem argumentos
 .DEFAULT_GOAL := help
 
-.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-domain cloudflare-deploy cloudflare-purge-cache cloudflare-public-check cloudflare-mobile-qa cloudflare-ball-turret-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-powerups-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa cloudflare-offline-pwa-qa cloudflare-i18n-seo-qa cloudflare-reset-preferences-qa cloudflare-evasive-blocks-qa docker-build docker-up docker-down docker-logs docker-shell
+.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-domain cloudflare-deploy cloudflare-purge-cache cloudflare-public-check cloudflare-mobile-qa cloudflare-orientation-lock-qa cloudflare-ball-turret-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-powerups-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa cloudflare-offline-pwa-qa cloudflare-i18n-seo-qa cloudflare-reset-preferences-qa cloudflare-evasive-blocks-qa docker-build docker-up docker-down docker-logs docker-shell
 
 # Função para matar processos anteriores
 kill-processes:
@@ -95,6 +95,9 @@ cloudflare-public-check:
 # Validar layout, logs e estatísticas contra o app publicado no Cloudflare Pages
 cloudflare-mobile-qa:
 	@npm run test:cloudflare-mobile
+
+cloudflare-orientation-lock-qa:
+	@npm run test:cloudflare-orientation-lock
 
 cloudflare-ball-turret-qa:
 	@npm run test:cloudflare-ball-turret
@@ -286,6 +289,7 @@ help:
 	@echo "  cloudflare-purge-cache - Limpar cache público de brikaya.com sem alterar origem"
 	@echo "  cloudflare-public-check - Validar que brikaya.com serve o build local"
 	@echo "  cloudflare-mobile-qa - Testar mobile default/logs contra Cloudflare publicado"
+	@echo "  cloudflare-orientation-lock-qa - Validar bloqueio portrait em mobile/tablet contra Cloudflare publicado"
 	@echo "  cloudflare-ball-turret-qa - Validar modo Torreta contra Cloudflare publicado"
 	@echo "  cloudflare-no-score-reset - Validar continuidade após tijolo no Cloudflare publicado"
 	@echo "  cloudflare-phase-transition-qa - Validar pausa/toast de fase no Cloudflare publicado"
