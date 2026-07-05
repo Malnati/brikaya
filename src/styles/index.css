@@ -641,29 +641,40 @@ select {
 }
 
 .game-turret-joystick {
-  --bb-turret-joystick-size: 88px;
-  --bb-turret-joystick-knob-size: 34px;
-  --bb-turret-joystick-travel: 24px;
-  --bb-turret-joystick-x: 0;
-  --bb-turret-joystick-y: 0;
+  --bb-turret-trackball-size: 132px;
+  --bb-turret-trackball-knob-size: 42px;
+  --bb-turret-trackball-travel: 36px;
+  --bb-turret-trackball-x: 0;
+  --bb-turret-trackball-y: 0;
+  --bb-turret-trackball-active: 0;
   display: none;
   flex: 0 0 auto;
-  width: var(--bb-turret-joystick-size);
-  height: var(--bb-turret-joystick-size);
+  width: var(--bb-turret-trackball-size);
+  height: var(--bb-turret-trackball-size);
   align-items: center;
   justify-content: center;
-  border: 1px solid color-mix(in srgb, var(--color-accent) 72%, #ffffff);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 78%, #ffffff);
   border-radius: 999px;
   background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent 42%),
     radial-gradient(
-      circle at 50% 50%,
-      color-mix(in srgb, var(--color-accent) 22%, transparent) 0 28%,
-      transparent 29% 100%
+      circle at 34% 24%,
+      rgba(255, 255, 255, 0.68) 0 9%,
+      rgba(255, 255, 255, 0.2) 10% 19%,
+      transparent 20% 100%
+    ),
+    radial-gradient(
+      circle at 50% 64%,
+      color-mix(in srgb, var(--color-accent) 42%, transparent) 0 26%,
+      color-mix(in srgb, var(--color-accent) 18%, transparent) 27% 56%,
+      transparent 57% 100%
     ),
     color-mix(in srgb, var(--color-panel) 82%, transparent);
   box-shadow:
-    0 0 18px color-mix(in srgb, var(--color-accent) 34%, transparent),
-    inset 0 0 18px rgba(255, 255, 255, 0.08);
+    0 0 24px color-mix(in srgb, var(--color-accent) 42%, transparent),
+    inset 0 12px 22px rgba(255, 255, 255, 0.18),
+    inset 0 -24px 30px rgba(0, 0, 0, 0.4);
+  perspective: 240px;
   touch-action: none;
   user-select: none;
   -webkit-touch-callout: none;
@@ -672,19 +683,50 @@ select {
 .game-turret-joystick-pad {
   position: relative;
   display: block;
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 14px);
+  height: calc(100% - 14px);
   border-radius: inherit;
+  background:
+    repeating-radial-gradient(
+      ellipse at 50% 50%,
+      transparent 0 15%,
+      color-mix(in srgb, var(--color-accent) 18%, transparent) 16% 17%,
+      transparent 18% 29%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 22%,
+      color-mix(in srgb, var(--color-accent) 22%, transparent) 23% 24%,
+      transparent 25% 49%
+    ),
+    radial-gradient(
+      circle at 50% 38%,
+      rgba(255, 255, 255, 0.18),
+      rgba(1, 12, 26, 0.2) 60%,
+      rgba(0, 0, 0, 0.28)
+    );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--color-accent) 38%, transparent),
+    inset 0 -18px 22px rgba(0, 0, 0, 0.34);
+  transform: rotateX(calc(var(--bb-turret-trackball-y) * -9deg))
+    rotateY(calc(var(--bb-turret-trackball-x) * 11deg))
+    scale(calc(1 + var(--bb-turret-trackball-active) * 0.025));
+  transition:
+    transform 120ms ease-out,
+    box-shadow 120ms ease-out;
 }
 
 .game-turret-joystick-pad::before,
 .game-turret-joystick-pad::after {
   position: absolute;
-  inset: 50% 16%;
+  inset: 50% 12%;
   display: block;
   height: 1px;
-  background: color-mix(in srgb, var(--color-accent) 48%, transparent);
+  background: color-mix(in srgb, var(--color-accent) 54%, transparent);
   content: "";
+  box-shadow:
+    0 -22px 0 color-mix(in srgb, var(--color-accent) 18%, transparent),
+    0 22px 0 color-mix(in srgb, var(--color-accent) 18%, transparent);
 }
 
 .game-turret-joystick-pad::after {
@@ -696,18 +738,32 @@ select {
   top: 50%;
   left: 50%;
   display: block;
-  width: var(--bb-turret-joystick-knob-size);
-  height: var(--bb-turret-joystick-knob-size);
+  width: var(--bb-turret-trackball-knob-size);
+  height: var(--bb-turret-trackball-knob-size);
   border: 1px solid color-mix(in srgb, var(--color-accent) 86%, #ffffff);
   border-radius: 999px;
   background:
-    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.7), transparent 32%),
+    radial-gradient(
+      circle at 35% 28%,
+      rgba(255, 255, 255, 0.74),
+      transparent 32%
+    ),
     color-mix(in srgb, var(--color-accent) 72%, var(--color-panel));
-  box-shadow: 0 0 14px color-mix(in srgb, var(--color-accent) 62%, transparent);
+  opacity: calc(0.64 + var(--bb-turret-trackball-active) * 0.36);
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--color-accent) 66%, transparent),
+    0 10px 18px rgba(0, 0, 0, 0.28);
   transform: translate(
-      calc(-50% + var(--bb-turret-joystick-x) * var(--bb-turret-joystick-travel)),
-      calc(-50% + var(--bb-turret-joystick-y) * var(--bb-turret-joystick-travel))
-    );
+    calc(
+      -50% + var(--bb-turret-trackball-x) * var(--bb-turret-trackball-travel)
+    ),
+    calc(
+      -50% + var(--bb-turret-trackball-y) * var(--bb-turret-trackball-travel)
+    )
+  );
+  transition:
+    opacity 120ms ease-out,
+    transform 120ms ease-out;
 }
 
 @media (pointer: coarse), (hover: none) {
@@ -737,7 +793,7 @@ select {
   (orientation: landscape) and (hover: none) {
   .game-surface--ball-turret {
     --bb-ball-turret-playfield-max-width: calc(
-      var(--bb-visual-viewport-width, 100vw) - 104px
+      var(--bb-visual-viewport-width, 100vw) - 148px
     );
   }
 }
@@ -928,8 +984,16 @@ canvas {
 .game-cinematic-overlay__countdown-halo-layer {
   position: absolute;
   z-index: 0;
-  width: min(94%, 520px, calc(var(--game-cinematic-countdown-size, 420px) * 0.94));
-  height: min(94%, 520px, calc(var(--game-cinematic-countdown-size, 420px) * 0.94));
+  width: min(
+    94%,
+    520px,
+    calc(var(--game-cinematic-countdown-size, 420px) * 0.94)
+  );
+  height: min(
+    94%,
+    520px,
+    calc(var(--game-cinematic-countdown-size, 420px) * 0.94)
+  );
   pointer-events: none;
   user-select: none;
   transform: translate(-50%, -50%);
@@ -2332,15 +2396,15 @@ html.bb-landscape-immersive .game-status-region {
 
   .game-surface--ball-turret .game-turret-joystick,
   html.bb-landscape-immersive .game-surface--ball-turret .game-turret-joystick {
-    --bb-turret-joystick-size: 72px;
-    --bb-turret-joystick-knob-size: 28px;
-    --bb-turret-joystick-travel: 20px;
+    --bb-turret-trackball-size: 112px;
+    --bb-turret-trackball-knob-size: 36px;
+    --bb-turret-trackball-travel: 30px;
   }
 
   .game-surface--ball-turret,
   html.bb-landscape-immersive .game-surface--ball-turret {
     --bb-ball-turret-playfield-max-width: calc(
-      var(--bb-visual-viewport-width, 100vw) - 84px
+      var(--bb-visual-viewport-width, 100vw) - 136px
     );
   }
 }
@@ -2443,7 +2507,11 @@ html.bb-landscape-immersive .game-status-region {
 .game-mode-selector__button:hover,
 .game-mode-selector__button:focus-visible {
   border-color: color-mix(in srgb, var(--bb-color-primary) 58%, transparent);
-  background: color-mix(in srgb, var(--bb-color-primary) 14%, var(--bb-color-panel-soft));
+  background: color-mix(
+    in srgb,
+    var(--bb-color-primary) 14%,
+    var(--bb-color-panel-soft)
+  );
 }
 
 .game-mode-selector__button:focus-visible {

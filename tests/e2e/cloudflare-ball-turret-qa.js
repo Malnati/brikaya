@@ -30,6 +30,8 @@ const BRICK_IMAGE_PATTERN = /\/bricks\/|spr-brick/i;
 const FULL_CIRCLE_TOLERANCE = 0.08;
 const JOYSTICK_TEST_ID = "ball-turret-joystick";
 const MIN_TOUCH_TARGET_SIZE = 44;
+const MIN_PORTRAIT_TRACKBALL_SIZE = 120;
+const MIN_LANDSCAPE_TRACKBALL_SIZE = 104;
 const ACTIVE_TRAMPOLINE_ARC_MIN_SWEEP = 0.2;
 const JOYSTICK_HOLD_SAMPLE_MS = 120;
 const JOYSTICK_HOLD_PROOF_MS = 360;
@@ -44,6 +46,7 @@ const VIEWPORTS = [
   {
     name: "mobile-portrait",
     joystickPlacement: "below",
+    minTrackballSize: MIN_PORTRAIT_TRACKBALL_SIZE,
     screenshotPath: mobileScreenshotPath(),
     viewport: {
       width: 390,
@@ -56,6 +59,7 @@ const VIEWPORTS = [
   {
     name: "mobile-landscape",
     joystickPlacement: "right",
+    minTrackballSize: MIN_LANDSCAPE_TRACKBALL_SIZE,
     screenshotPath: mobileLandscapeScreenshotPath(),
     viewport: {
       width: 844,
@@ -360,6 +364,20 @@ async function readBallTurretState(page) {
               height: joystickRect.height,
               x: joystickRect.x,
               y: joystickRect.y,
+              hasTrackballClass:
+                joystick?.classList.contains("game-turret-trackball") || false,
+              trackballX:
+                joystickStyle
+                  ?.getPropertyValue("--bb-turret-trackball-x")
+                  .trim() || "",
+              trackballY:
+                joystickStyle
+                  ?.getPropertyValue("--bb-turret-trackball-y")
+                  .trim() || "",
+              trackballActive:
+                joystickStyle
+                  ?.getPropertyValue("--bb-turret-trackball-active")
+                  .trim() || "",
             }
           : {
               exists: false,
@@ -368,6 +386,10 @@ async function readBallTurretState(page) {
               height: 0,
               x: 0,
               y: 0,
+              hasTrackballClass: false,
+              trackballX: "",
+              trackballY: "",
+              trackballActive: "",
             },
         scoreHudText: scoreHud?.textContent || "",
         bodyHasInternalCopy: internalCopyPattern.test(
@@ -419,6 +441,15 @@ function assertJoystickPlacement(config, gameplayState) {
     joystick.width >= MIN_TOUCH_TARGET_SIZE &&
       joystick.height >= MIN_TOUCH_TARGET_SIZE,
     `${config.name}: joystick menor que alvo mínimo de toque.`,
+  );
+  assert(
+    joystick.hasTrackballClass,
+    `${config.name}: controle da Torreta não está usando visual de trackball.`,
+  );
+  assert(
+    joystick.width >= config.minTrackballSize &&
+      joystick.height >= config.minTrackballSize,
+    `${config.name}: trackball da Torreta menor que o tamanho esperado.`,
   );
 
   if (config.joystickPlacement === "below") {
@@ -493,9 +524,14 @@ async function exerciseJoystick(page) {
   const center = { x: box.x + box.width * 0.5, y: box.y + box.height * 0.5 };
   const right = { x: box.x + box.width * 0.95, y: box.y + box.height * 0.5 };
   const left = { x: box.x + box.width * 0.05, y: box.y + box.height * 0.5 };
-  const path = [center, right, left, center];
+  const top = { x: box.x + box.width * 0.5, y: box.y + box.height * 0.05 };
+  const path = [center, right, top, left, center];
 
   await dispatchJoystickPointer(page, "pointerdown", center);
+  await dispatchJoystickPointer(page, "pointermove", right);
+  const rightVisualState = await readBallTurretState(page);
+  await dispatchJoystickPointer(page, "pointermove", top);
+  const topVisualState = await readBallTurretState(page);
   await dispatchJoystickPointer(page, "pointermove", right);
   await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_SAMPLE_MS));
   const rightStartState = await readBallTurretState(page);
@@ -508,10 +544,19 @@ async function exerciseJoystick(page) {
   const leftHoldState = await readBallTurretState(page);
   await dispatchJoystickPointer(page, "pointermove", center);
   await dispatchJoystickPointer(page, "pointerup", center);
+  const releaseState = await readBallTurretState(page);
 
   return {
     exercised: true,
     pathWithinControl: path.every((point) => isPointInsideBox(point, box)),
+    rightVisualX: Number(rightVisualState.joystick.trackballX),
+    topVisualY: Number(topVisualState.joystick.trackballY),
+    leftVisualX: Number(leftStartState.joystick.trackballX),
+    releaseVisual: {
+      x: Number(releaseState.joystick.trackballX),
+      y: Number(releaseState.joystick.trackballY),
+      active: Number(releaseState.joystick.trackballActive),
+    },
     rightHoldAngularDelta: angularDistance(
       rightStartState.probe.activeTrampolineCenterAngle,
       rightHoldState.probe.activeTrampolineCenterAngle,
@@ -603,6 +648,27 @@ async function runViewport(page, baseUrl, config) {
   assert(
     config.joystickPlacement === "hidden" || joystickExercise.pathWithinControl,
     `${config.name}: joystick exigiu arraste fora do controle.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
+      joystickExercise.rightVisualX > 0.6,
+    `${config.name}: trackball não exibiu pressão visual à direita.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
+      joystickExercise.leftVisualX < -0.6,
+    `${config.name}: trackball não exibiu pressão visual à esquerda.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" || joystickExercise.topVisualY < -0.6,
+    `${config.name}: trackball não exibiu profundidade visual para cima.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
+      (joystickExercise.releaseVisual.x === 0 &&
+        joystickExercise.releaseVisual.y === 0 &&
+        joystickExercise.releaseVisual.active === 0),
+    `${config.name}: trackball não resetou visualmente ao soltar.`,
   );
   assert(
     config.joystickPlacement === "hidden" ||

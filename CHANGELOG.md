@@ -1,6 +1,14 @@
 <!-- CHANGELOG.md -->
 # Changelog
 
+## 2026-07-05 — v1.2.5 — Trackball da Torreta
+
+- Transformado o controle touch da Torreta em trackball maior com aparência de meia esfera.
+- Adicionado feedback visual imediato para toque direto, arraste lateral e profundidade vertical.
+- Mantido o giro contínuo da cama elástica pelo eixo esquerda/direita.
+- Adicionado fallback touch e reset seguro quando captura de ponteiro não está disponível.
+- Ampliada a cobertura unitária e o QA visual da Torreta.
+
 ## 2026-07-05 — v1.2.4 — Joystick orbital da Torreta
 
 - Convertido o joystick da Torreta para giro orbital contínuo da cama elástica.

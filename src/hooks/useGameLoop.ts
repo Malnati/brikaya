@@ -37,10 +37,12 @@ const POINTER_DOWN_EVENT_NAME = "pointerdown";
 const POINTER_MOVE_EVENT_NAME = "pointermove";
 const POINTER_UP_EVENT_NAME = "pointerup";
 const POINTER_CANCEL_EVENT_NAME = "pointercancel";
-const JOYSTICK_VECTOR_X_CSS_VAR = "--bb-turret-joystick-x";
-const JOYSTICK_VECTOR_Y_CSS_VAR = "--bb-turret-joystick-y";
+const TRACKBALL_VECTOR_X_CSS_VAR = "--bb-turret-trackball-x";
+const TRACKBALL_VECTOR_Y_CSS_VAR = "--bb-turret-trackball-y";
+const TRACKBALL_ACTIVE_CSS_VAR = "--bb-turret-trackball-active";
 const JOYSTICK_DEADZONE = 0.15;
 const JOYSTICK_DEFAULT_VECTOR = "0";
+const JOYSTICK_ACTIVE_VECTOR = "1";
 
 function readTouchClientPoint(event: TouchEvent) {
   const touch = event.touches[0] ?? event.changedTouches[0] ?? null;
@@ -54,41 +56,43 @@ function clampJoystickAxis(value: number) {
   return Math.max(-1, Math.min(1, value));
 }
 
-function setJoystickVisualVector(
+function setTrackballVisualVector(
   joystick: HTMLElement,
   vectorX: number,
   vectorY: number,
+  active: boolean,
 ) {
-  joystick.style.setProperty(JOYSTICK_VECTOR_X_CSS_VAR, String(vectorX));
-  joystick.style.setProperty(JOYSTICK_VECTOR_Y_CSS_VAR, String(vectorY));
-}
-
-function resetJoystickVisualVector(joystick: HTMLElement) {
+  joystick.style.setProperty(TRACKBALL_VECTOR_X_CSS_VAR, String(vectorX));
+  joystick.style.setProperty(TRACKBALL_VECTOR_Y_CSS_VAR, String(vectorY));
   joystick.style.setProperty(
-    JOYSTICK_VECTOR_X_CSS_VAR,
-    JOYSTICK_DEFAULT_VECTOR,
-  );
-  joystick.style.setProperty(
-    JOYSTICK_VECTOR_Y_CSS_VAR,
-    JOYSTICK_DEFAULT_VECTOR,
+    TRACKBALL_ACTIVE_CSS_VAR,
+    active ? JOYSTICK_ACTIVE_VECTOR : JOYSTICK_DEFAULT_VECTOR,
   );
 }
 
-function readJoystickInput(event: PointerEvent, joystick: HTMLElement) {
+function resetTrackballVisualVector(joystick: HTMLElement) {
+  setTrackballVisualVector(joystick, 0, 0, false);
+}
+
+function readTrackballInput(
+  clientX: number,
+  clientY: number,
+  joystick: HTMLElement,
+) {
   const rect = joystick.getBoundingClientRect();
   const centerX = rect.left + rect.width / 2;
   const centerY = rect.top + rect.height / 2;
   const radius = Math.max(1, Math.min(rect.width, rect.height) / 2);
-  const rawX = (event.clientX - centerX) / radius;
-  const rawY = (event.clientY - centerY) / radius;
+  const rawX = (clientX - centerX) / radius;
+  const rawY = (clientY - centerY) / radius;
   const magnitude = Math.hypot(rawX, rawY);
 
-  if (!Number.isFinite(magnitude) || magnitude < JOYSTICK_DEADZONE) {
+  if (!Number.isFinite(magnitude)) {
     return null;
   }
 
-  const visualX = clampJoystickAxis(rawX);
-  const visualY = clampJoystickAxis(rawY);
+  const visualX = clampJoystickAxis(magnitude > 1 ? rawX / magnitude : rawX);
+  const visualY = clampJoystickAxis(magnitude > 1 ? rawY / magnitude : rawY);
   const turnInput =
     Math.abs(visualX) < JOYSTICK_DEADZONE ? 0 : clampJoystickAxis(rawX);
 
@@ -263,56 +267,128 @@ export function useGameLoop(
     if (!joystick || gameMode !== GAME_MODE_BALL_TURRET) return undefined;
 
     let isDraggingJoystick = false;
+    let activeInputType: "pointer" | "touch" | null = null;
 
-    const applyJoystickInput = (event: PointerEvent) => {
-      const input = readJoystickInput(event, joystick);
+    const applyJoystickInput = (clientX: number, clientY: number) => {
+      const input = readTrackballInput(clientX, clientY, joystick);
       if (!input) {
-        resetJoystickVisualVector(joystick);
+        resetTrackballVisualVector(joystick);
         engineRef.current?.setBallTurretJoystickTurn(0);
         return;
       }
 
-      setJoystickVisualVector(joystick, input.visualX, input.visualY);
+      setTrackballVisualVector(joystick, input.visualX, input.visualY, true);
       engineRef.current?.setBallTurretJoystickTurn(input.turnInput);
+    };
+
+    const safeSetPointerCapture = (pointerId: number) => {
+      try {
+        joystick.setPointerCapture?.(pointerId);
+      } catch {
+        // Captura é opcional; o trackball precisa continuar responsivo.
+      }
+    };
+
+    const safeReleasePointerCapture = (pointerId: number) => {
+      try {
+        joystick.releasePointerCapture?.(pointerId);
+      } catch {
+        // Alguns navegadores não mantêm captura após gestos touch sintetizados.
+      }
+    };
+
+    const resetJoystickInput = () => {
+      isDraggingJoystick = false;
+      activeInputType = null;
+      resetTrackballVisualVector(joystick);
+      engineRef.current?.setBallTurretJoystickTurn(0);
     };
 
     const handlePointerDown = (event: PointerEvent) => {
       isDraggingJoystick = true;
+      activeInputType = "pointer";
       event.preventDefault();
-      joystick.setPointerCapture?.(event.pointerId);
-      applyJoystickInput(event);
+      safeSetPointerCapture(event.pointerId);
+      applyJoystickInput(event.clientX, event.clientY);
     };
 
     const handlePointerMove = (event: PointerEvent) => {
-      if (!isDraggingJoystick) return;
+      if (!isDraggingJoystick || activeInputType !== "pointer") return;
 
       event.preventDefault();
-      applyJoystickInput(event);
+      applyJoystickInput(event.clientX, event.clientY);
     };
 
     const handlePointerEnd = (event: PointerEvent) => {
-      if (!isDraggingJoystick) return;
+      if (!isDraggingJoystick || activeInputType !== "pointer") return;
 
-      isDraggingJoystick = false;
       event.preventDefault();
-      joystick.releasePointerCapture?.(event.pointerId);
-      resetJoystickVisualVector(joystick);
-      engineRef.current?.setBallTurretJoystickTurn(0);
+      safeReleasePointerCapture(event.pointerId);
+      resetJoystickInput();
     };
 
-    resetJoystickVisualVector(joystick);
+    const handleTouchStart = (event: TouchEvent) => {
+      const point = readTouchClientPoint(event);
+      if (!point) return;
+
+      isDraggingJoystick = true;
+      activeInputType = "touch";
+      event.preventDefault();
+      applyJoystickInput(point.x, point.y);
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (!isDraggingJoystick || activeInputType !== "touch") return;
+      const point = readTouchClientPoint(event);
+      if (!point) return;
+
+      event.preventDefault();
+      applyJoystickInput(point.x, point.y);
+    };
+
+    const handleTouchEnd = (event: TouchEvent) => {
+      if (!isDraggingJoystick || activeInputType !== "touch") return;
+
+      event.preventDefault();
+      resetJoystickInput();
+    };
+
+    resetTrackballVisualVector(joystick);
     joystick.addEventListener(POINTER_DOWN_EVENT_NAME, handlePointerDown);
     joystick.addEventListener(POINTER_MOVE_EVENT_NAME, handlePointerMove);
     joystick.addEventListener(POINTER_UP_EVENT_NAME, handlePointerEnd);
     joystick.addEventListener(POINTER_CANCEL_EVENT_NAME, handlePointerEnd);
+    joystick.addEventListener(
+      TOUCH_START_EVENT_NAME,
+      handleTouchStart,
+      TOUCH_LISTENER_OPTIONS,
+    );
+    joystick.addEventListener(
+      TOUCH_MOVE_EVENT_NAME,
+      handleTouchMove,
+      TOUCH_LISTENER_OPTIONS,
+    );
+    joystick.addEventListener(
+      TOUCH_END_EVENT_NAME,
+      handleTouchEnd,
+      TOUCH_LISTENER_OPTIONS,
+    );
+    joystick.addEventListener(
+      TOUCH_CANCEL_EVENT_NAME,
+      handleTouchEnd,
+      TOUCH_LISTENER_OPTIONS,
+    );
 
     return () => {
       joystick.removeEventListener(POINTER_DOWN_EVENT_NAME, handlePointerDown);
       joystick.removeEventListener(POINTER_MOVE_EVENT_NAME, handlePointerMove);
       joystick.removeEventListener(POINTER_UP_EVENT_NAME, handlePointerEnd);
       joystick.removeEventListener(POINTER_CANCEL_EVENT_NAME, handlePointerEnd);
-      resetJoystickVisualVector(joystick);
-      engineRef.current?.setBallTurretJoystickTurn(0);
+      joystick.removeEventListener(TOUCH_START_EVENT_NAME, handleTouchStart);
+      joystick.removeEventListener(TOUCH_MOVE_EVENT_NAME, handleTouchMove);
+      joystick.removeEventListener(TOUCH_END_EVENT_NAME, handleTouchEnd);
+      joystick.removeEventListener(TOUCH_CANCEL_EVENT_NAME, handleTouchEnd);
+      resetJoystickInput();
     };
   }, [ballTurretJoystickRef, gameMode]);
 }
