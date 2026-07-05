@@ -34,6 +34,7 @@ function createMockContext(): CanvasRenderingContext2D {
 function createState(): BallTurretRenderState {
   return {
     canvasSize: { width: 480, height: 320 },
+    level: 1,
     geometry: {
       centerX: 240,
       centerY: 160,
@@ -86,6 +87,13 @@ describe("ballTurretRenderer", () => {
     expect(ctx.arc).toHaveBeenCalledWith(240, 160, 160, 0, Math.PI * 2);
     expect(ctx.arc).toHaveBeenCalledWith(240, 160, 144, 0, Math.PI * 2);
     expect(ctx.arc).toHaveBeenCalledWith(240, 160, 144, 1.2, 1.94);
+    expect(ctx.arc).toHaveBeenCalledWith(
+      240,
+      160,
+      expect.closeTo(158),
+      expect.closeTo(1.414),
+      expect.closeTo(1.727),
+    );
     expect(ctx.moveTo).toHaveBeenCalled();
     expect(ctx.lineTo).toHaveBeenCalled();
     expect(ctx.fillRect).toHaveBeenCalledWith(0, 0, 480, 320);
