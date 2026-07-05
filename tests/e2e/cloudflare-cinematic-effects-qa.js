@@ -75,7 +75,6 @@ const MAX_MEDIA_CENTER_OFFSET_PX = 4;
 const MAX_MEDIA_OVERFLOW_PX = 2;
 const MAX_CONTENT_CENTER_OFFSET_PX = 4;
 const MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX = 8;
-const MAX_COUNTDOWN_COUNT_OPTICAL_OFFSET_PX = 32;
 const MAX_RIP_VIEWPORT_CENTER_OFFSET_PX = 8;
 const MIN_RIP_STAGE_VIEWPORT_COVERAGE_RATIO = 0.96;
 const RIP_SAFE_AREA_PX = 12;
@@ -92,6 +91,7 @@ const COUNTDOWN_COUNT_SELECTOR = '[data-testid="game-cinematic-countdown-count"]
 const COUNTDOWN_HALO_SELECTOR = '[data-testid="game-cinematic-countdown-halo"]';
 const COUNTDOWN_COMPOSITION_SELECTOR =
   '[data-testid="game-cinematic-countdown-composition"]';
+const COUNTDOWN_MEDIA_LAYER_SELECTOR = '[data-cinematic-media-layer]';
 const RIP_COMPOSITION_SELECTOR = '[data-testid="game-cinematic-rip-composition"]';
 const CINEMATIC_COMPOSITION_SELECTOR = `${COUNTDOWN_COMPOSITION_SELECTOR}, ${RIP_COMPOSITION_SELECTOR}`;
 const VIEWPORT_TOP_INSET_PARAM = 'qaViewportTopInset';
@@ -241,7 +241,7 @@ async function prepareControlledPage(page, publicUrl) {
 }
 
 async function overlaySnapshot(page, selector) {
-  return page.evaluate(({ targetSelector, stageSelector, canvasSelector, titleSelector, detailSelector, contentSelector, countSelector, haloSelector, compositionSelector, topInsetParam, bottomInsetParam, leftInsetParam, rightInsetParam, visibleLeftProperty, visibleTopProperty, visibleWidthProperty, visibleHeightProperty }) => {
+  return page.evaluate(({ targetSelector, stageSelector, canvasSelector, titleSelector, detailSelector, contentSelector, countSelector, haloSelector, compositionSelector, mediaLayerSelector, topInsetParam, bottomInsetParam, leftInsetParam, rightInsetParam, visibleLeftProperty, visibleTopProperty, visibleWidthProperty, visibleHeightProperty }) => {
     const overlay = document.querySelector(targetSelector);
     const stage = overlay?.querySelector(stageSelector);
     const canvas = document.querySelector(canvasSelector);
@@ -377,6 +377,10 @@ async function overlaySnapshot(page, selector) {
         alt: item.getAttribute('alt') || '',
         rect: rectOf(item),
       })),
+      mediaLayers: [...(overlay?.querySelectorAll(mediaLayerSelector) || [])].map((item) => ({
+        id: item.getAttribute('data-cinematic-media-layer') || '',
+        rect: rectOf(item),
+      })),
     };
   }, {
     targetSelector: selector,
@@ -388,6 +392,7 @@ async function overlaySnapshot(page, selector) {
     countSelector: COUNTDOWN_COUNT_SELECTOR,
     haloSelector: COUNTDOWN_HALO_SELECTOR,
     compositionSelector: CINEMATIC_COMPOSITION_SELECTOR,
+    mediaLayerSelector: COUNTDOWN_MEDIA_LAYER_SELECTOR,
     topInsetParam: VIEWPORT_TOP_INSET_PARAM,
     bottomInsetParam: VIEWPORT_BOTTOM_INSET_PARAM,
     leftInsetParam: VIEWPORT_LEFT_INSET_PARAM,
@@ -465,6 +470,10 @@ function assertCountdownViewportCentering(snapshot, label) {
   assert(snapshot.compositionRect, `${label}: composição visual ausente.`);
   assert(snapshot.countdownCountRect, `${label}: número da contagem sem retângulo visual.`);
   assert(snapshot.countdownHaloRect, `${label}: halo da contagem sem retângulo visual.`);
+  assert(
+    snapshot.mediaLayers.length >= REQUIRED_COUNTDOWN_MEDIA.length,
+    `${label}: camadas centrais de mídia ausentes.`,
+  );
   assert(snapshot.stageRect.width >= viewport.width * MIN_RIP_STAGE_VIEWPORT_COVERAGE_RATIO, `${label}: palco não cobre a largura da viewport.`);
   assert(snapshot.stageRect.height >= viewport.height * MIN_RIP_STAGE_VIEWPORT_COVERAGE_RATIO, `${label}: palco não cobre a altura da viewport.`);
   assert(Math.abs(snapshot.stageRect.centerX - viewport.centerX) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: palco fora do centro X da viewport.`);
@@ -474,7 +483,7 @@ function assertCountdownViewportCentering(snapshot, label) {
   assert(Math.abs(snapshot.contentRect.centerX - viewport.centerX) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: conteúdo fora do centro X da viewport.`);
   assert(Math.abs(snapshot.contentRect.centerY - viewport.centerY) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: conteúdo fora do centro Y da viewport.`);
   assert(Math.abs(snapshot.countdownCountRect.centerX - viewport.centerX) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: número fora do centro X da área visível.`);
-  assert(Math.abs(snapshot.countdownCountRect.centerY - viewport.centerY) <= MAX_COUNTDOWN_COUNT_OPTICAL_OFFSET_PX, `${label}: número fora do alinhamento óptico Y da área visível.`);
+  assert(Math.abs(snapshot.countdownCountRect.centerY - viewport.centerY) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: número fora do centro Y da área visível.`);
   assert(Math.abs(snapshot.countdownHaloRect.centerX - viewport.centerX) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: halo fora do centro X da área visível.`);
   assert(Math.abs(snapshot.countdownHaloRect.centerY - viewport.centerY) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: halo fora do centro Y da área visível.`);
   assertRectInsideVisualViewport(snapshot.compositionRect, viewport, `${label}: composição countdown`);
@@ -485,6 +494,13 @@ function assertCountdownViewportCentering(snapshot, label) {
     assert(Math.abs(item.rect.centerX - viewport.centerX) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: mídia ${item.id} fora do centro X da viewport.`);
     assert(Math.abs(item.rect.centerY - viewport.centerY) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: mídia ${item.id} fora do centro Y da viewport.`);
     assertRectInsideVisualViewport(item.rect, viewport, `${label}: mídia ${item.id}`);
+  }
+
+  for (const item of snapshot.mediaLayers) {
+    assert(item.rect, `${label}: camada sem retângulo visual ${item.id}.`);
+    assert(Math.abs(item.rect.centerX - viewport.centerX) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: camada ${item.id} fora do centro X da viewport.`);
+    assert(Math.abs(item.rect.centerY - viewport.centerY) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: camada ${item.id} fora do centro Y da viewport.`);
+    assertRectInsideVisualViewport(item.rect, viewport, `${label}: camada ${item.id}`);
   }
 }
 
