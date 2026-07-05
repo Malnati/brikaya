@@ -38,6 +38,7 @@ const ACTIVE_TRAMPOLINE_ARC_MIN_SWEEP = 0.2;
 const JOYSTICK_SETTLE_MS = 120;
 const JOYSTICK_STABILITY_PROOF_MS = 300;
 const JOYSTICK_TRACKBALL_EDGE_AXIS_MIN = 0.95;
+const JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN = 0.65;
 const JOYSTICK_ABSOLUTE_ANGLE_TOLERANCE = 0.24;
 const JOYSTICK_HOLD_MAX_ANGLE_DELTA = 0.04;
 const BOUNDARY_SEGMENT_COUNT = 18;
@@ -164,14 +165,12 @@ function isAngleNear(actualAngle, expectedAngle) {
   );
 }
 
-function isPointInsideBox(point, box) {
+function isPointInsideJoystickCircle(point, box) {
   const tolerance = 1;
-  return (
-    point.x >= box.x - tolerance &&
-    point.x <= box.x + box.width + tolerance &&
-    point.y >= box.y - tolerance &&
-    point.y <= box.y + box.height + tolerance
-  );
+  const radius = Math.min(box.width, box.height) / 2;
+  const centerX = box.x + box.width / 2;
+  const centerY = box.y + box.height / 2;
+  return Math.hypot(point.x - centerX, point.y - centerY) <= radius + tolerance;
 }
 
 async function clickButtonByPattern(page, patternSource) {
@@ -751,13 +750,19 @@ async function exerciseJoystick(page) {
   });
   const center = pointAt(0.5, 0.5);
   const right = pointAt(1, 0.5);
-  const topRight = pointAt(1, 0);
-  const bottomRight = pointAt(1, 1);
+  const topRight = pointAt(0.85, 0.15);
+  const bottomRight = pointAt(0.85, 0.85);
   const left = pointAt(0, 0.5);
-  const bottomLeft = pointAt(0, 1);
-  const topLeft = pointAt(0, 0);
+  const bottomLeft = pointAt(0.15, 0.85);
+  const topLeft = pointAt(0.15, 0.15);
   const top = pointAt(0.5, 0);
   const bottom = pointAt(0.5, 1);
+  const lowerLeftArc = pointAt(0.2, 0.9);
+  const outsideCircleInsideBox = {
+    x: box.x,
+    y: box.y + box.height,
+    expectedAngle: joystickExpectedAngle(0, 1, canvasMetrics),
+  };
   const outsideTopRight = {
     x: box.x + box.width * 1.35,
     y: box.y - box.height * 0.35,
@@ -772,6 +777,7 @@ async function exerciseJoystick(page) {
     left,
     bottomLeft,
     bottom,
+    lowerLeftArc,
     bottomRight,
     center,
   ];
@@ -808,6 +814,25 @@ async function exerciseJoystick(page) {
   const topCheck = await moveAndRead(top);
   const topLeftCheck = await moveAndRead(topLeft);
   const bottomCheck = await moveAndRead(bottom);
+  const lowerLeftArcCheck = await moveAndRead(lowerLeftArc);
+  const outsideCircleInsideBoxCheck = await moveAndRead(
+    outsideCircleInsideBox,
+  );
+  const outsideCircleInsideBoxIgnoredCheck = {
+    angleUnchanged:
+      angularDistance(
+        lowerLeftArcCheck.actualAngle,
+        outsideCircleInsideBoxCheck.actualAngle,
+      ) <= JOYSTICK_HOLD_MAX_ANGLE_DELTA,
+    visualUnchanged:
+      lowerLeftArcCheck.visual.x === outsideCircleInsideBoxCheck.visual.x &&
+      lowerLeftArcCheck.visual.y === outsideCircleInsideBoxCheck.visual.y,
+    outsideAngleRejected: !outsideCircleInsideBoxCheck.angleMatches,
+    beforeVisual: lowerLeftArcCheck.visual,
+    afterVisual: outsideCircleInsideBoxCheck.visual,
+    expectedIgnoredAngle: outsideCircleInsideBoxCheck.expectedAngle,
+    actualAngleAfterIgnoredMove: outsideCircleInsideBoxCheck.actualAngle,
+  };
   const bottomRightCheck = await moveAndRead(bottomRight);
   const outsideCheck = await moveAndRead(outsideTopRight);
   const outsideIgnoredCheck = {
@@ -829,7 +854,9 @@ async function exerciseJoystick(page) {
 
   return {
     exercised: true,
-    pathWithinControl: path.every((point) => isPointInsideBox(point, box)),
+    pathWithinControl: path.every((point) =>
+      isPointInsideJoystickCircle(point, box),
+    ),
     angleChecks: {
       right: rightCheck,
       topRight: topRightCheck,
@@ -838,6 +865,7 @@ async function exerciseJoystick(page) {
       top: topCheck,
       topLeft: topLeftCheck,
       bottom: bottomCheck,
+      lowerLeftArc: lowerLeftArcCheck,
       bottomRight: bottomRightCheck,
     },
     holdStableAngleDelta: angularDistance(
@@ -845,6 +873,7 @@ async function exerciseJoystick(page) {
       rightHoldState.probe.activeTrampolineCenterAngle,
     ),
     outsideIgnoredCheck,
+    outsideCircleInsideBoxIgnoredCheck,
     rightVisualX: rightCheck.visual.x,
     topVisualY: topCheck.visual.y,
     bottomVisualY: bottomCheck.visual.y,
@@ -953,7 +982,7 @@ async function runViewport(page, baseUrl, config) {
   );
   assert(
     config.joystickPlacement === "hidden" || joystickExercise.pathWithinControl,
-    `${config.name}: joystick exigiu arraste fora do controle.`,
+    `${config.name}: joystick exigiu arraste fora do círculo visual do controle.`,
   );
   assert(
     config.joystickPlacement === "hidden" ||
@@ -977,32 +1006,40 @@ async function runViewport(page, baseUrl, config) {
   );
   assert(
     config.joystickPlacement === "hidden" ||
-      (isEdgeAxis(joystickExercise.topRightVisual.x) &&
-        isEdgeAxis(joystickExercise.topRightVisual.y) &&
+      (Math.abs(joystickExercise.topRightVisual.x) >=
+        JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
+        Math.abs(joystickExercise.topRightVisual.y) >=
+          JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
         joystickExercise.topRightVisual.x > 0 &&
         joystickExercise.topRightVisual.y < 0),
     `${config.name}: trackball não alcançou canto superior direito.`,
   );
   assert(
     config.joystickPlacement === "hidden" ||
-      (isEdgeAxis(joystickExercise.topLeftVisual.x) &&
-        isEdgeAxis(joystickExercise.topLeftVisual.y) &&
+      (Math.abs(joystickExercise.topLeftVisual.x) >=
+        JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
+        Math.abs(joystickExercise.topLeftVisual.y) >=
+          JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
         joystickExercise.topLeftVisual.x < 0 &&
         joystickExercise.topLeftVisual.y < 0),
     `${config.name}: trackball não alcançou canto superior esquerdo.`,
   );
   assert(
     config.joystickPlacement === "hidden" ||
-      (isEdgeAxis(joystickExercise.bottomLeftVisual.x) &&
-        isEdgeAxis(joystickExercise.bottomLeftVisual.y) &&
+      (Math.abs(joystickExercise.bottomLeftVisual.x) >=
+        JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
+        Math.abs(joystickExercise.bottomLeftVisual.y) >=
+          JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
         joystickExercise.bottomLeftVisual.x < 0 &&
         joystickExercise.bottomLeftVisual.y > 0),
     `${config.name}: trackball não alcançou canto inferior esquerdo.`,
   );
   assert(
     config.joystickPlacement === "hidden" ||
-      (isEdgeAxis(joystickExercise.bottomRightVisual.x) &&
-        isEdgeAxis(joystickExercise.bottomRightVisual.y) &&
+      (Math.abs(joystickExercise.bottomRightVisual.x) >=
+        JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
+        Math.abs(joystickExercise.bottomRightVisual.y) >=
+          JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
         joystickExercise.bottomRightVisual.x > 0 &&
         joystickExercise.bottomRightVisual.y > 0),
     `${config.name}: trackball não alcançou canto inferior direito.`,
@@ -1025,6 +1062,12 @@ async function runViewport(page, baseUrl, config) {
         joystickExercise.outsideIgnoredCheck.visualUnchanged &&
         joystickExercise.outsideIgnoredCheck.outsideAngleRejected),
     `${config.name}: joystick aceitou movimento fora da área do controle.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
+      (joystickExercise.outsideCircleInsideBoxIgnoredCheck.angleUnchanged &&
+        joystickExercise.outsideCircleInsideBoxIgnoredCheck.visualUnchanged),
+    `${config.name}: joystick aceitou movimento fora do círculo visual do controle.`,
   );
   assert(
     config.joystickPlacement === "hidden" ||

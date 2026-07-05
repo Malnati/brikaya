@@ -331,36 +331,36 @@ describe("useGameLoop", () => {
         expectedVisualY: 1,
       },
       {
-        name: "superior direito",
-        event: createPointerEvent(POINTER_MOVE_EVENT_NAME, 200, 200),
-        expectedClientX: 420,
-        expectedClientY: 40,
-        expectedVisualX: 1,
-        expectedVisualY: -1,
+        name: "arco superior direito",
+        event: createPointerEvent(POINTER_MOVE_EVENT_NAME, 185, 215),
+        expectedClientX: 360,
+        expectedClientY: 85,
+        expectedVisualX: 0.7,
+        expectedVisualY: -0.7,
       },
       {
-        name: "inferior esquerdo",
-        event: createPointerEvent(POINTER_MOVE_EVENT_NAME, 100, 300),
-        expectedClientX: 20,
-        expectedClientY: 340,
-        expectedVisualX: -1,
-        expectedVisualY: 1,
+        name: "arco inferior esquerdo",
+        event: createPointerEvent(POINTER_MOVE_EVENT_NAME, 115, 285),
+        expectedClientX: 80,
+        expectedClientY: 295,
+        expectedVisualX: -0.7,
+        expectedVisualY: 0.7,
       },
       {
-        name: "superior esquerdo",
-        event: createPointerEvent(POINTER_MOVE_EVENT_NAME, 100, 200),
-        expectedClientX: 20,
-        expectedClientY: 40,
-        expectedVisualX: -1,
-        expectedVisualY: -1,
+        name: "arco superior esquerdo",
+        event: createPointerEvent(POINTER_MOVE_EVENT_NAME, 115, 215),
+        expectedClientX: 80,
+        expectedClientY: 85,
+        expectedVisualX: -0.7,
+        expectedVisualY: -0.7,
       },
       {
-        name: "inferior direito",
-        event: createPointerEvent(POINTER_MOVE_EVENT_NAME, 200, 300),
-        expectedClientX: 420,
-        expectedClientY: 340,
-        expectedVisualX: 1,
-        expectedVisualY: 1,
+        name: "arco inferior direito",
+        event: createPointerEvent(POINTER_MOVE_EVENT_NAME, 185, 285),
+        expectedClientX: 360,
+        expectedClientY: 295,
+        expectedVisualX: 0.7,
+        expectedVisualY: 0.7,
       },
     ];
 
@@ -426,6 +426,41 @@ describe("useGameLoop", () => {
     expect(joystick.style.getPropertyValue(TRACKBALL_ACTIVE_CSS_VAR)).toBe("0");
   });
 
+  it("ignora início pointer fora do círculo visual mesmo dentro do retângulo do joystick", async () => {
+    const { container, getByTestId } = render(
+      <Harness
+        imageSetId={IMAGE_SET_RETRO_DEFAULT}
+        gameMode="ball-turret"
+        joystickEnabled
+      />,
+    );
+
+    await waitFor(() => {
+      expect(GameEngine).toHaveBeenCalledTimes(1);
+    });
+
+    const canvas = container.querySelector("canvas") as HTMLCanvasElement;
+    const joystick = getByTestId(JOYSTICK_TEST_ID);
+    canvas.getBoundingClientRect = jest.fn(() => CANVAS_RECT);
+    joystick.getBoundingClientRect = jest.fn(() => JOYSTICK_RECT);
+
+    const pointerDownTransparentCorner = createPointerEvent(
+      POINTER_DOWN_EVENT_NAME,
+      100,
+      200,
+    );
+
+    joystick.dispatchEvent(pointerDownTransparentCorner);
+
+    expect(pointerDownTransparentCorner.defaultPrevented).toBe(false);
+    expect(mockStartPaddleDrag).not.toHaveBeenCalled();
+    expect(mockMovePaddleDrag).not.toHaveBeenCalled();
+    expect(mockEndPaddleDrag).not.toHaveBeenCalled();
+    expect(joystick.style.getPropertyValue(TRACKBALL_X_CSS_VAR)).toBe("0");
+    expect(joystick.style.getPropertyValue(TRACKBALL_Y_CSS_VAR)).toBe("0");
+    expect(joystick.style.getPropertyValue(TRACKBALL_ACTIVE_CSS_VAR)).toBe("0");
+  });
+
   it("ignora movimento pointer fora do joystick sem clamping e retoma ao voltar", async () => {
     const { container, getByTestId } = render(
       <Harness
@@ -480,6 +515,110 @@ describe("useGameLoop", () => {
     expect(mockMovePaddleDrag).toHaveBeenCalledWith(20, 190);
     expect(readStyleNumber(joystick, TRACKBALL_X_CSS_VAR)).toBeCloseTo(-1);
     expect(readStyleNumber(joystick, TRACKBALL_Y_CSS_VAR)).toBeCloseTo(0);
+  });
+
+  it("ignora movimento pointer fora do círculo visual e retoma ao voltar ao círculo", async () => {
+    const { container, getByTestId } = render(
+      <Harness
+        imageSetId={IMAGE_SET_RETRO_DEFAULT}
+        gameMode="ball-turret"
+        joystickEnabled
+      />,
+    );
+
+    await waitFor(() => {
+      expect(GameEngine).toHaveBeenCalledTimes(1);
+    });
+
+    const canvas = container.querySelector("canvas") as HTMLCanvasElement;
+    const joystick = getByTestId(JOYSTICK_TEST_ID);
+    canvas.getBoundingClientRect = jest.fn(() => CANVAS_RECT);
+    joystick.getBoundingClientRect = jest.fn(() => JOYSTICK_RECT);
+
+    const pointerDownBottom = createPointerEvent(
+      POINTER_DOWN_EVENT_NAME,
+      150,
+      300,
+    );
+    const pointerMoveTransparentCorner = createPointerEvent(
+      POINTER_MOVE_EVENT_NAME,
+      100,
+      300,
+    );
+    const pointerMoveLeftEdge = createPointerEvent(
+      POINTER_MOVE_EVENT_NAME,
+      100,
+      250,
+    );
+
+    joystick.dispatchEvent(pointerDownBottom);
+    mockMovePaddleDrag.mockClear();
+    joystick.dispatchEvent(pointerMoveTransparentCorner);
+
+    expect(pointerDownBottom.defaultPrevented).toBe(true);
+    expect(pointerMoveTransparentCorner.defaultPrevented).toBe(true);
+    expect(mockStartPaddleDrag).toHaveBeenCalledWith(220, 340);
+    expect(mockMovePaddleDrag).not.toHaveBeenCalled();
+    expect(readStyleNumber(joystick, TRACKBALL_X_CSS_VAR)).toBeCloseTo(0);
+    expect(readStyleNumber(joystick, TRACKBALL_Y_CSS_VAR)).toBeCloseTo(1);
+    expect(joystick.style.getPropertyValue(TRACKBALL_ACTIVE_CSS_VAR)).toBe(
+      "1",
+    );
+
+    joystick.dispatchEvent(pointerMoveLeftEdge);
+
+    expect(pointerMoveLeftEdge.defaultPrevented).toBe(true);
+    expect(mockMovePaddleDrag).toHaveBeenCalledWith(20, 190);
+    expect(readStyleNumber(joystick, TRACKBALL_X_CSS_VAR)).toBeCloseTo(-1);
+    expect(readStyleNumber(joystick, TRACKBALL_Y_CSS_VAR)).toBeCloseTo(0);
+  });
+
+  it("para de mover na tangência inferior esquerda quando o pointer sai do círculo visual", async () => {
+    const { container, getByTestId } = render(
+      <Harness
+        imageSetId={IMAGE_SET_RETRO_DEFAULT}
+        gameMode="ball-turret"
+        joystickEnabled
+      />,
+    );
+
+    await waitFor(() => {
+      expect(GameEngine).toHaveBeenCalledTimes(1);
+    });
+
+    const canvas = container.querySelector("canvas") as HTMLCanvasElement;
+    const joystick = getByTestId(JOYSTICK_TEST_ID);
+    canvas.getBoundingClientRect = jest.fn(() => CANVAS_RECT);
+    joystick.getBoundingClientRect = jest.fn(() => JOYSTICK_RECT);
+
+    const pointerDownBottom = createPointerEvent(
+      POINTER_DOWN_EVENT_NAME,
+      150,
+      300,
+    );
+    const pointerMoveInsideLowerLeftArc = createPointerEvent(
+      POINTER_MOVE_EVENT_NAME,
+      120,
+      290,
+    );
+    const pointerMoveOutsideLowerLeftTangent = createPointerEvent(
+      POINTER_MOVE_EVENT_NAME,
+      100,
+      300,
+    );
+
+    joystick.dispatchEvent(pointerDownBottom);
+    joystick.dispatchEvent(pointerMoveInsideLowerLeftArc);
+    mockMovePaddleDrag.mockClear();
+    joystick.dispatchEvent(pointerMoveOutsideLowerLeftTangent);
+
+    expect(pointerDownBottom.defaultPrevented).toBe(true);
+    expect(pointerMoveInsideLowerLeftArc.defaultPrevented).toBe(true);
+    expect(pointerMoveOutsideLowerLeftTangent.defaultPrevented).toBe(true);
+    expect(mockStartPaddleDrag).toHaveBeenCalledWith(220, 340);
+    expect(mockMovePaddleDrag).not.toHaveBeenCalled();
+    expect(readStyleNumber(joystick, TRACKBALL_X_CSS_VAR)).toBeCloseTo(-0.6);
+    expect(readStyleNumber(joystick, TRACKBALL_Y_CSS_VAR)).toBeCloseTo(0.8);
   });
 
   it("usa touch como fallback absoluto do joystick espelhado", async () => {

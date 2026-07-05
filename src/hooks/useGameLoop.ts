@@ -42,6 +42,7 @@ const TRACKBALL_VECTOR_Y_CSS_VAR = "--bb-turret-trackball-y";
 const TRACKBALL_ACTIVE_CSS_VAR = "--bb-turret-trackball-active";
 const JOYSTICK_DEFAULT_VECTOR = "0";
 const JOYSTICK_ACTIVE_VECTOR = "1";
+const JOYSTICK_CIRCLE_HIT_TOLERANCE_PX = 0.5;
 
 function readTouchClientPoint(event: TouchEvent) {
   const touch = event.touches[0] ?? event.changedTouches[0] ?? null;
@@ -69,6 +70,21 @@ function resetTrackballVisualVector(joystick: HTMLElement) {
   setTrackballVisualVector(joystick, 0, 0, false);
 }
 
+function isPointInsideJoystickCircle(
+  clientX: number,
+  clientY: number,
+  joystickRect: DOMRect,
+) {
+  const radius = Math.min(joystickRect.width, joystickRect.height) / 2;
+  const centerX = joystickRect.left + joystickRect.width / 2;
+  const centerY = joystickRect.top + joystickRect.height / 2;
+  const distanceX = clientX - centerX;
+  const distanceY = clientY - centerY;
+  const distanceFromCenter = Math.hypot(distanceX, distanceY);
+
+  return distanceFromCenter <= radius + JOYSTICK_CIRCLE_HIT_TOLERANCE_PX;
+}
+
 function readMirroredTrackballInput(
   clientX: number,
   clientY: number,
@@ -91,15 +107,7 @@ function readMirroredTrackballInput(
     return null;
   }
 
-  const joystickRight = joystickRect.left + joystickRect.width;
-  const joystickBottom = joystickRect.top + joystickRect.height;
-  const isInsideJoystick =
-    clientX >= joystickRect.left &&
-    clientX <= joystickRight &&
-    clientY >= joystickRect.top &&
-    clientY <= joystickBottom;
-
-  if (!isInsideJoystick) {
+  if (!isPointInsideJoystickCircle(clientX, clientY, joystickRect)) {
     return { kind: "outside" as const };
   }
 
