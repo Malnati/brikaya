@@ -543,6 +543,28 @@ describe("GameEngine", () => {
     expect(onLevelChange).toHaveBeenCalledWith(11);
   });
 
+  it("posiciona cenário de estabilidade da fase 11 abaixo do centro radial", () => {
+    const engine = new (GameEngine as any)(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      undefined,
+      "late-phase-stability",
+      undefined,
+      onLevelChange,
+    );
+    const ball = mockBallInstances[0];
+    const geometry = (engine as any).radialGeometry;
+    const calls = ball.setPosition.mock.calls;
+    const [x, y] = calls[calls.length - 1];
+
+    expect(x).toBeCloseTo(canvas.width - ball.position.radius - 1);
+    expect(y).toBeGreaterThan(geometry.centerY);
+    expect(ball.setDirection).toHaveBeenCalledWith(Math.PI / 2);
+  });
+
   it("para o jogo corretamente", () => {
     const cancelAnimationFrameSpy = jest.spyOn(window, "cancelAnimationFrame");
     const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
