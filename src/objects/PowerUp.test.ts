@@ -139,4 +139,35 @@ describe('PowerUp', () => {
     powerUp.update();
     expect(powerUp.isOutOfBounds(TEST_POWER_UP_BOUNDARY)).toBe(true);
   });
+
+  it('move power-up radial do centro até a borda da torreta', () => {
+    const powerUp = new PowerUp(
+      100,
+      100,
+      'multiball',
+      20,
+      undefined,
+      {
+        kind: 'radial',
+        centerX: 100,
+        centerY: 100,
+        directionX: 1,
+        directionY: 0,
+        boundaryRadius: 45,
+        speed: 12,
+      },
+    );
+
+    expect(powerUp.getPosition()).toEqual({ x: 100, y: 100 });
+    expect(powerUp.hasReachedRadialBoundary()).toBe(false);
+
+    powerUp.update();
+    expect(powerUp.getPosition()).toEqual({ x: 112, y: 100 });
+    expect(powerUp.hasReachedRadialBoundary()).toBe(false);
+
+    powerUp.update();
+    powerUp.update();
+    expect(powerUp.getPosition()).toEqual({ x: 136, y: 100 });
+    expect(powerUp.hasReachedRadialBoundary()).toBe(true);
+  });
 });

@@ -25,6 +25,8 @@ const TOUCH_END_EVENT_NAME = "touchend";
 const TOUCH_CANCEL_EVENT_NAME = "touchcancel";
 const TOUCH_START_CLIENT_X = 128;
 const TOUCH_MOVE_CLIENT_X = 196;
+const TOUCH_START_CLIENT_Y = 420;
+const TOUCH_MOVE_CLIENT_Y = 512;
 
 jest.mock("../logic/GameEngine", () => ({
   GameEngine: jest.fn().mockImplementation(() => ({
@@ -83,9 +85,13 @@ function Harness({
   );
 }
 
-function createTouchEvent(type: string, clientX: number | null) {
+function createTouchEvent(
+  type: string,
+  clientX: number | null,
+  clientY = TOUCH_START_CLIENT_Y,
+) {
   const event = new Event(type, { bubbles: true, cancelable: true });
-  const touches = clientX === null ? [] : [{ clientX }];
+  const touches = clientX === null ? [] : [{ clientX, clientY }];
 
   Object.defineProperty(event, "touches", { value: touches });
   Object.defineProperty(event, "changedTouches", { value: touches });
@@ -143,10 +149,12 @@ describe("useGameLoop", () => {
     const startEvent = createTouchEvent(
       TOUCH_START_EVENT_NAME,
       TOUCH_START_CLIENT_X,
+      TOUCH_START_CLIENT_Y,
     );
     const moveEvent = createTouchEvent(
       TOUCH_MOVE_EVENT_NAME,
       TOUCH_MOVE_CLIENT_X,
+      TOUCH_MOVE_CLIENT_Y,
     );
     const endEvent = createTouchEvent(TOUCH_END_EVENT_NAME, null);
     const cancelEvent = createTouchEvent(TOUCH_CANCEL_EVENT_NAME, null);
@@ -160,8 +168,14 @@ describe("useGameLoop", () => {
     expect(moveEvent.defaultPrevented).toBe(true);
     expect(endEvent.defaultPrevented).toBe(true);
     expect(cancelEvent.defaultPrevented).toBe(true);
-    expect(mockStartPaddleDrag).toHaveBeenCalledWith(TOUCH_START_CLIENT_X);
-    expect(mockMovePaddleDrag).toHaveBeenCalledWith(TOUCH_MOVE_CLIENT_X);
+    expect(mockStartPaddleDrag).toHaveBeenCalledWith(
+      TOUCH_START_CLIENT_X,
+      TOUCH_START_CLIENT_Y,
+    );
+    expect(mockMovePaddleDrag).toHaveBeenCalledWith(
+      TOUCH_MOVE_CLIENT_X,
+      TOUCH_MOVE_CLIENT_Y,
+    );
     expect(mockEndPaddleDrag).toHaveBeenCalledTimes(2);
     expect(GameEngine).toHaveBeenCalledTimes(1);
   });

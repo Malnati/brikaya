@@ -17,6 +17,7 @@ import {
 import { gameLogger } from '../storage/gameLogger';
 import { ERROR } from '../utils/logger';
 import {
+  calculatePaddleAngleFromCanvasPoint,
   calculatePaddleAngleFromCanvasX,
   calculateRadialPaddleBounds,
   calculateRadialPlayfieldGeometry,
@@ -92,6 +93,18 @@ export class Paddle {
     this.syncRectFromRadialPosition(false);
     
     // Log do movimento da raquete por touch
+    this.logPaddleMove('touch');
+  }
+
+  setPositionFromPoint(x: number, y: number) {
+    this.previousPosition = this.position;
+    this.centerAngle = calculatePaddleAngleFromCanvasPoint(
+      x,
+      y,
+      this.position,
+    );
+    this.syncRectFromRadialPosition();
+
     this.logPaddleMove('touch');
   }
 

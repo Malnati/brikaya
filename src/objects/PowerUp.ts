@@ -11,6 +11,7 @@ import {
 
 const DEFAULT_POWER_UP_SIZE = 24;
 const POWER_UP_FALL_SPEED = 1.2;
+const POWER_UP_RADIAL_SPEED = 1.8;
 const POWER_UP_CORNER_RADIUS = 5;
 const POWER_UP_LABEL_FONT = 'bold 11px Arial';
 const POWER_UP_TEXT_COLOR = '#001014';
@@ -47,6 +48,18 @@ interface PaddleBounds {
 
 type PowerUpSizeOrResolver = number | VisualAssetPathResolver;
 
+export interface RadialPowerUpMotion {
+  kind: 'radial';
+  centerX: number;
+  centerY: number;
+  directionX: number;
+  directionY: number;
+  boundaryRadius: number;
+  speed?: number;
+}
+
+type PowerUpMotion = RadialPowerUpMotion | { kind: 'falling' };
+
 function drawRoundedRect(
   ctx: CanvasRenderingContext2D,
   x: number,
@@ -70,6 +83,7 @@ function drawRoundedRect(
 export class PowerUp {
   private y: number;
   private resolveAssetPath: VisualAssetPathResolver;
+  private motion: PowerUpMotion;
   public size: number;
 
   constructor(
@@ -78,6 +92,7 @@ export class PowerUp {
     private type: PowerUpType,
     sizeOrResolveAssetPath: PowerUpSizeOrResolver = DEFAULT_POWER_UP_SIZE,
     resolveAssetPath: VisualAssetPathResolver = DEFAULT_GAME_VISUAL_ASSET_RESOLVER,
+    motion: PowerUpMotion = { kind: 'falling' },
   ) {
     this.y = startY;
     this.size =
@@ -88,6 +103,7 @@ export class PowerUp {
       typeof sizeOrResolveAssetPath === 'function'
         ? sizeOrResolveAssetPath
         : resolveAssetPath;
+    this.motion = this.normalizeMotion(motion);
   }
 
   setSize(size: number): void {
@@ -95,6 +111,13 @@ export class PowerUp {
   }
 
   update(): void {
+    if (this.motion.kind === 'radial') {
+      const speed = this.motion.speed ?? POWER_UP_RADIAL_SPEED;
+      this.x += this.motion.directionX * speed;
+      this.y += this.motion.directionY * speed;
+      return;
+    }
+
     this.y += POWER_UP_FALL_SPEED;
   }
 
@@ -129,10 +152,51 @@ export class PowerUp {
   }
 
   isOutOfBounds(canvasHeight: number): boolean {
+    if (this.motion.kind === 'radial') {
+      return (
+        this.distanceFromRadialCenter() - this.size / 2 >
+        this.motion.boundaryRadius
+      );
+    }
+
     return this.y - this.size / 2 > canvasHeight;
+  }
+
+  hasReachedRadialBoundary(): boolean {
+    if (this.motion.kind !== 'radial') return false;
+
+    return (
+      this.distanceFromRadialCenter() + this.size / 2 >=
+      this.motion.boundaryRadius
+    );
+  }
+
+  getPosition() {
+    return { x: this.x, y: this.y };
   }
 
   getType(): PowerUpType {
     return this.type;
+  }
+
+  private normalizeMotion(motion: PowerUpMotion): PowerUpMotion {
+    if (motion.kind !== 'radial') return motion;
+
+    const magnitude = Math.hypot(motion.directionX, motion.directionY) || 1;
+
+    return {
+      ...motion,
+      directionX: motion.directionX / magnitude,
+      directionY: motion.directionY / magnitude,
+    };
+  }
+
+  private distanceFromRadialCenter(): number {
+    if (this.motion.kind !== 'radial') return 0;
+
+    return Math.hypot(
+      this.x - this.motion.centerX,
+      this.y - this.motion.centerY,
+    );
   }
 }

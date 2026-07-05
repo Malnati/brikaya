@@ -15,6 +15,7 @@ import {
   PhaseSpeedConfig
 } from '../constants/game';
 import {
+  calculateBallTurretPlayfieldGeometry,
   calculateRadialPaddleBounds,
   calculateRadialPlayfieldGeometry,
 } from '../utils/radialGeometry';
@@ -371,5 +372,28 @@ describe('Ball', () => {
 
     expect(inPlay).toBe(true);
     expect(ball.getVelocity().dx).toBeLessThan(0);
+  });
+
+  it('na torreta perde a bolinha em qualquer borda fora do segmento ativo', async () => {
+    const geometry = calculateBallTurretPlayfieldGeometry(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const topPaddle = calculateRadialPaddleBounds(geometry, DIMENSIONS, -Math.PI / 2, 1);
+    const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS, 1, undefined, geometry);
+    const bricks = { collide: jest.fn().mockResolvedValue(false) };
+
+    ball.applyPhaseSpeedConfig(buildPhaseSpeedConfig(PHASE_ONE));
+    ball.setPosition(
+      geometry.centerX + geometry.radius - DIMENSIONS.ballRadius - 1,
+      geometry.centerY,
+    );
+    ball.setDirection(Math.PI / 2);
+
+    const inPlay = await ball.update(
+      { position: topPaddle },
+      bricks,
+      CANVAS_HEIGHT,
+      createGameState(ball),
+    );
+
+    expect(inPlay).toBe(false);
   });
 });

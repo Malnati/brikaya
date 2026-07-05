@@ -24,6 +24,8 @@ const CLASSIC_BUTTON_PATTERN = /clássico|classic/i;
 const INTERNAL_COPY_PATTERN =
   /service worker|cache|runtime|localStorage|IndexedDB|Canvas|engine|build/i;
 const OLD_TURRET_AIM_COPY_PATTERN = /mire|aim|reticle|crosshair|metralhadora/i;
+const BRICK_IMAGE_PATTERN = /\/bricks\/|spr-brick/i;
+const FULL_CIRCLE_TOLERANCE = 0.08;
 const VIEWPORTS = [
   {
     name: "desktop",
@@ -100,24 +102,111 @@ async function clickButtonByPattern(page, patternSource) {
   }, patternSource);
 }
 
+async function installCanvasProbe(page) {
+  await page.evaluateOnNewDocument(() => {
+    const originalArc = CanvasRenderingContext2D.prototype.arc;
+    const originalDrawImage = CanvasRenderingContext2D.prototype.drawImage;
+    const originalFillRect = CanvasRenderingContext2D.prototype.fillRect;
+
+    window.__brikayaBallTurretProbe = {
+      arcs: [],
+      drawImages: [],
+      fillRects: [],
+    };
+
+    CanvasRenderingContext2D.prototype.arc = function patchedArc(
+      x,
+      y,
+      radius,
+      startAngle,
+      endAngle,
+      ...rest
+    ) {
+      window.__brikayaBallTurretProbe?.arcs.push({
+        x,
+        y,
+        radius,
+        startAngle,
+        endAngle,
+      });
+      return originalArc.call(
+        this,
+        x,
+        y,
+        radius,
+        startAngle,
+        endAngle,
+        ...rest,
+      );
+    };
+
+    CanvasRenderingContext2D.prototype.drawImage = function patchedDrawImage(
+      image,
+      ...args
+    ) {
+      const drawArgs = Array.from(args);
+      const targetOffset = drawArgs.length >= 8 ? 4 : 0;
+      const x = Number(drawArgs[targetOffset]);
+      const y = Number(drawArgs[targetOffset + 1]);
+      const width = Number(drawArgs[targetOffset + 2] ?? image?.width ?? 0);
+      const height = Number(drawArgs[targetOffset + 3] ?? image?.height ?? 0);
+      const src = image?.currentSrc || image?.src || "";
+
+      if (Number.isFinite(x) && Number.isFinite(y)) {
+        window.__brikayaBallTurretProbe?.drawImages.push({
+          src,
+          x,
+          y,
+          width,
+          height,
+        });
+      }
+
+      return originalDrawImage.call(this, image, ...args);
+    };
+
+    CanvasRenderingContext2D.prototype.fillRect = function patchedFillRect(
+      x,
+      y,
+      width,
+      height,
+    ) {
+      window.__brikayaBallTurretProbe?.fillRects.push({
+        x,
+        y,
+        width,
+        height,
+      });
+      return originalFillRect.call(this, x, y, width, height);
+    };
+  });
+}
+
 async function readBallTurretState(page) {
   return page.evaluate(
     ({
       internalCopyPatternSource,
       gameModeHeadingPatternSource,
       oldTurretAimCopyPatternSource,
+      brickImagePatternSource,
+      fullCircleTolerance,
     }) => {
       const internalCopyPattern = new RegExp(internalCopyPatternSource, "i");
       const oldTurretAimCopyPattern = new RegExp(
         oldTurretAimCopyPatternSource,
         "i",
       );
+      const brickImagePattern = new RegExp(brickImagePatternSource, "i");
       const gameModeHeadingPattern = new RegExp(
         gameModeHeadingPatternSource,
         "i",
       );
       const canvas = document.querySelector("canvas");
       const canvasRect = canvas?.getBoundingClientRect();
+      const canvasWidth = canvas?.width || 0;
+      const canvasHeight = canvas?.height || 0;
+      const centerX = canvasWidth / 2;
+      const centerY = canvasHeight / 2;
       const scoreHud = document.querySelector(".score-hud");
       const headings = Array.from(document.querySelectorAll("h1,h2,h3")).map(
         (heading) => heading.textContent?.trim() || "",
@@ -128,6 +217,39 @@ async function readBallTurretState(page) {
           ariaLabel: button.getAttribute("aria-label") || "",
           ariaPressed: button.getAttribute("aria-pressed"),
         }),
+      );
+      const probe = window.__brikayaBallTurretProbe || {
+        arcs: [],
+        drawImages: [],
+        fillRects: [],
+      };
+      const brickDraws = probe.drawImages
+        .filter((draw) => brickImagePattern.test(draw.src))
+        .map((draw) => ({
+          x: draw.x + draw.width / 2,
+          y: draw.y + draw.height / 2,
+        }));
+      const fallbackBrickDraws = probe.fillRects
+        .filter(
+          (draw) =>
+            draw.width > 0 &&
+            draw.height > 0 &&
+            draw.width < canvasWidth * 0.5 &&
+            draw.height < canvasHeight * 0.5,
+        )
+        .map((draw) => ({
+          x: draw.x + draw.width / 2,
+          y: draw.y + draw.height / 2,
+        }));
+      const brickCenters = brickDraws.length > 0 ? brickDraws : fallbackBrickDraws;
+      const fullRingArcs = probe.arcs.filter(
+        (arc) =>
+          Math.abs(arc.x - centerX) < 2 &&
+          Math.abs(arc.y - centerY) < 2 &&
+          Math.abs(
+            Math.abs(arc.endAngle - arc.startAngle) - Math.PI * 2,
+          ) < fullCircleTolerance &&
+          arc.radius > Math.min(canvasWidth, canvasHeight) * 0.3,
       );
 
       return {
@@ -153,12 +275,24 @@ async function readBallTurretState(page) {
         bodyHasOldAimCopy: oldTurretAimCopyPattern.test(
           document.body.textContent || "",
         ),
+        probe: {
+          brickDrawCount: brickCenters.length,
+          brickQuadrants: {
+            left: brickCenters.some((point) => point.x < centerX),
+            right: brickCenters.some((point) => point.x > centerX),
+            top: brickCenters.some((point) => point.y < centerY),
+            bottom: brickCenters.some((point) => point.y > centerY),
+          },
+          fullRingArcCount: fullRingArcs.length,
+        },
       };
     },
     {
       internalCopyPatternSource: INTERNAL_COPY_PATTERN.source,
       gameModeHeadingPatternSource: GAME_MODE_HEADING_PATTERN.source,
       oldTurretAimCopyPatternSource: OLD_TURRET_AIM_COPY_PATTERN.source,
+      brickImagePatternSource: BRICK_IMAGE_PATTERN.source,
+      fullCircleTolerance: FULL_CIRCLE_TOLERANCE,
     },
   );
 }
@@ -245,6 +379,18 @@ async function runViewport(page, baseUrl, config) {
     !gameplayState.bodyHasOldAimCopy,
     `${config.name}: cópia pública ainda fala em mira/metralhadora.`,
   );
+  assert(
+    gameplayState.probe.fullRingArcCount > 0,
+    `${config.name}: cama elástica/anel 360° não foi desenhado.`,
+  );
+  assert(
+    gameplayState.probe.brickDrawCount > 0 &&
+      gameplayState.probe.brickQuadrants.left &&
+      gameplayState.probe.brickQuadrants.right &&
+      gameplayState.probe.brickQuadrants.top &&
+      gameplayState.probe.brickQuadrants.bottom,
+    `${config.name}: blocos da Torreta não cobrem quatro quadrantes.`,
+  );
 
   ensureParentDirectory(config.screenshotPath);
   await page.screenshot({ path: config.screenshotPath, fullPage: true });
@@ -276,6 +422,7 @@ async function run() {
   try {
     const page = await browser.newPage();
     page.setDefaultTimeout(60000);
+    await installCanvasProbe(page);
     for (const viewportConfig of VIEWPORTS) {
       results.push(await runViewport(page, baseUrl, viewportConfig));
     }

@@ -4,8 +4,8 @@ import type { DynamicGameDimensions } from "../constants/game";
 const CENTER_RATIO = 0.5;
 const BRICK_ARC_START_ANGLE = (-Math.PI * 5) / 6;
 const BRICK_ARC_END_ANGLE = -Math.PI / 6;
-const BALL_TURRET_BRICK_ARC_START_ANGLE = Math.PI / 6;
-const BALL_TURRET_BRICK_ARC_END_ANGLE = (Math.PI * 5) / 6;
+const BALL_TURRET_BRICK_ARC_START_ANGLE = -Math.PI;
+const BALL_TURRET_BRICK_ARC_END_ANGLE = Math.PI;
 const BRICK_RING_START_RADIUS_RATIO = 0.28;
 const BRICK_RING_END_RADIUS_RATIO = 0.74;
 const BRICK_RADIAL_GAP_RATIO = 0.18;
@@ -20,6 +20,7 @@ const PADDLE_MOVEMENT_END_ANGLE = Math.PI * 0.92;
 const LOSS_ARC_START_ANGLE = Math.PI * 0.16;
 const LOSS_ARC_END_ANGLE = Math.PI * 0.84;
 const FULL_CIRCLE = Math.PI * 2;
+const FULL_CIRCLE_EPSILON = 0.000001;
 const MIN_RADIUS_FOR_ANGLE_EXPANSION = 1;
 
 export interface CartesianPoint {
@@ -45,8 +46,12 @@ export interface RadialPlayfieldGeometry {
   brickRingStartRadius: number;
   brickRingEndRadius: number;
   paddleRadius: number;
+  paddleMovementStartAngle: number;
+  paddleMovementEndAngle: number;
   lossArcStartAngle: number;
   lossArcEndAngle: number;
+  lossIsFullCircle: boolean;
+  trampolineIsFullRing: boolean;
 }
 
 export interface RadialBrickSegment {
@@ -72,6 +77,7 @@ export interface RadialPaddleBounds extends RectBounds {
     movementEndAngle: number;
     lossStartAngle: number;
     lossEndAngle: number;
+    lossIsFullCircle: boolean;
   };
 }
 
@@ -91,8 +97,12 @@ export function calculateRadialPlayfieldGeometry(
     brickRingStartRadius: radius * BRICK_RING_START_RADIUS_RATIO,
     brickRingEndRadius: radius * BRICK_RING_END_RADIUS_RATIO,
     paddleRadius: radius * PADDLE_RADIUS_RATIO,
+    paddleMovementStartAngle: PADDLE_MOVEMENT_START_ANGLE,
+    paddleMovementEndAngle: PADDLE_MOVEMENT_END_ANGLE,
     lossArcStartAngle: LOSS_ARC_START_ANGLE,
     lossArcEndAngle: LOSS_ARC_END_ANGLE,
+    lossIsFullCircle: false,
+    trampolineIsFullRing: false,
   };
 }
 
@@ -111,6 +121,12 @@ export function calculateBallTurretPlayfieldGeometry(
     ...geometry,
     brickArcStartAngle: BALL_TURRET_BRICK_ARC_START_ANGLE,
     brickArcEndAngle: BALL_TURRET_BRICK_ARC_END_ANGLE,
+    paddleMovementStartAngle: -Math.PI,
+    paddleMovementEndAngle: Math.PI,
+    lossArcStartAngle: -Math.PI,
+    lossArcEndAngle: Math.PI,
+    lossIsFullCircle: true,
+    trampolineIsFullRing: true,
   };
 }
 
@@ -128,12 +144,19 @@ export function calculateRadialPaddleBounds(
     ),
   );
   const halfArcWidth = arcWidth * CENTER_RATIO;
-  const movementStartAngle = PADDLE_MOVEMENT_START_ANGLE + halfArcWidth;
-  const movementEndAngle = PADDLE_MOVEMENT_END_ANGLE - halfArcWidth;
-  const clampedCenterAngle = Math.max(
-    movementStartAngle,
-    Math.min(movementEndAngle, centerAngle),
+  const movementIsFullCircle = isFullAngleRange(
+    geometry.paddleMovementStartAngle,
+    geometry.paddleMovementEndAngle,
   );
+  const movementStartAngle = movementIsFullCircle
+    ? geometry.paddleMovementStartAngle
+    : geometry.paddleMovementStartAngle + halfArcWidth;
+  const movementEndAngle = movementIsFullCircle
+    ? geometry.paddleMovementEndAngle
+    : geometry.paddleMovementEndAngle - halfArcWidth;
+  const clampedCenterAngle = movementIsFullCircle
+    ? normalizeSignedAngle(centerAngle)
+    : Math.max(movementStartAngle, Math.min(movementEndAngle, centerAngle));
   const thickness = dimensions.paddleHeight * PADDLE_THICKNESS_RATIO;
   const centerX =
     geometry.centerX + Math.cos(clampedCenterAngle) * geometry.paddleRadius;
@@ -159,6 +182,7 @@ export function calculateRadialPaddleBounds(
       movementEndAngle,
       lossStartAngle: geometry.lossArcStartAngle,
       lossEndAngle: geometry.lossArcEndAngle,
+      lossIsFullCircle: geometry.lossIsFullCircle,
     },
   };
 }
@@ -176,6 +200,31 @@ export function calculatePaddleAngleFromCanvasX(
     ),
   );
   const angle = Math.acos(clampedCosine);
+
+  return Math.max(
+    paddleBounds.radial.movementStartAngle,
+    Math.min(paddleBounds.radial.movementEndAngle, angle),
+  );
+}
+
+export function calculatePaddleAngleFromCanvasPoint(
+  canvasX: number,
+  canvasY: number,
+  paddleBounds: RadialPaddleBounds,
+): number {
+  const angle = Math.atan2(
+    canvasY - paddleBounds.radial.centerY,
+    canvasX - paddleBounds.radial.centerX,
+  );
+
+  if (
+    isFullAngleRange(
+      paddleBounds.radial.movementStartAngle,
+      paddleBounds.radial.movementEndAngle,
+    )
+  ) {
+    return normalizeSignedAngle(angle);
+  }
 
   return Math.max(
     paddleBounds.radial.movementStartAngle,
@@ -269,6 +318,18 @@ export function isAngleBetween(
 
 export function normalizeAngle(angle: number): number {
   return ((angle % FULL_CIRCLE) + FULL_CIRCLE) % FULL_CIRCLE;
+}
+
+function normalizeSignedAngle(angle: number): number {
+  const normalizedAngle = normalizeAngle(angle);
+
+  return normalizedAngle > Math.PI
+    ? normalizedAngle - FULL_CIRCLE
+    : normalizedAngle;
+}
+
+function isFullAngleRange(startAngle: number, endAngle: number): boolean {
+  return Math.abs(endAngle - startAngle) >= FULL_CIRCLE - FULL_CIRCLE_EPSILON;
 }
 
 export function toPolar(

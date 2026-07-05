@@ -408,7 +408,12 @@ export class Ball {
 
     if (
       this.isMovingOutward(polar.angle) &&
-      isAngleBetween(polar.angle, paddlePos.radial.lossStartAngle, paddlePos.radial.lossEndAngle)
+      (paddlePos.radial.lossIsFullCircle ||
+        isAngleBetween(
+          polar.angle,
+          paddlePos.radial.lossStartAngle,
+          paddlePos.radial.lossEndAngle,
+        ))
     ) {
       return this.logRadialBallLost(paddlePos, gameState, audioSink);
     }

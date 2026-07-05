@@ -10,6 +10,7 @@ import {
 import {
   LEVEL_CLEAR_PAUSE_MS,
   LASER_FAN_EFFECT_VISIBLE_MS,
+  calculateDynamicDimensions,
   calculateLevelInitialSpawnSpeed,
   calculateLevelBrickRows,
   calculateLevelMaxSpeed,
@@ -84,11 +85,13 @@ jest.mock("../objects/Paddle", () => ({
         movementEndAngle: 2.9,
         lossStartAngle: 0.5,
         lossEndAngle: 2.64,
+        lossIsFullCircle: false,
       },
     },
     onKeyDown: jest.fn(),
     onKeyUp: jest.fn(),
     setPosition: jest.fn(),
+    setPositionFromPoint: jest.fn(),
     setWidthScale: jest.fn(),
     reset: jest.fn(),
     update: jest.fn(),
@@ -329,13 +332,82 @@ describe("GameEngine", () => {
     );
     const turretGeometry = (drawBallTurretBackdrop as jest.Mock).mock
       .calls[0][1].geometry;
-    expect(turretGeometry.brickArcStartAngle).toBeGreaterThan(0);
-    expect(turretGeometry.brickArcEndAngle).toBeGreaterThan(
-      turretGeometry.brickArcStartAngle,
-    );
+    expect(turretGeometry.brickArcStartAngle).toBeCloseTo(-Math.PI);
+    expect(turretGeometry.brickArcEndAngle).toBeCloseTo(Math.PI);
     expect(drawBallTurretTrampoline).toHaveBeenCalled();
     expect(drawBallTurretGlassOverlay).toHaveBeenCalled();
     expect((engine as any).paddle.draw).not.toHaveBeenCalled();
+  });
+
+  it("usa dobro de colunas e posiciona bola inicial na borda da torreta", () => {
+    const engine = new GameEngine(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "ball-turret",
+    );
+    const baseDimensions = calculateDynamicDimensions(canvas.width, canvas.height);
+    const dimensions = (engine as any).dimensions;
+    const geometry = (engine as any).radialGeometry;
+    const ball = mockBallInstances[0];
+
+    expect(dimensions.brickCols).toBe(baseDimensions.brickCols * 2);
+    expect(ball.setPosition).toHaveBeenCalled();
+    const [spawnX, spawnY] = ball.setPosition.mock.calls[0];
+    expect(
+      Math.hypot(spawnX - geometry.centerX, spawnY - geometry.centerY),
+    ).toBeCloseTo(geometry.radius - ball.position.radius - 1, 1);
+    expect(ball.setDirection).toHaveBeenCalledWith(Math.PI);
+  });
+
+  it("spawna power-up da torreta no centro com movimento radial até a borda", () => {
+    const playAudio = jest.fn();
+    const audioSink: GameAudioSink = {
+      playAudio,
+      startGameplayMusic: jest.fn(),
+      startMenuMusic: jest.fn(),
+      setHighIntensity: jest.fn(),
+    };
+    const engine = new GameEngine(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      undefined,
+      undefined,
+      audioSink,
+      undefined,
+      undefined,
+      "ball-turret",
+    );
+    const geometry = (engine as any).radialGeometry;
+
+    (engine as any).destroyedBricksSincePowerUp = 4;
+    (engine as any).maybeSpawnPowerUp();
+
+    const powerUp = (engine as any).activePowerUp;
+    expect(powerUp.getPosition()).toEqual({
+      x: geometry.centerX,
+      y: geometry.centerY,
+    });
+
+    powerUp.update();
+    const movedPosition = powerUp.getPosition();
+    expect(
+      Math.hypot(
+        movedPosition.x - geometry.centerX,
+        movedPosition.y - geometry.centerY,
+      ),
+    ).toBeGreaterThan(0);
+    expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.POWERUP_SPAWN);
   });
 
   it("move a raquete pelo início do arraste touch na faixa sensível", () => {
@@ -348,6 +420,36 @@ describe("GameEngine", () => {
     engine.startPaddleDrag(300);
 
     expect((engine as any).paddle.setPosition).toHaveBeenCalledWith(400);
+  });
+
+  it("move o segmento ativo da torreta pelo ponto completo do canvas", () => {
+    jest.spyOn(canvas, "getBoundingClientRect").mockReturnValue({
+      left: 100,
+      top: 50,
+      width: 400,
+      height: 300,
+    } as DOMRect);
+    const engine = new GameEngine(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "ball-turret",
+    );
+
+    engine.startPaddleDrag(300, 200);
+
+    expect((engine as any).paddle.setPositionFromPoint).toHaveBeenCalledWith(
+      400,
+      300,
+    );
+    expect((engine as any).paddle.setPosition).not.toHaveBeenCalled();
   });
 
   it("ignora movimento touch sem arraste ativo", () => {
