@@ -20,7 +20,18 @@ const TEST_BOARD_RECT = {
 const STAGE_TEST_ID = "game-cinematic-stage";
 const COUNTDOWN_COMPOSITION_TEST_ID = "game-cinematic-countdown-composition";
 const RIP_COMPOSITION_TEST_ID = "game-cinematic-rip-composition";
+const VISIBLE_TOP_PROPERTY = "--game-cinematic-visible-top";
+const VISIBLE_HEIGHT_PROPERTY = "--game-cinematic-visible-height";
 const RIP_VIEWPORT_HEIGHT_PROPERTY = "--game-cinematic-rip-visible-height";
+const COUNTDOWN_HALO_TEST_ID = "game-cinematic-countdown-halo";
+const COUNTDOWN_COUNT_TEST_ID = "game-cinematic-countdown-count";
+function setLocationSearch(search: string) {
+  window.history.replaceState({}, "", `/${search}`);
+}
+
+function resetLocationSearch() {
+  window.history.replaceState({}, "", "/");
+}
 
 function expectDecorativeMedia(container: HTMLElement, name: string, path: string) {
   const media = container.querySelector(
@@ -33,10 +44,13 @@ function expectDecorativeMedia(container: HTMLElement, name: string, path: strin
 }
 
 describe("GameCinematicOverlay media", () => {
-  it("centraliza o palco visual no retângulo do tabuleiro quando informado", () => {
+  afterEach(() => {
+    resetLocationSearch();
+  });
+  it("centraliza a subida de fase no retângulo do tabuleiro quando informado", () => {
     render(
       <GameCinematicOverlay
-        state={{ type: "countdown", value: "3" }}
+        state={{ type: "levelUp", nextLevel: 2, speedLabel: "1.12×" }}
         boardRect={TEST_BOARD_RECT}
       />,
     );
@@ -47,6 +61,42 @@ describe("GameCinematicOverlay media", () => {
       width: `${TEST_BOARD_RECT.width}px`,
       height: `${TEST_BOARD_RECT.height}px`,
     });
+  });
+
+  it("mantém o countdown fora do retângulo do tabuleiro e dentro da viewport utilizável", () => {
+    setLocationSearch("?qaViewportBottomInset=104");
+
+    render(
+      <GameCinematicOverlay
+        state={{ type: "countdown", value: "3" }}
+        boardRect={TEST_BOARD_RECT}
+      />,
+    );
+
+    const stage = screen.getByTestId(STAGE_TEST_ID);
+
+    expect(stage).not.toHaveStyle({ left: `${TEST_BOARD_RECT.x}px` });
+    expect(stage).not.toHaveStyle({ top: `${TEST_BOARD_RECT.y}px` });
+    expect(stage.style.getPropertyValue(VISIBLE_HEIGHT_PROPERTY)).toBeTruthy();
+    expect(stage.style.getPropertyValue(VISIBLE_HEIGHT_PROPERTY)).toBe(
+      "664px",
+    );
+    expect(stage.style.height).toBe("664px");
+  });
+
+  it("aplica inset superior no countdown landscape para não centralizar sob o chrome do Safari", () => {
+    setLocationSearch("?qaViewportTopInset=180&qaViewportBottomInset=0");
+
+    render(<GameCinematicOverlay state={{ type: "countdown", value: "2" }} />);
+
+    const stage = screen.getByTestId(STAGE_TEST_ID);
+
+    expect(stage.style.getPropertyValue(VISIBLE_TOP_PROPERTY)).toBe("180px");
+    expect(stage.style.top).toBe("180px");
+    expect(stage.style.getPropertyValue(VISIBLE_HEIGHT_PROPERTY)).toBe(
+      "588px",
+    );
+    expect(stage.style.height).toBe("588px");
   });
 
   it("renderiza mídias locais CC0 no countdown sem remover a contagem textual", () => {
@@ -72,6 +122,30 @@ describe("GameCinematicOverlay media", () => {
     expect(composition).toContainElement(
       container.querySelector('img[data-cinematic-media="countdown-spark"]'),
     );
+    expect(composition).toContainElement(screen.getByTestId(COUNTDOWN_HALO_TEST_ID));
+    expect(composition).toContainElement(screen.getByTestId(COUNTDOWN_COUNT_TEST_ID));
+  });
+
+  it("usa a mesma origem de centro para halo, anel, faísca e número do countdown", () => {
+    const { container } = render(
+      <GameCinematicOverlay state={{ type: "countdown", value: "1" }} />,
+    );
+    const composition = screen.getByTestId(COUNTDOWN_COMPOSITION_TEST_ID);
+    const halo = screen.getByTestId(COUNTDOWN_HALO_TEST_ID);
+    const count = screen.getByTestId(COUNTDOWN_COUNT_TEST_ID);
+    const circle = container.querySelector('img[data-cinematic-media="countdown-circle"]');
+    const spark = container.querySelector('img[data-cinematic-media="countdown-spark"]');
+
+    for (const layer of [halo, count, circle, spark]) {
+      expect(layer).toBeInTheDocument();
+      expect(layer).toHaveStyle({
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+      });
+    }
+    expect(composition).toContainElement(halo);
+    expect(composition).toContainElement(count);
   });
 
   it("renderiza mídias locais CC0 na subida de fase sem remover mensagem essencial", () => {

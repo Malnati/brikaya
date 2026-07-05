@@ -655,6 +655,8 @@ canvas {
   --game-cinematic-rip-visible-top: 0px;
   --game-cinematic-rip-visible-width: 100vw;
   --game-cinematic-rip-visible-height: 100dvh;
+  --game-cinematic-visible-width: 100vw;
+  --game-cinematic-visible-height: 100dvh;
   --game-cinematic-rip-media-size: min(
     92vw,
     calc(var(--game-cinematic-rip-visible-height) - 24px),
@@ -768,8 +770,14 @@ canvas {
 }
 
 .game-cinematic-overlay--countdown .game-cinematic-overlay__composition {
-  width: min(100%, 420px, 88vmin);
-  height: min(100%, 420px, 88vmin);
+  --game-cinematic-countdown-size: min(
+    420px,
+    88vmin,
+    max(96px, calc(var(--game-cinematic-visible-width) - 16px)),
+    max(96px, calc(var(--game-cinematic-visible-height) - 40px))
+  );
+  width: var(--game-cinematic-countdown-size);
+  height: var(--game-cinematic-countdown-size);
 }
 
 .game-cinematic-overlay--countdown .game-cinematic-overlay__content {
@@ -779,10 +787,38 @@ canvas {
   place-items: center;
 }
 
+.game-cinematic-overlay--countdown {
+  background: color-mix(in srgb, var(--bb-color-background) 88%, transparent);
+}
+
+.game-cinematic-overlay__countdown-halo {
+  position: absolute;
+  z-index: 0;
+  width: min(94%, 520px, calc(var(--game-cinematic-countdown-size, 420px) * 0.94));
+  height: min(94%, 520px, calc(var(--game-cinematic-countdown-size, 420px) * 0.94));
+  border-radius: 999px;
+  pointer-events: none;
+  user-select: none;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--bb-color-primary) 42%, transparent) 0%,
+    color-mix(in srgb, var(--bb-color-primary) 22%, transparent) 34%,
+    transparent 68%
+  );
+  filter: blur(2px);
+  opacity: 0.86;
+  animation: cinematic-countdown-halo-pulse 600ms ease-out both;
+}
+
 .game-cinematic-overlay--countdown .game-cinematic-overlay__count {
+  position: absolute;
   display: block;
+  font-size: clamp(
+    3.5rem,
+    min(30vw, calc(var(--game-cinematic-countdown-size, 420px) * 0.68)),
+    16rem
+  );
   line-height: 1;
-  transform: translateY(0.04em);
 }
 
 .game-cinematic-overlay--rip .game-cinematic-overlay__media--rip-smoke {
@@ -1111,17 +1147,34 @@ canvas {
 @keyframes cinematic-count-pulse {
   0% {
     opacity: 0;
-    transform: scale(0.76);
+    transform: translate(-50%, -50%) scale(0.76);
   }
 
   34% {
     opacity: 1;
-    transform: scale(1.08);
+    transform: translate(-50%, -50%) scale(1.08);
   }
 
   100% {
     opacity: 0.88;
-    transform: scale(1);
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes cinematic-countdown-halo-pulse {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.82);
+  }
+
+  42% {
+    opacity: 0.92;
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+
+  100% {
+    opacity: 0.78;
+    transform: translate(-50%, -50%) scale(1);
   }
 }
 
