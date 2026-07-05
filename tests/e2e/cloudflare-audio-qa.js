@@ -12,9 +12,12 @@ const DEFAULT_SCREENSHOT_PATH = 'docs/assets/issues/audio-cc0-integration/eviden
 const CHROME_EXECUTABLE_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const BROWSER_CLOSE_TIMEOUT_MS = 5000;
 const AUDIO_EVENT_IDS_PATTERN = /export const AUDIO_EVENT_IDS = (\[[\s\S]*?\]) as const;/;
+const AUDIO_CATALOG_START = 'export const AUDIO_CATALOG = ';
+const AUDIO_CATALOG_END = '\n} satisfies Record<AudioId, AudioCatalogEntry>;';
 const AUDIO_FILE_PATTERN = /^.*\.mp3$/;
 const AUDIO_DIR = 'public/assets/audio';
 const AUDIO_QA_SCENARIO = 'audio-event-tour';
+const SILENT_AUDIO_ID = 'sfx-ad-placeholder-none';
 const AUDIO_OFF_LABEL = 'Sem som';
 const AUDIO_ON_LABEL = 'Som';
 const AUDIO_OFF_ICON = '×';
@@ -70,6 +73,25 @@ function expectedAudioIds() {
   const match = source.match(AUDIO_EVENT_IDS_PATTERN);
   assert(match, 'AUDIO_EVENT_IDS não encontrado.');
   return JSON.parse(match[1]);
+}
+
+function expectedLatencySensitiveAudioPaths() {
+  const source = readFileSync('src/constants/audio.ts', 'utf8');
+  const catalogStart = source.indexOf(AUDIO_CATALOG_START);
+  assert(catalogStart >= 0, 'AUDIO_CATALOG não encontrado.');
+  const objectStart = source.indexOf('{', catalogStart);
+  const objectEnd = source.indexOf(AUDIO_CATALOG_END, objectStart);
+  assert(objectStart >= 0 && objectEnd >= 0, 'AUDIO_CATALOG sem bloco parseável.');
+  const catalog = JSON.parse(source.slice(objectStart, objectEnd + 2));
+  return Object.values(catalog)
+    .filter(entry => (
+      entry.id !== SILENT_AUDIO_ID &&
+      entry.type !== 'music' &&
+      entry.volume > 0 &&
+      entry.files.length > 0
+    ))
+    .flatMap(entry => entry.files)
+    .sort();
 }
 
 function expectedAudioPaths() {
@@ -212,7 +234,7 @@ async function activateMusicButton(page, ariaLabel, touch) {
   await page.click(selector);
 }
 
-async function runViewportQa(page, targetUrl, config, audioPaths) {
+async function runViewportQa(page, targetUrl, config, audioPaths, latencySensitiveAudioPaths) {
   await page.setViewport(config.viewport);
   if (config.userAgent) await page.setUserAgent(config.userAgent);
   await page.goto(targetUrl, { waitUntil: 'networkidle0', timeout: 60000 });
@@ -241,7 +263,12 @@ async function runViewportQa(page, targetUrl, config, audioPaths) {
     const state = window.__brikayaAudioState?.();
     const button = Array.from(document.querySelectorAll('button'))
       .find(node => node.getAttribute('aria-label') === 'Som');
-    return Boolean(state?.unlocked && state?.muted === false && button?.textContent?.trim() === '♪');
+    return Boolean(
+      state?.unlocked &&
+      state?.muted === false &&
+      state?.latencySensitiveEffectsReady === true &&
+      button?.textContent?.trim() === '♪'
+    );
   }, { timeout: AUDIO_TOGGLE_TIMEOUT_MS });
   const enabled = await readAudioToggleState(page, audioPaths);
   assert(enabled.soundButton?.ariaLabel === AUDIO_ON_LABEL, `${config.name}: botão não mudou para Som.`);
@@ -251,7 +278,14 @@ async function runViewportQa(page, targetUrl, config, audioPaths) {
   assert(enabled.audioState.muted === false, `${config.name}: áudio não ficou ativo.`);
   assert(enabled.audioState.contextState === 'running', `${config.name}: AudioContext não está running.`);
   assert(enabled.audioState.lastUnlockResult?.unlocked === true, `${config.name}: último unlock não marcou sucesso.`);
-  assert(enabled.audioState.loaded < audioPaths.length, `${config.name}: unlock carregou áudio demais para fluxo lazy.`);
+  assert(enabled.audioState.latencySensitiveEffectsReady === true, `${config.name}: efeitos instantâneos não ficaram prontos após ligar som.`);
+  const missingLatencySensitivePaths = latencySensitiveAudioPaths.filter(path => (
+    !enabled.audioState.loadedPaths?.includes(path)
+  ));
+  assert(
+    missingLatencySensitivePaths.length === 0,
+    `${config.name}: efeitos instantâneos ausentes do preload: ${missingLatencySensitivePaths.join(', ')}`,
+  );
 
   await activateMusicButton(page, MUSIC_ON_LABEL, config.touch);
   await page.waitForFunction(() => {
@@ -321,6 +355,7 @@ async function run() {
 
   const ids = expectedAudioIds();
   const audioPaths = expectedAudioPaths();
+  const latencySensitiveAudioPaths = expectedLatencySensitiveAudioPaths();
   const audioPathSet = new Set(audioPaths);
   const externalAudioRequests = [];
   const sameOriginAudioRequests = [];
@@ -345,7 +380,7 @@ async function run() {
         externalAudioRequests.push(request.url());
       });
       try {
-        viewportResults.push(await runViewportQa(page, targetUrl, viewportConfig, audioPaths));
+        viewportResults.push(await runViewportQa(page, targetUrl, viewportConfig, audioPaths, latencySensitiveAudioPaths));
         if (viewportConfig.name === VIEWPORTS[VIEWPORTS.length - 1].name) {
           await page.screenshot({ path: screenshotPath, fullPage: true });
         }
@@ -377,6 +412,7 @@ async function run() {
       expectedAudioIds: ids,
       emittedAudioIds: [...emittedIds].sort(),
       localAudioPaths: audioPaths,
+      latencySensitiveAudioPaths,
       sameOriginAudioRequests: requestedAudioPaths,
       externalAudioRequests,
       cachedAudioPaths,
