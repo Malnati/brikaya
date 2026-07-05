@@ -16,6 +16,7 @@ const TRAMPOLINE_FRAME_WIDTH_RATIO = 1.18;
 const TRAMPOLINE_FABRIC_WIDTH_RATIO = 0.66;
 const TRAMPOLINE_HIGHLIGHT_WIDTH_RATIO = 0.2;
 const TRAMPOLINE_SPRING_COUNT = 7;
+const TRAMPOLINE_FULL_RING_SPRING_COUNT = 24;
 const TRAMPOLINE_SPRING_INSET_RATIO = 0.72;
 const TRAMPOLINE_SHADOW_BLUR_RATIO = 0.08;
 const GLASS_HIGHLIGHT_OFFSET_RATIO = 0.28;
@@ -210,6 +211,45 @@ export function drawBallTurretTrampoline(
     trampoline.centerX,
     trampoline.centerY,
     trampoline.radius,
+    0,
+    FULL_CIRCLE,
+  );
+  ctx.stroke();
+
+  ctx.shadowBlur = Math.max(5, trampoline.thickness * 0.34);
+  ctx.strokeStyle = "rgba(16, 215, 232, 0.44)";
+  ctx.lineWidth = fabricWidth;
+  ctx.beginPath();
+  ctx.arc(
+    trampoline.centerX,
+    trampoline.centerY,
+    trampoline.radius,
+    0,
+    FULL_CIRCLE,
+  );
+  ctx.stroke();
+
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = "rgba(248, 251, 255, 0.34)";
+  ctx.lineWidth = highlightWidth;
+  ctx.beginPath();
+  ctx.arc(
+    trampoline.centerX,
+    trampoline.centerY,
+    trampoline.radius - fabricWidth * 0.22,
+    0,
+    FULL_CIRCLE,
+  );
+  ctx.stroke();
+
+  ctx.shadowBlur = Math.max(5, trampoline.thickness * 0.42);
+  ctx.strokeStyle = "rgba(16, 24, 34, 0.98)";
+  ctx.lineWidth = frameWidth * 0.82;
+  ctx.beginPath();
+  ctx.arc(
+    trampoline.centerX,
+    trampoline.centerY,
+    trampoline.radius,
     trampoline.startAngle,
     trampoline.endAngle,
   );
@@ -243,8 +283,21 @@ export function drawBallTurretTrampoline(
 
   ctx.strokeStyle = "rgba(227, 248, 255, 0.58)";
   ctx.lineWidth = Math.max(1, highlightWidth * 0.7);
+  for (let index = 0; index < TRAMPOLINE_FULL_RING_SPRING_COUNT; index += 1) {
+    const angle = (FULL_CIRCLE / TRAMPOLINE_FULL_RING_SPRING_COUNT) * index;
+    const outer = pointOnArc(trampoline, springOuterRadius, angle);
+    const inner = pointOnArc(trampoline, springInnerRadius, angle);
+
+    ctx.beginPath();
+    ctx.moveTo(outer.x, outer.y);
+    ctx.lineTo(inner.x, inner.y);
+    ctx.stroke();
+  }
+
+  ctx.strokeStyle = "rgba(255, 245, 184, 0.82)";
+  ctx.lineWidth = Math.max(1.2, highlightWidth * 0.9);
   for (let index = 0; index < TRAMPOLINE_SPRING_COUNT; index += 1) {
-    const ratio = index / (TRAMPOLINE_SPRING_COUNT - 1);
+    const ratio = index / Math.max(1, TRAMPOLINE_SPRING_COUNT - 1);
     const angle =
       trampoline.startAngle +
       (trampoline.endAngle - trampoline.startAngle) * ratio;

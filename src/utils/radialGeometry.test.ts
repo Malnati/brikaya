@@ -3,6 +3,7 @@ import type { DynamicGameDimensions } from "../constants/game";
 
 import {
   calculateBallTurretPlayfieldGeometry,
+  calculatePaddleAngleFromCanvasPoint,
   calculatePaddleAngleFromCanvasX,
   calculateRadialBrickSegment,
   calculateRadialPaddleBounds,
@@ -23,6 +24,10 @@ const TEST_DIMENSIONS: DynamicGameDimensions = {
   paddleWidth: 80,
   paddleHeight: 12,
   ballRadius: 9,
+};
+const FULL_CIRCLE_TURRET_DIMENSIONS: DynamicGameDimensions = {
+  ...TEST_DIMENSIONS,
+  brickCols: TEST_DIMENSIONS.brickCols * 2,
 };
 
 describe("radialGeometry", () => {
@@ -58,7 +63,7 @@ describe("radialGeometry", () => {
     expect(geometry.centerY + geometry.radius).toBe(TEST_CANVAS_HEIGHT);
   });
 
-  it("calcula tijolos da torreta no arco inferior oposto ao clássico", () => {
+  it("calcula tijolos da torreta em toda a circunferência", () => {
     const classicGeometry = calculateRadialPlayfieldGeometry(
       TEST_CANVAS_WIDTH,
       TEST_CANVAS_HEIGHT,
@@ -67,7 +72,7 @@ describe("radialGeometry", () => {
     const turretGeometry = calculateBallTurretPlayfieldGeometry(
       TEST_CANVAS_WIDTH,
       TEST_CANVAS_HEIGHT,
-      TEST_DIMENSIONS,
+      FULL_CIRCLE_TURRET_DIMENSIONS,
     );
     const classicSegment = calculateRadialBrickSegment(
       classicGeometry,
@@ -75,19 +80,55 @@ describe("radialGeometry", () => {
       2,
       0,
     );
-    const turretSegment = calculateRadialBrickSegment(
-      turretGeometry,
-      TEST_DIMENSIONS,
-      2,
-      0,
+    const turretSegments = Array.from(
+      { length: FULL_CIRCLE_TURRET_DIMENSIONS.brickCols },
+      (_, col) =>
+        calculateRadialBrickSegment(
+          turretGeometry,
+          FULL_CIRCLE_TURRET_DIMENSIONS,
+          col,
+          0,
+        ),
     );
 
     expect(classicSegment.centerY).toBeLessThan(classicGeometry.centerY);
-    expect(turretSegment.centerY).toBeGreaterThan(turretGeometry.centerY);
-    expect(turretGeometry.brickArcStartAngle).toBeGreaterThan(0);
-    expect(turretGeometry.brickArcEndAngle).toBeGreaterThan(
-      turretGeometry.brickArcStartAngle,
+    expect(turretGeometry.brickArcStartAngle).toBeCloseTo(-Math.PI);
+    expect(turretGeometry.brickArcEndAngle).toBeCloseTo(Math.PI);
+    expect(
+      turretSegments.some((segment) => segment.centerX < turretGeometry.centerX),
+    ).toBe(true);
+    expect(
+      turretSegments.some((segment) => segment.centerX > turretGeometry.centerX),
+    ).toBe(true);
+    expect(
+      turretSegments.some((segment) => segment.centerY < turretGeometry.centerY),
+    ).toBe(true);
+    expect(
+      turretSegments.some((segment) => segment.centerY > turretGeometry.centerY),
+    ).toBe(true);
+  });
+
+  it("mantém segmento ativo da cama elástica navegável em 360 graus", () => {
+    const turretGeometry = calculateBallTurretPlayfieldGeometry(
+      TEST_CANVAS_WIDTH,
+      TEST_CANVAS_HEIGHT,
+      FULL_CIRCLE_TURRET_DIMENSIONS,
     );
+    const wrappedPaddle = calculateRadialPaddleBounds(
+      turretGeometry,
+      FULL_CIRCLE_TURRET_DIMENSIONS,
+      Math.PI * 1.25,
+      1,
+    );
+    const topAngle = calculatePaddleAngleFromCanvasPoint(
+      turretGeometry.centerX,
+      turretGeometry.centerY - turretGeometry.paddleRadius,
+      wrappedPaddle,
+    );
+
+    expect(wrappedPaddle.radial.centerAngle).toBeCloseTo(-Math.PI * 0.75);
+    expect(wrappedPaddle.radial.lossIsFullCircle).toBe(true);
+    expect(topAngle).toBeCloseTo(-Math.PI / 2);
   });
 
   it("detecta colisão circular dentro de segmento radial", () => {

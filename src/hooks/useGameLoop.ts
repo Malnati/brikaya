@@ -30,8 +30,12 @@ const TOUCH_END_EVENT_NAME = "touchend";
 const TOUCH_CANCEL_EVENT_NAME = "touchcancel";
 const TOUCH_LISTENER_OPTIONS = { passive: false } as const;
 
-function readTouchClientX(event: TouchEvent) {
-  return event.touches[0]?.clientX ?? event.changedTouches[0]?.clientX ?? null;
+function readTouchClientPoint(event: TouchEvent) {
+  const touch = event.touches[0] ?? event.changedTouches[0] ?? null;
+
+  if (!touch) return null;
+
+  return { x: touch.clientX, y: touch.clientY };
 }
 
 export function useGameLoop(
@@ -136,18 +140,18 @@ export function useGameLoop(
     if (!paddleTouchZone) return undefined;
 
     const handleTouchStart = (event: TouchEvent) => {
-      const clientX = readTouchClientX(event);
-      if (clientX === null) return;
+      const point = readTouchClientPoint(event);
+      if (point === null) return;
 
       event.preventDefault();
-      engineRef.current?.startPaddleDrag(clientX);
+      engineRef.current?.startPaddleDrag(point.x, point.y);
     };
     const handleTouchMove = (event: TouchEvent) => {
-      const clientX = readTouchClientX(event);
-      if (clientX === null) return;
+      const point = readTouchClientPoint(event);
+      if (point === null) return;
 
       event.preventDefault();
-      engineRef.current?.movePaddleDrag(clientX);
+      engineRef.current?.movePaddleDrag(point.x, point.y);
     };
     const handleTouchEnd = (event: TouchEvent) => {
       event.preventDefault();

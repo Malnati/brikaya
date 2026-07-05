@@ -43,8 +43,12 @@ function createState(): BallTurretRenderState {
       brickRingStartRadius: 44,
       brickRingEndRadius: 118,
       paddleRadius: 144,
+      paddleMovementStartAngle: -Math.PI,
+      paddleMovementEndAngle: Math.PI,
       lossArcStartAngle: 0.5,
       lossArcEndAngle: 2.64,
+      lossIsFullCircle: true,
+      trampolineIsFullRing: true,
     },
     paddlePosition: {
       x: 198,
@@ -63,6 +67,7 @@ function createState(): BallTurretRenderState {
         movementEndAngle: 2.9,
         lossStartAngle: 0.5,
         lossEndAngle: 2.64,
+        lossIsFullCircle: true,
       },
     },
   };
@@ -79,6 +84,8 @@ describe("ballTurretRenderer", () => {
 
     expect(ctx.createRadialGradient).toHaveBeenCalled();
     expect(ctx.arc).toHaveBeenCalledWith(240, 160, 160, 0, Math.PI * 2);
+    expect(ctx.arc).toHaveBeenCalledWith(240, 160, 144, 0, Math.PI * 2);
+    expect(ctx.arc).toHaveBeenCalledWith(240, 160, 144, 1.2, 1.94);
     expect(ctx.moveTo).toHaveBeenCalled();
     expect(ctx.lineTo).toHaveBeenCalled();
     expect(ctx.fillRect).toHaveBeenCalledWith(0, 0, 480, 320);

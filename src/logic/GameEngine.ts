@@ -2,7 +2,7 @@
 import { Paddle } from "../objects/Paddle";
 import { Ball } from "../objects/Ball";
 import { Bricks, type DestroyedBrickSnapshot } from "../objects/Bricks";
-import { PowerUp } from "../objects/PowerUp";
+import { PowerUp, type RadialPowerUpMotion } from "../objects/PowerUp";
 import {
   GAME_COLOR,
   CANVAS_HEIGHT,
@@ -109,6 +109,15 @@ const POWER_UP_ACTION_COLLECT: LoggedPowerUpAction = "collect";
 const POWER_UP_ACTION_ACTIVATE: LoggedPowerUpAction = "activate";
 const POWER_UP_ACTION_EXPIRE: LoggedPowerUpAction = "expire";
 const POWER_UP_ACTION_MISS: LoggedPowerUpAction = "miss";
+const BALL_TURRET_BRICK_COLUMN_MULTIPLIER = 2;
+const BALL_TURRET_SPAWN_BORDER_INSET = 1;
+const BALL_TURRET_POWER_UP_FALLBACK_ANGLE = -Math.PI / 2;
+const BALL_TURRET_SPAWN_ANGLES = [
+  -Math.PI / 2,
+  0,
+  Math.PI / 2,
+  Math.PI,
+] as const;
 const WIDE_PADDLE_SCALE = 1.45;
 const SLOW_BALL_MULTIPLIER = 0.75;
 const MULTIBALL_ANGLE_OFFSET = 0.42;
@@ -237,6 +246,7 @@ export class GameEngine {
   private destroyedBricksSincePowerUp = 0;
   private activePowerUp: PowerUp | null = null;
   private nextPowerUpIndex = 0;
+  private ballTurretSpawnIndex = 0;
   private powerUpEffectTimers: ReturnType<typeof setTimeout>[] = [];
   private laserFanSpawnsThisLevel = 0;
   private laserFanEffectStartedAt = 0;
@@ -314,16 +324,7 @@ export class GameEngine {
       this.resolveAssetPath,
       this.radialGeometry,
     );
-    this.balls.push(
-      new Ball(
-        this.canvasSize.width,
-        this.canvasSize.height,
-        this.dimensions,
-        calculateLevelSpeedMultiplier(this.level),
-        this.resolveAssetPath,
-        this.radialGeometry,
-      ),
-    );
+    this.balls.push(this.createBall(calculateLevelSpeedMultiplier(this.level)));
     this.prepareQaBall();
     this.prepareEvasiveBlocksQaBall();
     this.prepareCinematicRipBall();
@@ -405,6 +406,20 @@ export class GameEngine {
         brickHeight,
         brickPadding: EVASIVE_BLOCKS_QA_BRICK_PADDING,
         brickOffsetTop: Math.max(24, canvasHeight * 0.12),
+        brickOffsetLeft: (canvasWidth - totalBricksWidth) / CENTER_DIVISOR,
+      };
+    }
+
+    if (this.isBallTurretMode()) {
+      const brickCols =
+        dimensions.brickCols * BALL_TURRET_BRICK_COLUMN_MULTIPLIER;
+      const totalBricksWidth =
+        brickCols * dimensions.brickWidth +
+        (brickCols - 1) * dimensions.brickPadding;
+
+      return {
+        ...dimensions,
+        brickCols,
         brickOffsetLeft: (canvasWidth - totalBricksWidth) / CENTER_DIVISOR,
       };
     }
@@ -529,6 +544,21 @@ export class GameEngine {
       undefined,
       this.radialGeometry,
     );
+  }
+
+  private createBall(speedMultiplier: number): Ball {
+    const ball = new Ball(
+      this.canvasSize.width,
+      this.canvasSize.height,
+      this.dimensions,
+      speedMultiplier,
+      this.resolveAssetPath,
+      this.radialGeometry,
+    );
+
+    this.positionBallForCurrentMode(ball);
+
+    return ball;
   }
 
   private isSingleBrickQaScenario(): boolean {
@@ -685,6 +715,32 @@ export class GameEngine {
     this.laserFanSpawnsThisLevel = 1;
   }
 
+  private positionBallForCurrentMode(ball: Ball) {
+    if (!this.isBallTurretMode()) return;
+
+    const angle =
+      BALL_TURRET_SPAWN_ANGLES[
+        this.ballTurretSpawnIndex % BALL_TURRET_SPAWN_ANGLES.length
+      ];
+    this.ballTurretSpawnIndex += 1;
+    const spawnRadius =
+      this.radialGeometry.radius -
+      ball.position.radius -
+      BALL_TURRET_SPAWN_BORDER_INSET;
+
+    ball.setPosition(
+      this.radialGeometry.centerX + Math.cos(angle) * spawnRadius,
+      this.radialGeometry.centerY + Math.sin(angle) * spawnRadius,
+    );
+    ball.setDirection(
+      this.convertCartesianAngleToBallDirection(angle + Math.PI),
+    );
+  }
+
+  private convertCartesianAngleToBallDirection(angle: number): number {
+    return angle + Math.PI / 2;
+  }
+
   private async preloadAssets() {
     LOG("🎮 Assets serão carregados sob demanda.");
     this.assetsLoaded = true;
@@ -817,16 +873,7 @@ export class GameEngine {
     this.activePowerUp = null;
     this.resetLaserFanSpawnCounterForLevel();
     this.destroyedBricksSincePowerUp = 0;
-    this.balls = [
-      new Ball(
-        this.canvasSize.width,
-        this.canvasSize.height,
-        this.dimensions,
-        nextSpeedMultiplier,
-        this.resolveAssetPath,
-        this.radialGeometry,
-      ),
-    ];
+    this.balls = [this.createBall(nextSpeedMultiplier)];
     this.prepareQaBall();
     this.bricks = this.createBricks();
     this.startLevelSpeedTracking(nextLevel);
@@ -1035,6 +1082,16 @@ export class GameEngine {
     this.destroyedBricksSincePowerUp = 0;
     const powerUpType = this.selectNextPowerUpType();
     if (!powerUpType) return;
+    this.activePowerUp = this.createPowerUp(powerUpType);
+    this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_SPAWN);
+    void this.logPowerUpEvent(powerUpType, POWER_UP_ACTION_SPAWN);
+  }
+
+  private createPowerUp(powerUpType: PowerUpType): PowerUp {
+    if (this.isBallTurretMode()) {
+      return this.createBallTurretPowerUp(powerUpType);
+    }
+
     const ballPosition = this.balls[0]?.position;
     const spawnX = Math.max(
       POWER_UP_EDGE_PADDING,
@@ -1044,15 +1101,47 @@ export class GameEngine {
       ),
     );
     const spawnY = this.dimensions.brickOffsetTop + POWER_UP_START_Y_OFFSET;
-    this.activePowerUp = new PowerUp(
+    return new PowerUp(
       spawnX,
       spawnY,
       powerUpType,
       this.getPowerUpSize(),
       this.resolveAssetPath,
     );
-    this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_SPAWN);
-    void this.logPowerUpEvent(powerUpType, POWER_UP_ACTION_SPAWN);
+  }
+
+  private createBallTurretPowerUp(powerUpType: PowerUpType): PowerUp {
+    const angle = this.getBallTurretPowerUpDirectionAngle();
+    const motion: RadialPowerUpMotion = {
+      kind: "radial",
+      centerX: this.radialGeometry.centerX,
+      centerY: this.radialGeometry.centerY,
+      directionX: Math.cos(angle),
+      directionY: Math.sin(angle),
+      boundaryRadius: this.radialGeometry.radius,
+    };
+
+    return new PowerUp(
+      this.radialGeometry.centerX,
+      this.radialGeometry.centerY,
+      powerUpType,
+      this.getPowerUpSize(),
+      this.resolveAssetPath,
+      motion,
+    );
+  }
+
+  private getBallTurretPowerUpDirectionAngle(): number {
+    const ballPosition = this.balls[0]?.position;
+    if (!ballPosition) return BALL_TURRET_POWER_UP_FALLBACK_ANGLE;
+
+    const dx = ballPosition.x - this.radialGeometry.centerX;
+    const dy = ballPosition.y - this.radialGeometry.centerY;
+    if (Math.hypot(dx, dy) <= ballPosition.radius) {
+      return BALL_TURRET_POWER_UP_FALLBACK_ANGLE;
+    }
+
+    return Math.atan2(dy, dx);
   }
 
   private selectNextPowerUpType(): PowerUpType | null {
@@ -1093,6 +1182,25 @@ export class GameEngine {
       return;
 
     this.activePowerUp.update();
+    if (this.isBallTurretMode()) {
+      if (this.activePowerUp.hasReachedRadialBoundary()) {
+        const powerUpType = this.activePowerUp.getType();
+        this.activePowerUp = null;
+        void this.logPowerUpEvent(powerUpType, POWER_UP_ACTION_COLLECT);
+        void this.activatePowerUp(powerUpType);
+        return;
+      }
+
+      if (this.activePowerUp.isOutOfBounds(this.canvasSize.height)) {
+        void this.logPowerUpEvent(
+          this.activePowerUp.getType(),
+          POWER_UP_ACTION_MISS,
+        );
+        this.activePowerUp = null;
+      }
+      return;
+    }
+
     if (this.activePowerUp.intersects(this.paddle.position)) {
       const powerUpType = this.activePowerUp.getType();
       this.activePowerUp = null;
@@ -1599,25 +1707,33 @@ export class GameEngine {
     document.removeEventListener("keyup", this.handleKeyUp);
   }
 
-  public startPaddleDrag(clientX: number) {
+  public startPaddleDrag(clientX: number, clientY?: number) {
     this.isTouching = true;
-    this.movePaddleFromClientX(clientX);
+    this.movePaddleFromClientPoint(clientX, clientY);
   }
 
-  public movePaddleDrag(clientX: number) {
+  public movePaddleDrag(clientX: number, clientY?: number) {
     if (!this.isTouching) return;
 
-    this.movePaddleFromClientX(clientX);
+    this.movePaddleFromClientPoint(clientX, clientY);
   }
 
   public endPaddleDrag() {
     this.isTouching = false;
   }
 
-  private movePaddleFromClientX(clientX: number) {
+  private movePaddleFromClientPoint(clientX: number, clientY?: number) {
     const rect = this.canvas.getBoundingClientRect();
     const touchX = clientX - rect.left;
     const canvasX = (touchX / rect.width) * this.canvasSize.width;
+    if (this.isBallTurretMode() && typeof clientY === "number") {
+      const rectHeight = rect.height || this.canvasSize.height;
+      const touchY = clientY - rect.top;
+      const canvasY = (touchY / rectHeight) * this.canvasSize.height;
+      this.paddle.setPositionFromPoint(canvasX, canvasY);
+      return;
+    }
+
     this.paddle.setPosition(canvasX);
   }
 
