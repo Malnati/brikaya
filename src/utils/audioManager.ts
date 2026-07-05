@@ -37,6 +37,15 @@ const AUDIO_UNLOCK_FAILED_REASON = 'audio_context_failed';
 const SILENT_UNLOCK_CHANNEL_COUNT = 1;
 const SILENT_UNLOCK_FRAME_COUNT = 1;
 const SILENT_UNLOCK_GAIN = 0;
+const LATENCY_SENSITIVE_AUDIO_IDS = AUDIO_EVENT_IDS.filter((id) => {
+  const entry = AUDIO_CATALOG[id];
+  return (
+    id !== SILENT_AUDIO_ID &&
+    entry.type !== 'music' &&
+    entry.volume > 0 &&
+    entry.files.length > 0
+  );
+});
 
 type AudioEventStatus =
   | typeof AUDIO_EVENT_PLAYED_STATUS
@@ -75,6 +84,8 @@ interface AudioWindow extends Window {
     contextState: string;
     lastUnlockResult: AudioUnlockResult;
     loaded: number;
+    loadedPaths: string[];
+    latencySensitiveEffectsReady: boolean;
     events: AudioQaEvent[];
   };
 }
@@ -104,6 +115,7 @@ class BrikayaAudioManager {
   private buffers = new Map<string, AudioBuffer>();
   private loadingBuffers = new Map<string, Promise<AudioBuffer | null>>();
   private activeMusic = new Map<AudioId, ActiveMusicNode>();
+  private latencySensitiveEffectsPreload: Promise<void> | null = null;
   private muted = true;
   private musicMuted = false;
   private unlocked = false;
@@ -145,6 +157,7 @@ class BrikayaAudioManager {
   async unlock(): Promise<boolean> {
     if (this.unlocked && this.audioContext?.state === AUDIO_CONTEXT_RUNNING_STATE) {
       this.recordUnlockResult(true, AUDIO_UNLOCK_ALREADY_RUNNING_REASON);
+      void this.preloadLatencySensitiveEffects();
       return true;
     }
 
@@ -167,6 +180,9 @@ class BrikayaAudioManager {
       this.unlocked = this.audioContext?.state === AUDIO_CONTEXT_RUNNING_STATE;
       this.recordUnlockResult(this.unlocked, AUDIO_UNLOCK_OK_REASON);
       this.applyMasterVolume();
+      if (this.unlocked) {
+        void this.preloadLatencySensitiveEffects();
+      }
       return this.unlocked;
     } catch (error) {
       WARN(AUDIO_ERROR_MESSAGE, error);
@@ -181,9 +197,22 @@ class BrikayaAudioManager {
     await Promise.all(AUDIO_PUBLIC_PATHS.map(path => this.loadBuffer(path)));
   }
 
+  async preloadLatencySensitiveEffects(): Promise<void> {
+    if (!this.audioContext) return;
+    if (!this.latencySensitiveEffectsPreload) {
+      const paths = LATENCY_SENSITIVE_AUDIO_IDS.flatMap(
+        (id) => AUDIO_CATALOG[id].files,
+      );
+      this.latencySensitiveEffectsPreload = Promise.all(
+        paths.map((path) => this.loadBuffer(path)),
+      ).then(() => undefined);
+    }
+    await this.latencySensitiveEffectsPreload;
+  }
+
   async play(id: AudioId): Promise<void> {
     const entry = AUDIO_CATALOG[id];
-    const path = this.pickFile(id);
+    const path = this.pickReadyFile(id) || this.pickFile(id);
 
     if (id === SILENT_AUDIO_ID || entry.volume === 0 || !path) {
       this.recordEvent(id, AUDIO_EVENT_SILENT_STATUS, path);
@@ -210,8 +239,14 @@ class BrikayaAudioManager {
       return;
     }
 
-    const buffer = await this.loadBuffer(path);
-    if (!buffer || !this.audioContext || !this.sfxGain) {
+    const buffer = this.buffers.get(path) || null;
+    if (!buffer) {
+      this.preloadAudioEntry(id);
+      this.recordEvent(id, AUDIO_EVENT_BLOCKED_STATUS, path);
+      return;
+    }
+
+    if (!this.audioContext || !this.sfxGain) {
       this.recordEvent(id, AUDIO_EVENT_FAILED_STATUS, path);
       return;
     }
@@ -335,6 +370,8 @@ class BrikayaAudioManager {
       contextState: this.audioContext?.state || AUDIO_CONTEXT_MISSING_STATE,
       lastUnlockResult: this.lastUnlockResult,
       loaded: this.buffers.size,
+      loadedPaths: [...this.buffers.keys()].sort(),
+      latencySensitiveEffectsReady: this.areLatencySensitiveEffectsReady(),
       events: [...(audioWindow.__brikayaAudioEvents || [])],
     });
   }
@@ -389,6 +426,30 @@ class BrikayaAudioManager {
     const files = AUDIO_CATALOG[id].files;
     if (files.length === 0) return null;
     return files[Math.floor(Math.random() * files.length)] || files[0];
+  }
+
+  private pickReadyFile(id: AudioId): string | null {
+    const readyFiles = AUDIO_CATALOG[id].files.filter((path) =>
+      this.buffers.has(path),
+    );
+    if (readyFiles.length === 0) return null;
+    return (
+      readyFiles[Math.floor(Math.random() * readyFiles.length)] ||
+      readyFiles[0]
+    );
+  }
+
+  private preloadAudioEntry(id: AudioId): void {
+    if (!this.audioContext) return;
+    for (const path of AUDIO_CATALOG[id].files) {
+      void this.loadBuffer(path);
+    }
+  }
+
+  private areLatencySensitiveEffectsReady(): boolean {
+    return LATENCY_SENSITIVE_AUDIO_IDS.every((id) =>
+      AUDIO_CATALOG[id].files.every((path) => this.buffers.has(path)),
+    );
   }
 
   private async loadBuffer(path: string): Promise<AudioBuffer | null> {
