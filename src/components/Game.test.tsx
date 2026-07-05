@@ -80,6 +80,7 @@ describe("Game", () => {
       true,
       "retro-default",
       false,
+      "classic",
       expect.anything(),
     );
   });
@@ -105,6 +106,28 @@ describe("Game", () => {
       false,
       "retro-default",
       true,
+      "classic",
+      expect.anything(),
+    );
+  });
+
+  it("propaga modo torreta para o loop do jogo", () => {
+    render(<Game onScoreUpdate={jest.fn()} gameMode="ball-turret" />);
+
+    expect(useGameLoop).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.any(Function),
+      undefined,
+      undefined,
+      expect.any(Object),
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      false,
+      "retro-default",
+      false,
+      "ball-turret",
       expect.anything(),
     );
   });
