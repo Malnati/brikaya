@@ -83,6 +83,8 @@ const MAX_QA_DEVICE_SCALE_FACTOR = 1;
 const NAVIGATION_TIMEOUT_MS = 60000;
 const SERVICE_WORKER_READY_TIMEOUT_MS = 10000;
 const MEDIA_READY_TIMEOUT_MS = 5000;
+const CACHE_READY_TIMEOUT_MS = 7000;
+const CACHE_READY_POLL_MS = 250;
 const TITLE_SELECTOR = '.game-cinematic-overlay__title';
 const DETAIL_SELECTOR = '.game-cinematic-overlay__detail';
 const CONTENT_SELECTOR = '[data-testid="game-cinematic-content"]';
@@ -142,10 +144,8 @@ function screenshotPathForViewport(basePath, viewportName, index) {
   const viewportSuffix =
     RIP_SCREENSHOT_VIEWPORT_SUFFIXES.get(viewportName) || viewportName;
 
-  return basePath.replace(FILE_NAME_EXTENSION_PATTERN, (fileName, extension) => {
-    const baseStem = fileName.slice(0, -extension.length);
-
-    return `${baseStem}-${RIP_SCREENSHOT_SHORT_STEM}-${viewportSuffix}${extension}`;
+  return basePath.replace(FILE_NAME_EXTENSION_PATTERN, (_fileName, extension) => {
+    return `${RIP_SCREENSHOT_SHORT_STEM}-${viewportSuffix}${extension}`;
   });
 }
 
@@ -480,6 +480,10 @@ function assertMedia(snapshot, requiredIds, label) {
   }
 }
 
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function cachedCinematicPaths(page) {
   return page.evaluate(async ({ paths, manifestPath, hashSearchParam }) => {
     if (!('serviceWorker' in navigator) || !('caches' in window)) return [];
@@ -514,6 +518,21 @@ async function cachedCinematicPaths(page) {
     manifestPath: ASSET_MANIFEST_PATH,
     hashSearchParam: ASSET_HASH_SEARCH_PARAM,
   });
+}
+
+
+async function waitForCachedCinematicPaths(page) {
+  const deadline = Date.now() + CACHE_READY_TIMEOUT_MS;
+  let cachedPaths = [];
+
+  do {
+    cachedPaths = await cachedCinematicPaths(page);
+    const missingPaths = REQUIRED_CINEMATIC_MEDIA_PATHS.filter(path => !cachedPaths.includes(path));
+    if (missingPaths.length === 0) return cachedPaths;
+    await delay(CACHE_READY_POLL_MS);
+  } while (Date.now() < deadline);
+
+  return cachedPaths;
 }
 
 async function run() {
@@ -716,7 +735,7 @@ async function run() {
     const ripAudioIds = primaryRipResult.ripAudioIds;
     const countdownAfterRip = primaryRipResult.countdownAfterRip;
     const ripAfterTimeoutState = primaryRipResult.ripAfterTimeoutState;
-    const cachedPaths = await cachedCinematicPaths(page);
+    const cachedPaths = await waitForCachedCinematicPaths(page);
 
     assertFullViewport(levelUpState, 'level-up');
     assertFullViewport(ripState, 'rip');

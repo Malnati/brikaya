@@ -655,6 +655,8 @@ canvas {
   --game-cinematic-rip-visible-top: 0px;
   --game-cinematic-rip-visible-width: 100vw;
   --game-cinematic-rip-visible-height: 100dvh;
+  --game-cinematic-visible-width: 100vw;
+  --game-cinematic-visible-height: 100dvh;
   --game-cinematic-rip-media-size: min(
     92vw,
     calc(var(--game-cinematic-rip-visible-height) - 24px),
@@ -768,8 +770,14 @@ canvas {
 }
 
 .game-cinematic-overlay--countdown .game-cinematic-overlay__composition {
-  width: min(100%, 420px, 88vmin);
-  height: min(100%, 420px, 88vmin);
+  --game-cinematic-countdown-size: min(
+    420px,
+    88vmin,
+    max(96px, calc(var(--game-cinematic-visible-width) - 16px)),
+    max(96px, calc(var(--game-cinematic-visible-height) - 40px))
+  );
+  width: var(--game-cinematic-countdown-size);
+  height: var(--game-cinematic-countdown-size);
 }
 
 .game-cinematic-overlay--countdown .game-cinematic-overlay__content {
@@ -786,8 +794,8 @@ canvas {
 .game-cinematic-overlay__countdown-halo {
   position: absolute;
   z-index: 0;
-  width: min(94%, 520px);
-  height: min(94%, 520px);
+  width: min(94%, 520px, calc(var(--game-cinematic-countdown-size, 420px) * 0.94));
+  height: min(94%, 520px, calc(var(--game-cinematic-countdown-size, 420px) * 0.94));
   border-radius: 999px;
   pointer-events: none;
   user-select: none;
@@ -805,6 +813,11 @@ canvas {
 .game-cinematic-overlay--countdown .game-cinematic-overlay__count {
   position: absolute;
   display: block;
+  font-size: clamp(
+    3.5rem,
+    min(30vw, calc(var(--game-cinematic-countdown-size, 420px) * 0.68)),
+    16rem
+  );
   line-height: 1;
 }
 

@@ -1,8 +1,8 @@
 {
   "levelTargetUrl": "https://brikaya.com/?qaScenario=single-brick-phase-clear",
   "ripTargetUrl": "https://brikaya.com/?qaScenario=cinematic-rip",
-  "countdownDurationMs": 1784,
-  "ripDurationMs": 1752,
+  "countdownDurationMs": 1774,
+  "ripDurationMs": 1739,
   "countdownState": {
     "text": "3",
     "type": "countdown",
@@ -20,11 +20,11 @@
       "x": 0,
       "y": 0,
       "width": 402,
-      "height": 874,
+      "height": 770,
       "right": 402,
-      "bottom": 874,
+      "bottom": 770,
       "centerX": 201,
-      "centerY": 437
+      "centerY": 385
     },
     "canvasRect": {
       "x": 0,
@@ -38,23 +38,43 @@
     },
     "contentRect": {
       "x": 24.125,
-      "y": 260.125,
+      "y": 208.125,
       "width": 353.75,
       "height": 353.75,
       "right": 377.875,
-      "bottom": 613.875,
+      "bottom": 561.875,
       "centerX": 201,
-      "centerY": 437
+      "centerY": 385
     },
     "compositionRect": {
       "x": 24.125,
-      "y": 260.125,
+      "y": 208.125,
       "width": 353.75,
       "height": 353.75,
       "right": 377.875,
-      "bottom": 613.875,
+      "bottom": 561.875,
       "centerX": 201,
-      "centerY": 437
+      "centerY": 385
+    },
+    "countdownCountRect": {
+      "x": 168.41140747070312,
+      "y": 334.2496337890625,
+      "width": 65.17720031738281,
+      "height": 101.500732421875,
+      "right": 233.58860778808594,
+      "bottom": 435.7503662109375,
+      "centerX": 201.00000762939453,
+      "centerY": 385
+    },
+    "countdownHaloRect": {
+      "x": 56.31996154785156,
+      "y": 240.31996154785156,
+      "width": 289.360107421875,
+      "height": 289.360107421875,
+      "right": 345.68006896972656,
+      "bottom": 529.6800689697266,
+      "centerX": 201.00001525878906,
+      "centerY": 385.00001525878906
     },
     "titleRect": null,
     "detailRect": null,
@@ -76,12 +96,15 @@
       "x": 0,
       "y": 0,
       "width": 402,
-      "height": 874,
+      "height": 770,
       "centerX": 201,
-      "centerY": 437,
+      "centerY": 385,
       "right": 402,
-      "bottom": 874,
-      "browserChromeBottomInset": 0
+      "bottom": 770,
+      "browserChromeTopInset": 0,
+      "browserChromeBottomInset": 104,
+      "browserChromeLeftInset": 0,
+      "browserChromeRightInset": 0
     },
     "hasBodyScroll": false,
     "media": [
@@ -91,14 +114,14 @@
         "ariaHidden": "true",
         "alt": "",
         "rect": {
-          "x": 62.183998107910156,
-          "y": 298.1839904785156,
-          "width": 277.63201904296875,
-          "height": 277.6320495605469,
-          "right": 339.8160171508789,
-          "bottom": 575.8160400390625,
-          "centerX": 201.00000762939453,
-          "centerY": 437.00001525878906
+          "x": 62.18289566040039,
+          "y": 246.18289184570312,
+          "width": 277.63421630859375,
+          "height": 277.6342468261719,
+          "right": 339.81711196899414,
+          "bottom": 523.817138671875,
+          "centerX": 201.00000381469727,
+          "centerY": 385.00001525878906
         }
       },
       {
@@ -107,18 +130,342 @@
         "ariaHidden": "true",
         "alt": "",
         "rect": {
-          "x": 136.2827911376953,
-          "y": 372.28277587890625,
-          "width": 129.43443298339844,
-          "height": 129.4344482421875,
-          "right": 265.71722412109375,
-          "bottom": 501.71722412109375,
-          "centerX": 201.00000762939453,
-          "centerY": 437
+          "x": 136.29306030273438,
+          "y": 320.2930603027344,
+          "width": 129.41387939453125,
+          "height": 129.41387939453125,
+          "right": 265.7069396972656,
+          "bottom": 449.7069396972656,
+          "centerX": 201,
+          "centerY": 385
         }
       }
     ]
   },
+  "countdownResults": [
+    {
+      "viewportName": "iphone-17-default",
+      "viewport": {
+        "name": "iphone-17-default",
+        "label": "iPhone 17 default portrait",
+        "models": [
+          "iPhone 17"
+        ],
+        "category": "mobile",
+        "orientation": "portrait",
+        "width": 402,
+        "height": 874,
+        "deviceScaleFactor": 3,
+        "isMobile": true,
+        "hasTouch": true,
+        "priority": "gameplay",
+        "smokeOverlays": true,
+        "screenshotRole": "mobile-default"
+      },
+      "countdownState": {
+        "text": "3",
+        "type": "countdown",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 874,
+          "right": 402,
+          "bottom": 874,
+          "centerX": 201,
+          "centerY": 437
+        },
+        "stageRect": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 770,
+          "right": 402,
+          "bottom": 770,
+          "centerX": 201,
+          "centerY": 385
+        },
+        "canvasRect": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 402,
+          "right": 402,
+          "bottom": 402,
+          "centerX": 201,
+          "centerY": 201
+        },
+        "contentRect": {
+          "x": 24.125,
+          "y": 208.125,
+          "width": 353.75,
+          "height": 353.75,
+          "right": 377.875,
+          "bottom": 561.875,
+          "centerX": 201,
+          "centerY": 385
+        },
+        "compositionRect": {
+          "x": 24.125,
+          "y": 208.125,
+          "width": 353.75,
+          "height": 353.75,
+          "right": 377.875,
+          "bottom": 561.875,
+          "centerX": 201,
+          "centerY": 385
+        },
+        "countdownCountRect": {
+          "x": 168.41140747070312,
+          "y": 334.2496337890625,
+          "width": 65.17720031738281,
+          "height": 101.500732421875,
+          "right": 233.58860778808594,
+          "bottom": 435.7503662109375,
+          "centerX": 201.00000762939453,
+          "centerY": 385
+        },
+        "countdownHaloRect": {
+          "x": 56.31996154785156,
+          "y": 240.31996154785156,
+          "width": 289.360107421875,
+          "height": 289.360107421875,
+          "right": 345.68006896972656,
+          "bottom": 529.6800689697266,
+          "centerX": 201.00001525878906,
+          "centerY": 385.00001525878906
+        },
+        "titleRect": null,
+        "detailRect": null,
+        "viewport": {
+          "width": 402,
+          "height": 874
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 874,
+          "centerX": 201,
+          "centerY": 437,
+          "right": 402,
+          "bottom": 874
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 770,
+          "centerX": 201,
+          "centerY": 385,
+          "right": 402,
+          "bottom": 770,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 104,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "hasBodyScroll": false,
+        "media": [
+          {
+            "id": "countdown-circle",
+            "src": "/assets/visual/vfx/vfx-countdown-circle-overlay.svg",
+            "ariaHidden": "true",
+            "alt": "",
+            "rect": {
+              "x": 62.18289566040039,
+              "y": 246.18289184570312,
+              "width": 277.63421630859375,
+              "height": 277.6342468261719,
+              "right": 339.81711196899414,
+              "bottom": 523.817138671875,
+              "centerX": 201.00000381469727,
+              "centerY": 385.00001525878906
+            }
+          },
+          {
+            "id": "countdown-spark",
+            "src": "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
+            "ariaHidden": "true",
+            "alt": "",
+            "rect": {
+              "x": 136.29306030273438,
+              "y": 320.2930603027344,
+              "width": 129.41387939453125,
+              "height": 129.41387939453125,
+              "right": 265.7069396972656,
+              "bottom": 449.7069396972656,
+              "centerX": 201,
+              "centerY": 385
+            }
+          }
+        ]
+      },
+      "countdownDurationMs": 1774,
+      "countdownScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-countdown.png"
+    },
+    {
+      "viewportName": "iphone-17-default-landscape",
+      "viewport": {
+        "name": "iphone-17-default-landscape",
+        "label": "iPhone 17 default landscape",
+        "models": [
+          "iPhone 17"
+        ],
+        "category": "mobile",
+        "orientation": "landscape",
+        "width": 874,
+        "height": 402,
+        "deviceScaleFactor": 3,
+        "isMobile": true,
+        "hasTouch": true,
+        "priority": "gameplay",
+        "smokeOverlays": false,
+        "screenshotRole": "landscape-default"
+      },
+      "countdownState": {
+        "text": "3",
+        "type": "countdown",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "right": 874,
+          "bottom": 402,
+          "centerX": 437,
+          "centerY": 201
+        },
+        "stageRect": {
+          "x": 0,
+          "y": 236,
+          "width": 874,
+          "height": 166,
+          "right": 874,
+          "bottom": 402,
+          "centerX": 437,
+          "centerY": 319
+        },
+        "canvasRect": {
+          "x": 6,
+          "y": 4,
+          "width": 862,
+          "height": 394,
+          "right": 868,
+          "bottom": 398,
+          "centerX": 437,
+          "centerY": 201
+        },
+        "contentRect": {
+          "x": 374,
+          "y": 256,
+          "width": 126,
+          "height": 126,
+          "right": 500,
+          "bottom": 382,
+          "centerX": 437,
+          "centerY": 319
+        },
+        "compositionRect": {
+          "x": 374,
+          "y": 256,
+          "width": 126,
+          "height": 126,
+          "right": 500,
+          "bottom": 382,
+          "centerX": 437,
+          "centerY": 319
+        },
+        "countdownCountRect": {
+          "x": 416.09405517578125,
+          "y": 286.4387512207031,
+          "width": 41.8118896484375,
+          "height": 65.12249755859375,
+          "right": 457.90594482421875,
+          "bottom": 351.5612487792969,
+          "centerX": 437,
+          "centerY": 319
+        },
+        "countdownHaloRect": {
+          "x": 388.44061279296875,
+          "y": 270.44061279296875,
+          "width": 97.1187744140625,
+          "height": 97.1187744140625,
+          "right": 485.55938720703125,
+          "bottom": 367.55938720703125,
+          "centerX": 437,
+          "centerY": 319
+        },
+        "titleRect": null,
+        "detailRect": null,
+        "viewport": {
+          "width": 874,
+          "height": 402
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "centerX": 437,
+          "centerY": 201,
+          "right": 874,
+          "bottom": 402
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 236,
+          "width": 874,
+          "height": 166,
+          "centerX": 437,
+          "centerY": 319,
+          "right": 874,
+          "bottom": 402,
+          "browserChromeTopInset": 236,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "hasBodyScroll": false,
+        "media": [
+          {
+            "id": "countdown-circle",
+            "src": "/assets/visual/vfx/vfx-countdown-circle-overlay.svg",
+            "ariaHidden": "true",
+            "alt": "",
+            "rect": {
+              "x": 387.3416748046875,
+              "y": 269.3416748046875,
+              "width": 99.316650390625,
+              "height": 99.316650390625,
+              "right": 486.6583251953125,
+              "bottom": 368.6583251953125,
+              "centerX": 437,
+              "centerY": 319
+            }
+          },
+          {
+            "id": "countdown-spark",
+            "src": "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
+            "ariaHidden": "true",
+            "alt": "",
+            "rect": {
+              "x": 416.1368713378906,
+              "y": 298.1368713378906,
+              "width": 41.72625732421875,
+              "height": 41.72625732421875,
+              "right": 457.8631286621094,
+              "bottom": 339.8631286621094,
+              "centerX": 437,
+              "centerY": 319
+            }
+          }
+        ]
+      },
+      "countdownDurationMs": 1804,
+      "countdownScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-countdown-landscape.png"
+    }
+  ],
   "levelUpState": {
     "text": "Subindo de nívelFase 2Velocidade 1.12×",
     "type": "levelUp",
@@ -163,6 +510,8 @@
       "centerY": 200.9921875
     },
     "compositionRect": null,
+    "countdownCountRect": null,
+    "countdownHaloRect": null,
     "titleRect": {
       "x": 30.625,
       "y": 160.3125,
@@ -201,12 +550,15 @@
       "x": 0,
       "y": 0,
       "width": 402,
-      "height": 874,
+      "height": 770,
       "centerX": 201,
-      "centerY": 437,
+      "centerY": 385,
       "right": 402,
-      "bottom": 874,
-      "browserChromeBottomInset": 0
+      "bottom": 770,
+      "browserChromeTopInset": 0,
+      "browserChromeBottomInset": 104,
+      "browserChromeLeftInset": 0,
+      "browserChromeRightInset": 0
     },
     "hasBodyScroll": false,
     "media": [
@@ -216,14 +568,14 @@
         "ariaHidden": "true",
         "alt": "",
         "rect": {
-          "x": 45.26523971557617,
-          "y": 45.26523971557617,
-          "width": 311.46954345703125,
-          "height": 311.46954345703125,
-          "right": 356.7347831726074,
-          "bottom": 356.7347831726074,
-          "centerX": 201.0000114440918,
-          "centerY": 201.0000114440918
+          "x": 44.44622039794922,
+          "y": 44.44622039794922,
+          "width": 313.1075439453125,
+          "height": 313.1075439453125,
+          "right": 357.5537643432617,
+          "bottom": 357.5537643432617,
+          "centerX": 200.99999237060547,
+          "centerY": 200.99999237060547
         }
       },
       {
@@ -232,12 +584,12 @@
         "ariaHidden": "true",
         "alt": "",
         "rect": {
-          "x": 129.12905883789062,
-          "y": 129.12905883789062,
-          "width": 143.74188232421875,
-          "height": 143.74188232421875,
-          "right": 272.8709411621094,
-          "bottom": 272.8709411621094,
+          "x": 130.639892578125,
+          "y": 130.639892578125,
+          "width": 140.72021484375,
+          "height": 140.72021484375,
+          "right": 271.360107421875,
+          "bottom": 271.360107421875,
           "centerX": 201,
           "centerY": 201
         }
@@ -297,6 +649,8 @@
       "centerX": 201,
       "centerY": 385
     },
+    "countdownCountRect": null,
+    "countdownHaloRect": null,
     "titleRect": {
       "x": 115.8125,
       "y": 322.8125,
@@ -340,7 +694,10 @@
       "centerY": 385,
       "right": 402,
       "bottom": 770,
-      "browserChromeBottomInset": 104
+      "browserChromeTopInset": 0,
+      "browserChromeBottomInset": 104,
+      "browserChromeLeftInset": 0,
+      "browserChromeRightInset": 0
     },
     "hasBodyScroll": false,
     "media": [
@@ -350,14 +707,14 @@
         "ariaHidden": "true",
         "alt": "",
         "rect": {
-          "x": 47.27207946777344,
-          "y": 220.6852264404297,
-          "width": 307.455810546875,
-          "height": 328.6295166015625,
-          "right": 354.72789001464844,
-          "bottom": 549.3147430419922,
-          "centerX": 200.99998474121094,
-          "centerY": 384.99998474121094
+          "x": 47.79048156738281,
+          "y": 221.2393341064453,
+          "width": 306.4190673828125,
+          "height": 327.5213623046875,
+          "right": 354.2095489501953,
+          "bottom": 548.7606964111328,
+          "centerX": 201.00001525878906,
+          "centerY": 385.00001525878906
         }
       }
     ]
@@ -435,6 +792,8 @@
           "centerX": 201,
           "centerY": 385
         },
+        "countdownCountRect": null,
+        "countdownHaloRect": null,
         "titleRect": {
           "x": 115.8125,
           "y": 322.8125,
@@ -478,7 +837,10 @@
           "centerY": 385,
           "right": 402,
           "bottom": 770,
-          "browserChromeBottomInset": 104
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 104,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
         },
         "hasBodyScroll": false,
         "media": [
@@ -488,19 +850,19 @@
             "ariaHidden": "true",
             "alt": "",
             "rect": {
-              "x": 47.27207946777344,
-              "y": 220.6852264404297,
-              "width": 307.455810546875,
-              "height": 328.6295166015625,
-              "right": 354.72789001464844,
-              "bottom": 549.3147430419922,
-              "centerX": 200.99998474121094,
-              "centerY": 384.99998474121094
+              "x": 47.79048156738281,
+              "y": 221.2393341064453,
+              "width": 306.4190673828125,
+              "height": 327.5213623046875,
+              "right": 354.2095489501953,
+              "bottom": 548.7606964111328,
+              "centerX": 201.00001525878906,
+              "centerY": 385.00001525878906
             }
           }
         ]
       },
-      "ripDurationMs": 1752,
+      "ripDurationMs": 1739,
       "ripAfterTimeoutState": {
         "text": "",
         "type": "",
@@ -518,6 +880,8 @@
         },
         "contentRect": null,
         "compositionRect": null,
+        "countdownCountRect": null,
+        "countdownHaloRect": null,
         "titleRect": null,
         "detailRect": null,
         "viewport": {
@@ -543,7 +907,10 @@
           "centerY": 385,
           "right": 402,
           "bottom": 770,
-          "browserChromeBottomInset": 104
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 104,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
         },
         "hasBodyScroll": false,
         "media": []
@@ -632,6 +999,8 @@
           "centerX": 437,
           "centerY": 201
         },
+        "countdownCountRect": null,
+        "countdownHaloRect": null,
         "titleRect": {
           "x": 252.078125,
           "y": 88.1875,
@@ -675,7 +1044,10 @@
           "centerY": 201,
           "right": 874,
           "bottom": 402,
-          "browserChromeBottomInset": 0
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
         },
         "hasBodyScroll": false,
         "media": [
@@ -685,19 +1057,19 @@
             "ariaHidden": "true",
             "alt": "",
             "rect": {
-              "x": 270.14703369140625,
-              "y": 48.27214050292969,
-              "width": 333.7059326171875,
-              "height": 305.4556884765625,
-              "right": 603.8529663085938,
-              "bottom": 353.7278289794922,
+              "x": 270.14697265625,
+              "y": 48.27207946777344,
+              "width": 333.7060546875,
+              "height": 305.455810546875,
+              "right": 603.85302734375,
+              "bottom": 353.72789001464844,
               "centerX": 437,
               "centerY": 200.99998474121094
             }
           }
         ]
       },
-      "ripDurationMs": 1785,
+      "ripDurationMs": 1793,
       "ripAfterTimeoutState": {
         "text": "",
         "type": "",
@@ -715,6 +1087,8 @@
         },
         "contentRect": null,
         "compositionRect": null,
+        "countdownCountRect": null,
+        "countdownHaloRect": null,
         "titleRect": null,
         "detailRect": null,
         "viewport": {
@@ -740,7 +1114,10 @@
           "centerY": 201,
           "right": 874,
           "bottom": 402,
-          "browserChromeBottomInset": 0
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
         },
         "hasBodyScroll": false,
         "media": []
@@ -830,6 +1207,8 @@
           "centerX": 410,
           "centerY": 590
         },
+        "countdownCountRect": null,
+        "countdownHaloRect": null,
         "titleRect": {
           "x": 236.25,
           "y": 482.515625,
@@ -873,7 +1252,10 @@
           "centerY": 590,
           "right": 820,
           "bottom": 1180,
-          "browserChromeBottomInset": 0
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
         },
         "hasBodyScroll": false,
         "media": [
@@ -895,7 +1277,7 @@
           }
         ]
       },
-      "ripDurationMs": 1798,
+      "ripDurationMs": 1804,
       "ripAfterTimeoutState": {
         "text": "",
         "type": "",
@@ -913,6 +1295,8 @@
         },
         "contentRect": null,
         "compositionRect": null,
+        "countdownCountRect": null,
+        "countdownHaloRect": null,
         "titleRect": null,
         "detailRect": null,
         "viewport": {
@@ -938,7 +1322,10 @@
           "centerY": 590,
           "right": 820,
           "bottom": 1180,
-          "browserChromeBottomInset": 0
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
         },
         "hasBodyScroll": false,
         "media": []
@@ -1027,6 +1414,8 @@
           "centerX": 720,
           "centerY": 450
         },
+        "countdownCountRect": null,
+        "countdownHaloRect": null,
         "titleRect": {
           "x": 535.078125,
           "y": 337.1875,
@@ -1070,7 +1459,10 @@
           "centerY": 450,
           "right": 1440,
           "bottom": 900,
-          "browserChromeBottomInset": 0
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
         },
         "hasBodyScroll": false,
         "media": [
@@ -1080,19 +1472,19 @@
             "ariaHidden": "true",
             "alt": "",
             "rect": {
-              "x": 395.03643798828125,
-              "y": 125.03643798828125,
-              "width": 649.9271850585938,
-              "height": 649.9271240234375,
-              "right": 1044.963623046875,
-              "bottom": 774.9635620117188,
-              "centerX": 720.0000305175781,
+              "x": 395.12469482421875,
+              "y": 125.12469482421875,
+              "width": 649.7505493164062,
+              "height": 649.7506103515625,
+              "right": 1044.875244140625,
+              "bottom": 774.8753051757812,
+              "centerX": 719.9999694824219,
               "centerY": 450
             }
           }
         ]
       },
-      "ripDurationMs": 1792,
+      "ripDurationMs": 1796,
       "ripAfterTimeoutState": {
         "text": "",
         "type": "",
@@ -1110,6 +1502,8 @@
         },
         "contentRect": null,
         "compositionRect": null,
+        "countdownCountRect": null,
+        "countdownHaloRect": null,
         "titleRect": null,
         "detailRect": null,
         "viewport": {
@@ -1135,7 +1529,10 @@
           "centerY": 450,
           "right": 1440,
           "bottom": 900,
-          "browserChromeBottomInset": 0
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
         },
         "hasBodyScroll": false,
         "media": []
@@ -1155,7 +1552,7 @@
   ],
   "levelAudioIds": [
     "bgm-gameplay-loop-main",
-    "sfx-brick-break-blue",
+    "sfx-brick-break-red",
     "sfx-brick-hit",
     "sfx-game-start",
     "sfx-level-complete",
@@ -1180,6 +1577,7 @@
     "/assets/visual/vfx/vfx-game-over-rip-smoke.svg"
   ],
   "countdownScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-countdown.png",
+  "countdownLandscapeScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-countdown-landscape.png",
   "levelUpScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-level-up.png",
   "ripScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-rip.png",
   "externalAudioRequests": [],
