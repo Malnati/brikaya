@@ -264,6 +264,8 @@ async function readBallTurretState(page) {
       fullCircleTolerance,
       joystickTestId,
       activeTrampolineArcMinSweep,
+      boundaryReboundColorFragment,
+      boundaryLossColorFragment,
     }) => {
       const internalCopyPattern = new RegExp(internalCopyPatternSource, "i");
       const oldTurretAimCopyPattern = new RegExp(
@@ -337,12 +339,12 @@ async function readBallTurretState(page) {
         const sweep = Math.abs(arc.endAngle - arc.startAngle);
         const strokeStyle = String(arc.strokeStyle || "");
         const isBoundarySegment =
-          strokeStyle.includes("73, 255, 199") ||
-          strokeStyle.includes("255, 96, 120");
+          strokeStyle.includes(boundaryReboundColorFragment) ||
+          strokeStyle.includes(boundaryLossColorFragment);
         return (
-          !isBoundarySegment &&
           Math.abs(arc.x - centerX) < 2 &&
           Math.abs(arc.y - centerY) < 2 &&
+          !isBoundarySegment &&
           sweep > activeTrampolineArcMinSweep &&
           sweep < Math.PI * 2 - fullCircleTolerance &&
           arc.radius > Math.min(canvasWidth, canvasHeight) * 0.3
@@ -363,8 +365,8 @@ async function readBallTurretState(page) {
           Math.abs(arc.x - centerX) < 2 &&
           Math.abs(arc.y - centerY) < 2 &&
           arc.radius > Math.min(canvasWidth, canvasHeight) * 0.3 &&
-          (strokeStyle.includes("73, 255, 199") ||
-            strokeStyle.includes("255, 96, 120"))
+          (strokeStyle.includes(boundaryReboundColorFragment) ||
+            strokeStyle.includes(boundaryLossColorFragment))
         );
       });
       const uniqueBoundarySegments = new Set(
@@ -372,7 +374,9 @@ async function readBallTurretState(page) {
           [
             Math.round(arc.startAngle * 1000),
             Math.round(arc.endAngle * 1000),
-            String(arc.strokeStyle || "").includes("73, 255, 199")
+            String(arc.strokeStyle || "").includes(
+              boundaryReboundColorFragment,
+            )
               ? "rebound"
               : "loss",
           ].join(":"),
@@ -381,7 +385,9 @@ async function readBallTurretState(page) {
       const uniqueReboundBoundarySegments = new Set(
         boundarySegmentArcs
           .filter((arc) =>
-            String(arc.strokeStyle || "").includes("73, 255, 199"),
+            String(arc.strokeStyle || "").includes(
+              boundaryReboundColorFragment,
+            ),
           )
           .map((arc) =>
             [Math.round(arc.startAngle * 1000), Math.round(arc.endAngle * 1000)]
@@ -391,7 +397,9 @@ async function readBallTurretState(page) {
       const uniqueLossBoundarySegments = new Set(
         boundarySegmentArcs
           .filter((arc) =>
-            String(arc.strokeStyle || "").includes("255, 96, 120"),
+            String(arc.strokeStyle || "").includes(
+              boundaryLossColorFragment,
+            ),
           )
           .map((arc) =>
             [Math.round(arc.startAngle * 1000), Math.round(arc.endAngle * 1000)]
@@ -485,6 +493,8 @@ async function readBallTurretState(page) {
       fullCircleTolerance: FULL_CIRCLE_TOLERANCE,
       joystickTestId: JOYSTICK_TEST_ID,
       activeTrampolineArcMinSweep: ACTIVE_TRAMPOLINE_ARC_MIN_SWEEP,
+      boundaryReboundColorFragment: BOUNDARY_REBOUND_COLOR_FRAGMENT,
+      boundaryLossColorFragment: BOUNDARY_LOSS_COLOR_FRAGMENT,
     },
   );
 }

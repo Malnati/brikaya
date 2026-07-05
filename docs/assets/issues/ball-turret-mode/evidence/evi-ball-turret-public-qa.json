@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-07-05T15:19:12.495Z",
+  "checkedAt": "2026-07-05T15:27:11.195Z",
   "publicUrl": "http://127.0.0.1:4173/?qaScenario=ball-turret",
   "qaScenario": "ball-turret",
   "results": [
@@ -333,16 +333,16 @@
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 1877,
+          "brickDrawCount": 1765,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 256,
-          "activeTrampolineArcCount": 2996,
-          "activeTrampolineCenterAngle": 1.5707963267948966,
+          "fullRingArcCount": 240,
+          "activeTrampolineArcCount": 2874,
+          "activeTrampolineCenterAngle": 1.5928922863908568,
           "boundarySegmentCount": 18,
           "reboundBoundarySegmentCount": 9,
           "lossBoundarySegmentCount": 9
@@ -399,15 +399,15 @@
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 128,
+          "brickDrawCount": 64,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 16,
-          "activeTrampolineArcCount": 198,
+          "fullRingArcCount": 24,
+          "activeTrampolineArcCount": 297,
           "activeTrampolineCenterAngle": 1.5707963267948966,
           "boundarySegmentCount": 18,
           "reboundBoundarySegmentCount": 9,
@@ -465,16 +465,16 @@
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 1815,
+          "brickDrawCount": 1765,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 248,
-          "activeTrampolineArcCount": 2905,
-          "activeTrampolineCenterAngle": 1.5707963267948966,
+          "fullRingArcCount": 240,
+          "activeTrampolineArcCount": 2874,
+          "activeTrampolineCenterAngle": 1.5928922863908568,
           "boundarySegmentCount": 18,
           "reboundBoundarySegmentCount": 9,
           "lossBoundarySegmentCount": 9
@@ -512,10 +512,10 @@
           "y": 0,
           "active": 0
         },
-        "rightHoldAngularDelta": 1.1309733552923262,
-        "rightUpHoldAngularDelta": 0.8146025867113345,
-        "leftDownHoldAngularDelta": 0.8143804425644312,
-        "leftHoldAngularDelta": 0.979988412360802,
+        "rightHoldAngularDelta": 1.0365370801254201,
+        "rightUpHoldAngularDelta": 0.7772823700308056,
+        "leftDownHoldAngularDelta": 0.7775045141777159,
+        "leftHoldAngularDelta": 1.0274892932830824,
         "path": [
           {
             "x": 195,
@@ -877,16 +877,16 @@
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 5485,
+          "brickDrawCount": 4981,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 808,
-          "activeTrampolineArcCount": 6545,
-          "activeTrampolineCenterAngle": 1.496130404691769,
+          "fullRingArcCount": 728,
+          "activeTrampolineArcCount": 5717,
+          "activeTrampolineCenterAngle": 1.7930634174604236,
           "boundarySegmentCount": 18,
           "reboundBoundarySegmentCount": 9,
           "lossBoundarySegmentCount": 9
@@ -1009,16 +1009,16 @@
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 5485,
+          "brickDrawCount": 4928,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 808,
-          "activeTrampolineArcCount": 6545,
-          "activeTrampolineCenterAngle": 1.496130404691769,
+          "fullRingArcCount": 720,
+          "activeTrampolineArcCount": 5658,
+          "activeTrampolineCenterAngle": 1.7930634174604236,
           "boundarySegmentCount": 18,
           "reboundBoundarySegmentCount": 9,
           "lossBoundarySegmentCount": 9
@@ -1056,10 +1056,10 @@
           "y": 0,
           "active": 0
         },
-        "rightHoldAngularDelta": 1.0368198234642403,
-        "rightUpHoldAngularDelta": 0.8146025867113345,
-        "leftDownHoldAngularDelta": 0.8090489830386414,
-        "leftHoldAngularDelta": 1.0376680534806972,
+        "rightHoldAngularDelta": 0.9896016858807819,
+        "rightUpHoldAngularDelta": 0.8514785150980462,
+        "leftDownHoldAngularDelta": 0.7404064416440921,
+        "leftHoldAngularDelta": 1.0255100899113163,
         "path": [
           {
             "x": 778,
@@ -1421,16 +1421,16 @@
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 4997,
+          "brickDrawCount": 4511,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 952,
-          "activeTrampolineArcCount": 6925,
-          "activeTrampolineCenterAngle": 1.684334618540733,
+          "fullRingArcCount": 856,
+          "activeTrampolineArcCount": 6265,
+          "activeTrampolineCenterAngle": 1.4852904481747355,
           "boundarySegmentCount": 18,
           "reboundBoundarySegmentCount": 9,
           "lossBoundarySegmentCount": 9
@@ -1487,7 +1487,7 @@
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 96,
+          "brickDrawCount": 48,
           "brickQuadrants": {
             "left": true,
             "right": true,
@@ -1553,16 +1553,16 @@
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 4997,
+          "brickDrawCount": 4511,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 952,
-          "activeTrampolineArcCount": 6925,
-          "activeTrampolineCenterAngle": 1.684334618540733,
+          "fullRingArcCount": 856,
+          "activeTrampolineArcCount": 6265,
+          "activeTrampolineCenterAngle": 1.4852904481747355,
           "boundarySegmentCount": 18,
           "reboundBoundarySegmentCount": 9,
           "lossBoundarySegmentCount": 9
