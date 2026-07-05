@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-07-05T10:27:07.488Z",
+  "checkedAt": "2026-07-05T14:45:03.367Z",
   "publicUrl": "http://127.0.0.1:4173/?qaScenario=ball-turret",
   "qaScenario": "ball-turret",
   "results": [
@@ -321,22 +321,26 @@
           "width": 0,
           "height": 0,
           "x": 0,
-          "y": 0
+          "y": 0,
+          "hasTrackballClass": true,
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
         },
         "scoreHudText": "Fase 1|Score 20|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 1441,
+          "brickDrawCount": 1443,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 208,
-          "activeTrampolineArcCount": 2450,
-          "activeTrampolineCenterAngle": 1.5928922863908568
+          "fullRingArcCount": 200,
+          "activeTrampolineArcCount": 2359,
+          "activeTrampolineCenterAngle": 1.5707963267948966
         }
       },
       "gameplayState": {
@@ -380,21 +384,25 @@
           "width": 0,
           "height": 0,
           "x": 0,
-          "y": 0
+          "y": 0,
+          "hasTrackballClass": true,
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
         },
         "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 192,
+          "brickDrawCount": 128,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 24,
-          "activeTrampolineArcCount": 297,
+          "fullRingArcCount": 16,
+          "activeTrampolineArcCount": 198,
           "activeTrampolineCenterAngle": 1.5707963267948966
         }
       },
@@ -439,22 +447,26 @@
           "width": 0,
           "height": 0,
           "x": 0,
-          "y": 0
+          "y": 0,
+          "hasTrackballClass": true,
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
         },
         "scoreHudText": "Fase 1|Score 20|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 1441,
+          "brickDrawCount": 1443,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 208,
-          "activeTrampolineArcCount": 2450,
-          "activeTrampolineCenterAngle": 1.5928922863908568
+          "fullRingArcCount": 200,
+          "activeTrampolineArcCount": 2359,
+          "activeTrampolineCenterAngle": 1.5707963267948966
         }
       }
     },
@@ -464,24 +476,36 @@
       "joystickExercise": {
         "exercised": true,
         "pathWithinControl": true,
-        "rightHoldAngularDelta": 0.9842295624431454,
-        "leftHoldAngularDelta": 0.9896016858807837,
+        "rightVisualX": 0.9000000000000001,
+        "topVisualY": -0.9000000000000001,
+        "leftVisualX": -0.9000000000000001,
+        "releaseVisual": {
+          "x": 0,
+          "y": 0,
+          "active": 0
+        },
+        "rightHoldAngularDelta": 0.9896016858807872,
+        "leftHoldAngularDelta": 1.0365370801254166,
         "path": [
           {
             "x": 195,
-            "y": 443
+            "y": 465
           },
           {
-            "x": 235.5,
-            "y": 443
-          },
-          {
-            "x": 154.5,
-            "y": 443
+            "x": 255.3,
+            "y": 465
           },
           {
             "x": 195,
-            "y": 443
+            "y": 404.7
+          },
+          {
+            "x": 134.7,
+            "y": 465
+          },
+          {
+            "x": 195,
+            "y": 465
           }
         ]
       },
@@ -790,25 +814,29 @@
         "joystick": {
           "exists": true,
           "visible": true,
-          "width": 90,
-          "height": 90,
-          "x": 150,
-          "y": 398
+          "width": 134,
+          "height": 134,
+          "x": 128,
+          "y": 398,
+          "hasTrackballClass": true,
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
         },
-        "scoreHudText": "Fase 1|Score 60|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 30|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 3325,
+          "brickDrawCount": 3237,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 480,
-          "activeTrampolineArcCount": 3880,
-          "activeTrampolineCenterAngle": 1.6287587112536297
+          "fullRingArcCount": 456,
+          "activeTrampolineArcCount": 3799,
+          "activeTrampolineCenterAngle": 1.5707963267948948
         }
       },
       "gameplayState": {
@@ -849,16 +877,20 @@
         "joystick": {
           "exists": true,
           "visible": true,
-          "width": 90,
-          "height": 90,
-          "x": 150,
-          "y": 398
+          "width": 134,
+          "height": 134,
+          "x": 128,
+          "y": 398,
+          "hasTrackballClass": true,
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
         },
         "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 120,
+          "brickDrawCount": 57,
           "brickQuadrants": {
             "left": true,
             "right": true,
@@ -908,25 +940,29 @@
         "joystick": {
           "exists": true,
           "visible": true,
-          "width": 90,
-          "height": 90,
-          "x": 150,
-          "y": 398
+          "width": 134,
+          "height": 134,
+          "x": 128,
+          "y": 398,
+          "hasTrackballClass": true,
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
         },
-        "scoreHudText": "Fase 1|Score 60|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 30|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 3271,
+          "brickDrawCount": 3237,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 472,
-          "activeTrampolineArcCount": 3829,
-          "activeTrampolineCenterAngle": 1.6287587112536297
+          "fullRingArcCount": 456,
+          "activeTrampolineArcCount": 3799,
+          "activeTrampolineCenterAngle": 1.5707963267948948
         }
       }
     },
@@ -936,23 +972,35 @@
       "joystickExercise": {
         "exercised": true,
         "pathWithinControl": true,
-        "rightHoldAngularDelta": 0.9898844292196092,
-        "leftHoldAngularDelta": 0.9944083226407763,
+        "rightVisualX": 0.8999999999999992,
+        "topVisualY": -0.9000000000000002,
+        "leftVisualX": -0.8999999999999992,
+        "releaseVisual": {
+          "x": 0,
+          "y": 0,
+          "active": 0
+        },
+        "rightHoldAngularDelta": 1.032578673381897,
+        "leftHoldAngularDelta": 1.0362543367865946,
         "path": [
           {
-            "x": 804,
+            "x": 778,
             "y": 195
           },
           {
-            "x": 837.3,
+            "x": 829.3,
             "y": 195
           },
           {
-            "x": 770.7,
+            "x": 778,
+            "y": 143.7
+          },
+          {
+            "x": 726.7,
             "y": 195
           },
           {
-            "x": 804,
+            "x": 778,
             "y": 195
           }
         ]
@@ -1254,24 +1302,28 @@
         ],
         "hasCanvas": true,
         "canvas": {
-          "width": 760,
-          "height": 348.9375,
-          "x": 3,
-          "y": 20.53125
+          "width": 708,
+          "height": 325.0625,
+          "x": 9,
+          "y": 32.46875
         },
         "joystick": {
           "exists": true,
           "visible": true,
-          "width": 74,
-          "height": 74,
-          "x": 767,
-          "y": 158
+          "width": 114,
+          "height": 114,
+          "x": 721,
+          "y": 138,
+          "hasTrackballClass": true,
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
         },
-        "scoreHudText": "Fase 1|Score 110|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 120|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 3109,
+          "brickDrawCount": 3053,
           "brickQuadrants": {
             "left": true,
             "right": true,
@@ -1279,8 +1331,8 @@
             "bottom": true
           },
           "fullRingArcCount": 600,
-          "activeTrampolineArcCount": 3389,
-          "activeTrampolineCenterAngle": 1.5702308401172491
+          "activeTrampolineArcCount": 3173,
+          "activeTrampolineCenterAngle": 1.5787131402819412
         }
       },
       "gameplayState": {
@@ -1313,18 +1365,22 @@
         ],
         "hasCanvas": true,
         "canvas": {
-          "width": 760,
-          "height": 348.9375,
-          "x": 3,
-          "y": 20.53125
+          "width": 708,
+          "height": 325.0625,
+          "x": 9,
+          "y": 32.46875
         },
         "joystick": {
           "exists": true,
           "visible": true,
-          "width": 74,
-          "height": 74,
-          "x": 767,
-          "y": 158
+          "width": 114,
+          "height": 114,
+          "x": 721,
+          "y": 138,
+          "hasTrackballClass": true,
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
         },
         "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
@@ -1372,24 +1428,28 @@
         ],
         "hasCanvas": true,
         "canvas": {
-          "width": 760,
-          "height": 348.9375,
-          "x": 3,
-          "y": 20.53125
+          "width": 708,
+          "height": 325.0625,
+          "x": 9,
+          "y": 32.46875
         },
         "joystick": {
           "exists": true,
           "visible": true,
-          "width": 74,
-          "height": 74,
-          "x": 767,
-          "y": 158
+          "width": 114,
+          "height": 114,
+          "x": 721,
+          "y": 138,
+          "hasTrackballClass": true,
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
         },
-        "scoreHudText": "Fase 1|Score 110|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 120|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 3109,
+          "brickDrawCount": 3053,
           "brickQuadrants": {
             "left": true,
             "right": true,
@@ -1397,8 +1457,8 @@
             "bottom": true
           },
           "fullRingArcCount": 600,
-          "activeTrampolineArcCount": 3389,
-          "activeTrampolineCenterAngle": 1.5702308401172491
+          "activeTrampolineArcCount": 3173,
+          "activeTrampolineCenterAngle": 1.5787131402819412
         }
       }
     }

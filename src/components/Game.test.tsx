@@ -151,6 +151,7 @@ describe("Game", () => {
     expect(joystick).toBeInTheDocument();
     expect(joystick).toHaveAttribute("aria-label", BALL_TURRET_JOYSTICK_LABEL);
     expect(joystick).toHaveClass("game-turret-joystick");
+    expect(joystick).toHaveClass("game-turret-trackball");
     expect(playfield).not.toContainElement(joystick);
     expect(inputLayout).toContainElement(joystick);
   });

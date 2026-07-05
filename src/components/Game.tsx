@@ -76,7 +76,8 @@ const GAME_SURFACE_BALL_TURRET_CLASS_NAME = "game-surface--ball-turret";
 const GAME_BOARD_INPUT_LAYOUT_CLASS_NAME = "game-board-input-layout";
 const GAME_BOARD_PLAYFIELD_CLASS_NAME = "game-board-playfield";
 const PADDLE_TOUCH_ZONE_CLASS_NAME = "game-paddle-touch-zone";
-const BALL_TURRET_JOYSTICK_CLASS_NAME = "game-turret-joystick";
+const BALL_TURRET_JOYSTICK_CLASS_NAME =
+  "game-turret-joystick game-turret-trackball";
 
 function readPixelValue(value: string): number {
   const parsedValue = Number.parseFloat(value);
@@ -307,10 +308,7 @@ export default function Game({
     .join(" ");
 
   return (
-    <div
-      className={surfaceClassName}
-      ref={surfaceRef}
-    >
+    <div className={surfaceClassName} ref={surfaceRef}>
       <div className={GAME_BOARD_INPUT_LAYOUT_CLASS_NAME}>
         <div className="game-board-frame">
           <div
