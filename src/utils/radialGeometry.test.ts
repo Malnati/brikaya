@@ -2,12 +2,18 @@
 import type { DynamicGameDimensions } from "../constants/game";
 
 import {
+  BALL_TURRET_BOUNDARY_SEGMENT_COUNT,
+  BALL_TURRET_INITIAL_REBOUND_SEGMENT_COUNT,
+  BALL_TURRET_REBOUND_ZERO_LEVEL,
+  calculateBallTurretBoundarySegments,
   calculateBallTurretPlayfieldGeometry,
+  calculateBallTurretReboundSegmentCount,
   calculatePaddleAngleFromCanvasPoint,
   calculatePaddleAngleFromCanvasX,
   calculateRadialBrickSegment,
   calculateRadialPaddleBounds,
   calculateRadialPlayfieldGeometry,
+  isBallTurretBoundarySegmentRebounding,
   isCircleIntersectingRadialSegment,
 } from "./radialGeometry";
 
@@ -129,6 +135,53 @@ describe("radialGeometry", () => {
     expect(wrappedPaddle.radial.centerAngle).toBeCloseTo(-Math.PI * 0.75);
     expect(wrappedPaddle.radial.lossIsFullCircle).toBe(true);
     expect(topAngle).toBeCloseTo(-Math.PI / 2);
+  });
+
+  it("divide a borda da torreta em partes iguais com 50% rebatendo na fase 1", () => {
+    const segments = calculateBallTurretBoundarySegments(1);
+    const reboundSegments = segments.filter((segment) => segment.rebounds);
+    const segmentSpans = segments.map(
+      (segment) => segment.endAngle - segment.startAngle,
+    );
+
+    expect(segments).toHaveLength(BALL_TURRET_BOUNDARY_SEGMENT_COUNT);
+    expect(reboundSegments).toHaveLength(
+      BALL_TURRET_INITIAL_REBOUND_SEGMENT_COUNT,
+    );
+    segmentSpans.forEach((span) => {
+      expect(span).toBeCloseTo((Math.PI * 2) / segments.length);
+    });
+    expect(reboundSegments.map((segment) => segment.index)).toEqual([
+      0, 2, 4, 6, 8, 10, 12, 14, 16,
+    ]);
+  });
+
+  it("reduz proporcionalmente os segmentos que rebatem até zerar na fase 10", () => {
+    expect(calculateBallTurretReboundSegmentCount(1)).toBe(9);
+    expect(calculateBallTurretReboundSegmentCount(2)).toBe(8);
+    expect(calculateBallTurretReboundSegmentCount(5)).toBe(5);
+    expect(
+      calculateBallTurretReboundSegmentCount(BALL_TURRET_REBOUND_ZERO_LEVEL),
+    ).toBe(0);
+    expect(calculateBallTurretReboundSegmentCount(99)).toBe(0);
+  });
+
+  it("identifica pelo ângulo se a parte da borda rebate a bolinha", () => {
+    const phaseOneSegments = calculateBallTurretBoundarySegments(1);
+    const bottomReboundSegment = phaseOneSegments[0];
+    const nextLossSegment = phaseOneSegments[1];
+    const bottomReboundAngle =
+      (bottomReboundSegment.startAngle + bottomReboundSegment.endAngle) / 2;
+    const nextLossAngle =
+      (nextLossSegment.startAngle + nextLossSegment.endAngle) / 2;
+
+    expect(isBallTurretBoundarySegmentRebounding(bottomReboundAngle, 1)).toBe(
+      true,
+    );
+    expect(isBallTurretBoundarySegmentRebounding(nextLossAngle, 1)).toBe(false);
+    expect(isBallTurretBoundarySegmentRebounding(bottomReboundAngle, 10)).toBe(
+      false,
+    );
   });
 
   it("detecta colisão circular dentro de segmento radial", () => {

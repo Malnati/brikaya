@@ -37,6 +37,7 @@ const TOUCH_MOVE_CLIENT_Y = 512;
 const TRACKBALL_X_CSS_VAR = "--bb-turret-trackball-x";
 const TRACKBALL_Y_CSS_VAR = "--bb-turret-trackball-y";
 const TRACKBALL_ACTIVE_CSS_VAR = "--bb-turret-trackball-active";
+const DIAGONAL_TRACKBALL_AXIS = Math.SQRT1_2;
 const JOYSTICK_RECT = {
   left: 100,
   top: 200,
@@ -139,6 +140,10 @@ function createPointerEvent(type: string, clientX: number, clientY: number) {
   Object.defineProperty(event, "pointerId", { value: 7 });
 
   return event as PointerEvent;
+}
+
+function readStyleNumber(element: HTMLElement, propertyName: string) {
+  return Number(element.style.getPropertyValue(propertyName));
 }
 
 describe("useGameLoop", () => {
@@ -408,6 +413,110 @@ describe("useGameLoop", () => {
 
     expect(pointerDown.defaultPrevented).toBe(true);
     expect(pointerCancel.defaultPrevented).toBe(true);
+    expect(mockSetBallTurretJoystickTurn).toHaveBeenLastCalledWith(0);
+    expect(joystick.style.getPropertyValue(TRACKBALL_X_CSS_VAR)).toBe("0");
+    expect(joystick.style.getPropertyValue(TRACKBALL_Y_CSS_VAR)).toBe("0");
+    expect(joystick.style.getPropertyValue(TRACKBALL_ACTIVE_CSS_VAR)).toBe("0");
+  });
+
+  it("representa oito direções do trackball e normaliza diagonais antes de girar", async () => {
+    const { getByTestId } = render(
+      <Harness
+        imageSetId={IMAGE_SET_RETRO_DEFAULT}
+        gameMode="ball-turret"
+        joystickEnabled
+      />,
+    );
+
+    await waitFor(() => {
+      expect(GameEngine).toHaveBeenCalledTimes(1);
+    });
+
+    const joystick = getByTestId(JOYSTICK_TEST_ID);
+    joystick.getBoundingClientRect = jest.fn(() => JOYSTICK_RECT);
+
+    const dispatchAndExpect = (
+      event: PointerEvent,
+      expectedTurn: number,
+      expectedX: number,
+      expectedY: number,
+    ) => {
+      joystick.dispatchEvent(event);
+
+      expect(event.defaultPrevented).toBe(true);
+      expect(mockSetBallTurretJoystickTurn).toHaveBeenLastCalledWith(
+        expect.closeTo(expectedTurn, 6),
+      );
+      expect(readStyleNumber(joystick, TRACKBALL_X_CSS_VAR)).toBeCloseTo(
+        expectedX,
+      );
+      expect(readStyleNumber(joystick, TRACKBALL_Y_CSS_VAR)).toBeCloseTo(
+        expectedY,
+      );
+      expect(joystick.style.getPropertyValue(TRACKBALL_ACTIVE_CSS_VAR)).toBe(
+        "1",
+      );
+    };
+
+    dispatchAndExpect(
+      createPointerEvent(POINTER_DOWN_EVENT_NAME, 150, 250),
+      0,
+      0,
+      0,
+    );
+    dispatchAndExpect(
+      createPointerEvent(POINTER_MOVE_EVENT_NAME, 200, 200),
+      DIAGONAL_TRACKBALL_AXIS,
+      DIAGONAL_TRACKBALL_AXIS,
+      -DIAGONAL_TRACKBALL_AXIS,
+    );
+    dispatchAndExpect(
+      createPointerEvent(POINTER_MOVE_EVENT_NAME, 100, 300),
+      -DIAGONAL_TRACKBALL_AXIS,
+      -DIAGONAL_TRACKBALL_AXIS,
+      DIAGONAL_TRACKBALL_AXIS,
+    );
+    dispatchAndExpect(
+      createPointerEvent(POINTER_MOVE_EVENT_NAME, 100, 200),
+      -DIAGONAL_TRACKBALL_AXIS,
+      -DIAGONAL_TRACKBALL_AXIS,
+      -DIAGONAL_TRACKBALL_AXIS,
+    );
+    dispatchAndExpect(
+      createPointerEvent(POINTER_MOVE_EVENT_NAME, 200, 300),
+      DIAGONAL_TRACKBALL_AXIS,
+      DIAGONAL_TRACKBALL_AXIS,
+      DIAGONAL_TRACKBALL_AXIS,
+    );
+    dispatchAndExpect(
+      createPointerEvent(POINTER_MOVE_EVENT_NAME, 150, 300),
+      0,
+      0,
+      1,
+    );
+    dispatchAndExpect(
+      createPointerEvent(POINTER_MOVE_EVENT_NAME, 150, 200),
+      0,
+      0,
+      -1,
+    );
+    dispatchAndExpect(
+      createPointerEvent(POINTER_MOVE_EVENT_NAME, 200, 250),
+      1,
+      1,
+      0,
+    );
+    dispatchAndExpect(
+      createPointerEvent(POINTER_MOVE_EVENT_NAME, 100, 250),
+      -1,
+      -1,
+      0,
+    );
+
+    const pointerUp = createPointerEvent(POINTER_UP_EVENT_NAME, 150, 250);
+    joystick.dispatchEvent(pointerUp);
+
+    expect(pointerUp.defaultPrevented).toBe(true);
     expect(mockSetBallTurretJoystickTurn).toHaveBeenLastCalledWith(0);
     expect(joystick.style.getPropertyValue(TRACKBALL_X_CSS_VAR)).toBe("0");
     expect(joystick.style.getPropertyValue(TRACKBALL_Y_CSS_VAR)).toBe("0");

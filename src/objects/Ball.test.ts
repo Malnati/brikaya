@@ -15,6 +15,7 @@ import {
   PhaseSpeedConfig
 } from '../constants/game';
 import {
+  calculateBallTurretBoundarySegments,
   calculateBallTurretPlayfieldGeometry,
   calculateRadialPaddleBounds,
   calculateRadialPlayfieldGeometry,
@@ -68,6 +69,7 @@ const LATE_PHASE = 11;
 const INITIAL_BRICK_COUNT = DIMENSIONS.brickCols * DIMENSIONS.brickRows;
 const CENTER_DIVISOR = 2;
 const RADIAL_PADDLE_TEST_INSET = 1;
+const CARTESIAN_TO_BALL_DIRECTION_OFFSET = Math.PI / 2;
 
 function buildPhaseSpeedConfig(level: number): PhaseSpeedConfig {
   const maxSpeed = calculateLevelMaxSpeed(CANVAS_WIDTH, level);
@@ -96,6 +98,20 @@ function createGameState(ball: Ball, level: number = PHASE_ONE) {
     gameDimensions: DIMENSIONS,
     speedState: ball.getSpeedStateSnapshot(),
   };
+}
+
+function placeBallAtTurretBoundary(
+  ball: Ball,
+  geometry: ReturnType<typeof calculateBallTurretPlayfieldGeometry>,
+  angle: number,
+) {
+  const boundaryRadius = geometry.radius - DIMENSIONS.ballRadius - 1;
+
+  ball.setPosition(
+    geometry.centerX + Math.cos(angle) * boundaryRadius,
+    geometry.centerY + Math.sin(angle) * boundaryRadius,
+  );
+  ball.setDirection(angle + CARTESIAN_TO_BALL_DIRECTION_OFFSET);
 }
 
 describe('Ball', () => {
@@ -374,24 +390,67 @@ describe('Ball', () => {
     expect(ball.getVelocity().dx).toBeLessThan(0);
   });
 
-  it('na torreta perde a bolinha em qualquer borda fora do segmento ativo', async () => {
+  it('na torreta rebate a bolinha nas partes ativas da borda', async () => {
     const geometry = calculateBallTurretPlayfieldGeometry(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
     const topPaddle = calculateRadialPaddleBounds(geometry, DIMENSIONS, -Math.PI / 2, 1);
     const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS, 1, undefined, geometry);
     const bricks = { collide: jest.fn().mockResolvedValue(false) };
+    const bottomReboundSegment = calculateBallTurretBoundarySegments(PHASE_ONE)[0];
+    const bottomReboundAngle =
+      (bottomReboundSegment.startAngle + bottomReboundSegment.endAngle) / 2;
 
     ball.applyPhaseSpeedConfig(buildPhaseSpeedConfig(PHASE_ONE));
-    ball.setPosition(
-      geometry.centerX + geometry.radius - DIMENSIONS.ballRadius - 1,
-      geometry.centerY,
-    );
-    ball.setDirection(Math.PI / 2);
+    placeBallAtTurretBoundary(ball, geometry, bottomReboundAngle);
 
     const inPlay = await ball.update(
       { position: topPaddle },
       bricks,
       CANVAS_HEIGHT,
       createGameState(ball),
+    );
+
+    expect(inPlay).toBe(true);
+    expect(ball.getVelocity().dy).toBeLessThan(0);
+  });
+
+  it('na torreta perde a bolinha nas partes inativas da borda', async () => {
+    const geometry = calculateBallTurretPlayfieldGeometry(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const topPaddle = calculateRadialPaddleBounds(geometry, DIMENSIONS, -Math.PI / 2, 1);
+    const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS, 1, undefined, geometry);
+    const bricks = { collide: jest.fn().mockResolvedValue(false) };
+    const inactiveSegment = calculateBallTurretBoundarySegments(PHASE_ONE)[1];
+    const inactiveAngle =
+      (inactiveSegment.startAngle + inactiveSegment.endAngle) / 2;
+
+    ball.applyPhaseSpeedConfig(buildPhaseSpeedConfig(PHASE_ONE));
+    placeBallAtTurretBoundary(ball, geometry, inactiveAngle);
+
+    const inPlay = await ball.update(
+      { position: topPaddle },
+      bricks,
+      CANVAS_HEIGHT,
+      createGameState(ball),
+    );
+
+    expect(inPlay).toBe(false);
+  });
+
+  it('na fase 10 da torreta não mantém partes da borda rebatendo', async () => {
+    const geometry = calculateBallTurretPlayfieldGeometry(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const topPaddle = calculateRadialPaddleBounds(geometry, DIMENSIONS, -Math.PI / 2, 1);
+    const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS, 1, undefined, geometry);
+    const bricks = { collide: jest.fn().mockResolvedValue(false) };
+    const bottomSegment = calculateBallTurretBoundarySegments(PHASE_ONE)[0];
+    const bottomAngle = (bottomSegment.startAngle + bottomSegment.endAngle) / 2;
+
+    ball.applyPhaseSpeedConfig(buildPhaseSpeedConfig(10));
+    placeBallAtTurretBoundary(ball, geometry, bottomAngle);
+
+    const inPlay = await ball.update(
+      { position: topPaddle },
+      bricks,
+      CANVAS_HEIGHT,
+      createGameState(ball, 10),
     );
 
     expect(inPlay).toBe(false);
