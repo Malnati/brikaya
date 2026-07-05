@@ -33,12 +33,11 @@ const MIN_TOUCH_TARGET_SIZE = 44;
 const MIN_PORTRAIT_TRACKBALL_SIZE = 120;
 const MIN_LANDSCAPE_TRACKBALL_SIZE = 104;
 const ACTIVE_TRAMPOLINE_ARC_MIN_SWEEP = 0.2;
-const JOYSTICK_HOLD_SAMPLE_MS = 120;
-const JOYSTICK_HOLD_PROOF_MS = 360;
-const JOYSTICK_CONTINUOUS_TURN_MIN_DELTA = 0.08;
-const DIAGONAL_TRACKBALL_AXIS_MIN = 0.68;
-const DIAGONAL_TRACKBALL_AXIS_MAX = 0.74;
-const DIAGONAL_TURN_RATIO_MAX = 0.92;
+const JOYSTICK_SETTLE_MS = 120;
+const JOYSTICK_STABILITY_PROOF_MS = 300;
+const JOYSTICK_TRACKBALL_EDGE_AXIS_MIN = 0.95;
+const JOYSTICK_ABSOLUTE_ANGLE_TOLERANCE = 0.24;
+const JOYSTICK_HOLD_MAX_ANGLE_DELTA = 0.04;
 const BOUNDARY_SEGMENT_COUNT = 18;
 const BOUNDARY_PHASE_ONE_REBOUND_SEGMENTS = 9;
 const BOUNDARY_REBOUND_COLOR_FRAGMENT = "73, 255, 199";
@@ -140,11 +139,26 @@ function angularDistance(startAngle, endAngle) {
   return Math.abs(normalizeSignedAngle(endAngle - startAngle));
 }
 
-function isDiagonalAxis(value) {
-  const absoluteValue = Math.abs(value);
+function isEdgeAxis(value) {
+  return Math.abs(value) >= JOYSTICK_TRACKBALL_EDGE_AXIS_MIN;
+}
+
+function joystickExpectedAngle(horizontalRatio, verticalRatio, canvasMetrics) {
+  if (horizontalRatio === 0.5 && verticalRatio === 0.5) return null;
+  return normalizeSignedAngle(
+    Math.atan2(
+      (verticalRatio - 0.5) * canvasMetrics.height,
+      (horizontalRatio - 0.5) * canvasMetrics.width,
+    ),
+  );
+}
+
+function isAngleNear(actualAngle, expectedAngle) {
   return (
-    absoluteValue >= DIAGONAL_TRACKBALL_AXIS_MIN &&
-    absoluteValue <= DIAGONAL_TRACKBALL_AXIS_MAX
+    Number.isFinite(actualAngle) &&
+    Number.isFinite(expectedAngle) &&
+    angularDistance(expectedAngle, actualAngle) <=
+      JOYSTICK_ABSOLUTE_ANGLE_TOLERANCE
   );
 }
 
@@ -374,9 +388,7 @@ async function readBallTurretState(page) {
           [
             Math.round(arc.startAngle * 1000),
             Math.round(arc.endAngle * 1000),
-            String(arc.strokeStyle || "").includes(
-              boundaryReboundColorFragment,
-            )
+            String(arc.strokeStyle || "").includes(boundaryReboundColorFragment)
               ? "rebound"
               : "loss",
           ].join(":"),
@@ -390,20 +402,22 @@ async function readBallTurretState(page) {
             ),
           )
           .map((arc) =>
-            [Math.round(arc.startAngle * 1000), Math.round(arc.endAngle * 1000)]
-              .join(":"),
+            [
+              Math.round(arc.startAngle * 1000),
+              Math.round(arc.endAngle * 1000),
+            ].join(":"),
           ),
       );
       const uniqueLossBoundarySegments = new Set(
         boundarySegmentArcs
           .filter((arc) =>
-            String(arc.strokeStyle || "").includes(
-              boundaryLossColorFragment,
-            ),
+            String(arc.strokeStyle || "").includes(boundaryLossColorFragment),
           )
           .map((arc) =>
-            [Math.round(arc.startAngle * 1000), Math.round(arc.endAngle * 1000)]
-              .join(":"),
+            [
+              Math.round(arc.startAngle * 1000),
+              Math.round(arc.endAngle * 1000),
+            ].join(":"),
           ),
       );
       return {
@@ -590,32 +604,51 @@ async function exerciseJoystick(page) {
     return {
       exercised: false,
       pathWithinControl: false,
-      rightHoldAngularDelta: 0,
-      rightUpHoldAngularDelta: 0,
-      leftDownHoldAngularDelta: 0,
-      leftHoldAngularDelta: 0,
+      angleChecks: {},
+      holdStableAngleDelta: 0,
+      clampCheck: {
+        visual: { x: 0, y: 0 },
+        expectedAngle: null,
+        actualAngle: null,
+        angleMatches: false,
+      },
+      releaseVisual: { x: 0, y: 0, active: 0 },
       path: [],
     };
   }
 
-  const center = { x: box.x + box.width * 0.5, y: box.y + box.height * 0.5 };
-  const right = { x: box.x + box.width * 0.95, y: box.y + box.height * 0.5 };
-  const topRight = {
-    x: box.x + box.width * 0.95,
-    y: box.y + box.height * 0.05,
+  const canvasMetrics = await page.evaluate(() => {
+    const canvas = document.querySelector("canvas");
+    return {
+      width: canvas?.width || 1,
+      height: canvas?.height || 1,
+    };
+  });
+  const pointAt = (horizontalRatio, verticalRatio) => ({
+    x: box.x + box.width * horizontalRatio,
+    y: box.y + box.height * verticalRatio,
+    horizontalRatio,
+    verticalRatio,
+    expectedAngle: joystickExpectedAngle(
+      horizontalRatio,
+      verticalRatio,
+      canvasMetrics,
+    ),
+  });
+  const center = pointAt(0.5, 0.5);
+  const right = pointAt(1, 0.5);
+  const topRight = pointAt(1, 0);
+  const bottomRight = pointAt(1, 1);
+  const left = pointAt(0, 0.5);
+  const bottomLeft = pointAt(0, 1);
+  const topLeft = pointAt(0, 0);
+  const top = pointAt(0.5, 0);
+  const bottom = pointAt(0.5, 1);
+  const outsideTopRight = {
+    x: box.x + box.width * 1.35,
+    y: box.y - box.height * 0.35,
+    expectedAngle: joystickExpectedAngle(1, 0, canvasMetrics),
   };
-  const bottomRight = {
-    x: box.x + box.width * 0.95,
-    y: box.y + box.height * 0.95,
-  };
-  const left = { x: box.x + box.width * 0.05, y: box.y + box.height * 0.5 };
-  const bottomLeft = {
-    x: box.x + box.width * 0.05,
-    y: box.y + box.height * 0.95,
-  };
-  const topLeft = { x: box.x + box.width * 0.05, y: box.y + box.height * 0.05 };
-  const top = { x: box.x + box.width * 0.5, y: box.y + box.height * 0.05 };
-  const bottom = { x: box.x + box.width * 0.5, y: box.y + box.height * 0.95 };
   const path = [
     center,
     right,
@@ -629,42 +662,40 @@ async function exerciseJoystick(page) {
     center,
   ];
 
+  const moveAndRead = async (point) => {
+    await dispatchJoystickPointer(page, "pointermove", point);
+    await new Promise((resolve) => setTimeout(resolve, JOYSTICK_SETTLE_MS));
+    const state = await readBallTurretState(page);
+    return {
+      actualAngle: state.probe.activeTrampolineCenterAngle,
+      expectedAngle: point.expectedAngle,
+      angleMatches: isAngleNear(
+        state.probe.activeTrampolineCenterAngle,
+        point.expectedAngle,
+      ),
+      visual: {
+        x: Number(state.joystick.trackballX),
+        y: Number(state.joystick.trackballY),
+      },
+    };
+  };
+
   await dispatchJoystickPointer(page, "pointerdown", center);
-  await dispatchJoystickPointer(page, "pointermove", right);
-  const rightVisualState = await readBallTurretState(page);
-  await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_SAMPLE_MS));
-  const rightStartState = await readBallTurretState(page);
-  await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_PROOF_MS));
+  await new Promise((resolve) => setTimeout(resolve, JOYSTICK_SETTLE_MS));
+
+  const rightCheck = await moveAndRead(right);
+  await new Promise((resolve) =>
+    setTimeout(resolve, JOYSTICK_STABILITY_PROOF_MS),
+  );
   const rightHoldState = await readBallTurretState(page);
-
-  await dispatchJoystickPointer(page, "pointermove", topRight);
-  const topRightVisualState = await readBallTurretState(page);
-  await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_SAMPLE_MS));
-  const topRightStartState = await readBallTurretState(page);
-  await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_PROOF_MS));
-  const topRightHoldState = await readBallTurretState(page);
-
-  await dispatchJoystickPointer(page, "pointermove", bottomLeft);
-  const bottomLeftVisualState = await readBallTurretState(page);
-  await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_SAMPLE_MS));
-  const bottomLeftStartState = await readBallTurretState(page);
-  await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_PROOF_MS));
-  const bottomLeftHoldState = await readBallTurretState(page);
-
-  await dispatchJoystickPointer(page, "pointermove", left);
-  await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_SAMPLE_MS));
-  const leftStartState = await readBallTurretState(page);
-  await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_PROOF_MS));
-  const leftHoldState = await readBallTurretState(page);
-
-  await dispatchJoystickPointer(page, "pointermove", top);
-  const topVisualState = await readBallTurretState(page);
-  await dispatchJoystickPointer(page, "pointermove", topLeft);
-  const topLeftVisualState = await readBallTurretState(page);
-  await dispatchJoystickPointer(page, "pointermove", bottom);
-  const bottomVisualState = await readBallTurretState(page);
-  await dispatchJoystickPointer(page, "pointermove", bottomRight);
-  const bottomRightVisualState = await readBallTurretState(page);
+  const topRightCheck = await moveAndRead(topRight);
+  const bottomLeftCheck = await moveAndRead(bottomLeft);
+  const leftCheck = await moveAndRead(left);
+  const topCheck = await moveAndRead(top);
+  const topLeftCheck = await moveAndRead(topLeft);
+  const bottomCheck = await moveAndRead(bottom);
+  const bottomRightCheck = await moveAndRead(bottomRight);
+  const clampCheck = await moveAndRead(outsideTopRight);
   await dispatchJoystickPointer(page, "pointermove", center);
   await dispatchJoystickPointer(page, "pointerup", center);
   const releaseState = await readBallTurretState(page);
@@ -672,47 +703,34 @@ async function exerciseJoystick(page) {
   return {
     exercised: true,
     pathWithinControl: path.every((point) => isPointInsideBox(point, box)),
-    rightVisualX: Number(rightVisualState.joystick.trackballX),
-    topVisualY: Number(topVisualState.joystick.trackballY),
-    bottomVisualY: Number(bottomVisualState.joystick.trackballY),
-    leftVisualX: Number(leftStartState.joystick.trackballX),
-    topRightVisual: {
-      x: Number(topRightVisualState.joystick.trackballX),
-      y: Number(topRightVisualState.joystick.trackballY),
+    angleChecks: {
+      right: rightCheck,
+      topRight: topRightCheck,
+      bottomLeft: bottomLeftCheck,
+      left: leftCheck,
+      top: topCheck,
+      topLeft: topLeftCheck,
+      bottom: bottomCheck,
+      bottomRight: bottomRightCheck,
     },
-    topLeftVisual: {
-      x: Number(topLeftVisualState.joystick.trackballX),
-      y: Number(topLeftVisualState.joystick.trackballY),
-    },
-    bottomLeftVisual: {
-      x: Number(bottomLeftVisualState.joystick.trackballX),
-      y: Number(bottomLeftVisualState.joystick.trackballY),
-    },
-    bottomRightVisual: {
-      x: Number(bottomRightVisualState.joystick.trackballX),
-      y: Number(bottomRightVisualState.joystick.trackballY),
-    },
+    holdStableAngleDelta: angularDistance(
+      rightCheck.actualAngle,
+      rightHoldState.probe.activeTrampolineCenterAngle,
+    ),
+    clampCheck,
+    rightVisualX: rightCheck.visual.x,
+    topVisualY: topCheck.visual.y,
+    bottomVisualY: bottomCheck.visual.y,
+    leftVisualX: leftCheck.visual.x,
+    topRightVisual: topRightCheck.visual,
+    topLeftVisual: topLeftCheck.visual,
+    bottomLeftVisual: bottomLeftCheck.visual,
+    bottomRightVisual: bottomRightCheck.visual,
     releaseVisual: {
       x: Number(releaseState.joystick.trackballX),
       y: Number(releaseState.joystick.trackballY),
       active: Number(releaseState.joystick.trackballActive),
     },
-    rightHoldAngularDelta: angularDistance(
-      rightStartState.probe.activeTrampolineCenterAngle,
-      rightHoldState.probe.activeTrampolineCenterAngle,
-    ),
-    rightUpHoldAngularDelta: angularDistance(
-      topRightStartState.probe.activeTrampolineCenterAngle,
-      topRightHoldState.probe.activeTrampolineCenterAngle,
-    ),
-    leftDownHoldAngularDelta: angularDistance(
-      bottomLeftStartState.probe.activeTrampolineCenterAngle,
-      bottomLeftHoldState.probe.activeTrampolineCenterAngle,
-    ),
-    leftHoldAngularDelta: angularDistance(
-      leftStartState.probe.activeTrampolineCenterAngle,
-      leftHoldState.probe.activeTrampolineCenterAngle,
-    ),
     path,
   };
 }
@@ -807,54 +825,76 @@ async function runViewport(page, baseUrl, config) {
   );
   assert(
     config.joystickPlacement === "hidden" ||
-      joystickExercise.rightVisualX > 0.6,
-    `${config.name}: trackball não exibiu pressão visual à direita.`,
+      joystickExercise.rightVisualX > JOYSTICK_TRACKBALL_EDGE_AXIS_MIN,
+    `${config.name}: trackball não exibiu posição visual à direita.`,
   );
   assert(
     config.joystickPlacement === "hidden" ||
-      joystickExercise.leftVisualX < -0.6,
-    `${config.name}: trackball não exibiu pressão visual à esquerda.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" || joystickExercise.topVisualY < -0.6,
-    `${config.name}: trackball não exibiu profundidade visual para cima.`,
+      joystickExercise.leftVisualX < -JOYSTICK_TRACKBALL_EDGE_AXIS_MIN,
+    `${config.name}: trackball não exibiu posição visual à esquerda.`,
   );
   assert(
     config.joystickPlacement === "hidden" ||
-      joystickExercise.bottomVisualY > 0.6,
-    `${config.name}: trackball não exibiu profundidade visual para baixo.`,
+      joystickExercise.topVisualY < -JOYSTICK_TRACKBALL_EDGE_AXIS_MIN,
+    `${config.name}: trackball não exibiu posição visual no topo.`,
   );
   assert(
     config.joystickPlacement === "hidden" ||
-      (isDiagonalAxis(joystickExercise.topRightVisual.x) &&
-        isDiagonalAxis(joystickExercise.topRightVisual.y) &&
+      joystickExercise.bottomVisualY > JOYSTICK_TRACKBALL_EDGE_AXIS_MIN,
+    `${config.name}: trackball não exibiu posição visual na base.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
+      (isEdgeAxis(joystickExercise.topRightVisual.x) &&
+        isEdgeAxis(joystickExercise.topRightVisual.y) &&
         joystickExercise.topRightVisual.x > 0 &&
         joystickExercise.topRightVisual.y < 0),
-    `${config.name}: trackball não normalizou diagonal superior direita.`,
+    `${config.name}: trackball não alcançou canto superior direito.`,
   );
   assert(
     config.joystickPlacement === "hidden" ||
-      (isDiagonalAxis(joystickExercise.topLeftVisual.x) &&
-        isDiagonalAxis(joystickExercise.topLeftVisual.y) &&
+      (isEdgeAxis(joystickExercise.topLeftVisual.x) &&
+        isEdgeAxis(joystickExercise.topLeftVisual.y) &&
         joystickExercise.topLeftVisual.x < 0 &&
         joystickExercise.topLeftVisual.y < 0),
-    `${config.name}: trackball não normalizou diagonal superior esquerda.`,
+    `${config.name}: trackball não alcançou canto superior esquerdo.`,
   );
   assert(
     config.joystickPlacement === "hidden" ||
-      (isDiagonalAxis(joystickExercise.bottomLeftVisual.x) &&
-        isDiagonalAxis(joystickExercise.bottomLeftVisual.y) &&
+      (isEdgeAxis(joystickExercise.bottomLeftVisual.x) &&
+        isEdgeAxis(joystickExercise.bottomLeftVisual.y) &&
         joystickExercise.bottomLeftVisual.x < 0 &&
         joystickExercise.bottomLeftVisual.y > 0),
-    `${config.name}: trackball não normalizou diagonal inferior esquerda.`,
+    `${config.name}: trackball não alcançou canto inferior esquerdo.`,
   );
   assert(
     config.joystickPlacement === "hidden" ||
-      (isDiagonalAxis(joystickExercise.bottomRightVisual.x) &&
-        isDiagonalAxis(joystickExercise.bottomRightVisual.y) &&
+      (isEdgeAxis(joystickExercise.bottomRightVisual.x) &&
+        isEdgeAxis(joystickExercise.bottomRightVisual.y) &&
         joystickExercise.bottomRightVisual.x > 0 &&
         joystickExercise.bottomRightVisual.y > 0),
-    `${config.name}: trackball não normalizou diagonal inferior direita.`,
+    `${config.name}: trackball não alcançou canto inferior direito.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
+      Object.entries(joystickExercise.angleChecks).every(
+        ([, check]) => check.angleMatches,
+      ),
+    `${config.name}: joystick não espelhou todos os pontos absolutos no campo.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
+      joystickExercise.holdStableAngleDelta <= JOYSTICK_HOLD_MAX_ANGLE_DELTA,
+    `${config.name}: joystick continuou girando após segurar ponto absoluto.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
+      (joystickExercise.clampCheck.angleMatches &&
+        joystickExercise.clampCheck.visual.x >=
+          JOYSTICK_TRACKBALL_EDGE_AXIS_MIN &&
+        joystickExercise.clampCheck.visual.y <=
+          -JOYSTICK_TRACKBALL_EDGE_AXIS_MIN),
+    `${config.name}: joystick não limitou gesto externo ao canto equivalente.`,
   );
   assert(
     config.joystickPlacement === "hidden" ||
@@ -862,34 +902,6 @@ async function runViewport(page, baseUrl, config) {
         joystickExercise.releaseVisual.y === 0 &&
         joystickExercise.releaseVisual.active === 0),
     `${config.name}: trackball não resetou visualmente ao soltar.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      joystickExercise.rightHoldAngularDelta >
-        JOYSTICK_CONTINUOUS_TURN_MIN_DELTA,
-    `${config.name}: joystick à direita não girou a cama elástica continuamente.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      (joystickExercise.rightUpHoldAngularDelta >
-        JOYSTICK_CONTINUOUS_TURN_MIN_DELTA &&
-        joystickExercise.rightUpHoldAngularDelta <
-          joystickExercise.rightHoldAngularDelta * DIAGONAL_TURN_RATIO_MAX),
-    `${config.name}: diagonal superior direita não girou com intensidade normalizada.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      (joystickExercise.leftDownHoldAngularDelta >
-        JOYSTICK_CONTINUOUS_TURN_MIN_DELTA &&
-        joystickExercise.leftDownHoldAngularDelta <
-          joystickExercise.leftHoldAngularDelta * DIAGONAL_TURN_RATIO_MAX),
-    `${config.name}: diagonal inferior esquerda não mudou rumo com intensidade normalizada.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      joystickExercise.leftHoldAngularDelta >
-        JOYSTICK_CONTINUOUS_TURN_MIN_DELTA,
-    `${config.name}: joystick à esquerda não girou a cama elástica continuamente.`,
   );
   await new Promise((resolve) => setTimeout(resolve, 120));
   const postExerciseState = await readBallTurretState(page);

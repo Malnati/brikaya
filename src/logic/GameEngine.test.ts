@@ -457,68 +457,6 @@ describe("GameEngine", () => {
     expect((engine as any).paddle.setPosition).not.toHaveBeenCalled();
   });
 
-  it("rotaciona continuamente o segmento ativo da torreta pelo joystick", () => {
-    const engine = new GameEngine(
-      canvas,
-      onScoreUpdate,
-      onGameWon,
-      onGameOver,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      "ball-turret",
-    );
-    const geometry = (engine as any).radialGeometry;
-    (engine as any).paddle.position.radial.centerAngle = Math.PI / 2;
-
-    (engine as any).setBallTurretJoystickTurn(1);
-    (engine as any).applyBallTurretJoystickTurn(250);
-
-    const [x, y] = (engine as any).paddle.setPositionFromPoint.mock.calls[0];
-    expect(x).toBeCloseTo(
-      geometry.centerX + Math.cos(Math.PI / 4) * geometry.radius,
-    );
-    expect(y).toBeCloseTo(
-      geometry.centerY + Math.sin(Math.PI / 4) * geometry.radius,
-    );
-    expect((engine as any).paddle.setPosition).not.toHaveBeenCalled();
-  });
-
-  it("para giro da torreta quando o joystick volta ao centro", () => {
-    const engine = new GameEngine(
-      canvas,
-      onScoreUpdate,
-      onGameWon,
-      onGameOver,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      "ball-turret",
-    );
-
-    (engine as any).setBallTurretJoystickTurn(1);
-    (engine as any).setBallTurretJoystickTurn(0);
-    (engine as any).applyBallTurretJoystickTurn(250);
-
-    expect((engine as any).paddle.setPositionFromPoint).not.toHaveBeenCalled();
-  });
-
-  it("ignora giro do joystick fora do modo torreta", () => {
-    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
-
-    (engine as any).setBallTurretJoystickTurn(1);
-    (engine as any).applyBallTurretJoystickTurn(250);
-
-    expect((engine as any).paddle.setPositionFromPoint).not.toHaveBeenCalled();
-    expect((engine as any).paddle.setPosition).not.toHaveBeenCalled();
-  });
-
   it("ignora movimento touch sem arraste ativo", () => {
     jest.spyOn(canvas, "getBoundingClientRect").mockReturnValue({
       left: 100,

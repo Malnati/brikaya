@@ -6,7 +6,6 @@ import { useColorDebug } from "../hooks/useColorDebug";
 import {
   CANVAS_WIDTH,
   CANVAS_HEIGHT,
-  IMMERSIVE_LANDSCAPE_ROOT_CLASS,
   ROOT_ELEMENT_ID,
   calculateDynamicDimensions,
 } from "../constants/game";
@@ -51,7 +50,6 @@ export interface GameBoardRect {
 interface PendingBoardRectTarget {
   width: number;
   height: number;
-  isLandscapeImmersive: boolean;
 }
 
 const RESIZE_EVENT_NAME = "resize";
@@ -71,7 +69,6 @@ const PADDLE_TOUCH_ZONE_TEST_ID = "paddle-touch-zone";
 const BALL_TURRET_JOYSTICK_TEST_ID = "ball-turret-joystick";
 const BALL_TURRET_JOYSTICK_LABEL = "Controle da Torreta";
 const GAME_SURFACE_CLASS_NAME = "game-surface";
-const GAME_SURFACE_IMMERSIVE_CLASS_NAME = "game-surface--immersive-landscape";
 const GAME_SURFACE_BALL_TURRET_CLASS_NAME = "game-surface--ball-turret";
 const GAME_BOARD_INPUT_LAYOUT_CLASS_NAME = "game-board-input-layout";
 const GAME_BOARD_PLAYFIELD_CLASS_NAME = "game-board-playfield";
@@ -110,8 +107,7 @@ function setViewportCssVariables(width: number, height: number) {
   );
 }
 
-function clearImmersiveViewportState() {
-  document.documentElement.classList.remove(IMMERSIVE_LANDSCAPE_ROOT_CLASS);
+function clearViewportCssVariables() {
   document.documentElement.style.removeProperty(VISUAL_VIEWPORT_WIDTH_CSS_VAR);
   document.documentElement.style.removeProperty(VISUAL_VIEWPORT_HEIGHT_CSS_VAR);
 }
@@ -149,9 +145,7 @@ export default function Game({
     width: CANVAS_WIDTH,
     height: CANVAS_HEIGHT,
   });
-  const [isLandscapeImmersive, setIsLandscapeImmersive] = useState(false);
   const canvasSizeRef = useRef(canvasSize);
-  const isLandscapeImmersiveRef = useRef(isLandscapeImmersive);
   const pendingBoardRectTargetRef = useRef<PendingBoardRectTarget | null>(null);
   const isBallTurretMode = gameMode === GAME_MODE_BALL_TURRET;
   const paddleTouchZoneCenterPercent = useMemo(() => {
@@ -195,20 +189,7 @@ export default function Game({
       const shouldWaitForSizedCanvas =
         canvasSizeRef.current.width !== nextSize.width ||
         canvasSizeRef.current.height !== nextSize.height;
-      const shouldWaitForSurfaceMode =
-        isLandscapeImmersiveRef.current !== nextSize.isImmersiveLandscape;
       setViewportCssVariables(viewportWidth, viewportHeight);
-      document.documentElement.classList.toggle(
-        IMMERSIVE_LANDSCAPE_ROOT_CLASS,
-        nextSize.isImmersiveLandscape,
-      );
-      setIsLandscapeImmersive((currentValue) => {
-        if (currentValue === nextSize.isImmersiveLandscape) {
-          return currentValue;
-        }
-
-        return nextSize.isImmersiveLandscape;
-      });
       setCanvasSize((currentSize) => {
         if (
           currentSize.width === nextSize.width &&
@@ -219,11 +200,10 @@ export default function Game({
 
         return nextSize;
       });
-      if (shouldWaitForSizedCanvas || shouldWaitForSurfaceMode) {
+      if (shouldWaitForSizedCanvas) {
         pendingBoardRectTargetRef.current = {
           width: nextSize.width,
           height: nextSize.height,
-          isLandscapeImmersive: nextSize.isImmersiveLandscape,
         };
       } else {
         pendingBoardRectTargetRef.current = null;
@@ -257,19 +237,17 @@ export default function Game({
         VISUAL_VIEWPORT_SCROLL_EVENT_NAME,
         updateCanvasSize,
       );
-      clearImmersiveViewportState();
+      clearViewportCssVariables();
     };
   }, [publishBoardRect]);
 
   useLayoutEffect(() => {
     canvasSizeRef.current = canvasSize;
-    isLandscapeImmersiveRef.current = isLandscapeImmersive;
     const pendingBoardRectTarget = pendingBoardRectTargetRef.current;
     if (pendingBoardRectTarget) {
       if (
         pendingBoardRectTarget.width !== canvasSize.width ||
-        pendingBoardRectTarget.height !== canvasSize.height ||
-        pendingBoardRectTarget.isLandscapeImmersive !== isLandscapeImmersive
+        pendingBoardRectTarget.height !== canvasSize.height
       ) {
         return;
       }
@@ -278,7 +256,7 @@ export default function Game({
     }
 
     publishBoardRect();
-  }, [canvasSize, isLandscapeImmersive, publishBoardRect]);
+  }, [canvasSize, publishBoardRect]);
 
   useGameLoop(
     canvasRef,
@@ -301,7 +279,6 @@ export default function Game({
 
   const surfaceClassName = [
     GAME_SURFACE_CLASS_NAME,
-    isLandscapeImmersive ? GAME_SURFACE_IMMERSIVE_CLASS_NAME : "",
     isBallTurretMode ? GAME_SURFACE_BALL_TURRET_CLASS_NAME : "",
   ]
     .filter(Boolean)

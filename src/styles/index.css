@@ -455,6 +455,95 @@ select {
   box-sizing: border-box;
 }
 
+.app-shell--orientation-blocked {
+  touch-action: none;
+}
+
+.mobile-orientation-blocker {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: max(20px, env(safe-area-inset-top))
+    max(20px, env(safe-area-inset-right))
+    max(20px, env(safe-area-inset-bottom))
+    max(20px, env(safe-area-inset-left));
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      color-mix(in srgb, var(--bb-color-primary) 22%, transparent),
+      transparent 34%
+    ),
+    color-mix(in srgb, var(--bb-color-background) 94%, transparent);
+  color: var(--bb-color-text);
+  pointer-events: auto;
+  touch-action: none;
+  overscroll-behavior: contain;
+}
+
+.mobile-orientation-blocker__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  width: min(420px, 82vw);
+  box-sizing: border-box;
+  padding: var(--space-4);
+  border: 1px solid
+    color-mix(in srgb, var(--bb-color-primary) 56%, transparent);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--bb-color-panel) 96%, transparent),
+      color-mix(in srgb, var(--bb-color-surface) 96%, transparent)
+    );
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.56),
+    0 0 42px color-mix(in srgb, var(--bb-color-primary) 24%, transparent);
+  text-align: center;
+}
+
+.mobile-orientation-blocker__arrow {
+  width: clamp(76px, 20vw, 112px);
+  height: clamp(76px, 20vw, 112px);
+  color: var(--bb-color-primary);
+  filter: drop-shadow(
+    0 0 18px color-mix(in srgb, var(--bb-color-primary) 50%, transparent)
+  );
+}
+
+.mobile-orientation-blocker__panel p {
+  margin: 0;
+  max-width: 26ch;
+  color: var(--bb-color-text);
+  font-family: var(--bb-font-display);
+  font-size: clamp(1.15rem, 3.4vw, 1.7rem);
+  font-weight: 800;
+  line-height: 1.16;
+  text-wrap: balance;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mobile-orientation-blocker__arrow {
+    animation: mobile-orientation-nudge 1200ms ease-in-out infinite;
+  }
+}
+
+@keyframes mobile-orientation-nudge {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(-8deg);
+  }
+}
+
 .game-dashboard {
   width: 100%;
   min-width: 0;
@@ -2190,140 +2279,8 @@ canvas {
   }
 }
 
-html.bb-landscape-immersive,
-html.bb-landscape-immersive body,
-html.bb-landscape-immersive #root {
-  width: var(--bb-visual-viewport-width);
-  height: var(--bb-visual-viewport-height);
-  min-height: var(--bb-visual-viewport-height);
-  max-height: var(--bb-visual-viewport-height);
-  overflow: hidden;
-}
-
-html.bb-landscape-immersive body {
-  position: fixed;
-  inset: 0;
-  background: var(--color-bg);
-  overscroll-behavior: none;
-}
-
-html.bb-landscape-immersive #root {
-  position: fixed;
-  inset: 0;
-  padding: max(4px, env(safe-area-inset-top))
-    max(6px, env(safe-area-inset-right)) max(4px, env(safe-area-inset-bottom))
-    max(6px, env(safe-area-inset-left));
-}
-
-html.bb-landscape-immersive .app-shell,
-html.bb-landscape-immersive .game-dashboard {
-  height: 100%;
-  max-width: none;
-}
-
-html.bb-landscape-immersive .game-dashboard {
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-html.bb-landscape-immersive .dashboard-header {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: minmax(148px, 1fr) minmax(0, auto) minmax(68px, 1fr);
-  flex: 0 0 auto;
-  align-items: center;
-  gap: var(--space-1);
-  margin-bottom: var(--space-1);
-}
-
-html.bb-landscape-immersive .dashboard-header-controls {
-  justify-content: flex-end;
-  flex-wrap: nowrap;
-  min-width: 0;
-}
-
-html.bb-landscape-immersive .dashboard-title-group {
-  display: none;
-}
-
-html.bb-landscape-immersive .score-hud {
-  max-width: 100%;
-  overflow: hidden;
-  min-height: 24px;
-  padding: 3px 8px;
-  background: color-mix(in srgb, var(--bb-color-panel) 74%, transparent);
-  font-size: 0.72rem;
-}
-
-html.bb-landscape-immersive .dashboard-menu-button {
-  flex: 0 0 auto;
-  min-height: 44px;
-}
-
-html.bb-landscape-immersive .dashboard-layout {
-  display: flex;
-  flex: 1 1 auto;
-  height: auto;
-  min-height: 0;
-  align-items: stretch;
-  justify-content: center;
-  gap: 0;
-}
-
-html.bb-landscape-immersive .play-column,
-html.bb-landscape-immersive .game-container,
-html.bb-landscape-immersive .game-surface {
-  min-height: 0;
-  height: 100%;
-}
-
-html.bb-landscape-immersive .play-column {
-  width: 100%;
-  justify-content: center;
-  gap: 0;
-}
-
-html.bb-landscape-immersive .game-container,
-html.bb-landscape-immersive .game-surface {
-  justify-content: center;
-}
-
-html.bb-landscape-immersive .game-surface {
-  position: relative;
-  gap: var(--space-1);
-}
-
-html.bb-landscape-immersive .game-board-frame {
-  flex: 0 1 auto;
-  max-height: 100%;
-}
-
-html.bb-landscape-immersive .game-board-controls {
-  position: static;
-  flex: 0 0 auto;
-  margin-top: var(--space-1);
-  transform: none;
-}
-
-html.bb-landscape-immersive .dashboard-button {
-  min-height: 44px;
-  padding: 8px 10px;
-  font-size: 0.78rem;
-}
-
-html.bb-landscape-immersive .game-status-region {
-  display: none;
-}
-
 @media (max-height: 500px) and (orientation: landscape) {
-  .dashboard-header,
-  html.bb-landscape-immersive .dashboard-header {
+  .dashboard-header {
     position: fixed;
     inset: 0 auto auto 0;
     z-index: 10;
@@ -2335,37 +2292,31 @@ html.bb-landscape-immersive .game-status-region {
   }
 
   .dashboard-primary-controls,
-  .dashboard-header-controls,
-  html.bb-landscape-immersive .dashboard-primary-controls,
-  html.bb-landscape-immersive .dashboard-header-controls {
+  .dashboard-header-controls {
     position: fixed;
     z-index: 11;
     pointer-events: auto;
   }
 
-  .dashboard-primary-controls,
-  html.bb-landscape-immersive .dashboard-primary-controls {
+  .dashboard-primary-controls {
     top: auto;
     bottom: max(8px, env(safe-area-inset-bottom));
     left: max(8px, env(safe-area-inset-left));
     gap: 4px;
   }
 
-  .dashboard-header-controls,
-  html.bb-landscape-immersive .dashboard-header-controls {
+  .dashboard-header-controls {
     top: max(8px, env(safe-area-inset-top));
     right: max(8px, env(safe-area-inset-right));
     justify-content: flex-end;
     flex-wrap: nowrap;
   }
 
-  .score-hud,
-  html.bb-landscape-immersive .score-hud {
+  .score-hud {
     display: none;
   }
 
-  .dashboard-layout,
-  html.bb-landscape-immersive .dashboard-layout {
+  .dashboard-layout {
     height: 100%;
     min-height: 0;
     align-items: stretch;
@@ -2373,36 +2324,27 @@ html.bb-landscape-immersive .game-status-region {
 
   .play-column,
   .game-container,
-  .game-surface,
-  html.bb-landscape-immersive .play-column,
-  html.bb-landscape-immersive .game-container,
-  html.bb-landscape-immersive .game-surface {
+  .game-surface {
     min-height: 0;
     height: 100%;
   }
 
-  .game-surface,
-  html.bb-landscape-immersive .game-surface {
+  .game-surface {
     gap: 0;
   }
 
-  .game-surface--ball-turret .game-board-input-layout,
-  html.bb-landscape-immersive
-    .game-surface--ball-turret
-    .game-board-input-layout {
+  .game-surface--ball-turret .game-board-input-layout {
     flex-direction: row;
     gap: 4px;
   }
 
-  .game-surface--ball-turret .game-turret-joystick,
-  html.bb-landscape-immersive .game-surface--ball-turret .game-turret-joystick {
+  .game-surface--ball-turret .game-turret-joystick {
     --bb-turret-trackball-size: 112px;
     --bb-turret-trackball-knob-size: 36px;
     --bb-turret-trackball-travel: 30px;
   }
 
-  .game-surface--ball-turret,
-  html.bb-landscape-immersive .game-surface--ball-turret {
+  .game-surface--ball-turret {
     --bb-ball-turret-playfield-max-width: calc(
       var(--bb-visual-viewport-width, 100vw) - 136px
     );

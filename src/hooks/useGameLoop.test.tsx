@@ -19,7 +19,6 @@ const mockStartPaddleDrag = jest.fn();
 const mockMovePaddleDrag = jest.fn();
 const mockEndPaddleDrag = jest.fn();
 const mockSetBallTurretControlVector = jest.fn();
-const mockSetBallTurretJoystickTurn = jest.fn();
 const TOUCH_ZONE_TEST_ID = "paddle-touch-zone";
 const JOYSTICK_TEST_ID = "ball-turret-joystick";
 const TOUCH_START_EVENT_NAME = "touchstart";
@@ -37,7 +36,6 @@ const TOUCH_MOVE_CLIENT_Y = 512;
 const TRACKBALL_X_CSS_VAR = "--bb-turret-trackball-x";
 const TRACKBALL_Y_CSS_VAR = "--bb-turret-trackball-y";
 const TRACKBALL_ACTIVE_CSS_VAR = "--bb-turret-trackball-active";
-const DIAGONAL_TRACKBALL_AXIS = Math.SQRT1_2;
 const JOYSTICK_RECT = {
   left: 100,
   top: 200,
@@ -47,6 +45,17 @@ const JOYSTICK_RECT = {
   right: 200,
   x: 100,
   y: 200,
+  toJSON: jest.fn(),
+} as unknown as DOMRect;
+const CANVAS_RECT = {
+  left: 20,
+  top: 40,
+  width: 400,
+  height: 300,
+  bottom: 340,
+  right: 420,
+  x: 20,
+  y: 40,
   toJSON: jest.fn(),
 } as unknown as DOMRect;
 
@@ -61,7 +70,6 @@ jest.mock("../logic/GameEngine", () => ({
     movePaddleDrag: mockMovePaddleDrag,
     endPaddleDrag: mockEndPaddleDrag,
     setBallTurretControlVector: mockSetBallTurretControlVector,
-    setBallTurretJoystickTurn: mockSetBallTurretJoystickTurn,
   })),
 }));
 
@@ -264,8 +272,8 @@ describe("useGameLoop", () => {
     expect(mockStartPaddleDrag).not.toHaveBeenCalled();
   });
 
-  it("encaminha trackball da torreta com feedback visual 3D e giro horizontal", async () => {
-    const { getByTestId } = render(
+  it("espelha pontos do joystick para pontos equivalentes do canvas por pointer", async () => {
+    const { container, getByTestId } = render(
       <Harness
         imageSetId={IMAGE_SET_RETRO_DEFAULT}
         gameMode="ball-turret"
@@ -277,75 +285,114 @@ describe("useGameLoop", () => {
       expect(GameEngine).toHaveBeenCalledTimes(1);
     });
 
+    const canvas = container.querySelector("canvas") as HTMLCanvasElement;
     const joystick = getByTestId(JOYSTICK_TEST_ID);
+    canvas.getBoundingClientRect = jest.fn(() => CANVAS_RECT);
     joystick.getBoundingClientRect = jest.fn(() => JOYSTICK_RECT);
 
-    const pointerDown = createPointerEvent(POINTER_DOWN_EVENT_NAME, 200, 250);
-    const pointerMoveLeft = createPointerEvent(
-      POINTER_MOVE_EVENT_NAME,
-      100,
-      250,
-    );
-    const pointerMoveTop = createPointerEvent(
-      POINTER_MOVE_EVENT_NAME,
-      150,
-      200,
-    );
-    const pointerUp = createPointerEvent(POINTER_UP_EVENT_NAME, 150, 200);
-
-    joystick.dispatchEvent(pointerDown);
-    joystick.dispatchEvent(pointerMoveLeft);
-    joystick.dispatchEvent(pointerMoveTop);
-    joystick.dispatchEvent(pointerUp);
-
-    expect(pointerDown.defaultPrevented).toBe(true);
-    expect(pointerMoveLeft.defaultPrevented).toBe(true);
-    expect(pointerMoveTop.defaultPrevented).toBe(true);
-    expect(pointerUp.defaultPrevented).toBe(true);
-    expect(mockSetBallTurretJoystickTurn).toHaveBeenNthCalledWith(1, 1);
-    expect(mockSetBallTurretJoystickTurn).toHaveBeenNthCalledWith(2, -1);
-    expect(mockSetBallTurretJoystickTurn).toHaveBeenNthCalledWith(3, 0);
-    expect(mockSetBallTurretJoystickTurn).toHaveBeenNthCalledWith(4, 0);
-    expect(joystick.style.getPropertyValue(TRACKBALL_X_CSS_VAR)).toBe("0");
-    expect(joystick.style.getPropertyValue(TRACKBALL_Y_CSS_VAR)).toBe("0");
-    expect(joystick.style.getPropertyValue(TRACKBALL_ACTIVE_CSS_VAR)).toBe("0");
-    expect(mockSetBallTurretControlVector).not.toHaveBeenCalled();
-    expect(GameEngine).toHaveBeenCalledTimes(1);
-  });
-
-  it("mostra pressão imediata ao tocar no lado esquerdo do trackball da torreta", async () => {
-    const { getByTestId } = render(
-      <Harness
-        imageSetId={IMAGE_SET_RETRO_DEFAULT}
-        gameMode="ball-turret"
-        joystickEnabled
-      />,
-    );
-
-    await waitFor(() => {
-      expect(GameEngine).toHaveBeenCalledTimes(1);
-    });
-
-    const joystick = getByTestId(JOYSTICK_TEST_ID);
-    joystick.getBoundingClientRect = jest.fn(() => JOYSTICK_RECT);
-
-    const pointerDownLeft = createPointerEvent(
+    const pointerDownCenter = createPointerEvent(
       POINTER_DOWN_EVENT_NAME,
-      100,
+      150,
       250,
     );
+    joystick.dispatchEvent(pointerDownCenter);
 
-    joystick.dispatchEvent(pointerDownLeft);
+    const cases = [
+      {
+        name: "direita",
+        event: createPointerEvent(POINTER_MOVE_EVENT_NAME, 200, 250),
+        expectedClientX: 420,
+        expectedClientY: 190,
+        expectedVisualX: 1,
+        expectedVisualY: 0,
+      },
+      {
+        name: "esquerda",
+        event: createPointerEvent(POINTER_MOVE_EVENT_NAME, 100, 250),
+        expectedClientX: 20,
+        expectedClientY: 190,
+        expectedVisualX: -1,
+        expectedVisualY: 0,
+      },
+      {
+        name: "topo",
+        event: createPointerEvent(POINTER_MOVE_EVENT_NAME, 150, 200),
+        expectedClientX: 220,
+        expectedClientY: 40,
+        expectedVisualX: 0,
+        expectedVisualY: -1,
+      },
+      {
+        name: "base",
+        event: createPointerEvent(POINTER_MOVE_EVENT_NAME, 150, 300),
+        expectedClientX: 220,
+        expectedClientY: 340,
+        expectedVisualX: 0,
+        expectedVisualY: 1,
+      },
+      {
+        name: "superior direito",
+        event: createPointerEvent(POINTER_MOVE_EVENT_NAME, 200, 200),
+        expectedClientX: 420,
+        expectedClientY: 40,
+        expectedVisualX: 1,
+        expectedVisualY: -1,
+      },
+      {
+        name: "inferior esquerdo",
+        event: createPointerEvent(POINTER_MOVE_EVENT_NAME, 100, 300),
+        expectedClientX: 20,
+        expectedClientY: 340,
+        expectedVisualX: -1,
+        expectedVisualY: 1,
+      },
+      {
+        name: "superior esquerdo",
+        event: createPointerEvent(POINTER_MOVE_EVENT_NAME, 100, 200),
+        expectedClientX: 20,
+        expectedClientY: 40,
+        expectedVisualX: -1,
+        expectedVisualY: -1,
+      },
+      {
+        name: "inferior direito",
+        event: createPointerEvent(POINTER_MOVE_EVENT_NAME, 200, 300),
+        expectedClientX: 420,
+        expectedClientY: 340,
+        expectedVisualX: 1,
+        expectedVisualY: 1,
+      },
+    ];
 
-    expect(pointerDownLeft.defaultPrevented).toBe(true);
-    expect(mockSetBallTurretJoystickTurn).toHaveBeenCalledWith(-1);
-    expect(joystick.style.getPropertyValue(TRACKBALL_X_CSS_VAR)).toBe("-1");
-    expect(joystick.style.getPropertyValue(TRACKBALL_Y_CSS_VAR)).toBe("0");
-    expect(joystick.style.getPropertyValue(TRACKBALL_ACTIVE_CSS_VAR)).toBe("1");
+    expect(pointerDownCenter.defaultPrevented).toBe(true);
+    expect(mockStartPaddleDrag).toHaveBeenCalledWith(220, 190);
+    expect(readStyleNumber(joystick, TRACKBALL_X_CSS_VAR)).toBeCloseTo(0);
+    expect(readStyleNumber(joystick, TRACKBALL_Y_CSS_VAR)).toBeCloseTo(0);
+
+    for (const point of cases) {
+      joystick.dispatchEvent(point.event);
+
+      expect(point.event.defaultPrevented).toBe(true);
+      expect(mockMovePaddleDrag).toHaveBeenLastCalledWith(
+        point.expectedClientX,
+        point.expectedClientY,
+      );
+      expect(readStyleNumber(joystick, TRACKBALL_X_CSS_VAR)).toBeCloseTo(
+        point.expectedVisualX,
+      );
+      expect(readStyleNumber(joystick, TRACKBALL_Y_CSS_VAR)).toBeCloseTo(
+        point.expectedVisualY,
+      );
+      expect(joystick.style.getPropertyValue(TRACKBALL_ACTIVE_CSS_VAR)).toBe(
+        "1",
+      );
+    }
+
+    expect(mockSetBallTurretControlVector).not.toHaveBeenCalled();
   });
 
-  it("usa touch como fallback do trackball quando eventos pointer não cobrem o gesto", async () => {
-    const { getByTestId } = render(
+  it("clampa gestos pointer fora do joystick para a borda equivalente do canvas", async () => {
+    const { container, getByTestId } = render(
       <Harness
         imageSetId={IMAGE_SET_RETRO_DEFAULT}
         gameMode="ball-turret"
@@ -357,30 +404,72 @@ describe("useGameLoop", () => {
       expect(GameEngine).toHaveBeenCalledTimes(1);
     });
 
+    const canvas = container.querySelector("canvas") as HTMLCanvasElement;
     const joystick = getByTestId(JOYSTICK_TEST_ID);
+    canvas.getBoundingClientRect = jest.fn(() => CANVAS_RECT);
     joystick.getBoundingClientRect = jest.fn(() => JOYSTICK_RECT);
 
-    const touchStartLeft = createTouchEvent(TOUCH_START_EVENT_NAME, 100, 250);
+    const pointerDownOutside = createPointerEvent(
+      POINTER_DOWN_EVENT_NAME,
+      80,
+      320,
+    );
+    const pointerMoveOutside = createPointerEvent(
+      POINTER_MOVE_EVENT_NAME,
+      240,
+      180,
+    );
+
+    joystick.dispatchEvent(pointerDownOutside);
+    joystick.dispatchEvent(pointerMoveOutside);
+
+    expect(pointerDownOutside.defaultPrevented).toBe(true);
+    expect(pointerMoveOutside.defaultPrevented).toBe(true);
+    expect(mockStartPaddleDrag).toHaveBeenCalledWith(20, 340);
+    expect(mockMovePaddleDrag).toHaveBeenCalledWith(420, 40);
+    expect(readStyleNumber(joystick, TRACKBALL_X_CSS_VAR)).toBeCloseTo(1);
+    expect(readStyleNumber(joystick, TRACKBALL_Y_CSS_VAR)).toBeCloseTo(-1);
+  });
+
+  it("usa touch como fallback absoluto do joystick espelhado", async () => {
+    const { container, getByTestId } = render(
+      <Harness
+        imageSetId={IMAGE_SET_RETRO_DEFAULT}
+        gameMode="ball-turret"
+        joystickEnabled
+      />,
+    );
+
+    await waitFor(() => {
+      expect(GameEngine).toHaveBeenCalledTimes(1);
+    });
+
+    const canvas = container.querySelector("canvas") as HTMLCanvasElement;
+    const joystick = getByTestId(JOYSTICK_TEST_ID);
+    canvas.getBoundingClientRect = jest.fn(() => CANVAS_RECT);
+    joystick.getBoundingClientRect = jest.fn(() => JOYSTICK_RECT);
+
+    const touchStartBottom = createTouchEvent(TOUCH_START_EVENT_NAME, 150, 300);
     const touchMoveTop = createTouchEvent(TOUCH_MOVE_EVENT_NAME, 150, 200);
     const touchEnd = createTouchEvent(TOUCH_END_EVENT_NAME, null);
 
-    joystick.dispatchEvent(touchStartLeft);
+    joystick.dispatchEvent(touchStartBottom);
     joystick.dispatchEvent(touchMoveTop);
     joystick.dispatchEvent(touchEnd);
 
-    expect(touchStartLeft.defaultPrevented).toBe(true);
+    expect(touchStartBottom.defaultPrevented).toBe(true);
     expect(touchMoveTop.defaultPrevented).toBe(true);
     expect(touchEnd.defaultPrevented).toBe(true);
-    expect(mockSetBallTurretJoystickTurn).toHaveBeenNthCalledWith(1, -1);
-    expect(mockSetBallTurretJoystickTurn).toHaveBeenNthCalledWith(2, 0);
-    expect(mockSetBallTurretJoystickTurn).toHaveBeenNthCalledWith(3, 0);
+    expect(mockStartPaddleDrag).toHaveBeenCalledWith(220, 340);
+    expect(mockMovePaddleDrag).toHaveBeenCalledWith(220, 40);
+    expect(mockEndPaddleDrag).toHaveBeenCalledTimes(1);
     expect(joystick.style.getPropertyValue(TRACKBALL_X_CSS_VAR)).toBe("0");
     expect(joystick.style.getPropertyValue(TRACKBALL_Y_CSS_VAR)).toBe("0");
     expect(joystick.style.getPropertyValue(TRACKBALL_ACTIVE_CSS_VAR)).toBe("0");
   });
 
-  it("reseta trackball mesmo quando a captura de ponteiro não está disponível", async () => {
-    const { getByTestId } = render(
+  it("reseta joystick espelhado em pointerup e pointercancel", async () => {
+    const { container, getByTestId } = render(
       <Harness
         imageSetId={IMAGE_SET_RETRO_DEFAULT}
         gameMode="ball-turret"
@@ -392,7 +481,9 @@ describe("useGameLoop", () => {
       expect(GameEngine).toHaveBeenCalledTimes(1);
     });
 
+    const canvas = container.querySelector("canvas") as HTMLCanvasElement;
     const joystick = getByTestId(JOYSTICK_TEST_ID);
+    canvas.getBoundingClientRect = jest.fn(() => CANVAS_RECT);
     joystick.getBoundingClientRect = jest.fn(() => JOYSTICK_RECT);
     joystick.setPointerCapture = jest.fn(() => {
       throw new Error("captura indisponível");
@@ -402,124 +493,53 @@ describe("useGameLoop", () => {
     });
 
     const pointerDown = createPointerEvent(POINTER_DOWN_EVENT_NAME, 200, 250);
+    const pointerUp = createPointerEvent(POINTER_UP_EVENT_NAME, 200, 250);
+    const pointerDownAgain = createPointerEvent(
+      POINTER_DOWN_EVENT_NAME,
+      100,
+      250,
+    );
     const pointerCancel = createPointerEvent(
       POINTER_CANCEL_EVENT_NAME,
-      200,
+      100,
       250,
     );
 
     joystick.dispatchEvent(pointerDown);
+    joystick.dispatchEvent(pointerUp);
+    joystick.dispatchEvent(pointerDownAgain);
     joystick.dispatchEvent(pointerCancel);
 
     expect(pointerDown.defaultPrevented).toBe(true);
+    expect(pointerUp.defaultPrevented).toBe(true);
+    expect(pointerDownAgain.defaultPrevented).toBe(true);
     expect(pointerCancel.defaultPrevented).toBe(true);
-    expect(mockSetBallTurretJoystickTurn).toHaveBeenLastCalledWith(0);
+    expect(mockEndPaddleDrag).toHaveBeenCalledTimes(2);
     expect(joystick.style.getPropertyValue(TRACKBALL_X_CSS_VAR)).toBe("0");
     expect(joystick.style.getPropertyValue(TRACKBALL_Y_CSS_VAR)).toBe("0");
     expect(joystick.style.getPropertyValue(TRACKBALL_ACTIVE_CSS_VAR)).toBe("0");
   });
 
-  it("representa oito direções do trackball e normaliza diagonais antes de girar", async () => {
-    const { getByTestId } = render(
-      <Harness
-        imageSetId={IMAGE_SET_RETRO_DEFAULT}
-        gameMode="ball-turret"
-        joystickEnabled
-      />,
+  it("não instala controle absoluto do joystick fora do modo torreta", async () => {
+    const { container, getByTestId } = render(
+      <Harness imageSetId={IMAGE_SET_RETRO_DEFAULT} joystickEnabled />,
     );
 
     await waitFor(() => {
       expect(GameEngine).toHaveBeenCalledTimes(1);
     });
 
+    const canvas = container.querySelector("canvas") as HTMLCanvasElement;
     const joystick = getByTestId(JOYSTICK_TEST_ID);
+    canvas.getBoundingClientRect = jest.fn(() => CANVAS_RECT);
     joystick.getBoundingClientRect = jest.fn(() => JOYSTICK_RECT);
 
-    const dispatchAndExpect = (
-      event: PointerEvent,
-      expectedTurn: number,
-      expectedX: number,
-      expectedY: number,
-    ) => {
-      joystick.dispatchEvent(event);
+    const pointerDown = createPointerEvent(POINTER_DOWN_EVENT_NAME, 200, 250);
+    joystick.dispatchEvent(pointerDown);
 
-      expect(event.defaultPrevented).toBe(true);
-      expect(mockSetBallTurretJoystickTurn).toHaveBeenLastCalledWith(
-        expect.closeTo(expectedTurn, 6),
-      );
-      expect(readStyleNumber(joystick, TRACKBALL_X_CSS_VAR)).toBeCloseTo(
-        expectedX,
-      );
-      expect(readStyleNumber(joystick, TRACKBALL_Y_CSS_VAR)).toBeCloseTo(
-        expectedY,
-      );
-      expect(joystick.style.getPropertyValue(TRACKBALL_ACTIVE_CSS_VAR)).toBe(
-        "1",
-      );
-    };
-
-    dispatchAndExpect(
-      createPointerEvent(POINTER_DOWN_EVENT_NAME, 150, 250),
-      0,
-      0,
-      0,
-    );
-    dispatchAndExpect(
-      createPointerEvent(POINTER_MOVE_EVENT_NAME, 200, 200),
-      DIAGONAL_TRACKBALL_AXIS,
-      DIAGONAL_TRACKBALL_AXIS,
-      -DIAGONAL_TRACKBALL_AXIS,
-    );
-    dispatchAndExpect(
-      createPointerEvent(POINTER_MOVE_EVENT_NAME, 100, 300),
-      -DIAGONAL_TRACKBALL_AXIS,
-      -DIAGONAL_TRACKBALL_AXIS,
-      DIAGONAL_TRACKBALL_AXIS,
-    );
-    dispatchAndExpect(
-      createPointerEvent(POINTER_MOVE_EVENT_NAME, 100, 200),
-      -DIAGONAL_TRACKBALL_AXIS,
-      -DIAGONAL_TRACKBALL_AXIS,
-      -DIAGONAL_TRACKBALL_AXIS,
-    );
-    dispatchAndExpect(
-      createPointerEvent(POINTER_MOVE_EVENT_NAME, 200, 300),
-      DIAGONAL_TRACKBALL_AXIS,
-      DIAGONAL_TRACKBALL_AXIS,
-      DIAGONAL_TRACKBALL_AXIS,
-    );
-    dispatchAndExpect(
-      createPointerEvent(POINTER_MOVE_EVENT_NAME, 150, 300),
-      0,
-      0,
-      1,
-    );
-    dispatchAndExpect(
-      createPointerEvent(POINTER_MOVE_EVENT_NAME, 150, 200),
-      0,
-      0,
-      -1,
-    );
-    dispatchAndExpect(
-      createPointerEvent(POINTER_MOVE_EVENT_NAME, 200, 250),
-      1,
-      1,
-      0,
-    );
-    dispatchAndExpect(
-      createPointerEvent(POINTER_MOVE_EVENT_NAME, 100, 250),
-      -1,
-      -1,
-      0,
-    );
-
-    const pointerUp = createPointerEvent(POINTER_UP_EVENT_NAME, 150, 250);
-    joystick.dispatchEvent(pointerUp);
-
-    expect(pointerUp.defaultPrevented).toBe(true);
-    expect(mockSetBallTurretJoystickTurn).toHaveBeenLastCalledWith(0);
-    expect(joystick.style.getPropertyValue(TRACKBALL_X_CSS_VAR)).toBe("0");
-    expect(joystick.style.getPropertyValue(TRACKBALL_Y_CSS_VAR)).toBe("0");
-    expect(joystick.style.getPropertyValue(TRACKBALL_ACTIVE_CSS_VAR)).toBe("0");
+    expect(pointerDown.defaultPrevented).toBe(false);
+    expect(mockStartPaddleDrag).not.toHaveBeenCalled();
+    expect(mockMovePaddleDrag).not.toHaveBeenCalled();
+    expect(mockEndPaddleDrag).not.toHaveBeenCalled();
   });
 });
