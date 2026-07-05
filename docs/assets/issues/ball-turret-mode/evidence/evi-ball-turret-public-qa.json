@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-07-05T15:27:11.195Z",
-  "publicUrl": "http://127.0.0.1:4173/?qaScenario=ball-turret",
+  "checkedAt": "2026-07-05T19:07:23.877Z",
+  "publicUrl": "https://brikaya.com/?qaScenario=ball-turret",
   "qaScenario": "ball-turret",
   "results": [
     {
@@ -9,10 +9,22 @@
       "joystickExercise": {
         "exercised": false,
         "pathWithinControl": false,
-        "rightHoldAngularDelta": 0,
-        "rightUpHoldAngularDelta": 0,
-        "leftDownHoldAngularDelta": 0,
-        "leftHoldAngularDelta": 0,
+        "angleChecks": {},
+        "holdStableAngleDelta": 0,
+        "clampCheck": {
+          "visual": {
+            "x": 0,
+            "y": 0
+          },
+          "expectedAngle": null,
+          "actualAngle": null,
+          "angleMatches": false
+        },
+        "releaseVisual": {
+          "x": 0,
+          "y": 0,
+          "active": 0
+        },
         "path": []
       },
       "menuState": {
@@ -310,12 +322,27 @@
             "ariaPressed": null
           }
         ],
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
         "hasCanvas": true,
         "canvas": {
           "width": 1056,
           "height": 704,
           "x": 192,
           "y": 85
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
         },
         "joystick": {
           "exists": true,
@@ -333,16 +360,16 @@
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 1765,
+          "brickDrawCount": 1067,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 240,
-          "activeTrampolineArcCount": 2874,
-          "activeTrampolineCenterAngle": 1.5928922863908568,
+          "fullRingArcCount": 168,
+          "activeTrampolineArcCount": 1995,
+          "activeTrampolineCenterAngle": 1.5707963267948966,
           "boundarySegmentCount": 18,
           "reboundBoundarySegmentCount": 9,
           "lossBoundarySegmentCount": 9
@@ -376,12 +403,27 @@
             "ariaPressed": null
           }
         ],
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
         "hasCanvas": true,
         "canvas": {
           "width": 1056,
           "height": 704,
           "x": 192,
           "y": 85
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
         },
         "joystick": {
           "exists": true,
@@ -399,7 +441,7 @@
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 64,
+          "brickDrawCount": 192,
           "brickQuadrants": {
             "left": true,
             "right": true,
@@ -442,12 +484,27 @@
             "ariaPressed": null
           }
         ],
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
         "hasCanvas": true,
         "canvas": {
           "width": 1056,
           "height": 704,
           "x": 192,
           "y": 85
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
         },
         "joystick": {
           "exists": true,
@@ -465,16 +522,16 @@
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 1765,
+          "brickDrawCount": 1067,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 240,
-          "activeTrampolineArcCount": 2874,
-          "activeTrampolineCenterAngle": 1.5928922863908568,
+          "fullRingArcCount": 168,
+          "activeTrampolineArcCount": 1995,
+          "activeTrampolineCenterAngle": 1.5707963267948966,
           "boundarySegmentCount": 18,
           "reboundBoundarySegmentCount": 9,
           "lossBoundarySegmentCount": 9
@@ -487,75 +544,185 @@
       "joystickExercise": {
         "exercised": true,
         "pathWithinControl": true,
-        "rightVisualX": 0.9000000000000001,
-        "topVisualY": -0.9000000000000001,
-        "bottomVisualY": 0.8999999999999994,
-        "leftVisualX": -0.9000000000000001,
+        "angleChecks": {
+          "right": {
+            "actualAngle": 0,
+            "expectedAngle": 0,
+            "angleMatches": true,
+            "visual": {
+              "x": 1,
+              "y": 0
+            }
+          },
+          "topRight": {
+            "actualAngle": -0.7853981633974492,
+            "expectedAngle": -0.7853981633974492,
+            "angleMatches": true,
+            "visual": {
+              "x": 1,
+              "y": -1
+            }
+          },
+          "bottomLeft": {
+            "actualAngle": 2.356194490192344,
+            "expectedAngle": 2.356194490192344,
+            "angleMatches": true,
+            "visual": {
+              "x": -1,
+              "y": 1
+            }
+          },
+          "left": {
+            "actualAngle": -3.141592653589793,
+            "expectedAngle": -3.141592653589793,
+            "angleMatches": true,
+            "visual": {
+              "x": -1,
+              "y": 0
+            }
+          },
+          "top": {
+            "actualAngle": -1.5707963267948966,
+            "expectedAngle": -1.5707963267948966,
+            "angleMatches": true,
+            "visual": {
+              "x": 0,
+              "y": -1
+            }
+          },
+          "topLeft": {
+            "actualAngle": -2.356194490192345,
+            "expectedAngle": -2.356194490192345,
+            "angleMatches": true,
+            "visual": {
+              "x": -1,
+              "y": -1
+            }
+          },
+          "bottom": {
+            "actualAngle": 1.5707963267948966,
+            "expectedAngle": 1.5707963267948966,
+            "angleMatches": true,
+            "visual": {
+              "x": 0,
+              "y": 1
+            }
+          },
+          "bottomRight": {
+            "actualAngle": 0.7853981633974492,
+            "expectedAngle": 0.7853981633974492,
+            "angleMatches": true,
+            "visual": {
+              "x": 1,
+              "y": 1
+            }
+          }
+        },
+        "holdStableAngleDelta": 0,
+        "clampCheck": {
+          "actualAngle": -0.7853981633974492,
+          "expectedAngle": -0.7853981633974492,
+          "angleMatches": true,
+          "visual": {
+            "x": 1,
+            "y": -1
+          }
+        },
+        "rightVisualX": 1,
+        "topVisualY": -1,
+        "bottomVisualY": 1,
+        "leftVisualX": -1,
         "topRightVisual": {
-          "x": 0.7071067811865475,
-          "y": -0.7071067811865475
+          "x": 1,
+          "y": -1
         },
         "topLeftVisual": {
-          "x": -0.7071067811865475,
-          "y": -0.7071067811865475
+          "x": -1,
+          "y": -1
         },
         "bottomLeftVisual": {
-          "x": -0.7071067811865478,
-          "y": 0.7071067811865471
+          "x": -1,
+          "y": 1
         },
         "bottomRightVisual": {
-          "x": 0.7071067811865478,
-          "y": 0.7071067811865471
+          "x": 1,
+          "y": 1
         },
         "releaseVisual": {
           "x": 0,
           "y": 0,
           "active": 0
         },
-        "rightHoldAngularDelta": 1.0365370801254201,
-        "rightUpHoldAngularDelta": 0.7772823700308056,
-        "leftDownHoldAngularDelta": 0.7775045141777159,
-        "leftHoldAngularDelta": 1.0274892932830824,
         "path": [
           {
             "x": 195,
-            "y": 465
+            "y": 465,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0.5,
+            "expectedAngle": null
           },
           {
-            "x": 255.3,
-            "y": 465
+            "x": 262,
+            "y": 465,
+            "horizontalRatio": 1,
+            "verticalRatio": 0.5,
+            "expectedAngle": 0
           },
           {
-            "x": 255.3,
-            "y": 404.7
-          },
-          {
-            "x": 195,
-            "y": 404.7
-          },
-          {
-            "x": 134.7,
-            "y": 404.7
-          },
-          {
-            "x": 134.7,
-            "y": 465
-          },
-          {
-            "x": 134.7,
-            "y": 525.3
+            "x": 262,
+            "y": 398,
+            "horizontalRatio": 1,
+            "verticalRatio": 0,
+            "expectedAngle": -0.7853981633974492
           },
           {
             "x": 195,
-            "y": 525.3
+            "y": 398,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0,
+            "expectedAngle": -1.5707963267948966
           },
           {
-            "x": 255.3,
-            "y": 525.3
+            "x": 128,
+            "y": 398,
+            "horizontalRatio": 0,
+            "verticalRatio": 0,
+            "expectedAngle": -2.356194490192345
+          },
+          {
+            "x": 128,
+            "y": 465,
+            "horizontalRatio": 0,
+            "verticalRatio": 0.5,
+            "expectedAngle": -3.141592653589793
+          },
+          {
+            "x": 128,
+            "y": 532,
+            "horizontalRatio": 0,
+            "verticalRatio": 1,
+            "expectedAngle": 2.356194490192344
           },
           {
             "x": 195,
-            "y": 465
+            "y": 532,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 1,
+            "expectedAngle": 1.5707963267948966
+          },
+          {
+            "x": 262,
+            "y": 532,
+            "horizontalRatio": 1,
+            "verticalRatio": 1,
+            "expectedAngle": 0.7853981633974492
+          },
+          {
+            "x": 195,
+            "y": 465,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0.5,
+            "expectedAngle": null
           }
         ]
       },
@@ -854,10 +1021,25 @@
             "ariaPressed": null
           }
         ],
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
         "hasCanvas": true,
         "canvas": {
           "width": 390,
           "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
           "x": 0,
           "y": 0
         },
@@ -873,20 +1055,20 @@
           "trackballY": "0",
           "trackballActive": "0"
         },
-        "scoreHudText": "Fase 1|Score 70|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 50|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 4981,
+          "brickDrawCount": 4389,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 728,
-          "activeTrampolineArcCount": 5717,
-          "activeTrampolineCenterAngle": 1.7930634174604236,
+          "fullRingArcCount": 616,
+          "activeTrampolineArcCount": 5131,
+          "activeTrampolineCenterAngle": 0,
           "boundarySegmentCount": 18,
           "reboundBoundarySegmentCount": 9,
           "lossBoundarySegmentCount": 9
@@ -920,10 +1102,25 @@
             "ariaPressed": null
           }
         ],
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
         "hasCanvas": true,
         "canvas": {
           "width": 390,
           "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
           "x": 0,
           "y": 0
         },
@@ -943,7 +1140,7 @@
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 120,
+          "brickDrawCount": 60,
           "brickQuadrants": {
             "left": true,
             "right": true,
@@ -986,10 +1183,25 @@
             "ariaPressed": null
           }
         ],
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
         "hasCanvas": true,
         "canvas": {
           "width": 390,
           "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
           "x": 0,
           "y": 0
         },
@@ -1005,20 +1217,20 @@
           "trackballY": "0",
           "trackballActive": "0"
         },
-        "scoreHudText": "Fase 1|Score 70|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 50|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 4928,
+          "brickDrawCount": 4334,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 720,
-          "activeTrampolineArcCount": 5658,
-          "activeTrampolineCenterAngle": 1.7930634174604236,
+          "fullRingArcCount": 608,
+          "activeTrampolineArcCount": 5072,
+          "activeTrampolineCenterAngle": 0,
           "boundarySegmentCount": 18,
           "reboundBoundarySegmentCount": 9,
           "lossBoundarySegmentCount": 9
@@ -1027,415 +1239,13 @@
     },
     {
       "name": "mobile-landscape",
-      "joystickPlacement": "right",
+      "joystickPlacement": "blocked",
+      "orientationBlocked": true,
       "joystickExercise": {
-        "exercised": true,
-        "pathWithinControl": true,
-        "rightVisualX": 0.8999999999999992,
-        "topVisualY": -0.9000000000000002,
-        "bottomVisualY": 0.9000000000000002,
-        "leftVisualX": -0.8999999999999992,
-        "topRightVisual": {
-          "x": 0.7071067811865471,
-          "y": -0.7071067811865479
-        },
-        "topLeftVisual": {
-          "x": -0.7071067811865471,
-          "y": -0.7071067811865479
-        },
-        "bottomLeftVisual": {
-          "x": -0.7071067811865471,
-          "y": 0.7071067811865479
-        },
-        "bottomRightVisual": {
-          "x": 0.7071067811865471,
-          "y": 0.7071067811865479
-        },
-        "releaseVisual": {
-          "x": 0,
-          "y": 0,
-          "active": 0
-        },
-        "rightHoldAngularDelta": 0.9896016858807819,
-        "rightUpHoldAngularDelta": 0.8514785150980462,
-        "leftDownHoldAngularDelta": 0.7404064416440921,
-        "leftHoldAngularDelta": 1.0255100899113163,
-        "path": [
-          {
-            "x": 778,
-            "y": 195
-          },
-          {
-            "x": 829.3,
-            "y": 195
-          },
-          {
-            "x": 829.3,
-            "y": 143.7
-          },
-          {
-            "x": 778,
-            "y": 143.7
-          },
-          {
-            "x": 726.7,
-            "y": 143.7
-          },
-          {
-            "x": 726.7,
-            "y": 195
-          },
-          {
-            "x": 726.7,
-            "y": 246.3
-          },
-          {
-            "x": 778,
-            "y": 246.3
-          },
-          {
-            "x": 829.3,
-            "y": 246.3
-          },
-          {
-            "x": 778,
-            "y": 195
-          }
-        ]
+        "exercised": false,
+        "skippedReason": "mobile landscape bloqueado por portrait obrigatório"
       },
-      "menuState": {
-        "title": "Brikaya — arcade de quebrar blocos",
-        "headings": [
-          "Brikaya",
-          "Menu",
-          "Idioma",
-          "Modo de jogo",
-          "Aparência",
-          "Recordes",
-          "Privacidade",
-          "Dados do jogo"
-        ],
-        "hasGameModeHeading": true,
-        "buttons": [
-          {
-            "text": "×",
-            "ariaLabel": "Sem som",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "♫",
-            "ariaLabel": "Música",
-            "ariaPressed": "true"
-          },
-          {
-            "text": "↻",
-            "ariaLabel": "Reiniciar",
-            "ariaPressed": null
-          },
-          {
-            "text": "Menu",
-            "ariaLabel": "",
-            "ariaPressed": null
-          },
-          {
-            "text": "",
-            "ariaLabel": "Fechar menu",
-            "ariaPressed": null
-          },
-          {
-            "text": "×",
-            "ariaLabel": "Fechar menu",
-            "ariaPressed": null
-          },
-          {
-            "text": "Clássico",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Torreta",
-            "ariaLabel": "",
-            "ariaPressed": "true"
-          },
-          {
-            "text": "Automático por fase",
-            "ariaLabel": "",
-            "ariaPressed": "true"
-          },
-          {
-            "text": "Arcade neon",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "CRT alto contraste",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Pôr do sol pixelado",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Oceano noturno",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Selva laser",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Âmbar retrô",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Gelo cósmico",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Ameixa elétrica",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Lima grafite",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Rubi profundo",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Metrô noturno",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Oficina mecânica",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Laboratório clínico",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Templo antigo",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Estação orbital",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Arcade neon",
-            "ariaLabel": "",
-            "ariaPressed": "true"
-          },
-          {
-            "text": "CRT alto contraste",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Pôr do sol pixelado",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Oceano noturno",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Selva laser",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Âmbar retrô",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Gelo cósmico",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Ameixa elétrica",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Lima grafite",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Rubi profundo",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Metrô noturno",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Oficina mecânica",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Laboratório clínico",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Templo antigo",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Estação orbital",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Retrô padrão",
-            "ariaLabel": "",
-            "ariaPressed": "true"
-          },
-          {
-            "text": "Alto contraste",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Cabine pôr do sol",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Metrô realista",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Oficina realista",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Laboratório realista",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Templo realista",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Órbita realista",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Arcade",
-            "ariaLabel": "",
-            "ariaPressed": "true"
-          },
-          {
-            "text": "CRT mono",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "Blocos pixelados",
-            "ariaLabel": "",
-            "ariaPressed": "false"
-          },
-          {
-            "text": "◎Usar região para idioma",
-            "ariaLabel": "",
-            "ariaPressed": null
-          },
-          {
-            "text": "✓Revisar consentimento",
-            "ariaLabel": "",
-            "ariaPressed": null
-          },
-          {
-            "text": "≡Histórico",
-            "ariaLabel": "",
-            "ariaPressed": null
-          },
-          {
-            "text": "◈Colisões",
-            "ariaLabel": "",
-            "ariaPressed": null
-          },
-          {
-            "text": "0Zerar pontuação",
-            "ariaLabel": "",
-            "ariaPressed": null
-          },
-          {
-            "text": "↺Restaurar padrão",
-            "ariaLabel": "",
-            "ariaPressed": null
-          }
-        ],
-        "hasCanvas": true,
-        "canvas": {
-          "width": 708,
-          "height": 325.0625,
-          "x": 9,
-          "y": 32.46875
-        },
-        "joystick": {
-          "exists": true,
-          "visible": true,
-          "width": 114,
-          "height": 114,
-          "x": 721,
-          "y": 138,
-          "hasTrackballClass": true,
-          "trackballX": "0",
-          "trackballY": "0",
-          "trackballActive": "0"
-        },
-        "scoreHudText": "Fase 1|Score 80|Total 0|Recorde 0",
-        "bodyHasInternalCopy": false,
-        "bodyHasOldAimCopy": false,
-        "probe": {
-          "brickDrawCount": 4511,
-          "brickQuadrants": {
-            "left": true,
-            "right": true,
-            "top": true,
-            "bottom": true
-          },
-          "fullRingArcCount": 856,
-          "activeTrampolineArcCount": 6265,
-          "activeTrampolineCenterAngle": 1.4852904481747355,
-          "boundarySegmentCount": 18,
-          "reboundBoundarySegmentCount": 9,
-          "lossBoundarySegmentCount": 9
-        }
-      },
+      "menuState": null,
       "gameplayState": {
         "title": "Brikaya — arcade de quebrar blocos",
         "headings": [
@@ -1464,19 +1274,34 @@
             "ariaPressed": null
           }
         ],
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
         "hasCanvas": true,
         "canvas": {
-          "width": 708,
-          "height": 325.0625,
-          "x": 9,
-          "y": 32.46875
+          "width": 360,
+          "height": 240,
+          "x": 183,
+          "y": 75
+        },
+        "orientationBlocker": {
+          "exists": true,
+          "visible": true,
+          "role": "alertdialog",
+          "ariaLabel": "Você precisa de espaço para o joystick",
+          "text": "Você precisa de espaço para o joystick",
+          "width": 844,
+          "height": 390,
+          "x": 0,
+          "y": 0
         },
         "joystick": {
           "exists": true,
           "visible": true,
           "width": 114,
           "height": 114,
-          "x": 721,
+          "x": 547,
           "y": 138,
           "hasTrackballClass": true,
           "trackballX": "0",
@@ -1487,19 +1312,19 @@
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 48,
+          "brickDrawCount": 0,
           "brickQuadrants": {
-            "left": true,
-            "right": true,
-            "top": true,
-            "bottom": true
+            "left": false,
+            "right": false,
+            "top": false,
+            "bottom": false
           },
-          "fullRingArcCount": 16,
-          "activeTrampolineArcCount": 134,
-          "activeTrampolineCenterAngle": 1.5707963267948966,
-          "boundarySegmentCount": 18,
-          "reboundBoundarySegmentCount": 9,
-          "lossBoundarySegmentCount": 9
+          "fullRingArcCount": 0,
+          "activeTrampolineArcCount": 0,
+          "activeTrampolineCenterAngle": null,
+          "boundarySegmentCount": 0,
+          "reboundBoundarySegmentCount": 0,
+          "lossBoundarySegmentCount": 0
         }
       },
       "postExerciseState": {
@@ -1530,42 +1355,57 @@
             "ariaPressed": null
           }
         ],
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
         "hasCanvas": true,
         "canvas": {
-          "width": 708,
-          "height": 325.0625,
-          "x": 9,
-          "y": 32.46875
+          "width": 360,
+          "height": 240,
+          "x": 183,
+          "y": 75
+        },
+        "orientationBlocker": {
+          "exists": true,
+          "visible": true,
+          "role": "alertdialog",
+          "ariaLabel": "Você precisa de espaço para o joystick",
+          "text": "Você precisa de espaço para o joystick",
+          "width": 844,
+          "height": 390,
+          "x": 0,
+          "y": 0
         },
         "joystick": {
           "exists": true,
           "visible": true,
           "width": 114,
           "height": 114,
-          "x": 721,
+          "x": 547,
           "y": 138,
           "hasTrackballClass": true,
           "trackballX": "0",
           "trackballY": "0",
           "trackballActive": "0"
         },
-        "scoreHudText": "Fase 1|Score 80|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 4511,
+          "brickDrawCount": 0,
           "brickQuadrants": {
-            "left": true,
-            "right": true,
-            "top": true,
-            "bottom": true
+            "left": false,
+            "right": false,
+            "top": false,
+            "bottom": false
           },
-          "fullRingArcCount": 856,
-          "activeTrampolineArcCount": 6265,
-          "activeTrampolineCenterAngle": 1.4852904481747355,
-          "boundarySegmentCount": 18,
-          "reboundBoundarySegmentCount": 9,
-          "lossBoundarySegmentCount": 9
+          "fullRingArcCount": 0,
+          "activeTrampolineArcCount": 0,
+          "activeTrampolineCenterAngle": null,
+          "boundarySegmentCount": 0,
+          "reboundBoundarySegmentCount": 0,
+          "lossBoundarySegmentCount": 0
         }
       }
     }

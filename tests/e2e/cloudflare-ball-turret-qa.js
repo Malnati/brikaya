@@ -27,11 +27,13 @@ const INTERNAL_COPY_PATTERN =
   /service worker|cache|runtime|localStorage|IndexedDB|Canvas|engine|build/i;
 const OLD_TURRET_AIM_COPY_PATTERN = /mire|aim|reticle|crosshair|metralhadora/i;
 const BRICK_IMAGE_PATTERN = /\/bricks\/|spr-brick/i;
+const ORIENTATION_BLOCKER_TEST_ID = "mobile-orientation-blocker";
+const ORIENTATION_BLOCKER_MESSAGE =
+  "Você precisa de espaço para o joystick";
 const FULL_CIRCLE_TOLERANCE = 0.08;
 const JOYSTICK_TEST_ID = "ball-turret-joystick";
 const MIN_TOUCH_TARGET_SIZE = 44;
 const MIN_PORTRAIT_TRACKBALL_SIZE = 120;
-const MIN_LANDSCAPE_TRACKBALL_SIZE = 104;
 const ACTIVE_TRAMPOLINE_ARC_MIN_SWEEP = 0.2;
 const JOYSTICK_SETTLE_MS = 120;
 const JOYSTICK_STABILITY_PROOF_MS = 300;
@@ -64,8 +66,8 @@ const VIEWPORTS = [
   },
   {
     name: "mobile-landscape",
-    joystickPlacement: "right",
-    minTrackballSize: MIN_LANDSCAPE_TRACKBALL_SIZE,
+    joystickPlacement: "blocked",
+    orientationBlocked: true,
     screenshotPath: mobileLandscapeScreenshotPath(),
     viewport: {
       width: 844,
@@ -277,6 +279,7 @@ async function readBallTurretState(page) {
       brickImagePatternSource,
       fullCircleTolerance,
       joystickTestId,
+      orientationBlockerTestId,
       activeTrampolineArcMinSweep,
       boundaryReboundColorFragment,
       boundaryLossColorFragment,
@@ -296,8 +299,16 @@ async function readBallTurretState(page) {
       const joystick = document.querySelector(
         `[data-testid="${joystickTestId}"]`,
       );
+      const orientationBlocker = document.querySelector(
+        `[data-testid="${orientationBlockerTestId}"]`,
+      );
       const joystickRect = joystick?.getBoundingClientRect();
       const joystickStyle = joystick ? getComputedStyle(joystick) : null;
+      const orientationBlockerRect =
+        orientationBlocker?.getBoundingClientRect();
+      const orientationBlockerStyle = orientationBlocker
+        ? getComputedStyle(orientationBlocker)
+        : null;
       const canvasWidth = canvas?.width || 0;
       const canvasHeight = canvas?.height || 0;
       const centerX = canvasWidth / 2;
@@ -427,6 +438,10 @@ async function readBallTurretState(page) {
           gameModeHeadingPattern.test(heading),
         ),
         buttons,
+        viewport: {
+          width: window.innerWidth,
+          height: window.innerHeight,
+        },
         hasCanvas: Boolean(canvas),
         canvas: canvasRect
           ? {
@@ -436,6 +451,33 @@ async function readBallTurretState(page) {
               y: canvasRect.y,
             }
           : null,
+        orientationBlocker: orientationBlockerRect
+          ? {
+              exists: true,
+              visible:
+                orientationBlockerStyle?.display !== "none" &&
+                orientationBlockerStyle?.visibility !== "hidden" &&
+                orientationBlockerRect.width > 0 &&
+                orientationBlockerRect.height > 0,
+              role: orientationBlocker.getAttribute("role") || "",
+              ariaLabel: orientationBlocker.getAttribute("aria-label") || "",
+              text: orientationBlocker.textContent?.trim() || "",
+              width: orientationBlockerRect.width,
+              height: orientationBlockerRect.height,
+              x: orientationBlockerRect.x,
+              y: orientationBlockerRect.y,
+            }
+          : {
+              exists: false,
+              visible: false,
+              role: "",
+              ariaLabel: "",
+              text: "",
+              width: 0,
+              height: 0,
+              x: 0,
+              y: 0,
+            },
         joystick: joystickRect
           ? {
               exists: true,
@@ -506,6 +548,7 @@ async function readBallTurretState(page) {
       brickImagePatternSource: BRICK_IMAGE_PATTERN.source,
       fullCircleTolerance: FULL_CIRCLE_TOLERANCE,
       joystickTestId: JOYSTICK_TEST_ID,
+      orientationBlockerTestId: ORIENTATION_BLOCKER_TEST_ID,
       activeTrampolineArcMinSweep: ACTIVE_TRAMPOLINE_ARC_MIN_SWEEP,
       boundaryReboundColorFragment: BOUNDARY_REBOUND_COLOR_FRAGMENT,
       boundaryLossColorFragment: BOUNDARY_LOSS_COLOR_FRAGMENT,
@@ -554,6 +597,76 @@ function assertJoystickPlacement(config, gameplayState) {
       `${config.name}: joystick não está à direita do tabuleiro em landscape.`,
     );
   }
+}
+
+async function waitForOrientationBlocker(page, config) {
+  await page.waitForFunction(
+    ({ blockerTestId, expectedMessage }) => {
+      const blocker = document.querySelector(`[data-testid="${blockerTestId}"]`);
+      const rect = blocker?.getBoundingClientRect();
+      return Boolean(
+        blocker &&
+          rect &&
+          rect.width >= window.innerWidth * 0.98 &&
+          rect.height >= window.innerHeight * 0.98 &&
+          blocker.getAttribute("role") === "alertdialog" &&
+          blocker.getAttribute("aria-label") === expectedMessage &&
+          blocker.textContent?.includes(expectedMessage),
+      );
+    },
+    { timeout: 10000 },
+    {
+      blockerTestId: ORIENTATION_BLOCKER_TEST_ID,
+      expectedMessage: ORIENTATION_BLOCKER_MESSAGE,
+    },
+  );
+
+  const blockedState = await readBallTurretState(page);
+  assert(blockedState.hasCanvas, `${config.name}: canvas ausente sob bloqueio.`);
+  assert(
+    blockedState.orientationBlocker.exists &&
+      blockedState.orientationBlocker.visible,
+    `${config.name}: bloqueio portrait não ficou visível.`,
+  );
+  assert(
+    blockedState.orientationBlocker.text.includes(ORIENTATION_BLOCKER_MESSAGE),
+    `${config.name}: mensagem de bloqueio portrait incorreta.`,
+  );
+  assert(
+    blockedState.orientationBlocker.role === "alertdialog",
+    `${config.name}: bloqueio portrait sem role alertdialog.`,
+  );
+  assert(
+    blockedState.orientationBlocker.width >=
+      blockedState.viewport.width * 0.98 &&
+      blockedState.orientationBlocker.height >=
+        blockedState.viewport.height * 0.98,
+    `${config.name}: bloqueio portrait não cobre a tela.`,
+  );
+  assert(
+    !blockedState.bodyHasInternalCopy,
+    `${config.name}: cópia pública expõe detalhe técnico durante bloqueio.`,
+  );
+  assert(
+    !blockedState.bodyHasOldAimCopy,
+    `${config.name}: cópia pública ainda fala em mira/metralhadora durante bloqueio.`,
+  );
+
+  ensureParentDirectory(config.screenshotPath);
+  await page.screenshot({ path: config.screenshotPath, fullPage: true });
+
+  return {
+    name: config.name,
+    joystickPlacement: config.joystickPlacement,
+    orientationBlocked: true,
+    joystickExercise: {
+      exercised: false,
+      skippedReason: "mobile landscape bloqueado por portrait obrigatório",
+    },
+    menuState: null,
+    gameplayState: blockedState,
+    postExerciseState: blockedState,
+  };
 }
 
 async function exerciseTrampoline(page) {
@@ -750,6 +863,11 @@ async function runViewport(page, baseUrl, config) {
     },
     { timeout: 10000 },
   );
+
+  if (config.orientationBlocked) {
+    return waitForOrientationBlocker(page, config);
+  }
+
   await page.waitForFunction(
     (fullCircleTolerance) => {
       const canvas = document.querySelector("canvas");
