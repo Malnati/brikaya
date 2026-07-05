@@ -685,7 +685,12 @@ export class GameEngine {
       this.canvasSize.width * CINEMATIC_RIP_X_RATIO,
       this.canvasSize.height + ball.position.radius + CINEMATIC_RIP_Y_OFFSET,
     );
-    ball.setDirection(Math.PI);
+    ball.setDirection(
+      Math.atan2(
+        ball.position.y - this.radialGeometry.centerY,
+        ball.position.x - this.radialGeometry.centerX,
+      ),
+    );
   }
 
   private preparePaddleCollisionQaBall() {

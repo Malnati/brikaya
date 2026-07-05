@@ -372,6 +372,26 @@ describe("GameEngine", () => {
     expect(ball.setDirection).toHaveBeenCalledWith(0);
   });
 
+  it("posiciona cenário RIP fora do anel e aponta a bola para perda imediata", () => {
+    const engine = new GameEngine(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      undefined,
+      "cinematic-rip",
+    );
+    const geometry = (engine as any).radialGeometry;
+    const ball = mockBallInstances[0];
+    const [spawnX, spawnY] = ball.setPosition.mock.calls[0];
+
+    expect(spawnY).toBeGreaterThan(canvas.height);
+    expect(ball.setDirection).toHaveBeenCalledWith(
+      Math.atan2(spawnY - geometry.centerY, spawnX - geometry.centerX),
+    );
+  });
+
   it("spawna power-up da torreta no centro com movimento radial até a borda", () => {
     const playAudio = jest.fn();
     const audioSink: GameAudioSink = {
