@@ -18,6 +18,7 @@ const TEST_BOARD_RECT = {
   height: 245,
 };
 const STAGE_TEST_ID = "game-cinematic-stage";
+const COUNTDOWN_COMPOSITION_TEST_ID = "game-cinematic-countdown-composition";
 const RIP_COMPOSITION_TEST_ID = "game-cinematic-rip-composition";
 const RIP_VIEWPORT_HEIGHT_PROPERTY = "--game-cinematic-rip-visible-height";
 
@@ -56,6 +57,21 @@ describe("GameCinematicOverlay media", () => {
     expect(screen.getByTestId("game-cinematic-overlay")).toHaveTextContent("3");
     expectDecorativeMedia(container, "countdown-circle", COUNTDOWN_CIRCLE_PATH);
     expectDecorativeMedia(container, "countdown-spark", COUNTDOWN_SPARK_PATH);
+  });
+
+  it("agrupa número e mídias do countdown em uma composição visual única", () => {
+    const { container } = render(
+      <GameCinematicOverlay state={{ type: "countdown", value: "3" }} />,
+    );
+    const composition = screen.getByTestId(COUNTDOWN_COMPOSITION_TEST_ID);
+
+    expect(composition).toHaveTextContent("3");
+    expect(composition).toContainElement(
+      container.querySelector('img[data-cinematic-media="countdown-circle"]'),
+    );
+    expect(composition).toContainElement(
+      container.querySelector('img[data-cinematic-media="countdown-spark"]'),
+    );
   });
 
   it("renderiza mídias locais CC0 na subida de fase sem remover mensagem essencial", () => {

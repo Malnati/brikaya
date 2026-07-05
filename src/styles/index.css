@@ -767,6 +767,24 @@ canvas {
   isolation: isolate;
 }
 
+.game-cinematic-overlay--countdown .game-cinematic-overlay__composition {
+  width: min(100%, 420px, 88vmin);
+  height: min(100%, 420px, 88vmin);
+}
+
+.game-cinematic-overlay--countdown .game-cinematic-overlay__content {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.game-cinematic-overlay--countdown .game-cinematic-overlay__count {
+  display: block;
+  line-height: 1;
+  transform: translateY(0.04em);
+}
+
 .game-cinematic-overlay--rip .game-cinematic-overlay__media--rip-smoke {
   width: var(--game-cinematic-rip-media-size);
   height: var(--game-cinematic-rip-media-size);

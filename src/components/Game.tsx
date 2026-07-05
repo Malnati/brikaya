@@ -42,6 +42,12 @@ export interface GameBoardRect {
   height: number;
 }
 
+interface PendingBoardRectTarget {
+  width: number;
+  height: number;
+  isLandscapeImmersive: boolean;
+}
+
 const RESIZE_EVENT_NAME = "resize";
 const ORIENTATION_CHANGE_EVENT_NAME = "orientationchange";
 const VISUAL_VIEWPORT_SCROLL_EVENT_NAME = "scroll";
@@ -131,6 +137,9 @@ export default function Game({
     height: CANVAS_HEIGHT,
   });
   const [isLandscapeImmersive, setIsLandscapeImmersive] = useState(false);
+  const canvasSizeRef = useRef(canvasSize);
+  const isLandscapeImmersiveRef = useRef(isLandscapeImmersive);
+  const pendingBoardRectTargetRef = useRef<PendingBoardRectTarget | null>(null);
   const paddleTouchZoneCenterPercent = useMemo(() => {
     const dimensions = calculateDynamicDimensions(
       canvasSize.width,
@@ -169,16 +178,23 @@ export default function Game({
           navigator.maxTouchPoints > 0,
         hoverNone: window.matchMedia?.(HOVER_NONE_MEDIA_QUERY).matches || false,
       });
+      const shouldWaitForSizedCanvas =
+        canvasSizeRef.current.width !== nextSize.width ||
+        canvasSizeRef.current.height !== nextSize.height;
+      const shouldWaitForSurfaceMode =
+        isLandscapeImmersiveRef.current !== nextSize.isImmersiveLandscape;
       setViewportCssVariables(viewportWidth, viewportHeight);
       document.documentElement.classList.toggle(
         IMMERSIVE_LANDSCAPE_ROOT_CLASS,
         nextSize.isImmersiveLandscape,
       );
-      setIsLandscapeImmersive((currentValue) =>
-        currentValue === nextSize.isImmersiveLandscape
-          ? currentValue
-          : nextSize.isImmersiveLandscape,
-      );
+      setIsLandscapeImmersive((currentValue) => {
+        if (currentValue === nextSize.isImmersiveLandscape) {
+          return currentValue;
+        }
+
+        return nextSize.isImmersiveLandscape;
+      });
       setCanvasSize((currentSize) => {
         if (
           currentSize.width === nextSize.width &&
@@ -189,7 +205,16 @@ export default function Game({
 
         return nextSize;
       });
-      publishBoardRect();
+      if (shouldWaitForSizedCanvas || shouldWaitForSurfaceMode) {
+        pendingBoardRectTargetRef.current = {
+          width: nextSize.width,
+          height: nextSize.height,
+          isLandscapeImmersive: nextSize.isImmersiveLandscape,
+        };
+      } else {
+        pendingBoardRectTargetRef.current = null;
+        publishBoardRect();
+      }
     };
 
     updateCanvasSize();
@@ -223,6 +248,21 @@ export default function Game({
   }, [publishBoardRect]);
 
   useLayoutEffect(() => {
+    canvasSizeRef.current = canvasSize;
+    isLandscapeImmersiveRef.current = isLandscapeImmersive;
+    const pendingBoardRectTarget = pendingBoardRectTargetRef.current;
+    if (pendingBoardRectTarget) {
+      if (
+        pendingBoardRectTarget.width !== canvasSize.width ||
+        pendingBoardRectTarget.height !== canvasSize.height ||
+        pendingBoardRectTarget.isLandscapeImmersive !== isLandscapeImmersive
+      ) {
+        return;
+      }
+
+      pendingBoardRectTargetRef.current = null;
+    }
+
     publishBoardRect();
   }, [canvasSize, isLandscapeImmersive, publishBoardRect]);
 

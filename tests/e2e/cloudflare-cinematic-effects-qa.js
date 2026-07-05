@@ -71,6 +71,7 @@ const MAX_STAGE_OFFSET_PX = 3;
 const MAX_MEDIA_CENTER_OFFSET_PX = 4;
 const MAX_MEDIA_OVERFLOW_PX = 2;
 const MAX_CONTENT_CENTER_OFFSET_PX = 4;
+const MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX = 8;
 const MAX_RIP_VIEWPORT_CENTER_OFFSET_PX = 8;
 const MIN_RIP_STAGE_VIEWPORT_COVERAGE_RATIO = 0.96;
 const RIP_SAFE_AREA_PX = 12;
@@ -81,7 +82,10 @@ const MEDIA_READY_TIMEOUT_MS = 5000;
 const TITLE_SELECTOR = '.game-cinematic-overlay__title';
 const DETAIL_SELECTOR = '.game-cinematic-overlay__detail';
 const CONTENT_SELECTOR = '[data-testid="game-cinematic-content"]';
+const COUNTDOWN_COMPOSITION_SELECTOR =
+  '[data-testid="game-cinematic-countdown-composition"]';
 const RIP_COMPOSITION_SELECTOR = '[data-testid="game-cinematic-rip-composition"]';
+const CINEMATIC_COMPOSITION_SELECTOR = `${COUNTDOWN_COMPOSITION_SELECTOR}, ${RIP_COMPOSITION_SELECTOR}`;
 const RIP_BROWSER_CHROME_INSET_PARAM = 'qaViewportBottomInset';
 const RIP_MOBILE_BROWSER_CHROME_BOTTOM_INSET_PX = 104;
 const FILE_NAME_EXTENSION_PATTERN = /[^/]+(\.[^.]+)$/;
@@ -286,7 +290,7 @@ async function overlaySnapshot(page, selector) {
     titleSelector: TITLE_SELECTOR,
     detailSelector: DETAIL_SELECTOR,
     contentSelector: CONTENT_SELECTOR,
-    compositionSelector: RIP_COMPOSITION_SELECTOR,
+    compositionSelector: CINEMATIC_COMPOSITION_SELECTOR,
     browserChromeInsetParam: RIP_BROWSER_CHROME_INSET_PARAM,
   });
 }
@@ -327,6 +331,15 @@ function assertBoardAnchoring(snapshot, label) {
   assert(Math.abs(snapshot.contentRect.centerX - snapshot.canvasRect.centerX) <= MAX_CONTENT_CENTER_OFFSET_PX, `${label}: conteúdo textual descentralizado no eixo X.`);
   assert(Math.abs(snapshot.contentRect.centerY - snapshot.canvasRect.centerY) <= MAX_CONTENT_CENTER_OFFSET_PX, `${label}: conteúdo textual descentralizado no eixo Y.`);
 
+  if (snapshot.compositionRect) {
+    assert(Math.abs(snapshot.compositionRect.centerX - snapshot.canvasRect.centerX) <= MAX_CONTENT_CENTER_OFFSET_PX, `${label}: composição visual descentralizada no eixo X.`);
+    assert(Math.abs(snapshot.compositionRect.centerY - snapshot.canvasRect.centerY) <= MAX_CONTENT_CENTER_OFFSET_PX, `${label}: composição visual descentralizada no eixo Y.`);
+    assert(snapshot.compositionRect.x >= snapshot.canvasRect.x - MAX_MEDIA_OVERFLOW_PX, `${label}: composição visual saiu pela esquerda do canvas.`);
+    assert(snapshot.compositionRect.y >= snapshot.canvasRect.y - MAX_MEDIA_OVERFLOW_PX, `${label}: composição visual saiu pelo topo do canvas.`);
+    assert(snapshot.compositionRect.right <= snapshot.canvasRect.right + MAX_MEDIA_OVERFLOW_PX, `${label}: composição visual saiu pela direita do canvas.`);
+    assert(snapshot.compositionRect.bottom <= snapshot.canvasRect.bottom + MAX_MEDIA_OVERFLOW_PX, `${label}: composição visual saiu pelo rodapé do canvas.`);
+  }
+
   for (const item of snapshot.media) {
     assert(item.rect, `${label}: mídia sem retângulo visual ${item.id}.`);
     assert(item.rect.width > 0, `${label}: mídia sem largura visual ${item.id}.`);
@@ -337,6 +350,28 @@ function assertBoardAnchoring(snapshot, label) {
     assert(item.rect.y >= snapshot.canvasRect.y - MAX_MEDIA_OVERFLOW_PX, `${label}: mídia ${item.id} saiu pelo topo do canvas.`);
     assert(item.rect.right <= snapshot.canvasRect.right + MAX_MEDIA_OVERFLOW_PX, `${label}: mídia ${item.id} saiu pela direita do canvas.`);
     assert(item.rect.bottom <= snapshot.canvasRect.bottom + MAX_MEDIA_OVERFLOW_PX, `${label}: mídia ${item.id} saiu pelo rodapé do canvas.`);
+  }
+}
+
+function assertCountdownViewportCentering(snapshot, label) {
+  const viewport = snapshot.visualViewport;
+
+  assert(snapshot.stageRect, `${label}: palco cinematográfico ausente.`);
+  assert(snapshot.contentRect, `${label}: conteúdo textual sem retângulo visual.`);
+  assert(snapshot.compositionRect, `${label}: composição visual ausente.`);
+  assert(snapshot.stageRect.width >= viewport.width * MIN_RIP_STAGE_VIEWPORT_COVERAGE_RATIO, `${label}: palco não cobre a largura da viewport.`);
+  assert(snapshot.stageRect.height >= viewport.height * MIN_RIP_STAGE_VIEWPORT_COVERAGE_RATIO, `${label}: palco não cobre a altura da viewport.`);
+  assert(Math.abs(snapshot.stageRect.centerX - viewport.centerX) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: palco fora do centro X da viewport.`);
+  assert(Math.abs(snapshot.stageRect.centerY - viewport.centerY) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: palco fora do centro Y da viewport.`);
+  assert(Math.abs(snapshot.compositionRect.centerX - viewport.centerX) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: composição fora do centro X da viewport.`);
+  assert(Math.abs(snapshot.compositionRect.centerY - viewport.centerY) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: composição fora do centro Y da viewport.`);
+  assert(Math.abs(snapshot.contentRect.centerX - viewport.centerX) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: conteúdo fora do centro X da viewport.`);
+  assert(Math.abs(snapshot.contentRect.centerY - viewport.centerY) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: conteúdo fora do centro Y da viewport.`);
+
+  for (const item of snapshot.media) {
+    assert(item.rect, `${label}: mídia sem retângulo visual ${item.id}.`);
+    assert(Math.abs(item.rect.centerX - viewport.centerX) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: mídia ${item.id} fora do centro X da viewport.`);
+    assert(Math.abs(item.rect.centerY - viewport.centerY) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: mídia ${item.id} fora do centro Y da viewport.`);
   }
 }
 
@@ -579,7 +614,7 @@ async function run() {
     assertFullViewport(countdownState, 'countdown');
     assertFullViewport(levelUpState, 'level-up');
     assertFullViewport(ripState, 'rip');
-    assertBoardAnchoring(countdownState, 'countdown');
+    assertCountdownViewportCentering(countdownState, 'countdown');
     assertBoardAnchoring(levelUpState, 'level-up');
     assertMedia(countdownState, REQUIRED_COUNTDOWN_MEDIA, 'countdown');
     assertMedia(levelUpState, REQUIRED_LEVEL_UP_MEDIA, 'level-up');
