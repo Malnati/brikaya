@@ -703,45 +703,69 @@ canvas {
   overflow: visible;
 }
 
-.game-cinematic-overlay__media {
+.game-cinematic-overlay__media-layer {
   position: absolute;
   top: 50%;
   left: 50%;
   z-index: 0;
   width: min(120%, 680px);
-  max-height: 140%;
-  object-fit: contain;
+  aspect-ratio: 1;
   pointer-events: none;
   user-select: none;
   transform: translate(-50%, -50%);
 }
 
-.game-cinematic-overlay__media--countdown-circle {
+.game-cinematic-overlay__media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  transform-origin: center;
+}
+
+.game-cinematic-overlay__media-layer--countdown-circle {
   width: min(68%, 420px);
+}
+
+.game-cinematic-overlay__media--countdown-circle {
   opacity: 0.42;
   animation: cinematic-media-spin 1800ms linear both;
 }
 
-.game-cinematic-overlay__media--countdown-spark {
+.game-cinematic-overlay__media-layer--countdown-spark {
   width: min(46%, 260px);
+}
+
+.game-cinematic-overlay__media--countdown-spark {
   opacity: 0.72;
   animation: cinematic-media-pulse 600ms ease-out both;
 }
 
-.game-cinematic-overlay__media--level-up-twirl {
+.game-cinematic-overlay__media-layer--level-up-twirl {
   width: min(68%, 420px);
+}
+
+.game-cinematic-overlay__media--level-up-twirl {
   opacity: 0.5;
   animation: cinematic-media-spin 1200ms ease-out both;
 }
 
-.game-cinematic-overlay__media--level-up-star {
+.game-cinematic-overlay__media-layer--level-up-star {
   width: min(46%, 260px);
+}
+
+.game-cinematic-overlay__media--level-up-star {
   opacity: 0.72;
   animation: cinematic-media-pulse 1200ms ease-out both;
 }
 
-.game-cinematic-overlay__media--rip-smoke {
+.game-cinematic-overlay__media-layer--rip-smoke {
   width: min(132%, 760px);
+}
+
+.game-cinematic-overlay__media--rip-smoke {
   opacity: 0.62;
   filter: grayscale(1) sepia(0.25) hue-rotate(300deg);
   animation: cinematic-media-drift 1800ms ease-out both;
@@ -791,14 +815,21 @@ canvas {
   background: color-mix(in srgb, var(--bb-color-background) 88%, transparent);
 }
 
-.game-cinematic-overlay__countdown-halo {
+.game-cinematic-overlay__countdown-halo-layer {
   position: absolute;
   z-index: 0;
   width: min(94%, 520px, calc(var(--game-cinematic-countdown-size, 420px) * 0.94));
   height: min(94%, 520px, calc(var(--game-cinematic-countdown-size, 420px) * 0.94));
-  border-radius: 999px;
   pointer-events: none;
   user-select: none;
+  transform: translate(-50%, -50%);
+}
+
+.game-cinematic-overlay__countdown-halo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
   background: radial-gradient(
     circle,
     color-mix(in srgb, var(--bb-color-primary) 42%, transparent) 0%,
@@ -811,7 +842,7 @@ canvas {
 }
 
 .game-cinematic-overlay--countdown .game-cinematic-overlay__count {
-  position: absolute;
+  position: relative;
   display: block;
   font-size: clamp(
     3.5rem,
@@ -821,7 +852,7 @@ canvas {
   line-height: 1;
 }
 
-.game-cinematic-overlay--rip .game-cinematic-overlay__media--rip-smoke {
+.game-cinematic-overlay--rip .game-cinematic-overlay__media-layer--rip-smoke {
   width: var(--game-cinematic-rip-media-size);
   height: var(--game-cinematic-rip-media-size);
   max-width: calc(100% - 24px);
@@ -1147,72 +1178,72 @@ canvas {
 @keyframes cinematic-count-pulse {
   0% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.76);
+    transform: scale(0.76);
   }
 
   34% {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1.08);
+    transform: scale(1.08);
   }
 
   100% {
     opacity: 0.88;
-    transform: translate(-50%, -50%) scale(1);
+    transform: scale(1);
   }
 }
 
 @keyframes cinematic-countdown-halo-pulse {
   0% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.82);
+    transform: scale(0.82);
   }
 
   42% {
     opacity: 0.92;
-    transform: translate(-50%, -50%) scale(1.06);
+    transform: scale(1.06);
   }
 
   100% {
     opacity: 0.78;
-    transform: translate(-50%, -50%) scale(1);
+    transform: scale(1);
   }
 }
 
 @keyframes cinematic-media-spin {
   from {
-    transform: translate(-50%, -50%) rotate(-18deg) scale(0.92);
+    transform: rotate(-18deg) scale(0.92);
   }
 
   to {
-    transform: translate(-50%, -50%) rotate(18deg) scale(1);
+    transform: rotate(18deg) scale(1);
   }
 }
 
 @keyframes cinematic-media-pulse {
   0% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.72);
+    transform: scale(0.72);
   }
 
   42% {
     opacity: 0.82;
-    transform: translate(-50%, -50%) scale(1.08);
+    transform: scale(1.08);
   }
 
   100% {
-    transform: translate(-50%, -50%) scale(1);
+    transform: scale(1);
   }
 }
 
 @keyframes cinematic-media-drift {
   from {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.88);
+    transform: scale(0.88);
   }
 
   to {
     opacity: 0.62;
-    transform: translate(-50%, -50%) scale(1.06);
+    transform: scale(1.06);
   }
 }
 

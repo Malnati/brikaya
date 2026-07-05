@@ -25,6 +25,20 @@ const VISIBLE_HEIGHT_PROPERTY = "--game-cinematic-visible-height";
 const RIP_VIEWPORT_HEIGHT_PROPERTY = "--game-cinematic-rip-visible-height";
 const COUNTDOWN_HALO_TEST_ID = "game-cinematic-countdown-halo";
 const COUNTDOWN_COUNT_TEST_ID = "game-cinematic-countdown-count";
+
+function styleText(element: Element | null): string {
+  return element?.getAttribute("style") || "";
+}
+
+function expectCenteredAnchor(element: Element | null) {
+  expect(element).toBeInTheDocument();
+  expect(element).toHaveStyle({
+    left: "50%",
+    top: "50%",
+    transform: "translate(-50%, -50%)",
+  });
+}
+
 function setLocationSearch(search: string) {
   window.history.replaceState({}, "", `/${search}`);
 }
@@ -295,21 +309,21 @@ describe("GameCinematicOverlay media", () => {
     const count = screen.getByTestId(COUNTDOWN_COUNT_TEST_ID);
     const circle = container.querySelector('img[data-cinematic-media="countdown-circle"]');
     const spark = container.querySelector('img[data-cinematic-media="countdown-spark"]');
+    const circleLayer = container.querySelector(
+      '[data-cinematic-media-layer="countdown-circle"]',
+    );
+    const sparkLayer = container.querySelector(
+      '[data-cinematic-media-layer="countdown-spark"]',
+    );
 
-    for (const layer of [halo, circle, spark]) {
-      expect(layer).toBeInTheDocument();
-      expect(layer).toHaveStyle({
-        left: "50%",
-        top: "50%",
-        transform: "translate(-50%, -50%)",
-      });
-    }
+    for (const layer of [halo, circleLayer, sparkLayer]) expectCenteredAnchor(layer);
     expect(count).toBeInTheDocument();
-    expect(count).toHaveStyle({
-      left: "50%",
-      top: "50%",
-      transform: "translate(-50%, calc(-50% + 0.1em))",
-    });
+    expect(styleText(count)).not.toContain("transform");
+    expect(styleText(count)).not.toContain("0.1em");
+    expect(styleText(circle)).not.toContain("translate");
+    expect(styleText(spark)).not.toContain("translate");
+    expect(circleLayer).toContainElement(circle);
+    expect(sparkLayer).toContainElement(spark);
     expect(composition).toContainElement(halo);
     expect(composition).toContainElement(count);
   });

@@ -57,10 +57,12 @@ const RIP_CLASS_NAME = "game-cinematic-overlay game-cinematic-overlay--rip";
 const TEST_ID = "game-cinematic-overlay";
 const LEVEL_UP_TEST_ID = "level-toast";
 const MEDIA_CLASS_NAME = `${BASE_CLASS_NAME}__media`;
+const MEDIA_LAYER_CLASS_NAME = `${BASE_CLASS_NAME}__media-layer`;
 const STAGE_CLASS_NAME = `${BASE_CLASS_NAME}__stage`;
 const CONTENT_CLASS_NAME = `${BASE_CLASS_NAME}__content`;
 const RIP_COMPOSITION_CLASS_NAME = `${BASE_CLASS_NAME}__composition`;
 const COUNTDOWN_HALO_CLASS_NAME = `${BASE_CLASS_NAME}__countdown-halo`;
+const COUNTDOWN_HALO_LAYER_CLASS_NAME = `${BASE_CLASS_NAME}__countdown-halo-layer`;
 const MEDIA_ALT = "";
 const MEDIA_LOADING = "lazy";
 const MEDIA_DECODING = "async";
@@ -102,10 +104,6 @@ const CENTERED_LAYER_STYLE: CSSProperties = {
   top: "50%",
   transform: "translate(-50%, -50%)",
 };
-const COUNTDOWN_COUNT_CENTERED_LAYER_STYLE: CSSProperties = {
-  ...CENTERED_LAYER_STYLE,
-  transform: "translate(-50%, calc(-50% + 0.1em))",
-};
 
 function resolveCinematicMediaPath(
   media: (typeof CINEMATIC_MEDIA_LAYERS)[keyof typeof CINEMATIC_MEDIA_LAYERS][number],
@@ -123,18 +121,24 @@ function renderMediaLayers(
     const src = resolveCinematicMediaPath(media, imageSetId);
 
     return (
-      <img
+      <span
         key={media.id}
-        className={`${MEDIA_CLASS_NAME} ${MEDIA_CLASS_NAME}--${media.id}`}
-        data-cinematic-media={media.id}
-        src={src}
-        alt={MEDIA_ALT}
-        loading={MEDIA_LOADING}
-        decoding={MEDIA_DECODING}
+        className={`${MEDIA_LAYER_CLASS_NAME} ${MEDIA_LAYER_CLASS_NAME}--${media.id}`}
+        data-cinematic-media-layer={media.id}
         aria-hidden="true"
-        draggable={false}
         style={CENTERED_LAYER_STYLE}
-      />
+      >
+        <img
+          className={`${MEDIA_CLASS_NAME} ${MEDIA_CLASS_NAME}--${media.id}`}
+          data-cinematic-media={media.id}
+          src={src}
+          alt={MEDIA_ALT}
+          loading={MEDIA_LOADING}
+          decoding={MEDIA_DECODING}
+          aria-hidden="true"
+          draggable={false}
+        />
+      </span>
     );
   });
 }
@@ -354,11 +358,13 @@ function renderCountdownComposition(children: ReactNode) {
 function renderCountdownHalo() {
   return (
     <span
-      className={COUNTDOWN_HALO_CLASS_NAME}
+      className={COUNTDOWN_HALO_LAYER_CLASS_NAME}
       data-testid={COUNTDOWN_HALO_TEST_ID}
       aria-hidden="true"
       style={CENTERED_LAYER_STYLE}
-    />
+    >
+      <span className={COUNTDOWN_HALO_CLASS_NAME} />
+    </span>
   );
 }
 
@@ -430,7 +436,6 @@ export function GameCinematicOverlay({
                 <span
                   className={`${BASE_CLASS_NAME}__count`}
                   data-testid={COUNTDOWN_COUNT_TEST_ID}
-                  style={COUNTDOWN_COUNT_CENTERED_LAYER_STYLE}
                 >
                   {state.value}
                 </span>,
