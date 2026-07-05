@@ -51,10 +51,6 @@ function readTouchClientPoint(event: TouchEvent) {
   return { x: touch.clientX, y: touch.clientY };
 }
 
-function clampUnit(value: number) {
-  return Math.max(0, Math.min(1, value));
-}
-
 function setTrackballVisualVector(
   joystick: HTMLElement,
   vectorX: number,
@@ -95,14 +91,23 @@ function readMirroredTrackballInput(
     return null;
   }
 
-  const normalizedX = clampUnit(
-    (clientX - joystickRect.left) / joystickRect.width,
-  );
-  const normalizedY = clampUnit(
-    (clientY - joystickRect.top) / joystickRect.height,
-  );
+  const joystickRight = joystickRect.left + joystickRect.width;
+  const joystickBottom = joystickRect.top + joystickRect.height;
+  const isInsideJoystick =
+    clientX >= joystickRect.left &&
+    clientX <= joystickRight &&
+    clientY >= joystickRect.top &&
+    clientY <= joystickBottom;
+
+  if (!isInsideJoystick) {
+    return { kind: "outside" as const };
+  }
+
+  const normalizedX = (clientX - joystickRect.left) / joystickRect.width;
+  const normalizedY = (clientY - joystickRect.top) / joystickRect.height;
 
   return {
+    kind: "inside" as const,
     mappedClientX: canvasRect.left + normalizedX * canvasRect.width,
     mappedClientY: canvasRect.top + normalizedY * canvasRect.height,
     visualX: normalizedX * 2 - 1,
@@ -284,7 +289,7 @@ export function useGameLoop(
       const canvas = canvasRef.current;
       if (!canvas) {
         resetTrackballVisualVector(joystick);
-        return;
+        return false;
       }
 
       const input = readMirroredTrackballInput(
@@ -295,7 +300,11 @@ export function useGameLoop(
       );
       if (!input) {
         resetTrackballVisualVector(joystick);
-        return;
+        return false;
+      }
+
+      if (input.kind === "outside") {
+        return false;
       }
 
       setTrackballVisualVector(joystick, input.visualX, input.visualY, true);
@@ -304,13 +313,14 @@ export function useGameLoop(
           input.mappedClientX,
           input.mappedClientY,
         );
-        return;
+        return true;
       }
 
       engineRef.current?.movePaddleDrag(
         input.mappedClientX,
         input.mappedClientY,
       );
+      return true;
     };
 
     const safeSetPointerCapture = (pointerId: number) => {
@@ -340,11 +350,13 @@ export function useGameLoop(
     };
 
     const handlePointerDown = (event: PointerEvent) => {
+      const didApply = applyJoystickInput(event.clientX, event.clientY, "start");
+      if (!didApply) return;
+
       isDraggingJoystick = true;
       activeInputType = "pointer";
       event.preventDefault();
       safeSetPointerCapture(event.pointerId);
-      applyJoystickInput(event.clientX, event.clientY, "start");
     };
 
     const handlePointerMove = (event: PointerEvent) => {
@@ -365,11 +377,12 @@ export function useGameLoop(
     const handleTouchStart = (event: TouchEvent) => {
       const point = readTouchClientPoint(event);
       if (!point) return;
+      const didApply = applyJoystickInput(point.x, point.y, "start");
+      if (!didApply) return;
 
       isDraggingJoystick = true;
       activeInputType = "touch";
       event.preventDefault();
-      applyJoystickInput(point.x, point.y, "start");
     };
 
     const handleTouchMove = (event: TouchEvent) => {
