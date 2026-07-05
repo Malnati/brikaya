@@ -20,6 +20,7 @@ import { gameLogger, type LoggedGameState } from '../storage/gameLogger';
 import { GAME_AUDIO_IDS, type GameAudioSink } from '../constants/audio';
 import {
   calculateRadialPlayfieldGeometry,
+  isBallTurretBoundarySegmentRebounding,
   isAngleBetween,
   isRadialPaddleBounds,
   toPolar,
@@ -407,6 +408,23 @@ export class Ball {
     if (polar.radius < boundaryRadius) return true;
 
     if (
+      this.isBallTurretBoundaryCollision(paddlePos) &&
+      this.isMovingOutward(polar.angle)
+    ) {
+      if (isBallTurretBoundarySegmentRebounding(polar.angle, this.level)) {
+        this.handleRadialWallCollision(
+          paddlePos,
+          polar.angle,
+          gameState,
+          audioSink,
+        );
+        return true;
+      }
+
+      return this.logRadialBallLost(paddlePos, gameState, audioSink);
+    }
+
+    if (
       this.isMovingOutward(polar.angle) &&
       (paddlePos.radial.lossIsFullCircle ||
         isAngleBetween(
@@ -420,6 +438,12 @@ export class Ball {
 
     this.handleRadialWallCollision(paddlePos, polar.angle, gameState, audioSink);
     return true;
+  }
+
+  private isBallTurretBoundaryCollision(paddlePos: RadialPaddleBounds): boolean {
+    return (
+      this.geometry.trampolineIsFullRing && paddlePos.radial.lossIsFullCircle
+    );
   }
 
   private handleRadialWallCollision(

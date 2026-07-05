@@ -339,7 +339,7 @@ describe("GameEngine", () => {
     expect((engine as any).paddle.draw).not.toHaveBeenCalled();
   });
 
-  it("usa dobro de colunas e posiciona bola inicial na borda da torreta", () => {
+  it("usa dobro de colunas e posiciona bola inicial na borda inferior da torreta", () => {
     const engine = new GameEngine(
       canvas,
       onScoreUpdate,
@@ -367,7 +367,9 @@ describe("GameEngine", () => {
     expect(
       Math.hypot(spawnX - geometry.centerX, spawnY - geometry.centerY),
     ).toBeCloseTo(geometry.radius - ball.position.radius - 1, 1);
-    expect(ball.setDirection).toHaveBeenCalledWith(Math.PI);
+    expect(spawnX).toBeCloseTo(geometry.centerX, 5);
+    expect(spawnY).toBeGreaterThan(geometry.centerY);
+    expect(ball.setDirection).toHaveBeenCalledWith(0);
   });
 
   it("spawna power-up da torreta no centro com movimento radial até a borda", () => {

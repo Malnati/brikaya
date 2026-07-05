@@ -93,8 +93,7 @@ function readTrackballInput(
 
   const visualX = clampJoystickAxis(magnitude > 1 ? rawX / magnitude : rawX);
   const visualY = clampJoystickAxis(magnitude > 1 ? rawY / magnitude : rawY);
-  const turnInput =
-    Math.abs(visualX) < JOYSTICK_DEADZONE ? 0 : clampJoystickAxis(rawX);
+  const turnInput = Math.abs(visualX) < JOYSTICK_DEADZONE ? 0 : visualX;
 
   return {
     turnInput,

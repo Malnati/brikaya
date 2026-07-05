@@ -1,4 +1,5 @@
 // src/logic/rendering/ballTurretRenderer.ts
+import { calculateBallTurretBoundarySegments } from "../../utils/radialGeometry";
 import type {
   RadialPaddleBounds,
   RadialPlayfieldGeometry,
@@ -24,6 +25,12 @@ const GLASS_HIGHLIGHT_RADIUS_RATIO = 0.34;
 const GLASS_HIGHLIGHT_ALPHA = 0.28;
 const VIGNETTE_INNER_RATIO = 0.54;
 const VIGNETTE_OUTER_RATIO = 1;
+const BOUNDARY_SEGMENT_GAP_RADIANS = 0.018;
+const BOUNDARY_SEGMENT_LINE_WIDTH_RATIO = 0.024;
+const BOUNDARY_REBOUND_STROKE = "rgba(73, 255, 199, 0.92)";
+const BOUNDARY_LOSS_STROKE = "rgba(255, 96, 120, 0.82)";
+const BOUNDARY_REBOUND_SHADOW = "rgba(73, 255, 199, 0.48)";
+const BOUNDARY_LOSS_SHADOW = "rgba(255, 96, 120, 0.36)";
 
 export interface BallTurretCanvasSize {
   width: number;
@@ -33,6 +40,7 @@ export interface BallTurretCanvasSize {
 export interface BallTurretRenderState {
   canvasSize: BallTurretCanvasSize;
   geometry: RadialPlayfieldGeometry;
+  level: number;
   paddlePosition: Partial<RadialPaddleBounds> & {
     x: number;
     y: number;
@@ -114,6 +122,43 @@ function pointOnArc(bounds: TrampolineBounds, radius: number, angle: number) {
     x: bounds.centerX + Math.cos(angle) * radius,
     y: bounds.centerY + Math.sin(angle) * radius,
   };
+}
+
+function drawBoundarySegments(
+  ctx: CanvasRenderingContext2D,
+  state: BallTurretRenderState,
+) {
+  const { geometry, level } = state;
+  const lineWidth = Math.max(
+    4,
+    geometry.radius * BOUNDARY_SEGMENT_LINE_WIDTH_RATIO,
+  );
+  const radius = geometry.radius - lineWidth * HALF;
+
+  ctx.save();
+  ctx.lineCap = "butt";
+  ctx.lineWidth = lineWidth;
+
+  calculateBallTurretBoundarySegments(level).forEach((segment) => {
+    ctx.strokeStyle = segment.rebounds
+      ? BOUNDARY_REBOUND_STROKE
+      : BOUNDARY_LOSS_STROKE;
+    ctx.shadowColor = segment.rebounds
+      ? BOUNDARY_REBOUND_SHADOW
+      : BOUNDARY_LOSS_SHADOW;
+    ctx.shadowBlur = Math.max(3, lineWidth * 1.4);
+    ctx.beginPath();
+    ctx.arc(
+      geometry.centerX,
+      geometry.centerY,
+      radius,
+      segment.startAngle + BOUNDARY_SEGMENT_GAP_RADIANS,
+      segment.endAngle - BOUNDARY_SEGMENT_GAP_RADIANS,
+    );
+    ctx.stroke();
+  });
+
+  ctx.restore();
 }
 
 export function drawBallTurretBackdrop(
@@ -340,6 +385,8 @@ export function drawBallTurretGlassOverlay(
   ctx.beginPath();
   ctx.arc(geometry.centerX, geometry.centerY, geometry.radius, 0, FULL_CIRCLE);
   ctx.stroke();
+
+  drawBoundarySegments(ctx, state);
 
   ctx.strokeStyle = "rgba(255, 255, 255, 0.18)";
   ctx.lineWidth = Math.max(1, geometry.radius * 0.008);

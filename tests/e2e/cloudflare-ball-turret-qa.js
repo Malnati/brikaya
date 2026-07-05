@@ -36,6 +36,13 @@ const ACTIVE_TRAMPOLINE_ARC_MIN_SWEEP = 0.2;
 const JOYSTICK_HOLD_SAMPLE_MS = 120;
 const JOYSTICK_HOLD_PROOF_MS = 360;
 const JOYSTICK_CONTINUOUS_TURN_MIN_DELTA = 0.08;
+const DIAGONAL_TRACKBALL_AXIS_MIN = 0.68;
+const DIAGONAL_TRACKBALL_AXIS_MAX = 0.74;
+const DIAGONAL_TURN_RATIO_MAX = 0.92;
+const BOUNDARY_SEGMENT_COUNT = 18;
+const BOUNDARY_PHASE_ONE_REBOUND_SEGMENTS = 9;
+const BOUNDARY_REBOUND_COLOR_FRAGMENT = "73, 255, 199";
+const BOUNDARY_LOSS_COLOR_FRAGMENT = "255, 96, 120";
 const VIEWPORTS = [
   {
     name: "desktop",
@@ -133,6 +140,14 @@ function angularDistance(startAngle, endAngle) {
   return Math.abs(normalizeSignedAngle(endAngle - startAngle));
 }
 
+function isDiagonalAxis(value) {
+  const absoluteValue = Math.abs(value);
+  return (
+    absoluteValue >= DIAGONAL_TRACKBALL_AXIS_MIN &&
+    absoluteValue <= DIAGONAL_TRACKBALL_AXIS_MAX
+  );
+}
+
 function isPointInsideBox(point, box) {
   const tolerance = 1;
   return (
@@ -183,6 +198,8 @@ async function installCanvasProbe(page) {
         radius,
         startAngle,
         endAngle,
+        strokeStyle: String(this.strokeStyle || ""),
+        lineWidth: Number(this.lineWidth || 0),
       });
       return originalArc.call(
         this,
@@ -318,7 +335,12 @@ async function readBallTurretState(page) {
         Math.PI;
       const activeTrampolineArcs = probe.arcs.filter((arc) => {
         const sweep = Math.abs(arc.endAngle - arc.startAngle);
+        const strokeStyle = String(arc.strokeStyle || "");
+        const isBoundarySegment =
+          strokeStyle.includes("73, 255, 199") ||
+          strokeStyle.includes("255, 96, 120");
         return (
+          !isBoundarySegment &&
           Math.abs(arc.x - centerX) < 2 &&
           Math.abs(arc.y - centerY) < 2 &&
           sweep > activeTrampolineArcMinSweep &&
@@ -335,7 +357,47 @@ async function readBallTurretState(page) {
               2,
           )
         : null;
-
+      const boundarySegmentArcs = probe.arcs.filter((arc) => {
+        const strokeStyle = String(arc.strokeStyle || "");
+        return (
+          Math.abs(arc.x - centerX) < 2 &&
+          Math.abs(arc.y - centerY) < 2 &&
+          arc.radius > Math.min(canvasWidth, canvasHeight) * 0.3 &&
+          (strokeStyle.includes("73, 255, 199") ||
+            strokeStyle.includes("255, 96, 120"))
+        );
+      });
+      const uniqueBoundarySegments = new Set(
+        boundarySegmentArcs.map((arc) =>
+          [
+            Math.round(arc.startAngle * 1000),
+            Math.round(arc.endAngle * 1000),
+            String(arc.strokeStyle || "").includes("73, 255, 199")
+              ? "rebound"
+              : "loss",
+          ].join(":"),
+        ),
+      );
+      const uniqueReboundBoundarySegments = new Set(
+        boundarySegmentArcs
+          .filter((arc) =>
+            String(arc.strokeStyle || "").includes("73, 255, 199"),
+          )
+          .map((arc) =>
+            [Math.round(arc.startAngle * 1000), Math.round(arc.endAngle * 1000)]
+              .join(":"),
+          ),
+      );
+      const uniqueLossBoundarySegments = new Set(
+        boundarySegmentArcs
+          .filter((arc) =>
+            String(arc.strokeStyle || "").includes("255, 96, 120"),
+          )
+          .map((arc) =>
+            [Math.round(arc.startAngle * 1000), Math.round(arc.endAngle * 1000)]
+              .join(":"),
+          ),
+      );
       return {
         title: document.title,
         headings,
@@ -409,6 +471,9 @@ async function readBallTurretState(page) {
           fullRingArcCount: fullRingArcs.length,
           activeTrampolineArcCount: activeTrampolineArcs.length,
           activeTrampolineCenterAngle,
+          boundarySegmentCount: uniqueBoundarySegments.size,
+          reboundBoundarySegmentCount: uniqueReboundBoundarySegments.size,
+          lossBoundarySegmentCount: uniqueLossBoundarySegments.size,
         },
       };
     },
@@ -516,6 +581,8 @@ async function exerciseJoystick(page) {
       exercised: false,
       pathWithinControl: false,
       rightHoldAngularDelta: 0,
+      rightUpHoldAngularDelta: 0,
+      leftDownHoldAngularDelta: 0,
       leftHoldAngularDelta: 0,
       path: [],
     };
@@ -523,25 +590,71 @@ async function exerciseJoystick(page) {
 
   const center = { x: box.x + box.width * 0.5, y: box.y + box.height * 0.5 };
   const right = { x: box.x + box.width * 0.95, y: box.y + box.height * 0.5 };
+  const topRight = {
+    x: box.x + box.width * 0.95,
+    y: box.y + box.height * 0.05,
+  };
+  const bottomRight = {
+    x: box.x + box.width * 0.95,
+    y: box.y + box.height * 0.95,
+  };
   const left = { x: box.x + box.width * 0.05, y: box.y + box.height * 0.5 };
+  const bottomLeft = {
+    x: box.x + box.width * 0.05,
+    y: box.y + box.height * 0.95,
+  };
+  const topLeft = { x: box.x + box.width * 0.05, y: box.y + box.height * 0.05 };
   const top = { x: box.x + box.width * 0.5, y: box.y + box.height * 0.05 };
-  const path = [center, right, top, left, center];
+  const bottom = { x: box.x + box.width * 0.5, y: box.y + box.height * 0.95 };
+  const path = [
+    center,
+    right,
+    topRight,
+    top,
+    topLeft,
+    left,
+    bottomLeft,
+    bottom,
+    bottomRight,
+    center,
+  ];
 
   await dispatchJoystickPointer(page, "pointerdown", center);
   await dispatchJoystickPointer(page, "pointermove", right);
   const rightVisualState = await readBallTurretState(page);
-  await dispatchJoystickPointer(page, "pointermove", top);
-  const topVisualState = await readBallTurretState(page);
-  await dispatchJoystickPointer(page, "pointermove", right);
   await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_SAMPLE_MS));
   const rightStartState = await readBallTurretState(page);
   await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_PROOF_MS));
   const rightHoldState = await readBallTurretState(page);
+
+  await dispatchJoystickPointer(page, "pointermove", topRight);
+  const topRightVisualState = await readBallTurretState(page);
+  await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_SAMPLE_MS));
+  const topRightStartState = await readBallTurretState(page);
+  await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_PROOF_MS));
+  const topRightHoldState = await readBallTurretState(page);
+
+  await dispatchJoystickPointer(page, "pointermove", bottomLeft);
+  const bottomLeftVisualState = await readBallTurretState(page);
+  await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_SAMPLE_MS));
+  const bottomLeftStartState = await readBallTurretState(page);
+  await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_PROOF_MS));
+  const bottomLeftHoldState = await readBallTurretState(page);
+
   await dispatchJoystickPointer(page, "pointermove", left);
   await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_SAMPLE_MS));
   const leftStartState = await readBallTurretState(page);
   await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_PROOF_MS));
   const leftHoldState = await readBallTurretState(page);
+
+  await dispatchJoystickPointer(page, "pointermove", top);
+  const topVisualState = await readBallTurretState(page);
+  await dispatchJoystickPointer(page, "pointermove", topLeft);
+  const topLeftVisualState = await readBallTurretState(page);
+  await dispatchJoystickPointer(page, "pointermove", bottom);
+  const bottomVisualState = await readBallTurretState(page);
+  await dispatchJoystickPointer(page, "pointermove", bottomRight);
+  const bottomRightVisualState = await readBallTurretState(page);
   await dispatchJoystickPointer(page, "pointermove", center);
   await dispatchJoystickPointer(page, "pointerup", center);
   const releaseState = await readBallTurretState(page);
@@ -551,7 +664,24 @@ async function exerciseJoystick(page) {
     pathWithinControl: path.every((point) => isPointInsideBox(point, box)),
     rightVisualX: Number(rightVisualState.joystick.trackballX),
     topVisualY: Number(topVisualState.joystick.trackballY),
+    bottomVisualY: Number(bottomVisualState.joystick.trackballY),
     leftVisualX: Number(leftStartState.joystick.trackballX),
+    topRightVisual: {
+      x: Number(topRightVisualState.joystick.trackballX),
+      y: Number(topRightVisualState.joystick.trackballY),
+    },
+    topLeftVisual: {
+      x: Number(topLeftVisualState.joystick.trackballX),
+      y: Number(topLeftVisualState.joystick.trackballY),
+    },
+    bottomLeftVisual: {
+      x: Number(bottomLeftVisualState.joystick.trackballX),
+      y: Number(bottomLeftVisualState.joystick.trackballY),
+    },
+    bottomRightVisual: {
+      x: Number(bottomRightVisualState.joystick.trackballX),
+      y: Number(bottomRightVisualState.joystick.trackballY),
+    },
     releaseVisual: {
       x: Number(releaseState.joystick.trackballX),
       y: Number(releaseState.joystick.trackballY),
@@ -560,6 +690,14 @@ async function exerciseJoystick(page) {
     rightHoldAngularDelta: angularDistance(
       rightStartState.probe.activeTrampolineCenterAngle,
       rightHoldState.probe.activeTrampolineCenterAngle,
+    ),
+    rightUpHoldAngularDelta: angularDistance(
+      topRightStartState.probe.activeTrampolineCenterAngle,
+      topRightHoldState.probe.activeTrampolineCenterAngle,
+    ),
+    leftDownHoldAngularDelta: angularDistance(
+      bottomLeftStartState.probe.activeTrampolineCenterAngle,
+      bottomLeftHoldState.probe.activeTrampolineCenterAngle,
     ),
     leftHoldAngularDelta: angularDistance(
       leftStartState.probe.activeTrampolineCenterAngle,
@@ -627,6 +765,14 @@ async function runViewport(page, baseUrl, config) {
     `${config.name}: cama elástica/anel 360° não foi desenhado.`,
   );
   assert(
+    gameplayState.probe.boundarySegmentCount === BOUNDARY_SEGMENT_COUNT &&
+      gameplayState.probe.reboundBoundarySegmentCount ===
+        BOUNDARY_PHASE_ONE_REBOUND_SEGMENTS &&
+      gameplayState.probe.lossBoundarySegmentCount ===
+        BOUNDARY_SEGMENT_COUNT - BOUNDARY_PHASE_ONE_REBOUND_SEGMENTS,
+    `${config.name}: borda da Torreta não mostra 50% de segmentos rebatedores em cor distinta.`,
+  );
+  assert(
     gameplayState.probe.brickDrawCount > 0 &&
       gameplayState.probe.brickQuadrants.left &&
       gameplayState.probe.brickQuadrants.right &&
@@ -665,6 +811,43 @@ async function runViewport(page, baseUrl, config) {
   );
   assert(
     config.joystickPlacement === "hidden" ||
+      joystickExercise.bottomVisualY > 0.6,
+    `${config.name}: trackball não exibiu profundidade visual para baixo.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
+      (isDiagonalAxis(joystickExercise.topRightVisual.x) &&
+        isDiagonalAxis(joystickExercise.topRightVisual.y) &&
+        joystickExercise.topRightVisual.x > 0 &&
+        joystickExercise.topRightVisual.y < 0),
+    `${config.name}: trackball não normalizou diagonal superior direita.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
+      (isDiagonalAxis(joystickExercise.topLeftVisual.x) &&
+        isDiagonalAxis(joystickExercise.topLeftVisual.y) &&
+        joystickExercise.topLeftVisual.x < 0 &&
+        joystickExercise.topLeftVisual.y < 0),
+    `${config.name}: trackball não normalizou diagonal superior esquerda.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
+      (isDiagonalAxis(joystickExercise.bottomLeftVisual.x) &&
+        isDiagonalAxis(joystickExercise.bottomLeftVisual.y) &&
+        joystickExercise.bottomLeftVisual.x < 0 &&
+        joystickExercise.bottomLeftVisual.y > 0),
+    `${config.name}: trackball não normalizou diagonal inferior esquerda.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
+      (isDiagonalAxis(joystickExercise.bottomRightVisual.x) &&
+        isDiagonalAxis(joystickExercise.bottomRightVisual.y) &&
+        joystickExercise.bottomRightVisual.x > 0 &&
+        joystickExercise.bottomRightVisual.y > 0),
+    `${config.name}: trackball não normalizou diagonal inferior direita.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
       (joystickExercise.releaseVisual.x === 0 &&
         joystickExercise.releaseVisual.y === 0 &&
         joystickExercise.releaseVisual.active === 0),
@@ -675,6 +858,22 @@ async function runViewport(page, baseUrl, config) {
       joystickExercise.rightHoldAngularDelta >
         JOYSTICK_CONTINUOUS_TURN_MIN_DELTA,
     `${config.name}: joystick à direita não girou a cama elástica continuamente.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
+      (joystickExercise.rightUpHoldAngularDelta >
+        JOYSTICK_CONTINUOUS_TURN_MIN_DELTA &&
+        joystickExercise.rightUpHoldAngularDelta <
+          joystickExercise.rightHoldAngularDelta * DIAGONAL_TURN_RATIO_MAX),
+    `${config.name}: diagonal superior direita não girou com intensidade normalizada.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
+      (joystickExercise.leftDownHoldAngularDelta >
+        JOYSTICK_CONTINUOUS_TURN_MIN_DELTA &&
+        joystickExercise.leftDownHoldAngularDelta <
+          joystickExercise.leftHoldAngularDelta * DIAGONAL_TURN_RATIO_MAX),
+    `${config.name}: diagonal inferior esquerda não mudou rumo com intensidade normalizada.`,
   );
   assert(
     config.joystickPlacement === "hidden" ||

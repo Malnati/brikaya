@@ -111,13 +111,8 @@ const POWER_UP_ACTION_EXPIRE: LoggedPowerUpAction = "expire";
 const POWER_UP_ACTION_MISS: LoggedPowerUpAction = "miss";
 const BALL_TURRET_BRICK_COLUMN_MULTIPLIER = 2;
 const BALL_TURRET_SPAWN_BORDER_INSET = 1;
+const BALL_TURRET_BOTTOM_SPAWN_ANGLE = Math.PI / 2;
 const BALL_TURRET_POWER_UP_FALLBACK_ANGLE = -Math.PI / 2;
-const BALL_TURRET_SPAWN_ANGLES = [
-  -Math.PI / 2,
-  0,
-  Math.PI / 2,
-  Math.PI,
-] as const;
 const BALL_TURRET_JOYSTICK_TURN_RADIANS_PER_SECOND = Math.PI;
 const BALL_TURRET_JOYSTICK_TURN_DEADZONE = 0.05;
 const MAX_FRAME_DELTA_MS = 80;
@@ -262,7 +257,6 @@ export class GameEngine {
   private destroyedBricksSincePowerUp = 0;
   private activePowerUp: PowerUp | null = null;
   private nextPowerUpIndex = 0;
-  private ballTurretSpawnIndex = 0;
   private ballTurretJoystickTurn = 0;
   private lastFrameTimestamp = 0;
   private powerUpEffectTimers: ReturnType<typeof setTimeout>[] = [];
@@ -736,27 +730,18 @@ export class GameEngine {
   private positionBallForCurrentMode(ball: Ball) {
     if (!this.isBallTurretMode()) return;
 
-    const angle =
-      BALL_TURRET_SPAWN_ANGLES[
-        this.ballTurretSpawnIndex % BALL_TURRET_SPAWN_ANGLES.length
-      ];
-    this.ballTurretSpawnIndex += 1;
     const spawnRadius =
       this.radialGeometry.radius -
       ball.position.radius -
       BALL_TURRET_SPAWN_BORDER_INSET;
 
     ball.setPosition(
-      this.radialGeometry.centerX + Math.cos(angle) * spawnRadius,
-      this.radialGeometry.centerY + Math.sin(angle) * spawnRadius,
+      this.radialGeometry.centerX +
+        Math.cos(BALL_TURRET_BOTTOM_SPAWN_ANGLE) * spawnRadius,
+      this.radialGeometry.centerY +
+        Math.sin(BALL_TURRET_BOTTOM_SPAWN_ANGLE) * spawnRadius,
     );
-    ball.setDirection(
-      this.convertCartesianAngleToBallDirection(angle + Math.PI),
-    );
-  }
-
-  private convertCartesianAngleToBallDirection(angle: number): number {
-    return angle + Math.PI / 2;
+    ball.setDirection(0);
   }
 
   private async preloadAssets() {
@@ -2072,6 +2057,7 @@ export class GameEngine {
       drawBallTurretBackdrop(this.ctx, {
         canvasSize: this.canvasSize,
         geometry: this.radialGeometry,
+        level: this.level,
         paddlePosition: this.paddle.position,
       });
       return;
@@ -2085,6 +2071,7 @@ export class GameEngine {
       drawBallTurretTrampoline(this.ctx, {
         canvasSize: this.canvasSize,
         geometry: this.radialGeometry,
+        level: this.level,
         paddlePosition: this.paddle.position,
       });
       return;
@@ -2099,6 +2086,7 @@ export class GameEngine {
     drawBallTurretGlassOverlay(this.ctx, {
       canvasSize: this.canvasSize,
       geometry: this.radialGeometry,
+      level: this.level,
       paddlePosition: this.paddle.position,
     });
   }
