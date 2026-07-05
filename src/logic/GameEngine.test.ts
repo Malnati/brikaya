@@ -353,7 +353,10 @@ describe("GameEngine", () => {
       undefined,
       "ball-turret",
     );
-    const baseDimensions = calculateDynamicDimensions(canvas.width, canvas.height);
+    const baseDimensions = calculateDynamicDimensions(
+      canvas.width,
+      canvas.height,
+    );
     const dimensions = (engine as any).dimensions;
     const geometry = (engine as any).radialGeometry;
     const ball = mockBallInstances[0];
@@ -452,7 +455,7 @@ describe("GameEngine", () => {
     expect((engine as any).paddle.setPosition).not.toHaveBeenCalled();
   });
 
-  it("move o segmento ativo da torreta pelo vetor absoluto do joystick", () => {
+  it("rotaciona continuamente o segmento ativo da torreta pelo joystick", () => {
     const engine = new GameEngine(
       canvas,
       onScoreUpdate,
@@ -467,20 +470,48 @@ describe("GameEngine", () => {
       "ball-turret",
     );
     const geometry = (engine as any).radialGeometry;
+    (engine as any).paddle.position.radial.centerAngle = Math.PI / 2;
 
-    (engine as any).setBallTurretControlVector(1, 0);
+    (engine as any).setBallTurretJoystickTurn(1);
+    (engine as any).applyBallTurretJoystickTurn(250);
 
-    expect((engine as any).paddle.setPositionFromPoint).toHaveBeenCalledWith(
-      geometry.centerX + geometry.radius,
-      geometry.centerY,
+    const [x, y] = (engine as any).paddle.setPositionFromPoint.mock.calls[0];
+    expect(x).toBeCloseTo(
+      geometry.centerX + Math.cos(Math.PI / 4) * geometry.radius,
+    );
+    expect(y).toBeCloseTo(
+      geometry.centerY + Math.sin(Math.PI / 4) * geometry.radius,
     );
     expect((engine as any).paddle.setPosition).not.toHaveBeenCalled();
   });
 
-  it("ignora vetor do joystick fora do modo torreta", () => {
+  it("para giro da torreta quando o joystick volta ao centro", () => {
+    const engine = new GameEngine(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "ball-turret",
+    );
+
+    (engine as any).setBallTurretJoystickTurn(1);
+    (engine as any).setBallTurretJoystickTurn(0);
+    (engine as any).applyBallTurretJoystickTurn(250);
+
+    expect((engine as any).paddle.setPositionFromPoint).not.toHaveBeenCalled();
+  });
+
+  it("ignora giro do joystick fora do modo torreta", () => {
     const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
 
-    (engine as any).setBallTurretControlVector(1, 0);
+    (engine as any).setBallTurretJoystickTurn(1);
+    (engine as any).applyBallTurretJoystickTurn(250);
 
     expect((engine as any).paddle.setPositionFromPoint).not.toHaveBeenCalled();
     expect((engine as any).paddle.setPosition).not.toHaveBeenCalled();

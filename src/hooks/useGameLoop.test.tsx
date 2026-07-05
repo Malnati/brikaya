@@ -19,6 +19,7 @@ const mockStartPaddleDrag = jest.fn();
 const mockMovePaddleDrag = jest.fn();
 const mockEndPaddleDrag = jest.fn();
 const mockSetBallTurretControlVector = jest.fn();
+const mockSetBallTurretJoystickTurn = jest.fn();
 const TOUCH_ZONE_TEST_ID = "paddle-touch-zone";
 const JOYSTICK_TEST_ID = "ball-turret-joystick";
 const TOUCH_START_EVENT_NAME = "touchstart";
@@ -55,6 +56,7 @@ jest.mock("../logic/GameEngine", () => ({
     movePaddleDrag: mockMovePaddleDrag,
     endPaddleDrag: mockEndPaddleDrag,
     setBallTurretControlVector: mockSetBallTurretControlVector,
+    setBallTurretJoystickTurn: mockSetBallTurretJoystickTurn,
   })),
 }));
 
@@ -253,7 +255,7 @@ describe("useGameLoop", () => {
     expect(mockStartPaddleDrag).not.toHaveBeenCalled();
   });
 
-  it("encaminha joystick da torreta como vetor absoluto para o motor", async () => {
+  it("encaminha joystick da torreta como giro orbital contínuo pelo eixo horizontal", async () => {
     const { getByTestId } = render(
       <Harness
         imageSetId={IMAGE_SET_RETRO_DEFAULT}
@@ -270,18 +272,32 @@ describe("useGameLoop", () => {
     joystick.getBoundingClientRect = jest.fn(() => JOYSTICK_RECT);
 
     const pointerDown = createPointerEvent(POINTER_DOWN_EVENT_NAME, 200, 250);
-    const pointerMove = createPointerEvent(POINTER_MOVE_EVENT_NAME, 150, 200);
+    const pointerMoveLeft = createPointerEvent(
+      POINTER_MOVE_EVENT_NAME,
+      100,
+      250,
+    );
+    const pointerMoveTop = createPointerEvent(
+      POINTER_MOVE_EVENT_NAME,
+      150,
+      200,
+    );
     const pointerUp = createPointerEvent(POINTER_UP_EVENT_NAME, 150, 200);
 
     joystick.dispatchEvent(pointerDown);
-    joystick.dispatchEvent(pointerMove);
+    joystick.dispatchEvent(pointerMoveLeft);
+    joystick.dispatchEvent(pointerMoveTop);
     joystick.dispatchEvent(pointerUp);
 
     expect(pointerDown.defaultPrevented).toBe(true);
-    expect(pointerMove.defaultPrevented).toBe(true);
+    expect(pointerMoveLeft.defaultPrevented).toBe(true);
+    expect(pointerMoveTop.defaultPrevented).toBe(true);
     expect(pointerUp.defaultPrevented).toBe(true);
-    expect(mockSetBallTurretControlVector).toHaveBeenNthCalledWith(1, 1, 0);
-    expect(mockSetBallTurretControlVector).toHaveBeenNthCalledWith(2, 0, -1);
+    expect(mockSetBallTurretJoystickTurn).toHaveBeenNthCalledWith(1, 1);
+    expect(mockSetBallTurretJoystickTurn).toHaveBeenNthCalledWith(2, -1);
+    expect(mockSetBallTurretJoystickTurn).toHaveBeenNthCalledWith(3, 0);
+    expect(mockSetBallTurretJoystickTurn).toHaveBeenNthCalledWith(4, 0);
+    expect(mockSetBallTurretControlVector).not.toHaveBeenCalled();
     expect(GameEngine).toHaveBeenCalledTimes(1);
   });
 });

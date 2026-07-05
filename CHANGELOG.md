@@ -1,6 +1,14 @@
 <!-- CHANGELOG.md -->
 # Changelog
 
+## 2026-07-05 — v1.2.4 — Joystick orbital da Torreta
+
+- Convertido o joystick da Torreta para giro orbital contínuo da cama elástica.
+- Mantido o toque dentro do próprio joystick: segurar à direita/esquerda gira a cama elástica por toda a circunferência.
+- Ao soltar ou centralizar o joystick, o giro para e a cama elástica mantém a posição atual.
+- Preservado o arraste direto no tabuleiro como controle alternativo.
+- Ampliada a cobertura unitária e o QA da Torreta para provar giro contínuo sem arraste pela tela inteira.
+
 ## 2026-07-05 — v1.2.3 — Joystick touch da Torreta
 
 - Adicionado joystick visível no modo Torreta para dispositivos de toque.

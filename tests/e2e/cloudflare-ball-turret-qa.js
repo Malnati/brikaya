@@ -30,6 +30,10 @@ const BRICK_IMAGE_PATTERN = /\/bricks\/|spr-brick/i;
 const FULL_CIRCLE_TOLERANCE = 0.08;
 const JOYSTICK_TEST_ID = "ball-turret-joystick";
 const MIN_TOUCH_TARGET_SIZE = 44;
+const ACTIVE_TRAMPOLINE_ARC_MIN_SWEEP = 0.2;
+const JOYSTICK_HOLD_SAMPLE_MS = 120;
+const JOYSTICK_HOLD_PROOF_MS = 360;
+const JOYSTICK_CONTINUOUS_TURN_MIN_DELTA = 0.08;
 const VIEWPORTS = [
   {
     name: "desktop",
@@ -111,6 +115,28 @@ function ensureParentDirectory(filePath) {
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+function normalizeSignedAngle(angle) {
+  return (
+    ((((angle + Math.PI) % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2)) -
+    Math.PI
+  );
+}
+
+function angularDistance(startAngle, endAngle) {
+  if (!Number.isFinite(startAngle) || !Number.isFinite(endAngle)) return 0;
+  return Math.abs(normalizeSignedAngle(endAngle - startAngle));
+}
+
+function isPointInsideBox(point, box) {
+  const tolerance = 1;
+  return (
+    point.x >= box.x - tolerance &&
+    point.x <= box.x + box.width + tolerance &&
+    point.y >= box.y - tolerance &&
+    point.y <= box.y + box.height + tolerance
+  );
 }
 
 async function clickButtonByPattern(page, patternSource) {
@@ -216,6 +242,7 @@ async function readBallTurretState(page) {
       brickImagePatternSource,
       fullCircleTolerance,
       joystickTestId,
+      activeTrampolineArcMinSweep,
     }) => {
       const internalCopyPattern = new RegExp(internalCopyPatternSource, "i");
       const oldTurretAimCopyPattern = new RegExp(
@@ -229,7 +256,9 @@ async function readBallTurretState(page) {
       );
       const canvas = document.querySelector("canvas");
       const canvasRect = canvas?.getBoundingClientRect();
-      const joystick = document.querySelector(`[data-testid="${joystickTestId}"]`);
+      const joystick = document.querySelector(
+        `[data-testid="${joystickTestId}"]`,
+      );
       const joystickRect = joystick?.getBoundingClientRect();
       const joystickStyle = joystick ? getComputedStyle(joystick) : null;
       const canvasWidth = canvas?.width || 0;
@@ -270,16 +299,38 @@ async function readBallTurretState(page) {
           x: draw.x + draw.width / 2,
           y: draw.y + draw.height / 2,
         }));
-      const brickCenters = brickDraws.length > 0 ? brickDraws : fallbackBrickDraws;
+      const brickCenters =
+        brickDraws.length > 0 ? brickDraws : fallbackBrickDraws;
       const fullRingArcs = probe.arcs.filter(
         (arc) =>
           Math.abs(arc.x - centerX) < 2 &&
           Math.abs(arc.y - centerY) < 2 &&
-          Math.abs(
-            Math.abs(arc.endAngle - arc.startAngle) - Math.PI * 2,
-          ) < fullCircleTolerance &&
+          Math.abs(Math.abs(arc.endAngle - arc.startAngle) - Math.PI * 2) <
+            fullCircleTolerance &&
           arc.radius > Math.min(canvasWidth, canvasHeight) * 0.3,
       );
+      const normalizeAngle = (angle) =>
+        ((((angle + Math.PI) % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2)) -
+        Math.PI;
+      const activeTrampolineArcs = probe.arcs.filter((arc) => {
+        const sweep = Math.abs(arc.endAngle - arc.startAngle);
+        return (
+          Math.abs(arc.x - centerX) < 2 &&
+          Math.abs(arc.y - centerY) < 2 &&
+          sweep > activeTrampolineArcMinSweep &&
+          sweep < Math.PI * 2 - fullCircleTolerance &&
+          arc.radius > Math.min(canvasWidth, canvasHeight) * 0.3
+        );
+      });
+      const latestActiveTrampolineArc =
+        activeTrampolineArcs[activeTrampolineArcs.length - 1] || null;
+      const activeTrampolineCenterAngle = latestActiveTrampolineArc
+        ? normalizeAngle(
+            (latestActiveTrampolineArc.startAngle +
+              latestActiveTrampolineArc.endAngle) /
+              2,
+          )
+        : null;
 
       return {
         title: document.title,
@@ -334,6 +385,8 @@ async function readBallTurretState(page) {
             bottom: brickCenters.some((point) => point.y > centerY),
           },
           fullRingArcCount: fullRingArcs.length,
+          activeTrampolineArcCount: activeTrampolineArcs.length,
+          activeTrampolineCenterAngle,
         },
       };
     },
@@ -344,6 +397,7 @@ async function readBallTurretState(page) {
       brickImagePatternSource: BRICK_IMAGE_PATTERN.source,
       fullCircleTolerance: FULL_CIRCLE_TOLERANCE,
       joystickTestId: JOYSTICK_TEST_ID,
+      activeTrampolineArcMinSweep: ACTIVE_TRAMPOLINE_ARC_MIN_SWEEP,
     },
   );
 }
@@ -394,21 +448,80 @@ async function exerciseTrampoline(page) {
   await page.keyboard.press("ArrowRight");
 }
 
+async function dispatchJoystickPointer(page, type, point) {
+  await page.evaluate(
+    ({ joystickTestId, eventType, clientPoint }) => {
+      const joystick = document.querySelector(
+        `[data-testid="${joystickTestId}"]`,
+      );
+      if (!joystick) return false;
+
+      joystick.dispatchEvent(
+        new PointerEvent(eventType, {
+          bubbles: true,
+          cancelable: true,
+          clientX: clientPoint.x,
+          clientY: clientPoint.y,
+          isPrimary: true,
+          pointerId: 17,
+          pointerType: "touch",
+        }),
+      );
+      return true;
+    },
+    {
+      joystickTestId: JOYSTICK_TEST_ID,
+      eventType: type,
+      clientPoint: point,
+    },
+  );
+}
+
 async function exerciseJoystick(page) {
   const joystickHandle = await page.$(`[data-testid="${JOYSTICK_TEST_ID}"]`);
   const box = await joystickHandle?.boundingBox();
-  if (!box || box.width === 0 || box.height === 0) return false;
+  if (!box || box.width === 0 || box.height === 0) {
+    return {
+      exercised: false,
+      pathWithinControl: false,
+      rightHoldAngularDelta: 0,
+      leftHoldAngularDelta: 0,
+      path: [],
+    };
+  }
 
-  await page.mouse.move(box.x + box.width * 0.5, box.y + box.height * 0.5);
-  await page.mouse.down();
-  await page.mouse.move(box.x + box.width * 0.95, box.y + box.height * 0.5, {
-    steps: 4,
-  });
-  await page.mouse.move(box.x + box.width * 0.5, box.y + box.height * 0.05, {
-    steps: 4,
-  });
-  await page.mouse.up();
-  return true;
+  const center = { x: box.x + box.width * 0.5, y: box.y + box.height * 0.5 };
+  const right = { x: box.x + box.width * 0.95, y: box.y + box.height * 0.5 };
+  const left = { x: box.x + box.width * 0.05, y: box.y + box.height * 0.5 };
+  const path = [center, right, left, center];
+
+  await dispatchJoystickPointer(page, "pointerdown", center);
+  await dispatchJoystickPointer(page, "pointermove", right);
+  await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_SAMPLE_MS));
+  const rightStartState = await readBallTurretState(page);
+  await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_PROOF_MS));
+  const rightHoldState = await readBallTurretState(page);
+  await dispatchJoystickPointer(page, "pointermove", left);
+  await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_SAMPLE_MS));
+  const leftStartState = await readBallTurretState(page);
+  await new Promise((resolve) => setTimeout(resolve, JOYSTICK_HOLD_PROOF_MS));
+  const leftHoldState = await readBallTurretState(page);
+  await dispatchJoystickPointer(page, "pointermove", center);
+  await dispatchJoystickPointer(page, "pointerup", center);
+
+  return {
+    exercised: true,
+    pathWithinControl: path.every((point) => isPointInsideBox(point, box)),
+    rightHoldAngularDelta: angularDistance(
+      rightStartState.probe.activeTrampolineCenterAngle,
+      rightHoldState.probe.activeTrampolineCenterAngle,
+    ),
+    leftHoldAngularDelta: angularDistance(
+      leftStartState.probe.activeTrampolineCenterAngle,
+      leftHoldState.probe.activeTrampolineCenterAngle,
+    ),
+    path,
+  };
 }
 
 async function runViewport(page, baseUrl, config) {
@@ -437,9 +550,8 @@ async function runViewport(page, baseUrl, config) {
         (arc) =>
           Math.abs(arc.x - centerX) < 2 &&
           Math.abs(arc.y - centerY) < 2 &&
-          Math.abs(
-            Math.abs(arc.endAngle - arc.startAngle) - Math.PI * 2,
-          ) < fullCircleTolerance &&
+          Math.abs(Math.abs(arc.endAngle - arc.startAngle) - Math.PI * 2) <
+            fullCircleTolerance &&
           arc.radius > Math.min(canvasWidth, canvasHeight) * 0.3,
       );
     },
@@ -483,10 +595,26 @@ async function runViewport(page, baseUrl, config) {
   await page.screenshot({ path: config.screenshotPath, fullPage: true });
 
   await exerciseTrampoline(page);
-  const joystickExercised = await exerciseJoystick(page);
+  const joystickExercise = await exerciseJoystick(page);
   assert(
-    config.joystickPlacement === "hidden" || joystickExercised,
+    config.joystickPlacement === "hidden" || joystickExercise.exercised,
     `${config.name}: joystick visível não respondeu ao exercício.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" || joystickExercise.pathWithinControl,
+    `${config.name}: joystick exigiu arraste fora do controle.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
+      joystickExercise.rightHoldAngularDelta >
+        JOYSTICK_CONTINUOUS_TURN_MIN_DELTA,
+    `${config.name}: joystick à direita não girou a cama elástica continuamente.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
+      joystickExercise.leftHoldAngularDelta >
+        JOYSTICK_CONTINUOUS_TURN_MIN_DELTA,
+    `${config.name}: joystick à esquerda não girou a cama elástica continuamente.`,
   );
   await new Promise((resolve) => setTimeout(resolve, 120));
   const postExerciseState = await readBallTurretState(page);
@@ -538,7 +666,7 @@ async function runViewport(page, baseUrl, config) {
   return {
     name: config.name,
     joystickPlacement: config.joystickPlacement,
-    joystickExercised,
+    joystickExercise,
     menuState,
     gameplayState,
     postExerciseState,
