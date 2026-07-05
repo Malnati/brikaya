@@ -719,11 +719,12 @@ async function exerciseJoystick(page) {
       pathWithinControl: false,
       angleChecks: {},
       holdStableAngleDelta: 0,
-      clampCheck: {
-        visual: { x: 0, y: 0 },
-        expectedAngle: null,
-        actualAngle: null,
-        angleMatches: false,
+      outsideIgnoredCheck: {
+        angleUnchanged: false,
+        visualUnchanged: false,
+        outsideAngleRejected: false,
+        beforeVisual: { x: 0, y: 0 },
+        afterVisual: { x: 0, y: 0 },
       },
       releaseVisual: { x: 0, y: 0, active: 0 },
       path: [],
@@ -808,7 +809,20 @@ async function exerciseJoystick(page) {
   const topLeftCheck = await moveAndRead(topLeft);
   const bottomCheck = await moveAndRead(bottom);
   const bottomRightCheck = await moveAndRead(bottomRight);
-  const clampCheck = await moveAndRead(outsideTopRight);
+  const outsideCheck = await moveAndRead(outsideTopRight);
+  const outsideIgnoredCheck = {
+    angleUnchanged:
+      angularDistance(bottomRightCheck.actualAngle, outsideCheck.actualAngle) <=
+      JOYSTICK_HOLD_MAX_ANGLE_DELTA,
+    visualUnchanged:
+      bottomRightCheck.visual.x === outsideCheck.visual.x &&
+      bottomRightCheck.visual.y === outsideCheck.visual.y,
+    outsideAngleRejected: !outsideCheck.angleMatches,
+    beforeVisual: bottomRightCheck.visual,
+    afterVisual: outsideCheck.visual,
+    expectedIgnoredAngle: outsideCheck.expectedAngle,
+    actualAngleAfterIgnoredMove: outsideCheck.actualAngle,
+  };
   await dispatchJoystickPointer(page, "pointermove", center);
   await dispatchJoystickPointer(page, "pointerup", center);
   const releaseState = await readBallTurretState(page);
@@ -830,7 +844,7 @@ async function exerciseJoystick(page) {
       rightCheck.actualAngle,
       rightHoldState.probe.activeTrampolineCenterAngle,
     ),
-    clampCheck,
+    outsideIgnoredCheck,
     rightVisualX: rightCheck.visual.x,
     topVisualY: topCheck.visual.y,
     bottomVisualY: bottomCheck.visual.y,
@@ -1007,12 +1021,10 @@ async function runViewport(page, baseUrl, config) {
   );
   assert(
     config.joystickPlacement === "hidden" ||
-      (joystickExercise.clampCheck.angleMatches &&
-        joystickExercise.clampCheck.visual.x >=
-          JOYSTICK_TRACKBALL_EDGE_AXIS_MIN &&
-        joystickExercise.clampCheck.visual.y <=
-          -JOYSTICK_TRACKBALL_EDGE_AXIS_MIN),
-    `${config.name}: joystick não limitou gesto externo ao canto equivalente.`,
+      (joystickExercise.outsideIgnoredCheck.angleUnchanged &&
+        joystickExercise.outsideIgnoredCheck.visualUnchanged &&
+        joystickExercise.outsideIgnoredCheck.outsideAngleRejected),
+    `${config.name}: joystick aceitou movimento fora da área do controle.`,
   );
   assert(
     config.joystickPlacement === "hidden" ||
