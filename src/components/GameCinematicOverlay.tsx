@@ -76,7 +76,6 @@ const VIEWPORT_LEFT_INSET_PARAM = "qaViewportLeftInset";
 const VIEWPORT_RIGHT_INSET_PARAM = "qaViewportRightInset";
 const RIP_BROWSER_CHROME_SAFE_BOTTOM_PX = 104;
 const COUNTDOWN_BROWSER_CHROME_SAFE_BOTTOM_PX = 104;
-const COUNTDOWN_LANDSCAPE_SAFE_TOP_PX = 236;
 const RIP_MIN_VISIBLE_VIEWPORT_SIZE_PX = 240;
 const COUNTDOWN_MIN_VISIBLE_VIEWPORT_SIZE_PX = 0;
 const VISIBLE_VIEWPORT_LEFT_PROPERTY = "--game-cinematic-visible-left";
@@ -158,18 +157,9 @@ function shouldReserveMobileBrowserChrome(): boolean {
   );
 }
 
-function shouldReserveLandscapeBrowserChrome(): boolean {
-  return (
-    window.matchMedia?.(
-      "(pointer: coarse) and (orientation: landscape) and (max-height: 600px)",
-    ).matches === true && !isStandaloneDisplayMode()
-  );
-}
-
 interface UsableViewportStyleOptions {
   includeRipLegacyProperties?: boolean;
   reservePortraitBottomInset?: boolean;
-  reserveLandscapeTopInset?: boolean;
   minVisibleSize: number;
 }
 
@@ -180,7 +170,6 @@ function requestedInset(searchParams: URLSearchParams, name: string): number {
 function measuredUsableViewportStyle({
   includeRipLegacyProperties = false,
   reservePortraitBottomInset = false,
-  reserveLandscapeTopInset = false,
   minVisibleSize,
 }: UsableViewportStyleOptions): UsableViewportStyle {
   const visualViewport = window.visualViewport;
@@ -211,14 +200,7 @@ function measuredUsableViewportStyle({
     shouldReserveMobileBrowserChrome()
       ? RIP_BROWSER_CHROME_SAFE_BOTTOM_PX
       : 0;
-  const fallbackLandscapeTopInset =
-    reserveLandscapeTopInset &&
-    top === 0 &&
-    requestedTopInset === 0 &&
-    shouldReserveLandscapeBrowserChrome()
-      ? COUNTDOWN_LANDSCAPE_SAFE_TOP_PX
-      : 0;
-  const usableTop = top + Math.max(requestedTopInset, fallbackLandscapeTopInset);
+  const usableTop = top + requestedTopInset;
   const usableLeft = left + requestedLeftInset;
   const usableWidth = Math.max(
     minVisibleSize,
@@ -289,7 +271,6 @@ function useUsableViewportStyle(
 function useCountdownViewportStyle(enabled: boolean): UsableViewportStyle | undefined {
   return useUsableViewportStyle(enabled, {
     minVisibleSize: COUNTDOWN_MIN_VISIBLE_VIEWPORT_SIZE_PX,
-    reserveLandscapeTopInset: true,
     reservePortraitBottomInset: true,
   });
 }

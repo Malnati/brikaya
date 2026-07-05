@@ -1091,7 +1091,7 @@ export default function App() {
               <p>{t("menu.resetPreferencesError")}</p>
             </div>
           )}
-          {isOfflineReadyVisible && (
+          {isOfflineReadyVisible && !cinematicOverlay && (
             <div className="offline-ready-message">
               <p>{t("status.offlineReady")}</p>
             </div>

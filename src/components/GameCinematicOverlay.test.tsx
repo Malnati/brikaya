@@ -33,6 +33,32 @@ function resetLocationSearch() {
   window.history.replaceState({}, "", "/");
 }
 
+function mockMatchMedia(matches: boolean) {
+  const originalMatchMedia = window.matchMedia;
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    writable: true,
+    value: jest.fn().mockImplementation((query: string) => ({
+      matches: query.includes("orientation: landscape") ? matches : false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+
+  return () => {
+    Object.defineProperty(window, "matchMedia", {
+      configurable: true,
+      writable: true,
+      value: originalMatchMedia,
+    });
+  };
+}
+
 function expectDecorativeMedia(container: HTMLElement, name: string, path: string) {
   const media = container.querySelector(
     `img[data-cinematic-media="${name}"]`,
@@ -97,6 +123,23 @@ describe("GameCinematicOverlay media", () => {
       "588px",
     );
     expect(stage.style.height).toBe("588px");
+  });
+
+  it("não aplica deslocamento superior fixo em landscape quando o viewport visual já é a área útil", () => {
+    const restoreMatchMedia = mockMatchMedia(true);
+
+    try {
+      render(<GameCinematicOverlay state={{ type: "countdown", value: "2" }} />);
+
+      const stage = screen.getByTestId(STAGE_TEST_ID);
+
+      expect(stage.style.getPropertyValue(VISIBLE_TOP_PROPERTY)).toBe("0px");
+      expect(stage.style.top).toBe("0px");
+      expect(stage.style.getPropertyValue(VISIBLE_HEIGHT_PROPERTY)).toBe("768px");
+      expect(stage.style.height).toBe("768px");
+    } finally {
+      restoreMatchMedia();
+    }
   });
 
   it("renderiza mídias locais CC0 no countdown sem remover a contagem textual", () => {

@@ -16,6 +16,7 @@ import {
 } from "./constants/audio";
 import type { LevelTransitionPayload } from "./constants/game";
 import {
+  BRIKAYA_OFFLINE_READY_EVENT,
   BRIKAYA_UPDATE_INSTALLED_KEY,
   BRIKAYA_UPDATE_PROGRESS_EVENT,
 } from "./registerServiceWorker";
@@ -977,6 +978,25 @@ describe("App theme selector", () => {
       "false",
     );
   });
+  it("oculta o aviso offline durante a contagem inicial", async () => {
+    jest.useFakeTimers();
+    mockSystemTheme(true);
+
+    await renderApp();
+
+    act(() => {
+      jest.advanceTimersByTime(COUNTDOWN_STEP_MS);
+    });
+    publishTestBoardRect();
+
+    act(() => {
+      window.dispatchEvent(new Event(BRIKAYA_OFFLINE_READY_EVENT));
+    });
+
+    expect(screen.getByTestId("game-cinematic-overlay")).toHaveTextContent("3");
+    expect(screen.queryByText("Pronto para jogar offline")).not.toBeInTheDocument();
+  });
+
 
   it("mostra mensagem de subida de fase sem reiniciar countdown", async () => {
     jest.useFakeTimers();
