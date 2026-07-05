@@ -452,6 +452,40 @@ describe("GameEngine", () => {
     expect((engine as any).paddle.setPosition).not.toHaveBeenCalled();
   });
 
+  it("move o segmento ativo da torreta pelo vetor absoluto do joystick", () => {
+    const engine = new GameEngine(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "ball-turret",
+    );
+    const geometry = (engine as any).radialGeometry;
+
+    (engine as any).setBallTurretControlVector(1, 0);
+
+    expect((engine as any).paddle.setPositionFromPoint).toHaveBeenCalledWith(
+      geometry.centerX + geometry.radius,
+      geometry.centerY,
+    );
+    expect((engine as any).paddle.setPosition).not.toHaveBeenCalled();
+  });
+
+  it("ignora vetor do joystick fora do modo torreta", () => {
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+
+    (engine as any).setBallTurretControlVector(1, 0);
+
+    expect((engine as any).paddle.setPositionFromPoint).not.toHaveBeenCalled();
+    expect((engine as any).paddle.setPosition).not.toHaveBeenCalled();
+  });
+
   it("ignora movimento touch sem arraste ativo", () => {
     jest.spyOn(canvas, "getBoundingClientRect").mockReturnValue({
       left: 100,

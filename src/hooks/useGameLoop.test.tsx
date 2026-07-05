@@ -18,15 +18,31 @@ const mockSetPaused = jest.fn();
 const mockStartPaddleDrag = jest.fn();
 const mockMovePaddleDrag = jest.fn();
 const mockEndPaddleDrag = jest.fn();
+const mockSetBallTurretControlVector = jest.fn();
 const TOUCH_ZONE_TEST_ID = "paddle-touch-zone";
+const JOYSTICK_TEST_ID = "ball-turret-joystick";
 const TOUCH_START_EVENT_NAME = "touchstart";
 const TOUCH_MOVE_EVENT_NAME = "touchmove";
 const TOUCH_END_EVENT_NAME = "touchend";
 const TOUCH_CANCEL_EVENT_NAME = "touchcancel";
+const POINTER_DOWN_EVENT_NAME = "pointerdown";
+const POINTER_MOVE_EVENT_NAME = "pointermove";
+const POINTER_UP_EVENT_NAME = "pointerup";
 const TOUCH_START_CLIENT_X = 128;
 const TOUCH_MOVE_CLIENT_X = 196;
 const TOUCH_START_CLIENT_Y = 420;
 const TOUCH_MOVE_CLIENT_Y = 512;
+const JOYSTICK_RECT = {
+  left: 100,
+  top: 200,
+  width: 100,
+  height: 100,
+  bottom: 300,
+  right: 200,
+  x: 100,
+  y: 200,
+  toJSON: jest.fn(),
+} as unknown as DOMRect;
 
 jest.mock("../logic/GameEngine", () => ({
   GameEngine: jest.fn().mockImplementation(() => ({
@@ -38,6 +54,7 @@ jest.mock("../logic/GameEngine", () => ({
     startPaddleDrag: mockStartPaddleDrag,
     movePaddleDrag: mockMovePaddleDrag,
     endPaddleDrag: mockEndPaddleDrag,
+    setBallTurretControlVector: mockSetBallTurretControlVector,
   })),
 }));
 
@@ -50,15 +67,20 @@ function Harness({
   imageSetId,
   paused = false,
   touchEnabled = false,
+  joystickEnabled = false,
+  gameMode = "classic",
 }: {
   imageSetId: ImageSetId;
   paused?: boolean;
   touchEnabled?: boolean;
+  joystickEnabled?: boolean;
+  gameMode?: "classic" | "ball-turret";
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const touchZoneRef = useRef<HTMLDivElement>(null);
+  const joystickRef = useRef<HTMLDivElement>(null);
 
-  useGameLoop(
+  (useGameLoop as unknown as (...args: unknown[]) => void)(
     canvasRef,
     jest.fn(),
     undefined,
@@ -71,8 +93,9 @@ function Harness({
     false,
     imageSetId,
     paused,
-    "classic",
+    gameMode,
     touchZoneRef,
+    joystickRef,
   );
 
   return (
@@ -80,6 +103,9 @@ function Harness({
       <canvas ref={canvasRef} />
       {touchEnabled && (
         <div data-testid={TOUCH_ZONE_TEST_ID} ref={touchZoneRef} />
+      )}
+      {joystickEnabled && (
+        <div data-testid={JOYSTICK_TEST_ID} ref={joystickRef} />
       )}
     </>
   );
@@ -97,6 +123,16 @@ function createTouchEvent(
   Object.defineProperty(event, "changedTouches", { value: touches });
 
   return event as TouchEvent;
+}
+
+function createPointerEvent(type: string, clientX: number, clientY: number) {
+  const event = new Event(type, { bubbles: true, cancelable: true });
+
+  Object.defineProperty(event, "clientX", { value: clientX });
+  Object.defineProperty(event, "clientY", { value: clientY });
+  Object.defineProperty(event, "pointerId", { value: 7 });
+
+  return event as PointerEvent;
 }
 
 describe("useGameLoop", () => {
@@ -215,5 +251,37 @@ describe("useGameLoop", () => {
     );
 
     expect(mockStartPaddleDrag).not.toHaveBeenCalled();
+  });
+
+  it("encaminha joystick da torreta como vetor absoluto para o motor", async () => {
+    const { getByTestId } = render(
+      <Harness
+        imageSetId={IMAGE_SET_RETRO_DEFAULT}
+        gameMode="ball-turret"
+        joystickEnabled
+      />,
+    );
+
+    await waitFor(() => {
+      expect(GameEngine).toHaveBeenCalledTimes(1);
+    });
+
+    const joystick = getByTestId(JOYSTICK_TEST_ID);
+    joystick.getBoundingClientRect = jest.fn(() => JOYSTICK_RECT);
+
+    const pointerDown = createPointerEvent(POINTER_DOWN_EVENT_NAME, 200, 250);
+    const pointerMove = createPointerEvent(POINTER_MOVE_EVENT_NAME, 150, 200);
+    const pointerUp = createPointerEvent(POINTER_UP_EVENT_NAME, 150, 200);
+
+    joystick.dispatchEvent(pointerDown);
+    joystick.dispatchEvent(pointerMove);
+    joystick.dispatchEvent(pointerUp);
+
+    expect(pointerDown.defaultPrevented).toBe(true);
+    expect(pointerMove.defaultPrevented).toBe(true);
+    expect(pointerUp.defaultPrevented).toBe(true);
+    expect(mockSetBallTurretControlVector).toHaveBeenNthCalledWith(1, 1, 0);
+    expect(mockSetBallTurretControlVector).toHaveBeenNthCalledWith(2, 0, -1);
+    expect(GameEngine).toHaveBeenCalledTimes(1);
   });
 });

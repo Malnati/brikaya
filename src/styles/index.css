@@ -605,6 +605,21 @@ select {
   box-sizing: border-box;
 }
 
+.game-board-input-layout {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  box-sizing: border-box;
+}
+
+.game-surface--ball-turret {
+  --bb-ball-turret-playfield-max-width: 100%;
+}
+
 .game-board-playfield {
   position: relative;
   margin-inline: auto;
@@ -625,10 +640,105 @@ select {
   user-select: none;
 }
 
+.game-turret-joystick {
+  --bb-turret-joystick-size: 88px;
+  --bb-turret-joystick-knob-size: 34px;
+  --bb-turret-joystick-travel: 24px;
+  --bb-turret-joystick-x: 0;
+  --bb-turret-joystick-y: 0;
+  display: none;
+  flex: 0 0 auto;
+  width: var(--bb-turret-joystick-size);
+  height: var(--bb-turret-joystick-size);
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 72%, #ffffff);
+  border-radius: 999px;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      color-mix(in srgb, var(--color-accent) 22%, transparent) 0 28%,
+      transparent 29% 100%
+    ),
+    color-mix(in srgb, var(--color-panel) 82%, transparent);
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--color-accent) 34%, transparent),
+    inset 0 0 18px rgba(255, 255, 255, 0.08);
+  touch-action: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.game-turret-joystick-pad {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.game-turret-joystick-pad::before,
+.game-turret-joystick-pad::after {
+  position: absolute;
+  inset: 50% 16%;
+  display: block;
+  height: 1px;
+  background: color-mix(in srgb, var(--color-accent) 48%, transparent);
+  content: "";
+}
+
+.game-turret-joystick-pad::after {
+  transform: rotate(90deg);
+}
+
+.game-turret-joystick-knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: var(--bb-turret-joystick-knob-size);
+  height: var(--bb-turret-joystick-knob-size);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 86%, #ffffff);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.7), transparent 32%),
+    color-mix(in srgb, var(--color-accent) 72%, var(--color-panel));
+  box-shadow: 0 0 14px color-mix(in srgb, var(--color-accent) 62%, transparent);
+  transform: translate(
+      calc(-50% + var(--bb-turret-joystick-x) * var(--bb-turret-joystick-travel)),
+      calc(-50% + var(--bb-turret-joystick-y) * var(--bb-turret-joystick-travel))
+    );
+}
+
 @media (pointer: coarse), (hover: none) {
   .game-paddle-touch-zone {
     display: block;
     pointer-events: auto;
+  }
+
+  .game-turret-joystick {
+    display: flex;
+  }
+}
+
+@media (orientation: landscape) {
+  .game-surface--ball-turret .game-board-input-layout {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .game-surface--ball-turret .game-board-frame {
+    width: auto;
+    max-width: min-content;
+  }
+}
+
+@media (orientation: landscape) and (pointer: coarse),
+  (orientation: landscape) and (hover: none) {
+  .game-surface--ball-turret {
+    --bb-ball-turret-playfield-max-width: calc(
+      var(--bb-visual-viewport-width, 100vw) - 104px
+    );
   }
 }
 
@@ -2210,6 +2320,28 @@ html.bb-landscape-immersive .game-status-region {
   .game-surface,
   html.bb-landscape-immersive .game-surface {
     gap: 0;
+  }
+
+  .game-surface--ball-turret .game-board-input-layout,
+  html.bb-landscape-immersive
+    .game-surface--ball-turret
+    .game-board-input-layout {
+    flex-direction: row;
+    gap: 4px;
+  }
+
+  .game-surface--ball-turret .game-turret-joystick,
+  html.bb-landscape-immersive .game-surface--ball-turret .game-turret-joystick {
+    --bb-turret-joystick-size: 72px;
+    --bb-turret-joystick-knob-size: 28px;
+    --bb-turret-joystick-travel: 20px;
+  }
+
+  .game-surface--ball-turret,
+  html.bb-landscape-immersive .game-surface--ball-turret {
+    --bb-ball-turret-playfield-max-width: calc(
+      var(--bb-visual-viewport-width, 100vw) - 84px
+    );
   }
 }
 

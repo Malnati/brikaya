@@ -12,6 +12,8 @@ const DEFAULT_DESKTOP_SCREENSHOT_PATH =
   "docs/assets/issues/ball-turret-mode/evidence/evi-ball-turret-gameplay-desktop.png";
 const DEFAULT_MOBILE_SCREENSHOT_PATH =
   "docs/assets/issues/ball-turret-mode/evidence/evi-ball-turret-gameplay-mobile.png";
+const DEFAULT_MOBILE_LANDSCAPE_SCREENSHOT_PATH =
+  "docs/assets/issues/ball-turret-mode/evidence/evi-ball-turret-gameplay-mobile-landscape.png";
 const DEFAULT_MENU_SCREENSHOT_PATH =
   "docs/assets/issues/ball-turret-mode/evidence/evi-ball-turret-menu.png";
 const CHROME_EXECUTABLE_PATH =
@@ -26,18 +28,34 @@ const INTERNAL_COPY_PATTERN =
 const OLD_TURRET_AIM_COPY_PATTERN = /mire|aim|reticle|crosshair|metralhadora/i;
 const BRICK_IMAGE_PATTERN = /\/bricks\/|spr-brick/i;
 const FULL_CIRCLE_TOLERANCE = 0.08;
+const JOYSTICK_TEST_ID = "ball-turret-joystick";
+const MIN_TOUCH_TARGET_SIZE = 44;
 const VIEWPORTS = [
   {
     name: "desktop",
+    joystickPlacement: "hidden",
     screenshotPath: desktopScreenshotPath(),
     viewport: { width: 1440, height: 900, deviceScaleFactor: 1 },
   },
   {
-    name: "mobile",
+    name: "mobile-portrait",
+    joystickPlacement: "below",
     screenshotPath: mobileScreenshotPath(),
     viewport: {
       width: 390,
       height: 844,
+      deviceScaleFactor: 2,
+      isMobile: true,
+      hasTouch: true,
+    },
+  },
+  {
+    name: "mobile-landscape",
+    joystickPlacement: "right",
+    screenshotPath: mobileLandscapeScreenshotPath(),
+    viewport: {
+      width: 844,
+      height: 390,
       deviceScaleFactor: 2,
       isMobile: true,
       hasTouch: true,
@@ -71,6 +89,13 @@ function mobileScreenshotPath() {
   return (
     process.env.BRIKAYA_BALL_TURRET_MOBILE_SCREENSHOT ||
     DEFAULT_MOBILE_SCREENSHOT_PATH
+  );
+}
+
+function mobileLandscapeScreenshotPath() {
+  return (
+    process.env.BRIKAYA_BALL_TURRET_MOBILE_LANDSCAPE_SCREENSHOT ||
+    DEFAULT_MOBILE_LANDSCAPE_SCREENSHOT_PATH
   );
 }
 
@@ -190,6 +215,7 @@ async function readBallTurretState(page) {
       oldTurretAimCopyPatternSource,
       brickImagePatternSource,
       fullCircleTolerance,
+      joystickTestId,
     }) => {
       const internalCopyPattern = new RegExp(internalCopyPatternSource, "i");
       const oldTurretAimCopyPattern = new RegExp(
@@ -203,6 +229,9 @@ async function readBallTurretState(page) {
       );
       const canvas = document.querySelector("canvas");
       const canvasRect = canvas?.getBoundingClientRect();
+      const joystick = document.querySelector(`[data-testid="${joystickTestId}"]`);
+      const joystickRect = joystick?.getBoundingClientRect();
+      const joystickStyle = joystick ? getComputedStyle(joystick) : null;
       const canvasWidth = canvas?.width || 0;
       const canvasHeight = canvas?.height || 0;
       const centerX = canvasWidth / 2;
@@ -268,6 +297,27 @@ async function readBallTurretState(page) {
               y: canvasRect.y,
             }
           : null,
+        joystick: joystickRect
+          ? {
+              exists: true,
+              visible:
+                joystickStyle?.display !== "none" &&
+                joystickStyle?.visibility !== "hidden" &&
+                joystickRect.width > 0 &&
+                joystickRect.height > 0,
+              width: joystickRect.width,
+              height: joystickRect.height,
+              x: joystickRect.x,
+              y: joystickRect.y,
+            }
+          : {
+              exists: false,
+              visible: false,
+              width: 0,
+              height: 0,
+              x: 0,
+              y: 0,
+            },
         scoreHudText: scoreHud?.textContent || "",
         bodyHasInternalCopy: internalCopyPattern.test(
           document.body.textContent || "",
@@ -293,8 +343,43 @@ async function readBallTurretState(page) {
       oldTurretAimCopyPatternSource: OLD_TURRET_AIM_COPY_PATTERN.source,
       brickImagePatternSource: BRICK_IMAGE_PATTERN.source,
       fullCircleTolerance: FULL_CIRCLE_TOLERANCE,
+      joystickTestId: JOYSTICK_TEST_ID,
     },
   );
+}
+
+function assertJoystickPlacement(config, gameplayState) {
+  const { canvas, joystick } = gameplayState;
+
+  if (config.joystickPlacement === "hidden") {
+    assert(
+      joystick.exists && !joystick.visible,
+      `${config.name}: joystick deve existir no DOM, mas ficar oculto sem toque.`,
+    );
+    return;
+  }
+
+  assert(joystick.exists, `${config.name}: joystick da Torreta ausente.`);
+  assert(joystick.visible, `${config.name}: joystick da Torreta invisível.`);
+  assert(
+    joystick.width >= MIN_TOUCH_TARGET_SIZE &&
+      joystick.height >= MIN_TOUCH_TARGET_SIZE,
+    `${config.name}: joystick menor que alvo mínimo de toque.`,
+  );
+
+  if (config.joystickPlacement === "below") {
+    assert(
+      joystick.y >= canvas.y + canvas.height - 1,
+      `${config.name}: joystick não está abaixo do tabuleiro em portrait.`,
+    );
+  }
+
+  if (config.joystickPlacement === "right") {
+    assert(
+      joystick.x >= canvas.x + canvas.width - 1,
+      `${config.name}: joystick não está à direita do tabuleiro em landscape.`,
+    );
+  }
 }
 
 async function exerciseTrampoline(page) {
@@ -309,14 +394,110 @@ async function exerciseTrampoline(page) {
   await page.keyboard.press("ArrowRight");
 }
 
+async function exerciseJoystick(page) {
+  const joystickHandle = await page.$(`[data-testid="${JOYSTICK_TEST_ID}"]`);
+  const box = await joystickHandle?.boundingBox();
+  if (!box || box.width === 0 || box.height === 0) return false;
+
+  await page.mouse.move(box.x + box.width * 0.5, box.y + box.height * 0.5);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * 0.95, box.y + box.height * 0.5, {
+    steps: 4,
+  });
+  await page.mouse.move(box.x + box.width * 0.5, box.y + box.height * 0.05, {
+    steps: 4,
+  });
+  await page.mouse.up();
+  return true;
+}
+
 async function runViewport(page, baseUrl, config) {
   await page.setViewport(config.viewport);
   await page.goto(scenarioUrl(baseUrl), {
-    waitUntil: "networkidle0",
+    waitUntil: "domcontentloaded",
     timeout: 60000,
   });
   await acceptPrivacyConsentIfPresent(page);
+  await page.waitForFunction(
+    () => {
+      const canvas = document.querySelector("canvas");
+      const rect = canvas?.getBoundingClientRect();
+      return Boolean(rect && rect.width > 0 && rect.height > 0);
+    },
+    { timeout: 10000 },
+  );
+  await page.waitForFunction(
+    (fullCircleTolerance) => {
+      const canvas = document.querySelector("canvas");
+      const canvasWidth = canvas?.width || 0;
+      const canvasHeight = canvas?.height || 0;
+      const centerX = canvasWidth / 2;
+      const centerY = canvasHeight / 2;
+      return (window.__brikayaBallTurretProbe?.arcs || []).some(
+        (arc) =>
+          Math.abs(arc.x - centerX) < 2 &&
+          Math.abs(arc.y - centerY) < 2 &&
+          Math.abs(
+            Math.abs(arc.endAngle - arc.startAngle) - Math.PI * 2,
+          ) < fullCircleTolerance &&
+          arc.radius > Math.min(canvasWidth, canvasHeight) * 0.3,
+      );
+    },
+    { timeout: 5000 },
+    FULL_CIRCLE_TOLERANCE,
+  );
+
+  const gameplayState = await readBallTurretState(page);
+  assert(gameplayState.hasCanvas, `${config.name}: canvas ausente.`);
+  assert(
+    gameplayState.canvas?.width > 0 && gameplayState.canvas?.height > 0,
+    `${config.name}: canvas sem tamanho visível.`,
+  );
+  assert(
+    /fase|level/i.test(gameplayState.scoreHudText),
+    `${config.name}: HUD de fase não visível.`,
+  );
+  assert(
+    !gameplayState.bodyHasInternalCopy,
+    `${config.name}: cópia pública expõe detalhe técnico.`,
+  );
+  assert(
+    !gameplayState.bodyHasOldAimCopy,
+    `${config.name}: cópia pública ainda fala em mira/metralhadora.`,
+  );
+  assert(
+    gameplayState.probe.fullRingArcCount > 0,
+    `${config.name}: cama elástica/anel 360° não foi desenhado.`,
+  );
+  assert(
+    gameplayState.probe.brickDrawCount > 0 &&
+      gameplayState.probe.brickQuadrants.left &&
+      gameplayState.probe.brickQuadrants.right &&
+      gameplayState.probe.brickQuadrants.top &&
+      gameplayState.probe.brickQuadrants.bottom,
+    `${config.name}: blocos da Torreta não cobrem quatro quadrantes.`,
+  );
+  assertJoystickPlacement(config, gameplayState);
+
+  ensureParentDirectory(config.screenshotPath);
+  await page.screenshot({ path: config.screenshotPath, fullPage: true });
+
   await exerciseTrampoline(page);
+  const joystickExercised = await exerciseJoystick(page);
+  assert(
+    config.joystickPlacement === "hidden" || joystickExercised,
+    `${config.name}: joystick visível não respondeu ao exercício.`,
+  );
+  await new Promise((resolve) => setTimeout(resolve, 120));
+  const postExerciseState = await readBallTurretState(page);
+  assert(
+    !postExerciseState.bodyHasInternalCopy,
+    `${config.name}: cópia pública expõe detalhe técnico após controle.`,
+  );
+  assert(
+    !postExerciseState.bodyHasOldAimCopy,
+    `${config.name}: cópia pública ainda fala em mira/metralhadora após controle.`,
+  );
 
   const menuOpened = await clickButtonByPattern(
     page,
@@ -354,60 +535,14 @@ async function runViewport(page, baseUrl, config) {
     await page.screenshot({ path: menuScreenshotPath(), fullPage: true });
   }
 
-  await clickButtonByPattern(page, TURRET_BUTTON_PATTERN.source);
-  await page.waitForSelector("aside.settings-drawer", {
-    hidden: true,
-    timeout: 5000,
-  });
-  await new Promise((resolve) => setTimeout(resolve, 180));
-
-  const gameplayState = await readBallTurretState(page);
-  assert(gameplayState.hasCanvas, `${config.name}: canvas ausente.`);
-  assert(
-    gameplayState.canvas?.width > 0 && gameplayState.canvas?.height > 0,
-    `${config.name}: canvas sem tamanho visível.`,
-  );
-  assert(
-    /fase|level/i.test(gameplayState.scoreHudText),
-    `${config.name}: HUD de fase não visível.`,
-  );
-  assert(
-    !gameplayState.bodyHasInternalCopy,
-    `${config.name}: cópia pública expõe detalhe técnico.`,
-  );
-  assert(
-    !gameplayState.bodyHasOldAimCopy,
-    `${config.name}: cópia pública ainda fala em mira/metralhadora.`,
-  );
-  assert(
-    gameplayState.probe.fullRingArcCount > 0,
-    `${config.name}: cama elástica/anel 360° não foi desenhado.`,
-  );
-  assert(
-    gameplayState.probe.brickDrawCount > 0 &&
-      gameplayState.probe.brickQuadrants.left &&
-      gameplayState.probe.brickQuadrants.right &&
-      gameplayState.probe.brickQuadrants.top &&
-      gameplayState.probe.brickQuadrants.bottom,
-    `${config.name}: blocos da Torreta não cobrem quatro quadrantes.`,
-  );
-
-  ensureParentDirectory(config.screenshotPath);
-  await page.screenshot({ path: config.screenshotPath, fullPage: true });
-
-  await exerciseTrampoline(page);
-  await new Promise((resolve) => setTimeout(resolve, 120));
-  const postExerciseState = await readBallTurretState(page);
-  assert(
-    !postExerciseState.bodyHasInternalCopy,
-    `${config.name}: cópia pública expõe detalhe técnico após controle.`,
-  );
-  assert(
-    !postExerciseState.bodyHasOldAimCopy,
-    `${config.name}: cópia pública ainda fala em mira/metralhadora após controle.`,
-  );
-
-  return { name: config.name, menuState, gameplayState, postExerciseState };
+  return {
+    name: config.name,
+    joystickPlacement: config.joystickPlacement,
+    joystickExercised,
+    menuState,
+    gameplayState,
+    postExerciseState,
+  };
 }
 
 async function run() {
@@ -439,6 +574,7 @@ async function run() {
       menu: menuScreenshotPath(),
       desktop: desktopScreenshotPath(),
       mobile: mobileScreenshotPath(),
+      mobileLandscape: mobileLandscapeScreenshotPath(),
     },
   };
   ensureParentDirectory(reportPath());

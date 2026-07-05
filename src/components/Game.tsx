@@ -18,7 +18,11 @@ import {
 } from "../constants/appearance";
 import type { GameAudioSink } from "../constants/audio";
 import type { LevelTransitionPayload } from "../constants/game";
-import { GAME_MODE_CLASSIC, type GameMode } from "../constants/gameMode";
+import {
+  GAME_MODE_BALL_TURRET,
+  GAME_MODE_CLASSIC,
+  type GameMode,
+} from "../constants/gameMode";
 import type { ReactNode } from "react";
 
 interface GameProps {
@@ -64,11 +68,15 @@ const PERCENT_FACTOR = 100;
 const PADDLE_TOUCH_ZONE_TOP_OFFSET = "1in";
 const PADDLE_TOUCH_ZONE_HEIGHT = "3in";
 const PADDLE_TOUCH_ZONE_TEST_ID = "paddle-touch-zone";
+const BALL_TURRET_JOYSTICK_TEST_ID = "ball-turret-joystick";
+const BALL_TURRET_JOYSTICK_LABEL = "Controle da Torreta";
 const GAME_SURFACE_CLASS_NAME = "game-surface";
-const GAME_SURFACE_IMMERSIVE_CLASS_NAME =
-  "game-surface game-surface--immersive-landscape";
+const GAME_SURFACE_IMMERSIVE_CLASS_NAME = "game-surface--immersive-landscape";
+const GAME_SURFACE_BALL_TURRET_CLASS_NAME = "game-surface--ball-turret";
+const GAME_BOARD_INPUT_LAYOUT_CLASS_NAME = "game-board-input-layout";
 const GAME_BOARD_PLAYFIELD_CLASS_NAME = "game-board-playfield";
 const PADDLE_TOUCH_ZONE_CLASS_NAME = "game-paddle-touch-zone";
+const BALL_TURRET_JOYSTICK_CLASS_NAME = "game-turret-joystick";
 
 function readPixelValue(value: string): number {
   const parsedValue = Number.parseFloat(value);
@@ -135,6 +143,7 @@ export default function Game({
   const surfaceRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const paddleTouchZoneRef = useRef<HTMLDivElement>(null);
+  const ballTurretJoystickRef = useRef<HTMLDivElement>(null);
   const [canvasSize, setCanvasSize] = useState({
     width: CANVAS_WIDTH,
     height: CANVAS_HEIGHT,
@@ -143,6 +152,7 @@ export default function Game({
   const canvasSizeRef = useRef(canvasSize);
   const isLandscapeImmersiveRef = useRef(isLandscapeImmersive);
   const pendingBoardRectTargetRef = useRef<PendingBoardRectTarget | null>(null);
+  const isBallTurretMode = gameMode === GAME_MODE_BALL_TURRET;
   const paddleTouchZoneCenterPercent = useMemo(() => {
     const dimensions = calculateDynamicDimensions(
       canvasSize.width,
@@ -284,48 +294,69 @@ export default function Game({
     paused,
     gameMode,
     paddleTouchZoneRef,
+    ballTurretJoystickRef,
   );
   useColorDebug(canvasRef);
 
+  const surfaceClassName = [
+    GAME_SURFACE_CLASS_NAME,
+    isLandscapeImmersive ? GAME_SURFACE_IMMERSIVE_CLASS_NAME : "",
+    isBallTurretMode ? GAME_SURFACE_BALL_TURRET_CLASS_NAME : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <div
-      className={
-        isLandscapeImmersive
-          ? GAME_SURFACE_IMMERSIVE_CLASS_NAME
-          : GAME_SURFACE_CLASS_NAME
-      }
+      className={surfaceClassName}
       ref={surfaceRef}
     >
-      <div className="game-board-frame">
-        <div
-          className={GAME_BOARD_PLAYFIELD_CLASS_NAME}
-          style={{
-            width: `${canvasSize.width}px`,
-            maxWidth: "100%",
-          }}
-        >
-          <canvas
-            ref={canvasRef}
-            width={canvasSize.width}
-            height={canvasSize.height}
-            style={{
-              width: "100%",
-              height: "auto",
-              touchAction: TOUCH_ACTION_NONE,
-            }}
-          />
+      <div className={GAME_BOARD_INPUT_LAYOUT_CLASS_NAME}>
+        <div className="game-board-frame">
           <div
-            ref={paddleTouchZoneRef}
-            className={PADDLE_TOUCH_ZONE_CLASS_NAME}
-            data-testid={PADDLE_TOUCH_ZONE_TEST_ID}
-            aria-hidden="true"
+            className={GAME_BOARD_PLAYFIELD_CLASS_NAME}
             style={{
-              top: `calc(${paddleTouchZoneCenterPercent}${PERCENT_UNIT} - ${PADDLE_TOUCH_ZONE_TOP_OFFSET})`,
-              height: PADDLE_TOUCH_ZONE_HEIGHT,
-              transform: "none",
+              width: `${canvasSize.width}px`,
+              maxWidth: isBallTurretMode
+                ? "var(--bb-ball-turret-playfield-max-width, 100%)"
+                : "100%",
             }}
-          />
+          >
+            <canvas
+              ref={canvasRef}
+              width={canvasSize.width}
+              height={canvasSize.height}
+              style={{
+                width: "100%",
+                height: "auto",
+                touchAction: TOUCH_ACTION_NONE,
+              }}
+            />
+            <div
+              ref={paddleTouchZoneRef}
+              className={PADDLE_TOUCH_ZONE_CLASS_NAME}
+              data-testid={PADDLE_TOUCH_ZONE_TEST_ID}
+              aria-hidden="true"
+              style={{
+                top: `calc(${paddleTouchZoneCenterPercent}${PERCENT_UNIT} - ${PADDLE_TOUCH_ZONE_TOP_OFFSET})`,
+                height: PADDLE_TOUCH_ZONE_HEIGHT,
+                transform: "none",
+              }}
+            />
+          </div>
         </div>
+        {isBallTurretMode && (
+          <div
+            ref={ballTurretJoystickRef}
+            className={BALL_TURRET_JOYSTICK_CLASS_NAME}
+            data-testid={BALL_TURRET_JOYSTICK_TEST_ID}
+            aria-label={BALL_TURRET_JOYSTICK_LABEL}
+          >
+            <span className="game-turret-joystick-pad" aria-hidden="true">
+              <span className="game-turret-joystick-knob" />
+            </span>
+          </div>
+        )}
       </div>
       {boardControls && (
         <div

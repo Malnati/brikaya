@@ -9,7 +9,11 @@ import {
   type ImageSetId,
 } from "../constants/appearance";
 import type { GameAudioSink } from "../constants/audio";
-import { GAME_MODE_CLASSIC, type GameMode } from "../constants/gameMode";
+import {
+  GAME_MODE_BALL_TURRET,
+  GAME_MODE_CLASSIC,
+  type GameMode,
+} from "../constants/gameMode";
 
 interface CanvasSize {
   width: number;
@@ -29,6 +33,14 @@ const TOUCH_MOVE_EVENT_NAME = "touchmove";
 const TOUCH_END_EVENT_NAME = "touchend";
 const TOUCH_CANCEL_EVENT_NAME = "touchcancel";
 const TOUCH_LISTENER_OPTIONS = { passive: false } as const;
+const POINTER_DOWN_EVENT_NAME = "pointerdown";
+const POINTER_MOVE_EVENT_NAME = "pointermove";
+const POINTER_UP_EVENT_NAME = "pointerup";
+const POINTER_CANCEL_EVENT_NAME = "pointercancel";
+const JOYSTICK_VECTOR_X_CSS_VAR = "--bb-turret-joystick-x";
+const JOYSTICK_VECTOR_Y_CSS_VAR = "--bb-turret-joystick-y";
+const JOYSTICK_DEADZONE = 0.15;
+const JOYSTICK_DEFAULT_VECTOR = "0";
 
 function readTouchClientPoint(event: TouchEvent) {
   const touch = event.touches[0] ?? event.changedTouches[0] ?? null;
@@ -36,6 +48,51 @@ function readTouchClientPoint(event: TouchEvent) {
   if (!touch) return null;
 
   return { x: touch.clientX, y: touch.clientY };
+}
+
+function clampJoystickAxis(value: number) {
+  return Math.max(-1, Math.min(1, value));
+}
+
+function setJoystickVisualVector(
+  joystick: HTMLElement,
+  vectorX: number,
+  vectorY: number,
+) {
+  joystick.style.setProperty(JOYSTICK_VECTOR_X_CSS_VAR, String(vectorX));
+  joystick.style.setProperty(JOYSTICK_VECTOR_Y_CSS_VAR, String(vectorY));
+}
+
+function resetJoystickVisualVector(joystick: HTMLElement) {
+  joystick.style.setProperty(
+    JOYSTICK_VECTOR_X_CSS_VAR,
+    JOYSTICK_DEFAULT_VECTOR,
+  );
+  joystick.style.setProperty(
+    JOYSTICK_VECTOR_Y_CSS_VAR,
+    JOYSTICK_DEFAULT_VECTOR,
+  );
+}
+
+function readJoystickVector(event: PointerEvent, joystick: HTMLElement) {
+  const rect = joystick.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  const radius = Math.max(1, Math.min(rect.width, rect.height) / 2);
+  const rawX = (event.clientX - centerX) / radius;
+  const rawY = (event.clientY - centerY) / radius;
+  const magnitude = Math.hypot(rawX, rawY);
+
+  if (!Number.isFinite(magnitude) || magnitude < JOYSTICK_DEADZONE) {
+    return null;
+  }
+
+  return {
+    engineX: rawX / magnitude,
+    engineY: rawY / magnitude,
+    visualX: clampJoystickAxis(rawX),
+    visualY: clampJoystickAxis(rawY),
+  };
 }
 
 export function useGameLoop(
@@ -53,6 +110,7 @@ export function useGameLoop(
   paused = false,
   gameMode: GameMode = GAME_MODE_CLASSIC,
   paddleTouchZoneRef?: RefObject<HTMLElement>,
+  ballTurretJoystickRef?: RefObject<HTMLElement>,
 ) {
   const engineRef = useRef<GameEngine | null>(null);
   const callbacksRef = useRef<GameLoopCallbacks>({
@@ -195,4 +253,62 @@ export function useGameLoop(
       );
     };
   }, [paddleTouchZoneRef]);
+
+  useEffect(() => {
+    const joystick = ballTurretJoystickRef?.current;
+    if (!joystick || gameMode !== GAME_MODE_BALL_TURRET) return undefined;
+
+    let isDraggingJoystick = false;
+
+    const applyJoystickVector = (event: PointerEvent) => {
+      const vector = readJoystickVector(event, joystick);
+      if (!vector) {
+        resetJoystickVisualVector(joystick);
+        return;
+      }
+
+      setJoystickVisualVector(joystick, vector.visualX, vector.visualY);
+      engineRef.current?.setBallTurretControlVector(
+        vector.engineX,
+        vector.engineY,
+      );
+    };
+
+    const handlePointerDown = (event: PointerEvent) => {
+      isDraggingJoystick = true;
+      event.preventDefault();
+      joystick.setPointerCapture?.(event.pointerId);
+      applyJoystickVector(event);
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (!isDraggingJoystick) return;
+
+      event.preventDefault();
+      applyJoystickVector(event);
+    };
+
+    const handlePointerEnd = (event: PointerEvent) => {
+      if (!isDraggingJoystick) return;
+
+      isDraggingJoystick = false;
+      event.preventDefault();
+      joystick.releasePointerCapture?.(event.pointerId);
+      resetJoystickVisualVector(joystick);
+    };
+
+    resetJoystickVisualVector(joystick);
+    joystick.addEventListener(POINTER_DOWN_EVENT_NAME, handlePointerDown);
+    joystick.addEventListener(POINTER_MOVE_EVENT_NAME, handlePointerMove);
+    joystick.addEventListener(POINTER_UP_EVENT_NAME, handlePointerEnd);
+    joystick.addEventListener(POINTER_CANCEL_EVENT_NAME, handlePointerEnd);
+
+    return () => {
+      joystick.removeEventListener(POINTER_DOWN_EVENT_NAME, handlePointerDown);
+      joystick.removeEventListener(POINTER_MOVE_EVENT_NAME, handlePointerMove);
+      joystick.removeEventListener(POINTER_UP_EVENT_NAME, handlePointerEnd);
+      joystick.removeEventListener(POINTER_CANCEL_EVENT_NAME, handlePointerEnd);
+      resetJoystickVisualVector(joystick);
+    };
+  }, [ballTurretJoystickRef, gameMode]);
 }
