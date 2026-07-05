@@ -40,7 +40,6 @@ const POINTER_CANCEL_EVENT_NAME = "pointercancel";
 const TRACKBALL_VECTOR_X_CSS_VAR = "--bb-turret-trackball-x";
 const TRACKBALL_VECTOR_Y_CSS_VAR = "--bb-turret-trackball-y";
 const TRACKBALL_ACTIVE_CSS_VAR = "--bb-turret-trackball-active";
-const JOYSTICK_DEADZONE = 0.15;
 const JOYSTICK_DEFAULT_VECTOR = "0";
 const JOYSTICK_ACTIVE_VECTOR = "1";
 
@@ -52,8 +51,8 @@ function readTouchClientPoint(event: TouchEvent) {
   return { x: touch.clientX, y: touch.clientY };
 }
 
-function clampJoystickAxis(value: number) {
-  return Math.max(-1, Math.min(1, value));
+function clampUnit(value: number) {
+  return Math.max(0, Math.min(1, value));
 }
 
 function setTrackballVisualVector(
@@ -74,31 +73,40 @@ function resetTrackballVisualVector(joystick: HTMLElement) {
   setTrackballVisualVector(joystick, 0, 0, false);
 }
 
-function readTrackballInput(
+function readMirroredTrackballInput(
   clientX: number,
   clientY: number,
   joystick: HTMLElement,
+  canvas: HTMLCanvasElement,
 ) {
-  const rect = joystick.getBoundingClientRect();
-  const centerX = rect.left + rect.width / 2;
-  const centerY = rect.top + rect.height / 2;
-  const radius = Math.max(1, Math.min(rect.width, rect.height) / 2);
-  const rawX = (clientX - centerX) / radius;
-  const rawY = (clientY - centerY) / radius;
-  const magnitude = Math.hypot(rawX, rawY);
+  const joystickRect = joystick.getBoundingClientRect();
+  const canvasRect = canvas.getBoundingClientRect();
 
-  if (!Number.isFinite(magnitude)) {
+  if (
+    !Number.isFinite(joystickRect.width) ||
+    !Number.isFinite(joystickRect.height) ||
+    joystickRect.width <= 0 ||
+    joystickRect.height <= 0 ||
+    !Number.isFinite(canvasRect.left) ||
+    !Number.isFinite(canvasRect.top) ||
+    !Number.isFinite(canvasRect.width) ||
+    !Number.isFinite(canvasRect.height)
+  ) {
     return null;
   }
 
-  const visualX = clampJoystickAxis(magnitude > 1 ? rawX / magnitude : rawX);
-  const visualY = clampJoystickAxis(magnitude > 1 ? rawY / magnitude : rawY);
-  const turnInput = Math.abs(visualX) < JOYSTICK_DEADZONE ? 0 : visualX;
+  const normalizedX = clampUnit(
+    (clientX - joystickRect.left) / joystickRect.width,
+  );
+  const normalizedY = clampUnit(
+    (clientY - joystickRect.top) / joystickRect.height,
+  );
 
   return {
-    turnInput,
-    visualX,
-    visualY,
+    mappedClientX: canvasRect.left + normalizedX * canvasRect.width,
+    mappedClientY: canvasRect.top + normalizedY * canvasRect.height,
+    visualX: normalizedX * 2 - 1,
+    visualY: normalizedY * 2 - 1,
   };
 }
 
@@ -268,16 +276,41 @@ export function useGameLoop(
     let isDraggingJoystick = false;
     let activeInputType: "pointer" | "touch" | null = null;
 
-    const applyJoystickInput = (clientX: number, clientY: number) => {
-      const input = readTrackballInput(clientX, clientY, joystick);
+    const applyJoystickInput = (
+      clientX: number,
+      clientY: number,
+      phase: "start" | "move",
+    ) => {
+      const canvas = canvasRef.current;
+      if (!canvas) {
+        resetTrackballVisualVector(joystick);
+        return;
+      }
+
+      const input = readMirroredTrackballInput(
+        clientX,
+        clientY,
+        joystick,
+        canvas,
+      );
       if (!input) {
         resetTrackballVisualVector(joystick);
-        engineRef.current?.setBallTurretJoystickTurn(0);
         return;
       }
 
       setTrackballVisualVector(joystick, input.visualX, input.visualY, true);
-      engineRef.current?.setBallTurretJoystickTurn(input.turnInput);
+      if (phase === "start") {
+        engineRef.current?.startPaddleDrag(
+          input.mappedClientX,
+          input.mappedClientY,
+        );
+        return;
+      }
+
+      engineRef.current?.movePaddleDrag(
+        input.mappedClientX,
+        input.mappedClientY,
+      );
     };
 
     const safeSetPointerCapture = (pointerId: number) => {
@@ -296,11 +329,14 @@ export function useGameLoop(
       }
     };
 
-    const resetJoystickInput = () => {
+    const resetJoystickInput = (shouldEndDrag: boolean) => {
+      const wasDraggingJoystick = isDraggingJoystick;
       isDraggingJoystick = false;
       activeInputType = null;
       resetTrackballVisualVector(joystick);
-      engineRef.current?.setBallTurretJoystickTurn(0);
+      if (shouldEndDrag && wasDraggingJoystick) {
+        engineRef.current?.endPaddleDrag();
+      }
     };
 
     const handlePointerDown = (event: PointerEvent) => {
@@ -308,14 +344,14 @@ export function useGameLoop(
       activeInputType = "pointer";
       event.preventDefault();
       safeSetPointerCapture(event.pointerId);
-      applyJoystickInput(event.clientX, event.clientY);
+      applyJoystickInput(event.clientX, event.clientY, "start");
     };
 
     const handlePointerMove = (event: PointerEvent) => {
       if (!isDraggingJoystick || activeInputType !== "pointer") return;
 
       event.preventDefault();
-      applyJoystickInput(event.clientX, event.clientY);
+      applyJoystickInput(event.clientX, event.clientY, "move");
     };
 
     const handlePointerEnd = (event: PointerEvent) => {
@@ -323,7 +359,7 @@ export function useGameLoop(
 
       event.preventDefault();
       safeReleasePointerCapture(event.pointerId);
-      resetJoystickInput();
+      resetJoystickInput(true);
     };
 
     const handleTouchStart = (event: TouchEvent) => {
@@ -333,7 +369,7 @@ export function useGameLoop(
       isDraggingJoystick = true;
       activeInputType = "touch";
       event.preventDefault();
-      applyJoystickInput(point.x, point.y);
+      applyJoystickInput(point.x, point.y, "start");
     };
 
     const handleTouchMove = (event: TouchEvent) => {
@@ -342,14 +378,14 @@ export function useGameLoop(
       if (!point) return;
 
       event.preventDefault();
-      applyJoystickInput(point.x, point.y);
+      applyJoystickInput(point.x, point.y, "move");
     };
 
     const handleTouchEnd = (event: TouchEvent) => {
       if (!isDraggingJoystick || activeInputType !== "touch") return;
 
       event.preventDefault();
-      resetJoystickInput();
+      resetJoystickInput(true);
     };
 
     resetTrackballVisualVector(joystick);
@@ -387,7 +423,7 @@ export function useGameLoop(
       joystick.removeEventListener(TOUCH_MOVE_EVENT_NAME, handleTouchMove);
       joystick.removeEventListener(TOUCH_END_EVENT_NAME, handleTouchEnd);
       joystick.removeEventListener(TOUCH_CANCEL_EVENT_NAME, handleTouchEnd);
-      resetJoystickInput();
+      resetJoystickInput(false);
     };
-  }, [ballTurretJoystickRef, gameMode]);
+  }, [ballTurretJoystickRef, canvasRef, gameMode]);
 }

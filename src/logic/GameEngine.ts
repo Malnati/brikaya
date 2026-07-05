@@ -113,10 +113,7 @@ const BALL_TURRET_BRICK_COLUMN_MULTIPLIER = 2;
 const BALL_TURRET_SPAWN_BORDER_INSET = 1;
 const BALL_TURRET_BOTTOM_SPAWN_ANGLE = Math.PI / 2;
 const BALL_TURRET_POWER_UP_FALLBACK_ANGLE = -Math.PI / 2;
-const BALL_TURRET_JOYSTICK_TURN_RADIANS_PER_SECOND = Math.PI;
-const BALL_TURRET_JOYSTICK_TURN_DEADZONE = 0.05;
 const MAX_FRAME_DELTA_MS = 80;
-const MILLISECONDS_PER_SECOND = 1000;
 const WIDE_PADDLE_SCALE = 1.45;
 const SLOW_BALL_MULTIPLIER = 0.75;
 const MULTIBALL_ANGLE_OFFSET = 0.42;
@@ -191,14 +188,6 @@ const NOOP_AUDIO_SINK: GameAudioSink = {
   setHighIntensity: () => {},
 };
 
-function normalizeSignedAngle(angle: number) {
-  return (
-    ((((angle + Math.PI) % FULL_CIRCLE_RADIANS) + FULL_CIRCLE_RADIANS) %
-      FULL_CIRCLE_RADIANS) -
-    Math.PI
-  );
-}
-
 function readFrameTimestamp() {
   return globalThis.performance?.now?.() ?? Date.now();
 }
@@ -268,7 +257,6 @@ export class GameEngine {
   private destroyedBricksSincePowerUp = 0;
   private activePowerUp: PowerUp | null = null;
   private nextPowerUpIndex = 0;
-  private ballTurretJoystickTurn = 0;
   private lastFrameTimestamp = 0;
   private powerUpEffectTimers: ReturnType<typeof setTimeout>[] = [];
   private laserFanSpawnsThisLevel = 0;
@@ -1736,43 +1724,6 @@ export class GameEngine {
     this.isTouching = false;
   }
 
-  public setBallTurretJoystickTurn(turnInput: number) {
-    if (!this.isBallTurretMode() || !Number.isFinite(turnInput)) {
-      this.ballTurretJoystickTurn = 0;
-      return;
-    }
-
-    const clampedTurn = Math.max(-1, Math.min(1, turnInput));
-    this.ballTurretJoystickTurn =
-      Math.abs(clampedTurn) < BALL_TURRET_JOYSTICK_TURN_DEADZONE
-        ? 0
-        : clampedTurn;
-  }
-
-  private applyBallTurretJoystickTurn(deltaMs: number) {
-    if (!this.isBallTurretMode()) return;
-    if (Math.abs(this.ballTurretJoystickTurn) === 0) return;
-    if (!Number.isFinite(deltaMs) || deltaMs <= 0) return;
-
-    const radialPosition = this.paddle.position.radial;
-    if (!radialPosition) return;
-
-    const boundedDeltaSeconds = deltaMs / MILLISECONDS_PER_SECOND;
-    const nextAngle = normalizeSignedAngle(
-      radialPosition.centerAngle +
-        -this.ballTurretJoystickTurn *
-          BALL_TURRET_JOYSTICK_TURN_RADIANS_PER_SECOND *
-          boundedDeltaSeconds,
-    );
-
-    this.paddle.setPositionFromPoint(
-      this.radialGeometry.centerX +
-        Math.cos(nextAngle) * this.radialGeometry.radius,
-      this.radialGeometry.centerY +
-        Math.sin(nextAngle) * this.radialGeometry.radius,
-    );
-  }
-
   private movePaddleFromClientPoint(clientX: number, clientY?: number) {
     const rect = this.canvas.getBoundingClientRect();
     const touchX = clientX - rect.left;
@@ -1866,7 +1817,6 @@ export class GameEngine {
     this.isStopped = true;
     this.isPaused = false;
     this.isTouching = false;
-    this.ballTurretJoystickTurn = 0;
     this.lastFrameTimestamp = 0;
     this.clearPowerUpEffects();
     this.clearLaserFanEffect();
@@ -1884,7 +1834,6 @@ export class GameEngine {
 
     if (paused) {
       this.isTouching = false;
-      this.ballTurretJoystickTurn = 0;
       cancelAnimationFrame(this.animationFrame);
       return;
     }
@@ -1911,7 +1860,7 @@ export class GameEngine {
 
   private loop = async (timestamp = readFrameTimestamp()) => {
     if (this.isStopped || this.isPaused) return;
-    const deltaMs = this.calculateFrameDeltaMs(timestamp);
+    this.calculateFrameDeltaMs(timestamp);
     this.ctx.clearRect(0, 0, this.canvasSize.width, this.canvasSize.height);
 
     if (!this.assetsLoaded) {
@@ -1951,7 +1900,6 @@ export class GameEngine {
         this.drawGameBackdrop();
         this.bricks.draw(this.ctx);
         const isLaserFanAnimating = this.isLaserFanEffectActive();
-        this.applyBallTurretJoystickTurn(deltaMs);
         this.paddle.update();
         if (!isLaserFanAnimating) {
           this.updatePowerUp();
