@@ -1,0 +1,1188 @@
+{
+  "levelTargetUrl": "https://brikaya.com/?qaScenario=single-brick-phase-clear",
+  "ripTargetUrl": "https://brikaya.com/?qaScenario=cinematic-rip",
+  "countdownDurationMs": 1784,
+  "ripDurationMs": 1752,
+  "countdownState": {
+    "text": "3",
+    "type": "countdown",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "right": 402,
+      "bottom": 874,
+      "centerX": 201,
+      "centerY": 437
+    },
+    "stageRect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "right": 402,
+      "bottom": 874,
+      "centerX": 201,
+      "centerY": 437
+    },
+    "canvasRect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 402,
+      "right": 402,
+      "bottom": 402,
+      "centerX": 201,
+      "centerY": 201
+    },
+    "contentRect": {
+      "x": 24.125,
+      "y": 260.125,
+      "width": 353.75,
+      "height": 353.75,
+      "right": 377.875,
+      "bottom": 613.875,
+      "centerX": 201,
+      "centerY": 437
+    },
+    "compositionRect": {
+      "x": 24.125,
+      "y": 260.125,
+      "width": 353.75,
+      "height": 353.75,
+      "right": 377.875,
+      "bottom": 613.875,
+      "centerX": 201,
+      "centerY": 437
+    },
+    "titleRect": null,
+    "detailRect": null,
+    "viewport": {
+      "width": 402,
+      "height": 874
+    },
+    "visualViewport": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "centerX": 201,
+      "centerY": 437,
+      "right": 402,
+      "bottom": 874
+    },
+    "usableVisualViewport": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "centerX": 201,
+      "centerY": 437,
+      "right": 402,
+      "bottom": 874,
+      "browserChromeBottomInset": 0
+    },
+    "hasBodyScroll": false,
+    "media": [
+      {
+        "id": "countdown-circle",
+        "src": "/assets/visual/vfx/vfx-countdown-circle-overlay.svg",
+        "ariaHidden": "true",
+        "alt": "",
+        "rect": {
+          "x": 62.183998107910156,
+          "y": 298.1839904785156,
+          "width": 277.63201904296875,
+          "height": 277.6320495605469,
+          "right": 339.8160171508789,
+          "bottom": 575.8160400390625,
+          "centerX": 201.00000762939453,
+          "centerY": 437.00001525878906
+        }
+      },
+      {
+        "id": "countdown-spark",
+        "src": "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
+        "ariaHidden": "true",
+        "alt": "",
+        "rect": {
+          "x": 136.2827911376953,
+          "y": 372.28277587890625,
+          "width": 129.43443298339844,
+          "height": 129.4344482421875,
+          "right": 265.71722412109375,
+          "bottom": 501.71722412109375,
+          "centerX": 201.00000762939453,
+          "centerY": 437
+        }
+      }
+    ]
+  },
+  "levelUpState": {
+    "text": "Subindo de nívelFase 2Velocidade 1.12×",
+    "type": "levelUp",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "right": 402,
+      "bottom": 874,
+      "centerX": 201,
+      "centerY": 437
+    },
+    "stageRect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 402,
+      "right": 402,
+      "bottom": 402,
+      "centerX": 201,
+      "centerY": 201
+    },
+    "canvasRect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 402,
+      "right": 402,
+      "bottom": 402,
+      "centerX": 201,
+      "centerY": 201
+    },
+    "contentRect": {
+      "x": 30.625,
+      "y": 117.3125,
+      "width": 340.734375,
+      "height": 167.359375,
+      "right": 371.359375,
+      "bottom": 284.671875,
+      "centerX": 200.9921875,
+      "centerY": 200.9921875
+    },
+    "compositionRect": null,
+    "titleRect": {
+      "x": 30.625,
+      "y": 160.3125,
+      "width": 340.734375,
+      "height": 81.359375,
+      "right": 371.359375,
+      "bottom": 241.671875,
+      "centerX": 200.9921875,
+      "centerY": 200.9921875
+    },
+    "detailRect": {
+      "x": 123.59375,
+      "y": 249.671875,
+      "width": 154.796875,
+      "height": 35,
+      "right": 278.390625,
+      "bottom": 284.671875,
+      "centerX": 200.9921875,
+      "centerY": 267.171875
+    },
+    "viewport": {
+      "width": 402,
+      "height": 874
+    },
+    "visualViewport": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "centerX": 201,
+      "centerY": 437,
+      "right": 402,
+      "bottom": 874
+    },
+    "usableVisualViewport": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "centerX": 201,
+      "centerY": 437,
+      "right": 402,
+      "bottom": 874,
+      "browserChromeBottomInset": 0
+    },
+    "hasBodyScroll": false,
+    "media": [
+      {
+        "id": "level-up-twirl",
+        "src": "/assets/visual/vfx/vfx-level-up-twirl-overlay.svg",
+        "ariaHidden": "true",
+        "alt": "",
+        "rect": {
+          "x": 45.26523971557617,
+          "y": 45.26523971557617,
+          "width": 311.46954345703125,
+          "height": 311.46954345703125,
+          "right": 356.7347831726074,
+          "bottom": 356.7347831726074,
+          "centerX": 201.0000114440918,
+          "centerY": 201.0000114440918
+        }
+      },
+      {
+        "id": "level-up-star",
+        "src": "/assets/visual/vfx/vfx-level-up-star-overlay.svg",
+        "ariaHidden": "true",
+        "alt": "",
+        "rect": {
+          "x": 129.12905883789062,
+          "y": 129.12905883789062,
+          "width": 143.74188232421875,
+          "height": 143.74188232421875,
+          "right": 272.8709411621094,
+          "bottom": 272.8709411621094,
+          "centerX": 201,
+          "centerY": 201
+        }
+      }
+    ]
+  },
+  "ripState": {
+    "text": "RIPRecomeçando...",
+    "type": "rip",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "right": 402,
+      "bottom": 874,
+      "centerX": 201,
+      "centerY": 437
+    },
+    "stageRect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 770,
+      "right": 402,
+      "bottom": 770,
+      "centerX": 201,
+      "centerY": 385
+    },
+    "canvasRect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 402,
+      "right": 402,
+      "bottom": 402,
+      "centerX": 201,
+      "centerY": 201
+    },
+    "contentRect": {
+      "x": 115.8125,
+      "y": 322.8125,
+      "width": 170.359375,
+      "height": 124.359375,
+      "right": 286.171875,
+      "bottom": 447.171875,
+      "centerX": 200.9921875,
+      "centerY": 384.9921875
+    },
+    "compositionRect": {
+      "x": 16,
+      "y": 16,
+      "width": 370,
+      "height": 738,
+      "right": 386,
+      "bottom": 754,
+      "centerX": 201,
+      "centerY": 385
+    },
+    "titleRect": {
+      "x": 115.8125,
+      "y": 322.8125,
+      "width": 170.359375,
+      "height": 81.359375,
+      "right": 286.171875,
+      "bottom": 404.171875,
+      "centerX": 200.9921875,
+      "centerY": 363.4921875
+    },
+    "detailRect": {
+      "x": 125.484375,
+      "y": 412.171875,
+      "width": 151,
+      "height": 35,
+      "right": 276.484375,
+      "bottom": 447.171875,
+      "centerX": 200.984375,
+      "centerY": 429.671875
+    },
+    "viewport": {
+      "width": 402,
+      "height": 874
+    },
+    "visualViewport": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "centerX": 201,
+      "centerY": 437,
+      "right": 402,
+      "bottom": 874
+    },
+    "usableVisualViewport": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 770,
+      "centerX": 201,
+      "centerY": 385,
+      "right": 402,
+      "bottom": 770,
+      "browserChromeBottomInset": 104
+    },
+    "hasBodyScroll": false,
+    "media": [
+      {
+        "id": "rip-smoke",
+        "src": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+        "ariaHidden": "true",
+        "alt": "",
+        "rect": {
+          "x": 47.27207946777344,
+          "y": 220.6852264404297,
+          "width": 307.455810546875,
+          "height": 328.6295166015625,
+          "right": 354.72789001464844,
+          "bottom": 549.3147430419922,
+          "centerX": 200.99998474121094,
+          "centerY": 384.99998474121094
+        }
+      }
+    ]
+  },
+  "ripResults": [
+    {
+      "viewport": {
+        "name": "iphone-17-default",
+        "label": "iPhone 17 default portrait",
+        "models": [
+          "iPhone 17"
+        ],
+        "category": "mobile",
+        "orientation": "portrait",
+        "width": 402,
+        "height": 874,
+        "deviceScaleFactor": 3,
+        "isMobile": true,
+        "hasTouch": true,
+        "priority": "gameplay",
+        "smokeOverlays": true,
+        "screenshotRole": "mobile-default"
+      },
+      "viewportName": "iphone-17-default",
+      "ripState": {
+        "text": "RIPRecomeçando...",
+        "type": "rip",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 874,
+          "right": 402,
+          "bottom": 874,
+          "centerX": 201,
+          "centerY": 437
+        },
+        "stageRect": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 770,
+          "right": 402,
+          "bottom": 770,
+          "centerX": 201,
+          "centerY": 385
+        },
+        "canvasRect": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 402,
+          "right": 402,
+          "bottom": 402,
+          "centerX": 201,
+          "centerY": 201
+        },
+        "contentRect": {
+          "x": 115.8125,
+          "y": 322.8125,
+          "width": 170.359375,
+          "height": 124.359375,
+          "right": 286.171875,
+          "bottom": 447.171875,
+          "centerX": 200.9921875,
+          "centerY": 384.9921875
+        },
+        "compositionRect": {
+          "x": 16,
+          "y": 16,
+          "width": 370,
+          "height": 738,
+          "right": 386,
+          "bottom": 754,
+          "centerX": 201,
+          "centerY": 385
+        },
+        "titleRect": {
+          "x": 115.8125,
+          "y": 322.8125,
+          "width": 170.359375,
+          "height": 81.359375,
+          "right": 286.171875,
+          "bottom": 404.171875,
+          "centerX": 200.9921875,
+          "centerY": 363.4921875
+        },
+        "detailRect": {
+          "x": 125.484375,
+          "y": 412.171875,
+          "width": 151,
+          "height": 35,
+          "right": 276.484375,
+          "bottom": 447.171875,
+          "centerX": 200.984375,
+          "centerY": 429.671875
+        },
+        "viewport": {
+          "width": 402,
+          "height": 874
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 874,
+          "centerX": 201,
+          "centerY": 437,
+          "right": 402,
+          "bottom": 874
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 770,
+          "centerX": 201,
+          "centerY": 385,
+          "right": 402,
+          "bottom": 770,
+          "browserChromeBottomInset": 104
+        },
+        "hasBodyScroll": false,
+        "media": [
+          {
+            "id": "rip-smoke",
+            "src": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+            "ariaHidden": "true",
+            "alt": "",
+            "rect": {
+              "x": 47.27207946777344,
+              "y": 220.6852264404297,
+              "width": 307.455810546875,
+              "height": 328.6295166015625,
+              "right": 354.72789001464844,
+              "bottom": 549.3147430419922,
+              "centerX": 200.99998474121094,
+              "centerY": 384.99998474121094
+            }
+          }
+        ]
+      },
+      "ripDurationMs": 1752,
+      "ripAfterTimeoutState": {
+        "text": "",
+        "type": "",
+        "rect": null,
+        "stageRect": null,
+        "canvasRect": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 402,
+          "right": 402,
+          "bottom": 402,
+          "centerX": 201,
+          "centerY": 201
+        },
+        "contentRect": null,
+        "compositionRect": null,
+        "titleRect": null,
+        "detailRect": null,
+        "viewport": {
+          "width": 402,
+          "height": 874
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 874,
+          "centerX": 201,
+          "centerY": 437,
+          "right": 402,
+          "bottom": 874
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 770,
+          "centerX": 201,
+          "centerY": 385,
+          "right": 402,
+          "bottom": 770,
+          "browserChromeBottomInset": 104
+        },
+        "hasBodyScroll": false,
+        "media": []
+      },
+      "countdownAfterRip": false,
+      "ripAudioIds": [
+        "bgm-gameplay-loop-main",
+        "bgm-menu-loop-main",
+        "sfx-ball-lost",
+        "sfx-game-over",
+        "sfx-game-start",
+        "sfx-offline-ready",
+        "sfx-score-tick"
+      ],
+      "ripScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-rip.png"
+    },
+    {
+      "viewport": {
+        "name": "iphone-17-default-landscape",
+        "label": "iPhone 17 default landscape",
+        "models": [
+          "iPhone 17"
+        ],
+        "category": "mobile",
+        "orientation": "landscape",
+        "width": 874,
+        "height": 402,
+        "deviceScaleFactor": 3,
+        "isMobile": true,
+        "hasTouch": true,
+        "priority": "gameplay",
+        "smokeOverlays": false,
+        "screenshotRole": "landscape-default"
+      },
+      "viewportName": "iphone-17-default-landscape",
+      "ripState": {
+        "text": "RIPRecomeçando...",
+        "type": "rip",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "right": 874,
+          "bottom": 402,
+          "centerX": 437,
+          "centerY": 201
+        },
+        "stageRect": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "right": 874,
+          "bottom": 402,
+          "centerX": 437,
+          "centerY": 201
+        },
+        "canvasRect": {
+          "x": 6,
+          "y": 4,
+          "width": 862,
+          "height": 394,
+          "right": 868,
+          "bottom": 398,
+          "centerX": 437,
+          "centerY": 201
+        },
+        "contentRect": {
+          "x": 252.078125,
+          "y": 88.1875,
+          "width": 369.828125,
+          "height": 225.625,
+          "right": 621.90625,
+          "bottom": 313.8125,
+          "centerX": 436.9921875,
+          "centerY": 201
+        },
+        "compositionRect": {
+          "x": 57,
+          "y": 16,
+          "width": 760,
+          "height": 370,
+          "right": 817,
+          "bottom": 386,
+          "centerX": 437,
+          "centerY": 201
+        },
+        "titleRect": {
+          "x": 252.078125,
+          "y": 88.1875,
+          "width": 369.828125,
+          "height": 176.625,
+          "right": 621.90625,
+          "bottom": 264.8125,
+          "centerX": 436.9921875,
+          "centerY": 176.5
+        },
+        "detailRect": {
+          "x": 344.390625,
+          "y": 272.8125,
+          "width": 185.1875,
+          "height": 41,
+          "right": 529.578125,
+          "bottom": 313.8125,
+          "centerX": 436.984375,
+          "centerY": 293.3125
+        },
+        "viewport": {
+          "width": 874,
+          "height": 402
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "centerX": 437,
+          "centerY": 201,
+          "right": 874,
+          "bottom": 402
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "centerX": 437,
+          "centerY": 201,
+          "right": 874,
+          "bottom": 402,
+          "browserChromeBottomInset": 0
+        },
+        "hasBodyScroll": false,
+        "media": [
+          {
+            "id": "rip-smoke",
+            "src": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+            "ariaHidden": "true",
+            "alt": "",
+            "rect": {
+              "x": 270.14703369140625,
+              "y": 48.27214050292969,
+              "width": 333.7059326171875,
+              "height": 305.4556884765625,
+              "right": 603.8529663085938,
+              "bottom": 353.7278289794922,
+              "centerX": 437,
+              "centerY": 200.99998474121094
+            }
+          }
+        ]
+      },
+      "ripDurationMs": 1785,
+      "ripAfterTimeoutState": {
+        "text": "",
+        "type": "",
+        "rect": null,
+        "stageRect": null,
+        "canvasRect": {
+          "x": 6,
+          "y": 4,
+          "width": 862,
+          "height": 394,
+          "right": 868,
+          "bottom": 398,
+          "centerX": 437,
+          "centerY": 201
+        },
+        "contentRect": null,
+        "compositionRect": null,
+        "titleRect": null,
+        "detailRect": null,
+        "viewport": {
+          "width": 874,
+          "height": 402
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "centerX": 437,
+          "centerY": 201,
+          "right": 874,
+          "bottom": 402
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "centerX": 437,
+          "centerY": 201,
+          "right": 874,
+          "bottom": 402,
+          "browserChromeBottomInset": 0
+        },
+        "hasBodyScroll": false,
+        "media": []
+      },
+      "countdownAfterRip": false,
+      "ripAudioIds": [
+        "bgm-gameplay-loop-main",
+        "bgm-menu-loop-main",
+        "sfx-ball-lost",
+        "sfx-game-over",
+        "sfx-game-start",
+        "sfx-offline-ready",
+        "sfx-score-tick"
+      ],
+      "ripScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-rip-iphone-land.png"
+    },
+    {
+      "viewport": {
+        "name": "ipad-11-a16-air-default",
+        "label": "iPad 11/Air 11 default portrait",
+        "models": [
+          "iPad 11-inch (A16)",
+          "iPad Air 11-inch (M2/M3)"
+        ],
+        "category": "tablet",
+        "orientation": "portrait",
+        "width": 820,
+        "height": 1180,
+        "deviceScaleFactor": 2,
+        "isMobile": true,
+        "hasTouch": true,
+        "priority": "gameplay",
+        "smokeOverlays": false,
+        "screenshotRole": "tablet-default"
+      },
+      "viewportName": "ipad-11-a16-air-default",
+      "ripState": {
+        "text": "RIPRecomeçando...",
+        "type": "rip",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 820,
+          "height": 1180,
+          "right": 820,
+          "bottom": 1180,
+          "centerX": 410,
+          "centerY": 590
+        },
+        "stageRect": {
+          "x": 0,
+          "y": 0,
+          "width": 820,
+          "height": 1180,
+          "right": 820,
+          "bottom": 1180,
+          "centerX": 410,
+          "centerY": 590
+        },
+        "canvasRect": {
+          "x": 33,
+          "y": 85,
+          "width": 754,
+          "height": 502,
+          "right": 787,
+          "bottom": 587,
+          "centerX": 410,
+          "centerY": 336
+        },
+        "contentRect": {
+          "x": 236.25,
+          "y": 482.515625,
+          "width": 347.484375,
+          "height": 214.96875,
+          "right": 583.734375,
+          "bottom": 697.484375,
+          "centerX": 409.9921875,
+          "centerY": 590
+        },
+        "compositionRect": {
+          "x": 30,
+          "y": 210,
+          "width": 760,
+          "height": 760,
+          "right": 790,
+          "bottom": 970,
+          "centerX": 410,
+          "centerY": 590
+        },
+        "titleRect": {
+          "x": 236.25,
+          "y": 482.515625,
+          "width": 347.484375,
+          "height": 165.96875,
+          "right": 583.734375,
+          "bottom": 648.484375,
+          "centerX": 409.9921875,
+          "centerY": 565.5
+        },
+        "detailRect": {
+          "x": 317.390625,
+          "y": 656.484375,
+          "width": 185.1875,
+          "height": 41,
+          "right": 502.578125,
+          "bottom": 697.484375,
+          "centerX": 409.984375,
+          "centerY": 676.984375
+        },
+        "viewport": {
+          "width": 820,
+          "height": 1180
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 820,
+          "height": 1180,
+          "centerX": 410,
+          "centerY": 590,
+          "right": 820,
+          "bottom": 1180
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 820,
+          "height": 1180,
+          "centerX": 410,
+          "centerY": 590,
+          "right": 820,
+          "bottom": 1180,
+          "browserChromeBottomInset": 0
+        },
+        "hasBodyScroll": false,
+        "media": [
+          {
+            "id": "rip-smoke",
+            "src": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+            "ariaHidden": "true",
+            "alt": "",
+            "rect": {
+              "x": 86.16000366210938,
+              "y": 266.1600036621094,
+              "width": 647.679931640625,
+              "height": 647.679931640625,
+              "right": 733.8399353027344,
+              "bottom": 913.8399353027344,
+              "centerX": 409.9999694824219,
+              "centerY": 589.9999694824219
+            }
+          }
+        ]
+      },
+      "ripDurationMs": 1798,
+      "ripAfterTimeoutState": {
+        "text": "",
+        "type": "",
+        "rect": null,
+        "stageRect": null,
+        "canvasRect": {
+          "x": 33,
+          "y": 85,
+          "width": 754,
+          "height": 502,
+          "right": 787,
+          "bottom": 587,
+          "centerX": 410,
+          "centerY": 336
+        },
+        "contentRect": null,
+        "compositionRect": null,
+        "titleRect": null,
+        "detailRect": null,
+        "viewport": {
+          "width": 820,
+          "height": 1180
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 820,
+          "height": 1180,
+          "centerX": 410,
+          "centerY": 590,
+          "right": 820,
+          "bottom": 1180
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 820,
+          "height": 1180,
+          "centerX": 410,
+          "centerY": 590,
+          "right": 820,
+          "bottom": 1180,
+          "browserChromeBottomInset": 0
+        },
+        "hasBodyScroll": false,
+        "media": []
+      },
+      "countdownAfterRip": false,
+      "ripAudioIds": [
+        "bgm-gameplay-loop-main",
+        "bgm-menu-loop-main",
+        "sfx-ball-lost",
+        "sfx-game-over",
+        "sfx-game-start",
+        "sfx-offline-ready",
+        "sfx-score-tick"
+      ],
+      "ripScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-rip-ipad.png"
+    },
+    {
+      "viewport": {
+        "name": "desktop-laptop",
+        "label": "Desktop laptop amplo",
+        "models": [
+          "Laptop 1440x900"
+        ],
+        "category": "desktop",
+        "orientation": "landscape",
+        "width": 1440,
+        "height": 900,
+        "deviceScaleFactor": 1,
+        "isMobile": false,
+        "hasTouch": false,
+        "priority": "gameplay",
+        "smokeOverlays": true,
+        "screenshotRole": "desktop-default"
+      },
+      "viewportName": "desktop-laptop",
+      "ripState": {
+        "text": "RIPRecomeçando...",
+        "type": "rip",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "right": 1440,
+          "bottom": 900,
+          "centerX": 720,
+          "centerY": 450
+        },
+        "stageRect": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "right": 1440,
+          "bottom": 900,
+          "centerX": 720,
+          "centerY": 450
+        },
+        "canvasRect": {
+          "x": 192,
+          "y": 85,
+          "width": 1056,
+          "height": 704,
+          "right": 1248,
+          "bottom": 789,
+          "centerX": 720,
+          "centerY": 437
+        },
+        "contentRect": {
+          "x": 535.078125,
+          "y": 337.1875,
+          "width": 369.828125,
+          "height": 225.625,
+          "right": 904.90625,
+          "bottom": 562.8125,
+          "centerX": 719.9921875,
+          "centerY": 450
+        },
+        "compositionRect": {
+          "x": 340,
+          "y": 70,
+          "width": 760,
+          "height": 760,
+          "right": 1100,
+          "bottom": 830,
+          "centerX": 720,
+          "centerY": 450
+        },
+        "titleRect": {
+          "x": 535.078125,
+          "y": 337.1875,
+          "width": 369.828125,
+          "height": 176.625,
+          "right": 904.90625,
+          "bottom": 513.8125,
+          "centerX": 719.9921875,
+          "centerY": 425.5
+        },
+        "detailRect": {
+          "x": 627.390625,
+          "y": 521.8125,
+          "width": 185.1875,
+          "height": 41,
+          "right": 812.578125,
+          "bottom": 562.8125,
+          "centerX": 719.984375,
+          "centerY": 542.3125
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "centerX": 720,
+          "centerY": 450,
+          "right": 1440,
+          "bottom": 900
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "centerX": 720,
+          "centerY": 450,
+          "right": 1440,
+          "bottom": 900,
+          "browserChromeBottomInset": 0
+        },
+        "hasBodyScroll": false,
+        "media": [
+          {
+            "id": "rip-smoke",
+            "src": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+            "ariaHidden": "true",
+            "alt": "",
+            "rect": {
+              "x": 395.03643798828125,
+              "y": 125.03643798828125,
+              "width": 649.9271850585938,
+              "height": 649.9271240234375,
+              "right": 1044.963623046875,
+              "bottom": 774.9635620117188,
+              "centerX": 720.0000305175781,
+              "centerY": 450
+            }
+          }
+        ]
+      },
+      "ripDurationMs": 1792,
+      "ripAfterTimeoutState": {
+        "text": "",
+        "type": "",
+        "rect": null,
+        "stageRect": null,
+        "canvasRect": {
+          "x": 192,
+          "y": 85,
+          "width": 1056,
+          "height": 704,
+          "right": 1248,
+          "bottom": 789,
+          "centerX": 720,
+          "centerY": 437
+        },
+        "contentRect": null,
+        "compositionRect": null,
+        "titleRect": null,
+        "detailRect": null,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "centerX": 720,
+          "centerY": 450,
+          "right": 1440,
+          "bottom": 900
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "centerX": 720,
+          "centerY": 450,
+          "right": 1440,
+          "bottom": 900,
+          "browserChromeBottomInset": 0
+        },
+        "hasBodyScroll": false,
+        "media": []
+      },
+      "countdownAfterRip": false,
+      "ripAudioIds": [
+        "bgm-gameplay-loop-main",
+        "bgm-menu-loop-main",
+        "sfx-ball-lost",
+        "sfx-game-over",
+        "sfx-game-start",
+        "sfx-offline-ready",
+        "sfx-score-tick"
+      ],
+      "ripScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-rip-desktop.png"
+    }
+  ],
+  "levelAudioIds": [
+    "bgm-gameplay-loop-main",
+    "sfx-brick-break-blue",
+    "sfx-brick-hit",
+    "sfx-game-start",
+    "sfx-level-complete",
+    "sfx-level-toast-in",
+    "sfx-offline-ready",
+    "sfx-score-tick"
+  ],
+  "ripAudioIds": [
+    "bgm-gameplay-loop-main",
+    "bgm-menu-loop-main",
+    "sfx-ball-lost",
+    "sfx-game-over",
+    "sfx-game-start",
+    "sfx-offline-ready",
+    "sfx-score-tick"
+  ],
+  "cachedPaths": [
+    "/assets/visual/vfx/vfx-countdown-circle-overlay.svg",
+    "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
+    "/assets/visual/vfx/vfx-level-up-star-overlay.svg",
+    "/assets/visual/vfx/vfx-level-up-twirl-overlay.svg",
+    "/assets/visual/vfx/vfx-game-over-rip-smoke.svg"
+  ],
+  "countdownScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-countdown.png",
+  "levelUpScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-level-up.png",
+  "ripScreenshotPath": "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-rip.png",
+  "externalAudioRequests": [],
+  "externalMediaRequests": [],
+  "consoleProblems": []
+}
