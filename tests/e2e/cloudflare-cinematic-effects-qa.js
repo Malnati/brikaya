@@ -75,6 +75,7 @@ const MAX_MEDIA_CENTER_OFFSET_PX = 4;
 const MAX_MEDIA_OVERFLOW_PX = 2;
 const MAX_CONTENT_CENTER_OFFSET_PX = 4;
 const MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX = 8;
+const MAX_COUNTDOWN_COUNT_OPTICAL_OFFSET_PX = 32;
 const MAX_RIP_VIEWPORT_CENTER_OFFSET_PX = 8;
 const MIN_RIP_STAGE_VIEWPORT_COVERAGE_RATIO = 0.96;
 const RIP_SAFE_AREA_PX = 12;
@@ -104,7 +105,6 @@ const VISIBLE_VIEWPORT_HEIGHT_PROPERTY = '--game-cinematic-visible-height';
 const RIP_BROWSER_CHROME_INSET_PARAM = VIEWPORT_BOTTOM_INSET_PARAM;
 const RIP_MOBILE_BROWSER_CHROME_BOTTOM_INSET_PX = 104;
 const FILE_NAME_EXTENSION_PATTERN = /[^/]+(\.[^.]+)$/;
-const MIN_MOBILE_CHROME_RESERVED_INSET_PX = 96;
 const COUNTDOWN_VIEWPORT_CONFIGS = [
   {
     viewportName: VIEWPORT_NAME_IPHONE_PORTRAIT,
@@ -458,10 +458,7 @@ function assertBoardAnchoring(snapshot, label) {
 }
 
 function assertCountdownViewportCentering(snapshot, label) {
-  const viewport =
-    snapshot.cssVisibleViewport ||
-    snapshot.usableVisualViewport ||
-    snapshot.visualViewport;
+  const viewport = snapshot.visualViewport;
 
   assert(snapshot.stageRect, `${label}: palco cinematográfico ausente.`);
   assert(snapshot.contentRect, `${label}: conteúdo textual sem retângulo visual.`);
@@ -477,7 +474,7 @@ function assertCountdownViewportCentering(snapshot, label) {
   assert(Math.abs(snapshot.contentRect.centerX - viewport.centerX) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: conteúdo fora do centro X da viewport.`);
   assert(Math.abs(snapshot.contentRect.centerY - viewport.centerY) <= MAX_COUNTDOWN_VIEWPORT_CENTER_OFFSET_PX, `${label}: conteúdo fora do centro Y da viewport.`);
   assert(Math.abs(snapshot.countdownCountRect.centerX - viewport.centerX) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: número fora do centro X da área visível.`);
-  assert(Math.abs(snapshot.countdownCountRect.centerY - viewport.centerY) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: número fora do centro Y da área visível.`);
+  assert(Math.abs(snapshot.countdownCountRect.centerY - viewport.centerY) <= MAX_COUNTDOWN_COUNT_OPTICAL_OFFSET_PX, `${label}: número fora do alinhamento óptico Y da área visível.`);
   assert(Math.abs(snapshot.countdownHaloRect.centerX - viewport.centerX) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: halo fora do centro X da área visível.`);
   assert(Math.abs(snapshot.countdownHaloRect.centerY - viewport.centerY) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: halo fora do centro Y da área visível.`);
   assertRectInsideVisualViewport(snapshot.compositionRect, viewport, `${label}: composição countdown`);
@@ -491,32 +488,18 @@ function assertCountdownViewportCentering(snapshot, label) {
   }
 }
 
-function assertCountdownChromeReserve(snapshot, viewportName) {
+function assertCountdownFullScreenViewport(snapshot, viewportName) {
   const viewport = snapshot.cssVisibleViewport;
+  const visualViewport = snapshot.visualViewport;
   assert(viewport, `${viewportName}: viewport visível CSS ausente.`);
-
-  if (viewportName === VIEWPORT_NAME_IPHONE_PORTRAIT) {
-    assert(
-      viewport.browserChromeBottomInset >= MIN_MOBILE_CHROME_RESERVED_INSET_PX,
-      `${viewportName}: countdown não reservou a barra inferior mobile.`,
-    );
-    assert(
-      viewport.browserChromeTopInset <= MAX_STAGE_OFFSET_PX,
-      `${viewportName}: countdown aplicou topo indevido no portrait.`,
-    );
-    return;
-  }
-
-  if (viewportName === VIEWPORT_NAME_IPHONE_LANDSCAPE) {
-    assert(
-      viewport.browserChromeTopInset >= MIN_MOBILE_CHROME_RESERVED_INSET_PX,
-      `${viewportName}: countdown não reservou a barra superior mobile landscape.`,
-    );
-    assert(
-      viewport.browserChromeBottomInset <= MAX_STAGE_OFFSET_PX,
-      `${viewportName}: countdown aplicou rodapé indevido no landscape.`,
-    );
-  }
+  assert(Math.abs(viewport.x - visualViewport.x) <= MAX_STAGE_OFFSET_PX, `${viewportName}: countdown deslocou a tela visível no eixo X.`);
+  assert(Math.abs(viewport.y - visualViewport.y) <= MAX_STAGE_OFFSET_PX, `${viewportName}: countdown deslocou a tela visível no eixo Y.`);
+  assert(Math.abs(viewport.width - visualViewport.width) <= MAX_STAGE_OFFSET_PX, `${viewportName}: largura visível do countdown difere da tela inteira.`);
+  assert(Math.abs(viewport.height - visualViewport.height) <= MAX_STAGE_OFFSET_PX, `${viewportName}: altura visível do countdown difere da tela inteira.`);
+  assert(viewport.browserChromeTopInset <= MAX_STAGE_OFFSET_PX, `${viewportName}: countdown reservou topo automaticamente.`);
+  assert(viewport.browserChromeBottomInset <= MAX_STAGE_OFFSET_PX, `${viewportName}: countdown reservou rodapé automaticamente.`);
+  assert(viewport.browserChromeLeftInset <= MAX_STAGE_OFFSET_PX, `${viewportName}: countdown reservou esquerda automaticamente.`);
+  assert(viewport.browserChromeRightInset <= MAX_STAGE_OFFSET_PX, `${viewportName}: countdown reservou direita automaticamente.`);
 }
 
 function assertRectInsideVisualViewport(rect, viewport, label) {
@@ -843,7 +826,7 @@ async function run() {
     for (const result of countdownResults) {
       const label = `countdown/${result.viewportName}`;
       assertFullViewport(result.countdownState, label);
-      assertCountdownChromeReserve(result.countdownState, result.viewportName);
+      assertCountdownFullScreenViewport(result.countdownState, result.viewportName);
       assertCountdownViewportCentering(result.countdownState, label);
       assertMedia(result.countdownState, REQUIRED_COUNTDOWN_MEDIA, label);
       assert(result.countdownDurationMs <= COUNTDOWN_MAX_DURATION_MS + 900, `${label}: demorou demais: ${result.countdownDurationMs}ms.`);

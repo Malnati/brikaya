@@ -67,6 +67,13 @@ function mockMobileLandscapeBrowser() {
   );
 }
 
+function mockMobilePortraitBrowser() {
+  return mockMatchMedia((query) =>
+    query.includes("pointer: coarse") &&
+    query.includes("max-width: 600px"),
+  );
+}
+
 function mockVisualViewport({
   offsetTop = 0,
   offsetLeft = 0,
@@ -153,7 +160,7 @@ describe("GameCinematicOverlay media", () => {
     });
   });
 
-  it("mantém o countdown fora do retângulo do tabuleiro e dentro da viewport utilizável", () => {
+  it("mantém o countdown fora do retângulo do tabuleiro e respeita inset inferior explícito de QA", () => {
     setLocationSearch("?qaViewportBottomInset=104");
 
     render(
@@ -174,7 +181,7 @@ describe("GameCinematicOverlay media", () => {
     expect(stage.style.height).toBe("664px");
   });
 
-  it("aplica inset superior no countdown landscape para não centralizar sob o chrome do Safari", () => {
+  it("respeita inset superior explícito de QA no countdown landscape", () => {
     setLocationSearch("?qaViewportTopInset=180&qaViewportBottomInset=0");
 
     render(<GameCinematicOverlay state={{ type: "countdown", value: "2" }} />);
@@ -212,26 +219,7 @@ describe("GameCinematicOverlay media", () => {
     }
   });
 
-  it("reserva automaticamente o topo do Safari mobile landscape quando o navegador sobrepõe a área do jogo", () => {
-    const restoreMatchMedia = mockMobileLandscapeBrowser();
-
-    try {
-      render(<GameCinematicOverlay state={{ type: "countdown", value: "1" }} />);
-
-      const stage = screen.getByTestId(STAGE_TEST_ID);
-
-      expect(stage.style.getPropertyValue(VISIBLE_TOP_PROPERTY)).toBe("236px");
-      expect(stage.style.top).toBe("236px");
-      expect(stage.style.getPropertyValue(VISIBLE_HEIGHT_PROPERTY)).toBe(
-        "532px",
-      );
-      expect(stage.style.height).toBe("532px");
-    } finally {
-      restoreMatchMedia();
-    }
-  });
-
-  it("calcula a reserva landscape proporcionalmente em viewport baixa de telefone", () => {
+  it("não reserva automaticamente o topo do Safari mobile landscape: centraliza na tela inteira", () => {
     const restoreMatchMedia = mockMobileLandscapeBrowser();
     const restoreWindowSize = mockWindowSize({ width: 874, height: 402 });
 
@@ -240,12 +228,31 @@ describe("GameCinematicOverlay media", () => {
 
       const stage = screen.getByTestId(STAGE_TEST_ID);
 
-      expect(stage.style.getPropertyValue(VISIBLE_TOP_PROPERTY)).toBe("161px");
-      expect(stage.style.top).toBe("161px");
+      expect(stage.style.getPropertyValue(VISIBLE_TOP_PROPERTY)).toBe("0px");
+      expect(stage.style.top).toBe("0px");
+      expect(stage.style.getPropertyValue(VISIBLE_HEIGHT_PROPERTY)).toBe("402px");
+      expect(stage.style.height).toBe("402px");
+    } finally {
+      restoreWindowSize();
+      restoreMatchMedia();
+    }
+  });
+
+  it("não reserva automaticamente a barra inferior mobile portrait: centraliza na tela inteira", () => {
+    const restoreMatchMedia = mockMobilePortraitBrowser();
+    const restoreWindowSize = mockWindowSize({ width: 393, height: 852 });
+
+    try {
+      render(<GameCinematicOverlay state={{ type: "countdown", value: "1" }} />);
+
+      const stage = screen.getByTestId(STAGE_TEST_ID);
+
+      expect(stage.style.getPropertyValue(VISIBLE_TOP_PROPERTY)).toBe("0px");
+      expect(stage.style.top).toBe("0px");
       expect(stage.style.getPropertyValue(VISIBLE_HEIGHT_PROPERTY)).toBe(
-        "241px",
+        "852px",
       );
-      expect(stage.style.height).toBe("241px");
+      expect(stage.style.height).toBe("852px");
     } finally {
       restoreWindowSize();
       restoreMatchMedia();
@@ -289,7 +296,7 @@ describe("GameCinematicOverlay media", () => {
     const circle = container.querySelector('img[data-cinematic-media="countdown-circle"]');
     const spark = container.querySelector('img[data-cinematic-media="countdown-spark"]');
 
-    for (const layer of [halo, count, circle, spark]) {
+    for (const layer of [halo, circle, spark]) {
       expect(layer).toBeInTheDocument();
       expect(layer).toHaveStyle({
         left: "50%",
@@ -297,6 +304,12 @@ describe("GameCinematicOverlay media", () => {
         transform: "translate(-50%, -50%)",
       });
     }
+    expect(count).toBeInTheDocument();
+    expect(count).toHaveStyle({
+      left: "50%",
+      top: "50%",
+      transform: "translate(-50%, calc(-50% + 0.1em))",
+    });
     expect(composition).toContainElement(halo);
     expect(composition).toContainElement(count);
   });
