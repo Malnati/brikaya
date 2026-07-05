@@ -2,6 +2,7 @@
 import type { DynamicGameDimensions } from "../constants/game";
 
 import {
+  calculateBallTurretPlayfieldGeometry,
   calculatePaddleAngleFromCanvasX,
   calculateRadialBrickSegment,
   calculateRadialPaddleBounds,
@@ -57,6 +58,38 @@ describe("radialGeometry", () => {
     expect(geometry.centerY + geometry.radius).toBe(TEST_CANVAS_HEIGHT);
   });
 
+  it("calcula tijolos da torreta no arco inferior oposto ao clássico", () => {
+    const classicGeometry = calculateRadialPlayfieldGeometry(
+      TEST_CANVAS_WIDTH,
+      TEST_CANVAS_HEIGHT,
+      TEST_DIMENSIONS,
+    );
+    const turretGeometry = calculateBallTurretPlayfieldGeometry(
+      TEST_CANVAS_WIDTH,
+      TEST_CANVAS_HEIGHT,
+      TEST_DIMENSIONS,
+    );
+    const classicSegment = calculateRadialBrickSegment(
+      classicGeometry,
+      TEST_DIMENSIONS,
+      2,
+      0,
+    );
+    const turretSegment = calculateRadialBrickSegment(
+      turretGeometry,
+      TEST_DIMENSIONS,
+      2,
+      0,
+    );
+
+    expect(classicSegment.centerY).toBeLessThan(classicGeometry.centerY);
+    expect(turretSegment.centerY).toBeGreaterThan(turretGeometry.centerY);
+    expect(turretGeometry.brickArcStartAngle).toBeGreaterThan(0);
+    expect(turretGeometry.brickArcEndAngle).toBeGreaterThan(
+      turretGeometry.brickArcStartAngle,
+    );
+  });
+
   it("detecta colisão circular dentro de segmento radial", () => {
     const geometry = calculateRadialPlayfieldGeometry(
       TEST_CANVAS_WIDTH,
@@ -72,14 +105,22 @@ describe("radialGeometry", () => {
 
     expect(
       isCircleIntersectingRadialSegment(
-        { x: segment.centerX, y: segment.centerY, radius: TEST_DIMENSIONS.ballRadius },
+        {
+          x: segment.centerX,
+          y: segment.centerY,
+          radius: TEST_DIMENSIONS.ballRadius,
+        },
         segment,
         geometry,
       ),
     ).toBe(true);
     expect(
       isCircleIntersectingRadialSegment(
-        { x: geometry.centerX, y: geometry.centerY, radius: TEST_DIMENSIONS.ballRadius },
+        {
+          x: geometry.centerX,
+          y: geometry.centerY,
+          radius: TEST_DIMENSIONS.ballRadius,
+        },
         segment,
         geometry,
       ),
@@ -98,7 +139,11 @@ describe("radialGeometry", () => {
       Math.PI / 2,
       1,
     );
-    const leftAngle = calculatePaddleAngleFromCanvasX(0, TEST_CANVAS_WIDTH, paddle);
+    const leftAngle = calculatePaddleAngleFromCanvasX(
+      0,
+      TEST_CANVAS_WIDTH,
+      paddle,
+    );
     const rightAngle = calculatePaddleAngleFromCanvasX(
       TEST_CANVAS_WIDTH,
       TEST_CANVAS_WIDTH,

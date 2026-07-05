@@ -85,14 +85,15 @@ export class Ball {
     canvasWidth: number,
     canvasHeight: number,
     dimensions: DynamicGameDimensions,
-    speedMultiplier: number
+    speedMultiplier: number,
+    geometry?: RadialPlayfieldGeometry
   ): void {
     const initialSpeed = calculateInitialBallSpeed(canvasWidth) * speedMultiplier;
 
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
     this.dimensions = dimensions;
-    this.geometry = calculateRadialPlayfieldGeometry(canvasWidth, canvasHeight, dimensions);
+    this.geometry = geometry ?? calculateRadialPlayfieldGeometry(canvasWidth, canvasHeight, dimensions);
     this.speedMultiplier = speedMultiplier;
     this.radius = dimensions.ballRadius;
     this.x = canvasWidth / 2;
@@ -109,14 +110,19 @@ export class Ball {
     this.lastSpeedReduction = null;
   }
 
-  resize(canvasWidth: number, canvasHeight: number, dimensions: DynamicGameDimensions): void {
+  resize(
+    canvasWidth: number,
+    canvasHeight: number,
+    dimensions: DynamicGameDimensions,
+    geometry?: RadialPlayfieldGeometry
+  ): void {
     const widthRatio = this.canvasWidth > 0 ? canvasWidth / this.canvasWidth : 1;
     const heightRatio = this.canvasHeight > 0 ? canvasHeight / this.canvasHeight : 1;
 
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
     this.dimensions = dimensions;
-    this.geometry = calculateRadialPlayfieldGeometry(canvasWidth, canvasHeight, dimensions);
+    this.geometry = geometry ?? calculateRadialPlayfieldGeometry(canvasWidth, canvasHeight, dimensions);
     this.radius = dimensions.ballRadius;
     this.x = Math.max(
       this.radius,

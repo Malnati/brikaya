@@ -4,6 +4,8 @@ import type { DynamicGameDimensions } from "../constants/game";
 const CENTER_RATIO = 0.5;
 const BRICK_ARC_START_ANGLE = (-Math.PI * 5) / 6;
 const BRICK_ARC_END_ANGLE = -Math.PI / 6;
+const BALL_TURRET_BRICK_ARC_START_ANGLE = Math.PI / 6;
+const BALL_TURRET_BRICK_ARC_END_ANGLE = (Math.PI * 5) / 6;
 const BRICK_RING_START_RADIUS_RATIO = 0.28;
 const BRICK_RING_END_RADIUS_RATIO = 0.74;
 const BRICK_RADIAL_GAP_RATIO = 0.18;
@@ -91,6 +93,24 @@ export function calculateRadialPlayfieldGeometry(
     paddleRadius: radius * PADDLE_RADIUS_RATIO,
     lossArcStartAngle: LOSS_ARC_START_ANGLE,
     lossArcEndAngle: LOSS_ARC_END_ANGLE,
+  };
+}
+
+export function calculateBallTurretPlayfieldGeometry(
+  canvasWidth: number,
+  canvasHeight: number,
+  dimensions: DynamicGameDimensions,
+): RadialPlayfieldGeometry {
+  const geometry = calculateRadialPlayfieldGeometry(
+    canvasWidth,
+    canvasHeight,
+    dimensions,
+  );
+
+  return {
+    ...geometry,
+    brickArcStartAngle: BALL_TURRET_BRICK_ARC_START_ANGLE,
+    brickArcEndAngle: BALL_TURRET_BRICK_ARC_END_ANGLE,
   };
 }
 
@@ -239,7 +259,9 @@ export function isAngleBetween(
   const normalizedEnd = normalizeAngle(endAngle);
 
   if (normalizedStart <= normalizedEnd) {
-    return normalizedAngle >= normalizedStart && normalizedAngle <= normalizedEnd;
+    return (
+      normalizedAngle >= normalizedStart && normalizedAngle <= normalizedEnd
+    );
   }
 
   return normalizedAngle >= normalizedStart || normalizedAngle <= normalizedEnd;
@@ -280,8 +302,16 @@ function calculateRadialSegmentBounds(
     pointFromPolar(geometry, startAngle, outerRadius),
     pointFromPolar(geometry, endAngle, innerRadius),
     pointFromPolar(geometry, endAngle, outerRadius),
-    pointFromPolar(geometry, (startAngle + endAngle) * CENTER_RATIO, innerRadius),
-    pointFromPolar(geometry, (startAngle + endAngle) * CENTER_RATIO, outerRadius),
+    pointFromPolar(
+      geometry,
+      (startAngle + endAngle) * CENTER_RATIO,
+      innerRadius,
+    ),
+    pointFromPolar(
+      geometry,
+      (startAngle + endAngle) * CENTER_RATIO,
+      outerRadius,
+    ),
   ];
   const xs = points.map((point) => point.x);
   const ys = points.map((point) => point.y);

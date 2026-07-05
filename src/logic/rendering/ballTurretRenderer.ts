@@ -11,21 +11,18 @@ const INNER_RING_RATIO = 0.78;
 const HORIZON_Y_OFFSET_RATIO = 0.1;
 const HORIZON_RADIUS_X_RATIO = 0.72;
 const HORIZON_RADIUS_Y_RATIO = 0.18;
-const RETICLE_RADIUS_RATIO = 0.075;
-const RETICLE_MIN_RADIUS = 12;
-const RETICLE_MAX_RADIUS = 24;
-const RETICLE_LINE_WIDTH = 1.8;
-const BARREL_BASE_RADIUS_RATIO = 0.18;
-const BARREL_TIP_INSET_RATIO = 0.14;
-const BARREL_LINE_WIDTH_RATIO = 0.025;
-const TRACE_LINE_WIDTH_RATIO = 0.012;
+const TRAMPOLINE_FALLBACK_ARC_WIDTH = 0.46;
+const TRAMPOLINE_FRAME_WIDTH_RATIO = 1.18;
+const TRAMPOLINE_FABRIC_WIDTH_RATIO = 0.66;
+const TRAMPOLINE_HIGHLIGHT_WIDTH_RATIO = 0.2;
+const TRAMPOLINE_SPRING_COUNT = 7;
+const TRAMPOLINE_SPRING_INSET_RATIO = 0.72;
+const TRAMPOLINE_SHADOW_BLUR_RATIO = 0.08;
 const GLASS_HIGHLIGHT_OFFSET_RATIO = 0.28;
 const GLASS_HIGHLIGHT_RADIUS_RATIO = 0.34;
 const GLASS_HIGHLIGHT_ALPHA = 0.28;
 const VIGNETTE_INNER_RATIO = 0.54;
 const VIGNETTE_OUTER_RATIO = 1;
-const CROSSHAIR_TICK_RATIO = 0.55;
-const CROSSHAIR_GAP_RATIO = 0.28;
 
 export interface BallTurretCanvasSize {
   width: number;
@@ -43,11 +40,14 @@ export interface BallTurretRenderState {
   };
 }
 
-interface AimPoint {
-  x: number;
-  y: number;
-  angle: number;
+interface TrampolineBounds {
+  centerX: number;
+  centerY: number;
   radius: number;
+  startAngle: number;
+  endAngle: number;
+  centerAngle: number;
+  thickness: number;
 }
 
 function createRadialFill(
@@ -71,30 +71,47 @@ function createRadialFill(
   return gradient;
 }
 
-function readAimPoint(state: BallTurretRenderState): AimPoint {
+function readTrampolineBounds(state: BallTurretRenderState): TrampolineBounds {
   const radial = state.paddlePosition.radial;
   if (radial) {
     return {
-      x: radial.centerX + Math.cos(radial.centerAngle) * radial.radius,
-      y: radial.centerY + Math.sin(radial.centerAngle) * radial.radius,
-      angle: radial.centerAngle,
+      centerX: radial.centerX,
+      centerY: radial.centerY,
       radius: radial.radius,
+      startAngle: radial.startAngle,
+      endAngle: radial.endAngle,
+      centerAngle: radial.centerAngle,
+      thickness: radial.thickness,
     };
   }
 
   const fallbackX = state.paddlePosition.x + state.paddlePosition.width * HALF;
   const fallbackY = state.paddlePosition.y + state.paddlePosition.height * HALF;
+  const centerAngle = Math.atan2(
+    fallbackY - state.geometry.centerY,
+    fallbackX - state.geometry.centerX,
+  );
+  const radius = Math.hypot(
+    fallbackX - state.geometry.centerX,
+    fallbackY - state.geometry.centerY,
+  );
+  const halfArcWidth = TRAMPOLINE_FALLBACK_ARC_WIDTH * HALF;
+
   return {
-    x: fallbackX,
-    y: fallbackY,
-    angle: Math.atan2(
-      fallbackY - state.geometry.centerY,
-      fallbackX - state.geometry.centerX,
-    ),
-    radius: Math.hypot(
-      fallbackX - state.geometry.centerX,
-      fallbackY - state.geometry.centerY,
-    ),
+    centerX: state.geometry.centerX,
+    centerY: state.geometry.centerY,
+    radius,
+    startAngle: centerAngle - halfArcWidth,
+    endAngle: centerAngle + halfArcWidth,
+    centerAngle,
+    thickness: state.paddlePosition.height,
+  };
+}
+
+function pointOnArc(bounds: TrampolineBounds, radius: number, angle: number) {
+  return {
+    x: bounds.centerX + Math.cos(angle) * radius,
+    y: bounds.centerY + Math.sin(angle) * radius,
   };
 }
 
@@ -157,61 +174,103 @@ export function drawBallTurretBackdrop(
   ctx.restore();
 }
 
-export function drawBallTurretReticle(
+export function drawBallTurretTrampoline(
   ctx: CanvasRenderingContext2D,
   state: BallTurretRenderState,
 ): void {
-  const aim = readAimPoint(state);
-  const { geometry } = state;
-  const reticleRadius = Math.min(
-    RETICLE_MAX_RADIUS,
-    Math.max(RETICLE_MIN_RADIUS, geometry.radius * RETICLE_RADIUS_RATIO),
+  const trampoline = readTrampolineBounds(state);
+  const frameWidth = Math.max(
+    8,
+    trampoline.thickness * TRAMPOLINE_FRAME_WIDTH_RATIO,
   );
-  const barrelBaseRadius = geometry.radius * BARREL_BASE_RADIUS_RATIO;
-  const barrelTipRadius = geometry.radius * (1 - BARREL_TIP_INSET_RATIO);
-  const baseX = geometry.centerX + Math.cos(aim.angle) * barrelBaseRadius;
-  const baseY = geometry.centerY + Math.sin(aim.angle) * barrelBaseRadius;
-  const tipX = geometry.centerX + Math.cos(aim.angle) * barrelTipRadius;
-  const tipY = geometry.centerY + Math.sin(aim.angle) * barrelTipRadius;
+  const fabricWidth = Math.max(
+    5,
+    trampoline.thickness * TRAMPOLINE_FABRIC_WIDTH_RATIO,
+  );
+  const highlightWidth = Math.max(
+    1.4,
+    trampoline.thickness * TRAMPOLINE_HIGHLIGHT_WIDTH_RATIO,
+  );
+  const springInnerRadius =
+    trampoline.radius - trampoline.thickness * TRAMPOLINE_SPRING_INSET_RATIO;
+  const springOuterRadius =
+    trampoline.radius + trampoline.thickness * TRAMPOLINE_SPRING_INSET_RATIO;
 
   ctx.save();
   ctx.lineCap = "round";
-  ctx.strokeStyle = "rgba(20, 31, 41, 0.92)";
-  ctx.lineWidth = Math.max(4, geometry.radius * BARREL_LINE_WIDTH_RATIO);
+  ctx.shadowColor = "rgba(0, 212, 255, 0.5)";
+  ctx.shadowBlur = Math.max(
+    8,
+    trampoline.thickness * TRAMPOLINE_SHADOW_BLUR_RATIO,
+  );
+  ctx.strokeStyle = "rgba(16, 24, 34, 0.94)";
+  ctx.lineWidth = frameWidth;
   ctx.beginPath();
-  ctx.moveTo(baseX, baseY);
-  ctx.lineTo(tipX, tipY);
+  ctx.arc(
+    trampoline.centerX,
+    trampoline.centerY,
+    trampoline.radius,
+    trampoline.startAngle,
+    trampoline.endAngle,
+  );
   ctx.stroke();
 
-  ctx.strokeStyle = "rgba(125, 249, 255, 0.44)";
-  ctx.lineWidth = Math.max(1.4, geometry.radius * TRACE_LINE_WIDTH_RATIO);
+  ctx.shadowBlur = Math.max(5, trampoline.thickness * 0.42);
+  ctx.strokeStyle = "rgba(16, 215, 232, 0.94)";
+  ctx.lineWidth = fabricWidth;
   ctx.beginPath();
-  ctx.moveTo(geometry.centerX, geometry.centerY);
-  ctx.lineTo(aim.x, aim.y);
+  ctx.arc(
+    trampoline.centerX,
+    trampoline.centerY,
+    trampoline.radius,
+    trampoline.startAngle,
+    trampoline.endAngle,
+  );
   ctx.stroke();
 
-  ctx.strokeStyle = "rgba(248, 251, 255, 0.92)";
-  ctx.lineWidth = RETICLE_LINE_WIDTH;
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = "rgba(248, 251, 255, 0.82)";
+  ctx.lineWidth = highlightWidth;
   ctx.beginPath();
-  ctx.arc(aim.x, aim.y, reticleRadius, 0, FULL_CIRCLE);
+  ctx.arc(
+    trampoline.centerX,
+    trampoline.centerY,
+    trampoline.radius - fabricWidth * 0.22,
+    trampoline.startAngle,
+    trampoline.endAngle,
+  );
   ctx.stroke();
 
-  const gap = reticleRadius * CROSSHAIR_GAP_RATIO;
-  const tick = reticleRadius * CROSSHAIR_TICK_RATIO;
-  ctx.beginPath();
-  ctx.moveTo(aim.x - reticleRadius - tick, aim.y);
-  ctx.lineTo(aim.x - gap, aim.y);
-  ctx.moveTo(aim.x + gap, aim.y);
-  ctx.lineTo(aim.x + reticleRadius + tick, aim.y);
-  ctx.moveTo(aim.x, aim.y - reticleRadius - tick);
-  ctx.lineTo(aim.x, aim.y - gap);
-  ctx.moveTo(aim.x, aim.y + gap);
-  ctx.lineTo(aim.x, aim.y + reticleRadius + tick);
-  ctx.stroke();
+  ctx.strokeStyle = "rgba(227, 248, 255, 0.58)";
+  ctx.lineWidth = Math.max(1, highlightWidth * 0.7);
+  for (let index = 0; index < TRAMPOLINE_SPRING_COUNT; index += 1) {
+    const ratio = index / (TRAMPOLINE_SPRING_COUNT - 1);
+    const angle =
+      trampoline.startAngle +
+      (trampoline.endAngle - trampoline.startAngle) * ratio;
+    const outer = pointOnArc(trampoline, springOuterRadius, angle);
+    const inner = pointOnArc(trampoline, springInnerRadius, angle);
 
-  ctx.fillStyle = "rgba(255, 245, 184, 0.84)";
+    ctx.beginPath();
+    ctx.moveTo(outer.x, outer.y);
+    ctx.lineTo(inner.x, inner.y);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = "rgba(255, 245, 184, 0.9)";
+  const center = pointOnArc(
+    trampoline,
+    trampoline.radius,
+    trampoline.centerAngle,
+  );
   ctx.beginPath();
-  ctx.arc(aim.x, aim.y, Math.max(2, reticleRadius * 0.12), 0, FULL_CIRCLE);
+  ctx.arc(
+    center.x,
+    center.y,
+    Math.max(2.4, highlightWidth * 1.35),
+    0,
+    FULL_CIRCLE,
+  );
   ctx.fill();
   ctx.restore();
 }

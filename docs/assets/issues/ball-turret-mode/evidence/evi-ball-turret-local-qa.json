@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-07-05T04:41:30.167Z",
+  "checkedAt": "2026-07-05T08:25:24.913Z",
   "publicUrl": "http://127.0.0.1:7979/?qaScenario=ball-turret",
   "qaScenario": "ball-turret",
   "results": [
@@ -308,7 +308,8 @@
           "y": 85
         },
         "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
-        "bodyHasInternalCopy": false
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false
       },
       "gameplayState": {
         "title": "Brikaya — arcade de quebrar blocos",
@@ -345,8 +346,48 @@
           "x": 192,
           "y": 85
         },
-        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
-        "bodyHasInternalCopy": false
+        "scoreHudText": "Fase 1|Score 20|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false
+      },
+      "postExerciseState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "hasCanvas": true,
+        "canvas": {
+          "width": 1056,
+          "height": 704,
+          "x": 192,
+          "y": 85
+        },
+        "scoreHudText": "Fase 1|Score 40|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false
       }
     },
     {
@@ -653,8 +694,9 @@
           "x": 0,
           "y": 0
         },
-        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
-        "bodyHasInternalCopy": false
+        "scoreHudText": "Fase 1|Score 20|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false
       },
       "gameplayState": {
         "title": "Brikaya — arcade de quebrar blocos",
@@ -691,8 +733,48 @@
           "x": 0,
           "y": 0
         },
-        "scoreHudText": "Fase 1|Score 10|Total 0|Recorde 0",
-        "bodyHasInternalCopy": false
+        "scoreHudText": "Fase 1|Score 30|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false
+      },
+      "postExerciseState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "hasCanvas": true,
+        "canvas": {
+          "width": 390,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "scoreHudText": "Fase 1|Score 60|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false
       }
     }
   ],
