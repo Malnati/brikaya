@@ -43,7 +43,6 @@ const RIP_SCREENSHOT_VIEWPORT_SUFFIXES = new Map([
 const RIP_SCREENSHOT_SHORT_STEM = 'evi-cinematic-rip';
 const SEMANTIC_FILE_STEM_MAX_LENGTH = 64;
 const VIEWPORT = viewportByName(VIEWPORT_NAME_IPHONE_PORTRAIT);
-const COUNTDOWN_PORTRAIT_BOTTOM_INSET_PX = 104;
 const COUNTDOWN_MAX_DURATION_MS = 2000;
 const RIP_MAX_DURATION_MS = 2000;
 const RIP_OBSERVATION_BUFFER_MS = 300;
@@ -98,16 +97,19 @@ const VIEWPORT_TOP_INSET_PARAM = 'qaViewportTopInset';
 const VIEWPORT_BOTTOM_INSET_PARAM = 'qaViewportBottomInset';
 const VIEWPORT_LEFT_INSET_PARAM = 'qaViewportLeftInset';
 const VIEWPORT_RIGHT_INSET_PARAM = 'qaViewportRightInset';
+const VISIBLE_VIEWPORT_LEFT_PROPERTY = '--game-cinematic-visible-left';
+const VISIBLE_VIEWPORT_TOP_PROPERTY = '--game-cinematic-visible-top';
+const VISIBLE_VIEWPORT_WIDTH_PROPERTY = '--game-cinematic-visible-width';
+const VISIBLE_VIEWPORT_HEIGHT_PROPERTY = '--game-cinematic-visible-height';
 const RIP_BROWSER_CHROME_INSET_PARAM = VIEWPORT_BOTTOM_INSET_PARAM;
 const RIP_MOBILE_BROWSER_CHROME_BOTTOM_INSET_PX = 104;
 const FILE_NAME_EXTENSION_PATTERN = /[^/]+(\.[^.]+)$/;
+const MIN_MOBILE_CHROME_RESERVED_INSET_PX = 96;
 const COUNTDOWN_VIEWPORT_CONFIGS = [
   {
     viewportName: VIEWPORT_NAME_IPHONE_PORTRAIT,
     screenshotPath: DEFAULT_COUNTDOWN_SCREENSHOT_PATH,
-    searchParams: {
-      [VIEWPORT_BOTTOM_INSET_PARAM]: COUNTDOWN_PORTRAIT_BOTTOM_INSET_PX,
-    },
+    searchParams: {},
   },
   {
     viewportName: VIEWPORT_NAME_IPHONE_LANDSCAPE,
@@ -239,7 +241,7 @@ async function prepareControlledPage(page, publicUrl) {
 }
 
 async function overlaySnapshot(page, selector) {
-  return page.evaluate(({ targetSelector, stageSelector, canvasSelector, titleSelector, detailSelector, contentSelector, countSelector, haloSelector, compositionSelector, topInsetParam, bottomInsetParam, leftInsetParam, rightInsetParam }) => {
+  return page.evaluate(({ targetSelector, stageSelector, canvasSelector, titleSelector, detailSelector, contentSelector, countSelector, haloSelector, compositionSelector, topInsetParam, bottomInsetParam, leftInsetParam, rightInsetParam, visibleLeftProperty, visibleTopProperty, visibleWidthProperty, visibleHeightProperty }) => {
     const overlay = document.querySelector(targetSelector);
     const stage = overlay?.querySelector(stageSelector);
     const canvas = document.querySelector(canvasSelector);
@@ -280,6 +282,34 @@ async function overlaySnapshot(page, selector) {
     const usableViewportHeight = Math.max(0, viewportHeight - browserChromeTopInset - browserChromeBottomInset);
     const usableViewportX = viewportOffsetX + browserChromeLeftInset;
     const usableViewportY = viewportOffsetY + browserChromeTopInset;
+    const stageStyle = stage ? window.getComputedStyle(stage) : null;
+    const pxCustomProperty = (propertyName) => {
+      if (!stageStyle) return null;
+      const parsed = Number.parseFloat(stageStyle.getPropertyValue(propertyName));
+      return Number.isFinite(parsed) ? parsed : null;
+    };
+    const cssVisibleViewportX = pxCustomProperty(visibleLeftProperty);
+    const cssVisibleViewportY = pxCustomProperty(visibleTopProperty);
+    const cssVisibleViewportWidth = pxCustomProperty(visibleWidthProperty);
+    const cssVisibleViewportHeight = pxCustomProperty(visibleHeightProperty);
+    const hasCssVisibleViewport = [
+      cssVisibleViewportX,
+      cssVisibleViewportY,
+      cssVisibleViewportWidth,
+      cssVisibleViewportHeight,
+    ].every((value) => value !== null);
+    const cssBrowserChromeTopInset = hasCssVisibleViewport
+      ? Math.max(0, cssVisibleViewportY - viewportOffsetY)
+      : null;
+    const cssBrowserChromeLeftInset = hasCssVisibleViewport
+      ? Math.max(0, cssVisibleViewportX - viewportOffsetX)
+      : null;
+    const cssBrowserChromeBottomInset = hasCssVisibleViewport
+      ? Math.max(0, viewportHeight - cssBrowserChromeTopInset - cssVisibleViewportHeight)
+      : null;
+    const cssBrowserChromeRightInset = hasCssVisibleViewport
+      ? Math.max(0, viewportWidth - cssBrowserChromeLeftInset - cssVisibleViewportWidth)
+      : null;
 
     return {
       text: overlay?.textContent?.trim() || '',
@@ -321,6 +351,22 @@ async function overlaySnapshot(page, selector) {
         browserChromeLeftInset,
         browserChromeRightInset,
       },
+      cssVisibleViewport: hasCssVisibleViewport
+        ? {
+            x: cssVisibleViewportX,
+            y: cssVisibleViewportY,
+            width: cssVisibleViewportWidth,
+            height: cssVisibleViewportHeight,
+            centerX: cssVisibleViewportX + cssVisibleViewportWidth / 2,
+            centerY: cssVisibleViewportY + cssVisibleViewportHeight / 2,
+            right: cssVisibleViewportX + cssVisibleViewportWidth,
+            bottom: cssVisibleViewportY + cssVisibleViewportHeight,
+            browserChromeTopInset: cssBrowserChromeTopInset,
+            browserChromeBottomInset: cssBrowserChromeBottomInset,
+            browserChromeLeftInset: cssBrowserChromeLeftInset,
+            browserChromeRightInset: cssBrowserChromeRightInset,
+          }
+        : null,
       hasBodyScroll:
         document.documentElement.scrollHeight > window.innerHeight ||
         document.body.scrollHeight > window.innerHeight,
@@ -346,6 +392,10 @@ async function overlaySnapshot(page, selector) {
     bottomInsetParam: VIEWPORT_BOTTOM_INSET_PARAM,
     leftInsetParam: VIEWPORT_LEFT_INSET_PARAM,
     rightInsetParam: VIEWPORT_RIGHT_INSET_PARAM,
+    visibleLeftProperty: VISIBLE_VIEWPORT_LEFT_PROPERTY,
+    visibleTopProperty: VISIBLE_VIEWPORT_TOP_PROPERTY,
+    visibleWidthProperty: VISIBLE_VIEWPORT_WIDTH_PROPERTY,
+    visibleHeightProperty: VISIBLE_VIEWPORT_HEIGHT_PROPERTY,
   });
 }
 
@@ -408,7 +458,10 @@ function assertBoardAnchoring(snapshot, label) {
 }
 
 function assertCountdownViewportCentering(snapshot, label) {
-  const viewport = snapshot.usableVisualViewport || snapshot.visualViewport;
+  const viewport =
+    snapshot.cssVisibleViewport ||
+    snapshot.usableVisualViewport ||
+    snapshot.visualViewport;
 
   assert(snapshot.stageRect, `${label}: palco cinematográfico ausente.`);
   assert(snapshot.contentRect, `${label}: conteúdo textual sem retângulo visual.`);
@@ -435,6 +488,34 @@ function assertCountdownViewportCentering(snapshot, label) {
     assert(Math.abs(item.rect.centerX - viewport.centerX) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: mídia ${item.id} fora do centro X da viewport.`);
     assert(Math.abs(item.rect.centerY - viewport.centerY) <= MAX_MEDIA_CENTER_OFFSET_PX, `${label}: mídia ${item.id} fora do centro Y da viewport.`);
     assertRectInsideVisualViewport(item.rect, viewport, `${label}: mídia ${item.id}`);
+  }
+}
+
+function assertCountdownChromeReserve(snapshot, viewportName) {
+  const viewport = snapshot.cssVisibleViewport;
+  assert(viewport, `${viewportName}: viewport visível CSS ausente.`);
+
+  if (viewportName === VIEWPORT_NAME_IPHONE_PORTRAIT) {
+    assert(
+      viewport.browserChromeBottomInset >= MIN_MOBILE_CHROME_RESERVED_INSET_PX,
+      `${viewportName}: countdown não reservou a barra inferior mobile.`,
+    );
+    assert(
+      viewport.browserChromeTopInset <= MAX_STAGE_OFFSET_PX,
+      `${viewportName}: countdown aplicou topo indevido no portrait.`,
+    );
+    return;
+  }
+
+  if (viewportName === VIEWPORT_NAME_IPHONE_LANDSCAPE) {
+    assert(
+      viewport.browserChromeTopInset >= MIN_MOBILE_CHROME_RESERVED_INSET_PX,
+      `${viewportName}: countdown não reservou a barra superior mobile landscape.`,
+    );
+    assert(
+      viewport.browserChromeBottomInset <= MAX_STAGE_OFFSET_PX,
+      `${viewportName}: countdown aplicou rodapé indevido no landscape.`,
+    );
   }
 }
 
@@ -762,6 +843,7 @@ async function run() {
     for (const result of countdownResults) {
       const label = `countdown/${result.viewportName}`;
       assertFullViewport(result.countdownState, label);
+      assertCountdownChromeReserve(result.countdownState, result.viewportName);
       assertCountdownViewportCentering(result.countdownState, label);
       assertMedia(result.countdownState, REQUIRED_COUNTDOWN_MEDIA, label);
       assert(result.countdownDurationMs <= COUNTDOWN_MAX_DURATION_MS + 900, `${label}: demorou demais: ${result.countdownDurationMs}ms.`);

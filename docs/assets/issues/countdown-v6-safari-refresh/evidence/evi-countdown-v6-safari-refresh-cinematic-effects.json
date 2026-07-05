@@ -1,0 +1,1703 @@
+{
+  "levelTargetUrl": "https://brikaya.com/?qaScenario=single-brick-phase-clear",
+  "ripTargetUrl": "https://brikaya.com/?qaScenario=cinematic-rip",
+  "countdownDurationMs": 1777,
+  "ripDurationMs": 1745,
+  "countdownState": {
+    "text": "3",
+    "type": "countdown",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "right": 402,
+      "bottom": 874,
+      "centerX": 201,
+      "centerY": 437
+    },
+    "stageRect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 770,
+      "right": 402,
+      "bottom": 770,
+      "centerX": 201,
+      "centerY": 385
+    },
+    "canvasRect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 402,
+      "right": 402,
+      "bottom": 402,
+      "centerX": 201,
+      "centerY": 201
+    },
+    "contentRect": {
+      "x": 24.125,
+      "y": 208.125,
+      "width": 353.75,
+      "height": 353.75,
+      "right": 377.875,
+      "bottom": 561.875,
+      "centerX": 201,
+      "centerY": 385
+    },
+    "compositionRect": {
+      "x": 24.125,
+      "y": 208.125,
+      "width": 353.75,
+      "height": 353.75,
+      "right": 377.875,
+      "bottom": 561.875,
+      "centerX": 201,
+      "centerY": 385
+    },
+    "countdownCountRect": {
+      "x": 168.40188598632812,
+      "y": 334.2348327636719,
+      "width": 65.19621276855469,
+      "height": 101.53033447265625,
+      "right": 233.5980987548828,
+      "bottom": 435.7651672363281,
+      "centerX": 200.99999237060547,
+      "centerY": 385
+    },
+    "countdownHaloRect": {
+      "x": 56.294586181640625,
+      "y": 240.29458618164062,
+      "width": 289.41082763671875,
+      "height": 289.4108581542969,
+      "right": 345.7054138183594,
+      "bottom": 529.7054443359375,
+      "centerX": 201,
+      "centerY": 385.00001525878906
+    },
+    "titleRect": null,
+    "detailRect": null,
+    "viewport": {
+      "width": 402,
+      "height": 874
+    },
+    "visualViewport": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "centerX": 201,
+      "centerY": 437,
+      "right": 402,
+      "bottom": 874
+    },
+    "usableVisualViewport": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "centerX": 201,
+      "centerY": 437,
+      "right": 402,
+      "bottom": 874,
+      "browserChromeTopInset": 0,
+      "browserChromeBottomInset": 0,
+      "browserChromeLeftInset": 0,
+      "browserChromeRightInset": 0
+    },
+    "cssVisibleViewport": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 770,
+      "centerX": 201,
+      "centerY": 385,
+      "right": 402,
+      "bottom": 770,
+      "browserChromeTopInset": 0,
+      "browserChromeBottomInset": 104,
+      "browserChromeLeftInset": 0,
+      "browserChromeRightInset": 0
+    },
+    "hasBodyScroll": false,
+    "media": [
+      {
+        "id": "countdown-circle",
+        "src": "/assets/visual/vfx/vfx-countdown-circle-overlay.svg",
+        "ariaHidden": "true",
+        "alt": "",
+        "rect": {
+          "x": 62.18489456176758,
+          "y": 246.1848907470703,
+          "width": 277.63018798828125,
+          "height": 277.63018798828125,
+          "right": 339.8150825500488,
+          "bottom": 523.8150787353516,
+          "centerX": 200.9999885559082,
+          "centerY": 384.99998474121094
+        }
+      },
+      {
+        "id": "countdown-spark",
+        "src": "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
+        "ariaHidden": "true",
+        "alt": "",
+        "rect": {
+          "x": 136.27444458007812,
+          "y": 320.2744445800781,
+          "width": 129.45111083984375,
+          "height": 129.45111083984375,
+          "right": 265.7255554199219,
+          "bottom": 449.7255554199219,
+          "centerX": 201,
+          "centerY": 385
+        }
+      }
+    ]
+  },
+  "countdownResults": [
+    {
+      "viewportName": "iphone-17-default",
+      "viewport": {
+        "name": "iphone-17-default",
+        "label": "iPhone 17 default portrait",
+        "models": [
+          "iPhone 17"
+        ],
+        "category": "mobile",
+        "orientation": "portrait",
+        "width": 402,
+        "height": 874,
+        "deviceScaleFactor": 3,
+        "isMobile": true,
+        "hasTouch": true,
+        "priority": "gameplay",
+        "smokeOverlays": true,
+        "screenshotRole": "mobile-default"
+      },
+      "countdownState": {
+        "text": "3",
+        "type": "countdown",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 874,
+          "right": 402,
+          "bottom": 874,
+          "centerX": 201,
+          "centerY": 437
+        },
+        "stageRect": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 770,
+          "right": 402,
+          "bottom": 770,
+          "centerX": 201,
+          "centerY": 385
+        },
+        "canvasRect": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 402,
+          "right": 402,
+          "bottom": 402,
+          "centerX": 201,
+          "centerY": 201
+        },
+        "contentRect": {
+          "x": 24.125,
+          "y": 208.125,
+          "width": 353.75,
+          "height": 353.75,
+          "right": 377.875,
+          "bottom": 561.875,
+          "centerX": 201,
+          "centerY": 385
+        },
+        "compositionRect": {
+          "x": 24.125,
+          "y": 208.125,
+          "width": 353.75,
+          "height": 353.75,
+          "right": 377.875,
+          "bottom": 561.875,
+          "centerX": 201,
+          "centerY": 385
+        },
+        "countdownCountRect": {
+          "x": 168.40188598632812,
+          "y": 334.2348327636719,
+          "width": 65.19621276855469,
+          "height": 101.53033447265625,
+          "right": 233.5980987548828,
+          "bottom": 435.7651672363281,
+          "centerX": 200.99999237060547,
+          "centerY": 385
+        },
+        "countdownHaloRect": {
+          "x": 56.294586181640625,
+          "y": 240.29458618164062,
+          "width": 289.41082763671875,
+          "height": 289.4108581542969,
+          "right": 345.7054138183594,
+          "bottom": 529.7054443359375,
+          "centerX": 201,
+          "centerY": 385.00001525878906
+        },
+        "titleRect": null,
+        "detailRect": null,
+        "viewport": {
+          "width": 402,
+          "height": 874
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 874,
+          "centerX": 201,
+          "centerY": 437,
+          "right": 402,
+          "bottom": 874
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 874,
+          "centerX": 201,
+          "centerY": 437,
+          "right": 402,
+          "bottom": 874,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "cssVisibleViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 770,
+          "centerX": 201,
+          "centerY": 385,
+          "right": 402,
+          "bottom": 770,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 104,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "hasBodyScroll": false,
+        "media": [
+          {
+            "id": "countdown-circle",
+            "src": "/assets/visual/vfx/vfx-countdown-circle-overlay.svg",
+            "ariaHidden": "true",
+            "alt": "",
+            "rect": {
+              "x": 62.18489456176758,
+              "y": 246.1848907470703,
+              "width": 277.63018798828125,
+              "height": 277.63018798828125,
+              "right": 339.8150825500488,
+              "bottom": 523.8150787353516,
+              "centerX": 200.9999885559082,
+              "centerY": 384.99998474121094
+            }
+          },
+          {
+            "id": "countdown-spark",
+            "src": "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
+            "ariaHidden": "true",
+            "alt": "",
+            "rect": {
+              "x": 136.27444458007812,
+              "y": 320.2744445800781,
+              "width": 129.45111083984375,
+              "height": 129.45111083984375,
+              "right": 265.7255554199219,
+              "bottom": 449.7255554199219,
+              "centerX": 201,
+              "centerY": 385
+            }
+          }
+        ]
+      },
+      "countdownDurationMs": 1777,
+      "countdownScreenshotPath": "docs/assets/issues/countdown-v6-safari-refresh/evidence/evi-countdown-v6-safari-refresh-portrait.png"
+    },
+    {
+      "viewportName": "iphone-17-default-landscape",
+      "viewport": {
+        "name": "iphone-17-default-landscape",
+        "label": "iPhone 17 default landscape",
+        "models": [
+          "iPhone 17"
+        ],
+        "category": "mobile",
+        "orientation": "landscape",
+        "width": 874,
+        "height": 402,
+        "deviceScaleFactor": 3,
+        "isMobile": true,
+        "hasTouch": true,
+        "priority": "gameplay",
+        "smokeOverlays": false,
+        "screenshotRole": "landscape-default"
+      },
+      "countdownState": {
+        "text": "3",
+        "type": "countdown",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "right": 874,
+          "bottom": 402,
+          "centerX": 437,
+          "centerY": 201
+        },
+        "stageRect": {
+          "x": 0,
+          "y": 161,
+          "width": 874,
+          "height": 241,
+          "right": 874,
+          "bottom": 402,
+          "centerX": 437,
+          "centerY": 281.5
+        },
+        "canvasRect": {
+          "x": 6,
+          "y": 4,
+          "width": 862,
+          "height": 394,
+          "right": 868,
+          "bottom": 398,
+          "centerX": 437,
+          "centerY": 201
+        },
+        "contentRect": {
+          "x": 336.5,
+          "y": 181,
+          "width": 201,
+          "height": 201,
+          "right": 537.5,
+          "bottom": 382,
+          "centerX": 437,
+          "centerY": 281.5
+        },
+        "compositionRect": {
+          "x": 336.5,
+          "y": 181,
+          "width": 201,
+          "height": 201,
+          "right": 537.5,
+          "bottom": 382,
+          "centerX": 437,
+          "centerY": 281.5
+        },
+        "countdownCountRect": {
+          "x": 403.6549987792969,
+          "y": 229.55874633789062,
+          "width": 66.69000244140625,
+          "height": 103.88250732421875,
+          "right": 470.3450012207031,
+          "bottom": 333.4412536621094,
+          "centerX": 437,
+          "centerY": 281.5
+        },
+        "countdownHaloRect": {
+          "x": 359.53564453125,
+          "y": 204.03562927246094,
+          "width": 154.9287109375,
+          "height": 154.92872619628906,
+          "right": 514.46435546875,
+          "bottom": 358.96435546875,
+          "centerX": 437,
+          "centerY": 281.49999237060547
+        },
+        "titleRect": null,
+        "detailRect": null,
+        "viewport": {
+          "width": 874,
+          "height": 402
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "centerX": 437,
+          "centerY": 201,
+          "right": 874,
+          "bottom": 402
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "centerX": 437,
+          "centerY": 201,
+          "right": 874,
+          "bottom": 402,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "cssVisibleViewport": {
+          "x": 0,
+          "y": 161,
+          "width": 874,
+          "height": 241,
+          "centerX": 437,
+          "centerY": 281.5,
+          "right": 874,
+          "bottom": 402,
+          "browserChromeTopInset": 161,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "hasBodyScroll": false,
+        "media": [
+          {
+            "id": "countdown-circle",
+            "src": "/assets/visual/vfx/vfx-countdown-circle-overlay.svg",
+            "ariaHidden": "true",
+            "alt": "",
+            "rect": {
+              "x": 357.7803649902344,
+              "y": 202.28036499023438,
+              "width": 158.43923950195312,
+              "height": 158.43927001953125,
+              "right": 516.2196044921875,
+              "bottom": 360.7196350097656,
+              "centerX": 436.99998474121094,
+              "centerY": 281.5
+            }
+          },
+          {
+            "id": "countdown-spark",
+            "src": "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
+            "ariaHidden": "true",
+            "alt": "",
+            "rect": {
+              "x": 403.71685791015625,
+              "y": 248.2168731689453,
+              "width": 66.5662841796875,
+              "height": 66.56626892089844,
+              "right": 470.28314208984375,
+              "bottom": 314.78314208984375,
+              "centerX": 437,
+              "centerY": 281.50000762939453
+            }
+          }
+        ]
+      },
+      "countdownDurationMs": 1800,
+      "countdownScreenshotPath": "docs/assets/issues/countdown-v6-safari-refresh/evidence/evi-countdown-v6-safari-refresh-landscape.png"
+    }
+  ],
+  "levelUpState": {
+    "text": "Subindo de nívelFase 2Velocidade 1.12×",
+    "type": "levelUp",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "right": 402,
+      "bottom": 874,
+      "centerX": 201,
+      "centerY": 437
+    },
+    "stageRect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 402,
+      "right": 402,
+      "bottom": 402,
+      "centerX": 201,
+      "centerY": 201
+    },
+    "canvasRect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 402,
+      "right": 402,
+      "bottom": 402,
+      "centerX": 201,
+      "centerY": 201
+    },
+    "contentRect": {
+      "x": 30.625,
+      "y": 117.3125,
+      "width": 340.734375,
+      "height": 167.359375,
+      "right": 371.359375,
+      "bottom": 284.671875,
+      "centerX": 200.9921875,
+      "centerY": 200.9921875
+    },
+    "compositionRect": null,
+    "countdownCountRect": null,
+    "countdownHaloRect": null,
+    "titleRect": {
+      "x": 30.625,
+      "y": 160.3125,
+      "width": 340.734375,
+      "height": 81.359375,
+      "right": 371.359375,
+      "bottom": 241.671875,
+      "centerX": 200.9921875,
+      "centerY": 200.9921875
+    },
+    "detailRect": {
+      "x": 123.59375,
+      "y": 249.671875,
+      "width": 154.796875,
+      "height": 35,
+      "right": 278.390625,
+      "bottom": 284.671875,
+      "centerX": 200.9921875,
+      "centerY": 267.171875
+    },
+    "viewport": {
+      "width": 402,
+      "height": 874
+    },
+    "visualViewport": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "centerX": 201,
+      "centerY": 437,
+      "right": 402,
+      "bottom": 874
+    },
+    "usableVisualViewport": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "centerX": 201,
+      "centerY": 437,
+      "right": 402,
+      "bottom": 874,
+      "browserChromeTopInset": 0,
+      "browserChromeBottomInset": 0,
+      "browserChromeLeftInset": 0,
+      "browserChromeRightInset": 0
+    },
+    "cssVisibleViewport": null,
+    "hasBodyScroll": false,
+    "media": [
+      {
+        "id": "level-up-twirl",
+        "src": "/assets/visual/vfx/vfx-level-up-twirl-overlay.svg",
+        "ariaHidden": "true",
+        "alt": "",
+        "rect": {
+          "x": 44.342491149902344,
+          "y": 44.342491149902344,
+          "width": 313.31500244140625,
+          "height": 313.31500244140625,
+          "right": 357.6574935913086,
+          "bottom": 357.6574935913086,
+          "centerX": 200.99999237060547,
+          "centerY": 200.99999237060547
+        }
+      },
+      {
+        "id": "level-up-star",
+        "src": "/assets/visual/vfx/vfx-level-up-star-overlay.svg",
+        "ariaHidden": "true",
+        "alt": "",
+        "rect": {
+          "x": 130.83627319335938,
+          "y": 130.83627319335938,
+          "width": 140.32742309570312,
+          "height": 140.32742309570312,
+          "right": 271.1636962890625,
+          "bottom": 271.1636962890625,
+          "centerX": 200.99998474121094,
+          "centerY": 200.99998474121094
+        }
+      }
+    ]
+  },
+  "ripState": {
+    "text": "RIPRecomeçando...",
+    "type": "rip",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "right": 402,
+      "bottom": 874,
+      "centerX": 201,
+      "centerY": 437
+    },
+    "stageRect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 770,
+      "right": 402,
+      "bottom": 770,
+      "centerX": 201,
+      "centerY": 385
+    },
+    "canvasRect": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 402,
+      "right": 402,
+      "bottom": 402,
+      "centerX": 201,
+      "centerY": 201
+    },
+    "contentRect": {
+      "x": 115.8125,
+      "y": 322.8125,
+      "width": 170.359375,
+      "height": 124.359375,
+      "right": 286.171875,
+      "bottom": 447.171875,
+      "centerX": 200.9921875,
+      "centerY": 384.9921875
+    },
+    "compositionRect": {
+      "x": 16,
+      "y": 16,
+      "width": 370,
+      "height": 738,
+      "right": 386,
+      "bottom": 754,
+      "centerX": 201,
+      "centerY": 385
+    },
+    "countdownCountRect": null,
+    "countdownHaloRect": null,
+    "titleRect": {
+      "x": 115.8125,
+      "y": 322.8125,
+      "width": 170.359375,
+      "height": 81.359375,
+      "right": 286.171875,
+      "bottom": 404.171875,
+      "centerX": 200.9921875,
+      "centerY": 363.4921875
+    },
+    "detailRect": {
+      "x": 125.484375,
+      "y": 412.171875,
+      "width": 151,
+      "height": 35,
+      "right": 276.484375,
+      "bottom": 447.171875,
+      "centerX": 200.984375,
+      "centerY": 429.671875
+    },
+    "viewport": {
+      "width": 402,
+      "height": 874
+    },
+    "visualViewport": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "centerX": 201,
+      "centerY": 437,
+      "right": 402,
+      "bottom": 874
+    },
+    "usableVisualViewport": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 770,
+      "centerX": 201,
+      "centerY": 385,
+      "right": 402,
+      "bottom": 770,
+      "browserChromeTopInset": 0,
+      "browserChromeBottomInset": 104,
+      "browserChromeLeftInset": 0,
+      "browserChromeRightInset": 0
+    },
+    "cssVisibleViewport": {
+      "x": 0,
+      "y": 0,
+      "width": 402,
+      "height": 770,
+      "centerX": 201,
+      "centerY": 385,
+      "right": 402,
+      "bottom": 770,
+      "browserChromeTopInset": 0,
+      "browserChromeBottomInset": 104,
+      "browserChromeLeftInset": 0,
+      "browserChromeRightInset": 0
+    },
+    "hasBodyScroll": false,
+    "media": [
+      {
+        "id": "rip-smoke",
+        "src": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+        "ariaHidden": "true",
+        "alt": "",
+        "rect": {
+          "x": 47.319732666015625,
+          "y": 220.73617553710938,
+          "width": 307.36053466796875,
+          "height": 328.5276184082031,
+          "right": 354.6802673339844,
+          "bottom": 549.2637939453125,
+          "centerX": 201,
+          "centerY": 384.99998474121094
+        }
+      }
+    ]
+  },
+  "ripResults": [
+    {
+      "viewport": {
+        "name": "iphone-17-default",
+        "label": "iPhone 17 default portrait",
+        "models": [
+          "iPhone 17"
+        ],
+        "category": "mobile",
+        "orientation": "portrait",
+        "width": 402,
+        "height": 874,
+        "deviceScaleFactor": 3,
+        "isMobile": true,
+        "hasTouch": true,
+        "priority": "gameplay",
+        "smokeOverlays": true,
+        "screenshotRole": "mobile-default"
+      },
+      "viewportName": "iphone-17-default",
+      "ripState": {
+        "text": "RIPRecomeçando...",
+        "type": "rip",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 874,
+          "right": 402,
+          "bottom": 874,
+          "centerX": 201,
+          "centerY": 437
+        },
+        "stageRect": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 770,
+          "right": 402,
+          "bottom": 770,
+          "centerX": 201,
+          "centerY": 385
+        },
+        "canvasRect": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 402,
+          "right": 402,
+          "bottom": 402,
+          "centerX": 201,
+          "centerY": 201
+        },
+        "contentRect": {
+          "x": 115.8125,
+          "y": 322.8125,
+          "width": 170.359375,
+          "height": 124.359375,
+          "right": 286.171875,
+          "bottom": 447.171875,
+          "centerX": 200.9921875,
+          "centerY": 384.9921875
+        },
+        "compositionRect": {
+          "x": 16,
+          "y": 16,
+          "width": 370,
+          "height": 738,
+          "right": 386,
+          "bottom": 754,
+          "centerX": 201,
+          "centerY": 385
+        },
+        "countdownCountRect": null,
+        "countdownHaloRect": null,
+        "titleRect": {
+          "x": 115.8125,
+          "y": 322.8125,
+          "width": 170.359375,
+          "height": 81.359375,
+          "right": 286.171875,
+          "bottom": 404.171875,
+          "centerX": 200.9921875,
+          "centerY": 363.4921875
+        },
+        "detailRect": {
+          "x": 125.484375,
+          "y": 412.171875,
+          "width": 151,
+          "height": 35,
+          "right": 276.484375,
+          "bottom": 447.171875,
+          "centerX": 200.984375,
+          "centerY": 429.671875
+        },
+        "viewport": {
+          "width": 402,
+          "height": 874
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 874,
+          "centerX": 201,
+          "centerY": 437,
+          "right": 402,
+          "bottom": 874
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 770,
+          "centerX": 201,
+          "centerY": 385,
+          "right": 402,
+          "bottom": 770,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 104,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "cssVisibleViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 770,
+          "centerX": 201,
+          "centerY": 385,
+          "right": 402,
+          "bottom": 770,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 104,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "hasBodyScroll": false,
+        "media": [
+          {
+            "id": "rip-smoke",
+            "src": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+            "ariaHidden": "true",
+            "alt": "",
+            "rect": {
+              "x": 47.319732666015625,
+              "y": 220.73617553710938,
+              "width": 307.36053466796875,
+              "height": 328.5276184082031,
+              "right": 354.6802673339844,
+              "bottom": 549.2637939453125,
+              "centerX": 201,
+              "centerY": 384.99998474121094
+            }
+          }
+        ]
+      },
+      "ripDurationMs": 1745,
+      "ripAfterTimeoutState": {
+        "text": "",
+        "type": "",
+        "rect": null,
+        "stageRect": null,
+        "canvasRect": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 402,
+          "right": 402,
+          "bottom": 402,
+          "centerX": 201,
+          "centerY": 201
+        },
+        "contentRect": null,
+        "compositionRect": null,
+        "countdownCountRect": null,
+        "countdownHaloRect": null,
+        "titleRect": null,
+        "detailRect": null,
+        "viewport": {
+          "width": 402,
+          "height": 874
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 874,
+          "centerX": 201,
+          "centerY": 437,
+          "right": 402,
+          "bottom": 874
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 770,
+          "centerX": 201,
+          "centerY": 385,
+          "right": 402,
+          "bottom": 770,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 104,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "cssVisibleViewport": null,
+        "hasBodyScroll": false,
+        "media": []
+      },
+      "countdownAfterRip": false,
+      "ripAudioIds": [
+        "bgm-gameplay-loop-main",
+        "bgm-menu-loop-main",
+        "sfx-ball-lost",
+        "sfx-game-over",
+        "sfx-game-start",
+        "sfx-offline-ready",
+        "sfx-score-tick"
+      ],
+      "ripScreenshotPath": "docs/assets/issues/countdown-v6-safari-refresh/evidence/evi-countdown-v6-safari-refresh-rip.png"
+    },
+    {
+      "viewport": {
+        "name": "iphone-17-default-landscape",
+        "label": "iPhone 17 default landscape",
+        "models": [
+          "iPhone 17"
+        ],
+        "category": "mobile",
+        "orientation": "landscape",
+        "width": 874,
+        "height": 402,
+        "deviceScaleFactor": 3,
+        "isMobile": true,
+        "hasTouch": true,
+        "priority": "gameplay",
+        "smokeOverlays": false,
+        "screenshotRole": "landscape-default"
+      },
+      "viewportName": "iphone-17-default-landscape",
+      "ripState": {
+        "text": "RIPRecomeçando...",
+        "type": "rip",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "right": 874,
+          "bottom": 402,
+          "centerX": 437,
+          "centerY": 201
+        },
+        "stageRect": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "right": 874,
+          "bottom": 402,
+          "centerX": 437,
+          "centerY": 201
+        },
+        "canvasRect": {
+          "x": 6,
+          "y": 4,
+          "width": 862,
+          "height": 394,
+          "right": 868,
+          "bottom": 398,
+          "centerX": 437,
+          "centerY": 201
+        },
+        "contentRect": {
+          "x": 252.078125,
+          "y": 88.1875,
+          "width": 369.828125,
+          "height": 225.625,
+          "right": 621.90625,
+          "bottom": 313.8125,
+          "centerX": 436.9921875,
+          "centerY": 201
+        },
+        "compositionRect": {
+          "x": 57,
+          "y": 16,
+          "width": 760,
+          "height": 370,
+          "right": 817,
+          "bottom": 386,
+          "centerX": 437,
+          "centerY": 201
+        },
+        "countdownCountRect": null,
+        "countdownHaloRect": null,
+        "titleRect": {
+          "x": 252.078125,
+          "y": 88.1875,
+          "width": 369.828125,
+          "height": 176.625,
+          "right": 621.90625,
+          "bottom": 264.8125,
+          "centerX": 436.9921875,
+          "centerY": 176.5
+        },
+        "detailRect": {
+          "x": 344.390625,
+          "y": 272.8125,
+          "width": 185.1875,
+          "height": 41,
+          "right": 529.578125,
+          "bottom": 313.8125,
+          "centerX": 436.984375,
+          "centerY": 293.3125
+        },
+        "viewport": {
+          "width": 874,
+          "height": 402
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "centerX": 437,
+          "centerY": 201,
+          "right": 874,
+          "bottom": 402
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "centerX": 437,
+          "centerY": 201,
+          "right": 874,
+          "bottom": 402,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "cssVisibleViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "centerX": 437,
+          "centerY": 201,
+          "right": 874,
+          "bottom": 402,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "hasBodyScroll": false,
+        "media": [
+          {
+            "id": "rip-smoke",
+            "src": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+            "ariaHidden": "true",
+            "alt": "",
+            "rect": {
+              "x": 270.67999267578125,
+              "y": 48.75999450683594,
+              "width": 332.6400146484375,
+              "height": 304.47998046875,
+              "right": 603.3200073242188,
+              "bottom": 353.23997497558594,
+              "centerX": 437,
+              "centerY": 200.99998474121094
+            }
+          }
+        ]
+      },
+      "ripDurationMs": 1790,
+      "ripAfterTimeoutState": {
+        "text": "",
+        "type": "",
+        "rect": null,
+        "stageRect": null,
+        "canvasRect": {
+          "x": 6,
+          "y": 4,
+          "width": 862,
+          "height": 394,
+          "right": 868,
+          "bottom": 398,
+          "centerX": 437,
+          "centerY": 201
+        },
+        "contentRect": null,
+        "compositionRect": null,
+        "countdownCountRect": null,
+        "countdownHaloRect": null,
+        "titleRect": null,
+        "detailRect": null,
+        "viewport": {
+          "width": 874,
+          "height": 402
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "centerX": 437,
+          "centerY": 201,
+          "right": 874,
+          "bottom": 402
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 874,
+          "height": 402,
+          "centerX": 437,
+          "centerY": 201,
+          "right": 874,
+          "bottom": 402,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "cssVisibleViewport": null,
+        "hasBodyScroll": false,
+        "media": []
+      },
+      "countdownAfterRip": false,
+      "ripAudioIds": [
+        "bgm-gameplay-loop-main",
+        "bgm-menu-loop-main",
+        "sfx-ball-lost",
+        "sfx-game-over",
+        "sfx-game-start",
+        "sfx-offline-ready",
+        "sfx-score-tick"
+      ],
+      "ripScreenshotPath": "docs/assets/issues/countdown-v6-safari-refresh/evidence/evi-countdown-v6-safari-refresh-rip-iphone-land.png"
+    },
+    {
+      "viewport": {
+        "name": "ipad-11-a16-air-default",
+        "label": "iPad 11/Air 11 default portrait",
+        "models": [
+          "iPad 11-inch (A16)",
+          "iPad Air 11-inch (M2/M3)"
+        ],
+        "category": "tablet",
+        "orientation": "portrait",
+        "width": 820,
+        "height": 1180,
+        "deviceScaleFactor": 2,
+        "isMobile": true,
+        "hasTouch": true,
+        "priority": "gameplay",
+        "smokeOverlays": false,
+        "screenshotRole": "tablet-default"
+      },
+      "viewportName": "ipad-11-a16-air-default",
+      "ripState": {
+        "text": "RIPRecomeçando...",
+        "type": "rip",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 820,
+          "height": 1180,
+          "right": 820,
+          "bottom": 1180,
+          "centerX": 410,
+          "centerY": 590
+        },
+        "stageRect": {
+          "x": 0,
+          "y": 0,
+          "width": 820,
+          "height": 1180,
+          "right": 820,
+          "bottom": 1180,
+          "centerX": 410,
+          "centerY": 590
+        },
+        "canvasRect": {
+          "x": 33,
+          "y": 85,
+          "width": 754,
+          "height": 502,
+          "right": 787,
+          "bottom": 587,
+          "centerX": 410,
+          "centerY": 336
+        },
+        "contentRect": {
+          "x": 236.25,
+          "y": 482.515625,
+          "width": 347.484375,
+          "height": 214.96875,
+          "right": 583.734375,
+          "bottom": 697.484375,
+          "centerX": 409.9921875,
+          "centerY": 590
+        },
+        "compositionRect": {
+          "x": 30,
+          "y": 210,
+          "width": 760,
+          "height": 760,
+          "right": 790,
+          "bottom": 970,
+          "centerX": 410,
+          "centerY": 590
+        },
+        "countdownCountRect": null,
+        "countdownHaloRect": null,
+        "titleRect": {
+          "x": 236.25,
+          "y": 482.515625,
+          "width": 347.484375,
+          "height": 165.96875,
+          "right": 583.734375,
+          "bottom": 648.484375,
+          "centerX": 409.9921875,
+          "centerY": 565.5
+        },
+        "detailRect": {
+          "x": 317.390625,
+          "y": 656.484375,
+          "width": 185.1875,
+          "height": 41,
+          "right": 502.578125,
+          "bottom": 697.484375,
+          "centerX": 409.984375,
+          "centerY": 676.984375
+        },
+        "viewport": {
+          "width": 820,
+          "height": 1180
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 820,
+          "height": 1180,
+          "centerX": 410,
+          "centerY": 590,
+          "right": 820,
+          "bottom": 1180
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 820,
+          "height": 1180,
+          "centerX": 410,
+          "centerY": 590,
+          "right": 820,
+          "bottom": 1180,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "cssVisibleViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 820,
+          "height": 1180,
+          "centerX": 410,
+          "centerY": 590,
+          "right": 820,
+          "bottom": 1180,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "hasBodyScroll": false,
+        "media": [
+          {
+            "id": "rip-smoke",
+            "src": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+            "ariaHidden": "true",
+            "alt": "",
+            "rect": {
+              "x": 86.16000366210938,
+              "y": 266.1600036621094,
+              "width": 647.679931640625,
+              "height": 647.679931640625,
+              "right": 733.8399353027344,
+              "bottom": 913.8399353027344,
+              "centerX": 409.9999694824219,
+              "centerY": 589.9999694824219
+            }
+          }
+        ]
+      },
+      "ripDurationMs": 1765,
+      "ripAfterTimeoutState": {
+        "text": "",
+        "type": "",
+        "rect": null,
+        "stageRect": null,
+        "canvasRect": {
+          "x": 33,
+          "y": 85,
+          "width": 754,
+          "height": 502,
+          "right": 787,
+          "bottom": 587,
+          "centerX": 410,
+          "centerY": 336
+        },
+        "contentRect": null,
+        "compositionRect": null,
+        "countdownCountRect": null,
+        "countdownHaloRect": null,
+        "titleRect": null,
+        "detailRect": null,
+        "viewport": {
+          "width": 820,
+          "height": 1180
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 820,
+          "height": 1180,
+          "centerX": 410,
+          "centerY": 590,
+          "right": 820,
+          "bottom": 1180
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 820,
+          "height": 1180,
+          "centerX": 410,
+          "centerY": 590,
+          "right": 820,
+          "bottom": 1180,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "cssVisibleViewport": null,
+        "hasBodyScroll": false,
+        "media": []
+      },
+      "countdownAfterRip": false,
+      "ripAudioIds": [
+        "bgm-gameplay-loop-main",
+        "bgm-menu-loop-main",
+        "sfx-ball-lost",
+        "sfx-game-over",
+        "sfx-game-start",
+        "sfx-offline-ready",
+        "sfx-score-tick"
+      ],
+      "ripScreenshotPath": "docs/assets/issues/countdown-v6-safari-refresh/evidence/evi-countdown-v6-safari-refresh-rip-ipad.png"
+    },
+    {
+      "viewport": {
+        "name": "desktop-laptop",
+        "label": "Desktop laptop amplo",
+        "models": [
+          "Laptop 1440x900"
+        ],
+        "category": "desktop",
+        "orientation": "landscape",
+        "width": 1440,
+        "height": 900,
+        "deviceScaleFactor": 1,
+        "isMobile": false,
+        "hasTouch": false,
+        "priority": "gameplay",
+        "smokeOverlays": true,
+        "screenshotRole": "desktop-default"
+      },
+      "viewportName": "desktop-laptop",
+      "ripState": {
+        "text": "RIPRecomeçando...",
+        "type": "rip",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "right": 1440,
+          "bottom": 900,
+          "centerX": 720,
+          "centerY": 450
+        },
+        "stageRect": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "right": 1440,
+          "bottom": 900,
+          "centerX": 720,
+          "centerY": 450
+        },
+        "canvasRect": {
+          "x": 192,
+          "y": 85,
+          "width": 1056,
+          "height": 704,
+          "right": 1248,
+          "bottom": 789,
+          "centerX": 720,
+          "centerY": 437
+        },
+        "contentRect": {
+          "x": 535.078125,
+          "y": 337.1875,
+          "width": 369.828125,
+          "height": 225.625,
+          "right": 904.90625,
+          "bottom": 562.8125,
+          "centerX": 719.9921875,
+          "centerY": 450
+        },
+        "compositionRect": {
+          "x": 340,
+          "y": 70,
+          "width": 760,
+          "height": 760,
+          "right": 1100,
+          "bottom": 830,
+          "centerX": 720,
+          "centerY": 450
+        },
+        "countdownCountRect": null,
+        "countdownHaloRect": null,
+        "titleRect": {
+          "x": 535.078125,
+          "y": 337.1875,
+          "width": 369.828125,
+          "height": 176.625,
+          "right": 904.90625,
+          "bottom": 513.8125,
+          "centerX": 719.9921875,
+          "centerY": 425.5
+        },
+        "detailRect": {
+          "x": 627.390625,
+          "y": 521.8125,
+          "width": 185.1875,
+          "height": 41,
+          "right": 812.578125,
+          "bottom": 562.8125,
+          "centerX": 719.984375,
+          "centerY": 542.3125
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "centerX": 720,
+          "centerY": 450,
+          "right": 1440,
+          "bottom": 900
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "centerX": 720,
+          "centerY": 450,
+          "right": 1440,
+          "bottom": 900,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "cssVisibleViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "centerX": 720,
+          "centerY": 450,
+          "right": 1440,
+          "bottom": 900,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "hasBodyScroll": false,
+        "media": [
+          {
+            "id": "rip-smoke",
+            "src": "/assets/visual/vfx/vfx-game-over-rip-smoke.svg",
+            "ariaHidden": "true",
+            "alt": "",
+            "rect": {
+              "x": 396.1600036621094,
+              "y": 126.16000366210938,
+              "width": 647.679931640625,
+              "height": 647.679931640625,
+              "right": 1043.8399353027344,
+              "bottom": 773.8399353027344,
+              "centerX": 719.9999694824219,
+              "centerY": 449.9999694824219
+            }
+          }
+        ]
+      },
+      "ripDurationMs": 1799,
+      "ripAfterTimeoutState": {
+        "text": "",
+        "type": "",
+        "rect": null,
+        "stageRect": null,
+        "canvasRect": {
+          "x": 192,
+          "y": 85,
+          "width": 1056,
+          "height": 704,
+          "right": 1248,
+          "bottom": 789,
+          "centerX": 720,
+          "centerY": 437
+        },
+        "contentRect": null,
+        "compositionRect": null,
+        "countdownCountRect": null,
+        "countdownHaloRect": null,
+        "titleRect": null,
+        "detailRect": null,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "visualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "centerX": 720,
+          "centerY": 450,
+          "right": 1440,
+          "bottom": 900
+        },
+        "usableVisualViewport": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 900,
+          "centerX": 720,
+          "centerY": 450,
+          "right": 1440,
+          "bottom": 900,
+          "browserChromeTopInset": 0,
+          "browserChromeBottomInset": 0,
+          "browserChromeLeftInset": 0,
+          "browserChromeRightInset": 0
+        },
+        "cssVisibleViewport": null,
+        "hasBodyScroll": false,
+        "media": []
+      },
+      "countdownAfterRip": false,
+      "ripAudioIds": [
+        "bgm-gameplay-loop-main",
+        "bgm-menu-loop-main",
+        "sfx-ball-lost",
+        "sfx-game-over",
+        "sfx-game-start",
+        "sfx-offline-ready",
+        "sfx-score-tick"
+      ],
+      "ripScreenshotPath": "docs/assets/issues/countdown-v6-safari-refresh/evidence/evi-countdown-v6-safari-refresh-rip-desktop.png"
+    }
+  ],
+  "levelAudioIds": [
+    "bgm-gameplay-loop-main",
+    "sfx-brick-break-purple",
+    "sfx-brick-hit",
+    "sfx-game-start",
+    "sfx-level-complete",
+    "sfx-level-toast-in",
+    "sfx-offline-ready",
+    "sfx-score-tick"
+  ],
+  "ripAudioIds": [
+    "bgm-gameplay-loop-main",
+    "bgm-menu-loop-main",
+    "sfx-ball-lost",
+    "sfx-game-over",
+    "sfx-game-start",
+    "sfx-offline-ready",
+    "sfx-score-tick"
+  ],
+  "cachedPaths": [
+    "/assets/visual/vfx/vfx-countdown-circle-overlay.svg",
+    "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
+    "/assets/visual/vfx/vfx-level-up-star-overlay.svg",
+    "/assets/visual/vfx/vfx-level-up-twirl-overlay.svg",
+    "/assets/visual/vfx/vfx-game-over-rip-smoke.svg"
+  ],
+  "countdownScreenshotPath": "docs/assets/issues/countdown-v6-safari-refresh/evidence/evi-countdown-v6-safari-refresh-portrait.png",
+  "countdownLandscapeScreenshotPath": "docs/assets/issues/countdown-v6-safari-refresh/evidence/evi-countdown-v6-safari-refresh-landscape.png",
+  "levelUpScreenshotPath": "docs/assets/issues/countdown-v6-safari-refresh/evidence/evi-countdown-v6-safari-refresh-level.png",
+  "ripScreenshotPath": "docs/assets/issues/countdown-v6-safari-refresh/evidence/evi-countdown-v6-safari-refresh-rip.png",
+  "externalAudioRequests": [],
+  "externalMediaRequests": [],
+  "consoleProblems": []
+}
