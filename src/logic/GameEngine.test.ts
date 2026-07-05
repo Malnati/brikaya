@@ -28,7 +28,7 @@ import { GameEngine } from "./GameEngine";
 import {
   drawBallTurretBackdrop,
   drawBallTurretGlassOverlay,
-  drawBallTurretReticle,
+  drawBallTurretTrampoline,
 } from "./rendering/ballTurretRenderer";
 
 const mockBallInstances: any[] = [];
@@ -205,7 +205,7 @@ jest.mock("../utils/logger", () => ({
 jest.mock("./rendering/ballTurretRenderer", () => ({
   drawBallTurretBackdrop: jest.fn(),
   drawBallTurretGlassOverlay: jest.fn(),
-  drawBallTurretReticle: jest.fn(),
+  drawBallTurretTrampoline: jest.fn(),
 }));
 
 describe("GameEngine", () => {
@@ -291,7 +291,7 @@ describe("GameEngine", () => {
     await (engine as any).loop();
 
     expect(drawBallTurretBackdrop).not.toHaveBeenCalled();
-    expect(drawBallTurretReticle).not.toHaveBeenCalled();
+    expect(drawBallTurretTrampoline).not.toHaveBeenCalled();
     expect(drawBallTurretGlassOverlay).not.toHaveBeenCalled();
     expect((engine as any).paddle.draw).toHaveBeenCalled();
   });
@@ -327,7 +327,13 @@ describe("GameEngine", () => {
         paddlePosition: expect.any(Object),
       }),
     );
-    expect(drawBallTurretReticle).toHaveBeenCalled();
+    const turretGeometry = (drawBallTurretBackdrop as jest.Mock).mock
+      .calls[0][1].geometry;
+    expect(turretGeometry.brickArcStartAngle).toBeGreaterThan(0);
+    expect(turretGeometry.brickArcEndAngle).toBeGreaterThan(
+      turretGeometry.brickArcStartAngle,
+    );
+    expect(drawBallTurretTrampoline).toHaveBeenCalled();
     expect(drawBallTurretGlassOverlay).toHaveBeenCalled();
     expect((engine as any).paddle.draw).not.toHaveBeenCalled();
   });

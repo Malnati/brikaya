@@ -52,6 +52,7 @@ import {
   type GameVisualAssetRole,
 } from "../utils/visualAssetResolver";
 import {
+  calculateBallTurretPlayfieldGeometry,
   calculateRadialPlayfieldGeometry,
   type RadialPlayfieldGeometry,
 } from "../utils/radialGeometry";
@@ -59,7 +60,7 @@ import { LOG, ERROR, WARN } from "../utils/logger";
 import {
   drawBallTurretBackdrop,
   drawBallTurretGlassOverlay,
-  drawBallTurretReticle,
+  drawBallTurretTrampoline,
 } from "./rendering/ballTurretRenderer";
 
 LOG("📦 GameEngine.ts carregado, gameLogger:", gameLogger);
@@ -287,11 +288,7 @@ export class GameEngine {
       this.canvasSize.width,
       this.canvasSize.height,
     );
-    this.radialGeometry = calculateRadialPlayfieldGeometry(
-      this.canvasSize.width,
-      this.canvasSize.height,
-      this.dimensions,
-    );
+    this.radialGeometry = this.createRadialGeometry(this.dimensions);
     this.baseBrickRows = this.dimensions.brickRows;
 
     LOG(
@@ -342,6 +339,24 @@ export class GameEngine {
 
     LOG(`🎮 GameEngine constructor finalizado`);
     this.setupListeners();
+  }
+
+  private createRadialGeometry(
+    dimensions: DynamicGameDimensions,
+  ): RadialPlayfieldGeometry {
+    if (this.isBallTurretMode()) {
+      return calculateBallTurretPlayfieldGeometry(
+        this.canvasSize.width,
+        this.canvasSize.height,
+        dimensions,
+      );
+    }
+
+    return calculateRadialPlayfieldGeometry(
+      this.canvasSize.width,
+      this.canvasSize.height,
+      dimensions,
+    );
   }
 
   private createDimensions(
@@ -436,11 +451,7 @@ export class GameEngine {
       this.canvasSize.width,
       this.canvasSize.height,
     );
-    this.radialGeometry = calculateRadialPlayfieldGeometry(
-      this.canvasSize.width,
-      this.canvasSize.height,
-      this.dimensions,
-    );
+    this.radialGeometry = this.createRadialGeometry(this.dimensions);
     this.configureBrickRows();
     this.scaleX = this.canvasSize.width / CANVAS_WIDTH;
     this.scaleY = this.canvasSize.height / CANVAS_HEIGHT;
@@ -455,6 +466,7 @@ export class GameEngine {
         this.canvasSize.width,
         this.canvasSize.height,
         this.dimensions,
+        this.radialGeometry,
       ),
     );
     this.bricks.resize(this.dimensions, this.maxBrickRows, this.radialGeometry);
@@ -800,11 +812,7 @@ export class GameEngine {
       this.configureBrickRows();
     }
     this.applyLevelBrickRows(nextLevel);
-    this.radialGeometry = calculateRadialPlayfieldGeometry(
-      this.canvasSize.width,
-      this.canvasSize.height,
-      this.dimensions,
-    );
+    this.radialGeometry = this.createRadialGeometry(this.dimensions);
     this.paddle.reset();
     this.activePowerUp = null;
     this.resetLaserFanSpawnCounterForLevel();
@@ -1876,7 +1884,7 @@ export class GameEngine {
 
   private drawPlayerControl() {
     if (this.isBallTurretMode()) {
-      drawBallTurretReticle(this.ctx, {
+      drawBallTurretTrampoline(this.ctx, {
         canvasSize: this.canvasSize,
         geometry: this.radialGeometry,
         paddlePosition: this.paddle.position,

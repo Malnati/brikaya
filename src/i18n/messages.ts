@@ -20,7 +20,8 @@ export const EN_MESSAGES = {
   "menu.gameMode": "Game mode",
   "gameMode.classic": "Classic",
   "gameMode.ballTurret": "Turret",
-  "gameMode.ballTurretHint": "Aim through the bubble and defend the circle.",
+  "gameMode.ballTurretHint":
+    "Bounce from the trampoline and defend the circle.",
   "menu.appearance": "Appearance",
   "menu.highScores": "High scores",
   "menu.privacy": "Privacy",
@@ -229,7 +230,7 @@ const PT_BR_MESSAGES: TranslationCatalog = {
   "menu.gameMode": "Modo de jogo",
   "gameMode.classic": "Clássico",
   "gameMode.ballTurret": "Torreta",
-  "gameMode.ballTurretHint": "Mire pela bolha e defenda o círculo.",
+  "gameMode.ballTurretHint": "Rebata na cama elástica e defenda o círculo.",
   "menu.appearance": "Aparência",
   "menu.highScores": "Recordes",
   "menu.privacy": "Privacidade",
@@ -413,7 +414,8 @@ const ES_419_MESSAGES: TranslationCatalog = {
   "menu.gameMode": "Modo de juego",
   "gameMode.classic": "Clásico",
   "gameMode.ballTurret": "Torreta",
-  "gameMode.ballTurretHint": "Apunta por la burbuja y defiende el círculo.",
+  "gameMode.ballTurretHint":
+    "Rebota en la cama elástica y defiende el círculo.",
   "menu.appearance": "Apariencia",
   "menu.highScores": "Récords",
   "menu.privacy": "Privacidad",

@@ -23,6 +23,7 @@ const TURRET_BUTTON_PATTERN = /torreta|turret/i;
 const CLASSIC_BUTTON_PATTERN = /clássico|classic/i;
 const INTERNAL_COPY_PATTERN =
   /service worker|cache|runtime|localStorage|IndexedDB|Canvas|engine|build/i;
+const OLD_TURRET_AIM_COPY_PATTERN = /mire|aim|reticle|crosshair|metralhadora/i;
 const VIEWPORTS = [
   {
     name: "desktop",
@@ -101,8 +102,16 @@ async function clickButtonByPattern(page, patternSource) {
 
 async function readBallTurretState(page) {
   return page.evaluate(
-    ({ internalCopyPatternSource, gameModeHeadingPatternSource }) => {
+    ({
+      internalCopyPatternSource,
+      gameModeHeadingPatternSource,
+      oldTurretAimCopyPatternSource,
+    }) => {
       const internalCopyPattern = new RegExp(internalCopyPatternSource, "i");
+      const oldTurretAimCopyPattern = new RegExp(
+        oldTurretAimCopyPatternSource,
+        "i",
+      );
       const gameModeHeadingPattern = new RegExp(
         gameModeHeadingPatternSource,
         "i",
@@ -141,16 +150,20 @@ async function readBallTurretState(page) {
         bodyHasInternalCopy: internalCopyPattern.test(
           document.body.textContent || "",
         ),
+        bodyHasOldAimCopy: oldTurretAimCopyPattern.test(
+          document.body.textContent || "",
+        ),
       };
     },
     {
       internalCopyPatternSource: INTERNAL_COPY_PATTERN.source,
       gameModeHeadingPatternSource: GAME_MODE_HEADING_PATTERN.source,
+      oldTurretAimCopyPatternSource: OLD_TURRET_AIM_COPY_PATTERN.source,
     },
   );
 }
 
-async function exerciseAim(page) {
+async function exerciseTrampoline(page) {
   const canvasHandle = await page.$("canvas");
   const box = await canvasHandle?.boundingBox();
   if (!box) return;
@@ -169,7 +182,7 @@ async function runViewport(page, baseUrl, config) {
     timeout: 60000,
   });
   await acceptPrivacyConsentIfPresent(page);
-  await exerciseAim(page);
+  await exerciseTrampoline(page);
 
   const menuOpened = await clickButtonByPattern(
     page,
@@ -212,8 +225,7 @@ async function runViewport(page, baseUrl, config) {
     hidden: true,
     timeout: 5000,
   });
-  await exerciseAim(page);
-  await new Promise((resolve) => setTimeout(resolve, 600));
+  await new Promise((resolve) => setTimeout(resolve, 180));
 
   const gameplayState = await readBallTurretState(page);
   assert(gameplayState.hasCanvas, `${config.name}: canvas ausente.`);
@@ -229,11 +241,27 @@ async function runViewport(page, baseUrl, config) {
     !gameplayState.bodyHasInternalCopy,
     `${config.name}: cópia pública expõe detalhe técnico.`,
   );
+  assert(
+    !gameplayState.bodyHasOldAimCopy,
+    `${config.name}: cópia pública ainda fala em mira/metralhadora.`,
+  );
 
   ensureParentDirectory(config.screenshotPath);
   await page.screenshot({ path: config.screenshotPath, fullPage: true });
 
-  return { name: config.name, menuState, gameplayState };
+  await exerciseTrampoline(page);
+  await new Promise((resolve) => setTimeout(resolve, 120));
+  const postExerciseState = await readBallTurretState(page);
+  assert(
+    !postExerciseState.bodyHasInternalCopy,
+    `${config.name}: cópia pública expõe detalhe técnico após controle.`,
+  );
+  assert(
+    !postExerciseState.bodyHasOldAimCopy,
+    `${config.name}: cópia pública ainda fala em mira/metralhadora após controle.`,
+  );
+
+  return { name: config.name, menuState, gameplayState, postExerciseState };
 }
 
 async function run() {

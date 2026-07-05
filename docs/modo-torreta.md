@@ -3,7 +3,7 @@
 
 ## Objetivo
 
-Adicionar ao Brikaya um modo alternativo de jogo acionado pelo menu: **Torreta**. A fantasia é a visão do atirador dentro de uma torreta esférica de bombardeiro, com mira, cano, bolha de vidro e profundidade visual dentro do círculo de jogo.
+Adicionar ao Brikaya um modo alternativo de jogo acionado pelo menu: **Torreta**. A fantasia é a visão do atirador dentro de uma torreta esférica de bombardeiro, com cama elástica, bolha de vidro e profundidade visual dentro do círculo de jogo.
 
 ## Contexto
 
@@ -24,11 +24,11 @@ Adicionar ao Brikaya um modo alternativo de jogo acionado pelo menu: **Torreta**
   - fundo com profundidade radial;
   - anéis internos;
   - horizonte elíptico;
-  - cano alinhado ao controle do jogador;
-  - mira/crosshair;
+  - cama elástica alinhada ao controle do jogador;
+  - cama elástica curva;
   - camada de vidro e vinheta esférica.
 - O modo clássico preserva a raquete original.
-- O modo Torreta substitui a raquete visível por mira/metralhadora, mantendo a mesma lógica de colisão e progressão.
+- O modo Torreta usa uma cama elástica curva como controle visual, mantendo a mesma lógica de colisão e progressão.
 - Evidência visual desktop, mobile e menu em `docs/assets/issues/ball-turret-mode/evidence/`.
 
 ## Fora de escopo
@@ -53,7 +53,7 @@ Adicionar ao Brikaya um modo alternativo de jogo acionado pelo menu: **Torreta**
 - Renderizador dedicado: `src/logic/rendering/ballTurretRenderer.ts`.
 - `GameEngine` escolhe entre:
   - modo clássico: campo radial + raquete;
-  - modo Torreta: fundo de torreta + mira + vidro.
+  - modo Torreta: fundo de torreta + cama elástica + vidro.
 - A lógica de física continua compartilhada para reduzir risco e preservar progressão.
 
 ### UI e linguagem
@@ -62,7 +62,7 @@ Adicionar ao Brikaya um modo alternativo de jogo acionado pelo menu: **Torreta**
   - `Modo de jogo`
   - `Clássico`
   - `Torreta`
-  - `Mire pela bolha e defenda o círculo.`
+  - `Rebata na cama elástica e defenda o círculo.`
 - Nenhum detalhe de implementação aparece na interface do jogador.
 
 ## Cobertura de testes
@@ -73,7 +73,7 @@ Adicionar ao Brikaya um modo alternativo de jogo acionado pelo menu: **Torreta**
   - valida modos conhecidos;
   - resolve valores inválidos para `classic`.
 - `src/logic/rendering/ballTurretRenderer.test.ts`
-  - desenha fundo, mira e vidro;
+  - desenha fundo, cama elástica e vidro;
   - usa geometria radial quando disponível;
   - mantém fallback quando a posição radial não existe.
 - `src/components/Game.test.tsx`
@@ -95,7 +95,7 @@ Adicionar ao Brikaya um modo alternativo de jogo acionado pelo menu: **Torreta**
 - `tests/e2e/cloudflare-ball-turret-qa.js`
   - abre `?qaScenario=ball-turret`;
   - valida menu e botões de modo;
-  - exercita mira por mouse e teclado;
+  - exercita cama elástica por mouse e teclado;
   - captura desktop, mobile e menu;
   - verifica canvas visível e HUD ativo;
   - bloqueia cópia pública com detalhes técnicos.
@@ -133,7 +133,7 @@ PATH=/opt/homebrew/opt/node@23/bin:$PATH \
 
 ## Validação publicada
 
-Após merge, tag, release e deploy:
+Após merge, release e deploy:
 
 ```bash
 PATH=/opt/homebrew/opt/node@23/bin:$PATH make cloudflare-public-check
@@ -149,15 +149,15 @@ PATH=/opt/homebrew/opt/node@23/bin:$PATH \
 
 ## Publicação
 
-- Versão: `1.2.0`.
-- Tag planejada: `v1.2.0`.
-- Release: `Brikaya v1.2.0 — Modo Torreta`.
+- Release inicial do modo: `v1.2.0` — `Brikaya v1.2.0 — Modo Torreta`.
+- Release do ajuste atual: `v1.2.1` — `Brikaya v1.2.1 — Torreta com cama elástica`.
+- Pacote atual: `1.2.1`.
 - Deploy: Cloudflare Pages com domínio canônico `https://brikaya.com/`.
 
 ## Evidências esperadas
 
 - PR da feature com screenshot centralizado em `## Evidência visual`.
-- Release note versionada em `docs/releases/v1.2.0.md`.
+- Release note versionada em `docs/releases/v1.2.1.md`.
 - Evidência visual versionada:
   - `docs/assets/issues/ball-turret-mode/evidence/evi-ball-turret-menu.png`
   - `docs/assets/issues/ball-turret-mode/evidence/evi-ball-turret-gameplay-desktop.png`

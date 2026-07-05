@@ -1,7 +1,7 @@
 import {
   drawBallTurretBackdrop,
   drawBallTurretGlassOverlay,
-  drawBallTurretReticle,
+  drawBallTurretTrampoline,
   type BallTurretRenderState,
 } from "./ballTurretRenderer";
 
@@ -69,12 +69,12 @@ function createState(): BallTurretRenderState {
 }
 
 describe("ballTurretRenderer", () => {
-  it("desenha fundo, retícula e vidro sem depender de asset externo", () => {
+  it("desenha fundo, cama elástica e vidro sem depender de asset externo", () => {
     const ctx = createMockContext();
     const state = createState();
 
     drawBallTurretBackdrop(ctx, state);
-    drawBallTurretReticle(ctx, state);
+    drawBallTurretTrampoline(ctx, state);
     drawBallTurretGlassOverlay(ctx, state);
 
     expect(ctx.createRadialGradient).toHaveBeenCalled();
