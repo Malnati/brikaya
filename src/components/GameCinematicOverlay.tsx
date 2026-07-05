@@ -75,9 +75,6 @@ const VIEWPORT_BOTTOM_INSET_PARAM = "qaViewportBottomInset";
 const VIEWPORT_LEFT_INSET_PARAM = "qaViewportLeftInset";
 const VIEWPORT_RIGHT_INSET_PARAM = "qaViewportRightInset";
 const RIP_BROWSER_CHROME_SAFE_BOTTOM_PX = 104;
-const COUNTDOWN_BROWSER_CHROME_SAFE_BOTTOM_PX = 104;
-const COUNTDOWN_LANDSCAPE_SAFE_TOP_MAX_PX = 236;
-const COUNTDOWN_LANDSCAPE_SAFE_TOP_RATIO = 0.4;
 const RIP_MIN_VISIBLE_VIEWPORT_SIZE_PX = 240;
 const COUNTDOWN_MIN_VISIBLE_VIEWPORT_SIZE_PX = 0;
 const VIEWPORT_MEASUREMENT_TOLERANCE_PX = 1;
@@ -104,6 +101,10 @@ const CENTERED_LAYER_STYLE: CSSProperties = {
   left: "50%",
   top: "50%",
   transform: "translate(-50%, -50%)",
+};
+const COUNTDOWN_COUNT_CENTERED_LAYER_STYLE: CSSProperties = {
+  ...CENTERED_LAYER_STYLE,
+  transform: "translate(-50%, calc(-50% + 0.1em))",
 };
 
 function resolveCinematicMediaPath(
@@ -160,14 +161,6 @@ function shouldReserveMobileBrowserChrome(): boolean {
   );
 }
 
-function shouldReserveLandscapeBrowserChrome(): boolean {
-  return (
-    window.matchMedia?.(
-      "(pointer: coarse) and (orientation: landscape) and (max-height: 600px)",
-    ).matches === true && !isStandaloneDisplayMode()
-  );
-}
-
 function visualViewportAlreadyExcludesBrowserChrome(
   visualViewport: VisualViewport | null | undefined,
   width: number,
@@ -185,17 +178,8 @@ function visualViewportAlreadyExcludesBrowserChrome(
   );
 }
 
-function countdownLandscapeTopInset(height: number): number {
-  return Math.min(
-    COUNTDOWN_LANDSCAPE_SAFE_TOP_MAX_PX,
-    Math.round(height * COUNTDOWN_LANDSCAPE_SAFE_TOP_RATIO),
-  );
-}
-
 interface UsableViewportStyleOptions {
   includeRipLegacyProperties?: boolean;
-  reservePortraitBottomInset?: boolean;
-  reserveLandscapeTopInset?: boolean;
   minVisibleSize: number;
 }
 
@@ -205,8 +189,6 @@ function requestedInset(searchParams: URLSearchParams, name: string): number {
 
 function measuredUsableViewportStyle({
   includeRipLegacyProperties = false,
-  reservePortraitBottomInset = false,
-  reserveLandscapeTopInset = false,
   minVisibleSize,
 }: UsableViewportStyleOptions): UsableViewportStyle {
   const visualViewport = window.visualViewport;
@@ -229,13 +211,6 @@ function measuredUsableViewportStyle({
     left,
     top,
   );
-  const fallbackPortraitBottomInset =
-    reservePortraitBottomInset &&
-    !visualViewportIsUsable &&
-    requestedBottomInset === 0 &&
-    shouldReserveMobileBrowserChrome()
-      ? COUNTDOWN_BROWSER_CHROME_SAFE_BOTTOM_PX
-      : 0;
   const fallbackRipBottomInset =
     includeRipLegacyProperties &&
     !visualViewportIsUsable &&
@@ -243,14 +218,7 @@ function measuredUsableViewportStyle({
     shouldReserveMobileBrowserChrome()
       ? RIP_BROWSER_CHROME_SAFE_BOTTOM_PX
       : 0;
-  const fallbackLandscapeTopInset =
-    reserveLandscapeTopInset &&
-    !visualViewportIsUsable &&
-    requestedTopInset === 0 &&
-    shouldReserveLandscapeBrowserChrome()
-      ? countdownLandscapeTopInset(height)
-      : 0;
-  const usableTop = top + Math.max(requestedTopInset, fallbackLandscapeTopInset);
+  const usableTop = top + requestedTopInset;
   const usableLeft = left + requestedLeftInset;
   const usableWidth = Math.max(
     minVisibleSize,
@@ -258,7 +226,6 @@ function measuredUsableViewportStyle({
   );
   const bottomInset = Math.max(
     requestedBottomInset,
-    fallbackPortraitBottomInset,
     fallbackRipBottomInset,
   );
   const visibleHeight = Math.max(
@@ -320,8 +287,6 @@ function useUsableViewportStyle(
 function useCountdownViewportStyle(enabled: boolean): UsableViewportStyle | undefined {
   return useUsableViewportStyle(enabled, {
     minVisibleSize: COUNTDOWN_MIN_VISIBLE_VIEWPORT_SIZE_PX,
-    reserveLandscapeTopInset: true,
-    reservePortraitBottomInset: true,
   });
 }
 
@@ -465,7 +430,7 @@ export function GameCinematicOverlay({
                 <span
                   className={`${BASE_CLASS_NAME}__count`}
                   data-testid={COUNTDOWN_COUNT_TEST_ID}
-                  style={CENTERED_LAYER_STYLE}
+                  style={COUNTDOWN_COUNT_CENTERED_LAYER_STYLE}
                 >
                   {state.value}
                 </span>,
