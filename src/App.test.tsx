@@ -157,6 +157,12 @@ async function renderApp() {
   return result;
 }
 
+function publishTestBoardRect(rect: TestBoardRect = TEST_BOARD_RECT) {
+  act(() => {
+    mockLastGameProps?.onBoardRectChange?.(rect);
+  });
+}
+
 function createDeferredPromise() {
   let resolvePromise: () => void = () => {};
   const promise = new Promise<void>((resolve) => {
@@ -231,6 +237,7 @@ describe("App theme selector", () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
 
     await renderApp();
+    publishTestBoardRect();
 
     expect(
       screen.getByRole("dialog", { name: "Antes de jogar" }),
@@ -288,6 +295,7 @@ describe("App theme selector", () => {
     mockSystemTheme(true);
 
     await renderApp();
+    publishTestBoardRect();
 
     expect(
       screen.queryByRole("dialog", { name: "Antes de jogar" }),
@@ -928,7 +936,25 @@ describe("App theme selector", () => {
       "data-start-blocked",
       "true",
     );
+    expect(
+      screen.queryByTestId("game-cinematic-overlay"),
+    ).not.toBeInTheDocument();
+
+    act(() => {
+      jest.advanceTimersByTime(COUNTDOWN_STEP_MS);
+    });
+    expect(
+      screen.queryByTestId("game-cinematic-overlay"),
+    ).not.toBeInTheDocument();
+
+    publishTestBoardRect();
     expect(screen.getByTestId("game-cinematic-overlay")).toHaveTextContent("3");
+    expect(screen.getByTestId(STAGE_TEST_ID)).not.toHaveStyle({
+      left: `${TEST_BOARD_RECT.x}px`,
+      top: `${TEST_BOARD_RECT.y}px`,
+      width: `${TEST_BOARD_RECT.width}px`,
+      height: `${TEST_BOARD_RECT.height}px`,
+    });
 
     act(() => {
       jest.advanceTimersByTime(COUNTDOWN_STEP_MS);
@@ -957,6 +983,7 @@ describe("App theme selector", () => {
     mockSystemTheme(true);
 
     await renderApp();
+    publishTestBoardRect();
 
     act(() => {
       jest.advanceTimersByTime(COUNTDOWN_TOTAL_MS);
@@ -989,6 +1016,7 @@ describe("App theme selector", () => {
     const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
 
     await renderApp();
+    publishTestBoardRect();
 
     await user.click(screen.getByRole("button", { name: "Menu" }));
     await user.click(screen.getByTestId("appearance-option-pixel-sunset"));
@@ -1014,9 +1042,9 @@ describe("App theme selector", () => {
     mockSystemTheme(true);
 
     await renderApp();
+    publishTestBoardRect();
 
     act(() => {
-      mockLastGameProps?.onBoardRectChange?.(TEST_BOARD_RECT);
       jest.advanceTimersByTime(COUNTDOWN_TOTAL_MS);
       mockLastGameProps?.onLevelTransition?.(TEST_LEVEL_TRANSITION_PAYLOAD);
     });
@@ -1034,6 +1062,7 @@ describe("App theme selector", () => {
     mockSystemTheme(true);
 
     await renderApp();
+    publishTestBoardRect();
 
     act(() => {
       jest.advanceTimersByTime(COUNTDOWN_TOTAL_MS);

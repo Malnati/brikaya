@@ -65,6 +65,7 @@ const MEDIA_LOADING = "lazy";
 const MEDIA_DECODING = "async";
 const STAGE_TEST_ID = "game-cinematic-stage";
 const CONTENT_TEST_ID = "game-cinematic-content";
+const COUNTDOWN_COMPOSITION_TEST_ID = "game-cinematic-countdown-composition";
 const RIP_COMPOSITION_TEST_ID = "game-cinematic-rip-composition";
 const RIP_VIEWPORT_BOTTOM_INSET_PARAM = "qaViewportBottomInset";
 const RIP_BROWSER_CHROME_SAFE_BOTTOM_PX = 104;
@@ -233,15 +234,23 @@ function renderContent(children: ReactNode) {
   );
 }
 
-function renderRipComposition(children: ReactNode) {
+function renderComposition(children: ReactNode, testId: string) {
   return (
     <div
       className={RIP_COMPOSITION_CLASS_NAME}
-      data-testid={RIP_COMPOSITION_TEST_ID}
+      data-testid={testId}
     >
       {children}
     </div>
   );
+}
+
+function renderCountdownComposition(children: ReactNode) {
+  return renderComposition(children, COUNTDOWN_COMPOSITION_TEST_ID);
+}
+
+function renderRipComposition(children: ReactNode) {
+  return renderComposition(children, RIP_COMPOSITION_TEST_ID);
 }
 
 function overlayProps(
@@ -297,14 +306,16 @@ export function GameCinematicOverlay({
     return (
       <div {...overlayProps(state, labels)} role="status" aria-live="assertive">
         {renderStage(
-          <>
-            {renderMediaLayers(state, imageSetId)}
-            {renderContent(
-              <span className={`${BASE_CLASS_NAME}__count`}>
-                {state.value}
-              </span>,
-            )}
-          </>,
+          renderCountdownComposition(
+            <>
+              {renderMediaLayers(state, imageSetId)}
+              {renderContent(
+                <span className={`${BASE_CLASS_NAME}__count`}>
+                  {state.value}
+                </span>,
+              )}
+            </>,
+          ),
           boardRect,
         )}
       </div>

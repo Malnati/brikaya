@@ -140,4 +140,40 @@ describe("Game", () => {
       height: TEST_BOARD_RECT.height,
     });
   });
+
+  it("aguarda o tamanho responsivo antes de publicar o retângulo inicial", () => {
+    (
+      HTMLCanvasElement.prototype.getBoundingClientRect as jest.Mock
+    ).mockImplementation(function readSizedCanvasRect(this: HTMLCanvasElement) {
+      return {
+        x: TEST_BOARD_RECT.x,
+        y: TEST_BOARD_RECT.y,
+        width: this.width,
+        height: this.height,
+        bottom: TEST_BOARD_RECT.y + this.height,
+        left: TEST_BOARD_RECT.x,
+        right: TEST_BOARD_RECT.x + this.width,
+        top: TEST_BOARD_RECT.y,
+        toJSON: jest.fn(),
+      } as unknown as DOMRect;
+    });
+    const onBoardRectChange = jest.fn();
+
+    render(
+      <Game onScoreUpdate={jest.fn()} onBoardRectChange={onBoardRectChange} />,
+    );
+
+    expect(onBoardRectChange).not.toHaveBeenCalledWith({
+      x: TEST_BOARD_RECT.x,
+      y: TEST_BOARD_RECT.y,
+      width: 480,
+      height: 320,
+    });
+    expect(onBoardRectChange).toHaveBeenLastCalledWith({
+      x: TEST_BOARD_RECT.x,
+      y: TEST_BOARD_RECT.y,
+      width: 320,
+      height: 240,
+    });
+  });
 });

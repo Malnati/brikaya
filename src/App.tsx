@@ -106,6 +106,18 @@ const INITIAL_COUNTDOWN_OVERLAY: GameCinematicOverlayState = {
   value: CINEMATIC_COUNTDOWN_STEPS[COUNTDOWN_FIRST_STEP_INDEX],
 };
 
+function hasValidBoardRect(boardRect: GameBoardRect | null): boolean {
+  return Boolean(
+    boardRect &&
+      boardRect.width > 0 &&
+      boardRect.height > 0 &&
+      Number.isFinite(boardRect.x) &&
+      Number.isFinite(boardRect.y) &&
+      Number.isFinite(boardRect.width) &&
+      Number.isFinite(boardRect.height),
+  );
+}
+
 interface UpdateProgressState {
   progress: number;
 }
@@ -130,16 +142,17 @@ export default function App() {
   } = useLanguageLocationConsent();
   const shouldStartWithLanguageDetection =
     hasPrivacyConsent && hasLanguageLocationConsent;
+  const shouldStartWithInitialCountdown =
+    hasPrivacyConsent && !shouldStartWithLanguageDetection;
   const [cinematicOverlay, setCinematicOverlay] =
-    useState<GameCinematicOverlayState>(
-      hasPrivacyConsent && !shouldStartWithLanguageDetection
-        ? INITIAL_COUNTDOWN_OVERLAY
-        : null,
-    );
+    useState<GameCinematicOverlayState>(null);
   const [boardRect, setBoardRect] = useState<GameBoardRect | null>(null);
   const [isInitialCountdownActive, setIsInitialCountdownActive] = useState(
-    hasPrivacyConsent && !shouldStartWithLanguageDetection,
+    shouldStartWithInitialCountdown,
   );
+  const isBoardRectReady = hasValidBoardRect(boardRect);
+  const cinematicOverlayBoardRect =
+    cinematicOverlay?.type === "countdown" ? null : boardRect;
   const [isLanguageDetectionVisible, setIsLanguageDetectionVisible] = useState(
     shouldStartWithLanguageDetection,
   );
@@ -338,8 +351,9 @@ export default function App() {
   }, [qaScenario]);
 
   useEffect(() => {
-    if (!isInitialCountdownActive) return undefined;
+    if (!isInitialCountdownActive || !isBoardRectReady) return undefined;
 
+    setCinematicOverlay(INITIAL_COUNTDOWN_OVERLAY);
     audioSink.playAudio(GAME_AUDIO_IDS.COUNTDOWN_TICK);
     const timers = CINEMATIC_COUNTDOWN_STEPS.slice(
       COUNTDOWN_NEXT_STEP_INDEX,
@@ -367,7 +381,7 @@ export default function App() {
       }
       countdownTimerRefs.current = [];
     };
-  }, [audioSink, isInitialCountdownActive]);
+  }, [audioSink, isBoardRectReady, isInitialCountdownActive]);
 
   useEffect(() => {
     if (isAudioMuted || isMusicMuted) return undefined;
@@ -545,7 +559,7 @@ export default function App() {
   }, [audioSink]);
 
   const startInitialCountdown = useCallback(() => {
-    setCinematicOverlay(INITIAL_COUNTDOWN_OVERLAY);
+    setCinematicOverlay(null);
     setIsInitialCountdownActive(true);
     setIsMenuOpen(false);
   }, []);
@@ -1104,7 +1118,7 @@ export default function App() {
       <GameCinematicOverlay
         state={cinematicOverlay}
         imageSetId={selection.imageSetId}
-        boardRect={boardRect}
+        boardRect={cinematicOverlayBoardRect}
       />
       {isLanguageDetectionVisible && <LanguageDetectionOverlay />}
       {!hasPrivacyConsent && (
