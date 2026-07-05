@@ -25,6 +25,11 @@ import { POINTS_PER_BRICK } from "../constants/gameState";
 import { GAME_AUDIO_IDS, type GameAudioSink } from "../constants/audio";
 import { calculatePowerUpSize } from "../constants/powerUps";
 import { GameEngine } from "./GameEngine";
+import {
+  drawBallTurretBackdrop,
+  drawBallTurretGlassOverlay,
+  drawBallTurretReticle,
+} from "./rendering/ballTurretRenderer";
 
 const mockBallInstances: any[] = [];
 const mockBricksInstances: any[] = [];
@@ -62,7 +67,25 @@ function buildSpeedStateFromConfig(
 
 jest.mock("../objects/Paddle", () => ({
   Paddle: jest.fn().mockImplementation(() => ({
-    position: { x: 200, y: 580, width: 80, height: 10 },
+    position: {
+      x: 200,
+      y: 580,
+      width: 80,
+      height: 10,
+      radial: {
+        centerX: 400,
+        centerY: 300,
+        radius: 250,
+        startAngle: 1.2,
+        endAngle: 1.9,
+        centerAngle: 1.55,
+        thickness: 16,
+        movementStartAngle: 0.2,
+        movementEndAngle: 2.9,
+        lossStartAngle: 0.5,
+        lossEndAngle: 2.64,
+      },
+    },
     onKeyDown: jest.fn(),
     onKeyUp: jest.fn(),
     setPosition: jest.fn(),
@@ -179,6 +202,12 @@ jest.mock("../utils/logger", () => ({
   WARN: jest.fn(),
 }));
 
+jest.mock("./rendering/ballTurretRenderer", () => ({
+  drawBallTurretBackdrop: jest.fn(),
+  drawBallTurretGlassOverlay: jest.fn(),
+  drawBallTurretReticle: jest.fn(),
+}));
+
 describe("GameEngine", () => {
   let canvas: HTMLCanvasElement;
   let mockContext: CanvasRenderingContext2D;
@@ -251,6 +280,56 @@ describe("GameEngine", () => {
       gameState.bricksRemaining,
     );
     expect(gameState.speedState.elapsedLevelMs).toBeGreaterThanOrEqual(0);
+  });
+
+  it("mantém render clássico sem camada torreta", async () => {
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+
+    (engine as any).assetsLoaded = true;
+    (engine as any).isStopped = false;
+
+    await (engine as any).loop();
+
+    expect(drawBallTurretBackdrop).not.toHaveBeenCalled();
+    expect(drawBallTurretReticle).not.toHaveBeenCalled();
+    expect(drawBallTurretGlassOverlay).not.toHaveBeenCalled();
+    expect((engine as any).paddle.draw).toHaveBeenCalled();
+  });
+
+  it("renderiza camada torreta no modo ball-turret", async () => {
+    const engine = new GameEngine(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "ball-turret",
+    );
+
+    (engine as any).assetsLoaded = true;
+    (engine as any).isStopped = false;
+
+    await (engine as any).loop();
+
+    expect(drawBallTurretBackdrop).toHaveBeenCalledWith(
+      mockContext,
+      expect.objectContaining({
+        canvasSize: expect.objectContaining({
+          width: canvas.width,
+          height: canvas.height,
+        }),
+        geometry: expect.any(Object),
+        paddlePosition: expect.any(Object),
+      }),
+    );
+    expect(drawBallTurretReticle).toHaveBeenCalled();
+    expect(drawBallTurretGlassOverlay).toHaveBeenCalled();
+    expect((engine as any).paddle.draw).not.toHaveBeenCalled();
   });
 
   it("move a raquete pelo início do arraste touch na faixa sensível", () => {
@@ -829,7 +908,10 @@ describe("GameEngine", () => {
 
     expect(ball.setPosition).toHaveBeenCalledWith(
       dimensions.brickOffsetLeft + dimensions.brickWidth / 2,
-      dimensions.brickOffsetTop + dimensions.brickHeight + ball.position.radius - 1,
+      dimensions.brickOffsetTop +
+        dimensions.brickHeight +
+        ball.position.radius -
+        1,
     );
     expect(ball.setDirection).toHaveBeenCalledWith(0);
   });
@@ -855,9 +937,14 @@ describe("GameEngine", () => {
       brickRows: 3,
     });
     expect(typeof random).toBe("function");
-    expect([random(), random(), random(), random(), random(), random()]).toEqual(
-      [0, 0, 0, 0, 0.99, 0.99],
-    );
+    expect([
+      random(),
+      random(),
+      random(),
+      random(),
+      random(),
+      random(),
+    ]).toEqual([0, 0, 0, 0, 0.99, 0.99]);
     expect(mockBallInstances[0].setPosition).toHaveBeenCalledWith(
       dimensions.brickOffsetLeft + dimensions.brickWidth / 2,
       dimensions.brickOffsetTop +

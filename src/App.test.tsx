@@ -36,6 +36,7 @@ interface MockGameProps {
   onLevelTransition?: (payload: LevelTransitionPayload) => void;
   onGameOver?: () => Promise<void> | void;
   imageSetId?: string;
+  gameMode?: string;
 }
 
 interface TestBoardRect {
@@ -93,6 +94,7 @@ jest.mock("./components/Game", () => ({
       <div
         data-testid="mock-game"
         data-start-blocked={props.startBlocked}
+        data-game-mode={props.gameMode}
         data-paused={
           props.paused
             ? PAUSED_TRUE_ATTRIBUTE_VALUE
@@ -464,6 +466,61 @@ describe("App theme selector", () => {
       window.sessionStorage.getItem(BRIKAYA_UPDATE_INSTALLED_KEY),
     ).toBeNull();
     expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.UPDATE_INSTALLED);
+  });
+
+  it("seleciona modo torreta pelo menu, persiste e reinicia a partida", async () => {
+    mockSystemTheme(true);
+    const user = userEvent.setup();
+
+    await renderApp();
+
+    expect(mockLastGameProps?.gameMode).toBe("classic");
+    await user.click(screen.getByRole("button", { name: "Menu" }));
+
+    const drawer = screen.getByRole("complementary", { name: "Menu do jogo" });
+    expect(
+      within(drawer).getByRole("heading", { name: "Modo de jogo" }),
+    ).toBeInTheDocument();
+    expect(
+      within(drawer).getByRole("button", { name: "Clássico" }),
+    ).toHaveAttribute("aria-pressed", "true");
+
+    await user.click(within(drawer).getByRole("button", { name: "Torreta" }));
+
+    expect(window.localStorage.setItem).toHaveBeenCalledWith(
+      "brikaya-game-mode",
+      "ball-turret",
+    );
+    expect(mockLastGameProps?.gameMode).toBe("ball-turret");
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      "data-game-mode",
+      "ball-turret",
+    );
+    expect(
+      screen.queryByRole("complementary", { name: "Menu do jogo" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("carrega modo torreta salvo", async () => {
+    mockSystemTheme(true);
+    mockLocalStorageValues({
+      [PRIVACY_CONSENT_STORAGE_KEY]: VALID_PRIVACY_CONSENT_RECORD,
+      "brikaya-game-mode": "ball-turret",
+    });
+
+    await renderApp();
+
+    expect(mockLastGameProps?.gameMode).toBe("ball-turret");
+  });
+
+  it("força modo torreta no cenário de QA", async () => {
+    mockSystemTheme(true);
+    window.history.replaceState(null, "", "/?qaScenario=ball-turret");
+
+    await renderApp();
+
+    expect(mockLastGameProps?.qaScenario).toBe("ball-turret");
+    expect(mockLastGameProps?.gameMode).toBe("ball-turret");
   });
 
   it("abre menu lateral com aparência, histórico, colisões, zerar pontuação e restaurar padrão", async () => {
@@ -994,9 +1051,10 @@ describe("App theme selector", () => {
     });
 
     expect(screen.getByTestId("game-cinematic-overlay")).toHaveTextContent("3");
-    expect(screen.queryByText("Pronto para jogar offline")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Pronto para jogar offline"),
+    ).not.toBeInTheDocument();
   });
-
 
   it("mostra mensagem de subida de fase sem reiniciar countdown", async () => {
     jest.useFakeTimers();

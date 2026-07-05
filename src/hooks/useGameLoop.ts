@@ -1,14 +1,15 @@
 // src/hooks/useGameLoop.ts
-import { useEffect, RefObject, useRef } from 'react';
+import { useEffect, RefObject, useRef } from "react";
 
-import { GameEngine, GameQaScenario } from '../logic/GameEngine';
-import { LOG, ERROR } from '../utils/logger';
-import { LevelTransitionPayload } from '../constants/game';
+import { GameEngine, GameQaScenario } from "../logic/GameEngine";
+import { LOG, ERROR } from "../utils/logger";
+import { LevelTransitionPayload } from "../constants/game";
 import {
   IMAGE_SET_RETRO_DEFAULT,
   type ImageSetId,
-} from '../constants/appearance';
-import type { GameAudioSink } from '../constants/audio';
+} from "../constants/appearance";
+import type { GameAudioSink } from "../constants/audio";
+import { GAME_MODE_CLASSIC, type GameMode } from "../constants/gameMode";
 
 interface CanvasSize {
   width: number;
@@ -23,10 +24,10 @@ interface GameLoopCallbacks {
   onLevelChange?: (level: number) => void;
 }
 
-const TOUCH_START_EVENT_NAME = 'touchstart';
-const TOUCH_MOVE_EVENT_NAME = 'touchmove';
-const TOUCH_END_EVENT_NAME = 'touchend';
-const TOUCH_CANCEL_EVENT_NAME = 'touchcancel';
+const TOUCH_START_EVENT_NAME = "touchstart";
+const TOUCH_MOVE_EVENT_NAME = "touchmove";
+const TOUCH_END_EVENT_NAME = "touchend";
+const TOUCH_CANCEL_EVENT_NAME = "touchcancel";
 const TOUCH_LISTENER_OPTIONS = { passive: false } as const;
 
 function readTouchClientX(event: TouchEvent) {
@@ -46,49 +47,68 @@ export function useGameLoop(
   startBlocked = false,
   imageSetId: ImageSetId = IMAGE_SET_RETRO_DEFAULT,
   paused = false,
-  paddleTouchZoneRef?: RefObject<HTMLElement>
+  gameMode: GameMode = GAME_MODE_CLASSIC,
+  paddleTouchZoneRef?: RefObject<HTMLElement>,
 ) {
   const engineRef = useRef<GameEngine | null>(null);
-  const callbacksRef = useRef<GameLoopCallbacks>({ onScoreUpdate, onGameWon, onGameOver, onLevelTransition, onLevelChange });
+  const callbacksRef = useRef<GameLoopCallbacks>({
+    onScoreUpdate,
+    onGameWon,
+    onGameOver,
+    onLevelTransition,
+    onLevelChange,
+  });
 
   useEffect(() => {
-    callbacksRef.current = { onScoreUpdate, onGameWon, onGameOver, onLevelTransition, onLevelChange };
+    callbacksRef.current = {
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      onLevelTransition,
+      onLevelChange,
+    };
   }, [onScoreUpdate, onGameWon, onGameOver, onLevelTransition, onLevelChange]);
 
   useEffect(() => {
     if (startBlocked) {
-      LOG('⏳ Início do GameEngine aguardando contagem inicial');
+      LOG("⏳ Início do GameEngine aguardando contagem inicial");
       return undefined;
     }
 
     if (!canvasRef.current) {
-      LOG('❌ canvasRef.current não está disponível');
+      LOG("❌ canvasRef.current não está disponível");
       return undefined;
     }
 
     LOG(`🎮 Iniciando GameEngine...`);
     LOG(`🎮 Canvas ref:`, canvasRef.current);
-    LOG(`🎮 Canvas size:`, canvasRef.current.width, 'x', canvasRef.current.height);
+    LOG(
+      `🎮 Canvas size:`,
+      canvasRef.current.width,
+      "x",
+      canvasRef.current.height,
+    );
 
     try {
       const engine = new GameEngine(
         canvasRef.current,
-        score => callbacksRef.current.onScoreUpdate(score),
+        (score) => callbacksRef.current.onScoreUpdate(score),
         () => callbacksRef.current.onGameWon?.(),
         () => callbacksRef.current.onGameOver?.(),
         canvasSize,
-        payload => callbacksRef.current.onLevelTransition?.(payload),
+        (payload) => callbacksRef.current.onLevelTransition?.(payload),
         qaScenario,
         audioSink,
-        level => callbacksRef.current.onLevelChange?.(level),
-        imageSetId
+        (level) => callbacksRef.current.onLevelChange?.(level),
+        imageSetId,
+        gameMode,
       );
       engineRef.current = engine;
       LOG(`🎮 GameEngine criado com sucesso, chamando start()...`);
       void engine.start();
       LOG(`🎮 engine.start() chamado`);
     } catch (error) {
-      ERROR('❌ Erro ao criar/iniciar GameEngine:', error);
+      ERROR("❌ Erro ao criar/iniciar GameEngine:", error);
     }
 
     return () => {
@@ -96,7 +116,7 @@ export function useGameLoop(
       engineRef.current?.stop();
       engineRef.current = null;
     };
-  }, [audioSink, canvasRef, qaScenario, startBlocked]);
+  }, [audioSink, canvasRef, gameMode, qaScenario, startBlocked]);
 
   useEffect(() => {
     engineRef.current?.setImageSet(imageSetId);
@@ -160,7 +180,10 @@ export function useGameLoop(
         TOUCH_START_EVENT_NAME,
         handleTouchStart,
       );
-      paddleTouchZone.removeEventListener(TOUCH_MOVE_EVENT_NAME, handleTouchMove);
+      paddleTouchZone.removeEventListener(
+        TOUCH_MOVE_EVENT_NAME,
+        handleTouchMove,
+      );
       paddleTouchZone.removeEventListener(TOUCH_END_EVENT_NAME, handleTouchEnd);
       paddleTouchZone.removeEventListener(
         TOUCH_CANCEL_EVENT_NAME,

@@ -1,7 +1,7 @@
 {
   "name": "brikaya",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -31,6 +31,7 @@
     "test:cloudflare-phase10-stability": "node tests/e2e/cloudflare-phase10-stability-qa.js",
     "test:cloudflare-offline-pwa": "node tests/e2e/cloudflare-offline-pwa-qa.js",
     "test:cloudflare-gameplay-basic": "node tests/e2e/cloudflare-gameplay-basic-qa.js",
+    "test:cloudflare-ball-turret": "node tests/e2e/cloudflare-ball-turret-qa.js",
     "test:cloudflare-level-progression": "node tests/e2e/cloudflare-phase-transition-qa.js",
     "test:cloudflare-evasive-blocks": "node tests/e2e/cloudflare-evasive-blocks-qa.js",
     "test:cloudflare-reset-preferences": "node tests/e2e/cloudflare-reset-preferences-qa.js",

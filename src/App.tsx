@@ -50,6 +50,11 @@ import {
   type BrikayaUpdateProgressDetail,
 } from "./registerServiceWorker";
 import { BUILD_VERSION_LABEL } from "./constants/buildVersion";
+import {
+  GAME_MODE_BALL_TURRET,
+  GAME_MODE_CLASSIC,
+  type GameMode,
+} from "./constants/gameMode";
 import { LOG } from "./utils/logger";
 import { audioManager } from "./utils/audioManager";
 import {
@@ -59,6 +64,7 @@ import {
 import { GameQaScenario } from "./logic/GameEngine";
 import { useAppearancePreference } from "./hooks/useAppearancePreference";
 import { useAudioPreference } from "./hooks/useAudioPreference";
+import { useGameModePreference } from "./hooks/useGameModePreference";
 import { useLanguageLocationConsent } from "./hooks/useLanguageLocationConsent";
 import { usePrivacyConsent } from "./hooks/usePrivacyConsent";
 import {
@@ -90,6 +96,7 @@ const PADDLE_COLLISION_QA_SCENARIO = "paddle-collision";
 const LASER_FAN_QA_SCENARIO = "laser-fan";
 const METAL_BLOCK_QA_SCENARIO = "metal-block";
 const EVASIVE_BLOCKS_QA_SCENARIO = "evasive-blocks";
+const BALL_TURRET_QA_SCENARIO = "ball-turret";
 const COUNTDOWN_FIRST_STEP_INDEX = 0;
 const COUNTDOWN_NEXT_STEP_INDEX = 1;
 const COUNTDOWN_TIMER_OFFSET = 1;
@@ -109,12 +116,12 @@ const INITIAL_COUNTDOWN_OVERLAY: GameCinematicOverlayState = {
 function hasValidBoardRect(boardRect: GameBoardRect | null): boolean {
   return Boolean(
     boardRect &&
-      boardRect.width > 0 &&
-      boardRect.height > 0 &&
-      Number.isFinite(boardRect.x) &&
-      Number.isFinite(boardRect.y) &&
-      Number.isFinite(boardRect.width) &&
-      Number.isFinite(boardRect.height),
+    boardRect.width > 0 &&
+    boardRect.height > 0 &&
+    Number.isFinite(boardRect.x) &&
+    Number.isFinite(boardRect.y) &&
+    Number.isFinite(boardRect.width) &&
+    Number.isFinite(boardRect.height),
   );
 }
 
@@ -177,6 +184,7 @@ export default function App() {
   } = useAppearancePreference();
   const { isAudioMuted, isMusicMuted, toggleAudio, toggleMusic } =
     useAudioPreference();
+  const { gameMode, selectGameMode } = useGameModePreference();
   const levelTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cinematicTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const countdownTimerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -212,9 +220,13 @@ export default function App() {
     if (scenario === METAL_BLOCK_QA_SCENARIO) return METAL_BLOCK_QA_SCENARIO;
     if (scenario === EVASIVE_BLOCKS_QA_SCENARIO)
       return EVASIVE_BLOCKS_QA_SCENARIO;
+    if (scenario === BALL_TURRET_QA_SCENARIO) return BALL_TURRET_QA_SCENARIO;
     if (scenario === AUDIO_QA_SCENARIO) return AUDIO_QA_SCENARIO;
     return null;
   }, []);
+  const activeGameMode =
+    qaScenario === BALL_TURRET_QA_SCENARIO ? GAME_MODE_BALL_TURRET : gameMode;
+
   const audioSink = useMemo<GameAudioSink>(
     () => ({
       playAudio: (id) => {
@@ -437,16 +449,12 @@ export default function App() {
 
     window.addEventListener(BRIKAYA_OFFLINE_READY_EVENT, showOfflineReady);
     return () =>
-      window.removeEventListener(
-        BRIKAYA_OFFLINE_READY_EVENT,
-        showOfflineReady,
-      );
+      window.removeEventListener(BRIKAYA_OFFLINE_READY_EVENT, showOfflineReady);
   }, [audioSink]);
 
   useEffect(() => {
     const handleUpdateProgress = (event: Event) => {
-      const detail = (event as CustomEvent<BrikayaUpdateProgressDetail>)
-        .detail;
+      const detail = (event as CustomEvent<BrikayaUpdateProgressDetail>).detail;
       const progress = Math.min(
         UPDATE_PROGRESS_MAX,
         Math.max(UPDATE_PROGRESS_MIN, detail?.progress ?? UPDATE_PROGRESS_MIN),
@@ -484,8 +492,7 @@ export default function App() {
 
     try {
       shouldShowInstalledVersion =
-        window.sessionStorage.getItem(BRIKAYA_UPDATE_INSTALLED_KEY) !==
-          null ||
+        window.sessionStorage.getItem(BRIKAYA_UPDATE_INSTALLED_KEY) !== null ||
         window.sessionStorage.getItem(BRIKAYA_RELOAD_GUARD_KEY) !== null;
 
       if (shouldShowInstalledVersion) {
@@ -713,6 +720,21 @@ export default function App() {
     [audioSink, setLocale],
   );
 
+  const handleGameModeChange = useCallback(
+    (nextGameMode: GameMode) => {
+      audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+      if (nextGameMode === gameMode) {
+        setIsMenuOpen(false);
+        return;
+      }
+
+      selectGameMode(nextGameMode);
+      if (ripTimerRef.current) clearTimeout(ripTimerRef.current);
+      resetGameState();
+    },
+    [audioSink, gameMode, resetGameState, selectGameMode],
+  );
+
   const handleAudioToggle = useCallback(async () => {
     if (!isAudioMuted) {
       audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
@@ -897,6 +919,42 @@ export default function App() {
                   </select>
                 </label>
               </div>
+              <div className="settings-drawer__section game-mode-selector">
+                <h3>{t("menu.gameMode")}</h3>
+                <p className="settings-drawer__hint">
+                  {t("gameMode.ballTurretHint")}
+                </p>
+                <div
+                  className="game-mode-selector__options"
+                  role="group"
+                  aria-label={t("menu.gameMode")}
+                >
+                  <button
+                    type="button"
+                    className={
+                      activeGameMode === GAME_MODE_CLASSIC
+                        ? "game-mode-selector__button game-mode-selector__button--active"
+                        : "game-mode-selector__button"
+                    }
+                    aria-pressed={activeGameMode === GAME_MODE_CLASSIC}
+                    onClick={() => handleGameModeChange(GAME_MODE_CLASSIC)}
+                  >
+                    {t("gameMode.classic")}
+                  </button>
+                  <button
+                    type="button"
+                    className={
+                      activeGameMode === GAME_MODE_BALL_TURRET
+                        ? "game-mode-selector__button game-mode-selector__button--active"
+                        : "game-mode-selector__button"
+                    }
+                    aria-pressed={activeGameMode === GAME_MODE_BALL_TURRET}
+                    onClick={() => handleGameModeChange(GAME_MODE_BALL_TURRET)}
+                  >
+                    {t("gameMode.ballTurret")}
+                  </button>
+                </div>
+              </div>
               <div className="settings-drawer__section">
                 <h3>{t("menu.appearance")}</h3>
                 <AppearanceSelector
@@ -1035,7 +1093,7 @@ export default function App() {
           <div className="play-column">
             <div className="game-container">
               <Game
-                key={gameKey}
+                key={`${gameKey}-${activeGameMode}`}
                 onScoreUpdate={handleScoreUpdate}
                 onGameWon={handleGameWon}
                 onGameOver={handleGameOver}
@@ -1049,6 +1107,7 @@ export default function App() {
                   isInitialCountdownActive
                 }
                 imageSetId={selection.imageSetId}
+                gameMode={activeGameMode}
                 paused={
                   isMenuOpen || !hasPrivacyConsent || isLanguageDetectionVisible
                 }

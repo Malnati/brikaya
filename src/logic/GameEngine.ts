@@ -25,6 +25,11 @@ import {
   DynamicGameDimensions,
 } from "../constants/game";
 import { POINTS_PER_BRICK } from "../constants/gameState";
+import {
+  GAME_MODE_BALL_TURRET,
+  GAME_MODE_CLASSIC,
+  type GameMode,
+} from "../constants/gameMode";
 import { gameLogger, type LoggedPowerUpAction } from "../storage/gameLogger";
 import {
   AUDIO_QA_SCENARIO,
@@ -51,6 +56,11 @@ import {
   type RadialPlayfieldGeometry,
 } from "../utils/radialGeometry";
 import { LOG, ERROR, WARN } from "../utils/logger";
+import {
+  drawBallTurretBackdrop,
+  drawBallTurretGlassOverlay,
+  drawBallTurretReticle,
+} from "./rendering/ballTurretRenderer";
 
 LOG("📦 GameEngine.ts carregado, gameLogger:", gameLogger);
 
@@ -62,6 +72,7 @@ const PADDLE_COLLISION_QA_SCENARIO = "paddle-collision";
 const LASER_FAN_QA_SCENARIO = "laser-fan";
 const METAL_BLOCK_QA_SCENARIO = "metal-block";
 const EVASIVE_BLOCKS_QA_SCENARIO = "evasive-blocks";
+const BALL_TURRET_QA_SCENARIO = "ball-turret";
 const LATE_PHASE_STABILITY_LEVEL = 11;
 const LATE_PHASE_STABILITY_Y_RATIO = 0.35;
 const CINEMATIC_RIP_X_RATIO = 0.12;
@@ -83,8 +94,7 @@ const EVASIVE_BLOCKS_QA_BRICK_HEIGHT_RATIO = 0.05;
 const EVASIVE_BLOCKS_QA_BRICK_HEIGHT_MIN = 18;
 const EVASIVE_BLOCKS_QA_BRICK_HEIGHT_MAX = 28;
 const EVASIVE_BLOCKS_QA_BRICK_PADDING = 8;
-const EVASIVE_BLOCKS_QA_TARGET_ROW =
-  EVASIVE_BLOCKS_QA_BRICK_ROWS - 1;
+const EVASIVE_BLOCKS_QA_TARGET_ROW = EVASIVE_BLOCKS_QA_BRICK_ROWS - 1;
 const COMBO_WINDOW_MS = 1200;
 const COMBO_COOLDOWN_MS = 500;
 const COMBO_SMALL_THRESHOLD = 3;
@@ -190,6 +200,7 @@ export type GameQaScenario =
   | typeof LASER_FAN_QA_SCENARIO
   | typeof METAL_BLOCK_QA_SCENARIO
   | typeof EVASIVE_BLOCKS_QA_SCENARIO
+  | typeof BALL_TURRET_QA_SCENARIO
   | typeof AUDIO_QA_SCENARIO;
 
 export class GameEngine {
@@ -253,6 +264,7 @@ export class GameEngine {
     private audioSink: GameAudioSink = NOOP_AUDIO_SINK,
     private onLevelChange?: (level: number) => void,
     private imageSetId: ImageSetId = IMAGE_SET_RETRO_DEFAULT,
+    private gameMode: GameMode = GAME_MODE_CLASSIC,
   ) {
     LOG(`🚀 GameEngine constructor iniciado`);
 
@@ -368,8 +380,7 @@ export class GameEngine {
       );
       const totalBricksWidth =
         EVASIVE_BLOCKS_QA_BRICK_COLS * brickWidth +
-        (EVASIVE_BLOCKS_QA_BRICK_COLS - 1) *
-          EVASIVE_BLOCKS_QA_BRICK_PADDING;
+        (EVASIVE_BLOCKS_QA_BRICK_COLS - 1) * EVASIVE_BLOCKS_QA_BRICK_PADDING;
 
       return {
         ...dimensions,
@@ -379,8 +390,7 @@ export class GameEngine {
         brickHeight,
         brickPadding: EVASIVE_BLOCKS_QA_BRICK_PADDING,
         brickOffsetTop: Math.max(24, canvasHeight * 0.12),
-        brickOffsetLeft:
-          (canvasWidth - totalBricksWidth) / CENTER_DIVISOR,
+        brickOffsetLeft: (canvasWidth - totalBricksWidth) / CENTER_DIVISOR,
       };
     }
 
@@ -521,7 +531,9 @@ export class GameEngine {
   }
 
   private createBrickQaRandom(): (() => number) | null {
-    return this.createMetalBlockQaRandom() ?? this.createEvasiveBlocksQaRandom();
+    return (
+      this.createMetalBlockQaRandom() ?? this.createEvasiveBlocksQaRandom()
+    );
   }
 
   private createMetalBlockQaRandom(): (() => number) | null {
@@ -1741,14 +1753,14 @@ export class GameEngine {
     } else {
       // Normal game rendering
       try {
-        this.drawRadialPlayfield();
+        this.drawGameBackdrop();
         this.bricks.draw(this.ctx);
         const isLaserFanAnimating = this.isLaserFanEffectActive();
         this.paddle.update();
         if (!isLaserFanAnimating) {
           this.updatePowerUp();
         }
-        this.paddle.draw(this.ctx);
+        this.drawPlayerControl();
         this.activePowerUp?.draw(this.ctx);
         this.drawLaserFanEffect();
         if (this.isLevelTransitioning || isLaserFanAnimating) {
@@ -1790,6 +1802,7 @@ export class GameEngine {
             ball.draw(this.ctx);
           }
         }
+        this.drawGameForeground();
         if (this.balls.length === 0) {
           // Game over - no balls left
           this.gameOver = true;
@@ -1840,6 +1853,49 @@ export class GameEngine {
       this.animationFrame = requestAnimationFrame(this.loop);
     }
   };
+
+  private isBallTurretMode(): boolean {
+    return (
+      this.gameMode === GAME_MODE_BALL_TURRET ||
+      this.qaScenario === BALL_TURRET_QA_SCENARIO
+    );
+  }
+
+  private drawGameBackdrop() {
+    if (this.isBallTurretMode()) {
+      drawBallTurretBackdrop(this.ctx, {
+        canvasSize: this.canvasSize,
+        geometry: this.radialGeometry,
+        paddlePosition: this.paddle.position,
+      });
+      return;
+    }
+
+    this.drawRadialPlayfield();
+  }
+
+  private drawPlayerControl() {
+    if (this.isBallTurretMode()) {
+      drawBallTurretReticle(this.ctx, {
+        canvasSize: this.canvasSize,
+        geometry: this.radialGeometry,
+        paddlePosition: this.paddle.position,
+      });
+      return;
+    }
+
+    this.paddle.draw(this.ctx);
+  }
+
+  private drawGameForeground() {
+    if (!this.isBallTurretMode()) return;
+
+    drawBallTurretGlassOverlay(this.ctx, {
+      canvasSize: this.canvasSize,
+      geometry: this.radialGeometry,
+      paddlePosition: this.paddle.position,
+    });
+  }
 
   private drawRadialPlayfield() {
     this.ctx.save();

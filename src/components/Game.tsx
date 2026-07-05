@@ -18,6 +18,7 @@ import {
 } from "../constants/appearance";
 import type { GameAudioSink } from "../constants/audio";
 import type { LevelTransitionPayload } from "../constants/game";
+import { GAME_MODE_CLASSIC, type GameMode } from "../constants/gameMode";
 import type { ReactNode } from "react";
 
 interface GameProps {
@@ -32,6 +33,7 @@ interface GameProps {
   startBlocked?: boolean;
   imageSetId?: ImageSetId;
   paused?: boolean;
+  gameMode?: GameMode;
   onBoardRectChange?: (rect: GameBoardRect) => void;
 }
 
@@ -127,6 +129,7 @@ export default function Game({
   startBlocked = false,
   imageSetId = IMAGE_SET_RETRO_DEFAULT,
   paused = false,
+  gameMode = GAME_MODE_CLASSIC,
   onBoardRectChange,
 }: GameProps) {
   const surfaceRef = useRef<HTMLDivElement>(null);
@@ -279,6 +282,7 @@ export default function Game({
     startBlocked,
     imageSetId,
     paused,
+    gameMode,
     paddleTouchZoneRef,
   );
   useColorDebug(canvasRef);

@@ -1,0 +1,704 @@
+{
+  "checkedAt": "2026-07-05T04:41:30.167Z",
+  "publicUrl": "http://127.0.0.1:7979/?qaScenario=ball-turret",
+  "qaScenario": "ball-turret",
+  "results": [
+    {
+      "name": "desktop",
+      "menuState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya",
+          "Menu",
+          "Idioma",
+          "Modo de jogo",
+          "Aparência",
+          "Recordes",
+          "Privacidade",
+          "Dados do jogo"
+        ],
+        "hasGameModeHeading": true,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "Clássico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Torreta",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Automático por fase",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Arcade neon",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "CRT alto contraste",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Pôr do sol pixelado",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oceano noturno",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Selva laser",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Âmbar retrô",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Gelo cósmico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Ameixa elétrica",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Lima grafite",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Rubi profundo",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Metrô noturno",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oficina mecânica",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Laboratório clínico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Templo antigo",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Estação orbital",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Arcade neon",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "CRT alto contraste",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Pôr do sol pixelado",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oceano noturno",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Selva laser",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Âmbar retrô",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Gelo cósmico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Ameixa elétrica",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Lima grafite",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Rubi profundo",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Metrô noturno",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oficina mecânica",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Laboratório clínico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Templo antigo",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Estação orbital",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Retrô padrão",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Alto contraste",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Cabine pôr do sol",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Metrô realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oficina realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Laboratório realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Templo realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Órbita realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Arcade",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "CRT mono",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Blocos pixelados",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "◎Usar região para idioma",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "✓Revisar consentimento",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "≡Histórico",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "◈Colisões",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↺Restaurar padrão",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "hasCanvas": true,
+        "canvas": {
+          "width": 1056,
+          "height": 704,
+          "x": 192,
+          "y": 85
+        },
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false
+      },
+      "gameplayState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "hasCanvas": true,
+        "canvas": {
+          "width": 1056,
+          "height": 704,
+          "x": 192,
+          "y": 85
+        },
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false
+      }
+    },
+    {
+      "name": "mobile",
+      "menuState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya",
+          "Menu",
+          "Idioma",
+          "Modo de jogo",
+          "Aparência",
+          "Recordes",
+          "Privacidade",
+          "Dados do jogo"
+        ],
+        "hasGameModeHeading": true,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "Clássico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Torreta",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Automático por fase",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Arcade neon",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "CRT alto contraste",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Pôr do sol pixelado",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oceano noturno",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Selva laser",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Âmbar retrô",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Gelo cósmico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Ameixa elétrica",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Lima grafite",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Rubi profundo",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Metrô noturno",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oficina mecânica",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Laboratório clínico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Templo antigo",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Estação orbital",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Arcade neon",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "CRT alto contraste",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Pôr do sol pixelado",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oceano noturno",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Selva laser",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Âmbar retrô",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Gelo cósmico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Ameixa elétrica",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Lima grafite",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Rubi profundo",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Metrô noturno",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oficina mecânica",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Laboratório clínico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Templo antigo",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Estação orbital",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Retrô padrão",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Alto contraste",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Cabine pôr do sol",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Metrô realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oficina realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Laboratório realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Templo realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Órbita realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Arcade",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "CRT mono",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Blocos pixelados",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "◎Usar região para idioma",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "✓Revisar consentimento",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "≡Histórico",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "◈Colisões",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↺Restaurar padrão",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "hasCanvas": true,
+        "canvas": {
+          "width": 390,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false
+      },
+      "gameplayState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "hasCanvas": true,
+        "canvas": {
+          "width": 390,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "scoreHudText": "Fase 1|Score 10|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false
+      }
+    }
+  ],
+  "screenshots": {
+    "menu": "docs/assets/issues/ball-turret-mode/evidence/evi-ball-turret-menu.png",
+    "desktop": "docs/assets/issues/ball-turret-mode/evidence/evi-ball-turret-gameplay-desktop.png",
+    "mobile": "docs/assets/issues/ball-turret-mode/evidence/evi-ball-turret-gameplay-mobile.png"
+  }
+}
