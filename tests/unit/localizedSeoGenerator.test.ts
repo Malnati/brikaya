@@ -57,6 +57,30 @@ const LOCALIZED_LOCALES = [
   'da',
   'no',
   'fi',
+  "cs",
+  "ro",
+  "hu",
+  "bg",
+  "sk",
+  "sl",
+  "hr",
+  "sr",
+  "lt",
+  "lv",
+  "et",
+  "sw",
+  "af",
+  "am",
+  "ka",
+  "hy",
+  "az",
+  "kk",
+  "uz",
+  "ne",
+  "si",
+  "km",
+  "lo",
+  "my",
 ] as const;
 
 function readProjectFile(filePath: string): string {
@@ -107,5 +131,11 @@ describe('gerador SEO localizado', () => {
     expect(downloadsSeoBlock).toContain("Brikaya ડાઉનલોડ કરો");
     expect(downloadsSeoBlock).toContain("Λήψη Brikaya");
     expect(downloadsSeoBlock).toContain("Lataa Brikaya");
+    expect(downloadsSeoBlock).toContain("Stáhnout Brikaya");
+    expect(downloadsSeoBlock).toContain("Изтеглете Brikaya");
+    expect(downloadsSeoBlock).toContain("Преузми Brikaya");
+    expect(downloadsSeoBlock).toContain("Laai Brikaya af");
+    expect(downloadsSeoBlock).toContain("Brikaya yuklab olish");
+    expect(downloadsSeoBlock).toContain("Brikaya ဒေါင်းလုဒ်လုပ်ရန်");
   });
 });

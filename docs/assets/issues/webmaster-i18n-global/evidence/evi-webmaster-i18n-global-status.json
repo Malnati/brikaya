@@ -1,6 +1,6 @@
 {
   "artifact": "evi-webmaster-i18n-global-status",
-  "updatedAt": "2026-07-06T15:42:53.386Z",
+  "updatedAt": "2026-07-06T16:02:58.469Z",
   "scope": {
     "canonicalOrigin": "https://brikaya.com",
     "routes": [
@@ -90,6 +90,54 @@
       "/no/downloads/",
       "/fi/",
       "/fi/downloads/",
+      "/cs/",
+      "/cs/downloads/",
+      "/ro/",
+      "/ro/downloads/",
+      "/hu/",
+      "/hu/downloads/",
+      "/bg/",
+      "/bg/downloads/",
+      "/sk/",
+      "/sk/downloads/",
+      "/sl/",
+      "/sl/downloads/",
+      "/hr/",
+      "/hr/downloads/",
+      "/sr/",
+      "/sr/downloads/",
+      "/lt/",
+      "/lt/downloads/",
+      "/lv/",
+      "/lv/downloads/",
+      "/et/",
+      "/et/downloads/",
+      "/sw/",
+      "/sw/downloads/",
+      "/af/",
+      "/af/downloads/",
+      "/am/",
+      "/am/downloads/",
+      "/ka/",
+      "/ka/downloads/",
+      "/hy/",
+      "/hy/downloads/",
+      "/az/",
+      "/az/downloads/",
+      "/kk/",
+      "/kk/downloads/",
+      "/uz/",
+      "/uz/downloads/",
+      "/ne/",
+      "/ne/downloads/",
+      "/si/",
+      "/si/downloads/",
+      "/km/",
+      "/km/downloads/",
+      "/lo/",
+      "/lo/downloads/",
+      "/my/",
+      "/my/downloads/",
       "/privacy/",
       "/terms/"
     ],
@@ -136,14 +184,38 @@
       "sv",
       "da",
       "no",
-      "fi"
+      "fi",
+      "cs",
+      "ro",
+      "hu",
+      "bg",
+      "sk",
+      "sl",
+      "hr",
+      "sr",
+      "lt",
+      "lv",
+      "et",
+      "sw",
+      "af",
+      "am",
+      "ka",
+      "hy",
+      "az",
+      "kk",
+      "uz",
+      "ne",
+      "si",
+      "km",
+      "lo",
+      "my"
     ],
     "browserAutomationContract": {
       "workTabLabel": "Brikaya webmaster/i18n",
-      "singleReusableTab": false,
-      "userProvidedExistingTabsReused": true,
+      "singleReusableTab": true,
+      "userProvidedExistingTabsReused": false,
       "leaveOpenAtFinish": true,
-      "exception": "User explicitly authorized reusing already-open service tabs in Chrome for this continuation; no new tab was created."
+      "exception": "No authenticated Chrome panel action was executed in this code/deploy wave; no new tab was opened. Public sitemap and IndexNow were validated by CLI."
     },
     "privacyAndCostLimits": {
       "noPaidPlans": true,
@@ -153,7 +225,7 @@
       "noPlayerPersonalDataCollection": true,
       "clarityInstalled": false
     },
-    "sitemapUrlCount": 88,
+    "sitemapUrlCount": 136,
     "rtlLocales": [
       "ar",
       "ur",
@@ -163,9 +235,9 @@
     "futureRtlCandidates": []
   },
   "localImplementation": {
-    "downloadsCopyLocalized": "validated for 43 locales",
-    "downloadsSeoLocalized": "validated for 43 locales",
-    "sitemapCoversLocalizedDownloads": "validated for 43 locales",
+    "downloadsCopyLocalized": "validated for 67 locales",
+    "downloadsSeoLocalized": "validated for 67 locales",
+    "sitemapCoversLocalizedDownloads": "validated for 67 locales",
     "noPaidStoreLinksInDownloadsUi": "validated",
     "validationCommands": [
       "node --version => v23.5.0",
@@ -174,60 +246,44 @@
       "npm run test:semantic-file-names => ok",
       "npm run test:svg-assets => ok",
       "npm test -- --runInBand => 58 suites / 369 tests passed",
-      "npm run build => localized-seo ok: locales=43, routes=2",
-      "make cloudflare-deploy => https://ec523217.brikaya-live.pages.dev -> https://brikaya.com/",
+      "npm run build => localized-seo ok: locales=67, routes=2",
+      "make cloudflare-deploy => https://a3ae16e3.brikaya-live.pages.dev -> https://brikaya.com/",
       "make cloudflare-public-check => ok",
       "make cloudflare-i18n-seo-qa => ok",
       "make cloudflare-offline-pwa-qa => exit 0",
-      "make yandex-indexnow-submit => 200 accepted urls=88",
-      "public curl checks => 20 new routes returned 200 with matching html lang",
+      "make yandex-indexnow-submit => 200 accepted urls=136",
+      "public curl checks => wave-67 samples returned 200 with matching html lang",
       "public HTML tracking grep => Clarity/analytics/pixel/tag markers absent"
     ],
     "localizedDownloadSamples": [
       {
-        "path": "/mr/downloads/",
-        "title": "Brikaya डाउनलोड करा — मोफत ब्राउझर गेम"
+        "path": "/cs/downloads/",
+        "title": "Stáhnout Brikaya — bezplatná hra v prohlížeči"
       },
       {
-        "path": "/gu/downloads/",
-        "title": "Brikaya ડાઉનલોડ કરો — મફત બ્રાઉઝર ગેમ"
+        "path": "/bg/downloads/",
+        "title": "Изтеглете Brikaya — безплатна игра в браузъра"
       },
       {
-        "path": "/kn/downloads/",
-        "title": "Brikaya ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ — ಉಚಿತ ಬ್ರೌಸರ್ ಆಟ"
+        "path": "/sr/downloads/",
+        "title": "Преузми Brikaya — бесплатна игра у прегледачу"
       },
       {
-        "path": "/ml/downloads/",
-        "title": "Brikaya ഡൗൺലോഡ് ചെയ്യുക — സൗജന്യ ബ്രൗസർ ഗെയിം"
+        "path": "/af/downloads/",
+        "title": "Laai Brikaya af — gratis blaaier-speletjie"
       },
       {
-        "path": "/pa/downloads/",
-        "title": "Brikaya ਡਾਊਨਲੋਡ ਕਰੋ — ਮੁਫ਼ਤ ਬ੍ਰਾਊਜ਼ਰ ਗੇਮ"
+        "path": "/kk/downloads/",
+        "title": "Brikaya жүктеп алу — тегін браузер ойыны"
       },
       {
-        "path": "/el/downloads/",
-        "title": "Λήψη Brikaya — δωρεάν παιχνίδι browser"
-      },
-      {
-        "path": "/sv/downloads/",
-        "title": "Ladda ner Brikaya — gratis webbläsarspel"
-      },
-      {
-        "path": "/da/downloads/",
-        "title": "Download Brikaya — gratis browserspil"
-      },
-      {
-        "path": "/no/downloads/",
-        "title": "Last ned Brikaya — gratis nettleserspill"
-      },
-      {
-        "path": "/fi/downloads/",
-        "title": "Lataa Brikaya — ilmainen selainpeli"
+        "path": "/my/downloads/",
+        "title": "Brikaya ဒေါင်းလုဒ်လုပ်ရန် — အခမဲ့ ဘရောက်ဇာဂိမ်း"
       }
     ],
-    "expandedLocalesP13P16": "validated including fa/he RTL and wave mr, gu, kn, ml, pa, el, sv, da, no, fi",
-    "supportedLocaleCount": 43,
-    "sitemapUrlCount": 88,
+    "expandedLocalesP13P16": "validated including wave cs, ro, hu, bg, sk, sl, hr, sr, lt, lv, et, sw, af, am, ka, hy, az, kk, uz, ne, si, km, lo, my",
+    "supportedLocaleCount": 67,
+    "sitemapUrlCount": 136,
     "rtlSupport": "validated for ar, ur, fa and he",
     "clarityInstalled": false,
     "clarityDecision": "blocked_by_privacy_policy_no_pixel_tag_sdk_or_external_telemetry"
@@ -236,55 +292,39 @@
     {
       "platform": "Google Search Console",
       "panelUrl": "https://search.google.com/search-console/sitemaps?resource_id=sc-domain%3Abrikaya.com",
-      "status": "sitemap_submitted",
+      "status": "pending_processing",
       "actions": [
-        "Existing authenticated tab reused; no new tab created.",
-        "Before wave-43 submission, sitemap page showed https://brikaya.com/sitemap.xml processed with 68 pages.",
-        "Submitted https://brikaya.com/sitemap.xml again after 43-locale deployment; panel displayed Sitemap sent confirmation.",
-        "Google processing for the new 88-URL sitemap remains pending until Search Console rereads it."
+        "Sitemap URL remains the existing submitted https://brikaya.com/sitemap.xml.",
+        "Public sitemap now contains 136 URLs after wave-67 deploy.",
+        "No new authenticated Chrome action was executed in this wave; Search Console processing remains pending."
       ],
       "routesCovered": [
         "/sitemap.xml",
-        "/mr/",
-        "/mr/downloads/",
-        "/fi/",
-        "/fi/downloads/"
+        "/cs/",
+        "/cs/downloads/",
+        "/my/",
+        "/my/downloads/"
       ],
-      "evidence": "Sanitized panel text observed: sitemap processed with 68 pages before resubmission; Sitemap sent confirmation after 88-URL deployment; no cost, tracking, OTP, CAPTCHA, or payment action."
+      "evidence": "Public sitemap verified with 136 URLs; no cost, tracking, OTP, CAPTCHA, or payment action."
     },
     {
       "platform": "Bing Webmaster Tools",
       "panelUrl": "https://www.bing.com/webmasters/submiturl?siteUrl=https%3A%2F%2Fbrikaya.com",
-      "status": "manual_index_requested",
+      "status": "pending_processing",
       "actions": [
-        "Existing Bing URL Submission tab reused; Clarity was not installed or enabled.",
-        "Submitted 20 new wave URLs: home and downloads for mr, gu, kn, ml, pa, el, sv, da, no and fi.",
-        "Panel listed the 20 URLs as submitted today and displayed success message.",
-        "Daily quota decreased from 88 to 68 after the 20 URL submissions."
+        "Bing site remains configured from prior wave.",
+        "Wave-67 public routes are in sitemap/hreflang and IndexNow-compatible discovery path.",
+        "Manual Bing URL submission for the 48 new wave URLs remains optional follow-up; Clarity was not installed or enabled."
       ],
       "routesCovered": [
-        "/mr/",
-        "/mr/downloads/",
-        "/gu/",
-        "/gu/downloads/",
-        "/kn/",
-        "/kn/downloads/",
-        "/ml/",
-        "/ml/downloads/",
-        "/pa/",
-        "/pa/downloads/",
-        "/el/",
-        "/el/downloads/",
-        "/sv/",
-        "/sv/downloads/",
-        "/da/",
-        "/da/downloads/",
-        "/no/",
-        "/no/downloads/",
-        "/fi/",
-        "/fi/downloads/"
+        "/cs/",
+        "/cs/downloads/",
+        "/bg/",
+        "/bg/downloads/",
+        "/my/",
+        "/my/downloads/"
       ],
-      "evidence": "Sanitized panel text observed: Success: 20 URLs submitted; no Clarity install."
+      "evidence": "Public sitemap verified with 136 URLs; no Clarity install."
     },
     {
       "platform": "Yahoo Search",
@@ -303,12 +343,10 @@
       "panelUrl": "https://webmaster.yandex.com/site/https:brikaya.com:443/indexing/sitemap/",
       "status": "indexnow_submitted",
       "actions": [
-        "Existing Yandex tab reused; no new tab created.",
-        "Panel still shows https://brikaya.com/sitemap.xml in processing queue.",
-        "IndexNow submitted 88 URLs through free protocol and returned HTTP 200 accepted."
+        "IndexNow submitted 136 URLs through free protocol and returned HTTP 200.",
+        "Sitemap remains the same public URL for Yandex processing."
       ],
       "routesCovered": [
-        "/sitemap.xml",
         "/",
         "/downloads/",
         "/en/",
@@ -328,25 +366,42 @@
         "/ja/",
         "/ja/downloads/",
         "/ko/",
-        "/ko/downloads/"
+        "/ko/downloads/",
+        "/id/",
+        "/id/downloads/",
+        "/vi/",
+        "/vi/downloads/",
+        "/fil/",
+        "/fil/downloads/",
+        "/th/",
+        "/th/downloads/",
+        "/zh-CN/",
+        "/zh-CN/downloads/",
+        "/ar/",
+        "/ar/downloads/",
+        "/ru/",
+        "/ru/downloads/",
+        "/tr/",
+        "/tr/downloads/",
+        "/nl/",
+        "/nl/downloads/",
+        "/pl/",
+        "/pl/downloads/"
       ],
-      "evidence": "Sanitized panel text observed: sitemap processing queue can take 1–2 weeks; IndexNow CLI returned HTTP 200 for 88 URLs."
+      "evidence": "Sanitized CLI receipt: HTTP 200, urlCount=136."
     },
     {
       "platform": "Naver Search Advisor",
       "panelUrl": "https://searchadvisor.naver.com/console/site/request/crawl?site=https%3A%2F%2Fbrikaya.com",
-      "status": "manual_index_requested",
+      "status": "pending_processing",
       "actions": [
-        "Existing Naver Web page collection tab reused; session was valid after callback.",
-        "Submitted /fa/ in manual collection; panel history displayed /fa/ with registration timestamp.",
-        "No CAPTCHA, OTP, password, document, payment, or additional personal data was requested.",
-        "For wave-43 locales, sitemap and crawl discovery remain the scalable path; no bulk submission UI was used."
+        "Existing sitemap path remains the scalable Naver discovery path.",
+        "No new authenticated Chrome action was executed in this wave."
       ],
       "routesCovered": [
-        "/fa/",
         "/sitemap.xml"
       ],
-      "evidence": "Sanitized panel text observed: collection request history contained /fa/ and timestamp; no personal data included."
+      "evidence": "Public sitemap verified with 136 URLs; no personal data included."
     },
     {
       "platform": "Baidu Search Resource Platform",
@@ -362,9 +417,9 @@
       "platform": "Seznam/Yep/IndexNow participants",
       "status": "indexnow_submitted",
       "action": "Covered through IndexNow-compatible discovery and public sitemap/robots/canonical/hreflang; no paid service used.",
-      "evidence": "Sanitized CLI receipt: HTTP 200, urlCount=88.",
+      "evidence": "Sanitized CLI receipt: HTTP 200, urlCount=136.",
       "actions": [
-        "IndexNow submitted 88 URLs where participating engines consume the protocol."
+        "IndexNow submitted 136 URLs where participating engines consume the protocol."
       ],
       "routesCovered": [
         "/",
@@ -452,7 +507,55 @@
         "/no/",
         "/no/downloads/",
         "/fi/",
-        "/fi/downloads/"
+        "/fi/downloads/",
+        "/cs/",
+        "/cs/downloads/",
+        "/ro/",
+        "/ro/downloads/",
+        "/hu/",
+        "/hu/downloads/",
+        "/bg/",
+        "/bg/downloads/",
+        "/sk/",
+        "/sk/downloads/",
+        "/sl/",
+        "/sl/downloads/",
+        "/hr/",
+        "/hr/downloads/",
+        "/sr/",
+        "/sr/downloads/",
+        "/lt/",
+        "/lt/downloads/",
+        "/lv/",
+        "/lv/downloads/",
+        "/et/",
+        "/et/downloads/",
+        "/sw/",
+        "/sw/downloads/",
+        "/af/",
+        "/af/downloads/",
+        "/am/",
+        "/am/downloads/",
+        "/ka/",
+        "/ka/downloads/",
+        "/hy/",
+        "/hy/downloads/",
+        "/az/",
+        "/az/downloads/",
+        "/kk/",
+        "/kk/downloads/",
+        "/uz/",
+        "/uz/downloads/",
+        "/ne/",
+        "/ne/downloads/",
+        "/si/",
+        "/si/downloads/",
+        "/km/",
+        "/km/downloads/",
+        "/lo/",
+        "/lo/downloads/",
+        "/my/",
+        "/my/downloads/"
       ]
     }
   ],
@@ -466,32 +569,27 @@
   },
   "publicValidation": {
     "deployedTo": "https://brikaya.com/",
-    "cloudflareDeploy": "validated: https://ec523217.brikaya-live.pages.dev -> https://brikaya.com/",
+    "cloudflareDeploy": "validated: https://a3ae16e3.brikaya-live.pages.dev -> https://brikaya.com/",
     "cloudflarePublicCheck": "validated",
-    "cloudflareI18nSeoQa": "validated for 43 locales and 88 sitemap URLs",
+    "cloudflareI18nSeoQa": "validated for 67 locales and 136 sitemap URLs",
     "cloudflareOfflinePwaQa": "validated",
     "i18nSeoReport": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-public-validation.json",
     "indexNowYandex": {
       "status": "accepted",
       "httpStatus": 200,
-      "urlCount": 88,
+      "urlCount": 136,
       "keyLocation": "https://brikaya.com/[redacted].txt",
-      "validatedAt": "2026-07-06T15:42:53.386Z"
+      "validatedAt": "2026-07-06T16:02:58.469Z"
     },
     "clarityPublicCheck": "validated not installed on https://brikaya.com/"
   },
   "browserAutomation": {
-    "chromeProfile": "authenticated personal Chrome profile used where already signed in; no credentials printed",
+    "chromeProfile": "not touched in wave-67; prior authenticated tabs left as-is",
     "sessionName": "Brikaya webmaster/i18n",
     "newTabsOpenedByCodex": false,
-    "reusedUserProvidedTabs": true,
+    "reusedUserProvidedTabs": false,
     "tabsLeftOpenAtFinish": true,
-    "finalUrls": {
-      "google": "https://search.google.com/search-console/sitemaps?resource_id=sc-domain%3Abrikaya.com",
-      "bing": "https://www.bing.com/webmasters/submiturl?siteUrl=https%3A%2F%2Fbrikaya.com",
-      "yandex": "https://webmaster.yandex.com/site/https:brikaya.com:443/indexing/sitemap/",
-      "naver": "https://searchadvisor.naver.com/console/site/request/crawl?site=https%3A%2F%2Fbrikaya.com"
-    },
+    "finalUrls": {},
     "sensitiveScreenshotsStored": false,
     "captchaOrOtpEncountered": false,
     "stoppedAtPasswordPhoneDocumentOrPayment": false,
@@ -499,26 +597,26 @@
     "sensitiveFormValuesStored": false
   },
   "p0ToP20": {
-    "P0": "validated_public_200_after_43_locale_deploy",
-    "P1": "google_sitemap_resubmitted_pending_processing_after_88_url_sitemap",
-    "P2": "bing_wave_20_urls_submitted_quota_68_remaining",
+    "P0": "validated_public_200_after_67_locale_deploy",
+    "P1": "google_existing_sitemap_url_pending_processing_after_136_url_public_sitemap",
+    "P2": "bing_configured_pending_manual_optional_submission_for_wave67_urls_no_clarity",
     "P3": "no_direct_action_yahoo_via_bing",
     "P4": "no_direct_action_duckduckgo_via_bing_sitemap_crawl",
-    "P5": "indexnow_submitted_yandex_88_urls_http_200_sitemap_processing_queue_favicon_warning_pending",
+    "P5": "indexnow_submitted_yandex_136_urls_http_200_sitemap_processing_queue_favicon_warning_pending",
     "P6": "naver_manual_fa_collection_confirmed_sitemap_path_for_bulk_locales",
     "P7": "blocked_auth_baidu_overseas_registration_not_supported",
     "P8": "no_paid_action_brave_search_followup_only_if_free_submit_available",
     "P9": "no_paid_action_seznam_followup_only_if_free_panel_available",
     "P10": "no_direct_action_mojeek_crawl_backlinks",
-    "P11": "covered_by_sitemap_canonical_hreflang_indexnow_where_supported",
-    "P12": "validated_public_titles_for_wave_43_samples",
-    "P13": "validated_high_priority_wave_mr_gu_kn_ml_pa_el_sv_da_no_fi_added",
+    "P11": "covered_by_sitemap_canonical_hreflang_indexnow_where_supported_136_urls",
+    "P12": "validated_public_titles_for_wave_67_samples",
+    "P13": "validated_wave67_cs_ro_hu_bg_sk_sl_hr_sr_lt_lv_et_sw_af_am_ka_hy_az_kk_uz_ne_si_km_lo_my_added",
     "P14": "validated_regional_variants_added",
-    "P15": "validated_south_asia_wave_mr_gu_kn_ml_pa_added",
+    "P15": "validated_additional_asia_africa_europe_wave_added",
     "P16": "validated_rtl_ar_ur_fa_he",
-    "P17": "validated_i18n_tests_and_public_qa",
-    "P18": "validated_sitemap_hreflang_43_locales_88_urls",
-    "P19": "evidence_json_updated_sanitized_for_wave_43_main_post_merge_deploy",
+    "P17": "validated_i18n_tests_and_public_qa_67_locales",
+    "P18": "validated_sitemap_hreflang_67_locales_136_urls",
+    "P19": "evidence_json_updated_sanitized_for_wave_67_final_deploy",
     "P20": "clarity_not_installed_blocked_by_privacy_policy"
   }
 }

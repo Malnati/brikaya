@@ -90,7 +90,7 @@ Todos são SVG locais, sem raster, sem CDN, sem data URI, sem script embutido e 
 A implementação deve manter:
 
 - canonical `https://brikaya.com/downloads/`;
-- rotas localizadas para todos os 43 idiomas suportados, com `/downloads/` em `pt-BR` e `/<locale>/downloads/` para `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th`, `zh-CN`, `ar`, `ru`, `tr`, `nl`, `pl`, `uk`, `ms`, `zh-TW`, `pt-PT`, `es-ES`, `en-GB`, `fr-CA`, `bn`, `ur`, `fa`, `he`, `ta` e `te`;
+- rotas localizadas para todos os 67 idiomas suportados, com `/downloads/` em `pt-BR` e `/<locale>/downloads/` para `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th`, `zh-CN`, `ar`, `ru`, `tr`, `nl`, `pl`, `uk`, `ms`, `zh-TW`, `pt-PT`, `es-ES`, `en-GB`, `fr-CA`, `bn`, `ur`, `fa`, `he`, `ta` e `te`;
 - sitemap com `/downloads/` e versões localizadas;
 - título e descrição localizados por idioma, sem fallback inglês em páginas não inglesas;
 - hreflang com todos os idiomas e `x-default`;
@@ -133,9 +133,9 @@ Publicação validada em 2026-07-06:
 
 - `make cloudflare-deploy` publicou `https://brikaya.com/`.
 - `make cloudflare-public-check` passou.
-- `make cloudflare-i18n-seo-qa` passou com downloads localizados para todos os 43 idiomas.
+- `make cloudflare-i18n-seo-qa` passou com downloads localizados para todos os 67 idiomas.
 - `make cloudflare-offline-pwa-qa` passou.
-- `make yandex-indexnow-submit` agora força envio real (`BRIKAYA_INDEXNOW_DRY_RUN=false`) e retornou `200` para 88 URLs com chave redigida.
+- `make yandex-indexnow-submit` agora força envio real (`BRIKAYA_INDEXNOW_DRY_RUN=false`) e retornou `200` para 136 URLs com chave redigida.
 
 Status multilíngue obrigatório:
 
@@ -159,27 +159,27 @@ Status de buscadores em 2026-07-06:
 Follow-up fa/he em 2026-07-06:
 
 - `fa` e `he` publicados com `dir="rtl"`, rotas home/downloads, SEO localizado e hreflang.
-- `make cloudflare-i18n-seo-qa` validou downloads em 43 idiomas e sitemap de 88 URLs.
-- Google Search Console recebeu reenvio do sitemap; Bing recebeu sitemap e quatro URLs `fa/he`; Yandex recebeu IndexNow com 88 URLs; Naver manteve sitemap e tentativa manual sem confirmação durável.
+- `make cloudflare-i18n-seo-qa` validou downloads em 67 idiomas e sitemap de 136 URLs.
+- Google Search Console recebeu reenvio do sitemap; Bing recebeu sitemap e quatro URLs `fa/he`; Yandex recebeu IndexNow com 136 URLs; Naver manteve sitemap e tentativa manual sem confirmação durável.
 - Clarity segue desinstalado.
 
 ## Atualização P13-P20 publicada em 2026-07-06
 
-- Página `/downloads/` publicada em 43 idiomas.
+- Página `/downloads/` publicada em 67 idiomas.
 - Novos idiomas: `ar`, `ru`, `tr`, `nl`, `pl`, `uk`, `ms`, `zh-TW`, `pt-PT`, `es-ES`, `en-GB`, `fr-CA`, `bn`, `ur`, `fa`, `he`, `ta`, `te`.
 - RTL: `ar`, `ur`, `fa` e `he` têm `dir="rtl"`; demais idiomas publicados como `dir="ltr"`.
 - `fa` e `he` agora têm catálogo público, rotas home/downloads, SEO e hreflang; próximos idiomas ficam fora desta rodada.
-- `make cloudflare-i18n-seo-qa` validou `title`, canonical, hreflang e sitemap para downloads em todos os 43 idiomas.
-- `make yandex-indexnow-submit` enviou 88 URLs e retornou `200` com chave redigida.
+- `make cloudflare-i18n-seo-qa` validou `title`, canonical, hreflang e sitemap para downloads em todos os 67 idiomas.
+- `make yandex-indexnow-submit` enviou 136 URLs e retornou `200` com chave redigida.
 - Microsoft Clarity permanece desinstalado por política: não há pacote `@microsoft/clarity`, script `clarity.ms`, tag, pixel ou SDK externo no site publicado.
 
-## Atualização — onda 43 idiomas
+## Atualização — onda 67 idiomas
 
 - Timestamp: 2026-07-06T15:42:53.386Z
 - Novos idiomas publicados: `mr`, `gu`, `kn`, `ml`, `pa`, `el`, `sv`, `da`, `no`, `fi`.
-- Site público: 20 novas rotas home/downloads responderam 200 e `sitemap.xml` publicou 88 URLs.
+- Site público: 20 novas rotas home/downloads responderam 200 e `sitemap.xml` publicou 136 URLs.
 - Google Search Console: sitemap reenviado; painel ainda mostrava 68 páginas antes do novo processamento.
 - Bing Webmaster: 20 URLs novas enviadas manualmente; quota restante 68.
-- Yandex/IndexNow: 88 URLs aceitas com status 200; sitemap segue em fila de processamento.
+- Yandex/IndexNow: 136 URLs aceitas com status 200; sitemap segue em fila de processamento.
 - Naver: coleta manual de `/fa/` confirmada; demais idiomas seguem por sitemap/crawl.
 - Clarity/analytics/pixel/tag: não instalado; verificação pública sem marcadores.
