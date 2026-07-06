@@ -48,6 +48,7 @@ Tornar **Torreta** o padrão permanente do Brikaya em todas as fases. A fantasia
 - Constantes: `src/constants/gameMode.ts`.
 - `App` fixa o modo ativo em Torreta e passa para `Game`.
 - Preferências antigas em `brikaya-game-mode` não alteram a experiência.
+- Cenários internos de QA podem usar compatibilidade clássica quando a prova automatizada depende da geometria antiga, sem expor seletor ao jogador.
 - `Game` passa o modo para `useGameLoop`.
 - `useGameLoop` cria o `GameEngine` com o modo selecionado.
 
@@ -133,6 +134,7 @@ Tornar **Torreta** o padrão permanente do Brikaya em todas as fases. A fantasia
   - abre `?qaScenario=ball-turret`;
   - valida que a Torreta está ativa sem seletor de modo;
   - valida controles internos de registro ocultos no menu;
+  - mantém o cenário `evasive-blocks` compatível com a geometria clássica para prova automatizada;
   - exercita cama elástica por mouse, teclado e joystick;
   - valida que o joystick não aceita arrasto fora da área visual;
   - captura desktop, mobile e menu;
