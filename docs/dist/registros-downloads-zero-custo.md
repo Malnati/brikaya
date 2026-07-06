@@ -353,3 +353,18 @@ Follow-up fa/he em 2026-07-06:
 - RTL não muda nesta onda; nenhum idioma RTL novo foi adicionado.
 - Clarity permanece bloqueado/desinstalado: nenhum pixel, tag, SDK externo ou telemetria foi adicionado.
 - Buscadores após deploy: reenviar sitemap no Google/Bing, enviar IndexNow/Yandex, confirmar Naver e manter Baidu/Seznam bloqueados quando exigirem identidade, CAPTCHA, ICP, telefone extra ou custo.
+
+
+## Atualização — onda 259 publicada em 2026-07-06
+
+- Publicação: PR #221 mergeado com os 24 idiomas LTR e PR #222 corrigiu o QA público para validar todos os 259 hreflangs; `https://brikaya.com/` foi republicado via Cloudflare Pages em `https://35327c32.brikaya-live.pages.dev`.
+- Escopo publicado: 259 idiomas, 520 URLs no sitemap, hreflang completo e `x-default`.
+- QA público: `make cloudflare-public-check`, `make cloudflare-i18n-seo-qa` (259 hreflangs, 84 páginas de downloads amostradas), `make cloudflare-offline-pwa-qa` e `make yandex-indexnow-submit` (202, 520 URLs) passaram.
+- Amostras públicas: `/la/downloads/`, `/eo/downloads/`, `/nds/downloads/`, `/hsb/downloads/` e `/wa/downloads/` responderam 200 com `html lang` correto, `dir=ltr`, título localizado e sem Clarity/analytics/pixel.
+- Google Search Console: sitemap reenviado com URL completa; painel confirmou “Sitemap enviado”, mas tabela ainda mostra 472 páginas até o Google reprocessar o sitemap de 520 URLs.
+- Bing Webmaster Tools: sitemap reenviado e voltou para `Processing`; total descoberto do painel estava em 487, linha do sitemap em 472, e URL Submission manual está com quota 0.
+- Yandex Webmaster: IndexNow aceitou 520 URLs (`202`); sitemap segue em fila de processamento e checklist mostra 3 recomendações até o robô usar o sitemap processado.
+- Naver Search Advisor: `sitemap.xml` confirmado; uma tentativa segura de coleta de `/la/` não gerou novo item no histórico, sem CAPTCHA/OTP/custo.
+- Clarity: painel indica projeto existente, mas instalação continua bloqueada; nenhum script, tag, SDK, pixel ou telemetria foi adicionado.
+- Aba única Chrome: reutilizada e deixada aberta em `https://brikaya.com/sitemap.xml`.
+- Pendências: Google/Bing/Yandex/Naver precisam reprocessar; Yahoo/DuckDuckGo dependem de Bing/crawl; Brave sem endpoint direto atual; Baidu/Seznam seguem bloqueados por cadastro externo/CAPTCHA/ICP/custo; Clarity continua desinstalado.
