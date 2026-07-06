@@ -4,9 +4,9 @@ import userEvent from "@testing-library/user-event";
 
 import { AppearanceSelector } from "./AppearanceSelector";
 
-const INITIAL_SELECTION = {
+const FIXED_SELECTION = {
   themeId: "neon-arcade",
-  themeMode: "auto",
+  themeMode: "manual",
   autoThemeSequence: [
     "neon-arcade",
     "crt-high-contrast",
@@ -18,131 +18,75 @@ const INITIAL_SELECTION = {
     "electric-plum",
     "lime-graphite",
     "ruby-depth",
+    "real-metro-night",
+    "real-auto-garage",
+    "real-bio-lab",
+    "real-ancient-temple",
+    "real-orbital-station",
   ],
   autoThemeIndex: 0,
   imageSetId: "retro-default",
   fontSetId: "arcade-ui",
 } as const;
-const AUTO_THEME_TEST_ID = "appearance-option-auto-by-level";
-const PIXEL_SUNSET_PRESET_TEST_ID = "appearance-option-preset-pixel-sunset";
-const PIXEL_SUNSET_TEST_ID = "appearance-option-pixel-sunset";
-const PIXEL_SUNSET_OPTION_ID = "pixel-sunset";
-const MANUAL_SELECTION = {
-  ...INITIAL_SELECTION,
-  themeId: PIXEL_SUNSET_OPTION_ID,
-  themeMode: "manual",
-} as const;
-const PIXEL_SUNSET_PRESET_SELECTION = {
-  ...MANUAL_SELECTION,
-  imageSetId: "sunset-cabinet",
-} as const;
 
 describe("AppearanceSelector", () => {
-  it("mostra escolhas de aparência com texto de usuário", async () => {
-    const onThemeChange = jest.fn();
+  it("mostra somente Arcade neon e Retrô padrão", async () => {
     const onVisualThemePresetChange = jest.fn();
-    const onAutomaticThemeChange = jest.fn();
     const onImageSetChange = jest.fn();
-    const onFontSetChange = jest.fn();
 
     render(
       <AppearanceSelector
-        selection={INITIAL_SELECTION}
+        selection={FIXED_SELECTION}
         onVisualThemePresetChange={onVisualThemePresetChange}
-        onThemeChange={onThemeChange}
-        onAutomaticThemeChange={onAutomaticThemeChange}
         onImageSetChange={onImageSetChange}
-        onFontSetChange={onFontSetChange}
       />,
     );
 
     expect(screen.getByText("Conjuntos prontos")).toBeInTheDocument();
-    expect(screen.getByText("Cores")).toBeInTheDocument();
     expect(screen.getByText("Imagens")).toBeInTheDocument();
-    expect(screen.getByText("Fonte")).toBeInTheDocument();
-    expect(screen.getByTestId(AUTO_THEME_TEST_ID)).toHaveAttribute(
+    expect(screen.queryByText("Cores")).not.toBeInTheDocument();
+    expect(screen.queryByText("Fonte")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Automático por fase" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Arcade neon" })).toHaveAttribute(
       "data-appearance-option-id",
-      "auto-by-level",
+      "preset-neon-arcade",
     );
-    expect(screen.getByTestId(PIXEL_SUNSET_PRESET_TEST_ID)).toHaveAttribute(
-      "data-appearance-option-id",
-      "preset-pixel-sunset",
-    );
-    expect(screen.getByTestId(PIXEL_SUNSET_TEST_ID)).toHaveAttribute(
-      "data-appearance-option-id",
-      PIXEL_SUNSET_OPTION_ID,
-    );
+    expect(
+      screen.getByRole("button", { name: "Retrô padrão" }),
+    ).toHaveAttribute("data-appearance-option-id", "retro-default");
+    expect(
+      screen.queryByRole("button", { name: "Pôr do sol pixelado" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Alto contraste" }),
+    ).not.toBeInTheDocument();
 
-    await userEvent.click(
-      screen.getByRole("button", { name: "Automático por fase" }),
-    );
-    await userEvent.click(screen.getByTestId(PIXEL_SUNSET_PRESET_TEST_ID));
-    await userEvent.click(screen.getByTestId(PIXEL_SUNSET_TEST_ID));
-    await userEvent.click(
-      screen.getByRole("button", { name: "Cabine pôr do sol" }),
-    );
-    await userEvent.click(
-      screen.getByRole("button", { name: "Blocos pixelados" }),
-    );
+    await userEvent.click(screen.getByRole("button", { name: "Arcade neon" }));
+    await userEvent.click(screen.getByRole("button", { name: "Retrô padrão" }));
 
-    expect(onAutomaticThemeChange).toHaveBeenCalledTimes(1);
     expect(onVisualThemePresetChange).toHaveBeenCalledWith(
-      "preset-pixel-sunset",
+      "preset-neon-arcade",
     );
-    expect(onThemeChange).toHaveBeenCalledWith("pixel-sunset");
-    expect(onImageSetChange).toHaveBeenCalledWith("sunset-cabinet");
-    expect(onFontSetChange).toHaveBeenCalledWith("block-pixel");
+    expect(onImageSetChange).toHaveBeenCalledWith("retro-default");
   });
 
-  it("marca modo automático e tema manual sem dois ativos simultâneos", () => {
-    const props = {
-      selection: INITIAL_SELECTION,
-      onVisualThemePresetChange: jest.fn(),
-      onThemeChange: jest.fn(),
-      onAutomaticThemeChange: jest.fn(),
-      onImageSetChange: jest.fn(),
-      onFontSetChange: jest.fn(),
-    };
-    const { rerender } = render(<AppearanceSelector {...props} />);
-
-    expect(screen.getByTestId(AUTO_THEME_TEST_ID)).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-    expect(screen.getByTestId(PIXEL_SUNSET_TEST_ID)).toHaveAttribute(
-      "aria-pressed",
-      "false",
-    );
-    expect(screen.getByTestId(PIXEL_SUNSET_PRESET_TEST_ID)).toHaveAttribute(
-      "aria-pressed",
-      "false",
-    );
-
-    rerender(<AppearanceSelector {...props} selection={MANUAL_SELECTION} />);
-
-    expect(screen.getByTestId(AUTO_THEME_TEST_ID)).toHaveAttribute(
-      "aria-pressed",
-      "false",
-    );
-    expect(screen.getByTestId(PIXEL_SUNSET_TEST_ID)).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-    expect(screen.getByTestId(PIXEL_SUNSET_PRESET_TEST_ID)).toHaveAttribute(
-      "aria-pressed",
-      "false",
-    );
-
-    rerender(
+  it("marca padrão como ativo", () => {
+    render(
       <AppearanceSelector
-        {...props}
-        selection={PIXEL_SUNSET_PRESET_SELECTION}
+        selection={FIXED_SELECTION}
+        onVisualThemePresetChange={jest.fn()}
+        onImageSetChange={jest.fn()}
       />,
     );
 
-    expect(screen.getByTestId(PIXEL_SUNSET_PRESET_TEST_ID)).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "Arcade neon" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
+    expect(
+      screen.getByRole("button", { name: "Retrô padrão" }),
+    ).toHaveAttribute("aria-pressed", "true");
   });
 });

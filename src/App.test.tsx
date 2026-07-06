@@ -663,7 +663,7 @@ describe("App theme selector", () => {
     expect(mockLastGameProps?.gameMode).toBe("ball-turret");
   });
 
-  it("abre menu lateral com aparência, histórico, colisões, zerar pontuação e restaurar padrão", async () => {
+  it("abre menu lateral sem seção Aparência e mantém histórico, colisões, zerar pontuação e restaurar padrão", async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
 
@@ -677,27 +677,21 @@ describe("App theme selector", () => {
       within(drawer).queryByRole("button", { name: "Reiniciar" }),
     ).not.toBeInTheDocument();
     expect(within(drawer).queryByText("Partida")).not.toBeInTheDocument();
-    const appearanceGroup = screen.getByLabelText("Aparência do jogo");
     expect(
-      within(appearanceGroup).getByText("Conjuntos prontos"),
-    ).toBeInTheDocument();
-    expect(within(appearanceGroup).getByText("Cores")).toBeInTheDocument();
-    expect(within(appearanceGroup).getByText("Imagens")).toBeInTheDocument();
-    expect(within(appearanceGroup).getByText("Fonte")).toBeInTheDocument();
+      within(drawer).queryByRole("heading", { name: "Aparência" }),
+    ).not.toBeInTheDocument();
     expect(
-      within(appearanceGroup).getByRole("button", {
-        name: "Automático por fase",
-      }),
-    ).toBeInTheDocument();
+      screen.queryByLabelText("Aparência do jogo"),
+    ).not.toBeInTheDocument();
     expect(
-      within(appearanceGroup).getAllByRole("button", { name: "Arcade neon" }),
-    ).toHaveLength(2);
+      within(drawer).queryByRole("button", { name: "Automático por fase" }),
+    ).not.toBeInTheDocument();
     expect(
-      within(appearanceGroup).getByRole("button", { name: "Retrô padrão" }),
-    ).toBeInTheDocument();
+      within(drawer).queryByRole("button", { name: "Arcade neon" }),
+    ).not.toBeInTheDocument();
     expect(
-      within(appearanceGroup).getByRole("button", { name: "Arcade" }),
-    ).toBeInTheDocument();
+      within(drawer).queryByRole("button", { name: "Retrô padrão" }),
+    ).not.toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /histórico/i }),
     ).toBeInTheDocument();
@@ -997,8 +991,15 @@ describe("App theme selector", () => {
     expect(within(drawer).getByText("3º 40")).toBeInTheDocument();
   });
 
-  it("alterna aparência, aplica no documento e persiste escolha", async () => {
+  it("normaliza aparência antiga e não exibe controles de tema", async () => {
     mockSystemTheme(true);
+    mockLocalStorageValues({
+      [PRIVACY_CONSENT_STORAGE_KEY]: VALID_PRIVACY_CONSENT_RECORD,
+      "brikaya-theme": "pixel-sunset",
+      "brikaya-theme-mode": "auto",
+      "brikaya-image-set": "sunset-cabinet",
+      "brikaya-font-set": "block-pixel",
+    });
     const user = userEvent.setup();
 
     await renderApp();
@@ -1007,19 +1008,9 @@ describe("App theme selector", () => {
     expect(document.documentElement.dataset.imageSet).toBe("retro-default");
     expect(document.documentElement.dataset.fontSet).toBe("arcade-ui");
     expect(mockLastGameProps?.imageSetId).toBe("retro-default");
-    await user.click(screen.getByRole("button", { name: "Menu" }));
-
-    await user.click(screen.getByTestId("appearance-option-crt-high-contrast"));
-    await user.click(screen.getByRole("button", { name: "Alto contraste" }));
-    await user.click(screen.getByRole("button", { name: "CRT mono" }));
-
-    expect(document.documentElement.dataset.theme).toBe("crt-high-contrast");
-    expect(document.documentElement.dataset.imageSet).toBe("high-contrast");
-    expect(document.documentElement.dataset.fontSet).toBe("crt-mono");
-    expect(mockLastGameProps?.imageSetId).toBe("high-contrast");
     expect(window.localStorage.setItem).toHaveBeenCalledWith(
       "brikaya-theme",
-      "crt-high-contrast",
+      "neon-arcade",
     );
     expect(window.localStorage.setItem).toHaveBeenCalledWith(
       "brikaya-theme-mode",
@@ -1027,29 +1018,22 @@ describe("App theme selector", () => {
     );
     expect(window.localStorage.setItem).toHaveBeenCalledWith(
       "brikaya-image-set",
-      "high-contrast",
+      "retro-default",
     );
     expect(window.localStorage.setItem).toHaveBeenCalledWith(
       "brikaya-font-set",
-      "crt-mono",
+      "arcade-ui",
     );
 
-    await user.click(screen.getByTestId("appearance-option-pixel-sunset"));
+    await user.click(screen.getByRole("button", { name: "Menu" }));
 
-    expect(document.documentElement.dataset.theme).toBe("pixel-sunset");
-    expect(window.localStorage.setItem).toHaveBeenCalledWith(
-      "brikaya-theme",
-      "pixel-sunset",
-    );
-
-    await user.click(
-      screen.getByRole("button", { name: "Automático por fase" }),
-    );
-
-    expect(window.localStorage.setItem).toHaveBeenCalledWith(
-      "brikaya-theme-mode",
-      "auto",
-    );
+    expect(screen.queryByTestId("appearance-option-pixel-sunset")).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: "Automático por fase" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Alto contraste" }),
+    ).not.toBeInTheDocument();
   });
 
   it("mostra controles principais como ícones discretos", async () => {
@@ -1322,8 +1306,8 @@ describe("App theme selector", () => {
     );
     expect(screen.getByTestId("level-toast")).toHaveTextContent("Fase 2");
     expect(screen.queryByText("3")).not.toBeInTheDocument();
-    expect(document.documentElement.dataset.theme).not.toBe(initialTheme);
-    expect(window.localStorage.setItem).toHaveBeenCalledWith(
+    expect(document.documentElement.dataset.theme).toBe(initialTheme);
+    expect(window.localStorage.setItem).not.toHaveBeenCalledWith(
       "brikaya-theme-mode",
       "auto",
     );
@@ -1334,26 +1318,20 @@ describe("App theme selector", () => {
     expect(screen.queryByTestId("level-toast")).not.toBeInTheDocument();
   });
 
-  it("mantém tema manual durante subida de fase", async () => {
+  it("mantém tema padrão durante subida de fase", async () => {
     jest.useFakeTimers();
     mockSystemTheme(true);
-    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
 
     await renderApp();
     publishTestBoardRect();
 
-    await user.click(screen.getByRole("button", { name: "Menu" }));
-    await user.click(screen.getByTestId("appearance-option-pixel-sunset"));
-    const drawer = screen.getByRole("complementary", { name: "Menu do jogo" });
-    await user.click(
-      within(drawer).getByRole("button", { name: "Fechar menu" }),
-    );
     act(() => {
       jest.advanceTimersByTime(COUNTDOWN_TOTAL_MS);
       mockLastGameProps?.onLevelTransition?.(TEST_LEVEL_TRANSITION_PAYLOAD);
     });
 
-    expect(document.documentElement.dataset.theme).toBe("pixel-sunset");
+    expect(document.documentElement.dataset.theme).toBe("neon-arcade");
+    expect(document.documentElement.dataset.imageSet).toBe("retro-default");
     expect(window.localStorage.setItem).toHaveBeenCalledWith(
       "brikaya-theme-mode",
       "manual",

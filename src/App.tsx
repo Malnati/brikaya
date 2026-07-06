@@ -8,7 +8,6 @@ import {
   type ChangeEvent,
 } from "react";
 import Game, { type GameBoardRect } from "./components/Game";
-import { AppearanceSelector } from "./components/AppearanceSelector";
 import { AudioToggle } from "./components/AudioToggle";
 import { MusicToggle } from "./components/MusicToggle";
 import { ConsentScreen } from "./components/ConsentScreen";
@@ -181,15 +180,7 @@ export default function App() {
   const [isResetPreferencesErrorVisible, setIsResetPreferencesErrorVisible] =
     useState(false);
   const [isResetPreferencesBusy, setIsResetPreferencesBusy] = useState(false);
-  const {
-    selection,
-    selectTheme,
-    selectVisualThemePreset,
-    selectAutomaticTheme,
-    advanceAutoTheme,
-    selectImageSet,
-    selectFontSet,
-  } = useAppearancePreference();
+  const { selection } = useAppearancePreference();
   const { isAudioMuted, isMusicMuted, toggleAudio, toggleMusic } =
     useAudioPreference();
   const levelTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -757,43 +748,6 @@ export default function App() {
     setShowCollisionStats(false);
   }, [audioSink]);
 
-  const handleThemeChange = useCallback(
-    (nextTheme: Parameters<typeof selectTheme>[0]) => {
-      audioSink.playAudio(GAME_AUDIO_IDS.THEME_TOGGLE);
-      selectTheme(nextTheme);
-    },
-    [audioSink, selectTheme],
-  );
-
-  const handleVisualThemePresetChange = useCallback(
-    (nextPreset: Parameters<typeof selectVisualThemePreset>[0]) => {
-      audioSink.playAudio(GAME_AUDIO_IDS.THEME_TOGGLE);
-      selectVisualThemePreset(nextPreset);
-    },
-    [audioSink, selectVisualThemePreset],
-  );
-
-  const handleAutomaticThemeChange = useCallback(() => {
-    audioSink.playAudio(GAME_AUDIO_IDS.THEME_TOGGLE);
-    selectAutomaticTheme();
-  }, [audioSink, selectAutomaticTheme]);
-
-  const handleImageSetChange = useCallback(
-    (nextImageSet: Parameters<typeof selectImageSet>[0]) => {
-      audioSink.playAudio(GAME_AUDIO_IDS.THEME_TOGGLE);
-      selectImageSet(nextImageSet);
-    },
-    [audioSink, selectImageSet],
-  );
-
-  const handleFontSetChange = useCallback(
-    (nextFontSet: Parameters<typeof selectFontSet>[0]) => {
-      audioSink.playAudio(GAME_AUDIO_IDS.THEME_TOGGLE);
-      selectFontSet(nextFontSet);
-    },
-    [audioSink, selectFontSet],
-  );
-
   const handleLocaleChange = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
       audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
@@ -829,7 +783,6 @@ export default function App() {
 
   const handleLevelTransition = useCallback(
     (payload: LevelTransitionPayload) => {
-      advanceAutoTheme();
       audioSink.playAudio(GAME_AUDIO_IDS.LEVEL_UP_OVERLAY);
       setCinematicOverlay({
         type: "levelUp",
@@ -849,7 +802,7 @@ export default function App() {
         setLevel(payload.nextLevel);
       }, payload.pauseMs);
     },
-    [advanceAutoTheme, audioSink],
+    [audioSink],
   );
 
   const handleLevelChange = useCallback((nextLevel: number) => {
@@ -991,17 +944,6 @@ export default function App() {
                     ))}
                   </select>
                 </label>
-              </div>
-              <div className="settings-drawer__section">
-                <h3>{t("menu.appearance")}</h3>
-                <AppearanceSelector
-                  selection={selection}
-                  onVisualThemePresetChange={handleVisualThemePresetChange}
-                  onThemeChange={handleThemeChange}
-                  onAutomaticThemeChange={handleAutomaticThemeChange}
-                  onImageSetChange={handleImageSetChange}
-                  onFontSetChange={handleFontSetChange}
-                />
               </div>
               <div
                 className="settings-drawer__section high-scores-panel"
