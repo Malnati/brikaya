@@ -51,6 +51,8 @@ const LOCALIZED_LOCALES = [
   'fr-CA',
   'bn',
   'ur',
+  'fa',
+  'he',
   'ta',
   'te',
 ] as const;

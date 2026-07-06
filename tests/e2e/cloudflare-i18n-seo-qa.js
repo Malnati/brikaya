@@ -30,6 +30,8 @@ const TESTED_LOCALES = [
   { locale: "zh-TW", path: "/zh-TW/", title: "Brikaya — 打磚塊街機" },
   { locale: "bn", path: "/bn/", title: "Brikaya — ব্লক ব্রেকার আর্কেড" },
   { locale: "ur", path: "/ur/", title: "Brikaya — بلاک بریکر آرکیڈ" },
+  { locale: "fa", path: "/fa/", title: "Brikaya — آرکید شکستن بلوک" },
+  { locale: "he", path: "/he/", title: "Brikaya — ארקייד שבירת בלוקים" },
 ];
 const ALL_HREFLANG_LOCALES = [
   "pt-BR",
@@ -61,6 +63,8 @@ const ALL_HREFLANG_LOCALES = [
   "fr-CA",
   "bn",
   "ur",
+  "fa",
+  "he",
   "ta",
   "te",
 ];
@@ -211,6 +215,16 @@ const TESTED_DOWNLOADS_LOCALES = [
     title: "Brikaya ڈاؤن لوڈ کریں — مفت براؤزر گیم",
   },
   {
+    locale: "fa",
+    path: "/fa/downloads/",
+    title: "دانلود Brikaya — بازی رایگان مرورگر",
+  },
+  {
+    locale: "he",
+    path: "/he/downloads/",
+    title: "הורדת Brikaya — משחק דפדפן חינם",
+  },
+  {
     locale: "ta",
     path: "/ta/downloads/",
     title: "Brikaya பதிவிறக்கவும் — இலவச உலாவி விளையாட்டு",
@@ -232,7 +246,7 @@ const MENU_OPEN_ATTEMPTS = 3;
 const MENU_OPEN_RETRY_TIMEOUT_MS = 5000;
 const CHINESE_MENU_TEXT = "隐私";
 const ROOT_CANONICAL = "https://brikaya.com/";
-const RTL_LOCALES = new Set(["ar", "ur"]);
+const RTL_LOCALES = new Set(["ar", "ur", "fa", "he"]);
 const BROWSER_AUTO_LANGUAGE = "es-MX";
 const BROWSER_AUTO_LANGUAGES = ["es-MX", "en-US"];
 const BROWSER_AUTO_EXPECTED_LOCALE = "es-419";
