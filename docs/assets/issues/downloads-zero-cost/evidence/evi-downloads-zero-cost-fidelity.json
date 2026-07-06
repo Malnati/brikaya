@@ -1,0 +1,75 @@
+{
+  "checkedAt": "2026-07-06T06:47:20Z",
+  "acceptedConcept": "generated_images/019f3613-3c0d-7e43-a7b1-3aa0ea8b0f03/ig_0b7fe69ba31d11f8016a4b48f1f2a081918d90f8c6ca4dd2a3.png",
+  "renderedScreenshots": {
+    "desktop": "docs/assets/issues/downloads-zero-cost/evidence/evi-downloads-zero-cost-desktop.png",
+    "mobile": "docs/assets/issues/downloads-zero-cost/evidence/evi-downloads-zero-cost-mobile.png"
+  },
+  "browserMethod": "Google Chrome via Puppeteer executablePath because Browser/IAB navigation tools were unavailable in this session.",
+  "nativeViewportChecked": "1440x1800 desktop and 393x852 mobile",
+  "scopeDeviationFromConcept": "Store cards for paid or personal-registration channels were intentionally removed after user clarified zero-payment and no-personal-data policy.",
+  "comparisonPoints": [
+    {
+      "point": "Header/navigation",
+      "concept": "Brand left, Play/Downloads/Privacy/Terms right.",
+      "render": "Brand left, Jogar/Downloads/Privacidade/Termos right, Downloads selected.",
+      "status": "matched with Portuguese localization"
+    },
+    {
+      "point": "Hero hierarchy",
+      "concept": "Large Download Brikaya title, concise install/offline copy, two actions.",
+      "render": "Large Baixar Brikaya title, free/install/offline/no-account copy, Jogar agora and Instalar pelo navegador actions.",
+      "status": "matched with updated privacy copy"
+    },
+    {
+      "point": "QRCode prominence",
+      "concept": "Large QR card above the fold linking to brikaya.com.",
+      "render": "Large QR card above the fold, visible canonical link https://brikaya.com/.",
+      "status": "matched"
+    },
+    {
+      "point": "Distribution cards",
+      "concept": "Store/link card grid with QR and statuses.",
+      "render": "Free-only card grid: web app, browser install, QRCode, home shortcut, privacy; no paid store names.",
+      "status": "intentional product-policy deviation"
+    },
+    {
+      "point": "Palette and assets",
+      "concept": "Dark neon arcade, cyan accents, local arcade art.",
+      "render": "Dark neon arcade, cyan/green/magenta accents, all visible images are local SVG assets.",
+      "status": "matched"
+    },
+    {
+      "point": "Responsive behavior",
+      "concept": "Responsive-friendly page with reusable cards.",
+      "render": "Mobile stacks hero, QR, cards, steps, and commitments without horizontal overflow.",
+      "status": "matched"
+    }
+  ],
+  "aboveTheFoldCopyDiff": {
+    "allowedByUserOrConcept": [
+      "Baixar Brikaya",
+      "Jogar agora",
+      "Instalar pelo navegador",
+      "Escaneie para jogar",
+      "https://brikaya.com/"
+    ],
+    "intentionalAdditions": [
+      "Sem conta, sem pagamento e sem formulário de dados pessoais."
+    ],
+    "unapprovedAdditions": []
+  },
+  "remainingIntentionalDeviations": [
+    "No Chrome Web Store, Google Play, Apple App Store, Microsoft, TikTok, or Mozilla store/public submission cards because current user rule excludes known paid or personal-registration channels."
+  ],
+  "materialMismatchesFixed": [
+    "Adjusted desktop hero from two-row layout to three-column hero so QR is above the fold like the accepted direction."
+  ],
+  "coreInteractionPathVerified": [
+    "Jogar agora points to localized game home.",
+    "Instalar pelo navegador scrolls to install steps.",
+    "QRCode card displays canonical brikaya.com link.",
+    "Privacy and terms navigation remains available."
+  ],
+  "agencySignoffAssessment": "No material mismatch remains inside the revised zero-cost/no-personal-data scope."
+}

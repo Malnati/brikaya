@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Grátis e sem cadastro</title>
+  <desc id="desc">Escudo neon com marca de confirmação.</desc>
+  <rect width="256" height="256" rx="48" fill="#12122a"/>
+  <path d="M128 34 202 62v58c0 48-30 86-74 106-44-20-74-58-74-106V62z" fill="#080816" stroke="#00e5ff" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M88 132l28 28 58-68" fill="none" stroke="#39ff88" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="128" cy="128" r="82" fill="none" stroke="#ff2bd6" stroke-width="4" opacity="0.4"/>
+</svg>

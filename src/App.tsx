@@ -13,6 +13,7 @@ import { MusicToggle } from "./components/MusicToggle";
 import { ConsentScreen } from "./components/ConsentScreen";
 import { LanguageDetectionOverlay } from "./components/LanguageDetectionOverlay";
 import { MobileOrientationBlocker } from "./components/MobileOrientationBlocker";
+import { DownloadsPage } from "./components/DownloadsPage";
 import GameLogViewer from "./components/GameLogViewer";
 import {
   GameCinematicOverlay,
@@ -71,6 +72,7 @@ import {
   type AppLocale,
   type TranslationKey,
 } from "./i18n";
+import { isDownloadsRoute } from "./routes";
 import { requestLocaleFromDeviceLocation } from "./i18n/locationLocale";
 import {
   appendJoystickDiagnosticSample,
@@ -138,6 +140,14 @@ interface UpdateProgressState {
 }
 
 export default function App() {
+  if (isDownloadsRoute(window.location.pathname, SUPPORTED_LOCALES)) {
+    return <DownloadsPage />;
+  }
+
+  return <GameApp />;
+}
+
+function GameApp() {
   const { locale, setLocale, setLocaleFromLocation, t } = useI18n();
   const mobileOrientationLock = useMobileOrientationLock();
   const [score, setScore] = useState(0);

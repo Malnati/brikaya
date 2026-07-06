@@ -15,7 +15,12 @@ import {
   type AppLocale,
   type TranslationKey,
 } from "./messages";
-import { applySeoMetadata, getLocalePath, getMessage } from "./metadata";
+import { getPublicRoutePath } from "../routes";
+import {
+  applySeoMetadata,
+  getLocalizedRoutePath,
+  getMessage,
+} from "./metadata";
 
 export {
   DEFAULT_LOCALE,
@@ -24,7 +29,12 @@ export {
   type AppLocale,
   type TranslationKey,
 } from "./messages";
-export { getCanonicalUrl, getLocalePath, getSeoMetadata } from "./metadata";
+export {
+  getCanonicalUrl,
+  getLocalizedRoutePath,
+  getLocalePath,
+  getSeoMetadata,
+} from "./metadata";
 
 const LOCALE_STORAGE_KEY = "brikaya-locale";
 const LOCALE_SOURCE_STORAGE_KEY = "brikaya-locale-source";
@@ -270,7 +280,8 @@ function persistDetectedLocale(
 }
 
 function updateLocalizedPath(locale: AppLocale) {
-  const nextPath = getLocalePath(locale);
+  const routePath = getPublicRoutePath(window.location.pathname, SUPPORTED_LOCALES);
+  const nextPath = getLocalizedRoutePath(locale, routePath);
   const nextUrl = `${nextPath}${window.location.search}${window.location.hash}`;
   const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
   if (currentUrl === nextUrl) return;

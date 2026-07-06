@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Jogar na web</title>
+  <desc id="desc">Janela de navegador com botão de jogar.</desc>
+  <rect width="256" height="256" rx="48" fill="#12122a"/>
+  <rect x="42" y="58" width="172" height="128" rx="22" fill="#080816" stroke="#00e5ff" stroke-width="8"/>
+  <circle cx="68" cy="84" r="7" fill="#ff2bd6"/>
+  <circle cx="92" cy="84" r="7" fill="#ffe45e"/>
+  <circle cx="116" cy="84" r="7" fill="#39ff88"/>
+  <path d="M107 116l54 32-54 32z" fill="#00e5ff"/>
+  <rect x="76" y="202" width="104" height="14" rx="7" fill="#9cb7d8" opacity="0.7"/>
+</svg>
