@@ -742,6 +742,7 @@ select {
   flex: 0 0 auto;
   width: var(--bb-turret-trackball-size);
   height: var(--bb-turret-trackball-size);
+  box-sizing: border-box;
   align-items: center;
   justify-content: center;
   border: 1px solid color-mix(in srgb, var(--color-accent) 78%, #ffffff);
@@ -2218,6 +2219,14 @@ canvas {
 
   .game-board-playfield {
     margin-inline: auto;
+  }
+
+  .game-surface--ball-turret .game-board-input-layout {
+    gap: 0;
+  }
+
+  .game-surface--ball-turret .game-turret-joystick {
+    margin-top: var(--bb-turret-joystick-offset, var(--space-2));
   }
 }
 

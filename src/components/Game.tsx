@@ -17,6 +17,7 @@ import {
 } from "../constants/appearance";
 import type { GameAudioSink } from "../constants/audio";
 import type { JoystickDiagnosticSample } from "../utils/joystickDiagnostics";
+import { calculateTurretJoystickLayout } from "../utils/turretJoystickLayout";
 import type { LevelTransitionPayload } from "../constants/game";
 import {
   GAME_MODE_BALL_TURRET,
@@ -64,6 +65,11 @@ const POINTER_COARSE_MEDIA_QUERY = "(pointer: coarse)";
 const HOVER_NONE_MEDIA_QUERY = "(hover: none)";
 const VISUAL_VIEWPORT_WIDTH_CSS_VAR = "--bb-visual-viewport-width";
 const VISUAL_VIEWPORT_HEIGHT_CSS_VAR = "--bb-visual-viewport-height";
+const TURRET_JOYSTICK_OFFSET_CSS_VAR = "--bb-turret-joystick-offset";
+const TURRET_JOYSTICK_CENTER_Y_CSS_VAR = "--bb-turret-joystick-center-y";
+const TURRET_TRACKBALL_SIZE_CSS_VAR = "--bb-turret-trackball-size";
+const TURRET_TRACKBALL_KNOB_SIZE_CSS_VAR = "--bb-turret-trackball-knob-size";
+const TURRET_TRACKBALL_TRAVEL_CSS_VAR = "--bb-turret-trackball-travel";
 const PIXEL_UNIT = "px";
 const PERCENT_UNIT = "%";
 const PERCENT_FACTOR = 100;
@@ -129,6 +135,45 @@ function readBoardRect(canvas: HTMLCanvasElement): GameBoardRect {
     width: rect.width,
     height: rect.height,
   };
+}
+
+function removeTurretJoystickLayoutStyles(joystick: HTMLElement) {
+  joystick.style.removeProperty(TURRET_JOYSTICK_OFFSET_CSS_VAR);
+  joystick.style.removeProperty(TURRET_JOYSTICK_CENTER_Y_CSS_VAR);
+  joystick.style.removeProperty(TURRET_TRACKBALL_SIZE_CSS_VAR);
+  joystick.style.removeProperty(TURRET_TRACKBALL_KNOB_SIZE_CSS_VAR);
+  joystick.style.removeProperty(TURRET_TRACKBALL_TRAVEL_CSS_VAR);
+}
+
+function setTurretJoystickLayoutStyles(
+  joystick: HTMLElement,
+  layout: ReturnType<typeof calculateTurretJoystickLayout>,
+) {
+  if (!layout.shouldApply) {
+    removeTurretJoystickLayoutStyles(joystick);
+    return;
+  }
+
+  joystick.style.setProperty(
+    TURRET_JOYSTICK_OFFSET_CSS_VAR,
+    `${layout.marginTop}${PIXEL_UNIT}`,
+  );
+  joystick.style.setProperty(
+    TURRET_JOYSTICK_CENTER_Y_CSS_VAR,
+    `${layout.centerY}${PIXEL_UNIT}`,
+  );
+  joystick.style.setProperty(
+    TURRET_TRACKBALL_SIZE_CSS_VAR,
+    `${layout.size}${PIXEL_UNIT}`,
+  );
+  joystick.style.setProperty(
+    TURRET_TRACKBALL_KNOB_SIZE_CSS_VAR,
+    `${layout.knobSize}${PIXEL_UNIT}`,
+  );
+  joystick.style.setProperty(
+    TURRET_TRACKBALL_TRAVEL_CSS_VAR,
+    `${layout.travel}${PIXEL_UNIT}`,
+  );
 }
 
 
@@ -263,6 +308,31 @@ export default function Game({
 
     onBoardRectChange(readBoardRect(canvas));
   }, [onBoardRectChange]);
+  const updateTurretJoystickLayout = useCallback(() => {
+    const joystick = ballTurretJoystickRef.current;
+    if (!joystick) return;
+
+    const canvas = canvasRef.current;
+    if (!isBallTurretMode || !canvas) {
+      removeTurretJoystickLayoutStyles(joystick);
+      return;
+    }
+
+    const visualViewport = window.visualViewport;
+    const viewportWidth = visualViewport?.width || window.innerWidth;
+    const viewportHeight = visualViewport?.height || window.innerHeight;
+    const layout = calculateTurretJoystickLayout({
+      viewportWidth,
+      viewportHeight,
+      playfieldBottom: canvas.getBoundingClientRect().bottom,
+      pointerCoarse:
+        window.matchMedia?.(POINTER_COARSE_MEDIA_QUERY).matches ||
+        navigator.maxTouchPoints > 0,
+      hoverNone: window.matchMedia?.(HOVER_NONE_MEDIA_QUERY).matches || false,
+    });
+
+    setTurretJoystickLayoutStyles(joystick, layout);
+  }, [isBallTurretMode]);
 
   useLayoutEffect(() => {
     const updateCanvasSize = () => {
@@ -340,6 +410,41 @@ export default function Game({
       clearViewportCssVariables();
     };
   }, [publishBoardRect]);
+
+  useLayoutEffect(() => {
+    updateTurretJoystickLayout();
+    window.addEventListener(RESIZE_EVENT_NAME, updateTurretJoystickLayout);
+    window.addEventListener(
+      ORIENTATION_CHANGE_EVENT_NAME,
+      updateTurretJoystickLayout,
+    );
+    window.visualViewport?.addEventListener(
+      RESIZE_EVENT_NAME,
+      updateTurretJoystickLayout,
+    );
+    window.visualViewport?.addEventListener(
+      VISUAL_VIEWPORT_SCROLL_EVENT_NAME,
+      updateTurretJoystickLayout,
+    );
+
+    return () => {
+      window.removeEventListener(RESIZE_EVENT_NAME, updateTurretJoystickLayout);
+      window.removeEventListener(
+        ORIENTATION_CHANGE_EVENT_NAME,
+        updateTurretJoystickLayout,
+      );
+      window.visualViewport?.removeEventListener(
+        RESIZE_EVENT_NAME,
+        updateTurretJoystickLayout,
+      );
+      window.visualViewport?.removeEventListener(
+        VISUAL_VIEWPORT_SCROLL_EVENT_NAME,
+        updateTurretJoystickLayout,
+      );
+      const joystick = ballTurretJoystickRef.current;
+      if (joystick) removeTurretJoystickLayoutStyles(joystick);
+    };
+  }, [canvasSize, updateTurretJoystickLayout]);
 
   useLayoutEffect(() => {
     canvasSizeRef.current = canvasSize;
