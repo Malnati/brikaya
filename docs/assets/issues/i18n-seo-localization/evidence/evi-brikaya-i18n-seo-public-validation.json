@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-07-06T15:01:07.503Z",
+  "checkedAt": "2026-07-06T15:35:15.763Z",
   "baseUrl": "https://brikaya.com/",
   "localesChecked": [
     "pt-BR",
@@ -13,7 +13,17 @@
     "bn",
     "ur",
     "fa",
-    "he"
+    "he",
+    "mr",
+    "gu",
+    "kn",
+    "ml",
+    "pa",
+    "el",
+    "sv",
+    "da",
+    "no",
+    "fi"
   ],
   "downloadsLocalesChecked": [
     "pt-BR",
@@ -48,7 +58,17 @@
     "fa",
     "he",
     "ta",
-    "te"
+    "te",
+    "mr",
+    "gu",
+    "kn",
+    "ml",
+    "pa",
+    "el",
+    "sv",
+    "da",
+    "no",
+    "fi"
   ],
   "hreflangLocales": [
     "pt-BR",
@@ -83,7 +103,17 @@
     "fa",
     "he",
     "ta",
-    "te"
+    "te",
+    "mr",
+    "gu",
+    "kn",
+    "ml",
+    "pa",
+    "el",
+    "sv",
+    "da",
+    "no",
+    "fi"
   ],
   "htmlResults": [
     {
@@ -157,6 +187,66 @@
       "status": 200,
       "canonical": "https://brikaya.com/he/",
       "locale": "he"
+    },
+    {
+      "url": "https://brikaya.com/mr/",
+      "status": 200,
+      "canonical": "https://brikaya.com/mr/",
+      "locale": "mr"
+    },
+    {
+      "url": "https://brikaya.com/gu/",
+      "status": 200,
+      "canonical": "https://brikaya.com/gu/",
+      "locale": "gu"
+    },
+    {
+      "url": "https://brikaya.com/kn/",
+      "status": 200,
+      "canonical": "https://brikaya.com/kn/",
+      "locale": "kn"
+    },
+    {
+      "url": "https://brikaya.com/ml/",
+      "status": 200,
+      "canonical": "https://brikaya.com/ml/",
+      "locale": "ml"
+    },
+    {
+      "url": "https://brikaya.com/pa/",
+      "status": 200,
+      "canonical": "https://brikaya.com/pa/",
+      "locale": "pa"
+    },
+    {
+      "url": "https://brikaya.com/el/",
+      "status": 200,
+      "canonical": "https://brikaya.com/el/",
+      "locale": "el"
+    },
+    {
+      "url": "https://brikaya.com/sv/",
+      "status": 200,
+      "canonical": "https://brikaya.com/sv/",
+      "locale": "sv"
+    },
+    {
+      "url": "https://brikaya.com/da/",
+      "status": 200,
+      "canonical": "https://brikaya.com/da/",
+      "locale": "da"
+    },
+    {
+      "url": "https://brikaya.com/no/",
+      "status": 200,
+      "canonical": "https://brikaya.com/no/",
+      "locale": "no"
+    },
+    {
+      "url": "https://brikaya.com/fi/",
+      "status": 200,
+      "canonical": "https://brikaya.com/fi/",
+      "locale": "fi"
     },
     {
       "url": "https://brikaya.com/downloads/",
@@ -355,6 +445,66 @@
       "status": 200,
       "canonical": "https://brikaya.com/te/downloads/",
       "locale": "te"
+    },
+    {
+      "url": "https://brikaya.com/mr/downloads/",
+      "status": 200,
+      "canonical": "https://brikaya.com/mr/downloads/",
+      "locale": "mr"
+    },
+    {
+      "url": "https://brikaya.com/gu/downloads/",
+      "status": 200,
+      "canonical": "https://brikaya.com/gu/downloads/",
+      "locale": "gu"
+    },
+    {
+      "url": "https://brikaya.com/kn/downloads/",
+      "status": 200,
+      "canonical": "https://brikaya.com/kn/downloads/",
+      "locale": "kn"
+    },
+    {
+      "url": "https://brikaya.com/ml/downloads/",
+      "status": 200,
+      "canonical": "https://brikaya.com/ml/downloads/",
+      "locale": "ml"
+    },
+    {
+      "url": "https://brikaya.com/pa/downloads/",
+      "status": 200,
+      "canonical": "https://brikaya.com/pa/downloads/",
+      "locale": "pa"
+    },
+    {
+      "url": "https://brikaya.com/el/downloads/",
+      "status": 200,
+      "canonical": "https://brikaya.com/el/downloads/",
+      "locale": "el"
+    },
+    {
+      "url": "https://brikaya.com/sv/downloads/",
+      "status": 200,
+      "canonical": "https://brikaya.com/sv/downloads/",
+      "locale": "sv"
+    },
+    {
+      "url": "https://brikaya.com/da/downloads/",
+      "status": 200,
+      "canonical": "https://brikaya.com/da/downloads/",
+      "locale": "da"
+    },
+    {
+      "url": "https://brikaya.com/no/downloads/",
+      "status": 200,
+      "canonical": "https://brikaya.com/no/downloads/",
+      "locale": "no"
+    },
+    {
+      "url": "https://brikaya.com/fi/downloads/",
+      "status": 200,
+      "canonical": "https://brikaya.com/fi/downloads/",
+      "locale": "fi"
     }
   ],
   "sitemapRobots": {

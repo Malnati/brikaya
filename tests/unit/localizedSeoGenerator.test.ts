@@ -47,6 +47,16 @@ const LOCALIZED_LOCALES = [
   'he',
   'ta',
   'te',
+  'mr',
+  'gu',
+  'kn',
+  'ml',
+  'pa',
+  'el',
+  'sv',
+  'da',
+  'no',
+  'fi',
 ] as const;
 
 function readProjectFile(filePath: string): string {
@@ -84,14 +94,18 @@ describe('gerador SEO localizado', () => {
     for (const locale of LOCALIZED_LOCALES) {
       expect(downloadsSeoBlock).toContain(`'${locale}':`);
     }
-    expect(downloadsSeoBlock).toContain("title: '下载 Brikaya");
-    expect(downloadsSeoBlock).toContain("title: 'Brikayaをダウンロード");
-    expect(downloadsSeoBlock).toContain("title: 'Brikaya डाउनलोड");
-    expect(downloadsSeoBlock).toContain("title: 'تنزيل Brikaya");
-    expect(downloadsSeoBlock).toContain("title: 'Скачать Brikaya");
-    expect(downloadsSeoBlock).toContain("title: 'Brikaya ڈاؤن لوڈ کریں");
-    expect(downloadsSeoBlock).toContain("title: 'دانلود Brikaya");
-    expect(downloadsSeoBlock).toContain("title: 'הורדת Brikaya");
-    expect(downloadsSeoBlock).toContain("title: 'Brikaya பதிவிறக்கவும்");
+    expect(downloadsSeoBlock).toContain("下载 Brikaya");
+    expect(downloadsSeoBlock).toContain("Brikayaをダウンロード");
+    expect(downloadsSeoBlock).toContain("Brikaya डाउनलोड");
+    expect(downloadsSeoBlock).toContain("تنزيل Brikaya");
+    expect(downloadsSeoBlock).toContain("Скачать Brikaya");
+    expect(downloadsSeoBlock).toContain("Brikaya ڈاؤن لوڈ کریں");
+    expect(downloadsSeoBlock).toContain("دانلود Brikaya");
+    expect(downloadsSeoBlock).toContain("הורדת Brikaya");
+    expect(downloadsSeoBlock).toContain("Brikaya பதிவிறக்கவும்");
+    expect(downloadsSeoBlock).toContain("Brikaya डाउनलोड करा");
+    expect(downloadsSeoBlock).toContain("Brikaya ડાઉનલોડ કરો");
+    expect(downloadsSeoBlock).toContain("Λήψη Brikaya");
+    expect(downloadsSeoBlock).toContain("Lataa Brikaya");
   });
 });

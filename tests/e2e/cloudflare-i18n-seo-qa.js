@@ -32,6 +32,16 @@ const TESTED_LOCALES = [
   { locale: "ur", path: "/ur/", title: "Brikaya — بلاک بریکر آرکیڈ" },
   { locale: "fa", path: "/fa/", title: "Brikaya — آرکید شکستن بلوک" },
   { locale: "he", path: "/he/", title: "Brikaya — ארקייד שבירת בלוקים" },
+  { locale: "mr", path: "/mr/", title: "Brikaya — ब्लॉक ब्रेकर आर्केड" },
+  { locale: "gu", path: "/gu/", title: "Brikaya — બ્લોક બ્રેકર આર્કેડ" },
+  { locale: "kn", path: "/kn/", title: "Brikaya — ಬ್ಲಾಕ್ ಬ್ರೇಕರ್ ಆರ್ಕೇಡ್" },
+  { locale: "ml", path: "/ml/", title: "Brikaya — ബ്ലോക്ക് ബ്രേക്കർ ആർക്കേഡ്" },
+  { locale: "pa", path: "/pa/", title: "Brikaya — ਬਲਾਕ ਬ੍ਰੇਕਰ ਆਰਕੇਡ" },
+  { locale: "el", path: "/el/", title: "Brikaya — arcade σπασίματος μπλοκ" },
+  { locale: "sv", path: "/sv/", title: "Brikaya — blockbrytararkad" },
+  { locale: "da", path: "/da/", title: "Brikaya — blokbryder-arkade" },
+  { locale: "no", path: "/no/", title: "Brikaya — blokkbrekker-arkade" },
+  { locale: "fi", path: "/fi/", title: "Brikaya — palikanmurtaja-arcade" },
 ];
 const ALL_HREFLANG_LOCALES = [
   "pt-BR",
@@ -67,6 +77,16 @@ const ALL_HREFLANG_LOCALES = [
   "he",
   "ta",
   "te",
+  "mr",
+  "gu",
+  "kn",
+  "ml",
+  "pa",
+  "el",
+  "sv",
+  "da",
+  "no",
+  "fi",
 ];
 const TESTED_DOWNLOADS_LOCALES = [
   {
@@ -234,6 +254,16 @@ const TESTED_DOWNLOADS_LOCALES = [
     path: "/te/downloads/",
     title: "Brikaya డౌన్‌లోడ్ చేయండి — ఉచిత బ్రౌజర్ గేమ్",
   },
+  { locale: "mr", path: "/mr/downloads/", title: "Brikaya डाउनलोड करा — मोफत ब्राउझर गेम" },
+  { locale: "gu", path: "/gu/downloads/", title: "Brikaya ડાઉનલોડ કરો — મફત બ્રાઉઝર ગેમ" },
+  { locale: "kn", path: "/kn/downloads/", title: "Brikaya ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ — ಉಚಿತ ಬ್ರೌಸರ್ ಆಟ" },
+  { locale: "ml", path: "/ml/downloads/", title: "Brikaya ഡൗൺലോഡ് ചെയ്യുക — സൗജന്യ ബ്രൗസർ ഗെയിം" },
+  { locale: "pa", path: "/pa/downloads/", title: "Brikaya ਡਾਊਨਲੋਡ ਕਰੋ — ਮੁਫ਼ਤ ਬ੍ਰਾਊਜ਼ਰ ਗੇਮ" },
+  { locale: "el", path: "/el/downloads/", title: "Λήψη Brikaya — δωρεάν παιχνίδι browser" },
+  { locale: "sv", path: "/sv/downloads/", title: "Ladda ner Brikaya — gratis webbläsarspel" },
+  { locale: "da", path: "/da/downloads/", title: "Download Brikaya — gratis browserspil" },
+  { locale: "no", path: "/no/downloads/", title: "Last ned Brikaya — gratis nettleserspill" },
+  { locale: "fi", path: "/fi/downloads/", title: "Lataa Brikaya — ilmainen selainpeli" },
 ];
 const LANGUAGE_SELECT_SELECTOR = "#game-language-select";
 const MENU_BUTTON_SELECTOR = ".dashboard-menu-button";
