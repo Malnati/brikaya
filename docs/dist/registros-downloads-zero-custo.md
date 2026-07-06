@@ -187,3 +187,13 @@ Follow-up fa/he em 2026-07-06:
 - Brave: `https://brikaya.com/sitemap.xml` submetido com confirmação `Success`.
 - Seznam: formulário oficial bloqueado por CAPTCHA/código; não submetido.
 - Clarity/analytics/pixel/tag: não instalado; verificação pública sem marcadores.
+
+## Atualização — onda 91 idiomas validada localmente
+
+- Timestamp: 2026-07-06T16:40:29.402Z
+- Novos idiomas LTR adicionados nesta branch: `is`, `ga`, `cy`, `mt`, `sq`, `mk`, `bs`, `mn`, `tg`, `ky`, `tk`, `be`, `lb`, `eu`, `ca`, `gl`, `oc`, `br`, `mi`, `sm`, `to`, `fj`, `mg`, `so`.
+- Total alvo após publicação: 91 idiomas e 184 URLs no sitemap (home + downloads por idioma, mais `/privacy/` e `/terms/`).
+- RTL não mudou nesta onda: `ar`, `ur`, `fa` e `he` continuam como únicos idiomas `dir="rtl"`.
+- Clarity/analytics/pixel/tag/SDK externo continuam bloqueados e não foram adicionados.
+- Validação local: `node --version`, `make help`, `npm run codex-env:check`, `npm run test:semantic-file-names`, `npm run test:svg-assets`, `npm test -- --runInBand` e `npm run build` passaram; build gerou `localized-seo ok: locales=91, routes=2`.
+- Buscadores: nova submissão em Google/Bing/Yandex/Naver/Brave só deve ocorrer após deploy público; Bing tem quota diária limitada e a última rechecagem deixou quota restante 20.
