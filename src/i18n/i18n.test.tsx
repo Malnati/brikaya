@@ -32,7 +32,7 @@ const SPANISH_CANONICAL = "https://brikaya.com/es-419/";
 const CHINESE_TITLE = "Brikaya — 打砖块街机";
 const MENU_LABEL = "Menú";
 const LIME_GRAPHITE_LABEL = "Lima grafite";
-const COLLISION_SPEED_LABEL = "Velocidade atual:";
+const LOG_SPEED_LABEL = "Velocidade atual";
 const BUTTON_LABEL = "switch";
 const LOCALE_STORAGE_KEY = "brikaya-locale";
 const LOCALE_SOURCE_STORAGE_KEY = "brikaya-locale-source";
@@ -92,7 +92,7 @@ function LocaleProbe() {
       </button>
       <p>{t("controls.menu")}</p>
       <p>{t("appearance.option.lime-graphite")}</p>
-      <p>{t("collision.currentSpeed")}</p>
+      <p>{t("logs.speed.current")}</p>
     </div>
   );
 }
@@ -152,7 +152,7 @@ describe("i18n offline do Brikaya", () => {
 
     expect(screen.getByText(PORTUGUESE_LOCALE)).toBeInTheDocument();
     expect(screen.getByText(LIME_GRAPHITE_LABEL)).toBeInTheDocument();
-    expect(screen.getByText(COLLISION_SPEED_LABEL)).toBeInTheDocument();
+    expect(screen.getByText(LOG_SPEED_LABEL)).toBeInTheDocument();
     expect(document.documentElement.lang).toBe(PORTUGUESE_LOCALE);
     expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute(
       "href",

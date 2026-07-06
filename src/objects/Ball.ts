@@ -150,18 +150,18 @@ export class Ball {
     this.setVelocityFromAngleAndSpeed(this.getCurrentAngle(), this.initialSpawnSpeed, false);
   }
 
-  async update(
+  update(
     paddle: { position: PaddlePosition },
     bricks: { 
       collide: (
         ball: Ball, 
         gameState?: LoggedGameState
-      ) => Promise<boolean> 
+      ) => boolean
     },
     maxHeight: number,
     gameState: LoggedGameState,
     audioSink?: GameAudioSink
-  ): Promise<boolean> {
+  ): boolean {
     const motionSteps = this.getMotionStepCount();
     let brickCollisionHandled = false;
 
@@ -170,7 +170,7 @@ export class Ball {
       this.y += this.dy / motionSteps;
 
       if (!brickCollisionHandled) {
-        brickCollisionHandled = await bricks.collide(this, gameState);
+        brickCollisionHandled = bricks.collide(this, gameState);
       }
 
       const inPlay = this.resolvePaddleCollisionOrLoss(
@@ -181,15 +181,15 @@ export class Ball {
       );
 
       if (!inPlay) {
-        return Promise.resolve(false);
+        return false;
       }
 
       if (this.paddleCollision) {
-        return Promise.resolve(true);
+        return true;
       }
     }
 
-    return Promise.resolve(true);
+    return true;
   }
 
   private getMotionStepCount() {

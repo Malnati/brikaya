@@ -2,6 +2,7 @@
 import { SpeedReductionSnapshot, SpeedStateSnapshot } from '../constants/game';
 
 import { LOG, ERROR, WARN } from './logger';
+import { isGameplayTelemetryEnabled } from './runtimeDiagnostics';
 
 export interface CollisionEvent {
   id: string;
@@ -44,6 +45,9 @@ class CollisionTracker {
   private readonly DB_VERSION = 1;
 
   async initialize(): Promise<void> {
+    if (this.db) return;
+    if (typeof indexedDB === 'undefined') return;
+
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(this.DB_NAME, this.DB_VERSION);
 
@@ -71,6 +75,10 @@ class CollisionTracker {
   }
 
   async logCollision(event: Omit<CollisionEvent, 'id' | 'timestamp'>): Promise<void> {
+    if (!isGameplayTelemetryEnabled()) {
+      return;
+    }
+
     if (!this.db) {
       WARN('⚠️ IndexedDB não inicializado, pulando registro de colisão');
       return;
@@ -365,7 +373,8 @@ class CollisionTracker {
 // Instância singleton
 export const collisionTracker = new CollisionTracker();
 
-// Inicializar automaticamente
-collisionTracker.initialize().catch(error => {
-  ERROR('❌ Falha ao inicializar CollisionTracker:', error);
-});
+if (isGameplayTelemetryEnabled()) {
+  collisionTracker.initialize().catch(error => {
+    ERROR('❌ Falha ao inicializar CollisionTracker:', error);
+  });
+}

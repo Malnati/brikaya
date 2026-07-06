@@ -71,7 +71,6 @@ const TEST_LEVEL_TRANSITION_PAYLOAD: LevelTransitionPayload = {
   nextInitialBrickCount: 15,
 };
 const SETTINGS_ACTION_LOGS_TEST_ID = "settings-action-logs";
-const SETTINGS_ACTION_COLLISIONS_TEST_ID = "settings-action-collisions";
 const SETTINGS_ACTION_RESET_SCORE_TEST_ID = "settings-action-reset-score";
 const SETTINGS_ACTION_RESET_PREFERENCES_TEST_ID =
   "settings-action-reset-preferences";
@@ -714,11 +713,9 @@ describe("App theme selector", () => {
     expect(screen.queryByText("Nenhum registro ainda")).not.toBeInTheDocument();
     expect(mockLastGameProps?.joystickDiagnosticsEnabled).toBe(false);
     expect(
-      screen.getByRole("button", { name: /colisões/i }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByTestId(SETTINGS_ACTION_COLLISIONS_TEST_ID),
-    ).toHaveAttribute("data-settings-action", "collisions");
+      screen.queryByRole("button", { name: /colisões/i }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByTestId("settings-action-collisions")).toBeNull();
     expect(
       screen.getByRole("button", { name: /zerar pontuação/i }),
     ).toBeInTheDocument();

@@ -6,6 +6,7 @@ import {
 } from '../constants/game';
 
 import { LOG, ERROR, WARN } from '../utils/logger';
+import { isGameplayTelemetryEnabled } from '../utils/runtimeDiagnostics';
 
 LOG('📦 GameLogger.ts carregado');
 
@@ -87,6 +88,14 @@ export type LoggedPowerUpAction =
   | 'activate'
   | 'expire'
   | 'miss';
+
+const HIGH_VOLUME_EVENT_TYPES = new Set<GameEventType>([
+  'paddle_move',
+  'collision',
+  'brick_destroyed',
+]);
+
+const GAME_LOGGER_IDLE_TIMEOUT_MS = 2500;
 
 export interface GameStatsSummary {
   totalGames: number;
@@ -185,11 +194,19 @@ class GameLogger {
     return this.currentGameId;
   }
 
+  shouldRecordEvent(type: GameEventType): boolean {
+    return !HIGH_VOLUME_EVENT_TYPES.has(type) || isGameplayTelemetryEnabled();
+  }
+
   private getTotalBricks(gameState: LoggedGameState): number {
     return gameState.gameDimensions.brickCols * gameState.gameDimensions.brickRows;
   }
 
   async logEvent(event: Omit<GameEvent, 'id' | 'timestamp'>): Promise<void> {
+    if (!this.shouldRecordEvent(event.type)) {
+      return;
+    }
+
     LOG('📝 logEvent chamado - INÍCIO');
     LOG('📝 event.type:', event.type);
     LOG('📝 this.db:', this.db);
@@ -856,23 +873,28 @@ export const gameLogger = new GameLogger();
 
 LOG('📦 Instância do GameLogger criada');
 
-// Inicializar automaticamente quando o DOM estiver pronto
-if (document.readyState === 'loading') {
-  LOG('📦 DOM ainda carregando, aguardando DOMContentLoaded...');
-  document.addEventListener('DOMContentLoaded', () => {
-    LOG('🚀 Inicializando GameLogger (DOMContentLoaded)...');
-    gameLogger.initialize().then(() => {
-      LOG('✅ GameLogger inicializado com sucesso!');
-    }).catch(error => {
+function scheduleGameLoggerInitialization(): void {
+  if (!isGameplayTelemetryEnabled()) return;
+  if (typeof document === 'undefined') return;
+
+  const initialize = () => {
+    void gameLogger.initialize().catch(error => {
       ERROR('❌ Falha ao inicializar GameLogger:', error);
     });
-  });
-} else {
-  // DOM já está pronto
-  LOG('🚀 Inicializando GameLogger (DOM já pronto)...');
-  gameLogger.initialize().then(() => {
-    LOG('✅ GameLogger inicializado com sucesso!');
-  }).catch(error => {
-    ERROR('❌ Falha ao inicializar GameLogger:', error);
-  });
+  };
+
+  const scheduleIdle =
+    typeof window !== 'undefined' &&
+    typeof window.requestIdleCallback === 'function'
+      ? () => window.requestIdleCallback(initialize, { timeout: GAME_LOGGER_IDLE_TIMEOUT_MS })
+      : () => window.setTimeout(initialize, GAME_LOGGER_IDLE_TIMEOUT_MS);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', scheduleIdle, { once: true });
+    return;
+  }
+
+  scheduleIdle();
 }
+
+scheduleGameLoggerInitialization();

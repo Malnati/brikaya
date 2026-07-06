@@ -98,4 +98,16 @@ describe("ballTurretRenderer", () => {
     expect(ctx.lineTo).toHaveBeenCalled();
     expect(ctx.fillRect).toHaveBeenCalledWith(0, 0, 480, 320);
   });
+
+  it("reduz molas e sombras quando efeitos leves estão ativos", () => {
+    const ctx = createMockContext();
+
+    drawBallTurretTrampoline(ctx, {
+      ...createState(),
+      reducedEffects: true,
+    });
+
+    expect(ctx.moveTo).toHaveBeenCalledTimes(7);
+    expect((ctx as { shadowBlur?: number }).shadowBlur).toBe(0);
+  });
 });

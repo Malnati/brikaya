@@ -122,7 +122,7 @@ jest.mock("../objects/Ball", () => ({
     const mockBall = {
       position,
       getVelocity: jest.fn(() => velocity),
-      update: jest.fn().mockResolvedValue(true),
+      update: jest.fn(() => true),
       draw: jest.fn(),
       applyPhaseSpeedConfig: jest.fn((config: PhaseSpeedConfig) => {
         speedState = buildSpeedStateFromConfig(config);
@@ -520,6 +520,23 @@ describe("GameEngine", () => {
     expect(mockGameLogger.logGameStart.mock.calls[0][0]).toHaveProperty(
       "speedState",
     );
+    expect(loopSpy).toHaveBeenCalled();
+  });
+
+  it("inicia o loop sem aguardar persistência do GameLogger", async () => {
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+    jest.spyOn(engine as any, "preloadAssets").mockResolvedValue(undefined);
+    const loopSpy = jest
+      .spyOn(engine as any, "loop")
+      .mockImplementation(() => undefined);
+    const mockGameLogger = require("../storage/gameLogger").gameLogger;
+    mockGameLogger.logGameStart.mockImplementationOnce(
+      () => new Promise(() => undefined),
+    );
+
+    await engine.start();
+
+    expect(mockGameLogger.logGameStart).toHaveBeenCalled();
     expect(loopSpy).toHaveBeenCalled();
   });
 

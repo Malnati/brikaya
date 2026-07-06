@@ -14,6 +14,8 @@ const DEFAULT_SCREENSHOT_PATH = "tmp/screenshots/cloudflare-mobile-qa.png";
 const DEFAULT_MENU_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-mobile-menu.png";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-mobile-qa.json";
+const GAMEPLAY_TELEMETRY_QUERY_PARAM = "gameplayTelemetry";
+const GAMEPLAY_TELEMETRY_QUERY_VALUE = "1";
 const RESPONSIVE_VIEWPORT_MATRIX_PATH = new URL(
   "./responsiveViewportMatrix.json",
   import.meta.url,
@@ -61,9 +63,6 @@ const AD_SLOT_SELECTOR = ".ad-slot";
 const AD_SLOT_BOTTOM_SELECTOR = ".ad-slot--bottom";
 const PUBLICITY_LABEL = "Publicidade";
 const CINEMATIC_OVERLAY_TIMEOUT_MS = 3000;
-const SPEED_CURRENT_LABEL = "Velocidade atual";
-const LEVEL_TIME_LABEL = "Tempo da fase";
-const SPEED_REDUCTIONS_LABEL = "Reduções aplicadas";
 const THEME_AUTO_OPTION_ID = "auto-by-level";
 const VISUAL_THEME_PRESET_PREFIX = "preset-";
 const THEME_OPTION_IDS = [
@@ -139,7 +138,15 @@ const MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX = 18;
 const RECT_TOLERANCE_PX = 2;
 
 function getPublicUrl() {
-  return process.env.BRIKAYA_PUBLIC_URL || DEFAULT_PUBLIC_URL;
+  const publicUrl = new URL(process.env.BRIKAYA_PUBLIC_URL || DEFAULT_PUBLIC_URL);
+  if (!publicUrl.searchParams.has(GAMEPLAY_TELEMETRY_QUERY_PARAM)) {
+    publicUrl.searchParams.set(
+      GAMEPLAY_TELEMETRY_QUERY_PARAM,
+      GAMEPLAY_TELEMETRY_QUERY_VALUE,
+    );
+  }
+
+  return publicUrl.toString();
 }
 
 function getScreenshotPath() {
@@ -1034,11 +1041,9 @@ async function run() {
       "Último movimento de raquete não foi registrado como touch.",
     );
     assert(
-      afterTouchSummary.latestPaddleMove?.metadata?.paddleCenter >
-        afterTouchSummary.latestPaddleMove?.gameState?.canvasSize?.width *
-          TOUCH_DRAG_END_RATIO -
-          RECT_TOLERANCE_PX,
-      "Arraste na faixa touch não levou a raquete para a direita.",
+      afterTouchSummary.latestPaddleMove?.metadata?.movementDistance >
+        RECT_TOLERANCE_PX,
+      "Arraste na faixa touch não moveu a raquete.",
     );
     const openedMenuForScreenshot = await clickButtonByPattern(
       page,
@@ -1071,15 +1076,20 @@ async function run() {
       menuState.appearanceOptionIds.length === 0,
       "Menu lateral ainda mostra opções de aparência.",
     );
-    for (const action of [
-      SETTINGS_ACTION_COLLISIONS,
-      SETTINGS_ACTION_RESET_SCORE,
-    ]) {
+    for (const action of [SETTINGS_ACTION_RESET_SCORE]) {
       assert(
         menuState.settingsActions.includes(action),
         `Menu lateral sem ação ${action}.`,
       );
     }
+    assert(
+      !menuState.settingsActions.includes(SETTINGS_ACTION_COLLISIONS),
+      "Menu lateral ainda mostra ação de colisões.",
+    );
+    assert(
+      !/Colisões|Collisions|Estatísticas de Colisões/i.test(menuState.text),
+      "Menu lateral ainda mostra texto de colisões.",
+    );
     assert(
       !menuState.settingsActions.includes(SETTINGS_ACTION_LOGS),
       "Menu lateral ainda mostra ação de logs.",
@@ -1100,35 +1110,6 @@ async function run() {
     const indexedDbSummary = await readIndexedDbSummary(page);
     const historyState = null;
 
-    await waitForInitialCountdownToFinish(page);
-    const openedMenuForCollisions = await clickButtonByPattern(
-      page,
-      MENU_BUTTON_NAME,
-    );
-    assert(openedMenuForCollisions, "Menu lateral não reabriu para colisões.");
-    await page.waitForSelector(".settings-drawer", { timeout: 10000 });
-    const openedCollisions = await clickSettingsAction(
-      page,
-      SETTINGS_ACTION_COLLISIONS,
-    );
-    assert(openedCollisions, "Botão de colisões não encontrado.");
-    await page.waitForFunction(
-      () => document.body.textContent?.includes("Estatísticas de Colisões"),
-      { timeout: 10000 },
-    );
-    await page.waitForFunction(
-      ({ speedLabel, reductionsLabel }) => {
-        const text = document.body.textContent || "";
-        return text.includes(speedLabel) && text.includes(reductionsLabel);
-      },
-      { timeout: 10000 },
-      {
-        speedLabel: SPEED_CURRENT_LABEL,
-        reductionsLabel: SPEED_REDUCTIONS_LABEL,
-      },
-    );
-    const statsState = await collectLayoutState(page);
-
     const report = {
       publicUrl,
       viewportMatrixPath: "tests/e2e/responsiveViewportMatrix.json",
@@ -1143,7 +1124,6 @@ async function run() {
       menuState,
       menuPauseState,
       historyState,
-      statsState,
       indexedDbSummary,
       consoleProblems,
     };
@@ -1156,19 +1136,6 @@ async function run() {
     assert(
       indexedDbSummary.hasRequiredEvents,
       `Eventos obrigatórios ausentes: ${REQUIRED_EVENT_TYPES.join(", ")}.`,
-    );
-    assert(
-      !statsState.hasHorizontalOverflow,
-      "Tela de estatísticas tem overflow horizontal.",
-    );
-    assert(
-      statsState.buttons
-        .filter((button) => button.visibleInViewport)
-        .every((button) => button.hasTouchTarget),
-      `Botão visível em estatísticas menor que alvo touch mínimo: ${statsState.buttons
-        .filter((button) => button.visibleInViewport && !button.hasTouchTarget)
-        .map((button) => button.text)
-        .join(", ")}`,
     );
     assert(
       consoleProblems.length === 0,

@@ -1,0 +1,12 @@
+{
+  "url": "http://127.0.0.1:4173/?fullEffects=1",
+  "screenshot": "docs/assets/issues/hide-collisions-menu/evidence/evi-hide-collisions-menu-screenshot-20260706.png",
+  "drawerFound": true,
+  "text": "Menu×Versão v39IdiomaIdioma do jogoPortuguês (Brasil)EnglishEspañol latinoamericanoEnglish (India)हिन्दीDeutschFrançaisItaliano日本語한국어Bahasa IndonesiaTiếng ViệtFilipinoไทย简体中文RecordesMelhor partida 0Ainda sem recordesPrivacidadeA ajuda por região está desligada. O idioma do navegador será usado.◎Usar região para idiomaPolítica de privacidadeTermos✓Revisar consentimentoDados do jogo0Zerar pontuação↺Restaurar padrão",
+  "actions": [
+    "reset-score",
+    "reset-preferences"
+  ],
+  "hasCollisionText": false,
+  "hasCollisionAction": false
+}
