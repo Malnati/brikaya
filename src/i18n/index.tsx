@@ -141,6 +141,32 @@ const TIME_ZONE_LOCALE_MAP: readonly (readonly [string, AppLocale])[] = [
   ["Asia/Harbin", "zh-CN"],
   ["Asia/Hong_Kong", "zh-CN"],
   ["Asia/Macau", "zh-CN"],
+  ["Europe/Prague", "cs"],
+  ["Europe/Bucharest", "ro"],
+  ["Europe/Budapest", "hu"],
+  ["Europe/Sofia", "bg"],
+  ["Europe/Bratislava", "sk"],
+  ["Europe/Ljubljana", "sl"],
+  ["Europe/Zagreb", "hr"],
+  ["Europe/Belgrade", "sr"],
+  ["Europe/Vilnius", "lt"],
+  ["Europe/Riga", "lv"],
+  ["Europe/Tallinn", "et"],
+  ["Africa/Nairobi", "sw"],
+  ["Africa/Johannesburg", "af"],
+  ["Africa/Addis_Ababa", "am"],
+  ["Asia/Tbilisi", "ka"],
+  ["Asia/Yerevan", "hy"],
+  ["Asia/Baku", "az"],
+  ["Asia/Almaty", "kk"],
+  ["Asia/Tashkent", "uz"],
+  ["Asia/Kathmandu", "ne"],
+  ["Asia/Katmandu", "ne"],
+  ["Asia/Colombo", "si"],
+  ["Asia/Phnom_Penh", "km"],
+  ["Asia/Vientiane", "lo"],
+  ["Asia/Yangon", "my"],
+  ["Asia/Rangoon", "my"],
 ];
 const TIME_ZONE_LOCALE_PREFIX_MAP: readonly (readonly [string, AppLocale])[] = [
   ["America/Argentina/", "es-419"],
@@ -205,6 +231,30 @@ function normalizeLocale(value: string | null | undefined): AppLocale | null {
   if (normalizedValue.startsWith("fil") || normalizedValue.startsWith("tl"))
     return "fil";
   if (normalizedValue.startsWith("th")) return "th";
+  if (normalizedValue.startsWith("cs")) return "cs";
+  if (normalizedValue.startsWith("ro")) return "ro";
+  if (normalizedValue.startsWith("hu")) return "hu";
+  if (normalizedValue.startsWith("bg")) return "bg";
+  if (normalizedValue.startsWith("sk")) return "sk";
+  if (normalizedValue.startsWith("sl")) return "sl";
+  if (normalizedValue.startsWith("hr")) return "hr";
+  if (normalizedValue.startsWith("sr")) return "sr";
+  if (normalizedValue.startsWith("lt")) return "lt";
+  if (normalizedValue.startsWith("lv")) return "lv";
+  if (normalizedValue.startsWith("et")) return "et";
+  if (normalizedValue.startsWith("sw")) return "sw";
+  if (normalizedValue.startsWith("af")) return "af";
+  if (normalizedValue.startsWith("am")) return "am";
+  if (normalizedValue.startsWith("ka")) return "ka";
+  if (normalizedValue.startsWith("hy")) return "hy";
+  if (normalizedValue.startsWith("az")) return "az";
+  if (normalizedValue.startsWith("kk")) return "kk";
+  if (normalizedValue.startsWith("uz")) return "uz";
+  if (normalizedValue.startsWith("ne")) return "ne";
+  if (normalizedValue.startsWith("si")) return "si";
+  if (normalizedValue.startsWith("km")) return "km";
+  if (normalizedValue.startsWith("lo")) return "lo";
+  if (normalizedValue.startsWith("my")) return "my";
 
   return null;
 }

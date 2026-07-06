@@ -42,6 +42,12 @@ const TESTED_LOCALES = [
   { locale: "da", path: "/da/", title: "Brikaya — blokbryder-arkade" },
   { locale: "no", path: "/no/", title: "Brikaya — blokkbrekker-arkade" },
   { locale: "fi", path: "/fi/", title: "Brikaya — palikanmurtaja-arcade" },
+  { locale: "cs", path: "/cs/", title: "Brikaya — arkáda bourání bloků" },
+  { locale: "bg", path: "/bg/", title: "Brikaya — аркада за разбиване на блокове" },
+  { locale: "sr", path: "/sr/", title: "Brikaya — аркада разбијања блокова" },
+  { locale: "af", path: "/af/", title: "Brikaya — blokbreker-arkade" },
+  { locale: "uz", path: "/uz/", title: "Brikaya — blok sindirish arkadasi" },
+  { locale: "my", path: "/my/", title: "Brikaya — ဘလောက်ဖျက် arcade" },
 ];
 const ALL_HREFLANG_LOCALES = [
   "pt-BR",
@@ -87,6 +93,30 @@ const ALL_HREFLANG_LOCALES = [
   "da",
   "no",
   "fi",
+  "cs",
+  "ro",
+  "hu",
+  "bg",
+  "sk",
+  "sl",
+  "hr",
+  "sr",
+  "lt",
+  "lv",
+  "et",
+  "sw",
+  "af",
+  "am",
+  "ka",
+  "hy",
+  "az",
+  "kk",
+  "uz",
+  "ne",
+  "si",
+  "km",
+  "lo",
+  "my",
 ];
 const TESTED_DOWNLOADS_LOCALES = [
   {
@@ -264,6 +294,12 @@ const TESTED_DOWNLOADS_LOCALES = [
   { locale: "da", path: "/da/downloads/", title: "Download Brikaya — gratis browserspil" },
   { locale: "no", path: "/no/downloads/", title: "Last ned Brikaya — gratis nettleserspill" },
   { locale: "fi", path: "/fi/downloads/", title: "Lataa Brikaya — ilmainen selainpeli" },
+  { locale: "cs", path: "/cs/downloads/", title: "Stáhnout Brikaya — bezplatná hra v prohlížeči" },
+  { locale: "bg", path: "/bg/downloads/", title: "Изтеглете Brikaya — безплатна игра в браузъра" },
+  { locale: "sr", path: "/sr/downloads/", title: "Преузми Brikaya — бесплатна игра у прегледачу" },
+  { locale: "af", path: "/af/downloads/", title: "Laai Brikaya af — gratis blaaier-speletjie" },
+  { locale: "uz", path: "/uz/downloads/", title: "Brikaya yuklab olish — bepul brauzer o‘yini" },
+  { locale: "my", path: "/my/downloads/", title: "Brikaya ဒေါင်းလုဒ်လုပ်ရန် — အခမဲ့ ဘရောက်ဇာဂိမ်း" },
 ];
 const LANGUAGE_SELECT_SELECTOR = "#game-language-select";
 const MENU_BUTTON_SELECTOR = ".dashboard-menu-button";
