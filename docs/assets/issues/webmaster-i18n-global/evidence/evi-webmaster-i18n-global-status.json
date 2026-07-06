@@ -1,6 +1,6 @@
 {
   "artifact": "evi-webmaster-i18n-global-status",
-  "updatedAt": "2026-07-06T13:25:13.308Z",
+  "updatedAt": "2026-07-06T13:35:42.346Z",
   "scope": {
     "canonicalOrigin": "https://brikaya.com",
     "routes": [
@@ -187,14 +187,15 @@
     {
       "platform": "Baidu Search Resource Platform",
       "panelUrl": "https://ziyuan.baidu.com/site/index",
-      "status": "blocked_privacy",
+      "status": "blocked_auth",
       "actions": [
         "Opened Baidu registration tab supplied by user",
-        "Registration form requires phone number and verification code before account creation",
-        "Register button was disabled and verification request had timed out",
-        "Stopped before entering phone, verification code, CAPTCHA, document, ICP, payment or submitting account registration"
+        "Switched the same tab to the free overseas registration route and selected Brazil as the country/region selector",
+        "Entered only the user-authorized phone value into the form and requested the verification code",
+        "Baidu returned that registration from overseas regions and Hong Kong, Macao and Taiwan is not currently supported",
+        "Stopped before SMS code entry, CAPTCHA handling, identity document, ICP, payment, paid service or final account registration submission"
       ],
-      "evidence": "Sanitized panel state observed: phone and verification code required; no credential or personal data submitted"
+      "evidence": "Sanitized panel state observed: Brazil country/region selected; Baidu displayed overseas-registration-not-supported message; no phone, password, email, SMS code or personal identifier stored in evidence."
     },
     {
       "platform": "Seznam/Yep/IndexNow participants",
@@ -229,16 +230,20 @@
     "chromeProfile": "authenticated personal Chrome profile used where already signed in; no credentials printed",
     "sessionName": "Brikaya webmaster/i18n",
     "newTabsOpenedByCodex": false,
-    "workTabFinalUrl": "https://brikaya.com/sitemap.xml",
+    "workTabFinalUrl": "https://passport.baidu.com/v2/?reg&overseas=1&tpl=mn",
     "workTabLeftOpenAtFinish": true,
     "sensitiveScreenshotsStored": false,
     "exception": "Existing Naver Search Advisor tab was reused first. A Naver OAuth/Chrome extension block appeared on recheck, so the remaining Baidu check used an already-open about:blank tab; no new browser tab was created. This deviation is documented instead of silently claiming perfect one-tab compliance.",
     "popupsOrExtraTabsCreatedBySites": false,
     "captchaOrOtpEncountered": false,
-    "stoppedAtPasswordPhoneDocumentOrPayment": true
+    "stoppedAtPasswordPhoneDocumentOrPayment": false,
+    "phoneSubmittedWithUserPermission": true,
+    "finalRegistrationSubmitted": false,
+    "stoppedAtUnsupportedOverseasRegistration": true,
+    "sensitiveFormValuesStored": false
   },
   "followUp20260706": {
-    "updatedAt": "2026-07-06T13:25:13.308Z",
+    "updatedAt": "2026-07-06T13:35:42.346Z",
     "browserTabsProvidedByUser": [
       "https://searchadvisor.naver.com/console/site/request/sitemap?site=https%3A%2F%2Fbrikaya.com",
       "https://passport.baidu.com/v2/?reg&tpl=mn"
@@ -249,24 +254,26 @@
       "manualCrawlAttempt": "Opening Web page collection redirected to Search Advisor login/callback; stopped without entering password, OTP, CAPTCHA, phone, document or payment data."
     },
     "baidu": {
-      "status": "blocked_privacy",
-      "evidence": "Baidu registration page required phone number plus verification code; register button disabled after request timed out.",
-      "action": "Stopped before phone, verification code, password submission, CAPTCHA, identity, ICP or payment."
+      "status": "blocked_auth",
+      "evidence": "Baidu free overseas registration route accepted Brazil in the country/region selector, then returned an overseas-registration-not-supported message after requesting a verification code.",
+      "action": "Stopped before SMS code entry, CAPTCHA handling, document/ICP/payment, paid service selection, or final account registration submission. User-authorized contact data was used only in the live Baidu form and is intentionally omitted from repository evidence."
     },
     "browser": {
       "tabsKeptOpen": true,
       "keptTabs": [
         "Naver Search Advisor sitemap/manual crawl login state",
-        "Baidu registration page"
+        "Baidu registration page showing overseas-registration-not-supported state"
       ],
-      "newTabsOpenedByCodex": false
+      "newTabsOpenedByCodex": false,
+      "reusedUserProvidedTabs": true
     },
     "sanitization": {
       "authCodeIncluded": false,
       "phoneIncluded": false,
       "passwordIncluded": false,
       "emailIncluded": false,
-      "screenshotsStored": false
+      "screenshotsStored": false,
+      "personalIdentifierIncluded": false
     }
   }
 }
