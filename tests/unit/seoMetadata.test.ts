@@ -3,11 +3,14 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const INDEX_HTML_PATH = 'index.html';
+const PRIVACY_HTML_PATH = 'public/privacy/index.html';
+const TERMS_HTML_PATH = 'public/terms/index.html';
 const ROBOTS_TXT_PATH = 'public/robots.txt';
 const SITEMAP_XML_PATH = 'public/sitemap.xml';
 const CANONICAL_URL = 'https://brikaya.com/';
 const SITEMAP_URL = 'https://brikaya.com/sitemap.xml';
 const SOCIAL_IMAGE_URL = 'https://brikaya.com/assets/visual/ui/ui-pwa-app-icon.svg';
+const ROOT_FAVICON_LINK = '<link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />';
 const PORTUGUESE_LOCALE = 'pt-BR';
 const DESCRIPTION_META_NAME = 'name="description"';
 const CANONICAL_REL = 'rel="canonical"';
@@ -48,6 +51,7 @@ describe('metadados públicos de descoberta do Brikaya', () => {
     expect(html).toContain(DESCRIPTION_META_NAME);
     expect(html).toContain(CANONICAL_REL);
     expect(html).toContain(CANONICAL_URL);
+    expect(html).toContain(ROOT_FAVICON_LINK);
     expect(html).toContain(OG_IMAGE_PROPERTY);
     expect(html).toContain(TWITTER_IMAGE_NAME);
     expect(html).toContain(SOCIAL_IMAGE_URL);
@@ -81,5 +85,13 @@ describe('metadados públicos de descoberta do Brikaya', () => {
     expect(sitemap).toContain(PRIVACY_LOC_TAG);
     expect(sitemap).toContain(TERMS_LOC_TAG);
     expect(sitemap).not.toContain('.pages.dev');
+  });
+
+  it('declara favicon SVG raiz também nas páginas públicas estáticas', () => {
+    const privacy = readProjectFile(PRIVACY_HTML_PATH);
+    const terms = readProjectFile(TERMS_HTML_PATH);
+
+    expect(privacy).toContain(ROOT_FAVICON_LINK);
+    expect(terms).toContain(ROOT_FAVICON_LINK);
   });
 });

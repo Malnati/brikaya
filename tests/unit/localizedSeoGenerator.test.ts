@@ -5,6 +5,8 @@ import { resolve } from 'node:path';
 const GENERATOR_PATH = 'scripts/generate-localized-seo.mjs';
 const RELATIVE_MANIFEST_PATTERN = 'href="./manifest.webmanifest"';
 const ABSOLUTE_MANIFEST_PATTERN = 'href="/manifest.webmanifest"';
+const RELATIVE_FAVICON_PATTERN = 'href="./favicon.svg"';
+const ABSOLUTE_FAVICON_PATTERN = 'href="/favicon.svg"';
 const RELATIVE_ASSET_HREF_PATTERN = 'href="./assets/';
 const ABSOLUTE_ASSET_HREF_PATTERN = 'href="/assets/';
 const RELATIVE_ASSET_SRC_PATTERN = 'src="./assets/';
@@ -22,6 +24,8 @@ describe('gerador SEO localizado', () => {
 
     expect(generator).toContain(RELATIVE_MANIFEST_PATTERN);
     expect(generator).toContain(ABSOLUTE_MANIFEST_PATTERN);
+    expect(generator).toContain(RELATIVE_FAVICON_PATTERN);
+    expect(generator).toContain(ABSOLUTE_FAVICON_PATTERN);
     expect(generator).toContain(RELATIVE_ASSET_HREF_PATTERN);
     expect(generator).toContain(ABSOLUTE_ASSET_HREF_PATTERN);
     expect(generator).toContain(RELATIVE_ASSET_SRC_PATTERN);

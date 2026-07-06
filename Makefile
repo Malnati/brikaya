@@ -26,7 +26,7 @@ KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
 # Target padrão: mostrar help quando make é executado sem argumentos
 .DEFAULT_GOAL := help
 
-.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-domain cloudflare-deploy cloudflare-purge-cache cloudflare-public-check cloudflare-mobile-qa cloudflare-orientation-lock-qa cloudflare-ball-turret-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-powerups-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa cloudflare-offline-pwa-qa cloudflare-i18n-seo-qa cloudflare-reset-preferences-qa cloudflare-evasive-blocks-qa docker-build docker-up docker-down docker-logs docker-shell
+.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-domain cloudflare-deploy cloudflare-purge-cache cloudflare-public-check cloudflare-mobile-qa cloudflare-orientation-lock-qa cloudflare-ball-turret-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-powerups-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa cloudflare-offline-pwa-qa cloudflare-i18n-seo-qa cloudflare-reset-preferences-qa cloudflare-evasive-blocks-qa yandex-indexnow-dry-run yandex-indexnow-submit docker-build docker-up docker-down docker-logs docker-shell
 
 # Função para matar processos anteriores
 kill-processes:
@@ -149,6 +149,12 @@ cloudflare-reset-preferences-qa:
 
 cloudflare-evasive-blocks-qa:
 	@npm run test:cloudflare-evasive-blocks
+
+yandex-indexnow-dry-run:
+	@BRIKAYA_INDEXNOW_DRY_RUN=true npm run indexnow:yandex
+
+yandex-indexnow-submit:
+	@npm run indexnow:yandex
 
 # Executar o jogo em modo de desenvolvimento
 dev: kill-processes
@@ -307,6 +313,10 @@ help:
 	@echo "  cloudflare-i18n-seo-qa - Validar i18n, hreflang, sitemap e SEO no Cloudflare publicado"
 	@echo "  cloudflare-reset-preferences-qa - Validar restauração de padrão no Cloudflare publicado"
 	@echo "  cloudflare-evasive-blocks-qa - Validar blocos desviantes no Cloudflare publicado"
+	@echo ""
+	@echo "Indexação/Search:"
+	@echo "  yandex-indexnow-dry-run - Validar payload IndexNow sem enviar ao Yandex"
+	@echo "  yandex-indexnow-submit  - Enviar URLs do sitemap ao IndexNow/Yandex"
 	@echo ""
 	@echo "Builds Nativos:"
 	@echo "  build-pwa      - Gerar build da PWA"

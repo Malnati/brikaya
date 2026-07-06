@@ -13,7 +13,8 @@ const VISUAL_ASSET_SOURCE_PATH = 'src/constants/visualAssets.ts';
 const VISUAL_RUNTIME_ROOT = 'public/assets/visual';
 const CODEX_VISUAL_ARTIFACT_ROOT = 'docs/assets/theme-planning';
 const REPORT_PATH = process.env.BRIKAYA_SVG_GUARD_REPORT || 'tmp/reports/svg-assets-guard.json';
-const FAVICON_RUNTIME_PATH = '/assets/visual/ui/ui-app-browser-favicon.svg';
+const ROOT_FAVICON_FILE = 'public/favicon.svg';
+const FAVICON_RUNTIME_PATH = '/favicon.svg';
 const PWA_ICON_RUNTIME_PATH = '/assets/visual/ui/ui-pwa-app-icon.svg';
 const RUNTIME_SVG_PATTERN = /['"`]((?:\/assets\/visual\/)[^'"`]+\.svg)['"`]/g;
 const ALLOWED_VISUAL_EXTENSION = '.svg';
@@ -120,6 +121,19 @@ function validateSvgContent(svgFiles) {
   return failures;
 }
 
+function validateRootFavicon() {
+  const failures = [];
+  if (!existsSync(ROOT_FAVICON_FILE)) {
+    failures.push(`${ROOT_FAVICON_FILE} ausente`);
+  } else {
+    failures.push(...validateSvgContent([ROOT_FAVICON_FILE]));
+  }
+  addCheck('favicon raiz SVG existe e é seguro', failures, {
+    faviconPath: ROOT_FAVICON_FILE,
+    runtimePath: FAVICON_RUNTIME_PATH,
+  });
+}
+
 function validateDirectorySvgOnly(directory, label) {
   const files = collectFiles(directory);
   const invalidFiles = files.filter((file) => extname(file).toLowerCase() !== ALLOWED_VISUAL_EXTENSION);
@@ -196,6 +210,7 @@ try {
   validateExpectedSvgFiles(expectedRuntimeSvgPaths);
   validateExpectedReferences(expectedRuntimeSvgPaths);
   validateRuntimeRasterReferences();
+  validateRootFavicon();
 
   addCheck(
     'conteúdo SVG é local e seguro',

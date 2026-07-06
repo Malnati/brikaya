@@ -164,6 +164,7 @@ function replaceOrInsertHead(html, locale, routePath = HOME_ROUTE_PATH) {
   const canonical = canonicalUrl(locale, routePath);
   return html
     .replaceAll('href="./manifest.webmanifest"', 'href="/manifest.webmanifest"')
+    .replaceAll('href="./favicon.svg"', 'href="/favicon.svg"')
     .replaceAll('href="./assets/', 'href="/assets/')
     .replaceAll('src="./assets/', 'src="/assets/')
     .replace(/<html lang="[^"]+">/, `<html lang="${locale}">`)
