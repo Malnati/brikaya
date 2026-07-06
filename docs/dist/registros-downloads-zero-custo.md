@@ -90,7 +90,7 @@ Todos são SVG locais, sem raster, sem CDN, sem data URI, sem script embutido e 
 A implementação deve manter:
 
 - canonical `https://brikaya.com/downloads/`;
-- rotas localizadas para todos os 163 idiomas suportados após a onda 163 local; lista canônica: `pt-BR`, `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th`, `zh-CN`, `ar`, `ru`, `tr`, `nl`, `pl`, `uk`, `ms`, `zh-TW`, `pt-PT`, `es-ES`, `en-GB`, `fr-CA`, `bn`, `ur`, `fa`, `he`, `ta`, `te`, `mr`, `gu`, `kn`, `ml`, `pa`, `el`, `sv`, `da`, `no`, `fi`, `cs`, `ro`, `hu`, `bg`, `sk`, `sl`, `hr`, `sr`, `lt`, `lv`, `et`, `sw`, `af`, `am`, `ka`, `hy`, `az`, `kk`, `uz`, `ne`, `si`, `km`, `lo`, `my`, `is`, `ga`, `cy`, `mt`, `sq`, `mk`, `bs`, `mn`, `tg`, `ky`, `tk`, `be`, `lb`, `eu`, `ca`, `gl`, `oc`, `br`, `mi`, `sm`, `to`, `fj`, `mg`, `so`, `yo`, `ig`, `ha`, `zu`, `xh`, `st`, `tn`, `ts`, `ss`, `ve`, `nso`, `rw`, `rn`, `ln`, `lg`, `ak`, `ee`, `tw`, `sn`, `ny`, `wo`, `ff`, `om`, `ti`, `qu`, `ay`, `gn`, `nah`, `ht`, `pap`, `jv`, `su`, `ceb`, `ilo`, `war`, `haw`, `co`, `sc`, `fur`, `rm`, `lad`, `ast`, `vec`, `lmo`, `pms`, `nap`, `scn`, `sco`, `ps`, `sd`, `ks`, `dv`, `ckb`, `ug`, `yi`, `bo`, `dz`, `ku`, `or`, `as`, `sa`, `mai`, `bho`, `doi`, `mni`, `kok`, `sat`, `lus`, `brx`, `raj`, `hne`, `awa`;
+- rotas localizadas para todos os 187 idiomas suportados após a onda 187 local; lista canônica: `pt-BR`, `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th`, `zh-CN`, `ar`, `ru`, `tr`, `nl`, `pl`, `uk`, `ms`, `zh-TW`, `pt-PT`, `es-ES`, `en-GB`, `fr-CA`, `bn`, `ur`, `fa`, `he`, `ta`, `te`, `mr`, `gu`, `kn`, `ml`, `pa`, `el`, `sv`, `da`, `no`, `fi`, `cs`, `ro`, `hu`, `bg`, `sk`, `sl`, `hr`, `sr`, `lt`, `lv`, `et`, `sw`, `af`, `am`, `ka`, `hy`, `az`, `kk`, `uz`, `ne`, `si`, `km`, `lo`, `my`, `is`, `ga`, `cy`, `mt`, `sq`, `mk`, `bs`, `mn`, `tg`, `ky`, `tk`, `be`, `lb`, `eu`, `ca`, `gl`, `oc`, `br`, `mi`, `sm`, `to`, `fj`, `mg`, `so`, `yo`, `ig`, `ha`, `zu`, `xh`, `st`, `tn`, `ts`, `ss`, `ve`, `nso`, `rw`, `rn`, `ln`, `lg`, `ak`, `ee`, `tw`, `sn`, `ny`, `wo`, `ff`, `om`, `ti`, `qu`, `ay`, `gn`, `nah`, `ht`, `pap`, `jv`, `su`, `ceb`, `ilo`, `war`, `haw`, `co`, `sc`, `fur`, `rm`, `lad`, `ast`, `vec`, `lmo`, `pms`, `nap`, `scn`, `sco`, `ps`, `sd`, `ks`, `dv`, `ckb`, `ug`, `yi`, `bo`, `dz`, `ku`, `or`, `as`, `sa`, `mai`, `bho`, `doi`, `mni`, `kok`, `sat`, `lus`, `brx`, `raj`, `hne`, `awa`, `ace`, `bal`, `chr`, `crh`, `tt`, `ba`, `cv`, `sah`, `os`, `ab`, `ady`, `kab`, `tet`, `bug`, `min`, `ban`, `mad`, `bjn`, `hil`, `pam`, `bcl`, `gor`, `mak`, `sas`;
 - sitemap com `/downloads/` e versões localizadas;
 - título e descrição localizados por idioma, sem fallback inglês em páginas não inglesas;
 - hreflang com todos os idiomas e `x-default`;
@@ -277,3 +277,15 @@ Follow-up fa/he em 2026-07-06:
 - IndexNow/Yandex: `make yandex-indexnow-submit` retornou `202 accepted-pending` para 328 URLs com chave redigida.
 - Chrome aba única: Google recebeu reenvio do sitemap; Bing recebeu sitemap e ficou em `Processing`; Bing URL Submission estava com quota 0; Yandex confirmou sitemap em fila e limite diário de reindexação atingido; Naver confirmou `sitemap.xml`, mas `/ps/` não entrou no histórico; Google Cloud Auth foi somente leitura; aba final ficou aberta em `https://brikaya.com/sitemap.xml`.
 - Pendências: Google/Bing/Yandex/Naver precisam reprocessar; Yahoo/DuckDuckGo dependem de Bing/crawl; Brave sem endpoint direto atual; Baidu/Seznam seguem bloqueados por cadastro externo/CAPTCHA/ICP/custo; Clarity continua desinstalado.
+
+
+## Atualização — onda 187 validada localmente
+
+- Timestamp: 2026-07-06T18:36:01.651Z
+- Novos idiomas adicionados nesta branch: `ace`, `bal`, `chr`, `crh`, `tt`, `ba`, `cv`, `sah`, `os`, `ab`, `ady`, `kab`, `tet`, `bug`, `min`, `ban`, `mad`, `bjn`, `hil`, `pam`, `bcl`, `gor`, `mak`, `sas`.
+- Total alvo após publicação: 187 idiomas e 376 URLs no sitemap (home + downloads por idioma, mais `/privacy/` e `/terms/`).
+- RTL expandido: `bal` entra como `dir="rtl"` junto de `ar`, `ur`, `fa`, `he`, `ps`, `sd`, `ks`, `dv`, `ckb`, `ug` e `yi`.
+- Screenshot de evidência local: `docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave187-bal-downloads.png`.
+- Validação local passou: `node --version` (`v23.5.0`), `make help`, `npm run codex-env:check`, `npm run test:semantic-file-names`, `npm run test:svg-assets`, `npm test -- --runInBand` (58 suítes / 371 testes) e `npm run build` (`localized-seo ok: locales=187, routes=2`).
+- Clarity/analytics/pixel/tag/SDK externo continuam bloqueados e não foram adicionados.
+- Buscadores: rechecagem Google/Bing/Yandex/Naver só deve ocorrer após merge/deploy público; Bing depende de quota gratuita diária; Baidu/Seznam continuam bloqueados quando exigirem identidade pública, CAPTCHA, ICP, telefone extra ou custo.

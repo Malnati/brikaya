@@ -68,6 +68,11 @@ const TESTED_LOCALES = [
   { locale: "or", path: "/or/", title: "Brikaya — ବ୍ଲକ୍ ଭାଙ୍ଗିବା ଆର୍କେଡ୍" },
   { locale: "sat", path: "/sat/", title: "Brikaya — ᱵᱞᱚᱠ ᱨᱟᱯᱩᱫ ᱟᱨᱠᱮᱰ" },
   { locale: "awa", path: "/awa/", title: "Brikaya — ब्लॉक तोड़े वाला आर्केड" },
+  { locale: "ace", path: "/ace/", title: "Brikaya — arked peuhancô blok" },
+  { locale: "bal", path: "/bal/", title: "Brikaya — بلاک شکستن آرکید" },
+  { locale: "chr", path: "/chr/", title: "Brikaya — ᎠᏍᏆᏂᎪᏗ ᏗᎪᏍᏓᏱ ᎠᏁᏍᎩ" },
+  { locale: "tt", path: "/tt/", title: "Brikaya — блок вату аркадасы" },
+  { locale: "ban", path: "/ban/", title: "Brikaya — arkade ngancurin blok" },
 ];
 const ALL_HREFLANG_LOCALES = [
   "pt-BR",
@@ -233,6 +238,30 @@ const ALL_HREFLANG_LOCALES = [
   "raj",
   "hne",
   "awa",
+  "ace",
+  "bal",
+  "chr",
+  "crh",
+  "tt",
+  "ba",
+  "cv",
+  "sah",
+  "os",
+  "ab",
+  "ady",
+  "kab",
+  "tet",
+  "bug",
+  "min",
+  "ban",
+  "mad",
+  "bjn",
+  "hil",
+  "pam",
+  "bcl",
+  "gor",
+  "mak",
+  "sas",
 ];
 const TESTED_DOWNLOADS_LOCALES = [
   {
@@ -496,6 +525,31 @@ const TESTED_DOWNLOADS_LOCALES = [
     path: "/awa/downloads/",
     title: "Brikaya डाउनलोड करा — मुफ्त ब्राउजर खेल",
   },
+  {
+    locale: "ace",
+    path: "/ace/downloads/",
+    title: "Unduh Brikaya — game browser gratis",
+  },
+  {
+    locale: "bal",
+    path: "/bal/downloads/",
+    title: "Brikaya ڈاؤن لوڈ کن — مفت براوزر گیم",
+  },
+  {
+    locale: "chr",
+    path: "/chr/downloads/",
+    title: "Brikaya ᏫᎩᎶᏒᎢ — ᎾᎿᎢ ᎠᎾᏗᏍᎩ ᎠᏁᏍᎩ",
+  },
+  {
+    locale: "tt",
+    path: "/tt/downloads/",
+    title: "Brikaya йөкләү — бушлай браузер уены",
+  },
+  {
+    locale: "ban",
+    path: "/ban/downloads/",
+    title: "Unduh Brikaya — game browser gratis",
+  },
 ];
 const LANGUAGE_SELECT_SELECTOR = "#game-language-select";
 const MENU_BUTTON_SELECTOR = ".dashboard-menu-button";
@@ -508,7 +562,7 @@ const MENU_OPEN_ATTEMPTS = 3;
 const MENU_OPEN_RETRY_TIMEOUT_MS = 5000;
 const CHINESE_MENU_TEXT = "隐私";
 const ROOT_CANONICAL = "https://brikaya.com/";
-const RTL_LOCALES = new Set(["ar", "ur", "fa", "he", "ps", "sd", "ks", "dv", "ckb", "ug", "yi"]);
+const RTL_LOCALES = new Set(["ar", "ur", "fa", "he", "ps", "sd", "ks", "dv", "ckb", "ug", "yi", "bal"]);
 const BROWSER_AUTO_LANGUAGE = "es-MX";
 const BROWSER_AUTO_LANGUAGES = ["es-MX", "en-US"];
 const BROWSER_AUTO_EXPECTED_LOCALE = "es-419";

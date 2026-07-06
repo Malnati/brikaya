@@ -45,7 +45,7 @@ const LOCATION_LOCALE_SOURCE = "location";
 const PATH_SEGMENT_SEPARATOR = "/";
 const EMPTY_STRING = "";
 const TEMPLATE_PATTERN = /\{\{(\w+)\}\}/g;
-const RTL_LOCALE_PREFIXES = ["ar", "fa", "he", "ur", "ps", "sd", "ks", "dv", "ckb", "ug", "yi"] as const;
+const RTL_LOCALE_PREFIXES = ["ar", "fa", "he", "ur", "ps", "sd", "ks", "dv", "ckb", "ug", "yi", "bal"] as const;
 
 function isRtlLocale(locale: string): boolean {
   return RTL_LOCALE_PREFIXES.some((prefix) => locale.toLowerCase().startsWith(prefix));
@@ -200,6 +200,8 @@ const TIME_ZONE_LOCALE_MAP: readonly (readonly [string, AppLocale])[] = [
   ["Asia/Kabul", "ps"],
   ["Asia/Male", "dv"],
   ["Asia/Thimphu", "dz"],
+  ["Asia/Ulaanbaatar", "mn"],
+  ["Asia/Yakutsk", "sah"],
 ];
 const TIME_ZONE_LOCALE_PREFIX_MAP: readonly (readonly [string, AppLocale])[] = [
   ["America/Argentina/", "es-419"],
@@ -386,6 +388,30 @@ function normalizeLocale(value: string | null | undefined): AppLocale | null {
   if (normalizedValue.startsWith("raj")) return "raj";
   if (normalizedValue.startsWith("hne")) return "hne";
   if (normalizedValue.startsWith("awa")) return "awa";
+  if (normalizedValue.startsWith("ace")) return "ace";
+  if (normalizedValue.startsWith("bal")) return "bal";
+  if (normalizedValue.startsWith("ban")) return "ban";
+  if (normalizedValue.startsWith("bjn")) return "bjn";
+  if (normalizedValue.startsWith("bcl")) return "bcl";
+  if (normalizedValue.startsWith("bug")) return "bug";
+  if (normalizedValue.startsWith("ba")) return "ba";
+  if (normalizedValue.startsWith("chr")) return "chr";
+  if (normalizedValue.startsWith("crh")) return "crh";
+  if (normalizedValue.startsWith("cv")) return "cv";
+  if (normalizedValue.startsWith("sah")) return "sah";
+  if (normalizedValue.startsWith("sas")) return "sas";
+  if (normalizedValue.startsWith("tt")) return "tt";
+  if (normalizedValue.startsWith("os")) return "os";
+  if (normalizedValue.startsWith("ady")) return "ady";
+  if (normalizedValue.startsWith("ab")) return "ab";
+  if (normalizedValue.startsWith("kab")) return "kab";
+  if (normalizedValue.startsWith("tet")) return "tet";
+  if (normalizedValue.startsWith("min")) return "min";
+  if (normalizedValue.startsWith("mad")) return "mad";
+  if (normalizedValue.startsWith("hil")) return "hil";
+  if (normalizedValue.startsWith("pam")) return "pam";
+  if (normalizedValue.startsWith("gor")) return "gor";
+  if (normalizedValue.startsWith("mak")) return "mak";
 
   return null;
 }
