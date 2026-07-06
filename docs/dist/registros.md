@@ -458,3 +458,16 @@ Critérios:
 - Clarity: painel indica projeto existente, mas instalação continua bloqueada; nenhum script, tag, SDK, pixel ou telemetria foi adicionado.
 - Aba única Chrome: reutilizada e deixada aberta em `https://brikaya.com/sitemap.xml`.
 - Pendências: Google/Bing/Yandex/Naver precisam reprocessar; Yahoo/DuckDuckGo dependem de Bing/crawl; Brave sem endpoint direto atual; Baidu/Seznam seguem bloqueados por cadastro externo/CAPTCHA/ICP/custo; Clarity continua desinstalado.
+
+
+## Atualização — onda 284 validada localmente
+
+- Escopo: 25 novos locales solicitados (`en-AU, en-CA, en-NZ, en-ZA, es-MX, es-AR, es-CO, es-CL, es-PE, pt-AO, pt-MZ, fr-BE, fr-CH, de-AT, de-CH, it-CH, zh-HK, ar-SA, ar-EG, fa-AF, ps-AF, sd-IN, ks-IN, ug-CN, yi-001`), total alvo de 284 idiomas e 570 URLs no sitemap (home + downloads por idioma, mais `/privacy/` e `/terms/`).
+- RTL adicional: `ar-SA`, `ar-EG`, `fa-AF`, `ps-AF`, `sd-IN`, `ks-IN`, `ug-CN`, `yi-001`; amostra local confirmou `dir=rtl` em `/ar-SA/downloads/` e `/ug-CN/downloads/`.
+- Validação local concluída: `node --version` (`v23.5.0`), `npm test -- --runInBand` (58 suites / 372 testes) e `npm run build` (`localized-seo ok: locales=284, routes=2`).
+- Sitemap local: `dist/sitemap.xml` com 570 `<loc>`; `public/sitemap.xml` atualizado para 570 URLs; `robots.txt` mantém `Sitemap: https://brikaya.com/sitemap.xml`.
+- Amostras locais de downloads: `/en-AU/downloads/`, `/es-MX/downloads/`, `/pt-AO/downloads/`, `/zh-HK/downloads/`, `/ar-SA/downloads/`, `/ug-CN/downloads/` responderam 200, title/description/canonical localizados e sem Clarity/analytics/pixel/tag.
+- Evidência visual local: `docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave284-ar-sa-downloads.png`.
+- Evidência JSON local: `docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave284-local-preview.json`.
+- Seznam zero-custo: criado alvo `seznam-indexnow-submit` usando endpoint oficial `https://search.seznam.cz/indexnow`; painel Seznam/Webmaster fica limitado a fluxo gratuito e deve parar em CAPTCHA, OTP, telefone, documento, pagamento ou dado pessoal público. Referências oficiais: `https://o-seznam.cz/napoveda/vyhledavani/seznambot/sitemap-xml/`, `https://o-seznam.cz/napoveda/vyhledavani/seznambot/protokol-indexnow/`, `https://o-seznam.cz/napoveda/vyhledavani/seznam-webmaster/`.
+- Clarity permanece desinstalado: nenhum script/tag/pixel/SDK de telemetria foi adicionado.

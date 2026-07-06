@@ -14,7 +14,7 @@ const HOME_ROUTE_PATH = '/';
 const DOWNLOADS_ROUTE_PATH = '/downloads/';
 const LOCALIZED_ROUTES = [HOME_ROUTE_PATH, DOWNLOADS_ROUTE_PATH];
 const STATIC_PUBLIC_PATHS = ['/privacy/', '/terms/'];
-const RTL_LOCALES = new Set(['ar', 'ur', 'fa', 'he', 'ps', 'sd', 'ks', 'dv', 'ckb', 'ug', 'yi', 'bal']);
+const RTL_LOCALES = new Set(['ar', 'ur', 'fa', 'he', 'ps', 'sd', 'ks', 'dv', 'ckb', 'ug', 'yi', 'bal', 'ar-SA', 'ar-EG', 'fa-AF', 'ps-AF', 'sd-IN', 'ks-IN', 'ug-CN', 'yi-001']);
 
 const LOCALES = [
   'pt-BR',
@@ -275,6 +275,31 @@ const LOCALES = [
   'zea',
   'frp',
   'arp',
+  'en-AU',
+  'en-CA',
+  'en-NZ',
+  'en-ZA',
+  'es-MX',
+  'es-AR',
+  'es-CO',
+  'es-CL',
+  'es-PE',
+  'pt-AO',
+  'pt-MZ',
+  'fr-BE',
+  'fr-CH',
+  'de-AT',
+  'de-CH',
+  'it-CH',
+  'zh-HK',
+  'ar-SA',
+  'ar-EG',
+  'fa-AF',
+  'ps-AF',
+  'sd-IN',
+  'ks-IN',
+  'ug-CN',
+  'yi-001',
   'mus',
 ];
 const SEO = {
@@ -1569,6 +1594,131 @@ const SEO = {
     title: "Brikaya — block breaker game",
     description: "Install or play Brikaya for free, with no account and no payment; progress stays on your device and offline play works after the first visit.",
     ogDescription: "Brikaya — block breaker game",
+  },
+  'en-AU': {
+    title: "Brikaya — block breaker arcade for Australia",
+    description: "Install or play Brikaya free for players in Australia, with no account and no payment; progress stays on your device and offline play works after the first visit.",
+    ogDescription: "Brikaya — block breaker arcade for Australia",
+  },
+  'en-CA': {
+    title: "Brikaya — block breaker arcade for Canada",
+    description: "Install or play Brikaya free for players in Canada, with no account and no payment; progress stays on your device and offline play works after the first visit.",
+    ogDescription: "Brikaya — block breaker arcade for Canada",
+  },
+  'en-NZ': {
+    title: "Brikaya — block breaker arcade for New Zealand",
+    description: "Install or play Brikaya free for players in New Zealand, with no account and no payment; progress stays on your device and offline play works after the first visit.",
+    ogDescription: "Brikaya — block breaker arcade for New Zealand",
+  },
+  'en-ZA': {
+    title: "Brikaya — block breaker arcade for South Africa",
+    description: "Install or play Brikaya free for players in South Africa, with no account and no payment; progress stays on your device and offline play works after the first visit.",
+    ogDescription: "Brikaya — block breaker arcade for South Africa",
+  },
+  'es-MX': {
+    title: "Brikaya — arcade de romper bloques para México",
+    description: "Instala o juega Brikaya gratis para México, sin cuenta y sin pago; el progreso queda guardado en tu dispositivo y puedes jugar sin conexión después de la primera visita.",
+    ogDescription: "Brikaya — arcade de romper bloques para México",
+  },
+  'es-AR': {
+    title: "Brikaya — arcade de romper bloques para Argentina",
+    description: "Instalá o jugá Brikaya gratis para Argentina, sin cuenta y sin pago; el progreso queda guardado en tu dispositivo y podés jugar sin conexión después de la primera visita.",
+    ogDescription: "Brikaya — arcade de romper bloques para Argentina",
+  },
+  'es-CO': {
+    title: "Brikaya — arcade de romper bloques para Colombia",
+    description: "Instala o juega Brikaya gratis para Colombia, sin cuenta y sin pago; el progreso queda guardado en tu dispositivo y puedes jugar sin conexión después de la primera visita.",
+    ogDescription: "Brikaya — arcade de romper bloques para Colombia",
+  },
+  'es-CL': {
+    title: "Brikaya — arcade de romper bloques para Chile",
+    description: "Instala o juega Brikaya gratis para Chile, sin cuenta y sin pago; el progreso queda guardado en tu dispositivo y puedes jugar sin conexión después de la primera visita.",
+    ogDescription: "Brikaya — arcade de romper bloques para Chile",
+  },
+  'es-PE': {
+    title: "Brikaya — arcade de romper bloques para Perú",
+    description: "Instala o juega Brikaya gratis para Perú, sin cuenta y sin pago; el progreso queda guardado en tu dispositivo y puedes jugar sin conexión después de la primera visita.",
+    ogDescription: "Brikaya — arcade de romper bloques para Perú",
+  },
+  'pt-AO': {
+    title: "Brikaya — arcade de partir blocos para Angola",
+    description: "Instale ou jogue Brikaya grátis em Angola, sem conta e sem pagamento; o progresso fica guardado no seu aparelho e pode jogar offline após o primeiro acesso.",
+    ogDescription: "Brikaya — arcade de partir blocos para Angola",
+  },
+  'pt-MZ': {
+    title: "Brikaya — arcade de partir blocos para Moçambique",
+    description: "Instale ou jogue Brikaya grátis em Moçambique, sem conta e sem pagamento; o progresso fica guardado no seu aparelho e pode jogar offline após o primeiro acesso.",
+    ogDescription: "Brikaya — arcade de partir blocos para Moçambique",
+  },
+  'fr-BE': {
+    title: "Brikaya — arcade casse-briques pour la Belgique",
+    description: "Installez ou jouez à Brikaya gratuitement en Belgique, sans compte et sans paiement; la progression reste sur votre appareil et le jeu hors ligne fonctionne après la première visite.",
+    ogDescription: "Brikaya — arcade casse-briques pour la Belgique",
+  },
+  'fr-CH': {
+    title: "Brikaya — arcade casse-briques pour la Suisse",
+    description: "Installez ou jouez à Brikaya gratuitement en Suisse, sans compte et sans paiement; la progression reste sur votre appareil et le jeu hors ligne fonctionne après la première visite.",
+    ogDescription: "Brikaya — arcade casse-briques pour la Suisse",
+  },
+  'de-AT': {
+    title: "Brikaya — Blockbreaker-Arcade für Österreich",
+    description: "Installiere oder spiele Brikaya kostenlos in Österreich, ohne Konto und ohne Zahlung; der Fortschritt bleibt auf deinem Gerät und Offline-Spiel funktioniert nach dem ersten Besuch.",
+    ogDescription: "Brikaya — Blockbreaker-Arcade für Österreich",
+  },
+  'de-CH': {
+    title: "Brikaya — Blockbreaker-Arcade für die Schweiz",
+    description: "Installiere oder spiele Brikaya kostenlos in der Schweiz, ohne Konto und ohne Zahlung; der Fortschritt bleibt auf deinem Gerät und Offline-Spiel funktioniert nach dem ersten Besuch.",
+    ogDescription: "Brikaya — Blockbreaker-Arcade für die Schweiz",
+  },
+  'it-CH': {
+    title: "Brikaya — arcade rompi blocchi per la Svizzera",
+    description: "Installa o gioca a Brikaya gratis in Svizzera, senza account e senza pagamento; i progressi restano sul dispositivo e il gioco offline funziona dopo la prima visita.",
+    ogDescription: "Brikaya — arcade rompi blocchi per la Svizzera",
+  },
+  'zh-HK': {
+    title: "Brikaya — 香港打磚塊街機",
+    description: "在香港免費安裝或遊玩 Brikaya，無需帳戶，無需付款；進度保存在你的裝置上，首次造訪後可離線遊玩。",
+    ogDescription: "Brikaya — 香港打磚塊街機",
+  },
+  'ar-SA': {
+    title: "Brikaya — أركيد كسر الكتل للسعودية",
+    description: "ثبّت Brikaya أو العبها مجاناً في السعودية، بدون حساب وبدون دفع؛ يبقى التقدم على جهازك ويعمل اللعب دون اتصال بعد الزيارة الأولى.",
+    ogDescription: "Brikaya — أركيد كسر الكتل للسعودية",
+  },
+  'ar-EG': {
+    title: "Brikaya — أركيد كسر الكتل لمصر",
+    description: "ثبّت Brikaya أو العبها مجاناً في مصر، بدون حساب وبدون دفع؛ يبقى التقدم على جهازك ويعمل اللعب دون اتصال بعد الزيارة الأولى.",
+    ogDescription: "Brikaya — أركيد كسر الكتل لمصر",
+  },
+  'fa-AF': {
+    title: "Brikaya — بازی آرکید شکستن بلوک برای افغانستان",
+    description: "Brikaya را در افغانستان رایگان نصب کنید یا بازی کنید، بدون حساب و بدون پرداخت؛ پیشرفت روی دستگاه شما می‌ماند و پس از نخستین بازدید بازی آفلاین کار می‌کند.",
+    ogDescription: "Brikaya — بازی آرکید شکستن بلوک برای افغانستان",
+  },
+  'ps-AF': {
+    title: "Brikaya — د افغانستان لپاره د بلاک ماتولو ارکېډ",
+    description: "Brikaya په افغانستان کې وړیا نصب یا ولوبوئ، له حساب او پیسو پرته؛ پرمختګ ستاسو په وسیله پاتې کېږي او له لومړۍ لیدنې وروسته افلاین لوبه کار کوي.",
+    ogDescription: "Brikaya — د افغانستان لپاره د بلاک ماتولو ارکېډ",
+  },
+  'sd-IN': {
+    title: "Brikaya — ڀارت لاءِ بلاڪ ٽوڙڻ واري آرڪيڊ",
+    description: "ڀارت ۾ Brikaya مفت انسٽال ڪريو يا کيڏو، بغير اڪائونٽ ۽ بغير ادائيگي؛ ترقي توهان جي ڊوائيس تي رهي ٿي ۽ پهرين وزٽ کان پوءِ آف لائن راند هلي ٿي.",
+    ogDescription: "Brikaya — ڀارت لاءِ بلاڪ ٽوڙڻ واري آرڪيڊ",
+  },
+  'ks-IN': {
+    title: "Brikaya — ہندوستان خٲطرٕ بلاک توڑنہٕچ آرکیڈ",
+    description: "ہندوستانس منز Brikaya مفت انسٹال کرِو یا کھیلو، اکاؤنٹ تہٕ ادائیگی بغیر؛ پیشرفت تُہندِس آلہس پٲٹھ رہان چھ تہٕ گڈنی وزٹ پتہٕ آف لائن گیم چلان چھ.",
+    ogDescription: "Brikaya — ہندوستان خٲطرٕ بلاک توڑنہٕچ آرکیڈ",
+  },
+  'ug-CN': {
+    title: "Brikaya — جۇڭگو ئۈچۈن بۆلەك چېقىش ئاركىدى",
+    description: "جۇڭگودا Brikaya نى ھەقسىز قاچىلاڭ ياكى ئويناڭ، ھېسابات ۋە ھەق تۆلەش يوق؛ ئىلگىرىلەش ئۈسكۈنىڭىزدە ساقلىنىدۇ، تۇنجى زىيارەتتىن كېيىن تورسىز ئويناش ئىشلەيدۇ.",
+    ogDescription: "Brikaya — جۇڭگو ئۈچۈن بۆلەك چېقىش ئاركىدى",
+  },
+  'yi-001': {
+    title: "Brikaya — בלאָק־ברעכער אַרקייד",
+    description: "ינסטאַלירט אָדער שפּילט Brikaya בחינם, אָן חשבון און אָן צאָלונג; דער פּראָגרעס בלײַבט אויפֿן מיטל און אָפֿליין שפּיל אַרבעט נאָך דער ערשטער באַזוך.",
+    ogDescription: "Brikaya — בלאָק־ברעכער אַרקייד",
   },
   'mus': {
     title: "Brikaya — block breaker game",
@@ -2868,6 +3018,131 @@ const DOWNLOADS_SEO = {
     title: "Brikaya download — free browser game",
     description: "Install or play Brikaya for free, with no account and no payment; progress stays on your device and offline play works after the first visit. no account.",
     ogDescription: "Brikaya download — no account",
+  },
+  'en-AU': {
+    title: "Download Brikaya — free browser game",
+    description: "Install or play Brikaya free for players in Australia, with no account and no payment; progress stays on your device and offline play works after the first visit. no account.",
+    ogDescription: "Download Brikaya — no account",
+  },
+  'en-CA': {
+    title: "Download Brikaya — free browser game",
+    description: "Install or play Brikaya free for players in Canada, with no account and no payment; progress stays on your device and offline play works after the first visit. no account.",
+    ogDescription: "Download Brikaya — no account",
+  },
+  'en-NZ': {
+    title: "Download Brikaya — free browser game",
+    description: "Install or play Brikaya free for players in New Zealand, with no account and no payment; progress stays on your device and offline play works after the first visit. no account.",
+    ogDescription: "Download Brikaya — no account",
+  },
+  'en-ZA': {
+    title: "Download Brikaya — free browser game",
+    description: "Install or play Brikaya free for players in South Africa, with no account and no payment; progress stays on your device and offline play works after the first visit. no account.",
+    ogDescription: "Download Brikaya — no account",
+  },
+  'es-MX': {
+    title: "Descargar Brikaya — juego gratis en el navegador",
+    description: "Instala o juega Brikaya gratis para México, sin cuenta y sin pago; el progreso queda guardado en tu dispositivo y puedes jugar sin conexión después de la primera visita. sin cuenta.",
+    ogDescription: "Descargar Brikaya — sin cuenta",
+  },
+  'es-AR': {
+    title: "Descargar Brikaya — juego gratis en el navegador",
+    description: "Instalá o jugá Brikaya gratis para Argentina, sin cuenta y sin pago; el progreso queda guardado en tu dispositivo y podés jugar sin conexión después de la primera visita. sin cuenta.",
+    ogDescription: "Descargar Brikaya — sin cuenta",
+  },
+  'es-CO': {
+    title: "Descargar Brikaya — juego gratis en el navegador",
+    description: "Instala o juega Brikaya gratis para Colombia, sin cuenta y sin pago; el progreso queda guardado en tu dispositivo y puedes jugar sin conexión después de la primera visita. sin cuenta.",
+    ogDescription: "Descargar Brikaya — sin cuenta",
+  },
+  'es-CL': {
+    title: "Descargar Brikaya — juego gratis en el navegador",
+    description: "Instala o juega Brikaya gratis para Chile, sin cuenta y sin pago; el progreso queda guardado en tu dispositivo y puedes jugar sin conexión después de la primera visita. sin cuenta.",
+    ogDescription: "Descargar Brikaya — sin cuenta",
+  },
+  'es-PE': {
+    title: "Descargar Brikaya — juego gratis en el navegador",
+    description: "Instala o juega Brikaya gratis para Perú, sin cuenta y sin pago; el progreso queda guardado en tu dispositivo y puedes jugar sin conexión después de la primera visita. sin cuenta.",
+    ogDescription: "Descargar Brikaya — sin cuenta",
+  },
+  'pt-AO': {
+    title: "Descarregar Brikaya — jogo grátis no navegador",
+    description: "Instale ou jogue Brikaya grátis em Angola, sem conta e sem pagamento; o progresso fica guardado no seu aparelho e pode jogar offline após o primeiro acesso. sem conta.",
+    ogDescription: "Descarregar Brikaya — sem conta",
+  },
+  'pt-MZ': {
+    title: "Descarregar Brikaya — jogo grátis no navegador",
+    description: "Instale ou jogue Brikaya grátis em Moçambique, sem conta e sem pagamento; o progresso fica guardado no seu aparelho e pode jogar offline após o primeiro acesso. sem conta.",
+    ogDescription: "Descarregar Brikaya — sem conta",
+  },
+  'fr-BE': {
+    title: "Télécharger Brikaya — jeu gratuit dans le navigateur",
+    description: "Installez ou jouez à Brikaya gratuitement en Belgique, sans compte et sans paiement; la progression reste sur votre appareil et le jeu hors ligne fonctionne après la première visite. sans compte.",
+    ogDescription: "Télécharger Brikaya — sans compte",
+  },
+  'fr-CH': {
+    title: "Télécharger Brikaya — jeu gratuit dans le navigateur",
+    description: "Installez ou jouez à Brikaya gratuitement en Suisse, sans compte et sans paiement; la progression reste sur votre appareil et le jeu hors ligne fonctionne après la première visite. sans compte.",
+    ogDescription: "Télécharger Brikaya — sans compte",
+  },
+  'de-AT': {
+    title: "Brikaya herunterladen — kostenloses Browser-Spiel",
+    description: "Installiere oder spiele Brikaya kostenlos in Österreich, ohne Konto und ohne Zahlung; der Fortschritt bleibt auf deinem Gerät und Offline-Spiel funktioniert nach dem ersten Besuch. ohne Konto.",
+    ogDescription: "Brikaya herunterladen — ohne Konto",
+  },
+  'de-CH': {
+    title: "Brikaya herunterladen — kostenloses Browser-Spiel",
+    description: "Installiere oder spiele Brikaya kostenlos in der Schweiz, ohne Konto und ohne Zahlung; der Fortschritt bleibt auf deinem Gerät und Offline-Spiel funktioniert nach dem ersten Besuch. ohne Konto.",
+    ogDescription: "Brikaya herunterladen — ohne Konto",
+  },
+  'it-CH': {
+    title: "Scarica Brikaya — gioco gratuito nel browser",
+    description: "Installa o gioca a Brikaya gratis in Svizzera, senza account e senza pagamento; i progressi restano sul dispositivo e il gioco offline funziona dopo la prima visita. senza account.",
+    ogDescription: "Scarica Brikaya — senza account",
+  },
+  'zh-HK': {
+    title: "下載 Brikaya — 免費瀏覽器遊戲",
+    description: "在香港免費安裝或遊玩 Brikaya，無需帳戶，無需付款；進度保存在你的裝置上，首次造訪後可離線遊玩。 無需帳戶.",
+    ogDescription: "下載 Brikaya — 無需帳戶",
+  },
+  'ar-SA': {
+    title: "تنزيل Brikaya — لعبة متصفح مجانية",
+    description: "ثبّت Brikaya أو العبها مجاناً في السعودية، بدون حساب وبدون دفع؛ يبقى التقدم على جهازك ويعمل اللعب دون اتصال بعد الزيارة الأولى. بدون حساب.",
+    ogDescription: "تنزيل Brikaya — بدون حساب",
+  },
+  'ar-EG': {
+    title: "تنزيل Brikaya — لعبة متصفح مجانية",
+    description: "ثبّت Brikaya أو العبها مجاناً في مصر، بدون حساب وبدون دفع؛ يبقى التقدم على جهازك ويعمل اللعب دون اتصال بعد الزيارة الأولى. بدون حساب.",
+    ogDescription: "تنزيل Brikaya — بدون حساب",
+  },
+  'fa-AF': {
+    title: "دانلود Brikaya — بازی رایگان در مرورگر",
+    description: "Brikaya را در افغانستان رایگان نصب کنید یا بازی کنید، بدون حساب و بدون پرداخت؛ پیشرفت روی دستگاه شما می‌ماند و پس از نخستین بازدید بازی آفلاین کار می‌کند. بدون حساب.",
+    ogDescription: "دانلود Brikaya — بدون حساب",
+  },
+  'ps-AF': {
+    title: "Brikaya ډاونلوډ کړئ — وړیا براوزر لوبه",
+    description: "Brikaya په افغانستان کې وړیا نصب یا ولوبوئ، له حساب او پیسو پرته؛ پرمختګ ستاسو په وسیله پاتې کېږي او له لومړۍ لیدنې وروسته افلاین لوبه کار کوي. له حساب پرته.",
+    ogDescription: "Brikaya ډاونلوډ کړئ — له حساب پرته",
+  },
+  'sd-IN': {
+    title: "Brikaya ڊائونلوڊ ڪريو — مفت برائوزر راند",
+    description: "ڀارت ۾ Brikaya مفت انسٽال ڪريو يا کيڏو، بغير اڪائونٽ ۽ بغير ادائيگي؛ ترقي توهان جي ڊوائيس تي رهي ٿي ۽ پهرين وزٽ کان پوءِ آف لائن راند هلي ٿي. بغير اڪائونٽ.",
+    ogDescription: "Brikaya ڊائونلوڊ ڪريو — بغير اڪائونٽ",
+  },
+  'ks-IN': {
+    title: "Brikaya ڈاؤنلوڈ کرِو — مفت براؤزر گیم",
+    description: "ہندوستانس منز Brikaya مفت انسٹال کرِو یا کھیلو، اکاؤنٹ تہٕ ادائیگی بغیر؛ پیشرفت تُہندِس آلہس پٲٹھ رہان چھ تہٕ گڈنی وزٹ پتہٕ آف لائن گیم چلان چھ. اکاؤنٹ بغیر.",
+    ogDescription: "Brikaya ڈاؤنلوڈ کرِو — اکاؤنٹ بغیر",
+  },
+  'ug-CN': {
+    title: "Brikaya نى چۈشۈرۈش — ھەقسىز توركۆرگۈ ئويۇنى",
+    description: "جۇڭگودا Brikaya نى ھەقسىز قاچىلاڭ ياكى ئويناڭ، ھېسابات ۋە ھەق تۆلەش يوق؛ ئىلگىرىلەش ئۈسكۈنىڭىزدە ساقلىنىدۇ، تۇنجى زىيارەتتىن كېيىن تورسىز ئويناش ئىشلەيدۇ. ھېساباتسىز.",
+    ogDescription: "Brikaya نى چۈشۈرۈش — ھېساباتسىز",
+  },
+  'yi-001': {
+    title: "אַראָפּלאָדן Brikaya — פרײַער בלעטערער־שפּיל",
+    description: "ינסטאַלירט אָדער שפּילט Brikaya בחינם, אָן חשבון און אָן צאָלונג; דער פּראָגרעס בלײַבט אויפֿן מיטל און אָפֿליין שפּיל אַרבעט נאָך דער ערשטער באַזוך. אָן חשבון.",
+    ogDescription: "אַראָפּלאָדן Brikaya — אָן חשבון",
   },
   'mus': {
     title: "Brikaya download — free browser game",

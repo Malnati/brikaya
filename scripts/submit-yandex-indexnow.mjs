@@ -25,7 +25,7 @@ function usage() {
   return [
     'Uso: node scripts/submit-yandex-indexnow.mjs',
     '',
-    'Envia URLs do dist/sitemap.xml para o IndexNow/Yandex.',
+    'Envia URLs do dist/sitemap.xml para um endpoint IndexNow gratuito.',
     '',
     'Variáveis registradas em .env:',
     `  ${KEY_ENV_KEY}=<chave pública IndexNow>`,
@@ -126,6 +126,13 @@ function buildPayload(key, urlList) {
   };
 }
 
+function serviceLabel(endpoint) {
+  const endpointHost = new URL(endpoint).hostname;
+  if (endpointHost.includes('seznam.cz')) return 'seznam-indexnow';
+  if (endpointHost.includes('yandex.')) return 'yandex-indexnow';
+  return 'indexnow';
+}
+
 function sanitizedSummary(label, endpoint, urlCount, status = null) {
   const statusPart = status === null ? '' : ` status=${status}`;
   return `${label}: host=${CANONICAL_HOST} endpoint=${endpoint}${statusPart} urls=${urlCount} keyLocation=${REDACTED_KEY_LOCATION}`;
@@ -138,14 +145,16 @@ async function submit(endpoint, payload, envValues) {
     body: JSON.stringify(payload),
   });
 
+  const label = serviceLabel(endpoint);
+
   if (response.status === SUCCESS_HTTP_STATUS) {
-    console.log(sanitizeOutput(sanitizedSummary('yandex-indexnow submitted', endpoint, payload.urlList.length, response.status), envValues));
+    console.log(sanitizeOutput(sanitizedSummary(`${label} submitted`, endpoint, payload.urlList.length, response.status), envValues));
     return;
   }
 
   if (response.status === PENDING_HTTP_STATUS) {
     console.log(
-      sanitizeOutput(sanitizedSummary('yandex-indexnow accepted-pending', endpoint, payload.urlList.length, response.status), envValues),
+      sanitizeOutput(sanitizedSummary(`${label} accepted-pending`, endpoint, payload.urlList.length, response.status), envValues),
     );
     return;
   }
@@ -170,7 +179,8 @@ async function run() {
   const payload = buildPayload(key, urlList);
 
   if (envFlag(envValues, DRY_RUN_ENV_KEY)) {
-    console.log(sanitizeOutput(sanitizedSummary('yandex-indexnow dry-run', endpoint, urlList.length), { ...envValues, ...projectEnv }));
+    const label = serviceLabel(endpoint);
+    console.log(sanitizeOutput(sanitizedSummary(`${label} dry-run`, endpoint, urlList.length), { ...envValues, ...projectEnv }));
     return;
   }
 
