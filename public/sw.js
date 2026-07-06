@@ -9,6 +9,7 @@ const CORE_PRECACHE_URLS = [
   "/index.html",
   "/downloads/",
   "/manifest.webmanifest",
+  "/favicon.svg",
   ASSET_MANIFEST_URL,
 ];
 const PRECACHE_URLS = [...CORE_PRECACHE_URLS];

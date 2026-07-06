@@ -5,12 +5,31 @@ import { resolve } from 'node:path';
 const GENERATOR_PATH = 'scripts/generate-localized-seo.mjs';
 const RELATIVE_MANIFEST_PATTERN = 'href="./manifest.webmanifest"';
 const ABSOLUTE_MANIFEST_PATTERN = 'href="/manifest.webmanifest"';
+const RELATIVE_FAVICON_PATTERN = 'href="./favicon.svg"';
+const ABSOLUTE_FAVICON_PATTERN = 'href="/favicon.svg"';
 const RELATIVE_ASSET_HREF_PATTERN = 'href="./assets/';
 const ABSOLUTE_ASSET_HREF_PATTERN = 'href="/assets/';
 const RELATIVE_ASSET_SRC_PATTERN = 'src="./assets/';
 const ABSOLUTE_ASSET_SRC_PATTERN = 'src="/assets/';
 const PRIVACY_PATH = "'/privacy/'";
 const TERMS_PATH = "'/terms/'";
+const LOCALIZED_LOCALES = [
+  'pt-BR',
+  'en',
+  'es-419',
+  'en-IN',
+  'hi-IN',
+  'de',
+  'fr',
+  'it',
+  'ja',
+  'ko',
+  'id',
+  'vi',
+  'fil',
+  'th',
+  'zh-CN',
+] as const;
 
 function readProjectFile(filePath: string): string {
   return readFileSync(resolve(process.cwd(), filePath), 'utf8');
@@ -22,6 +41,8 @@ describe('gerador SEO localizado', () => {
 
     expect(generator).toContain(RELATIVE_MANIFEST_PATTERN);
     expect(generator).toContain(ABSOLUTE_MANIFEST_PATTERN);
+    expect(generator).toContain(RELATIVE_FAVICON_PATTERN);
+    expect(generator).toContain(ABSOLUTE_FAVICON_PATTERN);
     expect(generator).toContain(RELATIVE_ASSET_HREF_PATTERN);
     expect(generator).toContain(ABSOLUTE_ASSET_HREF_PATTERN);
     expect(generator).toContain(RELATIVE_ASSET_SRC_PATTERN);
@@ -33,5 +54,20 @@ describe('gerador SEO localizado', () => {
 
     expect(generator).toContain(PRIVACY_PATH);
     expect(generator).toContain(TERMS_PATH);
+  });
+
+  it('declara metadados de downloads para todos os idiomas suportados', () => {
+    const generator = readProjectFile(GENERATOR_PATH);
+    const downloadsSeoBlock = generator.slice(
+      generator.indexOf('const DOWNLOADS_SEO = {'),
+      generator.indexOf('function metadataFor'),
+    );
+
+    for (const locale of LOCALIZED_LOCALES) {
+      expect(downloadsSeoBlock).toContain(`'${locale}':`);
+    }
+    expect(downloadsSeoBlock).toContain("title: '下载 Brikaya");
+    expect(downloadsSeoBlock).toContain("title: 'Brikayaをダウンロード");
+    expect(downloadsSeoBlock).toContain("title: 'Brikaya डाउनलोड");
   });
 });

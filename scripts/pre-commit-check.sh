@@ -1,50 +1,15 @@
 #!/bin/bash
+# scripts/pre-commit-check.sh
 
-# Script de pre-commit para verificar cores do jogo
-# Este script deve ser executado antes de cada commit
+set -euo pipefail
 
-set -e
+echo "🔍 Verificando governança Codex/.env..."
+npm run codex-env:check
 
-echo "🔍 Verificando integridade do projeto..."
+echo "🔍 Verificando nomes semânticos de arquivos..."
+npm run test:semantic-file-names
 
-# Verificar se o diretório tmp existe
-if [ ! -d "tmp" ]; then
-    mkdir -p tmp
-fi
+echo "🔍 Verificando SVGs runtime..."
+npm run test:svg-assets
 
-# Verificar se as dependências estão instaladas
-if [ ! -d "node_modules" ]; then
-    echo "❌ node_modules não encontrado. Execute 'npm install' primeiro."
-    exit 1
-fi
-
-# Verificar se o Puppeteer está instalado
-if ! npm list puppeteer > /dev/null 2>&1; then
-    echo "❌ Puppeteer não encontrado. Execute 'npm install' primeiro."
-    exit 1
-fi
-
-# Verificar TypeScript
-echo "🔍 Verificando TypeScript..."
-if npx tsc --noEmit; then
-    echo "✅ Verificação TypeScript passou!"
-else
-    echo "❌ Erros de TypeScript encontrados"
-    exit 1
-fi
-
-# Verificar se há build existente
-if [ -d "dist" ]; then
-    echo "✅ Build existente encontrado"
-else
-    echo "⚠️ Build não encontrado. Criando build básico..."
-    # Tentar criar build básico sem Vite
-    mkdir -p dist
-    cp -r public/* dist/ 2>/dev/null || true
-    echo "✅ Build básico criado"
-fi
-
-echo "🎉 Verificação concluída com sucesso!"
-echo "💡 Nota: Verificação de cores temporariamente desabilitada devido a problemas de dependências"
-echo "   O jogo está funcionando corretamente, mas o Vite/Rollup tem problemas com ARM64"
-exit 0 
+echo "🎉 Pre-commit concluído sem vazamento de variáveis."

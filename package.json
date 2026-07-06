@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run test:semantic-file-names && npm run test:svg-assets && npm run test:trace-guard:unit && npm run test:trace-guard && tsc -p tsconfig.app.json && vite build && node scripts/generate-localized-seo.mjs && node scripts/generate-runtime-asset-manifest.mjs && node scripts/stamp-service-worker-version.mjs && npm run test:trace-guard -- --include-dist",
+    "build": "npm run codex-env:check && npm run test:semantic-file-names && npm run test:svg-assets && npm run test:trace-guard:unit && npm run test:trace-guard && tsc -p tsconfig.app.json && vite build && node scripts/generate-localized-seo.mjs && npm run codex-env:materialize && node scripts/generate-runtime-asset-manifest.mjs && node scripts/stamp-service-worker-version.mjs && npm run test:trace-guard -- --include-dist",
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -42,7 +42,12 @@
     "test:cloudflare-metal-blocks": "node tests/e2e/cloudflare-metal-blocks-qa.js",
     "test:trace-guard": "node scripts/validate-public-trace-guard.mjs",
     "test:trace-guard:public": "node scripts/validate-public-trace-guard.mjs --public-url https://brikaya.com/",
-    "test:trace-guard:unit": "node scripts/validate-public-trace-guard.test.mjs"
+    "test:trace-guard:unit": "node scripts/validate-public-trace-guard.test.mjs",
+    "indexnow:yandex": "node scripts/submit-yandex-indexnow.mjs",
+    "codex-env:check": "node scripts/validate-codex-env.mjs",
+    "codex-env:register": "node scripts/register-codex-env-value.mjs",
+    "codex-env:materialize": "node scripts/materialize-public-env-artifacts.mjs",
+    "codex-env:bootstrap": "node scripts/bootstrap-codex-env.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.4",

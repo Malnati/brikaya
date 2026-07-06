@@ -46,6 +46,83 @@ const ALL_HREFLANG_LOCALES = [
   "th",
   "zh-CN",
 ];
+const TESTED_DOWNLOADS_LOCALES = [
+  {
+    locale: "pt-BR",
+    path: "/downloads/",
+    title: "Baixar Brikaya — jogo grátis no navegador",
+  },
+  {
+    locale: "en",
+    path: "/en/downloads/",
+    title: "Download Brikaya — free browser game",
+  },
+  {
+    locale: "es-419",
+    path: "/es-419/downloads/",
+    title: "Descargar Brikaya — juego gratis en el navegador",
+  },
+  {
+    locale: "en-IN",
+    path: "/en-IN/downloads/",
+    title: "Download Brikaya — free browser game",
+  },
+  {
+    locale: "hi-IN",
+    path: "/hi-IN/downloads/",
+    title: "Brikaya डाउनलोड करें — मुफ़्त ब्राउज़र गेम",
+  },
+  {
+    locale: "de",
+    path: "/de/downloads/",
+    title: "Brikaya herunterladen — kostenloses Browser-Spiel",
+  },
+  {
+    locale: "fr",
+    path: "/fr/downloads/",
+    title: "Télécharger Brikaya — jeu gratuit dans le navigateur",
+  },
+  {
+    locale: "it",
+    path: "/it/downloads/",
+    title: "Scarica Brikaya — gioco gratis nel browser",
+  },
+  {
+    locale: "ja",
+    path: "/ja/downloads/",
+    title: "Brikayaをダウンロード — 無料ブラウザゲーム",
+  },
+  {
+    locale: "ko",
+    path: "/ko/downloads/",
+    title: "Brikaya 다운로드 — 무료 브라우저 게임",
+  },
+  {
+    locale: "id",
+    path: "/id/downloads/",
+    title: "Unduh Brikaya — game browser gratis",
+  },
+  {
+    locale: "vi",
+    path: "/vi/downloads/",
+    title: "Tải Brikaya — trò chơi trình duyệt miễn phí",
+  },
+  {
+    locale: "fil",
+    path: "/fil/downloads/",
+    title: "I-download ang Brikaya — libreng laro sa browser",
+  },
+  {
+    locale: "th",
+    path: "/th/downloads/",
+    title: "ดาวน์โหลด Brikaya — เกมเบราว์เซอร์ฟรี",
+  },
+  {
+    locale: "zh-CN",
+    path: "/zh-CN/downloads/",
+    title: "下载 Brikaya — 免费浏览器游戏",
+  },
+];
 const LANGUAGE_SELECT_SELECTOR = "#game-language-select";
 const MENU_BUTTON_SELECTOR = ".dashboard-menu-button";
 const CONSENT_BUTTON_SELECTOR = ".consent-screen__button";
@@ -99,7 +176,7 @@ function assert(condition, message) {
 }
 
 function canonicalFor(baseUrl, locale, path) {
-  return locale === ROOT_LOCALE ? ROOT_CANONICAL : new URL(path, baseUrl).href;
+  return locale === ROOT_LOCALE && path === "/" ? ROOT_CANONICAL : new URL(path, baseUrl).href;
 }
 
 async function fetchText(url) {
@@ -153,6 +230,14 @@ async function validateSitemapAndRobots(baseUrl) {
     assert(
       sitemap.body.includes(`<loc>${new URL(path, baseUrl).href}</loc>`),
       `sitemap sem ${locale}`,
+    );
+    const downloadsPath =
+      locale === ROOT_LOCALE ? "/downloads/" : `/${locale}/downloads/`;
+    assert(
+      sitemap.body.includes(
+        `<loc>${new URL(downloadsPath, baseUrl).href}</loc>`,
+      ),
+      `sitemap sem downloads ${locale}`,
     );
   }
   for (const path of STATIC_PUBLIC_PATHS) {
@@ -480,7 +565,7 @@ async function validateRuntimeTimeZoneLocale(baseUrl) {
 async function run() {
   const baseUrl = publicUrl();
   const htmlResults = [];
-  for (const item of TESTED_LOCALES) {
+  for (const item of [...TESTED_LOCALES, ...TESTED_DOWNLOADS_LOCALES]) {
     htmlResults.push(await validateHtml(baseUrl, item));
   }
   const sitemapRobots = await validateSitemapAndRobots(baseUrl);
@@ -494,6 +579,7 @@ async function run() {
     checkedAt: new Date().toISOString(),
     baseUrl,
     localesChecked: TESTED_LOCALES.map((item) => item.locale),
+    downloadsLocalesChecked: TESTED_DOWNLOADS_LOCALES.map((item) => item.locale),
     hreflangLocales: ALL_HREFLANG_LOCALES,
     htmlResults,
     sitemapRobots,

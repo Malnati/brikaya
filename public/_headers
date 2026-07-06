@@ -8,6 +8,9 @@
 /manifest.webmanifest
   Cache-Control: public, max-age=0, must-revalidate, no-transform
 
+/favicon.svg
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+
 /index.html
   Cache-Control: public, max-age=0, must-revalidate, no-transform
 

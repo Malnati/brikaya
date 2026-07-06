@@ -4,12 +4,17 @@ import { resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { resolve4 } from 'node:dns/promises';
 import { fileURLToPath } from 'node:url';
+import {
+  projectEnvPath,
+  readEnvFile as readCodexEnvFile,
+  sanitizeOutput as sanitizeCodexOutput,
+} from './load-project-env.mjs';
 
 const COMMAND_INDEX = 2;
 const SCRIPT_PATH_INDEX = 1;
 const DEFAULT_COMMAND = 'env-check';
 const ROOT_ENV_FILE = '/Users/mal/GitHub/malnati/.env';
-const PROJECT_ENV_FILE = resolve(process.cwd(), '.env');
+const PROJECT_ENV_FILE = projectEnvPath(process.cwd());
 const ENV_FILE_PATHS = [ROOT_ENV_FILE, PROJECT_ENV_FILE];
 const COMMENT_PREFIX = '#';
 const ENV_SEPARATOR = '=';
@@ -117,45 +122,13 @@ const COMMANDS = new Set([
   'deploy'
 ]);
 
-function parseEnvValue(rawValue) {
-  const trimmedValue = rawValue.trim();
-  const isSingleQuoted = trimmedValue.startsWith(SINGLE_QUOTE) && trimmedValue.endsWith(SINGLE_QUOTE);
-  const isDoubleQuoted = trimmedValue.startsWith(DOUBLE_QUOTE) && trimmedValue.endsWith(DOUBLE_QUOTE);
-
-  if (isSingleQuoted || isDoubleQuoted) {
-    return trimmedValue.slice(1, -1);
-  }
-
-  return trimmedValue;
-}
-
-function readEnvFile(filePath) {
-  if (!existsSync(filePath)) {
-    return {};
-  }
-
-  return readFileSync(filePath, 'utf8')
-    .split('\n')
-    .reduce((envValues, line) => {
-      const trimmedLine = line.trim();
-      const separatorIndex = trimmedLine.indexOf(ENV_SEPARATOR);
-      const shouldSkipLine =
-        trimmedLine === EMPTY_STRING || trimmedLine.startsWith(COMMENT_PREFIX) || separatorIndex === -1;
-
-      if (shouldSkipLine) {
-        return envValues;
-      }
-
-      const key = trimmedLine.slice(0, separatorIndex).trim();
-      const value = parseEnvValue(trimmedLine.slice(separatorIndex + 1));
-      envValues[key] = value;
-      return envValues;
-    }, {});
-}
-
 function loadEnvironment() {
+  if (!existsSync(PROJECT_ENV_FILE)) {
+    throw new Error('.env local ausente; execute npm run codex-env:bootstrap sem imprimir valores.');
+  }
+
   const fileValues = ENV_FILE_PATHS.reduce((mergedValues, filePath) => {
-    return { ...mergedValues, ...readEnvFile(filePath) };
+    return { ...mergedValues, ...readCodexEnvFile(filePath) };
   }, {});
 
   return {
@@ -176,14 +149,7 @@ function buildSensitiveValues(envValues) {
 }
 
 function sanitizeOutput(output, envValues) {
-  const sensitiveValues = buildSensitiveValues(envValues);
-  const valueSanitizedOutput = sensitiveValues.reduce((sanitizedText, value) => {
-    return sanitizedText.split(value).join(SAFE_SECRET_PLACEHOLDER);
-  }, output);
-
-  return valueSanitizedOutput
-    .replace(EMAIL_PATTERN, SAFE_EMAIL_PLACEHOLDER)
-    .replace(HEX_ID_PATTERN, SAFE_ID_PLACEHOLDER);
+  return sanitizeCodexOutput(output, envValues);
 }
 
 function validateEnvironment(envValues) {

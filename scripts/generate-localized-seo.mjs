@@ -115,10 +115,75 @@ const DOWNLOADS_SEO = {
     description: 'Instale ou jogue Brikaya gratuitamente, sem conta, sem pagamento, com progresso salvo no seu aparelho e jogo offline após o primeiro acesso.',
     ogDescription: 'Jogue Brikaya grátis no navegador, instale no aparelho e continue sem conta.',
   },
-  en: {
+  'en': {
     title: 'Download Brikaya — free browser game',
     description: 'Install or play Brikaya for free, with no account, no payment, progress saved on your device, and offline play after the first visit.',
     ogDescription: 'Play Brikaya free in your browser, install it on your device, and keep playing without an account.',
+  },
+  'es-419': {
+    title: 'Descargar Brikaya — juego gratis en el navegador',
+    description: 'Instala o juega Brikaya gratis, sin cuenta, sin pago, con progreso guardado en tu dispositivo y juego sin conexión después del primer acceso.',
+    ogDescription: 'Juega Brikaya gratis en el navegador, instálalo en tu dispositivo y continúa sin cuenta.',
+  },
+  'en-IN': {
+    title: 'Download Brikaya — free browser game',
+    description: 'Install or play Brikaya for free, with no account, no payment, progress saved on your device, and offline play after the first visit.',
+    ogDescription: 'Play Brikaya free in your browser, install it on your device, and keep playing without an account.',
+  },
+  'hi-IN': {
+    title: 'Brikaya डाउनलोड करें — मुफ़्त ब्राउज़र गेम',
+    description: 'Brikaya को मुफ़्त इंस्टॉल करें या खेलें, बिना खाते, बिना भुगतान, डिवाइस पर प्रगति सेव और पहले उपयोग के बाद ऑफ़लाइन खेल।',
+    ogDescription: 'ब्राउज़र में Brikaya मुफ़्त खेलें, डिवाइस पर इंस्टॉल करें और बिना खाते जारी रखें।',
+  },
+  'de': {
+    title: 'Brikaya herunterladen — kostenloses Browser-Spiel',
+    description: 'Installiere oder spiele Brikaya kostenlos, ohne Konto, ohne Zahlung, mit Fortschritt auf deinem Gerät und Offline-Spiel nach dem ersten Besuch.',
+    ogDescription: 'Spiele Brikaya kostenlos im Browser, installiere es auf deinem Gerät und spiele ohne Konto weiter.',
+  },
+  'fr': {
+    title: 'Télécharger Brikaya — jeu gratuit dans le navigateur',
+    description: 'Installez ou jouez à Brikaya gratuitement, sans compte, sans paiement, avec progression enregistrée sur votre appareil et jeu hors connexion après la première visite.',
+    ogDescription: 'Jouez à Brikaya gratuitement dans le navigateur, installez-le sur votre appareil et continuez sans compte.',
+  },
+  'it': {
+    title: 'Scarica Brikaya — gioco gratis nel browser',
+    description: 'Installa o gioca a Brikaya gratis, senza account, senza pagamento, con progressi salvati sul dispositivo e gioco offline dopo la prima visita.',
+    ogDescription: 'Gioca a Brikaya gratis nel browser, installalo sul dispositivo e continua senza account.',
+  },
+  'ja': {
+    title: 'Brikayaをダウンロード — 無料ブラウザゲーム',
+    description: 'Brikayaを無料でインストールまたはプレイ。アカウント不要、支払い不要、進行状況は端末に保存、初回アクセス後はオフラインでも遊べます。',
+    ogDescription: 'ブラウザでBrikayaを無料プレイ。端末にインストールして、アカウントなしで続けられます。',
+  },
+  'ko': {
+    title: 'Brikaya 다운로드 — 무료 브라우저 게임',
+    description: '계정 없이, 결제 없이 Brikaya를 무료로 설치하거나 플레이하세요. 진행 상황은 기기에 저장되고 첫 방문 후 오프라인으로도 플레이할 수 있습니다.',
+    ogDescription: '브라우저에서 Brikaya를 무료로 플레이하고 기기에 설치한 뒤 계정 없이 계속 즐기세요.',
+  },
+  'id': {
+    title: 'Unduh Brikaya — game browser gratis',
+    description: 'Pasang atau mainkan Brikaya gratis, tanpa akun, tanpa pembayaran, dengan progres tersimpan di perangkat dan permainan offline setelah kunjungan pertama.',
+    ogDescription: 'Mainkan Brikaya gratis di browser, pasang di perangkat, dan lanjutkan tanpa akun.',
+  },
+  'vi': {
+    title: 'Tải Brikaya — trò chơi trình duyệt miễn phí',
+    description: 'Cài đặt hoặc chơi Brikaya miễn phí, không cần tài khoản, không thanh toán, tiến trình lưu trên thiết bị và chơi ngoại tuyến sau lần truy cập đầu tiên.',
+    ogDescription: 'Chơi Brikaya miễn phí trong trình duyệt, cài vào thiết bị và tiếp tục không cần tài khoản.',
+  },
+  'fil': {
+    title: 'I-download ang Brikaya — libreng laro sa browser',
+    description: 'I-install o laruin ang Brikaya nang libre, walang account, walang bayad, may progresong naka-save sa device at offline play pagkatapos ng unang bisita.',
+    ogDescription: 'Maglaro ng Brikaya nang libre sa browser, i-install sa device, at magpatuloy nang walang account.',
+  },
+  'th': {
+    title: 'ดาวน์โหลด Brikaya — เกมเบราว์เซอร์ฟรี',
+    description: 'ติดตั้งหรือเล่น Brikaya ฟรี ไม่ต้องมีบัญชี ไม่ต้องจ่ายเงิน บันทึกความคืบหน้าในอุปกรณ์ และเล่นออฟไลน์ได้หลังเข้าใช้งานครั้งแรก',
+    ogDescription: 'เล่น Brikaya ฟรีในเบราว์เซอร์ ติดตั้งในอุปกรณ์ และเล่นต่อโดยไม่ต้องมีบัญชี',
+  },
+  'zh-CN': {
+    title: '下载 Brikaya — 免费浏览器游戏',
+    description: '免费安装或游玩 Brikaya，无需账号，无需付款，进度保存在你的设备上，首次访问后可离线游玩。',
+    ogDescription: '在浏览器中免费游玩 Brikaya，安装到设备，并且无需账号即可继续。',
   },
 };
 
@@ -164,6 +229,7 @@ function replaceOrInsertHead(html, locale, routePath = HOME_ROUTE_PATH) {
   const canonical = canonicalUrl(locale, routePath);
   return html
     .replaceAll('href="./manifest.webmanifest"', 'href="/manifest.webmanifest"')
+    .replaceAll('href="./favicon.svg"', 'href="/favicon.svg"')
     .replaceAll('href="./assets/', 'href="/assets/')
     .replaceAll('src="./assets/', 'src="/assets/')
     .replace(/<html lang="[^"]+">/, `<html lang="${locale}">`)
