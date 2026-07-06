@@ -73,6 +73,11 @@ const TESTED_LOCALES = [
   { locale: "chr", path: "/chr/", title: "Brikaya — ᎠᏍᏆᏂᎪᏗ ᏗᎪᏍᏓᏱ ᎠᏁᏍᎩ" },
   { locale: "tt", path: "/tt/", title: "Brikaya — блок вату аркадасы" },
   { locale: "ban", path: "/ban/", title: "Brikaya — arkade ngancurin blok" },
+  { locale: "fy", path: "/fy/", title: "Brikaya — blokbrekker-arkade" },
+  { locale: "se", path: "/se/", title: "Brikaya — blohkaid rihkkon-speallu" },
+  { locale: "iu", path: "/iu/", title: "Brikaya — ᐅᔭᕋᓛᓂᒃ ᓯᖁᒥᑦᓯᓂᖅ" },
+  { locale: "nv", path: "/nv/", title: "Brikaya — tsé bee dah naaznilí" },
+  { locale: "tpi", path: "/tpi/", title: "Brikaya — gem bilong brukim blok" },
 ];
 const ALL_HREFLANG_LOCALES = [
   "pt-BR",
@@ -262,6 +267,30 @@ const ALL_HREFLANG_LOCALES = [
   "gor",
   "mak",
   "sas",
+  "fy",
+  "fo",
+  "gd",
+  "gv",
+  "kw",
+  "se",
+  "kl",
+  "iu",
+  "cr",
+  "oj",
+  "lkt",
+  "nv",
+  "ik",
+  "ch",
+  "mh",
+  "ty",
+  "bi",
+  "na",
+  "gil",
+  "niu",
+  "rar",
+  "pau",
+  "tpi",
+  "ho",
 ];
 const TESTED_DOWNLOADS_LOCALES = [
   {
@@ -549,6 +578,31 @@ const TESTED_DOWNLOADS_LOCALES = [
     locale: "ban",
     path: "/ban/downloads/",
     title: "Unduh Brikaya — game browser gratis",
+  },
+  {
+    locale: "fy",
+    path: "/fy/downloads/",
+    title: "Download Brikaya — fergees browserspul",
+  },
+  {
+    locale: "se",
+    path: "/se/downloads/",
+    title: "Viečča Brikaya — nuvttá neahttalohkan-speallu",
+  },
+  {
+    locale: "iu",
+    path: "/iu/downloads/",
+    title: "Brikaya ᐱᔭᐅᔪᖅ — ᐊᑭᖃᙱᑦᑐᖅ ᕿᓂᕈᑎᒥ ᐱᙳᐊᕈᑎ",
+  },
+  {
+    locale: "nv",
+    path: "/nv/downloads/",
+    title: "Brikaya yíníłta’ — browser naaltsoos bee baa hane’ doo béeso da",
+  },
+  {
+    locale: "tpi",
+    path: "/tpi/downloads/",
+    title: "Daunlodim Brikaya — fri browser gem",
   },
 ];
 const LANGUAGE_SELECT_SELECTOR = "#game-language-select";

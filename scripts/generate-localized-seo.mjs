@@ -204,6 +204,30 @@ const LOCALES = [
   'gor',
   'mak',
   'sas',
+  'fy',
+  'fo',
+  'gd',
+  'gv',
+  'kw',
+  'se',
+  'kl',
+  'iu',
+  'cr',
+  'oj',
+  'lkt',
+  'nv',
+  'ik',
+  'ch',
+  'mh',
+  'ty',
+  'bi',
+  'na',
+  'gil',
+  'niu',
+  'rar',
+  'pau',
+  'tpi',
+  'ho',
 ];
 const SEO = {
   'pt-BR': {
@@ -1143,6 +1167,126 @@ const SEO = {
     description: "Pasang atau main Brikaya gratis, tanpa akun lan tanpa bayar; kemajuan tetep leq perangkat side lan bau dimainkan offline sawise kunjungan pertama.",
     ogDescription: "Brikaya — arkade mecah blok",
   },
+  'fy': {
+    title: "Brikaya — blokbrekker-arkade",
+    description: "Ynstallearje of spylje Brikaya fergees, sûnder akkount en sûnder betelling; foarútgong bliuwt op dyn apparaat en kinst offline spylje nei it earste besyk.",
+    ogDescription: "Brikaya — blokbrekker-arkade",
+  },
+  'fo': {
+    title: "Brikaya — blokkbrótaraspæl",
+    description: "Legg inn ella spæl Brikaya ókeypis, uttan konto og uttan gjald; framgongdin verður verandi á tínari eind, og tú kanst spæla offline eftir fyrstu vitjan.",
+    ogDescription: "Brikaya — blokkbrótaraspæl",
+  },
+  'gd': {
+    title: "Brikaya — geama briseadh bhlocaichean",
+    description: "Stàlaich no cluich Brikaya an-asgaidh, gun chunntas agus gun phàigheadh; fuirichidh adhartas air an inneal agad agus faodar cluich far loidhne às dèidh a’ chiad turais.",
+    ogDescription: "Brikaya — geama briseadh bhlocaichean",
+  },
+  'gv': {
+    title: "Brikaya — cloie brishey blocyn",
+    description: "Stallee ny cloie Brikaya gyn cosney, gyn coontey as gyn geeck; ta’n aase tannaghtyn er dty yannoo as foddee oo cloie gyn eddyr-voggyl lurg y chied çheet.",
+    ogDescription: "Brikaya — cloie brishey blocyn",
+  },
+  'kw': {
+    title: "Brikaya — gwari torri blocys",
+    description: "Settya po gwari Brikaya yn didal, heb akont ha heb tylli; yth esa an avonsyans war dha devis ha gallets gwari heb linen wosa an kynsa visit.",
+    ogDescription: "Brikaya — gwari torri blocys",
+  },
+  'se': {
+    title: "Brikaya — blohkaid rihkkon-speallu",
+    description: "Sajáiduhte dahje speala Brikaya nuvttá, konttu haga ja mávssu haga; ovdáneapmi báhcá du rusttegiidda ja sáhtát speallat offline vuosttaš galledeami maŋŋá.",
+    ogDescription: "Brikaya — blohkaid rihkkon-speallu",
+  },
+  'kl': {
+    title: "Brikaya — blokkinik aserorterut",
+    description: "Brikaya akeqanngitsumik ikkuguk imaluunniit pinnguaat, kontoqarani akiliutitaqaranilu; siuariarneq atortumiiginnarpoq siullermeerlunilu pulaarnerup kingorna internet-eqanngitsumik pinnguaqqissinnaavutit.",
+    ogDescription: "Brikaya — blokkinik aserorterut",
+  },
+  'iu': {
+    title: "Brikaya — ᐅᔭᕋᓛᓂᒃ ᓯᖁᒥᑦᓯᓂᖅ",
+    description: "Brikaya ᐊᑭᖃᙱᑦᑐᒥᒃ ᐃᓕᓯᒍᒃ ᐅᕝᕙᓘᓐᓃᑦ ᐱᙳᐊᕆᒍᒃ, ᐊᑎᓕᐅᖅᓯᒪᔪᖃᙱᑦᑐᖅ ᐊᑭᓕᐅᑎᖃᙱᑦᑐᖅ; ᓯᕗᒧᐊᕐᓂᖅ ᐊᑐᕈᑎᕕᑦ ᐃᓗᐊᓃᑦᑐᖅ ᐊᒻᒪ ᐱᙳᐊᕈᓐᓇᖅᑐᑎᑦ ᐃᑭᐊᖅᑭᕕᖃᙱᑦᑐᒥᒃ ᓯᕗᓪᓕᖅᐹᖅ ᐳᓚᕋᓂᐅᑉ ᑭᖑᓂᐊᓂ.",
+    ogDescription: "Brikaya — ᐅᔭᕋᓛᓂᒃ ᓯᖁᒥᑦᓯᓂᖅ",
+  },
+  'cr': {
+    title: "Brikaya — pīci-blohka paskisikan",
+    description: "Brikaya pīcih ahpō pimipahtā māmawi, namōya account ēkwa namōya tipahikēwin; pimohtēwin kī-masinahikanisihk ka-aya, ēkwa kā-kī-nitawēyimiht offline mīna.",
+    ogDescription: "Brikaya — pīci-blohka paskisikan",
+  },
+  'oj': {
+    title: "Brikaya — mazinaakizonan bashkiziganan",
+    description: "Aabaji’ Brikaya bezhig miinawaa gaawiin account miinawaa gaawiin diba’igan; ezhiwebak gdaa-bimaadiziwin gdaa-aabajitoon omaa zhiishiibikaaning miinawaa gdaa-odamin offline ishkwaa niizhwaaswi.",
+    ogDescription: "Brikaya — mazinaakizonan bashkiziganan",
+  },
+  'lkt': {
+    title: "Brikaya — blok iyúȟ’aŋ oyáte",
+    description: "Brikaya waŋžíla yúŋkȟaŋ kiŋ lé iyáya, akáuŋt šni na mázaška šni; owášte kiŋ léčhiya thíŋpi kiŋ él tókȟaŋ yaŋké na waŋžíla offline iyáye.",
+    ogDescription: "Brikaya — blok iyúȟ’aŋ oyáte",
+  },
+  'nv': {
+    title: "Brikaya — tsé bee dah naaznilí",
+    description: "Brikaya doo béeso da yíníłta’ dóó nááhai, account doo le’ dóó díí béeso da; aná’álwo’ígíí ne’ííł’į́į́hígíí bikáa’gi haasdzáá dóó t’áá shǫǫdí offline nááhai.",
+    ogDescription: "Brikaya — tsé bee dah naaznilí",
+  },
+  'ik': {
+    title: "Brikaya — block-nik sikłiqtuq",
+    description: "Brikaya aitchuqługu pinġuaq, account piqangitchuq suli akiitchuq; sivumut atuqtat aġviġmiittuġuq suli sivulliq paġitillugu offline pinġuarunnarutin.",
+    ogDescription: "Brikaya — block-nik sikłiqtuq",
+  },
+  'ch': {
+    title: "Brikaya — chaddek na pumakati bloke",
+    description: "Inståla pat hugå Brikaya libre, sin cuenta yan sin apas; i progreso gaige gi iyo-mu na aparato ya siña un hugå offline despues di i finenina na bisita.",
+    ogDescription: "Brikaya — chaddek na pumakati bloke",
+  },
+  'mh': {
+    title: "Brikaya — ikkure ko̧n blok ko",
+    description: "Koba ak ikkure Brikaya ejjelok wonen, ejjelok account im ejjelok wonen; jerbal eo ej bed ilo kein jerbal eo am im kwomaron ikkure offline elikin lotok eo kein kajuon.",
+    ogDescription: "Brikaya — ikkure ko̧n blok ko",
+  },
+  'ty': {
+    title: "Brikaya — hautiara e vāvāhi poro",
+    description: "Faauta aore ra taʻaro Brikaya ma te moni ore, aita pūkete e aita aufauraa; e vai te haere i mua i niʻa i tā oe matini e e nehenehe e taʻaro offline i muri aʻe i te taeraʻa mātāmua.",
+    ogDescription: "Brikaya — hautiara e vāvāhi poro",
+  },
+  'bi': {
+    title: "Brikaya — gem blong brekem blok",
+    description: "Instolem o plei Brikaya fri, no nidim akaon mo no peman; progres i stap long divaes blong yu mo yu save plei offline afta fas visit.",
+    ogDescription: "Brikaya — gem blong brekem blok",
+  },
+  'na': {
+    title: "Brikaya — game e kebabeda blok",
+    description: "Install eao play Brikaya eko cost, account eko ma payment eko; progress eitsi in device amwa ma omo play offline in after first visit.",
+    ogDescription: "Brikaya — game e kebabeda blok",
+  },
+  'gil': {
+    title: "Brikaya — te takakaro ni kabwaka blok",
+    description: "Kabwaka ke takakaro Brikaya n aki kabooaki, akea account ao akea boon te mwane; te rikirake e mena i aon am device ao ko kona n takakaro offline imwiin te moan roko.",
+    ogDescription: "Brikaya — te takakaro ni kabwaka blok",
+  },
+  'niu': {
+    title: "Brikaya — pelē moumou poloka",
+    description: "Fakaeke po ke pelē Brikaya nakai totogi, nakai fai account mo e nakai fai totogi; tumau e holoaga he haau a device ti maeke ke pelē offline ka mole e ahiahi fakamua.",
+    ogDescription: "Brikaya — pelē moumou poloka",
+  },
+  'rar': {
+    title: "Brikaya — kēmu wāwāhi poraka",
+    description: "Tāuru me kore rā tākaro Brikaya kore utu, kāre e pūkete e kāre e tutaki; ka noo te anga whakamua ki runga i tāʻau masini e ka rauka te tākaro offline i muri ake i te toroanga mua.",
+    ogDescription: "Brikaya — kēmu wāwāhi poraka",
+  },
+  'pau': {
+    title: "Brikaya — kesus er a blok",
+    description: "Medechel me a mlo er a Brikaya el diak el ngeseu, diak account me diak el ocheraol; a cheldecheduch a mla er a device er kau me a kmal diak el internet el blechoel el ngar er a omekedong.",
+    ogDescription: "Brikaya — kesus er a blok",
+  },
+  'tpi': {
+    title: "Brikaya — gem bilong brukim blok",
+    description: "Instolim o pilaim Brikaya fri, nogat akaun na nogat pe; progres i stap long divais bilong yu na yu inap pilai offline bihain long namba wan visit.",
+    ogDescription: "Brikaya — gem bilong brukim blok",
+  },
+  'ho': {
+    title: "Brikaya — blok dibaia gaim",
+    description: "Instalem o pleim Brikaya moni lasi, account lasi na pei lasi; progress e noho ena device bona oi dibaia offline lasi hegeregerena first visit murina.",
+    ogDescription: "Brikaya — blok dibaia gaim",
+  },
 };
 const DOWNLOADS_SEO = {
   'pt-BR': {
@@ -2081,6 +2225,126 @@ const DOWNLOADS_SEO = {
     title: "Unduh Brikaya — game browser gratis",
     description: "Pasang atau main Brikaya gratis, tanpa akun lan tanpa bayar; kemajuan tetep leq perangkat side lan bau dimainkan offline sawise kunjungan pertama. tanpa akun.",
     ogDescription: "Unduh Brikaya — tanpa akun",
+  },
+  'fy': {
+    title: "Download Brikaya — fergees browserspul",
+    description: "Ynstallearje of spylje Brikaya fergees, sûnder akkount en sûnder betelling; foarútgong bliuwt op dyn apparaat en kinst offline spylje nei it earste besyk. sûnder akkount.",
+    ogDescription: "Download Brikaya — sûnder akkount",
+  },
+  'fo': {
+    title: "Tak Brikaya niður — ókeypis kaganaspæl",
+    description: "Legg inn ella spæl Brikaya ókeypis, uttan konto og uttan gjald; framgongdin verður verandi á tínari eind, og tú kanst spæla offline eftir fyrstu vitjan. uttan konto.",
+    ogDescription: "Tak Brikaya niður — uttan konto",
+  },
+  'gd': {
+    title: "Luchdaich sìos Brikaya — geama brabhsair an-asgaidh",
+    description: "Stàlaich no cluich Brikaya an-asgaidh, gun chunntas agus gun phàigheadh; fuirichidh adhartas air an inneal agad agus faodar cluich far loidhne às dèidh a’ chiad turais. gun chunntas.",
+    ogDescription: "Luchdaich sìos Brikaya — gun chunntas",
+  },
+  'gv': {
+    title: "Lhiggey neose Brikaya — cloie brabhsair gyn cosney",
+    description: "Stallee ny cloie Brikaya gyn cosney, gyn coontey as gyn geeck; ta’n aase tannaghtyn er dty yannoo as foddee oo cloie gyn eddyr-voggyl lurg y chied çheet. gyn coontey.",
+    ogDescription: "Lhiggey neose Brikaya — gyn coontey",
+  },
+  'kw': {
+    title: "Deskarga Brikaya — gwari poriador heb cost",
+    description: "Settya po gwari Brikaya yn didal, heb akont ha heb tylli; yth esa an avonsyans war dha devis ha gallets gwari heb linen wosa an kynsa visit. heb akont.",
+    ogDescription: "Deskarga Brikaya — heb akont",
+  },
+  'se': {
+    title: "Viečča Brikaya — nuvttá neahttalohkan-speallu",
+    description: "Sajáiduhte dahje speala Brikaya nuvttá, konttu haga ja mávssu haga; ovdáneapmi báhcá du rusttegiidda ja sáhtát speallat offline vuosttaš galledeami maŋŋá. konttu haga.",
+    ogDescription: "Viečča Brikaya — konttu haga",
+  },
+  'kl': {
+    title: "Brikaya aajuk — browserimi pinnguaat akeqanngitsoq",
+    description: "Brikaya akeqanngitsumik ikkuguk imaluunniit pinnguaat, kontoqarani akiliutitaqaranilu; siuariarneq atortumiiginnarpoq siullermeerlunilu pulaarnerup kingorna internet-eqanngitsumik pinnguaqqissinnaavutit. kontoqarani.",
+    ogDescription: "Brikaya aajuk — kontoqarani",
+  },
+  'iu': {
+    title: "Brikaya ᐱᔭᐅᔪᖅ — ᐊᑭᖃᙱᑦᑐᖅ ᕿᓂᕈᑎᒥ ᐱᙳᐊᕈᑎ",
+    description: "Brikaya ᐊᑭᖃᙱᑦᑐᒥᒃ ᐃᓕᓯᒍᒃ ᐅᕝᕙᓘᓐᓃᑦ ᐱᙳᐊᕆᒍᒃ, ᐊᑎᓕᐅᖅᓯᒪᔪᖃᙱᑦᑐᖅ ᐊᑭᓕᐅᑎᖃᙱᑦᑐᖅ; ᓯᕗᒧᐊᕐᓂᖅ ᐊᑐᕈᑎᕕᑦ ᐃᓗᐊᓃᑦᑐᖅ ᐊᒻᒪ ᐱᙳᐊᕈᓐᓇᖅᑐᑎᑦ ᐃᑭᐊᖅᑭᕕᖃᙱᑦᑐᒥᒃ ᓯᕗᓪᓕᖅᐹᖅ ᐳᓚᕋᓂᐅᑉ ᑭᖑᓂᐊᓂ. ᐊᑎᓕᐅᖅᓯᒪᔪᖃᙱᑦᑐᖅ.",
+    ogDescription: "Brikaya ᐱᔭᐅᔪᖅ — ᐊᑎᓕᐅᖅᓯᒪᔪᖃᙱᑦᑐᖅ",
+  },
+  'cr': {
+    title: "Brikaya pīcih — māmawi-nitawēyimākana browser mīkiwāhp",
+    description: "Brikaya pīcih ahpō pimipahtā māmawi, namōya account ēkwa namōya tipahikēwin; pimohtēwin kī-masinahikanisihk ka-aya, ēkwa kā-kī-nitawēyimiht offline mīna. namōya account.",
+    ogDescription: "Brikaya pīcih — namōya account",
+  },
+  'oj': {
+    title: "Biindigedaa Brikaya — bepakaan browser odaminowin",
+    description: "Aabaji’ Brikaya bezhig miinawaa gaawiin account miinawaa gaawiin diba’igan; ezhiwebak gdaa-bimaadiziwin gdaa-aabajitoon omaa zhiishiibikaaning miinawaa gdaa-odamin offline ishkwaa niizhwaaswi. gaawiin account.",
+    ogDescription: "Biindigedaa Brikaya — gaawiin account",
+  },
+  'lkt': {
+    title: "Brikaya yúŋkȟaŋ — browser waŋžíla ohíŋni",
+    description: "Brikaya waŋžíla yúŋkȟaŋ kiŋ lé iyáya, akáuŋt šni na mázaška šni; owášte kiŋ léčhiya thíŋpi kiŋ él tókȟaŋ yaŋké na waŋžíla offline iyáye. akáuŋt šni.",
+    ogDescription: "Brikaya yúŋkȟaŋ — akáuŋt šni",
+  },
+  'nv': {
+    title: "Brikaya yíníłta’ — browser naaltsoos bee baa hane’ doo béeso da",
+    description: "Brikaya doo béeso da yíníłta’ dóó nááhai, account doo le’ dóó díí béeso da; aná’álwo’ígíí ne’ííł’į́į́hígíí bikáa’gi haasdzáá dóó t’áá shǫǫdí offline nááhai. account doo le’.",
+    ogDescription: "Brikaya yíníłta’ — account doo le’",
+  },
+  'ik': {
+    title: "Brikaya aitchuq — browser aitchuqługu pinġuaqti",
+    description: "Brikaya aitchuqługu pinġuaq, account piqangitchuq suli akiitchuq; sivumut atuqtat aġviġmiittuġuq suli sivulliq paġitillugu offline pinġuarunnarutin. account piqangitchuq.",
+    ogDescription: "Brikaya aitchuq — account piqangitchuq",
+  },
+  'ch': {
+    title: "Na’huyong Brikaya — huego browser libre",
+    description: "Inståla pat hugå Brikaya libre, sin cuenta yan sin apas; i progreso gaige gi iyo-mu na aparato ya siña un hugå offline despues di i finenina na bisita. sin cuenta.",
+    ogDescription: "Na’huyong Brikaya — sin cuenta",
+  },
+  'mh': {
+    title: "Aolep Brikaya — ikkure browser ejjelok wonen",
+    description: "Koba ak ikkure Brikaya ejjelok wonen, ejjelok account im ejjelok wonen; jerbal eo ej bed ilo kein jerbal eo am im kwomaron ikkure offline elikin lotok eo kein kajuon. ejjelok account.",
+    ogDescription: "Aolep Brikaya — ejjelok account",
+  },
+  'ty': {
+    title: "Faauta Brikaya — haʻuti browser moni ore",
+    description: "Faauta aore ra taʻaro Brikaya ma te moni ore, aita pūkete e aita aufauraa; e vai te haere i mua i niʻa i tā oe matini e e nehenehe e taʻaro offline i muri aʻe i te taeraʻa mātāmua. aita pūkete.",
+    ogDescription: "Faauta Brikaya — aita pūkete",
+  },
+  'bi': {
+    title: "Daonlodem Brikaya — fri browser gem",
+    description: "Instolem o plei Brikaya fri, no nidim akaon mo no peman; progres i stap long divaes blong yu mo yu save plei offline afta fas visit. no nidim akaon.",
+    ogDescription: "Daonlodem Brikaya — no nidim akaon",
+  },
+  'na': {
+    title: "Download Brikaya — game browser eko cost",
+    description: "Install eao play Brikaya eko cost, account eko ma payment eko; progress eitsi in device amwa ma omo play offline in after first visit. account eko.",
+    ogDescription: "Download Brikaya — account eko",
+  },
+  'gil': {
+    title: "Kaotinakoa Brikaya — te takakaro ni browser ae aki kabooaki",
+    description: "Kabwaka ke takakaro Brikaya n aki kabooaki, akea account ao akea boon te mwane; te rikirake e mena i aon am device ao ko kona n takakaro offline imwiin te moan roko. akea account.",
+    ogDescription: "Kaotinakoa Brikaya — akea account",
+  },
+  'niu': {
+    title: "Download Brikaya — pelē browser nakai totogi",
+    description: "Fakaeke po ke pelē Brikaya nakai totogi, nakai fai account mo e nakai fai totogi; tumau e holoaga he haau a device ti maeke ke pelē offline ka mole e ahiahi fakamua. nakai fai account.",
+    ogDescription: "Download Brikaya — nakai fai account",
+  },
+  'rar': {
+    title: "Tikiake Brikaya — kēmu browser kore utu",
+    description: "Tāuru me kore rā tākaro Brikaya kore utu, kāre e pūkete e kāre e tutaki; ka noo te anga whakamua ki runga i tāʻau masini e ka rauka te tākaro offline i muri ake i te toroanga mua. kāre e pūkete.",
+    ogDescription: "Tikiake Brikaya — kāre e pūkete",
+  },
+  'pau': {
+    title: "Medechel Brikaya — ngikel er a browser el diak el ngeseu",
+    description: "Medechel me a mlo er a Brikaya el diak el ngeseu, diak account me diak el ocheraol; a cheldecheduch a mla er a device er kau me a kmal diak el internet el blechoel el ngar er a omekedong. diak account.",
+    ogDescription: "Medechel Brikaya — diak account",
+  },
+  'tpi': {
+    title: "Daunlodim Brikaya — fri browser gem",
+    description: "Instolim o pilaim Brikaya fri, nogat akaun na nogat pe; progres i stap long divais bilong yu na yu inap pilai offline bihain long namba wan visit. nogat akaun.",
+    ogDescription: "Daunlodim Brikaya — nogat akaun",
+  },
+  'ho': {
+    title: "Daunlodem Brikaya — browser gaim moni lasi",
+    description: "Instalem o pleim Brikaya moni lasi, account lasi na pei lasi; progress e noho ena device bona oi dibaia offline lasi hegeregerena first visit murina. account lasi.",
+    ogDescription: "Daunlodem Brikaya — account lasi",
   },
 };
 function metadataFor(locale, routePath) {
