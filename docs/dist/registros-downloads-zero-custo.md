@@ -289,3 +289,15 @@ Follow-up fa/he em 2026-07-06:
 - Validação local passou: `node --version` (`v23.5.0`), `make help`, `npm run codex-env:check`, `npm run test:semantic-file-names`, `npm run test:svg-assets`, `npm test -- --runInBand` (58 suítes / 371 testes) e `npm run build` (`localized-seo ok: locales=187, routes=2`).
 - Clarity/analytics/pixel/tag/SDK externo continuam bloqueados e não foram adicionados.
 - Buscadores: rechecagem Google/Bing/Yandex/Naver só deve ocorrer após merge/deploy público; Bing depende de quota gratuita diária; Baidu/Seznam continuam bloqueados quando exigirem identidade pública, CAPTCHA, ICP, telefone extra ou custo.
+
+## Atualização operacional — onda 187 publicada em 2026-07-06
+
+- Timestamp: 2026-07-06T18:49:54.804Z
+- Produção: `https://brikaya.com/` publicada via Cloudflare Pages; deploy `https://055de4e1.brikaya-live.pages.dev`.
+- Sitemap público: 376 URLs; amostras `/ace/downloads/`, `/bal/downloads/`, `/chr/downloads/`, `/tt/downloads/` e `/ban/downloads/` responderam 200 com `lang` correto e sem marcadores de Clarity/analytics/tag/pixel.
+- RTL público: `/bal/downloads/` validado com `html lang="bal" dir="rtl"`; RTL publicado agora cobre `ar`, `ur`, `fa`, `he`, `ps`, `sd`, `ks`, `dv`, `ckb`, `ug`, `yi` e `bal`.
+- QA público: `make cloudflare-public-check`, `make cloudflare-i18n-seo-qa` e `make cloudflare-offline-pwa-qa` passaram; report i18n validou 187 hreflangs e 74 rotas de downloads amostradas.
+- IndexNow/Yandex: `make yandex-indexnow-submit` retornou `202 accepted-pending` para 376 URLs com chave redigida.
+- Chrome aba única: Google recebeu reenvio do sitemap; Bing recebeu sitemap e ficou em `Processing`; Bing URL Submission estava com quota 0; Yandex confirmou sitemap em fila, checklist com 4 recomendações e limite diário de reindexação atingido; Naver confirmou `sitemap.xml`, mas `/ace/` não entrou no histórico; aba final ficou aberta em `https://brikaya.com/sitemap.xml`.
+- Pendências: Google/Bing/Yandex/Naver precisam reprocessar; Yahoo/DuckDuckGo dependem de Bing/crawl; Brave sem endpoint direto atual; Baidu/Seznam seguem bloqueados por cadastro externo/CAPTCHA/ICP/custo; Clarity continua desinstalado.
+
