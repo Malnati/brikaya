@@ -211,6 +211,30 @@ const EXPECTED_GLOBAL_LOCALES = [
   "raj",
   "hne",
   "awa",
+  "ace",
+  "bal",
+  "chr",
+  "crh",
+  "tt",
+  "ba",
+  "cv",
+  "sah",
+  "os",
+  "ab",
+  "ady",
+  "kab",
+  "tet",
+  "bug",
+  "min",
+  "ban",
+  "mad",
+  "bjn",
+  "hil",
+  "pam",
+  "bcl",
+  "gor",
+  "mak",
+  "sas",
 ] as const;
 const NEW_DOWNLOADS_SEO_EXPECTATIONS = [
   { locale: "ar", title: "تنزيل Brikaya", description: "بدون حساب" },
@@ -361,6 +385,30 @@ const NEW_DOWNLOADS_SEO_EXPECTATIONS = [
   { locale: "raj", title: "Brikaya डाउनलोड करो", description: "खातो बिना" },
   { locale: "hne", title: "Brikaya डाउनलोड करव", description: "खाता बिना" },
   { locale: "awa", title: "Brikaya डाउनलोड करा", description: "खाता बिना" },
+  { locale: "ace", title: "Unduh Brikaya", description: "tanpa akun" },
+  { locale: "bal", title: "Brikaya ڈاؤن لوڈ کن", description: "بے حساب" },
+  { locale: "chr", title: "Brikaya ᏫᎩᎶᏒᎢ", description: "ᎠᎪᏩᏛᏗ ᎾᏍᎩ Ꮭ" },
+  { locale: "crh", title: "Brikaya indir", description: "hesapsız" },
+  { locale: "tt", title: "Brikaya йөкләү", description: "аккаунтсыз" },
+  { locale: "ba", title: "Brikaya йөкләп алыу", description: "иҫәпһеҙ" },
+  { locale: "cv", title: "Brikaya илсе", description: "аккаунтсӑр" },
+  { locale: "sah", title: "Brikaya хачайдаа", description: "аккаунт суох" },
+  { locale: "os", title: "Brikaya æрбавгæн", description: "аккаунтæй хъæздыг" },
+  { locale: "ab", title: "Brikaya аҭыгара", description: "аккаунтда" },
+  { locale: "ady", title: "Brikaya къутыгъэн", description: "аккаунтэнчъ" },
+  { locale: "kab", title: "Sider Brikaya", description: "war amiḍan" },
+  { locale: "tet", title: "Deskarga Brikaya", description: "laiha konta" },
+  { locale: "bug", title: "Unduh Brikaya", description: "tanpa akun" },
+  { locale: "min", title: "Unduah Brikaya", description: "tanpa akun" },
+  { locale: "ban", title: "Unduh Brikaya", description: "tanpa akun" },
+  { locale: "mad", title: "Unduh Brikaya", description: "tanpa akun" },
+  { locale: "bjn", title: "Unduh Brikaya", description: "tanpa akun" },
+  { locale: "hil", title: "I-download ang Brikaya", description: "wala account" },
+  { locale: "pam", title: "I-download ing Brikaya", description: "alang account" },
+  { locale: "bcl", title: "I-download an Brikaya", description: "mayong account" },
+  { locale: "gor", title: "Unduh Brikaya", description: "tanpa akun" },
+  { locale: "mak", title: "Unduh Brikaya", description: "tanpa akun" },
+  { locale: "sas", title: "Unduh Brikaya", description: "tanpa akun" },
 ] as const;
 const DOWNLOADS_TITLE_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
   "pt-BR": "Baixar Brikaya",
@@ -526,6 +574,30 @@ const DOWNLOADS_TITLE_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
   raj: "Brikaya डाउनलोड करो",
   hne: "Brikaya डाउनलोड करव",
   awa: "Brikaya डाउनलोड करा",
+  ace: "Unduh Brikaya",
+  bal: "Brikaya ڈاؤن لوڈ کن",
+  chr: "Brikaya ᏫᎩᎶᏒᎢ",
+  crh: "Brikaya indir",
+  tt: "Brikaya йөкләү",
+  ba: "Brikaya йөкләп алыу",
+  cv: "Brikaya илсе",
+  sah: "Brikaya хачайдаа",
+  os: "Brikaya æрбавгæн",
+  ab: "Brikaya аҭыгара",
+  ady: "Brikaya къутыгъэн",
+  kab: "Sider Brikaya",
+  tet: "Deskarga Brikaya",
+  bug: "Unduh Brikaya",
+  min: "Unduah Brikaya",
+  ban: "Unduh Brikaya",
+  mad: "Unduh Brikaya",
+  bjn: "Unduh Brikaya",
+  hil: "I-download ang Brikaya",
+  pam: "I-download ing Brikaya",
+  bcl: "I-download an Brikaya",
+  gor: "Unduh Brikaya",
+  mak: "Unduh Brikaya",
+  sas: "Unduh Brikaya",
 };
 const DOWNLOADS_DESCRIPTION_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
   "pt-BR": "sem conta",
@@ -691,6 +763,30 @@ const DOWNLOADS_DESCRIPTION_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
   raj: "खातो बिना",
   hne: "खाता बिना",
   awa: "खाता बिना",
+  ace: "tanpa akun",
+  bal: "بے حساب",
+  chr: "ᎠᎪᏩᏛᏗ ᎾᏍᎩ Ꮭ",
+  crh: "hesapsız",
+  tt: "аккаунтсыз",
+  ba: "иҫәпһеҙ",
+  cv: "аккаунтсӑр",
+  sah: "аккаунт суох",
+  os: "аккаунтæй хъæздыг",
+  ab: "аккаунтда",
+  ady: "аккаунтэнчъ",
+  kab: "war amiḍan",
+  tet: "laiha konta",
+  bug: "tanpa akun",
+  min: "tanpa akun",
+  ban: "tanpa akun",
+  mad: "tanpa akun",
+  bjn: "tanpa akun",
+  hil: "wala account",
+  pam: "alang account",
+  bcl: "mayong account",
+  gor: "tanpa akun",
+  mak: "tanpa akun",
+  sas: "tanpa akun",
 };
 const LOCALIZED_APPEARANCE_KEYS: TranslationKey[] = [
   "appearance.option.auto-by-level",
@@ -925,6 +1021,20 @@ describe("i18n offline do Brikaya", () => {
 
     expect(screen.getByText("dv")).toBeInTheDocument();
     expect(document.documentElement.lang).toBe("dv");
+    expect(document.documentElement).toHaveAttribute("dir", "rtl");
+  });
+
+  it("ativa direção RTL para balúchi como locale RTL da onda 187", () => {
+    window.history.replaceState(null, "", "/bal/");
+
+    render(
+      <I18nProvider>
+        <LocaleProbe />
+      </I18nProvider>,
+    );
+
+    expect(screen.getByText("bal")).toBeInTheDocument();
+    expect(document.documentElement.lang).toBe("bal");
     expect(document.documentElement).toHaveAttribute("dir", "rtl");
   });
 
