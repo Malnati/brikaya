@@ -76,6 +76,13 @@ import {
   type TranslationKey,
 } from "./i18n";
 import { requestLocaleFromDeviceLocation } from "./i18n/locationLocale";
+import {
+  appendJoystickDiagnosticSample,
+  buildJoystickDiagnosticExport,
+  createEmptyJoystickDiagnosticState,
+  createJoystickDiagnosticDownloadName,
+  type JoystickDiagnosticSample,
+} from "./utils/joystickDiagnostics";
 
 LOG("🚦 App.tsx carregado");
 
@@ -107,6 +114,9 @@ const SPEED_LABEL_SUFFIX = "×";
 const HIGH_SCORE_KEY_SEPARATOR = "-";
 const LANGUAGE_SELECT_ID = "game-language-select";
 const SETTINGS_ACTION_LOGS = "logs";
+const SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD =
+  "joystick-diagnostic-download";
+const SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_CLEAR = "joystick-diagnostic-clear";
 const SETTINGS_ACTION_COLLISIONS = "collisions";
 const SETTINGS_ACTION_RESET_SCORE = "reset-score";
 const SETTINGS_ACTION_RESET_PREFERENCES = "reset-preferences";
@@ -208,6 +218,11 @@ export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showCollisionStats, setShowCollisionStats] = useState(false);
   const [showGameLogs, setShowGameLogs] = useState(false);
+  const [isJoystickDiagnosticEnabled, setIsJoystickDiagnosticEnabled] =
+    useState(false);
+  const [joystickDiagnosticState, setJoystickDiagnosticState] = useState(
+    createEmptyJoystickDiagnosticState,
+  );
   const qaScenario = useMemo<GameQaScenario | null>(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const scenario = searchParams.get("qaScenario");
@@ -229,6 +244,7 @@ export default function App() {
   }, []);
   const activeGameMode =
     qaScenario === BALL_TURRET_QA_SCENARIO ? GAME_MODE_BALL_TURRET : gameMode;
+  const hasJoystickDiagnosticSamples = joystickDiagnosticState.samples.length > 0;
 
   const audioSink = useMemo<GameAudioSink>(
     () => ({
@@ -247,6 +263,52 @@ export default function App() {
     }),
     [],
   );
+  const handleJoystickDiagnosticSample = useCallback(
+    (sample: JoystickDiagnosticSample) => {
+      setJoystickDiagnosticState((currentState) =>
+        appendJoystickDiagnosticSample(currentState, sample),
+      );
+    },
+    [],
+  );
+
+  const handleJoystickDiagnosticToggle = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+      setIsJoystickDiagnosticEnabled(event.target.checked);
+    },
+    [audioSink],
+  );
+
+  const handleDownloadJoystickDiagnostic = useCallback(() => {
+    if (!hasJoystickDiagnosticSamples) return;
+
+    audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+    const exportData = buildJoystickDiagnosticExport({
+      ...joystickDiagnosticState,
+      versionLabel: BUILD_VERSION_LABEL,
+      publicUrl: window.location.href,
+      userAgent: navigator.userAgent,
+      viewport: { width: window.innerWidth, height: window.innerHeight },
+    });
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = createJoystickDiagnosticDownloadName();
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+    URL.revokeObjectURL(url);
+  }, [audioSink, hasJoystickDiagnosticSamples, joystickDiagnosticState]);
+
+  const handleClearJoystickDiagnostic = useCallback(() => {
+    audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+    setJoystickDiagnosticState(createEmptyJoystickDiagnosticState());
+  }, [audioSink]);
+
   const handleBoardRectChange = useCallback((nextRect: GameBoardRect) => {
     setBoardRect((currentRect) => {
       if (
@@ -1068,6 +1130,40 @@ export default function App() {
                   </span>
                   {t("menu.collisions")}
                 </button>
+                <label className="settings-drawer__toggle">
+                  <input
+                    type="checkbox"
+                    checked={isJoystickDiagnosticEnabled}
+                    onChange={handleJoystickDiagnosticToggle}
+                  />
+                  <span>{t("menu.joystickDiagnosticToggle")}</span>
+                </label>
+                <button
+                  type="button"
+                  onClick={handleDownloadJoystickDiagnostic}
+                  className="dashboard-button dashboard-button--secondary"
+                  disabled={!hasJoystickDiagnosticSamples}
+                  data-settings-action={SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD}
+                  data-testid={`settings-action-${SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD}`}
+                >
+                  <span aria-hidden="true" className="button-icon">
+                    ⇩
+                  </span>
+                  {t("menu.joystickDiagnosticDownload")}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleClearJoystickDiagnostic}
+                  className="dashboard-button dashboard-button--secondary"
+                  disabled={!hasJoystickDiagnosticSamples}
+                  data-settings-action={SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_CLEAR}
+                  data-testid={`settings-action-${SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_CLEAR}`}
+                >
+                  <span aria-hidden="true" className="button-icon">
+                    ✕
+                  </span>
+                  {t("menu.joystickDiagnosticClear")}
+                </button>
                 <button
                   type="button"
                   onClick={handleResetScores}
@@ -1124,6 +1220,9 @@ export default function App() {
                   isLanguageDetectionVisible
                 }
                 onBoardRectChange={handleBoardRectChange}
+                joystickDiagnosticsEnabled={isJoystickDiagnosticEnabled}
+                joystickDiagnosticSamples={joystickDiagnosticState.samples}
+                onJoystickDiagnosticSample={handleJoystickDiagnosticSample}
               />
             </div>
           </div>

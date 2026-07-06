@@ -16,13 +16,20 @@ const DEFAULT_MOBILE_LANDSCAPE_SCREENSHOT_PATH =
   "docs/assets/issues/ball-turret-mode/evidence/evi-ball-turret-gameplay-mobile-landscape.png";
 const DEFAULT_MENU_SCREENSHOT_PATH =
   "docs/assets/issues/ball-turret-mode/evidence/evi-ball-turret-menu.png";
+const DEFAULT_DIAGNOSTIC_SCREENSHOT_PATH =
+  "docs/assets/issues/joystick-diagnostic-log/evidence/evi-joystick-diagnostic-mobile.png";
 const CHROME_EXECUTABLE_PATH =
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const QA_SCENARIO = "ball-turret";
 const MENU_BUTTON_PATTERN = /menu/i;
+const CLOSE_MENU_PATTERN = /fechar menu|close menu/i;
 const GAME_MODE_HEADING_PATTERN = /modo de jogo|game mode/i;
 const TURRET_BUTTON_PATTERN = /torreta|turret/i;
 const CLASSIC_BUTTON_PATTERN = /clássico|classic/i;
+const JOYSTICK_DIAGNOSTIC_TOGGLE_PATTERN =
+  /registrar controle da torreta|record turret control/i;
+const JOYSTICK_DIAGNOSTIC_DOWNLOAD_PATTERN =
+  /baixar registro da torreta|download turret record/i;
 const INTERNAL_COPY_PATTERN =
   /service worker|cache|runtime|localStorage|IndexedDB|Canvas|engine|build/i;
 const OLD_TURRET_AIM_COPY_PATTERN = /mire|aim|reticle|crosshair|metralhadora/i;
@@ -32,6 +39,10 @@ const ORIENTATION_BLOCKER_MESSAGE =
   "Você precisa de espaço para o joystick";
 const FULL_CIRCLE_TOLERANCE = 0.08;
 const JOYSTICK_TEST_ID = "ball-turret-joystick";
+const JOYSTICK_DIAGNOSTIC_JOYSTICK_LAYER_TEST_ID =
+  "joystick-diagnostic-joystick-layer";
+const JOYSTICK_DIAGNOSTIC_PLAYFIELD_LAYER_TEST_ID =
+  "joystick-diagnostic-playfield-layer";
 const MIN_TOUCH_TARGET_SIZE = 44;
 const MIN_PORTRAIT_TRACKBALL_SIZE = 120;
 const ACTIVE_TRAMPOLINE_ARC_MIN_SWEEP = 0.2;
@@ -116,6 +127,13 @@ function mobileLandscapeScreenshotPath() {
   );
 }
 
+function diagnosticScreenshotPath() {
+  return (
+    process.env.BRIKAYA_JOYSTICK_DIAGNOSTIC_SCREENSHOT ||
+    DEFAULT_DIAGNOSTIC_SCREENSHOT_PATH
+  );
+}
+
 function scenarioUrl(baseUrl) {
   const url = new URL(baseUrl);
   url.searchParams.set("qaScenario", QA_SCENARIO);
@@ -128,6 +146,29 @@ function ensureParentDirectory(filePath) {
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+function debugLog(...args) {
+  if (process.env.BRIKAYA_E2E_DEBUG === "1") {
+    console.log("[ball-turret-qa]", ...args);
+  }
+}
+
+async function closeBrowser(browser) {
+  try {
+    await Promise.race([
+      browser.close(),
+      new Promise((_, reject) => {
+        setTimeout(
+          () => reject(new Error("browser-close-timeout")),
+          5000,
+        );
+      }),
+    ]);
+  } catch (error) {
+    debugLog("browser", String(error?.message || error));
+    browser.process()?.kill("SIGKILL");
+  }
 }
 
 function normalizeSignedAngle(angle) {
@@ -265,6 +306,61 @@ async function installCanvasProbe(page) {
         height,
       });
       return originalFillRect.call(this, x, y, width, height);
+    };
+  });
+}
+
+async function installJoystickDiagnosticDownloadProbe(page) {
+  await page.evaluateOnNewDocument(() => {
+    window.__brikayaJoystickDiagnosticDownloads = [];
+    window.__brikayaJoystickDiagnosticAnchorClicks = [];
+
+    const originalCreateObjectURL = URL.createObjectURL.bind(URL);
+    URL.createObjectURL = (blob) => {
+      const url = originalCreateObjectURL(blob);
+
+      if (blob?.type === "application/json") {
+        const record = {
+          href: url,
+          type: blob.type,
+          size: blob.size,
+          text: null,
+          parsed: null,
+          error: null,
+        };
+
+        window.__brikayaJoystickDiagnosticDownloads.push(record);
+        blob
+          .text()
+          .then((text) => {
+            record.text = text;
+            try {
+              record.parsed = JSON.parse(text);
+            } catch (error) {
+              record.error = String(error?.message || error);
+            }
+          })
+          .catch((error) => {
+            record.error = String(error?.message || error);
+          });
+      }
+
+      return url;
+    };
+
+    const originalAnchorClick = HTMLAnchorElement.prototype.click;
+    HTMLAnchorElement.prototype.click = function patchedAnchorClick() {
+      if (this.download && this.href) {
+        window.__brikayaJoystickDiagnosticAnchorClicks.push({
+          download: this.download,
+          href: this.href,
+        });
+        if (/brikaya-joystick-diagnostic-/.test(this.download)) {
+          return undefined;
+        }
+      }
+
+      return originalAnchorClick.call(this);
     };
   });
 }
@@ -555,6 +651,54 @@ async function readBallTurretState(page) {
   );
 }
 
+async function readJoystickDiagnosticState(page) {
+  return page.evaluate(
+    ({ joystickLayerTestId, playfieldLayerTestId, downloadPatternSource }) => {
+      const downloadPattern = new RegExp(downloadPatternSource, "i");
+      const joystickLayer = document.querySelector(
+        `[data-testid="${joystickLayerTestId}"]`,
+      );
+      const playfieldLayer = document.querySelector(
+        `[data-testid="${playfieldLayerTestId}"]`,
+      );
+      const downloadButton = Array.from(document.querySelectorAll("button")).find(
+        (button) =>
+          downloadPattern.test(button.textContent || "") ||
+          downloadPattern.test(button.getAttribute("aria-label") || ""),
+      );
+      const readLayer = (layer) => {
+        const rect = layer?.getBoundingClientRect();
+        return {
+          exists: Boolean(layer),
+          visible: Boolean(
+            layer &&
+              rect &&
+              rect.width > 0 &&
+              rect.height > 0 &&
+              getComputedStyle(layer).display !== "none" &&
+              getComputedStyle(layer).visibility !== "hidden",
+          ),
+          pointCount: layer?.querySelectorAll("circle").length || 0,
+          lineCount: layer?.querySelectorAll("polyline").length || 0,
+        };
+      };
+
+      return {
+        joystickLayer: readLayer(joystickLayer),
+        playfieldLayer: readLayer(playfieldLayer),
+        downloadButtonDisabled: downloadButton
+          ? Boolean(downloadButton.disabled)
+          : null,
+      };
+    },
+    {
+      joystickLayerTestId: JOYSTICK_DIAGNOSTIC_JOYSTICK_LAYER_TEST_ID,
+      playfieldLayerTestId: JOYSTICK_DIAGNOSTIC_PLAYFIELD_LAYER_TEST_ID,
+      downloadPatternSource: JOYSTICK_DIAGNOSTIC_DOWNLOAD_PATTERN.source,
+    },
+  );
+}
+
 function assertJoystickPlacement(config, gameplayState) {
   const { canvas, joystick } = gameplayState;
 
@@ -598,7 +742,105 @@ function assertJoystickPlacement(config, gameplayState) {
   }
 }
 
+async function setJoystickDiagnosticsEnabled(page, config) {
+  debugLog(config.name, "abrindo menu para habilitar registro");
+  const menuOpened = await clickButtonByPattern(
+    page,
+    MENU_BUTTON_PATTERN.source,
+  );
+  assert(menuOpened, `${config.name}: botão Menu não encontrado.`);
+  await page.waitForFunction(
+    (source) => {
+      const pattern = new RegExp(source, "i");
+      return Array.from(document.querySelectorAll("label")).some((label) =>
+        pattern.test(label.textContent || ""),
+      );
+    },
+    { timeout: 5000 },
+    JOYSTICK_DIAGNOSTIC_TOGGLE_PATTERN.source,
+  );
+  debugLog(config.name, "registro habilitado");
+
+  const initialState = await page.evaluate(
+    ({ togglePatternSource, downloadPatternSource }) => {
+      const togglePattern = new RegExp(togglePatternSource, "i");
+      const downloadPattern = new RegExp(downloadPatternSource, "i");
+      const label = Array.from(document.querySelectorAll("label")).find(
+        (candidate) => togglePattern.test(candidate.textContent || ""),
+      );
+      const checkbox = label?.querySelector('input[type="checkbox"]');
+      const downloadButton = Array.from(document.querySelectorAll("button")).find(
+        (button) =>
+          downloadPattern.test(button.textContent || "") ||
+          downloadPattern.test(button.getAttribute("aria-label") || ""),
+      );
+
+      return {
+        toggleExists: Boolean(checkbox),
+        enabled: Boolean(checkbox?.checked),
+        downloadExists: Boolean(downloadButton),
+        downloadDisabled: downloadButton ? Boolean(downloadButton.disabled) : null,
+      };
+    },
+    {
+      togglePatternSource: JOYSTICK_DIAGNOSTIC_TOGGLE_PATTERN.source,
+      downloadPatternSource: JOYSTICK_DIAGNOSTIC_DOWNLOAD_PATTERN.source,
+    },
+  );
+
+  assert(
+    initialState.toggleExists,
+    `${config.name}: checkbox do registro da Torreta ausente.`,
+  );
+  assert(
+    !initialState.enabled,
+    `${config.name}: registro da Torreta deve iniciar desligado.`,
+  );
+  assert(
+    initialState.downloadExists && initialState.downloadDisabled,
+    `${config.name}: download do registro deve iniciar desabilitado.`,
+  );
+
+  await page.evaluate((source) => {
+    const pattern = new RegExp(source, "i");
+    const label = Array.from(document.querySelectorAll("label")).find(
+      (candidate) => pattern.test(candidate.textContent || ""),
+    );
+    const checkbox = label?.querySelector('input[type="checkbox"]');
+    checkbox?.click();
+  }, JOYSTICK_DIAGNOSTIC_TOGGLE_PATTERN.source);
+  await page.waitForFunction(
+    (source) => {
+      const pattern = new RegExp(source, "i");
+      const label = Array.from(document.querySelectorAll("label")).find(
+        (candidate) => pattern.test(candidate.textContent || ""),
+      );
+      const checkbox = label?.querySelector('input[type="checkbox"]');
+      return Boolean(checkbox?.checked);
+    },
+    { timeout: 5000 },
+    JOYSTICK_DIAGNOSTIC_TOGGLE_PATTERN.source,
+  );
+
+  const closeClicked = await clickButtonByPattern(
+    page,
+    CLOSE_MENU_PATTERN.source,
+  );
+  assert(closeClicked, `${config.name}: botão de fechar menu não encontrado.`);
+  await page.waitForFunction(
+    () => !document.querySelector("#game-settings-menu"),
+    { timeout: 5000 },
+  );
+
+  return {
+    defaultEnabled: initialState.enabled,
+    initialDownloadDisabled: initialState.downloadDisabled,
+    enabledForExercise: true,
+  };
+}
+
 async function waitForOrientationBlocker(page, config) {
+  debugLog(config.name, "aguardando bloqueio de orientação");
   await page.waitForFunction(
     ({ blockerTestId, expectedMessage }) => {
       const blocker = document.querySelector(`[data-testid="${blockerTestId}"]`);
@@ -620,6 +862,7 @@ async function waitForOrientationBlocker(page, config) {
     },
   );
 
+  debugLog(config.name, "lendo estado bloqueado");
   const blockedState = await readBallTurretState(page);
   assert(blockedState.hasCanvas, `${config.name}: canvas ausente sob bloqueio.`);
   assert(
@@ -652,7 +895,9 @@ async function waitForOrientationBlocker(page, config) {
   );
 
   ensureParentDirectory(config.screenshotPath);
+  debugLog(config.name, "capturando screenshot de orientação");
   await page.screenshot({ path: config.screenshotPath, fullPage: true });
+  debugLog(config.name, "screenshot de orientação capturado");
 
   return {
     name: config.name,
@@ -891,7 +1136,99 @@ async function exerciseJoystick(page) {
   };
 }
 
+async function downloadJoystickDiagnostics(page, config) {
+  debugLog(config.name, "validando botão de download do registro");
+  const diagnosticBeforeDownload = await readJoystickDiagnosticState(page);
+  assert(
+    diagnosticBeforeDownload.downloadButtonDisabled === false,
+    `${config.name}: download do registro não ficou habilitado após exercício.`,
+  );
+
+  const clickedDownload = await clickButtonByPattern(
+    page,
+    JOYSTICK_DIAGNOSTIC_DOWNLOAD_PATTERN.source,
+  );
+  debugLog(config.name, "download clicado");
+  assert(
+    clickedDownload,
+    `${config.name}: botão de baixar registro da Torreta não encontrado.`,
+  );
+  await page.waitForFunction(
+    () =>
+      (window.__brikayaJoystickDiagnosticDownloads || []).some(
+        (record) => record.parsed?.summary?.totalSamples > 0,
+      ),
+    { timeout: 5000 },
+  );
+
+  const exportProof = await page.evaluate(() => {
+    const downloads = window.__brikayaJoystickDiagnosticDownloads || [];
+    const anchorClicks = window.__brikayaJoystickDiagnosticAnchorClicks || [];
+    const record = downloads.find(
+      (candidate) => candidate.parsed?.summary?.totalSamples > 0,
+    );
+    const anchorClick = record
+      ? anchorClicks.find((candidate) => candidate.href === record.href) || null
+      : null;
+    const parsed = record?.parsed || null;
+    const firstSample = parsed?.samples?.[0] || null;
+
+    return {
+      downloadName: anchorClick?.download || "",
+      mimeType: record?.type || "",
+      size: record?.size || 0,
+      totalSamples: parsed?.summary?.totalSamples || 0,
+      acceptedSamples: parsed?.summary?.acceptedSamples || 0,
+      rejectedSamples: parsed?.summary?.rejectedSamples || 0,
+      hasMappedCanvasPoint: Boolean(firstSample?.canvas?.mappedCanvasPoint),
+      hasJoystickPoint: Boolean(firstSample?.joystick?.normalized),
+      hasPaddleSnapshot: parsed?.samples?.some((sample) => sample.paddle) || false,
+      diagnosticSvgHasJoystick:
+        typeof parsed?.diagnosticSvg === "string" &&
+        parsed.diagnosticSvg.includes("Joystick"),
+      diagnosticSvgHasTrampoline:
+        typeof parsed?.diagnosticSvg === "string" &&
+        parsed.diagnosticSvg.includes("Cama elástica"),
+    };
+  });
+  debugLog(config.name, "prova de download", exportProof);
+
+  assert(
+    /brikaya-(?:torreta-joystick|joystick-diagnostic)-/.test(
+      exportProof.downloadName,
+    ),
+    `${config.name}: nome do arquivo de registro inesperado.`,
+  );
+  assert(
+    exportProof.mimeType === "application/json",
+    `${config.name}: registro da Torreta não foi gerado como JSON.`,
+  );
+  assert(
+    exportProof.totalSamples > 0 &&
+      exportProof.acceptedSamples > 0 &&
+      exportProof.rejectedSamples > 0,
+    `${config.name}: registro não cobre pontos aceitos e rejeitados.`,
+  );
+  assert(
+    exportProof.hasMappedCanvasPoint &&
+      exportProof.hasJoystickPoint &&
+      exportProof.hasPaddleSnapshot,
+    `${config.name}: registro não inclui joystick, área do jogo e cama elástica.`,
+  );
+  assert(
+    exportProof.diagnosticSvgHasJoystick &&
+      exportProof.diagnosticSvgHasTrampoline,
+    `${config.name}: registro desenhado não inclui joystick e cama elástica.`,
+  );
+
+  return {
+    beforeDownload: diagnosticBeforeDownload,
+    exportProof,
+  };
+}
+
 async function runViewport(page, baseUrl, config) {
+  debugLog(config.name, "iniciando viewport");
   await page.setViewport(config.viewport);
   await page.goto(scenarioUrl(baseUrl), {
     waitUntil: "domcontentloaded",
@@ -908,6 +1245,7 @@ async function runViewport(page, baseUrl, config) {
   );
 
   if (config.orientationBlocked) {
+    debugLog(config.name, "validando bloqueio de orientação");
     return waitForOrientationBlocker(page, config);
   }
 
@@ -971,10 +1309,16 @@ async function runViewport(page, baseUrl, config) {
   );
   assertJoystickPlacement(config, gameplayState);
 
+  const diagnosticToggleState =
+    config.name === "mobile-portrait"
+      ? await setJoystickDiagnosticsEnabled(page, config)
+      : null;
+
   ensureParentDirectory(config.screenshotPath);
   await page.screenshot({ path: config.screenshotPath, fullPage: true });
 
   await exerciseTrampoline(page);
+  debugLog(config.name, "exercitando joystick");
   const joystickExercise = await exerciseJoystick(page);
   assert(
     config.joystickPlacement === "hidden" || joystickExercise.exercised,
@@ -1076,6 +1420,45 @@ async function runViewport(page, baseUrl, config) {
         joystickExercise.releaseVisual.active === 0),
     `${config.name}: trackball não resetou visualmente ao soltar.`,
   );
+
+  let diagnosticOverlayState =
+    config.name === "mobile-portrait"
+      ? await readJoystickDiagnosticState(page)
+      : null;
+  if (config.name === "mobile-portrait") {
+    debugLog(config.name, "validando camadas desenhadas do registro");
+    await page.waitForFunction(
+      ({ joystickLayerTestId }) => {
+        const layer = document.querySelector(
+          `[data-testid="${joystickLayerTestId}"]`,
+        );
+        return Boolean(
+          layer?.querySelector(".joystick-diagnostic-layer__point") &&
+            layer?.querySelector(".joystick-diagnostic-layer__line"),
+        );
+      },
+      { timeout: 5000 },
+      { joystickLayerTestId: JOYSTICK_DIAGNOSTIC_JOYSTICK_LAYER_TEST_ID },
+    );
+    const settledDiagnosticOverlayState =
+      await readJoystickDiagnosticState(page);
+    diagnosticOverlayState = settledDiagnosticOverlayState;
+    assert(
+      settledDiagnosticOverlayState.joystickLayer.visible &&
+        settledDiagnosticOverlayState.joystickLayer.pointCount > 0 &&
+        settledDiagnosticOverlayState.joystickLayer.lineCount > 0,
+      `${config.name}: desenho do registro não apareceu sobre o joystick.`,
+    );
+    assert(
+      settledDiagnosticOverlayState.playfieldLayer.visible &&
+        settledDiagnosticOverlayState.playfieldLayer.pointCount > 0 &&
+        settledDiagnosticOverlayState.playfieldLayer.lineCount > 0,
+      `${config.name}: desenho do registro não apareceu na área do jogo.`,
+    );
+    ensureParentDirectory(diagnosticScreenshotPath());
+    await page.screenshot({ path: diagnosticScreenshotPath(), fullPage: true });
+  }
+
   await new Promise((resolve) => setTimeout(resolve, 120));
   const postExerciseState = await readBallTurretState(page);
   assert(
@@ -1122,11 +1505,19 @@ async function runViewport(page, baseUrl, config) {
     ensureParentDirectory(menuScreenshotPath());
     await page.screenshot({ path: menuScreenshotPath(), fullPage: true });
   }
+  const joystickDiagnosticDownload =
+    config.name === "mobile-portrait"
+      ? await downloadJoystickDiagnostics(page, config)
+      : null;
+  debugLog(config.name, "viewport concluído");
 
   return {
     name: config.name,
     joystickPlacement: config.joystickPlacement,
     joystickExercise,
+    diagnosticToggleState,
+    diagnosticOverlayState,
+    joystickDiagnosticDownload,
     menuState,
     gameplayState,
     postExerciseState,
@@ -1143,14 +1534,20 @@ async function run() {
   const results = [];
 
   try {
-    const page = await browser.newPage();
-    page.setDefaultTimeout(60000);
-    await installCanvasProbe(page);
     for (const viewportConfig of VIEWPORTS) {
+      const page = await browser.newPage();
+      page.setDefaultTimeout(60000);
+      await installCanvasProbe(page);
+      await installJoystickDiagnosticDownloadProbe(page);
       results.push(await runViewport(page, baseUrl, viewportConfig));
+      debugLog(viewportConfig.name, "fechando página");
+      await page.close();
+      debugLog(viewportConfig.name, "página fechada");
     }
   } finally {
-    await browser.close();
+    debugLog("browser", "fechando navegador");
+    await closeBrowser(browser);
+    debugLog("browser", "navegador fechado");
   }
 
   const report = {
@@ -1163,6 +1560,7 @@ async function run() {
       desktop: desktopScreenshotPath(),
       mobile: mobileScreenshotPath(),
       mobileLandscape: mobileLandscapeScreenshotPath(),
+      joystickDiagnostic: diagnosticScreenshotPath(),
     },
   };
   ensureParentDirectory(reportPath());

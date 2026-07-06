@@ -1729,6 +1729,28 @@ export class GameEngine {
     this.isTouching = false;
   }
 
+  public getPaddleDiagnosticSnapshot() {
+    const paddlePosition = this.paddle.position;
+
+    return {
+      x: paddlePosition.x,
+      y: paddlePosition.y,
+      width: paddlePosition.width,
+      height: paddlePosition.height,
+      radial: paddlePosition.radial
+        ? {
+            centerX: paddlePosition.radial.centerX,
+            centerY: paddlePosition.radial.centerY,
+            radius: paddlePosition.radial.radius,
+            thickness: paddlePosition.radial.thickness,
+            startAngle: paddlePosition.radial.startAngle,
+            centerAngle: paddlePosition.radial.centerAngle,
+            endAngle: paddlePosition.radial.endAngle,
+          }
+        : undefined,
+    };
+  }
+
   private movePaddleFromClientPoint(clientX: number, clientY?: number) {
     const rect = this.canvas.getBoundingClientRect();
     const touchX = clientX - rect.left;
