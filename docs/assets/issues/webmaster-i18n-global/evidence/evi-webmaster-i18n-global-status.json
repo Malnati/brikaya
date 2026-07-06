@@ -1,6 +1,6 @@
 {
   "artifact": "evi-webmaster-i18n-global-status",
-  "updatedAt": "2026-07-06T12:15:54.853Z",
+  "updatedAt": "2026-07-06T13:25:13.308Z",
   "scope": {
     "canonicalOrigin": "https://brikaya.com",
     "routes": [
@@ -178,23 +178,23 @@
       "panelUrl": "https://searchadvisor.naver.com/console/site/request/sitemap?site=https%3A%2F%2Fbrikaya.com",
       "status": "sitemap_submitted",
       "actions": [
-        "https://brikaya.com visible as selected site in Search Advisor before session recheck expired",
+        "https://brikaya.com visible as selected site in Search Advisor",
         "Sitemap table showed sitemap.xml registered on 2026-07-04 10:16:30",
-        "The earlier URL-format warning is no longer present in the observed submitted-sitemap state",
-        "A later revisit redirected to Naver sign-in; no password, OTP, phone or identity step was attempted"
+        "Manual Web page collection redirected to login/callback; stopped without credentials or verification"
       ],
-      "evidence": "Sanitized panel text observed: Submitted sitemap table with sitemap.xml; later auth recheck blocked by sign-in only"
+      "evidence": "Sanitized panel text observed: Submitted sitemap table with sitemap.xml; manual crawl blocked by login/callback only"
     },
     {
       "platform": "Baidu Search Resource Platform",
       "panelUrl": "https://ziyuan.baidu.com/site/index",
-      "status": "blocked_auth",
+      "status": "blocked_privacy",
       "actions": [
-        "Opened Baidu Search Resource Platform in Chrome",
-        "Platform showed public/logged-out Site Management page and Log in controls",
-        "No site addition or verification performed because authenticated account was not available and the next step would leave the no-password/no-phone/no-document boundary"
+        "Opened Baidu registration tab supplied by user",
+        "Registration form requires phone number and verification code before account creation",
+        "Register button was disabled and verification request had timed out",
+        "Stopped before entering phone, verification code, CAPTCHA, document, ICP, payment or submitting account registration"
       ],
-      "evidence": "Sanitized panel text observed: You are not logged in; Log in; add website prompt; no payment or tracking action performed"
+      "evidence": "Sanitized panel state observed: phone and verification code required; no credential or personal data submitted"
     },
     {
       "platform": "Seznam/Yep/IndexNow participants",
@@ -236,5 +236,37 @@
     "popupsOrExtraTabsCreatedBySites": false,
     "captchaOrOtpEncountered": false,
     "stoppedAtPasswordPhoneDocumentOrPayment": true
+  },
+  "followUp20260706": {
+    "updatedAt": "2026-07-06T13:25:13.308Z",
+    "browserTabsProvidedByUser": [
+      "https://searchadvisor.naver.com/console/site/request/sitemap?site=https%3A%2F%2Fbrikaya.com",
+      "https://passport.baidu.com/v2/?reg&tpl=mn"
+    ],
+    "naver": {
+      "status": "sitemap_submitted",
+      "evidence": "Search Advisor showed https://brikaya.com selected and submitted sitemap table containing sitemap.xml registered at 26.07.04 10:16:30.",
+      "manualCrawlAttempt": "Opening Web page collection redirected to Search Advisor login/callback; stopped without entering password, OTP, CAPTCHA, phone, document or payment data."
+    },
+    "baidu": {
+      "status": "blocked_privacy",
+      "evidence": "Baidu registration page required phone number plus verification code; register button disabled after request timed out.",
+      "action": "Stopped before phone, verification code, password submission, CAPTCHA, identity, ICP or payment."
+    },
+    "browser": {
+      "tabsKeptOpen": true,
+      "keptTabs": [
+        "Naver Search Advisor sitemap/manual crawl login state",
+        "Baidu registration page"
+      ],
+      "newTabsOpenedByCodex": false
+    },
+    "sanitization": {
+      "authCodeIncluded": false,
+      "phoneIncluded": false,
+      "passwordIncluded": false,
+      "emailIncluded": false,
+      "screenshotsStored": false
+    }
   }
 }
