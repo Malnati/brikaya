@@ -1020,26 +1020,26 @@
     ]
   },
   "p0ToP20": {
-    "P0": "validated_public_200_sitemap_184_urls_no_tracking",
-    "P1": "google_sitemap_resubmitted_panel_processed_88_public_184_pending_processing",
-    "P2": "bing_wave91_20_urls_manual_submission_done_100_today_0_quota_left_no_clarity",
+    "P0": "validated_public_200_sitemap_232_urls_no_tracking",
+    "P1": "google_sitemap_resubmitted_pending_232_processing",
+    "P2": "bing_sitemap_processing_manual_quota_0",
     "P3": "no_direct_action_yahoo_via_bing",
     "P4": "no_direct_action_duckduckgo_via_bing_sitemap_crawl",
-    "P5": "yandex_sitemap_indexnow_184_accepted_pending_manual_reindex_wave91_48_urls_in_queue_favicon_warning_pending",
-    "P6": "naver_sitemap_submitted_confirmed_manual_url_collection_not_needed_for_wave91",
+    "P5": "yandex_indexnow_232_manual_wave115_in_queue",
+    "P6": "naver_sitemap_confirmed_manual_wave115_inconsistent_stopped",
     "P7": "blocked_auth_baidu_overseas_registration_not_supported_without_extra_identity_constraints",
-    "P8": "brave_sitemap_url_submitted_success_free_submit_page",
+    "P8": "brave_direct_endpoint_404_no_direct_action",
     "P9": "seznam_official_form_blocked_captcha_robots_sitemap_indexnow_coverage_only",
     "P10": "no_direct_action_mojeek_official_no_manual_submit",
     "P11": "covered_by_sitemap_canonical_hreflang_indexnow_where_supported_184_urls",
     "P12": "pending_live_snippet_sampling_after_search_engines_process_184_url_sitemap",
-    "P13": "wave_115_local_validated_pending_deploy",
+    "P13": "wave_115_deployed",
     "P14": "validated_regional_variants_previously_added_and_ca_eu_gl_oc_br_wave91_added",
     "P15": "validated_additional_asia_africa_europe_pacific_wave_added",
     "P16": "validated_rtl_ar_ur_fa_he_only_no_new_rtl_this_turn",
-    "P17": "wave_115_local_ui_screenshot_captured_pending_public_qa",
-    "P18": "wave_115_sitemap_hreflang_build_validated_pending_public_deploy",
-    "P19": "evidence_json_updated_sanitized_after_browser_recheck",
+    "P17": "wave_115_public_qa_passed",
+    "P18": "sitemap_232_hreflang_115_public_qa_passed",
+    "P19": "evidence_updated_wave115",
     "P20": "clarity_not_installed_blocked_by_privacy_policy"
   },
   "nextWave91": {
@@ -1136,7 +1136,7 @@
     "noCostNoTelemetryBoundary": true
   },
   "nextWave115": {
-    "status": "local_validated_pending_pr_merge_deploy",
+    "status": "deployed_and_browser_rechecked",
     "locales": [
       "yo",
       "ig",
@@ -1178,6 +1178,74 @@
       "unitTests": "58 suites / 369 tests passed",
       "build": "passed; localized-seo ok: locales=115, routes=2",
       "screenshot": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave115-yo-downloads.png"
+    },
+    "deployedAt": "2026-07-06T17:28:15.602867Z",
+    "publicValidation": {
+      "deployment": "make cloudflare-deploy passed; https://brikaya.com/ updated from main",
+      "cloudflarePublicCheck": "passed",
+      "cloudflareI18nSeoQa": "passed; 115 hreflang locales; report updated",
+      "cloudflareOfflinePwaQa": "passed",
+      "indexNowYandex": "accepted-pending; status=202; urls=232",
+      "publicSamples": [
+        {
+          "url": "https://brikaya.com/yo/downloads/",
+          "status": 200,
+          "lang": "yo",
+          "dir": "ltr",
+          "title": "Gba Brikaya silẹ — ere aṣàwákiri ọfẹ"
+        },
+        {
+          "url": "https://brikaya.com/ha/downloads/",
+          "status": 200,
+          "lang": "ha",
+          "dir": "ltr",
+          "title": "Zazzage Brikaya — wasan burauza kyauta"
+        },
+        {
+          "url": "https://brikaya.com/rw/downloads/",
+          "status": 200,
+          "lang": "rw",
+          "dir": "ltr",
+          "title": "Kuramo Brikaya — umukino wa mushakisha w'ubuntu"
+        },
+        {
+          "url": "https://brikaya.com/ti/downloads/",
+          "status": 200,
+          "lang": "ti",
+          "dir": "ltr",
+          "title": "Brikaya ኣውርድ — ናጻ ናይ browser ጸወታ"
+        }
+      ],
+      "trackingCheck": "no Clarity, no analytics, no googletag found in sampled public HTML"
+    },
+    "browserRecheck": {
+      "singleReusableChromeTab": true,
+      "finalPlannedUrl": "https://brikaya.com/sitemap.xml",
+      "googleSearchConsole": {
+        "status": "sitemap_submitted",
+        "evidence": "Sitemap enviado confirmation displayed; table still showed Processado with 184 pages until Google recrawls the 232-URL sitemap."
+      },
+      "bingWebmasterTools": {
+        "status": "sitemap_submitted_pending_processing",
+        "evidence": "Sitemap resubmitted; sitemap row moved to Processing; manual URL Submission quota was 0 with reset in about 7 hours."
+      },
+      "yandexWebmaster": {
+        "status": "manual_index_requested",
+        "evidence": "Sitemap remains in processing queue; 48 wave-115 URLs submitted manually and shown In queue; IndexNow accepted 232 URLs with status 202."
+      },
+      "naverSearchAdvisor": {
+        "status": "sitemap_submitted",
+        "evidence": "sitemap.xml remains submitted; manual new URL attempt was inconsistent and stopped to avoid duplicate/spam submissions."
+      },
+      "braveSearch": {
+        "status": "no_direct_action",
+        "evidence": "Previously used submission endpoint returned 404 on recheck; coverage remains via sitemap/crawl/IndexNow where supported."
+      },
+      "clarity": {
+        "status": "blocked_privacy",
+        "evidence": "Not installed and not activated."
+      }
     }
-  }
+  },
+  "timestamp": "2026-07-06T17:28:15.602867Z"
 }

@@ -307,3 +307,15 @@ Critérios:
 - Evidência visual local: `docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave115-yo-downloads.png`, rota `/yo/downloads/`, `lang=yo`, `dir=ltr`.
 - Próximo estado: PR, merge em `main`, deploy, QA público e rechecagem dos buscadores gratuitos.
 
+## Atualização operacional — onda 115 publicada em 2026-07-06
+
+- `main` recebeu PR #215 e `https://brikaya.com/` foi republicado com 115 idiomas e sitemap público de 232 URLs.
+- Validação pós-deploy: `make cloudflare-deploy`, `make cloudflare-public-check`, `make cloudflare-i18n-seo-qa`, `make cloudflare-offline-pwa-qa` e `make yandex-indexnow-submit` passaram.
+- Checagens públicas: `/yo/downloads/`, `/ha/downloads/`, `/rw/downloads/` e `/ti/downloads/` responderam 200 com `lang` correto, `dir=ltr`, título/description localizados e sem Clarity/analytics/googletag.
+- Google Search Console: sitemap reenviado; painel confirmou “Sitemap enviado”, mas tabela ainda mostra 184 páginas até o Google reprocessar o sitemap de 232 URLs.
+- Bing Webmaster Tools: sitemap reenviado e voltou para `Processing`; URL Submission manual está com quota 0 e reset indicado em cerca de 7h.
+- Yandex Webmaster: IndexNow aceitou 232 URLs (`202`); 48 URLs da onda 115 foram enviadas manualmente e aparecem `In queue`; quota restante 4.
+- Naver Search Advisor: `sitemap.xml` confirmado; coleta manual de nova URL ficou inconsistente e foi interrompida para evitar duplicatas/spam.
+- Brave Search: endpoint gratuito usado anteriormente retornou 404 na rechecagem; cobertura segue por sitemap/crawl/IndexNow quando suportado.
+- Clarity continua bloqueado/desinstalado: nenhum pixel, tag, analytics, SDK externo ou telemetria foi adicionado.
+
