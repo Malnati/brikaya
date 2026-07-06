@@ -37,6 +37,22 @@ const LOCALIZED_LOCALES = [
   'fil',
   'th',
   'zh-CN',
+  'ar',
+  'ru',
+  'tr',
+  'nl',
+  'pl',
+  'uk',
+  'ms',
+  'zh-TW',
+  'pt-PT',
+  'es-ES',
+  'en-GB',
+  'fr-CA',
+  'bn',
+  'ur',
+  'ta',
+  'te',
 ] as const;
 
 function readProjectFile(filePath: string): string {

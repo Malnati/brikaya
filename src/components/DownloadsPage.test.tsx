@@ -94,6 +94,26 @@ describe("DownloadsPage", () => {
         heading: "Brikaya डाउनलोड करें",
         promise: "Brikaya हमेशा मुफ़्त रहेगा",
       },
+      {
+        path: "/ar/downloads/",
+        heading: "تنزيل Brikaya",
+        promise: "يبقى Brikaya مجانيًا",
+      },
+      {
+        path: "/ru/downloads/",
+        heading: "Скачать Brikaya",
+        promise: "Brikaya остаётся бесплатной",
+      },
+      {
+        path: "/ur/downloads/",
+        heading: "Brikaya ڈاؤن لوڈ کریں",
+        promise: "Brikaya ہمیشہ مفت رہے گا",
+      },
+      {
+        path: "/ta/downloads/",
+        heading: "Brikaya பதிவிறக்கவும்",
+        promise: "Brikaya எப்போதும் இலவசம்",
+      },
     ];
 
     for (const { path, heading, promise } of localizedExpectations) {

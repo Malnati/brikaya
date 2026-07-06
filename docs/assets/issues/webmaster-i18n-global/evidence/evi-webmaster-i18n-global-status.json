@@ -1,6 +1,6 @@
 {
   "artifact": "evi-webmaster-i18n-global-status",
-  "updatedAt": "2026-07-06T13:35:42.346Z",
+  "updatedAt": "2026-07-06T14:19:52.929Z",
   "scope": {
     "canonicalOrigin": "https://brikaya.com",
     "routes": [
@@ -33,7 +33,39 @@
       "/th/",
       "/th/downloads/",
       "/zh-CN/",
-      "/zh-CN/downloads/"
+      "/zh-CN/downloads/",
+      "/ar/",
+      "/ar/downloads/",
+      "/ru/",
+      "/ru/downloads/",
+      "/tr/",
+      "/tr/downloads/",
+      "/nl/",
+      "/nl/downloads/",
+      "/pl/",
+      "/pl/downloads/",
+      "/uk/",
+      "/uk/downloads/",
+      "/ms/",
+      "/ms/downloads/",
+      "/zh-TW/",
+      "/zh-TW/downloads/",
+      "/pt-PT/",
+      "/pt-PT/downloads/",
+      "/es-ES/",
+      "/es-ES/downloads/",
+      "/en-GB/",
+      "/en-GB/downloads/",
+      "/fr-CA/",
+      "/fr-CA/downloads/",
+      "/bn/",
+      "/bn/downloads/",
+      "/ur/",
+      "/ur/downloads/",
+      "/ta/",
+      "/ta/downloads/",
+      "/te/",
+      "/te/downloads/"
     ],
     "locales": [
       "pt-BR",
@@ -50,7 +82,23 @@
       "vi",
       "fil",
       "th",
-      "zh-CN"
+      "zh-CN",
+      "ar",
+      "ru",
+      "tr",
+      "nl",
+      "pl",
+      "uk",
+      "ms",
+      "zh-TW",
+      "pt-PT",
+      "es-ES",
+      "en-GB",
+      "fr-CA",
+      "bn",
+      "ur",
+      "ta",
+      "te"
     ],
     "browserAutomationContract": {
       "workTabLabel": "Brikaya webmaster/i18n",
@@ -63,53 +111,79 @@
       "noTrackingPixels": true,
       "noExternalTelemetrySdk": true,
       "noPlayerPersonalDataCollection": true
-    }
+    },
+    "sitemapUrlCount": 64,
+    "rtlLocales": [
+      "ar",
+      "ur"
+    ],
+    "futureRtlCandidates": [
+      "fa",
+      "he"
+    ]
   },
   "localImplementation": {
-    "downloadsCopyLocalized": "validated",
-    "downloadsSeoLocalized": "validated",
-    "sitemapCoversLocalizedDownloads": "validated",
+    "downloadsCopyLocalized": "validated for 31 locales",
+    "downloadsSeoLocalized": "validated for 31 locales",
+    "sitemapCoversLocalizedDownloads": "validated for 31 locales",
     "noPaidStoreLinksInDownloadsUi": "validated",
     "validationCommands": [
       "node --version => v23.5.0",
       "make help",
-      "npm run test:semantic-file-names",
-      "npm run test:svg-assets",
-      "npm test -- --runInBand => 58 suites / 365 tests passed",
-      "npm run build",
-      "make cloudflare-public-check",
-      "make cloudflare-i18n-seo-qa",
-      "make cloudflare-offline-pwa-qa",
-      "make -n yandex-indexnow-submit => BRIKAYA_INDEXNOW_DRY_RUN=false npm run indexnow:yandex"
+      "npm run codex-env:check => ok",
+      "npm run test:semantic-file-names => ok",
+      "npm run test:svg-assets => ok",
+      "npm test -- --runInBand => 58 suites / 369 tests passed",
+      "npm run build => localized-seo ok: locales=31, routes=2",
+      "make cloudflare-deploy => https://ebbb9717.brikaya-live.pages.dev -> https://brikaya.com/",
+      "make cloudflare-public-check => ok",
+      "make cloudflare-i18n-seo-qa => ok",
+      "make cloudflare-offline-pwa-qa => exit 0",
+      "make yandex-indexnow-submit => 202 accepted-pending urls=64"
     ],
     "localizedDownloadSamples": [
       {
-        "path": "/es-419/downloads/",
-        "title": "Descargar Brikaya — juego gratis en el navegador"
+        "path": "/ar/downloads/",
+        "title": "تنزيل Brikaya — لعبة متصفح مجانية"
       },
       {
-        "path": "/ja/downloads/",
-        "title": "Brikayaをダウンロード — 無料ブラウザゲーム"
+        "path": "/ur/downloads/",
+        "title": "Brikaya ڈاؤن لوڈ کریں — مفت براؤزر گیم"
       },
       {
-        "path": "/zh-CN/downloads/",
-        "title": "下载 Brikaya — 免费浏览器游戏"
+        "path": "/nl/downloads/",
+        "title": "Brikaya downloaden — gratis browserspel"
       },
       {
-        "path": "/hi-IN/downloads/",
-        "title": "Brikaya डाउनलोड करें — मुफ़्त ब्राउज़र गेम"
+        "path": "/zh-TW/downloads/",
+        "title": "下載 Brikaya — 免費瀏覽器遊戲"
+      },
+      {
+        "path": "/pt-PT/downloads/",
+        "title": "Descarregar Brikaya — jogo grátis no navegador"
+      },
+      {
+        "path": "/te/downloads/",
+        "title": "Brikaya డౌన్‌లోడ్ చేయండి — ఉచిత బ్రౌజర్ గేమ్"
       }
-    ]
+    ],
+    "expandedLocalesP13P15": "validated",
+    "supportedLocaleCount": 31,
+    "sitemapUrlCount": 64,
+    "rtlSupport": "validated for ar and ur",
+    "clarityInstalled": false,
+    "clarityDecision": "blocked_by_privacy_policy_no_pixel_tag_sdk_or_external_telemetry"
   },
   "searchEngines": [
     {
       "platform": "Google Search Console",
       "panelUrl": "https://search.google.com/search-console/sitemaps?resource_id=sc-domain%3Abrikaya.com",
-      "status": "manual_index_requested",
+      "status": "pending_processing",
       "actions": [
         "Domain property sc-domain:brikaya.com visible in authenticated Search Console",
         "https://brikaya.com/sitemap.xml listed as Processed on 2026-07-06 with 32 discovered pages",
-        "URL inspection confirmed indexed state and manual indexing requested for /, /downloads/, /es-419/, /es-419/downloads/, /ja/, /ja/downloads/, /zh-CN/, /zh-CN/downloads/"
+        "URL inspection confirmed indexed state and manual indexing requested for /, /downloads/, /es-419/, /es-419/downloads/, /ja/, /ja/downloads/, /zh-CN/, /zh-CN/downloads/",
+        "New 64-URL sitemap is public after P13-P15 locale expansion; manual panel reprocessing remains follow-up after Google processes the new sitemap"
       ],
       "routesCovered": [
         "/",
@@ -126,12 +200,13 @@
     {
       "platform": "Bing Webmaster Tools",
       "panelUrl": "https://www.bing.com/webmasters/sitemaps?siteUrl=https%3A%2F%2Fbrikaya.com",
-      "status": "manual_index_requested",
+      "status": "pending_processing",
       "actions": [
         "Site brikaya.com visible in authenticated Bing Webmaster Tools",
         "https://brikaya.com/sitemap.xml resubmitted on 2026-07-06; status Processing after prior Success state",
         "URL Inspection + Request indexing + confirmation Submit completed for /, /downloads/, /es-419/, /es-419/downloads/, /ja/, /ja/downloads/, /zh-CN/, /zh-CN/downloads/",
-        "IndexNow dashboard showed 64 URLs submitted in the last 12 hours and latest localized downloads URLs present; Clarity was not enabled or installed"
+        "IndexNow dashboard showed 64 URLs submitted in the last 12 hours and latest localized downloads URLs present; Clarity was not enabled or installed",
+        "New 64-URL sitemap and 31-locale hreflang are public; IndexNow/Yandex submitted 64 URLs after deploy; Bing processing remains follow-up"
       ],
       "routesCovered": [
         "/",
@@ -160,12 +235,13 @@
     {
       "platform": "Yandex Webmaster",
       "panelUrl": "https://webmaster.yandex.com/site/https:brikaya.com:443/indexing/sitemap/",
-      "status": "manual_index_requested",
+      "status": "indexnow_submitted",
       "actions": [
         "https://brikaya.com/sitemap.xml present in Yandex sitemap processing queue",
         "Manual reindex requested for https://brikaya.com/ and https://brikaya.com/downloads/; both shown In queue with 2026-07-06 timestamp",
         "Notifications checked; pending site-image/fav icon guidance remains visible while public favicon/assets are deployed",
-        "IndexNow/Yandex accepted-pending status=202 for 32 URLs after deploy"
+        "IndexNow/Yandex accepted-pending status=202 for 32 URLs after deploy",
+        "IndexNow/Yandex accepted-pending status=202 for 64 URLs after 31-locale deployment"
       ],
       "routesCovered": [
         "/",
@@ -201,7 +277,7 @@
       "platform": "Seznam/Yep/IndexNow participants",
       "status": "indexnow_submitted",
       "action": "Covered through IndexNow-compatible discovery and public sitemap/robots/canonical/hreflang; no paid service used",
-      "evidence": "IndexNow accepted-pending status=202 for 32 canonical URLs and Bing IndexNow dashboard lists latest localized URLs"
+      "evidence": "IndexNow accepted-pending status=202 for 64 canonical URLs; public sitemap/robots/canonical/hreflang expose 31 localized home and downloads routes"
     }
   ],
   "sanitization": {
@@ -212,19 +288,20 @@
   },
   "publicValidation": {
     "deployedTo": "https://brikaya.com/",
-    "cloudflareDeploy": "validated: https://fd31fe6d.brikaya-live.pages.dev -> https://brikaya.com/",
+    "cloudflareDeploy": "validated: https://ebbb9717.brikaya-live.pages.dev -> https://brikaya.com/",
     "cloudflarePublicCheck": "validated",
-    "cloudflareI18nSeoQa": "validated",
+    "cloudflareI18nSeoQa": "validated for 31 locales and 64 sitemap URLs",
     "cloudflareOfflinePwaQa": "validated",
     "i18nSeoReport": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-public-validation.json",
     "indexNowYandex": {
       "status": "accepted-pending",
       "httpStatus": 202,
-      "urlCount": 32,
+      "urlCount": 64,
       "keyLocation": "https://brikaya.com/[redacted].txt",
-      "validatedAt": "2026-07-06T12:15:54.853Z"
+      "validatedAt": "2026-07-06T14:19:52.929Z"
     },
-    "makefileIndexNowSubmitTarget": "validated by make -n; forces BRIKAYA_INDEXNOW_DRY_RUN=false"
+    "makefileIndexNowSubmitTarget": "validated by make -n; forces BRIKAYA_INDEXNOW_DRY_RUN=false",
+    "clarityPublicCheck": "validated not installed on https://brikaya.com/"
   },
   "browserAutomation": {
     "chromeProfile": "authenticated personal Chrome profile used where already signed in; no credentials printed",
@@ -275,5 +352,28 @@
       "screenshotsStored": false,
       "personalIdentifierIncluded": false
     }
+  },
+  "p0ToP20": {
+    "P0": "validated_public_200",
+    "P1": "pending_google_processing_after_64_url_sitemap",
+    "P2": "pending_bing_processing_after_64_url_sitemap",
+    "P3": "no_direct_action_yahoo_via_bing",
+    "P4": "no_direct_action_duckduckgo_via_bing_sitemap_crawl",
+    "P5": "indexnow_submitted_yandex_64_urls",
+    "P6": "sitemap_submitted_naver_login_followup_if_manual_collection_needed",
+    "P7": "blocked_auth_baidu_overseas_registration_not_supported",
+    "P8": "no_paid_action_brave_search_followup_only_if_free_submit_available",
+    "P9": "no_paid_action_seznam_followup_only_if_free_panel_available",
+    "P10": "no_direct_action_mojeek_crawl_backlinks",
+    "P11": "covered_by_sitemap_canonical_hreflang_indexnow_where_supported",
+    "P12": "validated_public_titles_for_new_locale_samples",
+    "P13": "validated_high_priority_locales_added",
+    "P14": "validated_regional_variants_added",
+    "P15": "validated_south_asia_locales_added",
+    "P16": "validated_rtl_ar_ur_future_fa_he",
+    "P17": "validated_i18n_tests_and_public_qa",
+    "P18": "validated_sitemap_hreflang_31_locales",
+    "P19": "evidence_json_updated_sanitized",
+    "P20": "clarity_not_installed_blocked_by_privacy_policy"
   }
 }

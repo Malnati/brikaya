@@ -24,7 +24,8 @@ const CHINESE_LOCALE: AppLocale = "zh-CN";
 const HINDI_LOCALE: AppLocale = "hi-IN";
 const ENGLISH_LOCALE: AppLocale = "en";
 const GERMAN_LOCALE: AppLocale = "de";
-const UNSUPPORTED_DUTCH_LANGUAGE = "nl-NL";
+const DUTCH_BROWSER_LANGUAGE = "nl-NL";
+const UNSUPPORTED_BROWSER_LANGUAGE = "eo-EO";
 const GERMAN_BROWSER_LANGUAGE = "de-DE";
 const FRENCH_BROWSER_LANGUAGE = "fr-FR";
 const FRENCH_LOCALE: AppLocale = "fr";
@@ -44,8 +45,59 @@ const NAVIGATOR_LANGUAGE_PROPERTY = "language";
 const GERMANY_TIME_ZONE = "Europe/Berlin";
 const MEXICO_TIME_ZONE = "America/Mexico_City";
 const INDIA_TIME_ZONE = "Asia/Kolkata";
-const UNSUPPORTED_TIME_ZONE = "Europe/Amsterdam";
-const ENGLISH_LOCALES = new Set<AppLocale>(["en", "en-IN"]);
+const UNSUPPORTED_TIME_ZONE = "Pacific/Kanton";
+const ENGLISH_LOCALES = new Set<AppLocale>(["en", "en-IN", "en-GB"]);
+const EXPECTED_GLOBAL_LOCALES = [
+  "pt-BR",
+  "en",
+  "es-419",
+  "en-IN",
+  "hi-IN",
+  "de",
+  "fr",
+  "it",
+  "ja",
+  "ko",
+  "id",
+  "vi",
+  "fil",
+  "th",
+  "zh-CN",
+  "ar",
+  "ru",
+  "tr",
+  "nl",
+  "pl",
+  "uk",
+  "ms",
+  "zh-TW",
+  "pt-PT",
+  "es-ES",
+  "en-GB",
+  "fr-CA",
+  "bn",
+  "ur",
+  "ta",
+  "te",
+] as const;
+const NEW_DOWNLOADS_SEO_EXPECTATIONS = [
+  { locale: "ar", title: "تنزيل Brikaya", description: "بدون حساب" },
+  { locale: "ru", title: "Скачать Brikaya", description: "без аккаунта" },
+  { locale: "tr", title: "Brikaya'yı indir", description: "hesap yok" },
+  { locale: "nl", title: "Brikaya downloaden", description: "geen account" },
+  { locale: "pl", title: "Pobierz Brikaya", description: "bez konta" },
+  { locale: "uk", title: "Завантажити Brikaya", description: "без облікового запису" },
+  { locale: "ms", title: "Muat turun Brikaya", description: "tanpa akaun" },
+  { locale: "zh-TW", title: "下載 Brikaya", description: "無需帳號" },
+  { locale: "pt-PT", title: "Descarregar Brikaya", description: "sem conta" },
+  { locale: "es-ES", title: "Descargar Brikaya", description: "sin cuenta" },
+  { locale: "en-GB", title: "Download Brikaya", description: "no account" },
+  { locale: "fr-CA", title: "Télécharger Brikaya", description: "sans compte" },
+  { locale: "bn", title: "Brikaya ডাউনলোড করুন", description: "অ্যাকাউন্ট ছাড়া" },
+  { locale: "ur", title: "Brikaya ڈاؤن لوڈ کریں", description: "اکاؤنٹ کے بغیر" },
+  { locale: "ta", title: "Brikaya பதிவிறக்கவும்", description: "கணக்கு இல்லாமல்" },
+  { locale: "te", title: "Brikaya డౌన్‌లోడ్ చేయండి", description: "ఖాతా లేకుండా" },
+] as const;
 const DOWNLOADS_TITLE_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
   "pt-BR": "Baixar Brikaya",
   en: "Download Brikaya",
@@ -62,6 +114,22 @@ const DOWNLOADS_TITLE_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
   fil: "I-download ang Brikaya",
   th: "ดาวน์โหลด Brikaya",
   "zh-CN": "下载 Brikaya",
+  ar: "تنزيل Brikaya",
+  ru: "Скачать Brikaya",
+  tr: "Brikaya'yı indir",
+  nl: "Brikaya downloaden",
+  pl: "Pobierz Brikaya",
+  uk: "Завантажити Brikaya",
+  ms: "Muat turun Brikaya",
+  "zh-TW": "下載 Brikaya",
+  "pt-PT": "Descarregar Brikaya",
+  "es-ES": "Descargar Brikaya",
+  "en-GB": "Download Brikaya",
+  "fr-CA": "Télécharger Brikaya",
+  bn: "Brikaya ডাউনলোড করুন",
+  ur: "Brikaya ڈاؤن لوڈ کریں",
+  ta: "Brikaya பதிவிறக்கவும்",
+  te: "Brikaya డౌన్‌లోడ్ చేయండి",
 };
 const DOWNLOADS_DESCRIPTION_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
   "pt-BR": "sem conta",
@@ -79,6 +147,22 @@ const DOWNLOADS_DESCRIPTION_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
   fil: "walang account",
   th: "ไม่ต้องมีบัญชี",
   "zh-CN": "无需账号",
+  ar: "بدون حساب",
+  ru: "без аккаунта",
+  tr: "hesap yok",
+  nl: "geen account",
+  pl: "bez konta",
+  uk: "без облікового запису",
+  ms: "tanpa akaun",
+  "zh-TW": "無需帳號",
+  "pt-PT": "sem conta",
+  "es-ES": "sin cuenta",
+  "en-GB": "no account",
+  "fr-CA": "sans compte",
+  bn: "অ্যাকাউন্ট ছাড়া",
+  ur: "اکاؤنٹ کے بغیر",
+  ta: "கணக்கு இல்லாமல்",
+  te: "ఖాతా లేకుండా",
 };
 const LOCALIZED_APPEARANCE_KEYS: TranslationKey[] = [
   "appearance.option.auto-by-level",
@@ -166,6 +250,10 @@ describe("i18n offline do Brikaya", () => {
     jest.restoreAllMocks();
   });
 
+  it("expande o catálogo global para as prioridades P13-P15", () => {
+    expect([...SUPPORTED_LOCALES]).toEqual([...EXPECTED_GLOBAL_LOCALES]);
+  });
+
   it("publica metadados para todos os locales planejados", () => {
     for (const locale of SUPPORTED_LOCALES) {
       const metadata = getSeoMetadata(locale);
@@ -174,6 +262,22 @@ describe("i18n offline do Brikaya", () => {
       expect(metadata.description.length).toBeGreaterThan(24);
       expect(metadata.canonicalUrl).toBe(getCanonicalUrl(locale));
       expect(getLocalePath(locale).startsWith(TEST_ROUTE)).toBe(true);
+    }
+  });
+
+  it("publica SEO de downloads localizado para os novos idiomas de P13-P15", () => {
+    for (const { locale, title, description } of NEW_DOWNLOADS_SEO_EXPECTATIONS) {
+      const metadata = getSeoMetadata(locale as AppLocale, DOWNLOADS_ROUTE_PATH);
+
+      expect(metadata.title).toContain(title);
+      expect(metadata.description).toContain(description);
+      expect(metadata.canonicalUrl).toBe(
+        getCanonicalUrl(locale as AppLocale, DOWNLOADS_ROUTE_PATH),
+      );
+      if (!ENGLISH_LOCALES.has(locale as AppLocale)) {
+        expect(metadata.title).not.toBe("Download Brikaya — free browser game");
+        expect(metadata.description).not.toContain("no account, no payment");
+      }
     }
   });
 
@@ -266,6 +370,35 @@ describe("i18n offline do Brikaya", () => {
     expect(document.documentElement.lang).toBe(CHINESE_LOCALE);
   });
 
+  it("ativa direção RTL para rotas árabes e urdu sem inverter idiomas LTR", () => {
+    window.history.replaceState(null, "", "/ar/");
+
+    render(
+      <I18nProvider>
+        <LocaleProbe />
+      </I18nProvider>,
+    );
+
+    expect(screen.getByText("ar")).toBeInTheDocument();
+    expect(document.documentElement.lang).toBe("ar");
+    expect(document.documentElement).toHaveAttribute("dir", "rtl");
+  });
+
+  it("reconhece neerlandês do navegador antes do fuso horário", () => {
+    setNavigatorLocale([DUTCH_BROWSER_LANGUAGE], DUTCH_BROWSER_LANGUAGE);
+    setBrowserTimeZone(MEXICO_TIME_ZONE);
+
+    render(
+      <I18nProvider>
+        <LocaleProbe />
+      </I18nProvider>,
+    );
+
+    expect(screen.getByText("nl")).toBeInTheDocument();
+    expect(window.location.pathname).toBe(getLocalePath("nl" as AppLocale));
+    expect(document.documentElement).toHaveAttribute("dir", "ltr");
+  });
+
   it("usa locale do navegador quando não há rota nem preferência salva", () => {
     setBrowserTimeZone(GERMANY_TIME_ZONE);
     setNavigatorLocale(["es-MX", "en-US"], "es-MX");
@@ -351,8 +484,8 @@ describe("i18n offline do Brikaya", () => {
 
   it("avalia todos os idiomas do navegador antes de usar fuso horário", () => {
     setNavigatorLocale(
-      [UNSUPPORTED_DUTCH_LANGUAGE, GERMAN_BROWSER_LANGUAGE],
-      UNSUPPORTED_DUTCH_LANGUAGE,
+      [UNSUPPORTED_BROWSER_LANGUAGE, GERMAN_BROWSER_LANGUAGE],
+      UNSUPPORTED_BROWSER_LANGUAGE,
     );
     setBrowserTimeZone(MEXICO_TIME_ZONE);
 
@@ -393,8 +526,8 @@ describe("i18n offline do Brikaya", () => {
 
   it("usa fuso horário do navegador quando o idioma não é suportado", () => {
     setNavigatorLocale(
-      [UNSUPPORTED_DUTCH_LANGUAGE],
-      UNSUPPORTED_DUTCH_LANGUAGE,
+      [UNSUPPORTED_BROWSER_LANGUAGE],
+      UNSUPPORTED_BROWSER_LANGUAGE,
     );
     setBrowserTimeZone(GERMANY_TIME_ZONE);
 
@@ -417,7 +550,7 @@ describe("i18n offline do Brikaya", () => {
     (window.localStorage.getItem as jest.Mock).mockImplementation(
       (key: string) => (key === LOCALE_STORAGE_KEY ? PORTUGUESE_LOCALE : null),
     );
-    setNavigatorLocale(["nl-NL"], "nl-NL");
+    setNavigatorLocale([UNSUPPORTED_BROWSER_LANGUAGE], UNSUPPORTED_BROWSER_LANGUAGE);
     setBrowserTimeZone(MEXICO_TIME_ZONE);
 
     render(
@@ -438,7 +571,7 @@ describe("i18n offline do Brikaya", () => {
         return null;
       },
     );
-    setNavigatorLocale(["nl-NL"], "nl-NL");
+    setNavigatorLocale([UNSUPPORTED_BROWSER_LANGUAGE], UNSUPPORTED_BROWSER_LANGUAGE);
     setBrowserTimeZone(MEXICO_TIME_ZONE);
 
     render(
@@ -452,7 +585,7 @@ describe("i18n offline do Brikaya", () => {
   });
 
   it("mapeia fuso horário da Índia para inglês indiano quando o idioma não é suportado", () => {
-    setNavigatorLocale(["nl-NL"], "nl-NL");
+    setNavigatorLocale([UNSUPPORTED_BROWSER_LANGUAGE], UNSUPPORTED_BROWSER_LANGUAGE);
     setBrowserTimeZone(INDIA_TIME_ZONE);
 
     render(
@@ -483,7 +616,7 @@ describe("i18n offline do Brikaya", () => {
   });
 
   it("usa pt-BR quando idioma e fuso do navegador não são suportados", () => {
-    setNavigatorLocale(["nl-NL"], "nl-NL");
+    setNavigatorLocale([UNSUPPORTED_BROWSER_LANGUAGE], UNSUPPORTED_BROWSER_LANGUAGE);
     setBrowserTimeZone(UNSUPPORTED_TIME_ZONE);
 
     render(
