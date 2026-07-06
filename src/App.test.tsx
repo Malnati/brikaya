@@ -305,7 +305,9 @@ describe("App theme selector", () => {
 
     await renderApp();
 
-    expect(screen.getByTestId("mobile-orientation-blocker")).toBeInTheDocument();
+    expect(
+      screen.getByTestId("mobile-orientation-blocker"),
+    ).toBeInTheDocument();
 
     act(() => {
       mockViewport({ width: 393, height: 852, maxTouchPoints: 5 });
@@ -663,7 +665,7 @@ describe("App theme selector", () => {
     expect(mockLastGameProps?.gameMode).toBe("ball-turret");
   });
 
-  it("abre menu lateral sem seção Aparência e mantém histórico, colisões, zerar pontuação e restaurar padrão", async () => {
+  it("abre menu lateral sem seção Aparência, logs ou diagnóstico", async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
 
@@ -693,12 +695,20 @@ describe("App theme selector", () => {
       within(drawer).queryByRole("button", { name: "Retrô padrão" }),
     ).not.toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /histórico/i }),
-    ).toBeInTheDocument();
-    expect(screen.getByTestId(SETTINGS_ACTION_LOGS_TEST_ID)).toHaveAttribute(
-      "data-settings-action",
-      "logs",
-    );
+      screen.queryByRole("button", { name: /histórico|logs/i }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByTestId(SETTINGS_ACTION_LOGS_TEST_ID)).toBeNull();
+    expect(
+      screen.queryByRole("checkbox", { name: "Registrar controle da Torreta" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Baixar registro da Torreta" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Limpar registro da Torreta" }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Nenhum registro ainda")).not.toBeInTheDocument();
+    expect(mockLastGameProps?.joystickDiagnosticsEnabled).toBe(false);
     expect(
       screen.getByRole("button", { name: /colisões/i }),
     ).toBeInTheDocument();
@@ -717,112 +727,6 @@ describe("App theme selector", () => {
     expect(
       screen.getByTestId(SETTINGS_ACTION_RESET_PREFERENCES_TEST_ID),
     ).toHaveAttribute("data-settings-action", "reset-preferences");
-  });
-
-
-  it("mantém registro do controle da Torreta desligado por padrão e alterna pelo menu", async () => {
-    const user = userEvent.setup();
-    mockSystemTheme(true);
-
-    await renderApp();
-    await user.click(screen.getByRole("button", { name: "Menu" }));
-
-    const diagnosticCheckbox = screen.getByRole("checkbox", {
-      name: "Registrar controle da Torreta",
-    });
-    expect(diagnosticCheckbox).not.toBeChecked();
-    expect(mockLastGameProps?.joystickDiagnosticsEnabled).toBe(false);
-    expect(
-      screen.getByRole("button", { name: "Baixar registro da Torreta" }),
-    ).toBeDisabled();
-    expect(screen.getByText("Nenhum registro ainda")).toBeInTheDocument();
-
-    await user.click(diagnosticCheckbox);
-
-    expect(diagnosticCheckbox).toBeChecked();
-    expect(mockLastGameProps?.joystickDiagnosticsEnabled).toBe(true);
-  });
-
-  it("baixa registro da Torreta com amostras do joystick e da cama elástica", async () => {
-    const user = userEvent.setup();
-    const createObjectUrl = jest.fn(() => "blob:joystick-diagnostic");
-    const revokeObjectUrl = jest.fn();
-    Object.defineProperty(URL, "createObjectURL", {
-      configurable: true,
-      value: createObjectUrl,
-    });
-    Object.defineProperty(URL, "revokeObjectURL", {
-      configurable: true,
-      value: revokeObjectUrl,
-    });
-    mockSystemTheme(true);
-
-    await renderApp();
-    await user.click(screen.getByRole("button", { name: "Menu" }));
-    await user.click(
-      screen.getByRole("checkbox", { name: "Registrar controle da Torreta" }),
-    );
-
-    act(() => {
-      mockLastGameProps?.onJoystickDiagnosticSample?.({
-        sequence: 1,
-        timestamp: 1782870000000,
-        phase: "move",
-        inputType: "pointer",
-        accepted: true,
-        clientPoint: { x: 150, y: 300 },
-        joystick: {
-          rect: { x: 100, y: 200, width: 100, height: 100 },
-          normalized: { x: 0.5, y: 1 },
-          visual: { x: 0, y: 1 },
-          radius: 50,
-          distanceFromCenter: 50,
-        },
-        canvas: {
-          rect: { x: 20, y: 40, width: 400, height: 300 },
-          size: { width: 800, height: 600 },
-          mappedClientPoint: { x: 220, y: 340 },
-          mappedCanvasPoint: { x: 400, y: 600 },
-        },
-        paddle: {
-          x: 360,
-          y: 520,
-          width: 80,
-          height: 12,
-          radial: { centerAngle: 1.57 },
-        },
-      });
-    });
-
-    expect(await screen.findByText("1 ponto registrado")).toBeInTheDocument();
-    const downloadLink = await screen.findByRole("link", {
-      name: "Baixar registro da Torreta",
-    });
-
-    expect(downloadLink).toHaveAttribute("href", "blob:joystick-diagnostic");
-    expect(downloadLink).toHaveAttribute(
-      "download",
-      expect.stringMatching(/^brikaya-torreta-joystick-.*\.json$/),
-    );
-
-    const blob = createObjectUrl.mock.calls[0][0] as Blob;
-    const blobText = await new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(String(reader.result));
-      reader.onerror = () => reject(reader.error);
-      reader.readAsText(blob);
-    });
-    expect(blobText).toContain("diagnosticSvg");
-    expect(blobText).toContain("mappedCanvasPoint");
-
-    await user.click(
-      screen.getByRole("button", { name: "Limpar registro da Torreta" }),
-    );
-
-    expect(revokeObjectUrl).toHaveBeenCalledWith("blob:joystick-diagnostic");
-    expect(
-      screen.getByRole("button", { name: "Baixar registro da Torreta" }),
-    ).toBeDisabled();
   });
 
   it("encaminha cenário de QA de blocos desviantes para o jogo", async () => {

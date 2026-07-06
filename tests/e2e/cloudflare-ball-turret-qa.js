@@ -28,13 +28,14 @@ const JOYSTICK_DIAGNOSTIC_TOGGLE_PATTERN =
   /registrar controle da torreta|record turret control/i;
 const JOYSTICK_DIAGNOSTIC_DOWNLOAD_PATTERN =
   /baixar registro da torreta|download turret record/i;
+const JOYSTICK_DIAGNOSTIC_CLEAR_PATTERN =
+  /limpar registro da torreta|clear turret record/i;
 const INTERNAL_COPY_PATTERN =
   /service worker|cache|runtime|localStorage|IndexedDB|Canvas|engine|build/i;
 const OLD_TURRET_AIM_COPY_PATTERN = /mire|aim|reticle|crosshair|metralhadora/i;
 const BRICK_IMAGE_PATTERN = /\/bricks\/|spr-brick/i;
 const ORIENTATION_BLOCKER_TEST_ID = "mobile-orientation-blocker";
-const ORIENTATION_BLOCKER_MESSAGE =
-  "Você precisa de espaço para o joystick";
+const ORIENTATION_BLOCKER_MESSAGE = "Você precisa de espaço para o joystick";
 const FULL_CIRCLE_TOLERANCE = 0.08;
 const JOYSTICK_TEST_ID = "ball-turret-joystick";
 const JOYSTICK_DIAGNOSTIC_JOYSTICK_LAYER_TEST_ID =
@@ -184,10 +185,7 @@ async function closeBrowser(browser) {
     await Promise.race([
       browser.close(),
       new Promise((_, reject) => {
-        setTimeout(
-          () => reject(new Error("browser-close-timeout")),
-          5000,
-        );
+        setTimeout(() => reject(new Error("browser-close-timeout")), 5000);
       }),
     ]);
   } catch (error) {
@@ -712,11 +710,11 @@ async function readJoystickDiagnosticState(page) {
           exists: Boolean(layer),
           visible: Boolean(
             layer &&
-              rect &&
-              rect.width > 0 &&
-              rect.height > 0 &&
-              getComputedStyle(layer).display !== "none" &&
-              getComputedStyle(layer).visibility !== "hidden",
+            rect &&
+            rect.width > 0 &&
+            rect.height > 0 &&
+            getComputedStyle(layer).display !== "none" &&
+            getComputedStyle(layer).visibility !== "hidden",
           ),
           pointCount: layer?.querySelectorAll("circle").length || 0,
           lineCount: layer?.querySelectorAll("polyline").length || 0,
@@ -811,83 +809,62 @@ function assertJoystickPlacement(config, gameplayState) {
 }
 
 async function setJoystickDiagnosticsEnabled(page, config) {
-  debugLog(config.name, "abrindo menu para habilitar registro");
+  debugLog(config.name, "validando registro oculto");
   const menuOpened = await clickButtonByPattern(
     page,
     MENU_BUTTON_PATTERN.source,
   );
   assert(menuOpened, `${config.name}: botão Menu não encontrado.`);
-  await page.waitForFunction(
-    (source) => {
-      const pattern = new RegExp(source, "i");
-      return Array.from(document.querySelectorAll("label")).some((label) =>
-        pattern.test(label.textContent || ""),
-      );
-    },
-    { timeout: 5000 },
-    JOYSTICK_DIAGNOSTIC_TOGGLE_PATTERN.source,
-  );
-  debugLog(config.name, "registro habilitado");
+  await page.waitForSelector(".settings-drawer", { timeout: 5000 });
 
-  const initialState = await page.evaluate(
-    ({ togglePatternSource, downloadPatternSource }) => {
+  const hiddenControlState = await page.evaluate(
+    ({ togglePatternSource, downloadPatternSource, clearPatternSource }) => {
       const togglePattern = new RegExp(togglePatternSource, "i");
       const downloadPattern = new RegExp(downloadPatternSource, "i");
-      const label = Array.from(document.querySelectorAll("label")).find(
-        (candidate) => togglePattern.test(candidate.textContent || ""),
-      );
-      const checkbox = label?.querySelector('input[type="checkbox"]');
-      const downloadButton = Array.from(document.querySelectorAll("button")).find(
-        (button) =>
-          downloadPattern.test(button.textContent || "") ||
-          downloadPattern.test(button.getAttribute("aria-label") || ""),
-      );
+      const clearPattern = new RegExp(clearPatternSource, "i");
+      const labels = Array.from(document.querySelectorAll("label"));
+      const controls = Array.from(document.querySelectorAll("button,a"));
+      const matchesText = (control, pattern) =>
+        pattern.test(control.textContent || "") ||
+        pattern.test(control.getAttribute("aria-label") || "");
 
       return {
-        toggleExists: Boolean(checkbox),
-        enabled: Boolean(checkbox?.checked),
-        downloadExists: Boolean(downloadButton),
-        downloadDisabled: downloadButton ? Boolean(downloadButton.disabled) : null,
+        toggleExists: labels.some((label) =>
+          togglePattern.test(label.textContent || ""),
+        ),
+        downloadExists: controls.some((control) =>
+          matchesText(control, downloadPattern),
+        ),
+        clearExists: controls.some((control) =>
+          matchesText(control, clearPattern),
+        ),
+        bodyHasDiagnosticCopy: togglePattern.test(
+          document.body.textContent || "",
+        ),
       };
     },
     {
       togglePatternSource: JOYSTICK_DIAGNOSTIC_TOGGLE_PATTERN.source,
       downloadPatternSource: JOYSTICK_DIAGNOSTIC_DOWNLOAD_PATTERN.source,
+      clearPatternSource: JOYSTICK_DIAGNOSTIC_CLEAR_PATTERN.source,
     },
   );
 
   assert(
-    initialState.toggleExists,
-    `${config.name}: checkbox do registro da Torreta ausente.`,
+    !hiddenControlState.toggleExists,
+    `${config.name}: checkbox do registro da Torreta ficou visível.`,
   );
   assert(
-    !initialState.enabled,
-    `${config.name}: registro da Torreta deve iniciar desligado.`,
+    !hiddenControlState.downloadExists,
+    `${config.name}: download do registro da Torreta ficou visível.`,
   );
   assert(
-    initialState.downloadExists && initialState.downloadDisabled,
-    `${config.name}: download do registro deve iniciar desabilitado.`,
+    !hiddenControlState.clearExists,
+    `${config.name}: limpeza do registro da Torreta ficou visível.`,
   );
-
-  await page.evaluate((source) => {
-    const pattern = new RegExp(source, "i");
-    const label = Array.from(document.querySelectorAll("label")).find(
-      (candidate) => pattern.test(candidate.textContent || ""),
-    );
-    const checkbox = label?.querySelector('input[type="checkbox"]');
-    checkbox?.click();
-  }, JOYSTICK_DIAGNOSTIC_TOGGLE_PATTERN.source);
-  await page.waitForFunction(
-    (source) => {
-      const pattern = new RegExp(source, "i");
-      const label = Array.from(document.querySelectorAll("label")).find(
-        (candidate) => pattern.test(candidate.textContent || ""),
-      );
-      const checkbox = label?.querySelector('input[type="checkbox"]');
-      return Boolean(checkbox?.checked);
-    },
-    { timeout: 5000 },
-    JOYSTICK_DIAGNOSTIC_TOGGLE_PATTERN.source,
+  assert(
+    !hiddenControlState.bodyHasDiagnosticCopy,
+    `${config.name}: texto de registro da Torreta ficou visível.`,
   );
 
   const closeClicked = await clickButtonByPattern(
@@ -901,9 +878,8 @@ async function setJoystickDiagnosticsEnabled(page, config) {
   );
 
   return {
-    defaultEnabled: initialState.enabled,
-    initialDownloadDisabled: initialState.downloadDisabled,
-    enabledForExercise: true,
+    controlsHidden: true,
+    enabledForExercise: false,
   };
 }
 
@@ -911,16 +887,18 @@ async function waitForOrientationBlocker(page, config) {
   debugLog(config.name, "aguardando bloqueio de orientação");
   await page.waitForFunction(
     ({ blockerTestId, expectedMessage }) => {
-      const blocker = document.querySelector(`[data-testid="${blockerTestId}"]`);
+      const blocker = document.querySelector(
+        `[data-testid="${blockerTestId}"]`,
+      );
       const rect = blocker?.getBoundingClientRect();
       return Boolean(
         blocker &&
-          rect &&
-          rect.width >= window.innerWidth * 0.98 &&
-          rect.height >= window.innerHeight * 0.98 &&
-          blocker.getAttribute("role") === "alertdialog" &&
-          blocker.getAttribute("aria-label") === expectedMessage &&
-          blocker.textContent?.includes(expectedMessage),
+        rect &&
+        rect.width >= window.innerWidth * 0.98 &&
+        rect.height >= window.innerHeight * 0.98 &&
+        blocker.getAttribute("role") === "alertdialog" &&
+        blocker.getAttribute("aria-label") === expectedMessage &&
+        blocker.textContent?.includes(expectedMessage),
       );
     },
     { timeout: 10000 },
@@ -932,7 +910,10 @@ async function waitForOrientationBlocker(page, config) {
 
   debugLog(config.name, "lendo estado bloqueado");
   const blockedState = await readBallTurretState(page);
-  assert(blockedState.hasCanvas, `${config.name}: canvas ausente sob bloqueio.`);
+  assert(
+    blockedState.hasCanvas,
+    `${config.name}: canvas ausente sob bloqueio.`,
+  );
   assert(
     blockedState.orientationBlocker.exists &&
       blockedState.orientationBlocker.visible,
@@ -1162,9 +1143,7 @@ async function exerciseJoystick(page) {
   const topLeftCheck = await moveAndRead(topLeft);
   const bottomCheck = await moveAndRead(bottom);
   const lowerLeftArcCheck = await moveAndRead(lowerLeftArc);
-  const outsideCircleInsideBoxCheck = await moveAndRead(
-    outsideCircleInsideBox,
-  );
+  const outsideCircleInsideBoxCheck = await moveAndRead(outsideCircleInsideBox);
   const outsideCircleInsideBoxIgnoredCheck = {
     angleUnchanged:
       angularDistance(
@@ -1285,7 +1264,8 @@ async function downloadJoystickDiagnostics(page, config) {
       rejectedSamples: parsed?.summary?.rejectedSamples || 0,
       hasMappedCanvasPoint: Boolean(firstSample?.canvas?.mappedCanvasPoint),
       hasJoystickPoint: Boolean(firstSample?.joystick?.normalized),
-      hasPaddleSnapshot: parsed?.samples?.some((sample) => sample.paddle) || false,
+      hasPaddleSnapshot:
+        parsed?.samples?.some((sample) => sample.paddle) || false,
       diagnosticSvgHasJoystick:
         typeof parsed?.diagnosticSvg === "string" &&
         parsed.diagnosticSvg.includes("Joystick"),
@@ -1534,37 +1514,18 @@ async function runViewport(page, baseUrl, config) {
       ? await readJoystickDiagnosticState(page)
       : null;
   if (config.name === "mobile-portrait") {
-    debugLog(config.name, "validando camadas desenhadas do registro");
-    await page.waitForFunction(
-      ({ joystickLayerTestId }) => {
-        const layer = document.querySelector(
-          `[data-testid="${joystickLayerTestId}"]`,
-        );
-        return Boolean(
-          layer?.querySelector(".joystick-diagnostic-layer__point") &&
-            layer?.querySelector(".joystick-diagnostic-layer__line"),
-        );
-      },
-      { timeout: 5000 },
-      { joystickLayerTestId: JOYSTICK_DIAGNOSTIC_JOYSTICK_LAYER_TEST_ID },
-    );
-    const settledDiagnosticOverlayState =
-      await readJoystickDiagnosticState(page);
-    diagnosticOverlayState = settledDiagnosticOverlayState;
+    debugLog(config.name, "validando camadas de registro ocultas");
+    diagnosticOverlayState = await readJoystickDiagnosticState(page);
     assert(
-      settledDiagnosticOverlayState.joystickLayer.visible &&
-        settledDiagnosticOverlayState.joystickLayer.pointCount > 0 &&
-        settledDiagnosticOverlayState.joystickLayer.lineCount > 0,
-      `${config.name}: desenho do registro não apareceu sobre o joystick.`,
+      diagnosticOverlayState.joystickLayer.pointCount === 0 &&
+        diagnosticOverlayState.joystickLayer.lineCount === 0,
+      `${config.name}: desenho do registro apareceu sobre o joystick.`,
     );
     assert(
-      settledDiagnosticOverlayState.playfieldLayer.visible &&
-        settledDiagnosticOverlayState.playfieldLayer.pointCount > 0 &&
-        settledDiagnosticOverlayState.playfieldLayer.lineCount > 0,
-      `${config.name}: desenho do registro não apareceu na área do jogo.`,
+      diagnosticOverlayState.playfieldLayer.pointCount === 0 &&
+        diagnosticOverlayState.playfieldLayer.lineCount === 0,
+      `${config.name}: desenho do registro apareceu na área do jogo.`,
     );
-    ensureParentDirectory(diagnosticScreenshotPath());
-    await page.screenshot({ path: diagnosticScreenshotPath(), fullPage: true });
   }
 
   await new Promise((resolve) => setTimeout(resolve, 120));
@@ -1598,10 +1559,7 @@ async function runViewport(page, baseUrl, config) {
     ensureParentDirectory(menuScreenshotPath());
     await page.screenshot({ path: menuScreenshotPath(), fullPage: true });
   }
-  const joystickDiagnosticDownload =
-    config.name === "mobile-portrait"
-      ? await downloadJoystickDiagnostics(page, config)
-      : null;
+  const joystickDiagnosticDownload = null;
   debugLog(config.name, "viewport concluído");
 
   return {
@@ -1653,7 +1611,7 @@ async function run() {
       desktop: desktopScreenshotPath(),
       mobile: mobileScreenshotPath(),
       mobileLandscape: mobileLandscapeScreenshotPath(),
-      joystickDiagnostic: diagnosticScreenshotPath(),
+      joystickDiagnostic: null,
     },
   };
   ensureParentDirectory(reportPath());
