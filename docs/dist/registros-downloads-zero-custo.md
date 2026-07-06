@@ -148,12 +148,14 @@ Buscadores devem receber a versão canônica via sitemap e hreflang; quando houv
 
 Status de buscadores em 2026-07-06:
 
-- Google Search Console: sitemap processado e oito URLs principais com indexação manual solicitada.
-- Bing Webmaster Tools: sitemap reenviado, oito URLs principais submetidas, IndexNow com URLs localizadas recentes, sem ativar Clarity.
-- Yandex Webmaster: sitemap em fila, `/` e `/downloads/` em fila de reindexação.
-- Naver Search Advisor: `sitemap.xml` já submetido; rechecagem posterior parou em login sem inserir credenciais.
+- Google Search Console: sitemap canônico reenviado; painel processado ainda mostra 88 páginas, enquanto o sitemap público já contém 136 URLs.
+- Bing Webmaster Tools: 48 URLs da onda 67 submetidas manualmente; painel com 80 URLs submetidas no dia e quota restante 20; Clarity não foi ativado.
+- Yandex Webmaster: sitemap em fila; 48 URLs da onda 67 em fila de reindexação manual; IndexNow retornou `200` para 136 URLs.
+- Naver Search Advisor: `sitemap.xml` já submetido; coleta manual de novas URLs bloqueada por aviso de formato.
+- Brave Search: `https://brikaya.com/sitemap.xml` submetido no formulário gratuito com confirmação `Success`.
+- Seznam: formulário oficial exige código/CAPTCHA; nenhuma submissão manual foi feita.
 - Baidu Search Resource Platform: cadastro internacional gratuito tentou Brasil na aba fornecida; Baidu retornou que registros de regiões externas não são suportados no momento. Não houve código SMS, CAPTCHA, documento, ICP, pagamento, serviço pago nem registro final de conta; valores pessoais não entram na documentação/evidência.
-- DuckDuckGo/Yahoo/Seznam/Yep/outros: sem painel direto obrigatório no escopo; cobertura por Bing/IndexNow/sitemap/robots/canonical/hreflang.
+- DuckDuckGo/Yahoo/Mojeek/Yep/outros: sem painel direto obrigatório no escopo; cobertura por Bing/IndexNow/sitemap/robots/canonical/hreflang/crawlers.
 
 
 Follow-up fa/he em 2026-07-06:
@@ -166,20 +168,22 @@ Follow-up fa/he em 2026-07-06:
 ## Atualização P13-P20 publicada em 2026-07-06
 
 - Página `/downloads/` publicada em 67 idiomas.
-- Novos idiomas: `ar`, `ru`, `tr`, `nl`, `pl`, `uk`, `ms`, `zh-TW`, `pt-PT`, `es-ES`, `en-GB`, `fr-CA`, `bn`, `ur`, `fa`, `he`, `ta`, `te`.
+- Onda 67 adicionada: `cs`, `ro`, `hu`, `bg`, `sk`, `sl`, `hr`, `sr`, `lt`, `lv`, `et`, `sw`, `af`, `am`, `ka`, `hy`, `az`, `kk`, `uz`, `ne`, `si`, `km`, `lo`, `my`.
 - RTL: `ar`, `ur`, `fa` e `he` têm `dir="rtl"`; demais idiomas publicados como `dir="ltr"`.
-- `fa` e `he` agora têm catálogo público, rotas home/downloads, SEO e hreflang; próximos idiomas ficam fora desta rodada.
 - `make cloudflare-i18n-seo-qa` validou `title`, canonical, hreflang e sitemap para downloads em todos os 67 idiomas.
 - `make yandex-indexnow-submit` enviou 136 URLs e retornou `200` com chave redigida.
+- Google/Bing/Yandex/Naver/Brave/Seznam foram rechecados na aba única; detalhes sanitizados estão em `docs/assets/issues/webmaster-i18n-global/evidence/evi-webmaster-i18n-global-status.json`.
 - Microsoft Clarity permanece desinstalado por política: não há pacote `@microsoft/clarity`, script `clarity.ms`, tag, pixel ou SDK externo no site publicado.
 
 ## Atualização — onda 67 idiomas
 
-- Timestamp: 2026-07-06T16:06:28.207Z
-- Novos idiomas publicados: `mr`, `gu`, `kn`, `ml`, `pa`, `el`, `sv`, `da`, `no`, `fi`.
-- Site público: 20 novas rotas home/downloads responderam 200 e `sitemap.xml` publicou 136 URLs.
-- Google Search Console: sitemap reenviado; painel ainda mostrava 68 páginas antes do novo processamento.
-- Bing Webmaster: 20 URLs novas enviadas manualmente; quota restante 68.
-- Yandex/IndexNow: 136 URLs aceitas com status 200; sitemap segue em fila de processamento.
-- Naver: coleta manual de `/fa/` confirmada; demais idiomas seguem por sitemap/crawl.
+- Timestamp: 2026-07-06T16:19:43.073Z
+- Novos idiomas publicados nesta onda: `cs`, `ro`, `hu`, `bg`, `sk`, `sl`, `hr`, `sr`, `lt`, `lv`, `et`, `sw`, `af`, `am`, `ka`, `hy`, `az`, `kk`, `uz`, `ne`, `si`, `km`, `lo`, `my`.
+- Site público: 48 novas rotas home/downloads responderam 200 e `sitemap.xml` publicou 136 URLs.
+- Google Search Console: sitemap reenviado; painel ainda mostra 88 páginas antes do novo processamento de 136 URLs.
+- Bing Webmaster: 48 URLs da onda 67 enviadas manualmente; quota restante 20.
+- Yandex/IndexNow: 136 URLs aceitas com status 200; 48 URLs da onda 67 enviadas para reindexação manual e ficaram `In queue`; sitemap segue em fila de processamento.
+- Naver: `sitemap.xml` confirmado; coleta manual de novas URLs bloqueada por formato.
+- Brave: `https://brikaya.com/sitemap.xml` submetido com confirmação `Success`.
+- Seznam: formulário oficial bloqueado por CAPTCHA/código; não submetido.
 - Clarity/analytics/pixel/tag: não instalado; verificação pública sem marcadores.
