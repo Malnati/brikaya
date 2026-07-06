@@ -9,7 +9,9 @@ import {
 } from './load-project-env.mjs';
 
 const INDEXNOW_KEY = 'BRIKAYA_INDEXNOW_KEY';
+const GOOGLE_ADSENSE_PUBLISHER_ID = 'BRIKAYA_GOOGLE_ADSENSE_PUBLISHER_ID';
 const INDEXNOW_KEY_PATTERN = /^[A-Za-z0-9-]{8,128}$/;
+const GOOGLE_ADSENSE_PUBLISHER_ID_PATTERN = /^pub-\d{16}$/;
 const DIST_DIR = 'dist';
 
 function removeStaleIndexNowFiles(distDir, key) {
@@ -36,6 +38,7 @@ function removeStaleIndexNowFiles(distDir, key) {
 function run() {
   const envValues = readProjectEnv();
   const key = envValues[INDEXNOW_KEY];
+  const publisherId = envValues[GOOGLE_ADSENSE_PUBLISHER_ID];
   if (!key) {
     throw new CodexEnvError(`${INDEXNOW_KEY} ausente no .env local`);
   }
@@ -48,8 +51,21 @@ function run() {
   removeStaleIndexNowFiles(distDir, key);
   writeFileSync(resolve(distDir, `${key}.txt`), `${key}\n`);
 
+  if (publisherId) {
+    if (!GOOGLE_ADSENSE_PUBLISHER_ID_PATTERN.test(publisherId)) {
+      throw new CodexEnvError(`${GOOGLE_ADSENSE_PUBLISHER_ID} inválida no .env local`);
+    }
+    writeFileSync(
+      resolve(distDir, 'ads.txt'),
+      `google.com, ${publisherId}, DIRECT, f08c47fec0942fa0\n`,
+    );
+  }
+
   console.log(
-    sanitizeOutput(`codex-env materialized: artifact=IndexNow keyLocation=${REDACTED_KEY_LOCATION}`, envValues),
+    sanitizeOutput(
+      `codex-env materialized: artifact=IndexNow keyLocation=${REDACTED_KEY_LOCATION} artifact=AdsTxt present=${Boolean(publisherId)}`,
+      envValues,
+    ),
   );
 }
 

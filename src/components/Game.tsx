@@ -30,7 +30,7 @@ interface GameProps {
   onScoreUpdate: (score: number) => void;
   onGameWon?: () => void;
   onGameOver?: () => void;
-  onLevelTransition?: (payload: LevelTransitionPayload) => void;
+  onLevelTransition?: (payload: LevelTransitionPayload) => void | Promise<void>;
   onLevelChange?: (level: number) => void;
   qaScenario?: GameQaScenario | null;
   audioSink?: GameAudioSink;

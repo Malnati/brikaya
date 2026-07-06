@@ -392,7 +392,7 @@ export const EN_MESSAGES = {
   "consent.body.location":
     "You can allow approximate region once to suggest the game language. Coordinates are not saved.",
   "consent.body.ads":
-    "This version does not show real ads. You can review this choice in the menu.",
+    "Ads may appear only between levels when available. They never interrupt active play, and you can review this choice in the menu.",
   "consent.locationLabel": "Use region to suggest language",
   "consent.locationHint": "If you skip this, the browser language is used.",
   "consent.accept": "Accept and play",
@@ -625,7 +625,7 @@ const PT_BR_MESSAGES: TranslationCatalog = {
   "consent.body.location":
     "Você pode permitir região aproximada uma vez para sugerir o idioma do jogo. Coordenadas não ficam salvas.",
   "consent.body.ads":
-    "Esta versão não mostra anúncios reais. Você pode revisar esta escolha no menu.",
+    "Anúncios podem aparecer apenas entre fases quando estiverem disponíveis. Eles nunca interrompem a jogada, e você pode revisar esta escolha no menu.",
   "consent.locationLabel": "Usar região para sugerir idioma",
   "consent.locationHint":
     "Se você pular esta opção, o idioma do navegador será usado.",
@@ -823,7 +823,7 @@ const ES_419_MESSAGES: TranslationCatalog = {
   "consent.body.location":
     "Puedes permitir región aproximada una vez para sugerir el idioma del juego. Las coordenadas no se guardan.",
   "consent.body.ads":
-    "Esta versión no muestra anuncios reales. Puedes revisar esta elección en el menú.",
+    "Los anuncios pueden aparecer solo entre niveles cuando estén disponibles. Nunca interrumpen la partida, y puedes revisar esta elección en el menú.",
   "consent.locationLabel": "Usar región para sugerir idioma",
   "consent.locationHint":
     "Si omites esta opción, se usará el idioma del navegador.",
@@ -946,7 +946,7 @@ const HI_IN_MESSAGES: TranslationCatalog = {
   "consent.body.storage":
     "आपका स्कोर, रिकॉर्ड और पसंद इस डिवाइस पर रहते हैं ताकि अगला खेल तैयार रहे।",
   "consent.body.ads":
-    "यह संस्करण वास्तविक विज्ञापन नहीं दिखाता। आप मेनू में यह चुनाव फिर देख सकते हैं।",
+    "विज्ञापन केवल स्तरों के बीच उपलब्ध होने पर दिखाई दे सकते हैं। वे सक्रिय खेल को कभी बाधित नहीं करते, और आप मेनू में यह चुनाव फिर देख सकते हैं।",
   "consent.accept": "स्वीकार करें और खेलें",
   "status.updateTitle": "गेम अपडेट हो रहा है",
   "status.updateProgress": "अपडेट प्रगति",
@@ -1048,7 +1048,7 @@ const DE_MESSAGES: TranslationCatalog = {
   "consent.body.storage":
     "Deine Punkte, Bestwerte und Einstellungen bleiben auf diesem Gerät, damit die nächste Runde bereit ist.",
   "consent.body.ads":
-    "Diese Version zeigt keine echten Anzeigen. Du kannst diese Auswahl im Menü prüfen.",
+    "Anzeigen können nur zwischen Leveln erscheinen, wenn sie verfügbar sind. Sie unterbrechen nie das aktive Spiel, und du kannst diese Auswahl im Menü prüfen.",
   "consent.accept": "Akzeptieren und spielen",
   "status.updateTitle": "Spiel wird aktualisiert",
   "status.updateProgress": "Aktualisierungsfortschritt",
@@ -1149,7 +1149,7 @@ const FR_MESSAGES: TranslationCatalog = {
   "consent.body.storage":
     "Votre score, vos records et vos préférences restent sur cet appareil pour préparer votre prochaine partie.",
   "consent.body.ads":
-    "Cette version n'affiche pas de vraies publicités. Vous pouvez revoir ce choix dans le menu.",
+    "Des annonces peuvent apparaître seulement entre les niveaux lorsqu'elles sont disponibles. Elles n'interrompent jamais la partie en cours, et vous pouvez revoir ce choix dans le menu.",
   "consent.accept": "Accepter et jouer",
   "status.updateTitle": "Mise à jour du jeu",
   "status.updateProgress": "Progression de la mise à jour",
@@ -1250,7 +1250,7 @@ const IT_MESSAGES: TranslationCatalog = {
   "consent.body.storage":
     "Punteggio, record e preferenze restano su questo dispositivo per preparare la prossima partita.",
   "consent.body.ads":
-    "Questa versione non mostra annunci reali. Puoi rivedere questa scelta nel menu.",
+    "Gli annunci possono apparire solo tra un livello e l'altro quando disponibili. Non interrompono mai la partita in corso, e puoi rivedere questa scelta nel menu.",
   "consent.accept": "Accetta e gioca",
   "status.updateTitle": "Aggiornamento del gioco",
   "status.updateProgress": "Avanzamento aggiornamento",
@@ -1344,7 +1344,7 @@ const JA_MESSAGES: TranslationCatalog = {
   "consent.body.storage":
     "スコア、記録、設定はこの端末に保存され、次のプレイをすぐ始められます。",
   "consent.body.ads":
-    "このバージョンでは実際の広告を表示しません。この選択はメニューで確認できます。",
+    "広告は利用可能な場合にレベルの合間だけ表示されることがあります。プレイ中の操作を妨げることはなく、この選択はメニューで確認できます。",
   "consent.accept": "同意して遊ぶ",
   "status.updateTitle": "ゲームを更新中",
   "status.updateProgress": "更新の進行状況",
@@ -1445,7 +1445,7 @@ const KO_MESSAGES: TranslationCatalog = {
   "consent.body.storage":
     "점수, 기록, 설정은 이 기기에 저장되어 다음 플레이를 바로 시작할 수 있습니다.",
   "consent.body.ads":
-    "이 버전은 실제 광고를 표시하지 않습니다. 이 선택은 메뉴에서 다시 확인할 수 있습니다.",
+    "광고는 제공될 때 레벨 사이에만 표시될 수 있습니다. 진행 중인 플레이를 방해하지 않으며, 이 선택은 메뉴에서 다시 확인할 수 있습니다.",
   "consent.accept": "동의하고 플레이",
   "status.updateTitle": "게임 업데이트 중",
   "status.updateProgress": "업데이트 진행률",
@@ -1539,7 +1539,7 @@ const ID_MESSAGES: TranslationCatalog = {
   "consent.body.storage":
     "Skor, rekor, dan preferensi Anda tetap di perangkat ini agar permainan berikutnya siap.",
   "consent.body.ads":
-    "Versi ini tidak menampilkan iklan sungguhan. Anda dapat meninjau pilihan ini di menu.",
+    "Iklan dapat muncul hanya di antara level saat tersedia. Iklan tidak pernah mengganggu permainan aktif, dan Anda dapat meninjau pilihan ini di menu.",
   "consent.accept": "Setuju dan main",
   "status.updateTitle": "Memperbarui game",
   "status.updateProgress": "Progres pembaruan",
@@ -1628,7 +1628,7 @@ const VI_MESSAGES: TranslationCatalog = {
   "consent.body.storage":
     "Điểm, kỷ lục và tùy chọn của bạn được lưu trên thiết bị này để lượt chơi sau luôn sẵn sàng.",
   "consent.body.ads":
-    "Phiên bản này không hiển thị quảng cáo thật. Bạn có thể xem lại lựa chọn này trong menu.",
+    "Quảng cáo chỉ có thể xuất hiện giữa các màn khi có sẵn. Chúng không bao giờ làm gián đoạn lượt chơi đang diễn ra, và bạn có thể xem lại lựa chọn này trong menu.",
   "consent.accept": "Đồng ý và chơi",
   "status.updateTitle": "Đang cập nhật trò chơi",
   "status.updateProgress": "Tiến độ cập nhật",
@@ -1717,7 +1717,7 @@ const FIL_MESSAGES: TranslationCatalog = {
   "consent.body.storage":
     "Ang iyong iskor, rekord, at mga kagustuhan ay mananatili sa device na ito para handa ang susunod na laro.",
   "consent.body.ads":
-    "Hindi nagpapakita ng totoong ads ang bersyong ito. Maaari mong suriin ang pagpiling ito sa menu.",
+    "Maaaring lumabas ang ads sa pagitan lang ng mga level kapag available. Hindi nito kailanman naaantala ang aktibong laro, at maaari mong suriin ang pagpiling ito sa menu.",
   "consent.accept": "Tanggapin at maglaro",
   "status.updateTitle": "Ina-update ang laro",
   "status.updateProgress": "Progreso ng update",
@@ -1806,7 +1806,7 @@ const TH_MESSAGES: TranslationCatalog = {
   "consent.body.storage":
     "คะแนน สถิติ และค่าตั้งค่าของคุณจะอยู่บนอุปกรณ์นี้เพื่อให้เกมถัดไปพร้อมเล่น",
   "consent.body.ads":
-    "เวอร์ชันนี้ไม่แสดงโฆษณาจริง คุณตรวจสอบตัวเลือกนี้ได้ในเมนู",
+    "โฆษณาอาจแสดงเฉพาะระหว่างด่านเมื่อพร้อมใช้งานเท่านั้น และจะไม่ขัดจังหวะการเล่นอยู่ คุณตรวจสอบตัวเลือกนี้ได้ในเมนู",
   "consent.accept": "ยอมรับและเล่น",
   "status.updateTitle": "กำลังอัปเดตเกม",
   "status.updateProgress": "ความคืบหน้าอัปเดต",
@@ -1894,7 +1894,8 @@ const ZH_CN_MESSAGES: TranslationCatalog = {
   "consent.title": "开始前",
   "consent.body.storage":
     "你的得分、记录和偏好会保存在此设备上，方便下次继续游玩。",
-  "consent.body.ads": "此版本不显示真实广告。你可以在菜单中查看此选择。",
+  "consent.body.ads":
+    "广告仅会在有可用内容时出现在关卡之间，不会打断正在进行的游戏。你可以在菜单中查看此选择。",
   "consent.accept": "同意并开始",
   "status.updateTitle": "正在更新游戏",
   "status.updateProgress": "更新进度",

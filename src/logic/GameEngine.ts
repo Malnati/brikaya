@@ -282,7 +282,9 @@ export class GameEngine {
     _onGameWon?: () => void,
     private onGameOver?: () => void,
     canvasSize?: CanvasSize,
-    private onLevelTransition?: (payload: LevelTransitionPayload) => void,
+    private onLevelTransition?: (
+      payload: LevelTransitionPayload,
+    ) => void | Promise<void>,
     private qaScenario?: GameQaScenario | null,
     private audioSink: GameAudioSink = NOOP_AUDIO_SINK,
     private onLevelChange?: (level: number) => void,
@@ -854,7 +856,22 @@ export class GameEngine {
     this.audioSink.setHighIntensity(
       nextSpeedMultiplier >= HIGH_INTENSITY_SPEED_MULTIPLIER,
     );
-    this.onLevelTransition?.(payload);
+    const levelTransitionResult = this.onLevelTransition?.(payload);
+
+    if (
+      levelTransitionResult &&
+      typeof levelTransitionResult.then === "function"
+    ) {
+      levelTransitionResult
+        .catch((error) =>
+          ERROR("❌ Erro recuperável na transição de fase:", error),
+        )
+        .finally(() => {
+          if (this.isStopped || !this.isLevelTransitioning) return;
+          this.finishLevelTransition(nextLevel, nextSpeedMultiplier);
+        });
+      return;
+    }
 
     this.levelTransitionTimer = setTimeout(() => {
       this.finishLevelTransition(nextLevel, nextSpeedMultiplier);

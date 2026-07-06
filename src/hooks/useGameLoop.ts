@@ -30,7 +30,7 @@ interface GameLoopCallbacks {
   onScoreUpdate: (score: number) => void;
   onGameWon?: () => void;
   onGameOver?: () => void;
-  onLevelTransition?: (payload: LevelTransitionPayload) => void;
+  onLevelTransition?: (payload: LevelTransitionPayload) => void | Promise<void>;
   onLevelChange?: (level: number) => void;
 }
 
@@ -176,7 +176,7 @@ export function useGameLoop(
   onGameWon?: () => void,
   onGameOver?: () => void,
   canvasSize?: CanvasSize,
-  onLevelTransition?: (payload: LevelTransitionPayload) => void,
+  onLevelTransition?: (payload: LevelTransitionPayload) => void | Promise<void>,
   qaScenario?: GameQaScenario | null,
   audioSink?: GameAudioSink,
   onLevelChange?: (level: number) => void,
