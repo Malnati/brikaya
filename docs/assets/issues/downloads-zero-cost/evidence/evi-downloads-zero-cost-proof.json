@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-07-06T06:47:15.498Z",
+  "browser": "Google Chrome via Puppeteer executablePath",
+  "baseUrl": "http://127.0.0.1:4173/downloads/",
+  "desktop": {
+    "url": "http://127.0.0.1:4173/downloads/",
+    "title": "Baixar Brikaya — jogo grátis no navegador",
+    "canonical": "https://brikaya.com/downloads/",
+    "h1": "Baixar Brikaya",
+    "qrText": "https://brikaya.com/",
+    "imageCount": 7
+  },
+  "mobile": {
+    "url": "http://127.0.0.1:4173/downloads/",
+    "title": "Baixar Brikaya — jogo grátis no navegador",
+    "canonical": "https://brikaya.com/downloads/",
+    "h1": "Baixar Brikaya",
+    "qrText": "https://brikaya.com/",
+    "imageCount": 7
+  },
+  "bannedStoreNamesAbsent": true,
+  "localSvgImagesOnly": true,
+  "screenshots": [
+    "docs/assets/issues/downloads-zero-cost/evidence/evi-downloads-zero-cost-desktop.png",
+    "docs/assets/issues/downloads-zero-cost/evidence/evi-downloads-zero-cost-mobile.png"
+  ]
+}

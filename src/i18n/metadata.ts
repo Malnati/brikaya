@@ -7,10 +7,15 @@ import {
   type AppLocale,
   type TranslationKey,
 } from "./messages";
+import {
+  DOWNLOADS_ROUTE_PATH,
+  HOME_ROUTE_PATH,
+  getLocalizedPublicPath,
+  getPublicRoutePath,
+  type PublicRoutePath,
+} from "../routes";
 
 const CANONICAL_ORIGIN = "https://brikaya.com";
-const ROOT_PATH = "/";
-const TRAILING_SLASH = "/";
 const HREFLANG_DEFAULT = "x-default";
 const HREFLANG_LINK_SELECTOR = 'link[rel="alternate"][hreflang]';
 const CANONICAL_LINK_SELECTOR = 'link[rel="canonical"]';
@@ -33,22 +38,40 @@ export interface SeoMetadata {
   canonicalUrl: string;
 }
 
+export function getLocalizedRoutePath(
+  locale: AppLocale,
+  routePath: PublicRoutePath = HOME_ROUTE_PATH,
+): string {
+  return getLocalizedPublicPath(locale, DEFAULT_LOCALE, routePath);
+}
+
 export function getLocalePath(locale: AppLocale): string {
-  return locale === DEFAULT_LOCALE ? ROOT_PATH : `${ROOT_PATH}${locale}${TRAILING_SLASH}`;
+  return getLocalizedRoutePath(locale, HOME_ROUTE_PATH);
 }
 
-export function getCanonicalUrl(locale: AppLocale): string {
-  return `${CANONICAL_ORIGIN}${getLocalePath(locale)}`;
+export function getCanonicalUrl(
+  locale: AppLocale,
+  routePath: PublicRoutePath = HOME_ROUTE_PATH,
+): string {
+  return `${CANONICAL_ORIGIN}${getLocalizedRoutePath(locale, routePath)}`;
 }
 
-export function getSeoMetadata(locale: AppLocale): SeoMetadata {
+export function getSeoMetadata(
+  locale: AppLocale,
+  routePath: PublicRoutePath = HOME_ROUTE_PATH,
+): SeoMetadata {
   const messages = I18N_MESSAGES[locale] ?? I18N_MESSAGES[FALLBACK_LOCALE];
+  const isDownloadsPage = routePath === DOWNLOADS_ROUTE_PATH;
 
   return {
-    title: messages["seo.title"],
-    description: messages["seo.description"],
-    ogDescription: messages["seo.ogDescription"],
-    canonicalUrl: getCanonicalUrl(locale),
+    title: messages[isDownloadsPage ? "seo.downloadsTitle" : "seo.title"],
+    description:
+      messages[isDownloadsPage ? "seo.downloadsDescription" : "seo.description"],
+    ogDescription:
+      messages[
+        isDownloadsPage ? "seo.downloadsOgDescription" : "seo.ogDescription"
+      ],
+    canonicalUrl: getCanonicalUrl(locale, routePath),
   };
 }
 
@@ -81,7 +104,8 @@ function appendHreflangLink(locale: AppLocale | typeof HREFLANG_DEFAULT, url: st
 }
 
 export function applySeoMetadata(locale: AppLocale) {
-  const metadata = getSeoMetadata(locale);
+  const routePath = getPublicRoutePath(window.location.pathname, SUPPORTED_LOCALES);
+  const metadata = getSeoMetadata(locale, routePath);
   const canonicalLink = ensureLink(CANONICAL_LINK_SELECTOR);
 
   document.documentElement.lang = locale;
@@ -96,9 +120,9 @@ export function applySeoMetadata(locale: AppLocale) {
   setMetaContent(TWITTER_DESCRIPTION_META_SELECTOR, metadata.ogDescription);
   removeExistingHreflangLinks();
   for (const supportedLocale of SUPPORTED_LOCALES) {
-    appendHreflangLink(supportedLocale, getCanonicalUrl(supportedLocale));
+    appendHreflangLink(supportedLocale, getCanonicalUrl(supportedLocale, routePath));
   }
-  appendHreflangLink(HREFLANG_DEFAULT, getCanonicalUrl(DEFAULT_LOCALE));
+  appendHreflangLink(HREFLANG_DEFAULT, getCanonicalUrl(DEFAULT_LOCALE, routePath));
 }
 
 export function getMessage(locale: AppLocale, key: TranslationKey): string {

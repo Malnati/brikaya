@@ -7,6 +7,7 @@ const ASSET_MANIFEST_URL = "/asset-cache-manifest.json";
 const CORE_PRECACHE_URLS = [
   "/",
   "/index.html",
+  "/downloads/",
   "/manifest.webmanifest",
   ASSET_MANIFEST_URL,
 ];

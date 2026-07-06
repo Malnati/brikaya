@@ -41,6 +41,20 @@ export const sprPowerupLaserFan =
 export const uiAppBrowserFavicon =
   "/assets/visual/ui/ui-app-browser-favicon.svg";
 export const uiPwaAppIcon = "/assets/visual/ui/ui-pwa-app-icon.svg";
+export const uiDownloadsQrCode =
+  "/assets/visual/ui/ui-downloads-qr-code.svg";
+export const uiDownloadsArcadePreview =
+  "/assets/visual/ui/ui-downloads-arcade-preview.svg";
+export const uiDownloadsPlayWeb =
+  "/assets/visual/ui/ui-downloads-play-web.svg";
+export const uiDownloadsInstallBrowser =
+  "/assets/visual/ui/ui-downloads-install-browser.svg";
+export const uiDownloadsMobileQr =
+  "/assets/visual/ui/ui-downloads-mobile-qr.svg";
+export const uiDownloadsHomeShortcut =
+  "/assets/visual/ui/ui-downloads-home-shortcut.svg";
+export const uiDownloadsFreePrivacy =
+  "/assets/visual/ui/ui-downloads-free-privacy.svg";
 export const sprBallPlayerHighContrastDefault =
   "/assets/visual/sprites/spr-ball-player-high-contrast-default.svg";
 export const sprPaddlePlayerHighContrastDefault =
@@ -314,6 +328,13 @@ export const VISUAL_ASSET_PATHS = {
   sprPowerupLaserFan,
   uiAppBrowserFavicon,
   uiPwaAppIcon,
+  uiDownloadsQrCode,
+  uiDownloadsArcadePreview,
+  uiDownloadsPlayWeb,
+  uiDownloadsInstallBrowser,
+  uiDownloadsMobileQr,
+  uiDownloadsHomeShortcut,
+  uiDownloadsFreePrivacy,
   sprBallPlayerHighContrastDefault,
   sprPaddlePlayerHighContrastDefault,
   sprBrickBasicRedHighContrastNormal,
@@ -665,6 +686,83 @@ export const VISUAL_ASSET_CATALOG = [
     width: 512,
     height: 512,
     usage: "Ícone instalável da PWA",
+  },
+  {
+    id: "ui-downloads-qr-code",
+    variableName: "uiDownloadsQrCode",
+    path: uiDownloadsQrCode,
+    group: "ui",
+    semanticRole: "downloads-qr-code",
+    state: "normal",
+    width: 29,
+    height: 29,
+    usage: "QRCode local da página de downloads",
+  },
+  {
+    id: "ui-downloads-arcade-preview",
+    variableName: "uiDownloadsArcadePreview",
+    path: uiDownloadsArcadePreview,
+    group: "ui",
+    semanticRole: "downloads-arcade-preview",
+    state: "normal",
+    width: 960,
+    height: 720,
+    usage: "Prévia arcade da página de downloads",
+  },
+  {
+    id: "ui-downloads-play-web",
+    variableName: "uiDownloadsPlayWeb",
+    path: uiDownloadsPlayWeb,
+    group: "ui",
+    semanticRole: "downloads-play-web",
+    state: "normal",
+    width: 256,
+    height: 256,
+    usage: "Ícone de app web da página de downloads",
+  },
+  {
+    id: "ui-downloads-install-browser",
+    variableName: "uiDownloadsInstallBrowser",
+    path: uiDownloadsInstallBrowser,
+    group: "ui",
+    semanticRole: "downloads-install-browser",
+    state: "normal",
+    width: 256,
+    height: 256,
+    usage: "Ícone de instalação pelo navegador",
+  },
+  {
+    id: "ui-downloads-mobile-qr",
+    variableName: "uiDownloadsMobileQr",
+    path: uiDownloadsMobileQr,
+    group: "ui",
+    semanticRole: "downloads-mobile-qr",
+    state: "normal",
+    width: 256,
+    height: 256,
+    usage: "Ícone de QRCode em celular",
+  },
+  {
+    id: "ui-downloads-home-shortcut",
+    variableName: "uiDownloadsHomeShortcut",
+    path: uiDownloadsHomeShortcut,
+    group: "ui",
+    semanticRole: "downloads-home-shortcut",
+    state: "normal",
+    width: 256,
+    height: 256,
+    usage: "Ícone de atalho na tela inicial",
+  },
+  {
+    id: "ui-downloads-free-privacy",
+    variableName: "uiDownloadsFreePrivacy",
+    path: uiDownloadsFreePrivacy,
+    group: "ui",
+    semanticRole: "downloads-free-privacy",
+    state: "normal",
+    width: 256,
+    height: 256,
+    usage: "Ícone de gratuidade e privacidade",
   },
   {
     id: "spr-ball-player-high-contrast-default",

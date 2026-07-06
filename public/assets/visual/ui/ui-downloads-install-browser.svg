@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Instalar no navegador</title>
+  <desc id="desc">Seta entrando em aparelho com brilho neon.</desc>
+  <rect width="256" height="256" rx="48" fill="#12122a"/>
+  <rect x="72" y="44" width="112" height="168" rx="24" fill="#080816" stroke="#00e5ff" stroke-width="8"/>
+  <path d="M128 74v74" stroke="#39ff88" stroke-width="16" stroke-linecap="round"/>
+  <path d="M94 122l34 34 34-34" fill="none" stroke="#39ff88" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="102" y="180" width="52" height="10" rx="5" fill="#f8f7ff" opacity="0.8"/>
+</svg>

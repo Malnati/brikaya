@@ -8,8 +8,11 @@ const SITEMAP_FILE = 'sitemap.xml';
 const ROBOTS_FILE = 'robots.txt';
 const CANONICAL_ORIGIN = 'https://brikaya.com';
 const DEFAULT_LOCALE = 'pt-BR';
-const LASTMOD = '2026-07-04';
+const LASTMOD = '2026-07-06';
 const XML_HEADER = '<?xml version="1.0" encoding="UTF-8"?>';
+const HOME_ROUTE_PATH = '/';
+const DOWNLOADS_ROUTE_PATH = '/downloads/';
+const LOCALIZED_ROUTES = [HOME_ROUTE_PATH, DOWNLOADS_ROUTE_PATH];
 const STATIC_PUBLIC_PATHS = ['/privacy/', '/terms/'];
 const LOCALES = [
   'pt-BR',
@@ -106,6 +109,27 @@ const SEO = {
   },
 };
 
+const DOWNLOADS_SEO = {
+  'pt-BR': {
+    title: 'Baixar Brikaya — jogo grátis no navegador',
+    description: 'Instale ou jogue Brikaya gratuitamente, sem conta, sem pagamento, com progresso salvo no seu aparelho e jogo offline após o primeiro acesso.',
+    ogDescription: 'Jogue Brikaya grátis no navegador, instale no aparelho e continue sem conta.',
+  },
+  en: {
+    title: 'Download Brikaya — free browser game',
+    description: 'Install or play Brikaya for free, with no account, no payment, progress saved on your device, and offline play after the first visit.',
+    ogDescription: 'Play Brikaya free in your browser, install it on your device, and keep playing without an account.',
+  },
+};
+
+function metadataFor(locale, routePath) {
+  if (routePath === DOWNLOADS_ROUTE_PATH) {
+    return DOWNLOADS_SEO[locale] ?? DOWNLOADS_SEO.en;
+  }
+
+  return SEO[locale];
+}
+
 function escapeXml(value) {
   return value
     .replaceAll('&', '&amp;')
@@ -115,26 +139,29 @@ function escapeXml(value) {
     .replaceAll("'", '&apos;');
 }
 
-function localePath(locale) {
-  return locale === DEFAULT_LOCALE ? '/' : `/${locale}/`;
+function localePath(locale, routePath = HOME_ROUTE_PATH) {
+  if (locale === DEFAULT_LOCALE) return routePath;
+  if (routePath === HOME_ROUTE_PATH) return `/${locale}/`;
+
+  return `/${locale}${routePath}`;
 }
 
-function canonicalUrl(locale) {
-  return `${CANONICAL_ORIGIN}${localePath(locale)}`;
+function canonicalUrl(locale, routePath = HOME_ROUTE_PATH) {
+  return `${CANONICAL_ORIGIN}${localePath(locale, routePath)}`;
 }
 
-function hreflangLinks() {
+function hreflangLinks(routePath = HOME_ROUTE_PATH) {
   return [
     ...LOCALES.map((locale) =>
-      `    <link rel="alternate" hreflang="${locale}" href="${canonicalUrl(locale)}" />`,
+      `    <link rel="alternate" hreflang="${locale}" href="${canonicalUrl(locale, routePath)}" />`,
     ),
-    `    <link rel="alternate" hreflang="x-default" href="${canonicalUrl(DEFAULT_LOCALE)}" />`,
+    `    <link rel="alternate" hreflang="x-default" href="${canonicalUrl(DEFAULT_LOCALE, routePath)}" />`,
   ].join('\n');
 }
 
-function replaceOrInsertHead(html, locale) {
-  const metadata = SEO[locale];
-  const canonical = canonicalUrl(locale);
+function replaceOrInsertHead(html, locale, routePath = HOME_ROUTE_PATH) {
+  const metadata = metadataFor(locale, routePath);
+  const canonical = canonicalUrl(locale, routePath);
   return html
     .replaceAll('href="./manifest.webmanifest"', 'href="/manifest.webmanifest"')
     .replaceAll('href="./assets/', 'href="/assets/')
@@ -149,16 +176,18 @@ function replaceOrInsertHead(html, locale) {
     .replace(/<meta name="twitter:description" content="[^"]*" \/>/, `<meta name="twitter:description" content="${escapeXml(metadata.ogDescription)}" />`)
     .replace(/<title>.*<\/title>/, `<title>${escapeXml(metadata.title)}</title>`)
     .replace(/(?:\n    <link rel="alternate" hreflang="[^"]+" href="[^"]+" \/>)+/, '')
-    .replace('    <meta name="theme-color"', `${hreflangLinks()}\n    <meta name="theme-color"`);
+    .replace('    <meta name="theme-color"', `${hreflangLinks(routePath)}\n    <meta name="theme-color"`);
 }
 
 function buildSitemap() {
-  const localizedUrls = LOCALES.map((locale) => [
-    '  <url>',
-    `    <loc>${canonicalUrl(locale)}</loc>`,
-    `    <lastmod>${LASTMOD}</lastmod>`,
-    '  </url>',
-  ].join('\n')).join('\n');
+  const localizedUrls = LOCALIZED_ROUTES.flatMap((routePath) =>
+    LOCALES.map((locale) => [
+      '  <url>',
+      `    <loc>${canonicalUrl(locale, routePath)}</loc>`,
+      `    <lastmod>${LASTMOD}</lastmod>`,
+      '  </url>',
+    ].join('\n')),
+  ).join('\n');
   const staticUrls = STATIC_PUBLIC_PATHS.map((path) => [
     '  <url>',
     `    <loc>${CANONICAL_ORIGIN}${path}</loc>`,
@@ -179,17 +208,19 @@ function run() {
   const rootIndexPath = join(distRoot, INDEX_FILE);
   const baseHtml = readFileSync(rootIndexPath, 'utf8');
 
-  for (const locale of LOCALES) {
-    const localizedHtml = replaceOrInsertHead(baseHtml, locale);
-    const outputPath = locale === DEFAULT_LOCALE
-      ? rootIndexPath
-      : join(distRoot, locale, INDEX_FILE);
-    writeFile(outputPath, localizedHtml);
+  for (const routePath of LOCALIZED_ROUTES) {
+    for (const locale of LOCALES) {
+      const localizedHtml = replaceOrInsertHead(baseHtml, locale, routePath);
+      const outputPath = routePath === HOME_ROUTE_PATH
+        ? (locale === DEFAULT_LOCALE ? rootIndexPath : join(distRoot, locale, INDEX_FILE))
+        : join(distRoot, localePath(locale, routePath).replace(/^\//, ''), INDEX_FILE);
+      writeFile(outputPath, localizedHtml);
+    }
   }
 
   writeFile(join(distRoot, SITEMAP_FILE), buildSitemap());
   writeFile(join(distRoot, ROBOTS_FILE), `User-agent: *\nAllow: /\n\nSitemap: ${CANONICAL_ORIGIN}/sitemap.xml\n`);
-  console.log(`localized-seo ok: locales=${LOCALES.length}`);
+  console.log(`localized-seo ok: locales=${LOCALES.length}, routes=${LOCALIZED_ROUTES.length}`);
 }
 
 run();

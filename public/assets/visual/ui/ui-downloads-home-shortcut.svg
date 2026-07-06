@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Atalho na tela inicial</title>
+  <desc id="desc">Ícone do Brikaya fixado na tela inicial.</desc>
+  <rect width="256" height="256" rx="48" fill="#12122a"/>
+  <path d="M48 118 128 52l80 66v84a14 14 0 0 1-14 14H62a14 14 0 0 1-14-14z" fill="#080816" stroke="#00e5ff" stroke-width="8" stroke-linejoin="round"/>
+  <rect x="91" y="132" width="74" height="74" rx="18" fill="#ff2bd6"/>
+  <circle cx="128" cy="169" r="18" fill="#f8f7ff"/>
+  <rect x="82" y="96" width="92" height="18" rx="9" fill="#ffe45e"/>
+</svg>

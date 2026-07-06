@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">QRCode no celular</title>
+  <desc id="desc">Celular lendo um código quadrado.</desc>
+  <rect width="256" height="256" rx="48" fill="#12122a"/>
+  <rect x="52" y="32" width="96" height="192" rx="22" fill="#080816" stroke="#00e5ff" stroke-width="8"/>
+  <rect x="76" y="66" width="48" height="48" fill="#f8f7ff"/>
+  <rect x="84" y="74" width="12" height="12" fill="#080816"/>
+  <rect x="104" y="74" width="12" height="12" fill="#080816"/>
+  <rect x="84" y="96" width="12" height="12" fill="#080816"/>
+  <rect x="106" y="98" width="10" height="10" fill="#080816"/>
+  <path d="M166 92h34v34M200 164h-34v-34" fill="none" stroke="#ff2bd6" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="100" cy="196" r="7" fill="#39ff88"/>
+</svg>
