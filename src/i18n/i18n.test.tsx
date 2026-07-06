@@ -1189,6 +1189,13 @@ const USER_COPY_KEYS: TranslationKey[] = [
   "logs.export",
   "logs.clear",
 ];
+const POST_AD_RESUME_KEYS: TranslationKey[] = [
+  "postAdResume.aria",
+  "postAdResume.title",
+  "postAdResume.body",
+  "postAdResume.thanks",
+  "postAdResume.cta",
+];
 const TECHNICAL_COPY_PATTERN = /\b(logs?|tools?)\b/i;
 
 function LocaleProbe() {
@@ -1673,6 +1680,23 @@ describe("i18n offline do Brikaya", () => {
       for (const key of USER_COPY_KEYS) {
         expect(I18N_MESSAGES[locale][key]).toBeTruthy();
         expect(I18N_MESSAGES[locale][key]).not.toMatch(TECHNICAL_COPY_PATTERN);
+      }
+    }
+  });
+
+  it("mantém mensagem pós-publicidade localizada para todos os idiomas", () => {
+    for (const locale of SUPPORTED_LOCALES) {
+      for (const key of POST_AD_RESUME_KEYS) {
+        expect(I18N_MESSAGES[locale][key]).toBeTruthy();
+        expect(I18N_MESSAGES[locale][key]).not.toMatch(
+          /AdSense|Google|H5|CMP|adsbygoogle|\bAPI\b/i,
+        );
+        if (key === "postAdResume.body") {
+          expect(I18N_MESSAGES[locale][key]).toContain("{{level}}");
+        }
+        if (!ENGLISH_LOCALES.has(locale)) {
+          expect(I18N_MESSAGES[locale][key]).not.toBe(EN_MESSAGES[key]);
+        }
       }
     }
   });

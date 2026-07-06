@@ -3,6 +3,7 @@ import {
   configureGoogleAdSound,
   isGoogleAdsEnabled,
   requestInterlevelGoogleAd,
+  shouldRequestInterlevelGoogleAd,
 } from "./googleAds";
 
 describe("Google interlevel ads", () => {
@@ -144,5 +145,15 @@ describe("Google interlevel ads", () => {
     configureGoogleAdSound(true);
 
     expect(window.adConfig).not.toHaveBeenCalled();
+  });
+
+  it("solicita interstitial só depois de cada terceira fase concluída", () => {
+    expect(shouldRequestInterlevelGoogleAd(1)).toBe(false);
+    expect(shouldRequestInterlevelGoogleAd(2)).toBe(false);
+    expect(shouldRequestInterlevelGoogleAd(3)).toBe(true);
+    expect(shouldRequestInterlevelGoogleAd(4)).toBe(false);
+    expect(shouldRequestInterlevelGoogleAd(5)).toBe(false);
+    expect(shouldRequestInterlevelGoogleAd(6)).toBe(true);
+    expect(shouldRequestInterlevelGoogleAd(9)).toBe(true);
   });
 });

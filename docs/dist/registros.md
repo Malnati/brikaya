@@ -501,7 +501,7 @@ Critérios:
 - CMP certificado Google foi configurado pelo painel AdSense com três opções para regulamentações europeias: `Consentir`, `Não consentir`, `Gerenciar opções`.
 - O painel ainda mostrou ads.txt como `Não encontrado`; o projeto agora publica `/ads.txt` com o publisher público do AdSense e aguarda recrawl do AdSense.
 - Central de políticas do AdSense verificada em modo leitura: `Não encontramos nenhum problema`.
-- Implementação preparada sem campanha paga: snippet para revisão do site, flag runtime desligada por padrão, e chamada H5 `adBreak` apenas entre fases quando a liberação do Google existir.
+- Implementação preparada sem campanha paga: snippet para revisão do site, flag runtime desligada por padrão, chamada H5 `adBreak` apenas depois das fases 3, 6, 9... quando a liberação do Google existir, e mensagem pós-anúncio com retorno manual ao jogo.
 - H5 Games Ads / Ad Placement API segue pendente de liberação/aprovação do Google; o formulário oficial exige conta aprovada e dados adicionais de contato/empresa/telefone antes de submissão.
-- Guardrails mantidos: sem Google Ads campaign, sem orçamento, sem cartão, sem Clarity/pixel adicional, sem clique em anúncio real em QA e sem anúncio durante jogada ativa.
+- Guardrails mantidos: sem Google Ads campaign, sem orçamento, sem cartão, sem Clarity/pixel adicional, sem clique em anúncio real em QA e sem anúncio durante jogada ativa e sem exibição em todas as transições de fase.
 - Documento operacional: [`docs/monetizacao-google.md`](../monetizacao-google.md).

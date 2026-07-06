@@ -786,6 +786,30 @@ describe("GameEngine", () => {
     expect(gameState.speedState.elapsedLevelMs).toBeGreaterThanOrEqual(0);
   });
 
+  it("inicia cenário de QA fase 3 pronto para transição 3 para 4", async () => {
+    jest.useFakeTimers();
+    mockBricksAllDestroyed = true;
+
+    const engine = new (GameEngine as any)(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      onLevelTransition,
+      "single-brick-phase3-clear",
+    );
+
+    await (engine as any).onBrickDestroyed();
+
+    expect(onLevelTransition).toHaveBeenCalledTimes(1);
+    expect(onLevelTransition.mock.calls[0][0]).toMatchObject({
+      currentLevel: 3,
+      nextLevel: 4,
+      nextSpeedMultiplier: calculateLevelSpeedMultiplier(4),
+    });
+  });
+
   it("mantém contador de hits da fase mesmo quando o hit vem de bolas diferentes", async () => {
     const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
     const mockGameLogger = require("../storage/gameLogger").gameLogger;

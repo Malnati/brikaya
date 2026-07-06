@@ -1434,6 +1434,132 @@ canvas {
   margin-top: var(--space-1);
 }
 
+.post-ad-resume {
+  position: fixed;
+  inset: 0;
+  z-index: 38;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-width: 100vw;
+  min-height: 100dvh;
+  padding: max(24px, env(safe-area-inset-top))
+    max(24px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom))
+    max(24px, env(safe-area-inset-left));
+  overflow: hidden;
+  color: var(--color-text);
+  background:
+    radial-gradient(
+      circle at 50% 34%,
+      color-mix(in srgb, var(--bb-color-primary) 24%, transparent),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 22% 76%,
+      color-mix(in srgb, var(--bb-color-secondary) 18%, transparent),
+      transparent 32%
+    ),
+    color-mix(in srgb, var(--bb-color-background) 90%, transparent);
+  isolation: isolate;
+  animation: cinematic-overlay-in 180ms ease-out;
+}
+
+.post-ad-resume__halo {
+  position: absolute;
+  z-index: 0;
+  width: min(84vw, 420px);
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--bb-color-primary) 48%, transparent);
+  border-radius: 999px;
+  background:
+    radial-gradient(
+      circle,
+      color-mix(in srgb, var(--bb-color-primary) 24%, transparent) 0%,
+      transparent 58%
+    ),
+    conic-gradient(
+      from 90deg,
+      transparent,
+      color-mix(in srgb, var(--bb-color-primary) 56%, transparent),
+      transparent,
+      color-mix(in srgb, var(--bb-color-secondary) 44%, transparent),
+      transparent
+    );
+  filter: blur(0.5px);
+  opacity: 0.7;
+  animation: post-ad-resume-halo-spin 3600ms linear infinite;
+}
+
+.post-ad-resume__panel {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: var(--space-3);
+  width: min(100%, 460px);
+  box-sizing: border-box;
+  padding: clamp(24px, 7vw, 36px);
+  border: 1px solid color-mix(in srgb, var(--bb-color-primary) 46%, transparent);
+  border-radius: calc(var(--radius-lg) + 6px);
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--bb-color-panel) 92%, transparent),
+      color-mix(in srgb, var(--bb-color-surface) 82%, transparent)
+    );
+  box-shadow:
+    var(--shadow-panel),
+    0 0 42px color-mix(in srgb, var(--bb-color-primary) 22%, transparent);
+  text-align: center;
+  backdrop-filter: blur(16px);
+}
+
+.post-ad-resume__panel h2,
+.post-ad-resume__panel p {
+  margin: 0;
+}
+
+.post-ad-resume__eyebrow {
+  justify-self: center;
+  border: 1px solid color-mix(in srgb, var(--bb-color-primary) 40%, transparent);
+  border-radius: 999px;
+  padding: 7px 14px;
+  color: var(--bb-color-primary-strong);
+  background: color-mix(in srgb, var(--bb-color-background) 68%, transparent);
+  font-family: var(--bb-font-display);
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.post-ad-resume__panel h2 {
+  color: var(--bb-color-primary-strong);
+  font-family: var(--bb-font-display);
+  font-size: clamp(2.1rem, 10vw, 3.6rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 28px color-mix(in srgb, var(--bb-color-primary) 38%, transparent);
+}
+
+.post-ad-resume__body {
+  color: var(--color-text);
+  font-size: clamp(1.02rem, 4vw, 1.22rem);
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.post-ad-resume__thanks {
+  color: color-mix(in srgb, var(--color-muted) 86%, transparent);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.post-ad-resume__button {
+  width: 100%;
+  min-height: 52px;
+}
+
 @keyframes cinematic-overlay-in {
   from {
     opacity: 0;
@@ -1441,6 +1567,20 @@ canvas {
 
   to {
     opacity: 1;
+  }
+}
+
+@keyframes post-ad-resume-halo-spin {
+  from {
+    transform: rotate(0deg) scale(0.96);
+  }
+
+  50% {
+    transform: rotate(180deg) scale(1.04);
+  }
+
+  to {
+    transform: rotate(360deg) scale(0.96);
   }
 }
 
@@ -2484,6 +2624,8 @@ canvas {
   .language-detection-overlay__rain,
   .language-detection-overlay__keyboard span,
   .language-detection-overlay__bar,
+  .post-ad-resume,
+  .post-ad-resume__halo,
   .dashboard-button {
     animation: none;
     transition-property: opacity, background, border-color;

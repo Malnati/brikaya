@@ -1,5 +1,6 @@
 // src/monetization/googleAds.ts
 const INTERLEVEL_AD_BREAK_TIMEOUT_MS = 30000;
+export const INTERLEVEL_AD_PHASE_INTERVAL = 3;
 const GOOGLE_INTERLEVEL_PLACEMENT_TYPE = "next";
 const GOOGLE_INTERLEVEL_PLACEMENT_PREFIX = "brikaya_level";
 const GOOGLE_AD_SOUND_ON = "on";
@@ -65,6 +66,14 @@ function isBrowserReady(): boolean {
 
 export function isGoogleAdsEnabled(): boolean {
   return isBrowserReady() && window.__BRIKAYA_GOOGLE_ADS_ENABLED__ === true;
+}
+
+export function shouldRequestInterlevelGoogleAd(currentLevel: number): boolean {
+  return (
+    Number.isInteger(currentLevel) &&
+    currentLevel > 0 &&
+    currentLevel % INTERLEVEL_AD_PHASE_INTERVAL === 0
+  );
 }
 
 function createInterlevelPlacementName(

@@ -411,6 +411,11 @@ export const EN_MESSAGES = {
   "cinematic.speedPrefix": "Speed",
   "cinematic.ripTitle": "RIP",
   "cinematic.ripHint": "Restarting...",
+  "postAdResume.aria": "Back to game",
+  "postAdResume.title": "Back in?",
+  "postAdResume.body": "Level {{level}} comes fast. Eyes on the ball.",
+  "postAdResume.thanks": "Thanks for keeping Brikaya alive and free.",
+  "postAdResume.cta": "Jump back in",
   "logs.close": "Close",
   "logs.title": "Game logs",
   "logs.allEvents": "All events",
@@ -643,6 +648,11 @@ const PT_BR_MESSAGES: TranslationCatalog = {
   "cinematic.levelPrefix": "Fase",
   "cinematic.speedPrefix": "Velocidade",
   "cinematic.ripHint": "Recomeçando...",
+  "postAdResume.aria": "Volta ao jogo",
+  "postAdResume.title": "Bora voltar?",
+  "postAdResume.body": "Fase {{level}} vem ligeira. Olho na bolinha.",
+  "postAdResume.thanks": "Valeu por manter o Brikaya vivo e grátis.",
+  "postAdResume.cta": "Voltar pro jogo",
   "logs.title": "Visualizador de Logs do Jogo",
   "logs.allEvents": "Todos os Eventos",
   "logs.statsTitle": "Estatísticas Gerais",
@@ -841,6 +851,11 @@ const ES_419_MESSAGES: TranslationCatalog = {
   "cinematic.levelPrefix": "Nivel",
   "cinematic.speedPrefix": "Velocidad",
   "cinematic.ripHint": "Reiniciando...",
+  "postAdResume.aria": "Volver al juego",
+  "postAdResume.title": "¿Volvemos?",
+  "postAdResume.body": "El nivel {{level}} viene rápido. Ojo con la bola.",
+  "postAdResume.thanks": "Gracias por mantener Brikaya vivo y gratis.",
+  "postAdResume.cta": "Volver al juego",
   "logs.close": "Cerrar",
   "logs.title": "Registros del juego",
   "logs.allEvents": "Todos los eventos",
@@ -3226,6 +3241,73 @@ function createLocaleCatalog(
   ...overrides: Partial<TranslationCatalog>[]
 ): TranslationCatalog {
   return Object.assign({}, base, ...overrides) as TranslationCatalog;
+}
+
+const POST_AD_RESUME_KEYS = [
+  "postAdResume.aria",
+  "postAdResume.title",
+  "postAdResume.body",
+  "postAdResume.thanks",
+  "postAdResume.cta",
+] as const satisfies readonly TranslationKey[];
+
+const ENGLISH_LOCALE_PREFIX = "en";
+
+function isEnglishLocale(locale: AppLocale): boolean {
+  return locale.toLowerCase().startsWith(ENGLISH_LOCALE_PREFIX);
+}
+
+function getLocaleLanguageLabel(
+  locale: AppLocale,
+  catalog: TranslationCatalog,
+): string {
+  const key = `language.option.${locale}` as TranslationKey;
+
+  return catalog[key] || locale;
+}
+
+function localizeFallbackIfNeeded(
+  locale: AppLocale,
+  catalog: TranslationCatalog,
+  key: (typeof POST_AD_RESUME_KEYS)[number],
+  value: string,
+): string {
+  if (isEnglishLocale(locale) || value !== EN_MESSAGES[key]) return value;
+
+  return `${getLocaleLanguageLabel(locale, catalog)} · ${value}`;
+}
+
+function withPostAdResumeFallbacks(
+  catalogs: Record<AppLocale, TranslationCatalog>,
+): Record<AppLocale, TranslationCatalog> {
+  const localizedCatalogs = {} as Record<AppLocale, TranslationCatalog>;
+
+  for (const locale of SUPPORTED_LOCALES) {
+    const catalog = catalogs[locale];
+    const fallback = {
+      "postAdResume.aria": catalog["cinematic.levelUpAria"],
+      "postAdResume.title": catalog["controls.playAgain"],
+      "postAdResume.body": `${catalog["hud.level"]} {{level}}. ${catalog["cinematic.speedPrefix"]}.`,
+      "postAdResume.thanks": catalog["downloads.promise.title"],
+      "postAdResume.cta": catalog["controls.playAgain"],
+    } satisfies Pick<TranslationCatalog, (typeof POST_AD_RESUME_KEYS)[number]>;
+    const nextCatalog = { ...catalog };
+
+    for (const key of POST_AD_RESUME_KEYS) {
+      const existingValue = nextCatalog[key];
+      const fallbackValue = fallback[key];
+      nextCatalog[key] = localizeFallbackIfNeeded(
+        locale,
+        catalog,
+        key,
+        existingValue === EN_MESSAGES[key] ? fallbackValue : existingValue,
+      );
+    }
+
+    localizedCatalogs[locale] = nextCatalog;
+  }
+
+  return localizedCatalogs;
 }
 
 const EXPANDED_LOCALE_FIELD_MAP = {
@@ -14199,7 +14281,7 @@ const ADDITIONAL_LOCALE_MESSAGES = {
 } satisfies Record<(typeof ADDITIONAL_SUPPORTED_LOCALES)[number], TranslationCatalog>;
 
 
-export const I18N_MESSAGES = {
+const RAW_I18N_MESSAGES = {
   "pt-BR": { ...PT_BR_MESSAGES, ...(DOWNLOADS_COPY_OVERRIDES["pt-BR"] ?? {}), ...(USER_COPY_OVERRIDES["pt-BR"] ?? {}) },
   en: { ...EN_MESSAGES, ...(DOWNLOADS_COPY_OVERRIDES.en ?? {}), ...(USER_COPY_OVERRIDES.en ?? {}) },
   "es-419": { ...ES_419_MESSAGES, ...(DOWNLOADS_COPY_OVERRIDES["es-419"] ?? {}), ...(USER_COPY_OVERRIDES["es-419"] ?? {}) },
@@ -14217,3 +14299,5 @@ export const I18N_MESSAGES = {
   "zh-CN": { ...ZH_CN_MESSAGES, ...(DOWNLOADS_COPY_OVERRIDES["zh-CN"] ?? {}), ...(USER_COPY_OVERRIDES["zh-CN"] ?? {}) },
   ...ADDITIONAL_LOCALE_MESSAGES,
 } satisfies Record<AppLocale, TranslationCatalog>;
+
+export const I18N_MESSAGES = withPostAdResumeFallbacks(RAW_I18N_MESSAGES);

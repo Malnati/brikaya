@@ -3,7 +3,7 @@
 
 ## Objetivo
 
-Preparar `https://brikaya.com/` para monetização por Google AdSense/H5 Games Ads com anúncios intersticiais apenas entre fases, sem investimento em campanhas, sem banners fixos, sem anúncios durante a jogada e sem bloquear o jogo quando não houver anúncio.
+Preparar `https://brikaya.com/` para monetização por Google AdSense/H5 Games Ads com anúncios intersticiais apenas a cada 3 fases concluídas, sem investimento em campanhas, sem banners fixos, sem anúncios durante a jogada e sem bloquear o jogo quando não houver anúncio.
 
 ## Estado em 2026-07-06
 
@@ -22,9 +22,9 @@ Preparar `https://brikaya.com/` para monetização por Google AdSense/H5 Games A
 
 - O snippet AdSense fica no `<head>` para verificação do site.
 - A chamada de anúncio fica atrás de flag runtime desligada por padrão: `window.__BRIKAYA_GOOGLE_ADS_ENABLED__ = false`.
-- O jogo chama `adBreak({ type: "next" })` somente na transição entre fases.
-- A transição só termina quando a pausa mínima da fase e o retorno do anúncio/no-fill terminam.
-- Se a API não estiver disponível, o navegador estiver offline, a flag estiver desligada, o anúncio não preencher ou o consentimento impedir exibição, o jogo segue para a próxima fase.
+- O jogo chama `adBreak({ type: "next" })` somente depois das fases 3, 6, 9...; outras transições seguem sem pedido de anúncio.
+- Quando um anúncio real é exibido, a transição só termina depois da pausa mínima, do retorno do anúncio e do clique do jogador na mensagem de volta ao jogo.
+- Se a API não estiver disponível, o navegador estiver offline, a flag estiver desligada, o anúncio não preencher ou o consentimento impedir exibição, o jogo segue para a próxima fase sem mensagem extra.
 
 ## Regras legais e produto
 
@@ -32,7 +32,7 @@ Preparar `https://brikaya.com/` para monetização por Google AdSense/H5 Games A
 - Anúncios personalizados em EEA/Reino Unido/Suíça exigem CMP certificado Google antes da ativação regional.
 - Privacidade e termos públicos informam cookies/armazenamento usados por fornecedores de anúncio, inclusive Google.
 - QA nunca deve clicar em anúncio real nem incentivar cliques.
-- Anúncios não devem aparecer durante movimento da bola, controle do jogador, menus principais, countdown inicial ou modo offline.
+- Anúncios não devem aparecer durante movimento da bola, controle do jogador, menus principais, countdown inicial, modo offline ou transições que não sejam múltiplas de 3 fases.
 
 ## Pendências P0-P20
 
@@ -42,7 +42,7 @@ Preparar `https://brikaya.com/` para monetização por Google AdSense/H5 Games A
 | P1 | Status do site verificado | feito: `Precisa de revisão` |
 | P2 | Snippet AdSense adicionado ao `<head>` | feito |
 | P3 | Flag runtime desligada por padrão | feito |
-| P4 | Interstitial somente entre fases | feito no código |
+| P4 | Interstitial somente a cada 3 fases concluídas | feito no código |
 | P5 | Fallback sem internet/API/no-fill | feito no código |
 | P6 | Privacidade/termos atualizados | feito |
 | P7 | Documentação operacional criada | feito |
@@ -51,7 +51,7 @@ Preparar `https://brikaya.com/` para monetização por Google AdSense/H5 Games A
 | P10 | Verificação AdSense após deploy | feito |
 | P11 | Pedir revisão no AdSense | feito |
 | P12 | Policy Center sem bloqueios | feito: AdSense mostrou “Não encontramos nenhum problema” |
-| P13 | Teste E2E de anúncio/no-fill | feito com anúncio simulado, sem clique real |
+| P13 | Teste E2E de anúncio/no-fill | feito com anúncio simulado na fase 3→4, sem clique real |
 | P14 | Teste offline/sem consentimento/no-fill | feito com fallback sem bloqueio de fase e sem pedido de anúncio antes do consentimento |
 | P15 | Prova mobile pública | feito em `tmp/screenshots/cloudflare-interlevel-google-ads.png` |
 | P16 | Monitorar consent audit | pendente |
