@@ -733,13 +733,14 @@ describe("App theme selector", () => {
     ).toHaveAttribute("data-settings-action", "reset-preferences");
   });
 
-  it("encaminha cenário de QA de blocos desviantes para o jogo", async () => {
+  it("encaminha cenário de QA de blocos desviantes com compatibilidade clássica", async () => {
     mockSystemTheme(true);
     window.history.replaceState(null, "", "/?qaScenario=evasive-blocks");
 
     await renderApp();
 
     expect(mockLastGameProps?.qaScenario).toBe("evasive-blocks");
+    expect(mockLastGameProps?.gameMode).toBe("classic");
   });
 
   it("encaminha cenário de QA de colisão da raquete para o jogo", async () => {

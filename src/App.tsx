@@ -50,7 +50,10 @@ import {
   type BrikayaUpdateProgressDetail,
 } from "./registerServiceWorker";
 import { BUILD_VERSION_LABEL } from "./constants/buildVersion";
-import { GAME_MODE_BALL_TURRET } from "./constants/gameMode";
+import {
+  GAME_MODE_BALL_TURRET,
+  GAME_MODE_CLASSIC,
+} from "./constants/gameMode";
 import { LOG } from "./utils/logger";
 import { audioManager } from "./utils/audioManager";
 import {
@@ -232,7 +235,10 @@ export default function App() {
     if (scenario === AUDIO_QA_SCENARIO) return AUDIO_QA_SCENARIO;
     return null;
   }, []);
-  const activeGameMode = GAME_MODE_BALL_TURRET;
+  const activeGameMode =
+    qaScenario === EVASIVE_BLOCKS_QA_SCENARIO
+      ? GAME_MODE_CLASSIC
+      : GAME_MODE_BALL_TURRET;
   const hasJoystickDiagnosticSamples =
     joystickDiagnosticState.samples.length > 0;
   const joystickDiagnosticSampleCountLabel = hasJoystickDiagnosticSamples
