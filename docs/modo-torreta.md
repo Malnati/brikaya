@@ -3,22 +3,20 @@
 
 ## Objetivo
 
-Adicionar ao Brikaya um modo alternativo de jogo acionado pelo menu: **Torreta**. A fantasia é a visão do atirador dentro de uma torreta esférica de bombardeiro, com cama elástica, bolha de vidro e profundidade visual dentro do círculo de jogo.
+Tornar **Torreta** o padrão permanente do Brikaya em todas as fases. A fantasia é a visão do atirador dentro de uma torreta esférica de bombardeiro, com cama elástica, bolha de vidro e profundidade visual dentro do círculo de jogo.
 
 ## Contexto
 
 - O jogo continua sendo arcade offline-first em React/TypeScript.
 - O círculo permanece como limite visual e mecânico da partida.
-- A bolinha, os blocos, poderes, fases, áudio, pontuação e recordes continuam compartilhados com o modo clássico.
-- A mudança é um modo de apresentação e controle visual, não uma troca completa do motor do jogo.
+- A bolinha, os blocos, poderes, fases, áudio, pontuação e recordes continuam usando o motor compartilhado.
+- O modo clássico fica apenas como compatibilidade interna de motor/testes, sem seletor para o jogador.
 
 ## Escopo implementado
 
-- Seletor de modo no menu:
-  - `Clássico`
-  - `Torreta`
-- Persistência local da preferência do jogador.
-- Reinício seguro da partida ao trocar o modo.
+- Torreta forçada como modo ativo no fluxo normal do jogador.
+- Seletor de modo removido do menu.
+- Preferência antiga de modo clássico salva no aparelho é ignorada.
 - Cenário de QA por URL: `?qaScenario=ball-turret`.
 - Renderização da torreta dentro do círculo:
   - fundo com profundidade radial;
@@ -28,8 +26,8 @@ Adicionar ao Brikaya um modo alternativo de jogo acionado pelo menu: **Torreta**
   - cama elástica curva;
   - cama elástica em anel completo no modo 360°;
   - camada de vidro e vinheta esférica.
-- O modo clássico preserva a raquete original.
-- O modo Torreta usa uma cama elástica como controle visual, mantendo progressão, pontuação, fases, áudio e recordes.
+- O modo clássico preserva a raquete original apenas para compatibilidade interna.
+- A Torreta usa uma cama elástica como controle visual, mantendo progressão, pontuação, fases, áudio e recordes.
 - Blocos da Torreta preenchem toda a circunferência.
 - O segmento ativo da cama elástica rebate a bolinha; o restante do anel é indicação visual.
 - Power-ups da Torreta saem do centro para a borda e são coletados ao tocar a borda.
@@ -48,8 +46,7 @@ Adicionar ao Brikaya um modo alternativo de jogo acionado pelo menu: **Torreta**
 ### Estado do modo
 
 - Constantes: `src/constants/gameMode.ts`.
-- Hook de preferência: `src/hooks/useGameModePreference.ts`.
-- `App` calcula o modo ativo e passa para `Game`.
+- `App` fixa o modo ativo em Torreta e passa para `Game`.
 - `Game` passa o modo para `useGameLoop`.
 - `useGameLoop` cria o `GameEngine` com o modo selecionado.
 
@@ -87,12 +84,8 @@ Adicionar ao Brikaya um modo alternativo de jogo acionado pelo menu: **Torreta**
 
 ### UI e linguagem
 
-- Cópia final do usuário usa linguagem de produto:
-  - `Modo de jogo`
-  - `Clássico`
-  - `Torreta`
-  - `Rebata na cama elástica e defenda o círculo.`
-- Nenhum detalhe de implementação aparece na interface do jogador.
+- O menu não exibe seleção de modo.
+- Cópia final do usuário mantém linguagem de produto e não expõe detalhes de implementação.
 
 ## Cobertura de testes
 
@@ -100,7 +93,7 @@ Adicionar ao Brikaya um modo alternativo de jogo acionado pelo menu: **Torreta**
 
 - `src/constants/gameMode.test.ts`
   - valida modos conhecidos;
-  - resolve valores inválidos para `classic`.
+  - preserva compatibilidade interna do modo clássico.
 - `src/logic/rendering/ballTurretRenderer.test.ts`
   - desenha fundo, cama elástica e vidro;
   - usa geometria radial quando disponível;
@@ -115,12 +108,11 @@ Adicionar ao Brikaya um modo alternativo de jogo acionado pelo menu: **Torreta**
   - valida perda da bolinha em qualquer borda fora do segmento ativo da Torreta.
 - `src/components/Game.test.tsx`
   - repassa `gameMode` ao loop;
-  - mantém padrão clássico.
+  - mantém compatibilidade padrão do componente isolado.
 - `src/App.test.tsx`
-  - mostra seletor no menu;
-  - persiste `Torreta`;
-  - reinicia a partida ao trocar;
-  - carrega preferência salva;
+  - usa `ball-turret` por padrão;
+  - não mostra seletor no menu;
+  - ignora preferência antiga de modo clássico;
   - força `ball-turret` por cenário de QA.
 - `src/logic/GameEngine.test.ts`
   - modo clássico desenha raquete;
@@ -136,7 +128,7 @@ Adicionar ao Brikaya um modo alternativo de jogo acionado pelo menu: **Torreta**
 
 - `tests/e2e/cloudflare-ball-turret-qa.js`
   - abre `?qaScenario=ball-turret`;
-  - valida menu e botões de modo;
+  - valida que a Torreta está ativa sem seletor de modo;
   - exercita cama elástica por mouse e teclado;
   - captura desktop, mobile e menu;
   - verifica canvas visível e HUD ativo;

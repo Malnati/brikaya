@@ -24,8 +24,6 @@ const QA_SCENARIO = "ball-turret";
 const MENU_BUTTON_PATTERN = /menu/i;
 const CLOSE_MENU_PATTERN = /fechar menu|close menu/i;
 const GAME_MODE_HEADING_PATTERN = /modo de jogo|game mode/i;
-const TURRET_BUTTON_PATTERN = /torreta|turret/i;
-const CLASSIC_BUTTON_PATTERN = /clássico|classic/i;
 const JOYSTICK_DIAGNOSTIC_TOGGLE_PATTERN =
   /registrar controle da torreta|record turret control/i;
 const JOYSTICK_DIAGNOSTIC_DOWNLOAD_PATTERN =
@@ -1585,31 +1583,16 @@ async function runViewport(page, baseUrl, config) {
     MENU_BUTTON_PATTERN.source,
   );
   assert(menuOpened, `${config.name}: botão Menu não encontrado.`);
-  await page.waitForFunction(
-    (source) => {
-      const pattern = new RegExp(source, "i");
-      return Array.from(document.querySelectorAll("h2,h3")).some((heading) =>
-        pattern.test(heading.textContent || ""),
-      );
-    },
-    { timeout: 5000 },
-    GAME_MODE_HEADING_PATTERN.source,
-  );
-
   const menuState = await readBallTurretState(page);
   assert(
-    menuState.hasGameModeHeading,
-    `${config.name}: seletor de modo ausente.`,
+    !menuState.hasGameModeHeading,
+    `${config.name}: seletor de modo não deve aparecer quando Torreta é padrão.`,
   );
   assert(
-    menuState.buttons.some((button) => TURRET_BUTTON_PATTERN.test(button.text)),
-    `${config.name}: botão Torreta ausente.`,
-  );
-  assert(
-    menuState.buttons.some((button) =>
-      CLASSIC_BUTTON_PATTERN.test(button.text),
+    !menuState.buttons.some((button) =>
+      /^(torreta|turret|clássico|classic)$/i.test(button.text.trim()),
     ),
-    `${config.name}: botão Clássico ausente.`,
+    `${config.name}: botões de modo não devem aparecer quando Torreta é padrão.`,
   );
   if (config.name === "desktop") {
     ensureParentDirectory(menuScreenshotPath());

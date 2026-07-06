@@ -51,11 +51,7 @@ import {
   type BrikayaUpdateProgressDetail,
 } from "./registerServiceWorker";
 import { BUILD_VERSION_LABEL } from "./constants/buildVersion";
-import {
-  GAME_MODE_BALL_TURRET,
-  GAME_MODE_CLASSIC,
-  type GameMode,
-} from "./constants/gameMode";
+import { GAME_MODE_BALL_TURRET } from "./constants/gameMode";
 import { LOG } from "./utils/logger";
 import { audioManager } from "./utils/audioManager";
 import {
@@ -65,7 +61,6 @@ import {
 import { GameQaScenario } from "./logic/GameEngine";
 import { useAppearancePreference } from "./hooks/useAppearancePreference";
 import { useAudioPreference } from "./hooks/useAudioPreference";
-import { useGameModePreference } from "./hooks/useGameModePreference";
 import { useLanguageLocationConsent } from "./hooks/useLanguageLocationConsent";
 import { useMobileOrientationLock } from "./hooks/useMobileOrientationLock";
 import { usePrivacyConsent } from "./hooks/usePrivacyConsent";
@@ -197,7 +192,6 @@ export default function App() {
   } = useAppearancePreference();
   const { isAudioMuted, isMusicMuted, toggleAudio, toggleMusic } =
     useAudioPreference();
-  const { gameMode, selectGameMode } = useGameModePreference();
   const levelTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cinematicTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const countdownTimerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -246,8 +240,7 @@ export default function App() {
     if (scenario === AUDIO_QA_SCENARIO) return AUDIO_QA_SCENARIO;
     return null;
   }, []);
-  const activeGameMode =
-    qaScenario === BALL_TURRET_QA_SCENARIO ? GAME_MODE_BALL_TURRET : gameMode;
+  const activeGameMode = GAME_MODE_BALL_TURRET;
   const hasJoystickDiagnosticSamples = joystickDiagnosticState.samples.length > 0;
   const joystickDiagnosticSampleCountLabel = hasJoystickDiagnosticSamples
     ? joystickDiagnosticState.samples.length === 1
@@ -809,21 +802,6 @@ export default function App() {
     [audioSink, setLocale],
   );
 
-  const handleGameModeChange = useCallback(
-    (nextGameMode: GameMode) => {
-      audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
-      if (nextGameMode === gameMode) {
-        setIsMenuOpen(false);
-        return;
-      }
-
-      selectGameMode(nextGameMode);
-      if (ripTimerRef.current) clearTimeout(ripTimerRef.current);
-      resetGameState();
-    },
-    [audioSink, gameMode, resetGameState, selectGameMode],
-  );
-
   const handleAudioToggle = useCallback(async () => {
     if (!isAudioMuted) {
       audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
@@ -1013,42 +991,6 @@ export default function App() {
                     ))}
                   </select>
                 </label>
-              </div>
-              <div className="settings-drawer__section game-mode-selector">
-                <h3>{t("menu.gameMode")}</h3>
-                <p className="settings-drawer__hint">
-                  {t("gameMode.ballTurretHint")}
-                </p>
-                <div
-                  className="game-mode-selector__options"
-                  role="group"
-                  aria-label={t("menu.gameMode")}
-                >
-                  <button
-                    type="button"
-                    className={
-                      activeGameMode === GAME_MODE_CLASSIC
-                        ? "game-mode-selector__button game-mode-selector__button--active"
-                        : "game-mode-selector__button"
-                    }
-                    aria-pressed={activeGameMode === GAME_MODE_CLASSIC}
-                    onClick={() => handleGameModeChange(GAME_MODE_CLASSIC)}
-                  >
-                    {t("gameMode.classic")}
-                  </button>
-                  <button
-                    type="button"
-                    className={
-                      activeGameMode === GAME_MODE_BALL_TURRET
-                        ? "game-mode-selector__button game-mode-selector__button--active"
-                        : "game-mode-selector__button"
-                    }
-                    aria-pressed={activeGameMode === GAME_MODE_BALL_TURRET}
-                    onClick={() => handleGameModeChange(GAME_MODE_BALL_TURRET)}
-                  >
-                    {t("gameMode.ballTurret")}
-                  </button>
-                </div>
               </div>
               <div className="settings-drawer__section">
                 <h3>{t("menu.appearance")}</h3>

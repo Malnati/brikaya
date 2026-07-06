@@ -615,44 +615,37 @@ describe("App theme selector", () => {
     expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.UPDATE_INSTALLED);
   });
 
-  it("seleciona modo torreta pelo menu, persiste e reinicia a partida", async () => {
+  it("usa Torreta por padrão e não oferece seleção de modo", async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
 
     await renderApp();
 
-    expect(mockLastGameProps?.gameMode).toBe("classic");
-    await user.click(screen.getByRole("button", { name: "Menu" }));
-
-    const drawer = screen.getByRole("complementary", { name: "Menu do jogo" });
-    expect(
-      within(drawer).getByRole("heading", { name: "Modo de jogo" }),
-    ).toBeInTheDocument();
-    expect(
-      within(drawer).getByRole("button", { name: "Clássico" }),
-    ).toHaveAttribute("aria-pressed", "true");
-
-    await user.click(within(drawer).getByRole("button", { name: "Torreta" }));
-
-    expect(window.localStorage.setItem).toHaveBeenCalledWith(
-      "brikaya-game-mode",
-      "ball-turret",
-    );
     expect(mockLastGameProps?.gameMode).toBe("ball-turret");
     expect(screen.getByTestId("mock-game")).toHaveAttribute(
       "data-game-mode",
       "ball-turret",
     );
+
+    await user.click(screen.getByRole("button", { name: "Menu" }));
+
+    const drawer = screen.getByRole("complementary", { name: "Menu do jogo" });
     expect(
-      screen.queryByRole("complementary", { name: "Menu do jogo" }),
+      within(drawer).queryByRole("heading", { name: "Modo de jogo" }),
+    ).not.toBeInTheDocument();
+    expect(
+      within(drawer).queryByRole("button", { name: "Clássico" }),
+    ).not.toBeInTheDocument();
+    expect(
+      within(drawer).queryByRole("button", { name: "Torreta" }),
     ).not.toBeInTheDocument();
   });
 
-  it("carrega modo torreta salvo", async () => {
+  it("ignora preferência antiga de modo clássico salvo", async () => {
     mockSystemTheme(true);
     mockLocalStorageValues({
       [PRIVACY_CONSENT_STORAGE_KEY]: VALID_PRIVACY_CONSENT_RECORD,
-      "brikaya-game-mode": "ball-turret",
+      "brikaya-game-mode": "classic",
     });
 
     await renderApp();
