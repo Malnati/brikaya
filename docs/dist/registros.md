@@ -37,6 +37,13 @@ Manter `https://brikaya.com/` descobrível por buscadores sem custo, sem cobran�
   - não havia conta autenticada disponível;
   - ação bloqueada em `blocked_auth` para preservar a regra de não inserir senha, telefone, documento, ICP, pagamento ou identidade pública.
 
+
+## Follow-up Naver/Baidu em 2026-07-06
+
+- Naver Search Advisor: aba fornecida pelo usuário mostrou `https://brikaya.com` selecionado e `sitemap.xml` na tabela de sitemaps submetidos com registro `26.07.04 10:16:30`. A tentativa de abrir “Web page collection” redirecionou para login/callback; nenhuma senha, OTP, CAPTCHA, telefone, documento ou pagamento foi informado.
+- Baidu: aba de cadastro fornecida pelo usuário exigia telefone e código de verificação; o botão de registro estava desabilitado após timeout da solicitação. A configuração continua bloqueada por privacidade/autenticação. Não foi submetido telefone, código, senha, documento, ICP ou pagamento.
+- As duas abas foram mantidas abertas como handoff; nenhuma aba nova foi criada pelo Codex nesta continuação.
+
 ## Regra operacional de navegador
 
 Toda configuração feita por Codex via Chrome ou outro navegador no macOS deve usar uma única aba de trabalho:
