@@ -20,6 +20,7 @@ import {
   type RadialPlayfieldGeometry,
   type RectBounds,
 } from "../utils/radialGeometry";
+import { shouldUseReducedCanvasEffects } from "../utils/performanceMode";
 
 const BRICK_ACTIVE = 1;
 const BRICK_DESTROYED = 0;
@@ -87,7 +88,7 @@ export class Bricks {
 
   constructor(
     dimensions: DynamicGameDimensions,
-    private onBrickDestroyed?: (colorIndex: number) => void | Promise<void>,
+    private onBrickDestroyed?: (colorIndex: number) => void,
     maxRows?: number,
     private onMaxRowsReached?: () => void,
     private resolveAssetPath: VisualAssetPathResolver = DEFAULT_GAME_VISUAL_ASSET_RESOLVER,
@@ -206,7 +207,7 @@ export class Bricks {
     this.geometry = geometry ?? this.geometry;
   }
 
-  async collide(
+  collide(
     ball: {
       position: { x: number; y: number; radius: number };
       bounceY: () => void;
@@ -217,7 +218,7 @@ export class Bricks {
       getLastSpeedReduction: () => SpeedReductionSnapshot | null;
     },
     gameState?: LoggedGameState,
-  ): Promise<boolean> {
+  ): boolean {
     let collided = false;
     let destroyedCount = 0;
     for (let c = 0; c < this.dimensions.brickCols; c++) {
@@ -363,7 +364,7 @@ export class Bricks {
             if (isDestroyed) {
               destroyedCount++;
               if (this.onBrickDestroyed) {
-                await this.onBrickDestroyed(b.colorIndex);
+                this.onBrickDestroyed(b.colorIndex);
               }
             }
             collided = true;
@@ -376,7 +377,7 @@ export class Bricks {
     if (destroyedCount > 0) {
       LOG(`💥 collide: ${destroyedCount} bloco(s) destruído(s)`);
     }
-    return Promise.resolve(collided);
+    return collided;
   }
 
   getRows(): number {
@@ -572,11 +573,14 @@ export class Bricks {
     segment: RadialBrickSegment,
   ) {
     if (!this.geometry) return;
+    const reducedEffects = shouldUseReducedCanvasEffects(
+      this.geometry.radius * 2,
+    );
 
     ctx.save();
     this.traceRadialBrickPath(ctx, segment);
     ctx.shadowColor = RADIAL_BRICK_SHADOW_COLOR;
-    ctx.shadowBlur = RADIAL_BRICK_SHADOW_BLUR;
+    ctx.shadowBlur = reducedEffects ? 0 : RADIAL_BRICK_SHADOW_BLUR;
     ctx.clip();
     if (brickImage) {
       ctx.drawImage(

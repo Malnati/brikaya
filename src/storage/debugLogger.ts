@@ -1,4 +1,5 @@
 // src/storage/debugLogger.ts
+import { isRuntimeDiagnosticsEnabled } from '../utils/runtimeDiagnostics';
 
 const FUNCTION_PLACEHOLDER = '[Function]';
 const SYMBOL_PLACEHOLDER = '[Symbol]';
@@ -312,7 +313,7 @@ export async function error(message: string, ...args: unknown[]): Promise<void> 
 
 export const debugLogger = new DebugLogger();
 
-if (typeof document !== 'undefined') {
+if (typeof document !== 'undefined' && isRuntimeDiagnosticsEnabled()) {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       debugLogger.initialize();

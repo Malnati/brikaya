@@ -13,7 +13,6 @@ import { MusicToggle } from "./components/MusicToggle";
 import { ConsentScreen } from "./components/ConsentScreen";
 import { LanguageDetectionOverlay } from "./components/LanguageDetectionOverlay";
 import { MobileOrientationBlocker } from "./components/MobileOrientationBlocker";
-import { CollisionStats } from "./components/CollisionStats";
 import GameLogViewer from "./components/GameLogViewer";
 import {
   GameCinematicOverlay,
@@ -114,7 +113,6 @@ const SETTINGS_ACTION_LOGS = "logs";
 const SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD =
   "joystick-diagnostic-download";
 const SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_CLEAR = "joystick-diagnostic-clear";
-const SETTINGS_ACTION_COLLISIONS = "collisions";
 const SETTINGS_ACTION_RESET_SCORE = "reset-score";
 const SETTINGS_ACTION_RESET_PREFERENCES = "reset-preferences";
 const SHOW_DEBUG_LOG_CONTROLS = false;
@@ -205,7 +203,6 @@ export default function App() {
   const updateProgressSoundPlayedRef = useRef(false);
   const updateInstalledSoundPlayedRef = useRef(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showCollisionStats, setShowCollisionStats] = useState(false);
   const [showGameLogs, setShowGameLogs] = useState(false);
   const [isJoystickDiagnosticEnabled, setIsJoystickDiagnosticEnabled] =
     useState(false);
@@ -745,17 +742,6 @@ export default function App() {
     setShowGameLogs(false);
   }, [audioSink]);
 
-  const handleOpenCollisionStats = useCallback(() => {
-    audioSink.playAudio(GAME_AUDIO_IDS.PANEL_OPEN);
-    setShowCollisionStats(true);
-    setIsMenuOpen(false);
-  }, [audioSink]);
-
-  const handleCloseCollisionStats = useCallback(() => {
-    audioSink.playAudio(GAME_AUDIO_IDS.PANEL_CLOSE);
-    setShowCollisionStats(false);
-  }, [audioSink]);
-
   const handleLocaleChange = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
       audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
@@ -1036,18 +1022,6 @@ export default function App() {
                     {t("menu.logs")}
                   </button>
                 ) : null}
-                <button
-                  type="button"
-                  onClick={handleOpenCollisionStats}
-                  className="dashboard-button dashboard-button--secondary"
-                  data-settings-action={SETTINGS_ACTION_COLLISIONS}
-                  data-testid={`settings-action-${SETTINGS_ACTION_COLLISIONS}`}
-                >
-                  <span aria-hidden="true" className="button-icon">
-                    ◈
-                  </span>
-                  {t("menu.collisions")}
-                </button>
                 {SHOW_DEBUG_LOG_CONTROLS ? (
                   <>
                     <label className="settings-drawer__toggle">
@@ -1229,10 +1203,6 @@ export default function App() {
           )}
         </div>
       </section>
-      <CollisionStats
-        isVisible={showCollisionStats}
-        onClose={handleCloseCollisionStats}
-      />
       {SHOW_DEBUG_LOG_CONTROLS ? (
         <GameLogViewer isVisible={showGameLogs} onClose={handleCloseLogs} />
       ) : null}

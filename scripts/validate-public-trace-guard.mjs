@@ -59,6 +59,7 @@ function runGitLsFiles() {
   return result.stdout
     .split(NULL_SEPARATOR)
     .filter((filePath) => filePath !== EMPTY_STRING)
+    .filter((filePath) => existsSync(filePath))
     .filter((filePath) => !shouldSkipPath(filePath));
 }
 

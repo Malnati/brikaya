@@ -85,7 +85,6 @@ const SETTINGS_ACTION_COLLISIONS = "collisions";
 const SETTINGS_ACTION_RESET_SCORE = "reset-score";
 const SPEED_CURRENT_LABEL = "Velocidade atual";
 const LEVEL_TIME_LABEL = "Tempo da fase";
-const COLLISIONS_PANEL_TITLE = "Estatísticas de Colisões";
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const ORIENTATION_BLOCKER_SELECTOR =
   '[data-testid="mobile-orientation-blocker"]';
@@ -1116,48 +1115,6 @@ async function run() {
               `${viewport.name}: não fechou painel de histórico.`,
             );
 
-            await waitForInitialCountdownToFinish(page);
-            const openedMenuForCollisions = await clickButtonByPattern(
-              page,
-              MENU_BUTTON_NAME,
-            );
-            assert(
-              openedMenuForCollisions,
-              `${viewport.name}: não abriu menu para colisões.`,
-            );
-            await page.waitForSelector(".settings-drawer", { timeout: 10000 });
-            const openedCollisions = await clickSettingsAction(
-              page,
-              SETTINGS_ACTION_COLLISIONS,
-            );
-            assert(
-              openedCollisions,
-              `${viewport.name}: não abriu painel de colisões.`,
-            );
-            await page.waitForFunction(
-              ({ panelTitle }) => {
-                const text = document.body.textContent || "";
-                return text.includes(panelTitle);
-              },
-              { timeout: 10000 },
-              {
-                panelTitle: COLLISIONS_PANEL_TITLE,
-              },
-            );
-            const collisionsOverlayState =
-              await collectOverlayLayoutState(page);
-            assert(
-              !collisionsOverlayState.hasHorizontalOverflow,
-              `${viewport.name}: colisões gerou overflow horizontal ${collisionsOverlayState.scrollWidth} > ${collisionsOverlayState.viewportWidth}.`,
-            );
-            const closedCollisions = await clickButtonByPattern(
-              page,
-              CLOSE_BUTTON_NAME,
-            );
-            assert(
-              closedCollisions,
-              `${viewport.name}: não fechou painel de colisões.`,
-            );
             trace(`overlay:end:${viewport.name}`);
           }
           viewportComplete = true;

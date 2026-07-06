@@ -124,6 +124,7 @@ describe('GameLogger', () => {
   beforeEach(async () => {
     // Limpar mocks
     jest.clearAllMocks();
+    window.localStorage.clear();
     
     mockIndexedDB = createMockIndexedDB();
     
@@ -232,6 +233,40 @@ describe('GameLogger', () => {
     }, 10000);
   });
 
+  describe('hot path guard', () => {
+    it('não grava eventos volumosos sem telemetria de gameplay explícita', async () => {
+      window.localStorage.clear();
+      (gameLogger as any).db = mockIndexedDB.mockDB;
+      const gameState = buildGameState();
+      const ballPositions = buildBallPositions();
+      const paddlePosition = buildPaddlePosition();
+
+      await gameLogger.logPaddleMove(
+        gameState,
+        ballPositions,
+        paddlePosition,
+        'touch',
+      );
+      await gameLogger.logCollision(gameState, ballPositions, paddlePosition, {
+        type: 'paddle',
+        ballPosition: { x: 400, y: 300 },
+      });
+      await gameLogger.logBrickDestroyed(
+        gameState,
+        ballPositions,
+        paddlePosition,
+        { x: 10, y: 20, width: 50, height: 20 },
+        { col: 0, row: 0 },
+        1,
+        { x: 40, y: 40 },
+        { dx: 1, dy: -1 },
+      );
+
+      expect(gameLogger.shouldRecordEvent('paddle_move')).toBe(false);
+      expect(mockIndexedDB.mockStore.add).not.toHaveBeenCalled();
+    });
+  });
+
   describe('level events', () => {
     it('deve registrar conclusão e início de fase com metadados da próxima velocidade', async () => {
       (gameLogger as any).db = mockIndexedDB.mockDB;
@@ -325,6 +360,9 @@ describe('GameLogger', () => {
 
   describe('logCollision', () => {
     it('deve registrar colisão', async () => {
+      (window.localStorage.getItem as jest.Mock).mockImplementation((key) =>
+        key === 'brikaya:gameplay-telemetry' ? '1' : null,
+      );
       // Garantir que o DB está mockado
       (gameLogger as any).db = mockIndexedDB.mockDB;
       const gameState = buildGameState({

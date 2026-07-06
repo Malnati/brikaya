@@ -56,12 +56,13 @@ import {
   calculateRadialPlayfieldGeometry,
   type RadialPlayfieldGeometry,
 } from "../utils/radialGeometry";
-import { LOG, ERROR, WARN } from "../utils/logger";
+import { LOG, ERROR } from "../utils/logger";
 import {
   drawBallTurretBackdrop,
   drawBallTurretGlassOverlay,
   drawBallTurretTrampoline,
 } from "./rendering/ballTurretRenderer";
+import { shouldUseReducedCanvasEffects } from "../utils/performanceMode";
 
 LOG("📦 GameEngine.ts carregado, gameLogger:", gameLogger);
 
@@ -753,7 +754,7 @@ export class GameEngine {
     this.assetsLoaded = true;
   }
 
-  private async onBrickDestroyed(colorIndex: number) {
+  private onBrickDestroyed(colorIndex: number) {
     this.playBrickAudio(colorIndex);
     this.updateComboAudio();
     this.maybeSpawnPowerUp();
@@ -777,7 +778,7 @@ export class GameEngine {
     const ballPositions = this.getBallPositions();
     const paddlePosition = this.paddle.position;
 
-    await gameLogger
+    void gameLogger
       .logScoreUpdate(
         gameState,
         ballPositions,
@@ -790,11 +791,11 @@ export class GameEngine {
 
     // Verificar se todos os blocos foram destruídos
     if (this.bricks.isAllDestroyed() && !this.isLevelTransitioning) {
-      await this.startLevelTransition(gameState, ballPositions, paddlePosition);
+      this.startLevelTransition(gameState, ballPositions, paddlePosition);
     }
   }
 
-  private async startLevelTransition(
+  private startLevelTransition(
     gameState: ReturnType<GameEngine["getCurrentGameState"]>,
     ballPositions: ReturnType<GameEngine["getBallPositions"]>,
     paddlePosition: { x: number; y: number; width: number; height: number },
@@ -832,7 +833,7 @@ export class GameEngine {
       nextInitialBrickCount,
     };
 
-    await gameLogger
+    void gameLogger
       .logLevelComplete(
         gameState,
         ballPositions,
@@ -856,11 +857,11 @@ export class GameEngine {
     this.onLevelTransition?.(payload);
 
     this.levelTransitionTimer = setTimeout(() => {
-      void this.finishLevelTransition(nextLevel, nextSpeedMultiplier);
+      this.finishLevelTransition(nextLevel, nextSpeedMultiplier);
     }, LEVEL_CLEAR_PAUSE_MS);
   }
 
-  private async finishLevelTransition(
+  private finishLevelTransition(
     nextLevel: number,
     nextSpeedMultiplier: number,
   ) {
@@ -893,7 +894,7 @@ export class GameEngine {
     );
 
     const gameState = this.getCurrentGameState();
-    await gameLogger
+    void gameLogger
       .logLevelStart(
         gameState,
         this.getBallPositions(),
@@ -1225,13 +1226,13 @@ export class GameEngine {
     }
   }
 
-  private async activatePowerUp(powerUpType: PowerUpType) {
+  private activatePowerUp(powerUpType: PowerUpType) {
     this.audioSink.playAudio(GAME_AUDIO_IDS.POWERUP_COLLECT);
-    await this.logPowerUpEvent(powerUpType, POWER_UP_ACTION_ACTIVATE);
+    this.logPowerUpEvent(powerUpType, POWER_UP_ACTION_ACTIVATE);
     const activationAudioId = getPowerUpActivationAudioId(powerUpType);
 
     if (powerUpType === "laser_fan") {
-      await this.activateLaserFanPowerUp(activationAudioId);
+      this.activateLaserFanPowerUp(activationAudioId);
       return;
     }
 
@@ -1283,7 +1284,7 @@ export class GameEngine {
     this.audioSink.playAudio(activationAudioId);
   }
 
-  private async activateLaserFanPowerUp(activationAudioId: AudioId) {
+  private activateLaserFanPowerUp(activationAudioId: AudioId) {
     this.audioSink.playAudio(activationAudioId);
     const selectedBricks = this.bricks.selectRandomActive(
       LASER_FAN_TARGET_COUNT,
@@ -1293,7 +1294,7 @@ export class GameEngine {
     if (selectedBricks.length === 0) return;
   }
 
-  private async finishLaserFanPowerUp() {
+  private finishLaserFanPowerUp() {
     const resolution = this.laserFanResolution;
     this.resetLaserFanEffectState();
     if (!resolution) return;
@@ -1321,20 +1322,18 @@ export class GameEngine {
       radius: 0,
     };
 
-    await Promise.all(
-      destroyedBricks.map((brick) =>
-        this.logLaserFanBrickDestroyed(
-          brick,
-          gameState,
-          ballPositions,
-          paddlePosition,
-          ballPosition,
-          ballVelocity,
-        ),
+    destroyedBricks.forEach((brick) =>
+      this.logLaserFanBrickDestroyed(
+        brick,
+        gameState,
+        ballPositions,
+        paddlePosition,
+        ballPosition,
+        ballVelocity,
       ),
     );
 
-    await gameLogger
+    void gameLogger
       .logScoreUpdate(
         gameState,
         ballPositions,
@@ -1346,11 +1345,11 @@ export class GameEngine {
       .catch((error) => ERROR("❌ Erro ao registrar pontuação:", error));
 
     if (this.bricks.isAllDestroyed() && !this.isLevelTransitioning) {
-      await this.startLevelTransition(gameState, ballPositions, paddlePosition);
+      this.startLevelTransition(gameState, ballPositions, paddlePosition);
     }
   }
 
-  private async logLaserFanBrickDestroyed(
+  private logLaserFanBrickDestroyed(
     brick: DestroyedBrickSnapshot,
     gameState: ReturnType<GameEngine["getCurrentGameState"]>,
     ballPositions: ReturnType<GameEngine["getBallPositions"]>,
@@ -1358,7 +1357,7 @@ export class GameEngine {
     ballPosition: { x: number; y: number; radius: number },
     ballVelocity: { dx: number; dy: number },
   ) {
-    await gameLogger
+    void gameLogger
       .logBrickDestroyed(
         gameState,
         ballPositions,
@@ -1638,11 +1637,11 @@ export class GameEngine {
     );
   }
 
-  private async logPowerUpEvent(
+  private logPowerUpEvent(
     powerUpType: PowerUpType,
     action: LoggedPowerUpAction,
   ) {
-    await gameLogger
+    void gameLogger
       .logPowerUp(
         this.getCurrentGameState(),
         this.getBallPositions(),
@@ -1776,20 +1775,6 @@ export class GameEngine {
     await this.preloadAssets();
     if (this.isStopped) return;
 
-    // Aguardar GameLogger estar pronto
-    LOG("⏳ Aguardando GameLogger estar pronto...");
-    let attempts = 0;
-    while (!gameLogger["db"] && attempts < 50) {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      attempts++;
-    }
-
-    if (!gameLogger["db"]) {
-      ERROR("❌ GameLogger não inicializou após 5 segundos");
-    } else {
-      LOG("✅ GameLogger está pronto");
-    }
-
     // Log do início do jogo
     const gameState = this.getCurrentGameState();
     const ballPositions = this.getBallPositions();
@@ -1803,7 +1788,7 @@ export class GameEngine {
     // Se já existe um gameId, é um restart
     if (gameLogger.getCurrentGameId()) {
       LOG("🔄 Detectado restart do jogo");
-      await gameLogger
+      void gameLogger
         .logRestartGame(gameState, ballPositions, paddlePosition)
         .catch((error) =>
           ERROR("❌ Erro ao registrar restart do jogo:", error),
@@ -1812,13 +1797,7 @@ export class GameEngine {
 
     LOG("🎮 Registrando início do jogo...");
 
-    // Verificar se o GameLogger está pronto
-    if (!gameLogger["db"]) {
-      WARN("⚠️ GameLogger ainda não inicializado, aguardando...");
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    }
-
-    await gameLogger
+    void gameLogger
       .logGameStart(gameState, ballPositions, paddlePosition)
       .then(() => {
         LOG("✅ Início do jogo registrado com sucesso!");
@@ -1836,7 +1815,7 @@ export class GameEngine {
 
     if (!this.isStopped) {
       this.lastFrameTimestamp = readFrameTimestamp();
-      void this.loop(this.lastFrameTimestamp);
+      this.loop(this.lastFrameTimestamp);
     }
   }
 
@@ -1885,7 +1864,7 @@ export class GameEngine {
     return Math.min(deltaMs, MAX_FRAME_DELTA_MS);
   }
 
-  private loop = async (timestamp = readFrameTimestamp()) => {
+  private loop = (timestamp = readFrameTimestamp()) => {
     if (this.isStopped || this.isPaused) return;
     this.calculateFrameDeltaMs(timestamp);
     this.ctx.clearRect(0, 0, this.canvasSize.width, this.canvasSize.height);
@@ -1940,7 +1919,7 @@ export class GameEngine {
           for (let i = this.balls.length - 1; i >= 0; i--) {
             const ball = this.balls[i];
 
-            const inPlay = await ball.update(
+            const inPlay = ball.update(
               this.paddle,
               this.bricks,
               this.canvasSize.height,
@@ -1956,7 +1935,7 @@ export class GameEngine {
 
               this.balls.splice(i, 1);
               if (this.balls.length > 0) {
-                await gameLogger
+                void gameLogger
                   .logGameStateChange(
                     this.getCurrentGameState(),
                     this.getBallPositions(),
@@ -1992,7 +1971,7 @@ export class GameEngine {
           const ballPositions = this.getBallPositions();
           const paddlePosition = this.paddle.position;
 
-          await gameLogger
+          void gameLogger
             .logGameStateChange(
               gameState,
               ballPositions,
@@ -2004,7 +1983,7 @@ export class GameEngine {
             );
 
           // Log do fim do jogo (derrota)
-          await gameLogger
+          void gameLogger
             .logGameEnd(gameState, ballPositions, paddlePosition, "lose")
             .catch((error) => ERROR("❌ Erro ao registrar derrota:", error));
 
@@ -2044,6 +2023,7 @@ export class GameEngine {
         canvasSize: this.canvasSize,
         geometry: this.radialGeometry,
         level: this.level,
+        reducedEffects: this.usesReducedCanvasEffects(),
         paddlePosition: this.paddle.position,
       });
       return;
@@ -2058,6 +2038,7 @@ export class GameEngine {
         canvasSize: this.canvasSize,
         geometry: this.radialGeometry,
         level: this.level,
+        reducedEffects: this.usesReducedCanvasEffects(),
         paddlePosition: this.paddle.position,
       });
       return;
@@ -2073,8 +2054,13 @@ export class GameEngine {
       canvasSize: this.canvasSize,
       geometry: this.radialGeometry,
       level: this.level,
+      reducedEffects: this.usesReducedCanvasEffects(),
       paddlePosition: this.paddle.position,
     });
+  }
+
+  private usesReducedCanvasEffects(): boolean {
+    return shouldUseReducedCanvasEffects(this.canvasSize.width);
   }
 
   private drawRadialPlayfield() {
