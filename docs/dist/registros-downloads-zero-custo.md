@@ -381,3 +381,15 @@ Follow-up fa/he em 2026-07-06:
 - Evidência JSON local: `docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave284-local-preview.json`.
 - Seznam zero-custo: criado alvo `seznam-indexnow-submit` usando endpoint oficial `https://search.seznam.cz/indexnow`; painel Seznam/Webmaster fica limitado a fluxo gratuito e deve parar em CAPTCHA, OTP, telefone, documento, pagamento ou dado pessoal público. Referências oficiais: `https://o-seznam.cz/napoveda/vyhledavani/seznambot/sitemap-xml/`, `https://o-seznam.cz/napoveda/vyhledavani/seznambot/protokol-indexnow/`, `https://o-seznam.cz/napoveda/vyhledavani/seznam-webmaster/`.
 - Clarity permanece desinstalado: nenhum script/tag/pixel/SDK de telemetria foi adicionado.
+
+
+## Atualização — onda 284 publicada em 2026-07-06
+
+- Publicação: PR #223 mergeado e `https://brikaya.com/` republicado via Cloudflare Pages em `https://19331701.brikaya-live.pages.dev`.
+- Escopo publicado: 284 idiomas, 570 URLs no sitemap, hreflang completo e `x-default`.
+- QA público: `make cloudflare-public-check`, `make cloudflare-i18n-seo-qa` (284 hreflangs, 90 páginas de downloads amostradas), `make cloudflare-offline-pwa-qa`, `make yandex-indexnow-submit` (202, 570 URLs) e `make seznam-indexnow-submit` (200, 570 URLs) passaram.
+- Amostras públicas: `/en-AU/downloads/`, `/es-MX/downloads/`, `/pt-AO/downloads/`, `/zh-HK/downloads/`, `/ar-SA/downloads/` e `/ug-CN/downloads/` responderam 200 com `html lang` correto, `dir` correto, title localizado e sem Clarity/analytics/pixel.
+- Seznam: endpoint oficial `https://search.seznam.cz/indexnow` aceitou 570 URLs com status 200; o script mantém fallback seguro por `curl` quando o `fetch` local sofre timeout de rede, sem imprimir chave.
+- Yandex: IndexNow aceitou 570 URLs com status 202.
+- Clarity: continua desinstalado; nenhum script, tag, SDK, pixel ou telemetria foi adicionado.
+- Pendências: Google/Bing/Yandex/Naver/Seznam precisam reprocessar crawler/painéis; Yahoo/DuckDuckGo dependem de Bing/crawl; Baidu permanece bloqueado por cadastro externo/ICP/documento/custo quando exigido.

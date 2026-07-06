@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-07-06T21:22:23.536Z",
+  "checkedAt": "2026-07-06T22:05:57.375Z",
   "baseUrl": "https://brikaya.com/",
   "localesChecked": [
     "pt-BR",
@@ -69,6 +69,12 @@
     "eo",
     "nds",
     "hsb",
+    "en-AU",
+    "es-MX",
+    "pt-AO",
+    "zh-HK",
+    "ar-SA",
+    "ug-CN",
     "wa"
   ],
   "downloadsLocalesChecked": [
@@ -155,7 +161,13 @@
     "ce",
     "tyv",
     "kaa",
-    "sma"
+    "sma",
+    "en-AU",
+    "es-MX",
+    "pt-AO",
+    "zh-HK",
+    "ar-SA",
+    "ug-CN"
   ],
   "hreflangLocales": [
     "pt-BR",
@@ -416,6 +428,31 @@
     "zea",
     "frp",
     "arp",
+    "en-AU",
+    "en-CA",
+    "en-NZ",
+    "en-ZA",
+    "es-MX",
+    "es-AR",
+    "es-CO",
+    "es-CL",
+    "es-PE",
+    "pt-AO",
+    "pt-MZ",
+    "fr-BE",
+    "fr-CH",
+    "de-AT",
+    "de-CH",
+    "it-CH",
+    "zh-HK",
+    "ar-SA",
+    "ar-EG",
+    "fa-AF",
+    "ps-AF",
+    "sd-IN",
+    "ks-IN",
+    "ug-CN",
+    "yi-001",
     "mus"
   ],
   "htmlResults": [
@@ -820,6 +857,42 @@
       "status": 200,
       "canonical": "https://brikaya.com/hsb/",
       "locale": "hsb"
+    },
+    {
+      "url": "https://brikaya.com/en-AU/",
+      "status": 200,
+      "canonical": "https://brikaya.com/en-AU/",
+      "locale": "en-AU"
+    },
+    {
+      "url": "https://brikaya.com/es-MX/",
+      "status": 200,
+      "canonical": "https://brikaya.com/es-MX/",
+      "locale": "es-MX"
+    },
+    {
+      "url": "https://brikaya.com/pt-AO/",
+      "status": 200,
+      "canonical": "https://brikaya.com/pt-AO/",
+      "locale": "pt-AO"
+    },
+    {
+      "url": "https://brikaya.com/zh-HK/",
+      "status": 200,
+      "canonical": "https://brikaya.com/zh-HK/",
+      "locale": "zh-HK"
+    },
+    {
+      "url": "https://brikaya.com/ar-SA/",
+      "status": 200,
+      "canonical": "https://brikaya.com/ar-SA/",
+      "locale": "ar-SA"
+    },
+    {
+      "url": "https://brikaya.com/ug-CN/",
+      "status": 200,
+      "canonical": "https://brikaya.com/ug-CN/",
+      "locale": "ug-CN"
     },
     {
       "url": "https://brikaya.com/wa/",
@@ -1330,6 +1403,42 @@
       "status": 200,
       "canonical": "https://brikaya.com/sma/downloads/",
       "locale": "sma"
+    },
+    {
+      "url": "https://brikaya.com/en-AU/downloads/",
+      "status": 200,
+      "canonical": "https://brikaya.com/en-AU/downloads/",
+      "locale": "en-AU"
+    },
+    {
+      "url": "https://brikaya.com/es-MX/downloads/",
+      "status": 200,
+      "canonical": "https://brikaya.com/es-MX/downloads/",
+      "locale": "es-MX"
+    },
+    {
+      "url": "https://brikaya.com/pt-AO/downloads/",
+      "status": 200,
+      "canonical": "https://brikaya.com/pt-AO/downloads/",
+      "locale": "pt-AO"
+    },
+    {
+      "url": "https://brikaya.com/zh-HK/downloads/",
+      "status": 200,
+      "canonical": "https://brikaya.com/zh-HK/downloads/",
+      "locale": "zh-HK"
+    },
+    {
+      "url": "https://brikaya.com/ar-SA/downloads/",
+      "status": 200,
+      "canonical": "https://brikaya.com/ar-SA/downloads/",
+      "locale": "ar-SA"
+    },
+    {
+      "url": "https://brikaya.com/ug-CN/downloads/",
+      "status": 200,
+      "canonical": "https://brikaya.com/ug-CN/downloads/",
+      "locale": "ug-CN"
     }
   ],
   "sitemapRobots": {
@@ -1351,9 +1460,9 @@
     }
   },
   "browserLocaleRuntime": {
-    "lang": "es-419",
-    "canonical": "https://brikaya.com/es-419/",
-    "path": "/es-419/",
+    "lang": "es-MX",
+    "canonical": "https://brikaya.com/es-MX/",
+    "path": "/es-MX/",
     "storedLocale": null,
     "storedSource": null
   },
