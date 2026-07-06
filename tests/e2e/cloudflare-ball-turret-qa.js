@@ -52,6 +52,11 @@ const JOYSTICK_TRACKBALL_EDGE_AXIS_MIN = 0.95;
 const JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN = 0.65;
 const JOYSTICK_ABSOLUTE_ANGLE_TOLERANCE = 0.24;
 const JOYSTICK_HOLD_MAX_ANGLE_DELTA = 0.04;
+const JOYSTICK_LOWER_HALF_CENTER_RATIO = 0.75;
+const JOYSTICK_LOWER_HALF_CENTER_TOLERANCE_PX = 18;
+const JOYSTICK_MAX_TRACKBALL_SIZE = 132;
+const JOYSTICK_MIN_RESPONSIVE_TRACKBALL_SIZE = 72;
+const JOYSTICK_MIN_PLAYFIELD_GAP = 12;
 const BOUNDARY_SEGMENT_COUNT = 18;
 const BOUNDARY_PHASE_ONE_REBOUND_SEGMENTS = 9;
 const BOUNDARY_REBOUND_COLOR_FRAGMENT = "73, 255, 199";
@@ -67,10 +72,25 @@ const VIEWPORTS = [
     name: "mobile-portrait",
     joystickPlacement: "below",
     minTrackballSize: MIN_PORTRAIT_TRACKBALL_SIZE,
+    expectLowerHalfCenter: true,
     screenshotPath: mobileScreenshotPath(),
     viewport: {
       width: 390,
       height: 844,
+      deviceScaleFactor: 2,
+      isMobile: true,
+      hasTouch: true,
+    },
+  },
+  {
+    name: "mobile-portrait-compact",
+    joystickPlacement: "below",
+    minTrackballSize: JOYSTICK_MIN_RESPONSIVE_TRACKBALL_SIZE,
+    expectJoystickShrink: true,
+    screenshotPath: compactMobileScreenshotPath(),
+    viewport: {
+      width: 480,
+      height: 640,
       deviceScaleFactor: 2,
       isMobile: true,
       hasTouch: true,
@@ -117,6 +137,13 @@ function mobileScreenshotPath() {
   return (
     process.env.BRIKAYA_BALL_TURRET_MOBILE_SCREENSHOT ||
     DEFAULT_MOBILE_SCREENSHOT_PATH
+  );
+}
+
+function compactMobileScreenshotPath() {
+  return (
+    process.env.BRIKAYA_BALL_TURRET_COMPACT_MOBILE_SCREENSHOT ||
+    "docs/assets/issues/ball-turret-mode/evidence/evi-ball-turret-gameplay-mobile-compact.png"
   );
 }
 
@@ -589,8 +616,14 @@ async function readBallTurretState(page) {
               height: joystickRect.height,
               x: joystickRect.x,
               y: joystickRect.y,
+              bottom: joystickRect.bottom,
+              centerY: joystickRect.y + joystickRect.height / 2,
               hasTrackballClass:
                 joystick?.classList.contains("game-turret-trackball") || false,
+              trackballSize:
+                joystickStyle
+                  ?.getPropertyValue("--bb-turret-trackball-size")
+                  .trim() || "",
               trackballX:
                 joystickStyle
                   ?.getPropertyValue("--bb-turret-trackball-x")
@@ -611,7 +644,10 @@ async function readBallTurretState(page) {
               height: 0,
               x: 0,
               y: 0,
+              bottom: 0,
+              centerY: 0,
               hasTrackballClass: false,
+              trackballSize: "",
               trackballX: "",
               trackballY: "",
               trackballActive: "",
@@ -739,6 +775,32 @@ function assertJoystickPlacement(config, gameplayState) {
     assert(
       joystick.y >= canvas.y + canvas.height - 1,
       `${config.name}: joystick não está abaixo do tabuleiro em portrait.`,
+    );
+    assert(
+      joystick.y >= canvas.y + canvas.height + JOYSTICK_MIN_PLAYFIELD_GAP - 1,
+      `${config.name}: joystick ficou próximo demais da área do jogo.`,
+    );
+  }
+
+  if (config.expectLowerHalfCenter) {
+    const expectedCenterY =
+      gameplayState.viewport.height * JOYSTICK_LOWER_HALF_CENTER_RATIO;
+    assert(
+      Math.abs(joystick.centerY - expectedCenterY) <=
+        JOYSTICK_LOWER_HALF_CENTER_TOLERANCE_PX,
+      `${config.name}: centro do joystick não ficou no meio da metade inferior da tela.`,
+    );
+  }
+
+  if (config.expectJoystickShrink) {
+    assert(
+      joystick.width < JOYSTICK_MAX_TRACKBALL_SIZE &&
+        joystick.height < JOYSTICK_MAX_TRACKBALL_SIZE,
+      `${config.name}: joystick não reduziu quando disputou espaço com o jogo.`,
+    );
+    assert(
+      joystick.bottom <= gameplayState.viewport.height,
+      `${config.name}: joystick reduzido saiu da viewport.`,
     );
   }
 
