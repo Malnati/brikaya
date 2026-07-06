@@ -14,6 +14,8 @@ const HOME_ROUTE_PATH = '/';
 const DOWNLOADS_ROUTE_PATH = '/downloads/';
 const LOCALIZED_ROUTES = [HOME_ROUTE_PATH, DOWNLOADS_ROUTE_PATH];
 const STATIC_PUBLIC_PATHS = ['/privacy/', '/terms/'];
+const RTL_LOCALES = new Set(['ar', 'ur']);
+
 const LOCALES = [
   'pt-BR',
   'en',
@@ -30,6 +32,22 @@ const LOCALES = [
   'fil',
   'th',
   'zh-CN',
+  'ar',
+  'ru',
+  'tr',
+  'nl',
+  'pl',
+  'uk',
+  'ms',
+  'zh-TW',
+  'pt-PT',
+  'es-ES',
+  'en-GB',
+  'fr-CA',
+  'bn',
+  'ur',
+  'ta',
+  'te',
 ];
 const SEO = {
   'pt-BR': {
@@ -65,7 +83,7 @@ const SEO = {
   fr: {
     title: 'Brikaya — arcade casse-briques',
     description: 'Jouez à Brikaya, un arcade casse-briques gratuit dans le navigateur, avec progression enregistrée sur votre appareil et jeu hors connexion après la première visite.',
-    ogDescription: "Cassez des blocs, progressez dans les niveaux et jouez dans le navigateur avec votre progression enregistrée sur l'appareil.",
+    ogDescription: "Cassez des blocs, progressez dans les niveaux et jouez dans le navigateur avec votre progression enregistrée sur l\'appareil.",
   },
   it: {
     title: 'Brikaya — arcade rompi blocchi',
@@ -107,8 +125,89 @@ const SEO = {
     description: '在浏览器中游玩免费的打砖块街机 Brikaya，进度保存在你的设备上，首次访问后可离线游玩。',
     ogDescription: '击碎砖块、推进关卡，并在浏览器中保存进度继续游玩。',
   },
-};
 
+
+  ar: {
+    title: 'Brikaya — أركيد كسر الكتل',
+    description: 'العب Brikaya، لعبة أركيد مجانية لكسر الكتل في المتصفح، مع حفظ التقدم على جهازك واللعب دون اتصال بعد أول زيارة.',
+    ogDescription: 'اكسر الكتل وتقدم في المستويات والعب في المتصفح مع حفظ التقدم على جهازك.',
+  },
+  ru: {
+    title: 'Brikaya — аркада с разбиванием блоков',
+    description: 'Играйте в Brikaya, бесплатную браузерную аркаду с разбиванием блоков, с сохранением прогресса на устройстве и офлайн-игрой после первого визита.',
+    ogDescription: 'Разбивайте блоки, проходите уровни и играйте в браузере с прогрессом на устройстве.',
+  },
+  tr: {
+    title: 'Brikaya — blok kırma arcade',
+    description: 'Brikaya\'yı tarayıcıda ücretsiz blok kırma arcade olarak oynayın; ilerleme cihazınızda kalır ve ilk ziyaretten sonra çevrimdışı oynanır.',
+    ogDescription: 'Blokları kırın, seviyeleri geçin ve ilerleme cihazınızda kalırken tarayıcıda oynayın.',
+  },
+  nl: {
+    title: 'Brikaya — blokbreker-arcade',
+    description: 'Speel Brikaya, een gratis blokbreker-arcade in de browser, met voortgang op je apparaat en offline spelen na het eerste bezoek.',
+    ogDescription: 'Breek blokken, haal levels en speel in de browser met voortgang op je apparaat.',
+  },
+  pl: {
+    title: 'Brikaya — arcade rozbijania bloków',
+    description: 'Graj w Brikaya, darmową przeglądarkową grę arcade do rozbijania bloków, z postępem zapisanym na urządzeniu i grą offline po pierwszej wizycie.',
+    ogDescription: 'Rozbijaj bloki, przechodź poziomy i graj w przeglądarce z postępem na urządzeniu.',
+  },
+  uk: {
+    title: 'Brikaya — аркада розбивання блоків',
+    description: 'Грайте в Brikaya, безкоштовну браузерну аркаду для розбивання блоків, із прогресом на пристрої та офлайн-грою після першого відвідування.',
+    ogDescription: 'Розбивайте блоки, проходьте рівні та грайте в браузері з прогресом на пристрої.',
+  },
+  ms: {
+    title: 'Brikaya — arked pemecah blok',
+    description: 'Main Brikaya, arked pemecah blok percuma dalam pelayar, dengan kemajuan disimpan pada peranti dan permainan luar talian selepas lawatan pertama.',
+    ogDescription: 'Pecahkan blok, mara tahap dan main dalam pelayar dengan kemajuan pada peranti.',
+  },
+  'zh-TW': {
+    title: 'Brikaya — 打磚塊街機',
+    description: '在瀏覽器中遊玩免費的打磚塊街機 Brikaya，進度保存在你的裝置上，首次造訪後可離線遊玩。',
+    ogDescription: '擊碎磚塊、推進關卡，並在瀏覽器中保存進度繼續遊玩。',
+  },
+  'pt-PT': {
+    title: 'Brikaya — arcade de partir blocos',
+    description: 'Jogue Brikaya, um arcade gratuito de partir blocos no navegador, com progresso guardado no seu aparelho e jogo offline após o primeiro acesso.',
+    ogDescription: 'Parta blocos, avance níveis e jogue no navegador com progresso guardado no aparelho.',
+  },
+  'es-ES': {
+    title: 'Brikaya — arcade de romper bloques',
+    description: 'Juega Brikaya, un arcade gratuito de romper bloques en el navegador, con progreso guardado en tu dispositivo y juego sin conexión después del primer acceso.',
+    ogDescription: 'Rompe bloques, avanza niveles y juega en el navegador con progreso guardado en tu dispositivo.',
+  },
+  'en-GB': {
+    title: 'Brikaya — block breaker arcade',
+    description: 'Play Brikaya, a free block breaker arcade in your browser, with progress saved on your device and offline play after the first visit.',
+    ogDescription: 'Break blocks, advance levels, and play in your browser with progress saved on your device.',
+  },
+  'fr-CA': {
+    title: 'Brikaya — arcade casse-briques',
+    description: 'Jouez à Brikaya, un arcade casse-briques gratuit dans le navigateur, avec progression enregistrée sur votre appareil et jeu hors connexion après la première visite.',
+    ogDescription: 'Cassez des blocs, progressez dans les niveaux et jouez dans le navigateur avec votre progression enregistrée sur l\'appareil.',
+  },
+  bn: {
+    title: 'Brikaya — ব্লক ব্রেকার আর্কেড',
+    description: 'ব্রাউজারে Brikaya খেলুন, একটি বিনামূল্যের ব্লক ব্রেকার আর্কেড; অগ্রগতি আপনার ডিভাইসে থাকে এবং প্রথম ভিজিটের পরে অফলাইনে খেলা যায়।',
+    ogDescription: 'ব্লক ভাঙুন, লেভেল এগিয়ে নিন এবং ডিভাইসে অগ্রগতি রেখে ব্রাউজারে খেলুন।',
+  },
+  ur: {
+    title: 'Brikaya — بلاک بریکر آرکیڈ',
+    description: 'براؤزر میں Brikaya کھیلیں، ایک مفت بلاک بریکر آرکیڈ؛ پیش رفت آپ کے آلے پر محفوظ رہتی ہے اور پہلی بار کے بعد آف لائن کھیل ممکن ہے۔',
+    ogDescription: 'بلاکس توڑیں، لیول آگے بڑھائیں اور آلے پر محفوظ پیش رفت کے ساتھ براؤزر میں کھیلیں۔',
+  },
+  ta: {
+    title: 'Brikaya — கட்டங்களை உடைக்கும் அர்கேட்',
+    description: 'உங்கள் உலாவியில் இலவச கட்டம் உடைக்கும் அர்கேட் Brikaya விளையாடுங்கள்; முன்னேற்றம் சாதனத்தில் சேமிக்கப்படும், முதல் வருகைக்குப் பிறகு ஆஃப்லைனிலும் விளையாடலாம்.',
+    ogDescription: 'கட்டங்களை உடைக்கவும், நிலைகளை முன்னேற்றவும், சாதனத்தில் முன்னேற்றத்துடன் உலாவியில் விளையாடவும்.',
+  },
+  te: {
+    title: 'Brikaya — బ్లాక్ బ్రేకర్ ఆర్కేడ్',
+    description: 'బ్రౌజర్‌లో Brikaya అనే ఉచిత బ్లాక్ బ్రేకర్ ఆర్కేడ్ ఆడండి; పురోగతి మీ పరికరంలోనే ఉంటుంది, మొదటి సందర్శన తర్వాత ఆఫ్‌లైన్‌లో ఆడవచ్చు.',
+    ogDescription: 'బ్లాకులను పగలగొట్టండి, స్థాయిలను దాటండి, పరికరంలో పురోగతితో బ్రౌజర్‌లో ఆడండి.',
+  },
+};
 const DOWNLOADS_SEO = {
   'pt-BR': {
     title: 'Baixar Brikaya — jogo grátis no navegador',
@@ -185,8 +284,89 @@ const DOWNLOADS_SEO = {
     description: '免费安装或游玩 Brikaya，无需账号，无需付款，进度保存在你的设备上，首次访问后可离线游玩。',
     ogDescription: '在浏览器中免费游玩 Brikaya，安装到设备，并且无需账号即可继续。',
   },
-};
 
+
+  'ar': {
+    title: 'تنزيل Brikaya — لعبة متصفح مجانية',
+    description: 'ثبّت Brikaya أو العبها مجانًا، بدون حساب، بدون دفع، مع حفظ التقدم على جهازك واللعب دون اتصال بعد أول زيارة.',
+    ogDescription: 'العب Brikaya مجانًا في المتصفح، وثبّتها على جهازك، وتابع بدون حساب.',
+  },
+  'ru': {
+    title: 'Скачать Brikaya — бесплатная браузерная игра',
+    description: 'Установите или играйте в Brikaya бесплатно, без аккаунта, без оплаты, с прогрессом на устройстве и офлайн-игрой после первого визита.',
+    ogDescription: 'Играйте в Brikaya бесплатно в браузере, установите на устройство и продолжайте без аккаунта.',
+  },
+  'tr': {
+    title: 'Brikaya\'yı indir — ücretsiz tarayıcı oyunu',
+    description: 'Brikaya\'yı ücretsiz kurun veya oynayın; hesap yok, ödeme yok, ilerleme cihazınızda kalır ve ilk ziyaretten sonra çevrimdışı oynanır.',
+    ogDescription: 'Brikaya\'yı tarayıcıda ücretsiz oynayın, cihazınıza kurun ve hesap olmadan devam edin.',
+  },
+  'nl': {
+    title: 'Brikaya downloaden — gratis browserspel',
+    description: 'Installeer of speel Brikaya gratis, geen account, geen betaling, met voortgang op je apparaat en offline spelen na het eerste bezoek.',
+    ogDescription: 'Speel Brikaya gratis in de browser, installeer op je apparaat en speel verder zonder account.',
+  },
+  'pl': {
+    title: 'Pobierz Brikaya — darmowa gra przeglądarkowa',
+    description: 'Zainstaluj lub graj w Brikaya za darmo, bez konta, bez płatności, z postępem na urządzeniu i grą offline po pierwszej wizycie.',
+    ogDescription: 'Graj w Brikaya za darmo w przeglądarce, zainstaluj na urządzeniu i graj dalej bez konta.',
+  },
+  'uk': {
+    title: 'Завантажити Brikaya — безкоштовна браузерна гра',
+    description: 'Установіть або грайте в Brikaya безкоштовно, без облікового запису, без оплати, з прогресом на пристрої та офлайн-грою після першого відвідування.',
+    ogDescription: 'Грайте в Brikaya безкоштовно в браузері, установіть на пристрій і продовжуйте без облікового запису.',
+  },
+  'ms': {
+    title: 'Muat turun Brikaya — permainan pelayar percuma',
+    description: 'Pasang atau main Brikaya secara percuma, tanpa akaun, tanpa bayaran, dengan kemajuan pada peranti dan permainan luar talian selepas lawatan pertama.',
+    ogDescription: 'Main Brikaya percuma dalam pelayar, pasang pada peranti dan teruskan tanpa akaun.',
+  },
+  'zh-TW': {
+    title: '下載 Brikaya — 免費瀏覽器遊戲',
+    description: '免費安裝或遊玩 Brikaya，無需帳號，無需付款，進度保存在你的裝置上，首次造訪後可離線遊玩。',
+    ogDescription: '在瀏覽器中免費遊玩 Brikaya，安裝到裝置，並且無需帳號即可繼續。',
+  },
+  'pt-PT': {
+    title: 'Descarregar Brikaya — jogo grátis no navegador',
+    description: 'Instale ou jogue Brikaya gratuitamente, sem conta, sem pagamento, com progresso guardado no seu aparelho e jogo offline após o primeiro acesso.',
+    ogDescription: 'Jogue Brikaya grátis no navegador, instale no aparelho e continue sem conta.',
+  },
+  'es-ES': {
+    title: 'Descargar Brikaya — juego gratis en el navegador',
+    description: 'Instala o juega Brikaya gratis, sin cuenta, sin pago, con progreso guardado en tu dispositivo y juego sin conexión después del primer acceso.',
+    ogDescription: 'Juega Brikaya gratis en el navegador, instálalo en tu dispositivo y continúa sin cuenta.',
+  },
+  'en-GB': {
+    title: 'Download Brikaya — free browser game',
+    description: 'Install or play Brikaya for free, with no account, no payment, progress saved on your device, and offline play after the first visit.',
+    ogDescription: 'Play Brikaya free in your browser, install it on your device, and keep playing without an account.',
+  },
+  'fr-CA': {
+    title: 'Télécharger Brikaya — jeu gratuit dans le navigateur',
+    description: 'Installez ou jouez à Brikaya gratuitement, sans compte, sans paiement, avec progression enregistrée sur votre appareil et jeu hors connexion après la première visite.',
+    ogDescription: 'Jouez à Brikaya gratuitement dans le navigateur, installez-le sur votre appareil et continuez sans compte.',
+  },
+  'bn': {
+    title: 'Brikaya ডাউনলোড করুন — বিনামূল্যের ব্রাউজার গেম',
+    description: 'অ্যাকাউন্ট ছাড়া, পেমেন্ট ছাড়া Brikaya বিনামূল্যে ইনস্টল করুন বা খেলুন; অগ্রগতি ডিভাইসে থাকে এবং প্রথম ভিজিটের পরে অফলাইনে খেলা যায়।',
+    ogDescription: 'ব্রাউজারে Brikaya বিনামূল্যে খেলুন, ডিভাইসে ইনস্টল করুন এবং অ্যাকাউন্ট ছাড়া চালিয়ে যান।',
+  },
+  'ur': {
+    title: 'Brikaya ڈاؤن لوڈ کریں — مفت براؤزر گیم',
+    description: 'Brikaya مفت انسٹال کریں یا کھیلیں، اکاؤنٹ کے بغیر، ادائیگی کے بغیر، آلے پر محفوظ پیش رفت اور پہلی بار کے بعد آف لائن کھیل کے ساتھ۔',
+    ogDescription: 'براؤزر میں Brikaya مفت کھیلیں، آلے پر انسٹال کریں اور اکاؤنٹ کے بغیر جاری رکھیں۔',
+  },
+  'ta': {
+    title: 'Brikaya பதிவிறக்கவும் — இலவச உலாவி விளையாட்டு',
+    description: 'கணக்கு இல்லாமல், கட்டணம் இல்லாமல் Brikaya-வை இலவசமாக நிறுவவும் அல்லது விளையாடவும்; முன்னேற்றம் சாதனத்தில் சேமிக்கப்படும், முதல் வருகைக்குப் பிறகு ஆஃப்லைனில் விளையாடலாம்.',
+    ogDescription: 'Brikaya-வை உலாவியில் இலவசமாக விளையாடுங்கள், சாதனத்தில் நிறுவி கணக்கு இல்லாமல் தொடருங்கள்.',
+  },
+  'te': {
+    title: 'Brikaya డౌన్‌లోడ్ చేయండి — ఉచిత బ్రౌజర్ గేమ్',
+    description: 'ఖాతా లేకుండా, చెల్లింపు లేకుండా Brikayaని ఉచితంగా ఇన్‌స్టాల్ చేయండి లేదా ఆడండి; పురోగతి పరికరంలో ఉంటుంది మరియు మొదటి సందర్శన తర్వాత ఆఫ్‌లైన్‌లో ఆడవచ్చు.',
+    ogDescription: 'Brikayaని బ్రౌజర్‌లో ఉచితంగా ఆడండి, పరికరంలో ఇన్‌స్టాల్ చేసి ఖాతా లేకుండా కొనసాగండి.',
+  },
+};
 function metadataFor(locale, routePath) {
   if (routePath === DOWNLOADS_ROUTE_PATH) {
     return DOWNLOADS_SEO[locale] ?? DOWNLOADS_SEO.en;
@@ -215,6 +395,10 @@ function canonicalUrl(locale, routePath = HOME_ROUTE_PATH) {
   return `${CANONICAL_ORIGIN}${localePath(locale, routePath)}`;
 }
 
+function htmlTagFor(locale) {
+  return `<html lang="${locale}" dir="${RTL_LOCALES.has(locale) ? 'rtl' : 'ltr'}">`;
+}
+
 function hreflangLinks(routePath = HOME_ROUTE_PATH) {
   return [
     ...LOCALES.map((locale) =>
@@ -232,7 +416,7 @@ function replaceOrInsertHead(html, locale, routePath = HOME_ROUTE_PATH) {
     .replaceAll('href="./favicon.svg"', 'href="/favicon.svg"')
     .replaceAll('href="./assets/', 'href="/assets/')
     .replaceAll('src="./assets/', 'src="/assets/')
-    .replace(/<html lang="[^"]+">/, `<html lang="${locale}">`)
+    .replace(/<html lang="[^"]+"(?: dir="[^"]+")?>/, htmlTagFor(locale))
     .replace(/<link rel="canonical" href="[^"]+" \/>/, `<link rel="canonical" href="${canonical}" />`)
     .replace(/<meta name="description" content="[^"]*" \/>/, `<meta name="description" content="${escapeXml(metadata.description)}" />`)
     .replace(/<meta property="og:url" content="[^"]*" \/>/, `<meta property="og:url" content="${canonical}" />`)

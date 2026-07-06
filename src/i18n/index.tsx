@@ -45,6 +45,12 @@ const LOCATION_LOCALE_SOURCE = "location";
 const PATH_SEGMENT_SEPARATOR = "/";
 const EMPTY_STRING = "";
 const TEMPLATE_PATTERN = /\{\{(\w+)\}\}/g;
+const RTL_LOCALE_PREFIXES = ["ar", "fa", "he", "ur"] as const;
+
+function isRtlLocale(locale: string): boolean {
+  return RTL_LOCALE_PREFIXES.some((prefix) => locale.toLowerCase().startsWith(prefix));
+}
+
 const TIME_ZONE_LOCALE_MAP: readonly (readonly [string, AppLocale])[] = [
   ["America/Araguaina", "pt-BR"],
   ["America/Bahia", "pt-BR"],
@@ -107,6 +113,20 @@ const TIME_ZONE_LOCALE_MAP: readonly (readonly [string, AppLocale])[] = [
   ["Europe/Berlin", "de"],
   ["Europe/Paris", "fr"],
   ["Europe/Rome", "it"],
+  ["Europe/Madrid", "es-ES"],
+  ["Europe/Lisbon", "pt-PT"],
+  ["Europe/Amsterdam", "nl"],
+  ["Europe/Warsaw", "pl"],
+  ["Europe/Kyiv", "uk"],
+  ["Europe/Kiev", "uk"],
+  ["Europe/Istanbul", "tr"],
+  ["Europe/Moscow", "ru"],
+  ["Asia/Riyadh", "ar"],
+  ["Asia/Dubai", "ar"],
+  ["Asia/Kuala_Lumpur", "ms"],
+  ["Asia/Taipei", "zh-TW"],
+  ["Asia/Dhaka", "bn"],
+  ["Asia/Karachi", "ur"],
   ["Asia/Tokyo", "ja"],
   ["Asia/Seoul", "ko"],
   ["Asia/Jakarta", "id"],
@@ -154,12 +174,27 @@ function normalizeLocale(value: string | null | undefined): AppLocale | null {
   if (isAppLocale(value)) return value;
 
   const normalizedValue = value.toLowerCase();
+  if (normalizedValue === "pt-pt") return "pt-PT";
   if (normalizedValue.startsWith("pt")) return "pt-BR";
+  if (normalizedValue === "es-es") return "es-ES";
   if (normalizedValue.startsWith("es")) return "es-419";
   if (normalizedValue === "en-in") return "en-IN";
+  if (normalizedValue === "en-gb") return "en-GB";
   if (normalizedValue.startsWith("en")) return "en";
   if (normalizedValue.startsWith("hi")) return "hi-IN";
+  if (normalizedValue === "zh-tw" || normalizedValue === "zh-hant") return "zh-TW";
   if (normalizedValue.startsWith("zh")) return "zh-CN";
+  if (normalizedValue.startsWith("ar")) return "ar";
+  if (normalizedValue.startsWith("ru")) return "ru";
+  if (normalizedValue.startsWith("tr")) return "tr";
+  if (normalizedValue.startsWith("nl")) return "nl";
+  if (normalizedValue.startsWith("pl")) return "pl";
+  if (normalizedValue.startsWith("uk")) return "uk";
+  if (normalizedValue.startsWith("ms")) return "ms";
+  if (normalizedValue.startsWith("bn")) return "bn";
+  if (normalizedValue.startsWith("ur")) return "ur";
+  if (normalizedValue.startsWith("ta")) return "ta";
+  if (normalizedValue.startsWith("te")) return "te";
   if (normalizedValue.startsWith("de")) return "de";
   if (normalizedValue.startsWith("fr")) return "fr";
   if (normalizedValue.startsWith("it")) return "it";
@@ -320,6 +355,7 @@ export function I18nProvider({ children }: I18nProviderProps) {
 
   useEffect(() => {
     applySeoMetadata(locale);
+    document.documentElement.dir = isRtlLocale(locale) ? "rtl" : "ltr";
     updateLocalizedPath(locale);
   }, [locale]);
 

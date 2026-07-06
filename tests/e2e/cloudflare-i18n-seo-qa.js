@@ -22,12 +22,14 @@ const ROOT_LOCALE = "pt-BR";
 const TESTED_LOCALES = [
   { locale: "pt-BR", path: "/", title: "Brikaya — arcade de quebrar blocos" },
   { locale: "en", path: "/en/", title: "Brikaya — block breaker arcade" },
-  {
-    locale: "es-419",
-    path: "/es-419/",
-    title: "Brikaya — arcade de romper bloques",
-  },
+  { locale: "es-419", path: "/es-419/", title: "Brikaya — arcade de romper bloques" },
   { locale: "zh-CN", path: "/zh-CN/", title: "Brikaya — 打砖块街机" },
+  { locale: "ar", path: "/ar/", title: "Brikaya — أركيد كسر الكتل" },
+  { locale: "ru", path: "/ru/", title: "Brikaya — аркада с разбиванием блоков" },
+  { locale: "nl", path: "/nl/", title: "Brikaya — blokbreker-arcade" },
+  { locale: "zh-TW", path: "/zh-TW/", title: "Brikaya — 打磚塊街機" },
+  { locale: "bn", path: "/bn/", title: "Brikaya — ব্লক ব্রেকার আর্কেড" },
+  { locale: "ur", path: "/ur/", title: "Brikaya — بلاک بریکر آرکیڈ" },
 ];
 const ALL_HREFLANG_LOCALES = [
   "pt-BR",
@@ -45,6 +47,22 @@ const ALL_HREFLANG_LOCALES = [
   "fil",
   "th",
   "zh-CN",
+  "ar",
+  "ru",
+  "tr",
+  "nl",
+  "pl",
+  "uk",
+  "ms",
+  "zh-TW",
+  "pt-PT",
+  "es-ES",
+  "en-GB",
+  "fr-CA",
+  "bn",
+  "ur",
+  "ta",
+  "te",
 ];
 const TESTED_DOWNLOADS_LOCALES = [
   {
@@ -122,6 +140,86 @@ const TESTED_DOWNLOADS_LOCALES = [
     path: "/zh-CN/downloads/",
     title: "下载 Brikaya — 免费浏览器游戏",
   },
+  {
+    locale: "ar",
+    path: "/ar/downloads/",
+    title: "تنزيل Brikaya — لعبة متصفح مجانية",
+  },
+  {
+    locale: "ru",
+    path: "/ru/downloads/",
+    title: "Скачать Brikaya — бесплатная браузерная игра",
+  },
+  {
+    locale: "tr",
+    path: "/tr/downloads/",
+    title: "Brikaya'yı indir — ücretsiz tarayıcı oyunu",
+  },
+  {
+    locale: "nl",
+    path: "/nl/downloads/",
+    title: "Brikaya downloaden — gratis browserspel",
+  },
+  {
+    locale: "pl",
+    path: "/pl/downloads/",
+    title: "Pobierz Brikaya — darmowa gra przeglądarkowa",
+  },
+  {
+    locale: "uk",
+    path: "/uk/downloads/",
+    title: "Завантажити Brikaya — безкоштовна браузерна гра",
+  },
+  {
+    locale: "ms",
+    path: "/ms/downloads/",
+    title: "Muat turun Brikaya — permainan pelayar percuma",
+  },
+  {
+    locale: "zh-TW",
+    path: "/zh-TW/downloads/",
+    title: "下載 Brikaya — 免費瀏覽器遊戲",
+  },
+  {
+    locale: "pt-PT",
+    path: "/pt-PT/downloads/",
+    title: "Descarregar Brikaya — jogo grátis no navegador",
+  },
+  {
+    locale: "es-ES",
+    path: "/es-ES/downloads/",
+    title: "Descargar Brikaya — juego gratis en el navegador",
+  },
+  {
+    locale: "en-GB",
+    path: "/en-GB/downloads/",
+    title: "Download Brikaya — free browser game",
+  },
+  {
+    locale: "fr-CA",
+    path: "/fr-CA/downloads/",
+    title: "Télécharger Brikaya — jeu gratuit dans le navigateur",
+  },
+  {
+    locale: "bn",
+    path: "/bn/downloads/",
+    title: "Brikaya ডাউনলোড করুন — বিনামূল্যের ব্রাউজার গেম",
+  },
+  {
+    locale: "ur",
+    path: "/ur/downloads/",
+    title: "Brikaya ڈاؤن لوڈ کریں — مفت براؤزر گیم",
+  },
+  {
+    locale: "ta",
+    path: "/ta/downloads/",
+    title: "Brikaya பதிவிறக்கவும் — இலவச உலாவி விளையாட்டு",
+  },
+  {
+    locale: "te",
+    path: "/te/downloads/",
+    title: "Brikaya డౌన్‌లోడ్ చేయండి — ఉచిత బ్రౌజర్ గేమ్",
+  },
 ];
 const LANGUAGE_SELECT_SELECTOR = "#game-language-select";
 const MENU_BUTTON_SELECTOR = ".dashboard-menu-button";
@@ -134,12 +232,13 @@ const MENU_OPEN_ATTEMPTS = 3;
 const MENU_OPEN_RETRY_TIMEOUT_MS = 5000;
 const CHINESE_MENU_TEXT = "隐私";
 const ROOT_CANONICAL = "https://brikaya.com/";
+const RTL_LOCALES = new Set(["ar", "ur"]);
 const BROWSER_AUTO_LANGUAGE = "es-MX";
 const BROWSER_AUTO_LANGUAGES = ["es-MX", "en-US"];
 const BROWSER_AUTO_EXPECTED_LOCALE = "es-419";
 const BROWSER_AUTO_EXPECTED_PATH = "/es-419/";
-const TIME_ZONE_AUTO_LANGUAGE = "nl-NL";
-const TIME_ZONE_AUTO_LANGUAGES = ["nl-NL"];
+const TIME_ZONE_AUTO_LANGUAGE = "eo-EO";
+const TIME_ZONE_AUTO_LANGUAGES = ["eo-EO"];
 const TIME_ZONE_AUTO_VALUE = "Europe/Berlin";
 const TIME_ZONE_AUTO_EXPECTED_LOCALE = "de";
 const TIME_ZONE_AUTO_EXPECTED_PATH = "/de/";
@@ -179,6 +278,20 @@ function canonicalFor(baseUrl, locale, path) {
   return locale === ROOT_LOCALE && path === "/" ? ROOT_CANONICAL : new URL(path, baseUrl).href;
 }
 
+function htmlLangPattern(locale) {
+  const direction = RTL_LOCALES.has(locale) ? "rtl" : "ltr";
+  return new RegExp(`<html lang="${locale}"(?: dir="${direction}")?>`);
+}
+
+function escapeHtml(value) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&apos;");
+}
+
 async function fetchText(url) {
   const response = await fetch(url);
   const body = await response.text();
@@ -192,7 +305,7 @@ async function validateHtml(baseUrl, item) {
 
   assert(status === HTTP_OK, `${url} status=${status}`);
   assert(
-    body.includes(`<html lang="${item.locale}">`),
+    htmlLangPattern(item.locale).test(body),
     `${url} sem lang ${item.locale}`,
   );
   assert(
@@ -200,7 +313,7 @@ async function validateHtml(baseUrl, item) {
     `${url} canonical incorreto`,
   );
   assert(
-    body.includes(`<title>${item.title}</title>`),
+    body.includes(`<title>${escapeHtml(item.title)}</title>`),
     `${url} title incorreto`,
   );
   assert(!body.includes(".pages.dev"), `${url} contém pages.dev`);
