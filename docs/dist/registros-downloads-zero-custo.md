@@ -393,3 +393,13 @@ Follow-up fa/he em 2026-07-06:
 - Yandex: IndexNow aceitou 570 URLs com status 202.
 - Clarity: continua desinstalado; nenhum script, tag, SDK, pixel ou telemetria foi adicionado.
 - Pendências: Google/Bing/Yandex/Naver/Seznam precisam reprocessar crawler/painéis; Yahoo/DuckDuckGo dependem de Bing/crawl; Baidu permanece bloqueado por cadastro externo/ICP/documento/custo quando exigido.
+
+
+## Atualização — rechecagem Chrome pós-onda 284 em 2026-07-06
+
+- Aba única registrada/reutilizada e deixada aberta em `https://brikaya.com/sitemap.xml`.
+- Google Search Console: página `Sitemaps` abriu autenticada para `sc-domain:brikaya.com`; sem CAPTCHA, OTP, senha ou custo visto nesta leitura.
+- Bing Webmaster Tools: painel Clarity abriu autenticado em modo leitura; Clarity não foi instalado nem ativado.
+- Yandex Webmaster: checklist abriu autenticado e ainda mostra 3 recomendações; sem ação paga e sem CAPTCHA.
+- Naver Search Advisor: abriu fluxo autenticado/callback, mas tela continua sem confirmação operacional de coleta nova; sem CAPTCHA, OTP, senha ou custo visível.
+- Seznam Reporter/Webmaster: portal abriu autenticado/legível; IndexNow já foi enviado via endpoint oficial com status 200 para 570 URLs; painel fica para reprocessamento/crawl.

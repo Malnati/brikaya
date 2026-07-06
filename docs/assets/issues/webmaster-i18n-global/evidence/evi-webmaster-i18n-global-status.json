@@ -1,6 +1,6 @@
 {
   "artifact": "evi-webmaster-i18n-global-status",
-  "updatedAt": "2026-07-06T22:08:00Z",
+  "updatedAt": "2026-07-06T22:11:00Z",
   "scope": {
     "canonicalOrigin": "https://brikaya.com",
     "routes": [
@@ -1309,19 +1309,51 @@
     "stoppedAtPasswordPhoneDocumentOrPayment": false,
     "finalRegistrationSubmitted": false,
     "sensitiveFormValuesStored": false,
-    "notes": "Wave284 public deploy completed. Single registered Chrome/browser panel recheck remains pending for search consoles; Seznam IndexNow endpoint accepted 570 URLs via zero-cost script. No Clarity install or paid action."
+    "notes": "Wave284 browser recheck used the single registered Chrome tab and left it open on https://brikaya.com/sitemap.xml. Google Search Console Sitemaps opened authenticated; Bing Clarity opened read-only and was not installed; Yandex checklist still showed 3 recommendations; Naver callback/login surface opened without completing a new manual crawl; Seznam Reporter/Webmaster opened and IndexNow was already accepted with 570 URLs. No CAPTCHA/OTP/password/payment/document flow was completed.",
+    "wave284PanelReadings": [
+      {
+        "platform": "Google Search Console",
+        "url": "https://search.google.com/search-console/sitemaps?resource_id=sc-domain%3Abrikaya.com",
+        "status": "verified",
+        "evidence": "Sitemaps page opened authenticated for brikaya.com; no CAPTCHA/OTP/payment visible."
+      },
+      {
+        "platform": "Bing Webmaster Tools / Clarity",
+        "url": "https://www.bing.com/webmasters/clarity?siteUrl=https://brikaya.com/",
+        "status": "verified_read_only",
+        "evidence": "Panel opened authenticated; Clarity not installed or activated."
+      },
+      {
+        "platform": "Yandex Webmaster",
+        "url": "https://webmaster.yandex.com/site/https:brikaya.com:443/optimization/checklist/#RECOMMENDATION",
+        "status": "pending_processing",
+        "evidence": "Checklist visible with 3 recommendations; IndexNow already accepted 570 URLs."
+      },
+      {
+        "platform": "Naver Search Advisor",
+        "url": "https://searchadvisor.naver.com/console/site/request/crawl?site=https%3A%2F%2Fbrikaya.com",
+        "status": "pending_processing",
+        "evidence": "Callback/login surface opened without CAPTCHA/OTP/cost; no new crawl confirmation recorded."
+      },
+      {
+        "platform": "Seznam Webmaster/Reporter",
+        "url": "https://reporter.seznam.cz/",
+        "status": "indexnow_submitted",
+        "evidence": "Reporter/Webmaster visible; Seznam IndexNow accepted 570 URLs with status 200."
+      }
+    ]
   },
   "p0ToP20": {
     "P0": "ok_public_570_url_sitemap_robots_200_after_wave284_deploy",
-    "P1": "google_panel_recheck_pending_after_570_url_deploy",
-    "P2": "bing_panel_recheck_pending_after_570_url_deploy",
+    "P1": "google_sitemaps_panel_opened_authenticated_reprocessing_570_url_sitemap_pending",
+    "P2": "bing_panel_opened_clarity_readonly_no_install_reprocessing_pending",
     "P3": "yahoo_covered_by_bing_pending_recrawl",
     "P4": "duckduckgo_covered_by_bing_duckduckbot_sitemap_robots_hreflang",
-    "P5": "yandex_indexnow_202_for_570_urls_panel_processing_pending",
-    "P6": "naver_panel_recheck_pending_after_570_url_deploy",
+    "P5": "yandex_indexnow_202_for_570_urls_checklist_still_3_recommendations_until_processed",
+    "P6": "naver_callback_login_surface_opened_no_new_crawl_confirmation",
     "P7": "baidu_blocked_external_registration_constraints_no_document_icp_payment",
     "P8": "brave_no_current_direct_submit_keep_crawl_path_and_indexnow_when_supported",
-    "P9": "seznam_indexnow_200_for_570_urls_panel_free_only_recheck_pending",
+    "P9": "seznam_indexnow_200_for_570_urls_reporter_webmaster_opened_processing_pending",
     "P10": "mojeek_no_direct_action_crawl_backlinks_needed",
     "P11": "other_metasearch_covered_by_google_bing_yandex_sitemap_indexnow_when_supported",
     "P12": "snippet_sampling_pending_after_search_engines_reprocess_570_url_sitemap",
@@ -1331,7 +1363,7 @@
     "P16": "rtl_public_validated_ar_sa_ar_eg_fa_af_ps_af_sd_in_ks_in_ug_cn_yi_001_by_public_qa_samples",
     "P17": "public_i18n_tests_passed_284_hreflangs_90_downloads_sampled_wave284_public_samples_ok",
     "P18": "sitemap_570_public_hreflang_284_html_report_passed",
-    "P19": "evidence_updated_wave284_public_validation_indexnow_and_search_status",
+    "P19": "evidence_updated_wave284_public_validation_indexnow_and_browser_panel_recheck",
     "P20": "clarity_not_installed_blocked_by_privacy_policy"
   },
   "nextWave91": {
@@ -2383,7 +2415,7 @@
       "noExternalTelemetrySdk": true,
       "noPlayerPersonalDataCollection": true
     },
-    "browserRecheck": "pending_single_tab_panel_recheck",
+    "browserRecheck": "completed_single_registered_chrome_tab_left_open_on_sitemap",
     "publicValidation": {
       "deployedTo": "https://brikaya.com/",
       "cloudflareDeploy": "ok: https://19331701.brikaya-live.pages.dev deployed and brikaya.com updated",
@@ -2407,6 +2439,38 @@
       "indexNowYandex": "accepted-pending status=202 urls=570 keyLocation=https://brikaya.com/[redacted].txt",
       "indexNowSeznam": "submitted status=200 urls=570 keyLocation=https://brikaya.com/[redacted].txt",
       "clarityPublicCheck": "not installed; no package/script/tag/pixel/SDK added"
-    }
+    },
+    "browserPanelReadings": [
+      {
+        "platform": "Google Search Console",
+        "url": "https://search.google.com/search-console/sitemaps?resource_id=sc-domain%3Abrikaya.com",
+        "status": "verified",
+        "evidence": "Sitemaps page opened authenticated for brikaya.com; no CAPTCHA/OTP/payment visible."
+      },
+      {
+        "platform": "Bing Webmaster Tools / Clarity",
+        "url": "https://www.bing.com/webmasters/clarity?siteUrl=https://brikaya.com/",
+        "status": "verified_read_only",
+        "evidence": "Panel opened authenticated; Clarity not installed or activated."
+      },
+      {
+        "platform": "Yandex Webmaster",
+        "url": "https://webmaster.yandex.com/site/https:brikaya.com:443/optimization/checklist/#RECOMMENDATION",
+        "status": "pending_processing",
+        "evidence": "Checklist visible with 3 recommendations; IndexNow already accepted 570 URLs."
+      },
+      {
+        "platform": "Naver Search Advisor",
+        "url": "https://searchadvisor.naver.com/console/site/request/crawl?site=https%3A%2F%2Fbrikaya.com",
+        "status": "pending_processing",
+        "evidence": "Callback/login surface opened without CAPTCHA/OTP/cost; no new crawl confirmation recorded."
+      },
+      {
+        "platform": "Seznam Webmaster/Reporter",
+        "url": "https://reporter.seznam.cz/",
+        "status": "indexnow_submitted",
+        "evidence": "Reporter/Webmaster visible; Seznam IndexNow accepted 570 URLs with status 200."
+      }
+    ]
   }
 }
