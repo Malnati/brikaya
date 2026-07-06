@@ -31,6 +31,20 @@ Não criar `favicon.ico`, PNG, JPG ou outro raster runtime enquanto a regra do p
 
 IndexNow foi adotado como caminho zero-custo para informar ao Yandex que páginas do Brikaya mudaram. A chave IndexNow é pública por definição porque o protocolo exige um arquivo `.txt` acessível no domínio. Ela não é credencial de login e não deve ser usada para autenticação interna.
 
+Fonte operacional obrigatória:
+
+- `BRIKAYA_INDEXNOW_KEY` fica no `.env` local do projeto;
+- `public/<chave>.txt` não é mais fonte versionada;
+- o arquivo público de verificação é materializado em `dist/<chave>.txt` durante build/deploy;
+- logs, PRs e docs devem exibir apenas `https://brikaya.com/[redacted].txt`.
+
+Para sincronizar valores atuais sem imprimir chaves:
+
+```bash
+PATH="/opt/homebrew/bin:$PATH" npm run codex-env:bootstrap
+PATH="/opt/homebrew/bin:$PATH" npm run codex-env:check
+```
+
 ### Comando de validação sem envio
 
 ```bash
@@ -86,6 +100,7 @@ Antes de afirmar conclusão:
 ```bash
 PATH="/opt/homebrew/bin:$PATH" node --version
 PATH="/opt/homebrew/bin:$PATH" make help
+PATH="/opt/homebrew/bin:$PATH" npm run codex-env:check
 PATH="/opt/homebrew/bin:$PATH" npm run test:semantic-file-names
 PATH="/opt/homebrew/bin:$PATH" npm run test:svg-assets
 PATH="/opt/homebrew/bin:$PATH" npm run build
@@ -97,6 +112,7 @@ PATH="/opt/homebrew/bin:$PATH" npm run build
 Critérios:
 
 - Node começa com `v23.`.
+- `.env` local contém as variáveis obrigatórias, com valores omitidos em logs e permissão `0600`.
 - `/favicon.svg` público responde `200` com `content-type: image/svg+xml`.
 - `/sitemap.xml` e `/robots.txt` respondem `200`.
 - IndexNow retorna `200` ou `202` com saída sanitizada, sem imprimir a chave.

@@ -47,6 +47,10 @@ Brikaya é um jogo arcade offline-first em TypeScript/React, distribuído como P
 - Domínio público canônico: `https://brikaya.com/`.
 - Não aceitar cobrança, plano pago, overage, cartão, campanha ativa ou compra sem aprovação explícita.
 - Variáveis locais ficam fora do Git; documentar apenas nomes seguros em `.env.example`.
+- Toda chave/variável usada ou gerada por Codex, navegador autenticado, API, SDK ou CLI deve ser registrada no `.env` local do projeto antes de declarar conclusão.
+- Use `npm run codex-env:register` para registrar valores sem imprimi-los, `npm run codex-env:bootstrap` para migrar valores já existentes e `npm run codex-env:check` antes de commit, push, deploy ou submissão IndexNow.
+- Valores públicos por protocolo, como IndexNow e DNS TXT de verificação, também devem ter fonte no `.env`; artefatos públicos derivados devem ser gerados por script e os logs devem permanecer sanitizados.
+- Nunca versionar `.env`, `.env.*` real, tokens, segredos, chaves privadas, cookies, refresh tokens ou valores sensíveis.
 
 ## GitHub
 
@@ -61,6 +65,7 @@ Antes de entrega técnica:
 ```bash
 node --version
 make help
+npm run codex-env:check
 npm run test:semantic-file-names
 npm run test:svg-assets
 npm run build

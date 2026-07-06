@@ -1,0 +1,458 @@
+{
+  "version": 1,
+  "envFile": ".env",
+  "entries": [
+    {
+      "name": "CLOUDFLARE_ACCOUNT_ID",
+      "classification": "secret",
+      "required": true,
+      "source": "Cloudflare account API",
+      "commands": [
+        "make cloudflare-deploy",
+        "node scripts/cloudflare-pages.js env-check"
+      ]
+    },
+    {
+      "name": "CLOUDFLARE_API_TOKEN",
+      "classification": "secret",
+      "required": true,
+      "source": "Cloudflare API token",
+      "commands": [
+        "make cloudflare-deploy",
+        "node scripts/cloudflare-pages.js env-check"
+      ]
+    },
+    {
+      "name": "BRIKAYA_CLOUDFLARE_PAGES_PROJECT_NAME",
+      "classification": "public-config",
+      "required": true,
+      "source": "Brikaya Cloudflare Pages project",
+      "commands": [
+        "make cloudflare-deploy"
+      ]
+    },
+    {
+      "name": "BRIKAYA_CLOUDFLARE_PAGES_BRANCH",
+      "classification": "public-config",
+      "required": true,
+      "source": "Brikaya Cloudflare Pages production branch",
+      "commands": [
+        "make cloudflare-deploy"
+      ]
+    },
+    {
+      "name": "BRIKAYA_CLOUDFLARE_PAGES_OUTPUT_DIR",
+      "classification": "public-config",
+      "required": true,
+      "source": "Brikaya static build output",
+      "commands": [
+        "npm run build",
+        "make cloudflare-deploy"
+      ]
+    },
+    {
+      "name": "BRIKAYA_CLOUDFLARE_PAGES_CUSTOM_DOMAIN",
+      "classification": "public-config",
+      "required": true,
+      "source": "Brikaya canonical domain",
+      "commands": [
+        "make cloudflare-deploy"
+      ]
+    },
+    {
+      "name": "BRIKAYA_INDEXNOW_KEY",
+      "classification": "public-generated",
+      "required": true,
+      "source": "IndexNow public verification key",
+      "commands": [
+        "npm run indexnow:yandex",
+        "npm run codex-env:materialize"
+      ]
+    },
+    {
+      "name": "BRIKAYA_INDEXNOW_ENDPOINT",
+      "classification": "public-config",
+      "required": true,
+      "source": "Yandex IndexNow endpoint",
+      "commands": [
+        "npm run indexnow:yandex"
+      ]
+    },
+    {
+      "name": "BRIKAYA_INDEXNOW_PUBLIC_ROOT",
+      "classification": "public-config",
+      "required": true,
+      "source": "Local public artifact root for IndexNow",
+      "commands": [
+        "npm run indexnow:yandex"
+      ]
+    },
+    {
+      "name": "BRIKAYA_INDEXNOW_SITEMAP",
+      "classification": "public-config",
+      "required": true,
+      "source": "Local sitemap path for IndexNow",
+      "commands": [
+        "npm run indexnow:yandex"
+      ]
+    },
+    {
+      "name": "BRIKAYA_INDEXNOW_DRY_RUN",
+      "classification": "public-config",
+      "required": true,
+      "source": "IndexNow dry-run switch",
+      "commands": [
+        "npm run indexnow:yandex",
+        "make yandex-indexnow-dry-run"
+      ]
+    },
+    {
+      "name": "BRIKAYA_GOOGLE_SEARCH_CONSOLE_PROPERTY",
+      "classification": "public-config",
+      "required": false,
+      "source": "Google Search Console property identifier",
+      "commands": [
+        "browser-authenticated webmaster registration"
+      ]
+    },
+    {
+      "name": "BRIKAYA_GOOGLE_SEARCH_CONSOLE_DNS_TXT",
+      "classification": "public-generated",
+      "required": false,
+      "source": "Google Search Console DNS TXT verification value",
+      "commands": [
+        "browser-authenticated webmaster registration"
+      ]
+    },
+    {
+      "name": "BRIKAYA_ASSET_MANIFEST_OUTPUT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_ASSET_MANIFEST_PUBLIC_ROOT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_AUDIO_QA_REPORT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_AUDIO_QA_SCREENSHOT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_BALL_TURRET_DESKTOP_SCREENSHOT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_BALL_TURRET_MENU_SCREENSHOT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_BALL_TURRET_MOBILE_SCREENSHOT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_BALL_TURRET_QA_REPORT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_BUILD_ID",
+      "classification": "public-generated",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_CHROME_HOST_RESOLVER_RULES",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_CINEMATIC_COUNTDOWN_LANDSCAPE_SCREENSHOT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_CINEMATIC_COUNTDOWN_SCREENSHOT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_CINEMATIC_LEVEL_SCREENSHOT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_CINEMATIC_QA_REPORT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_CINEMATIC_RIP_SCREENSHOT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_DASHBOARD_QA_TRACE",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_EVASIVE_QA_REPORT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_EVASIVE_QA_SCREENSHOT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_I18N_SEO_QA_REPORT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_I18N_SEO_QA_SCREENSHOT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_LASER_QA_ITEM_SCREENSHOT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_LASER_QA_REPORT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_LASER_QA_SCREENSHOT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_METAL_QA_REPORT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_METAL_QA_SCREENSHOT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_PUBLIC_URL",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_RUNTIME_UPDATE_MODE",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_RUNTIME_UPDATE_PROFILE",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_RUNTIME_UPDATE_REPORT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_RUNTIME_UPDATE_SCREENSHOT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_SVG_ASSETS_QA_REPORT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_SVG_ASSETS_QA_SCREENSHOT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_SW_FILE",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    }
+  ]
+}

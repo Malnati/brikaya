@@ -1,12 +1,14 @@
 // scripts/submit-yandex-indexnow.mjs
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { basename, extname, resolve } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { loadProjectEnv, readProjectEnv, sanitizeOutput } from './load-project-env.mjs';
 
+const KEY_ENV_KEY = 'BRIKAYA_INDEXNOW_KEY';
 const PUBLIC_ROOT_ENV_KEY = 'BRIKAYA_INDEXNOW_PUBLIC_ROOT';
 const SITEMAP_ENV_KEY = 'BRIKAYA_INDEXNOW_SITEMAP';
 const ENDPOINT_ENV_KEY = 'BRIKAYA_INDEXNOW_ENDPOINT';
 const DRY_RUN_ENV_KEY = 'BRIKAYA_INDEXNOW_DRY_RUN';
-const DEFAULT_PUBLIC_ROOT = 'public';
+const DEFAULT_PUBLIC_ROOT = 'dist';
 const DEFAULT_SITEMAP_PATH = 'dist/sitemap.xml';
 const DEFAULT_ENDPOINT = 'https://yandex.com/indexnow';
 const CANONICAL_HOST = 'brikaya.com';
@@ -25,8 +27,9 @@ function usage() {
     '',
     'Envia URLs do dist/sitemap.xml para o IndexNow/Yandex.',
     '',
-    'Variáveis:',
-    `  ${PUBLIC_ROOT_ENV_KEY}=public`,
+    'Variáveis registradas em .env:',
+    `  ${KEY_ENV_KEY}=<chave pública IndexNow>`,
+    `  ${PUBLIC_ROOT_ENV_KEY}=dist`,
     `  ${SITEMAP_ENV_KEY}=dist/sitemap.xml`,
     `  ${ENDPOINT_ENV_KEY}=https://yandex.com/indexnow`,
     `  ${DRY_RUN_ENV_KEY}=true`,
@@ -37,8 +40,8 @@ function fail(message) {
   throw new Error(message);
 }
 
-function envFlag(name) {
-  return /^(1|true|yes)$/i.test(process.env[name] || '');
+function envFlag(envValues, name) {
+  return /^(1|true|yes)$/i.test(envValues[name] || '');
 }
 
 function text(path) {
@@ -54,26 +57,21 @@ function decodeXmlText(value) {
     .replaceAll('&apos;', "'");
 }
 
-function findIndexNowKey(publicRoot) {
-  if (!existsSync(publicRoot)) fail('diretório público IndexNow não encontrado');
-
-  const matchingKeys = readdirSync(publicRoot)
-    .filter((entry) => extname(entry).toLowerCase() === '.txt')
-    .sort()
-    .map((entry) => {
-      const filePath = resolve(publicRoot, entry);
-      const keyFromName = basename(entry, '.txt');
-      const keyFromFile = text(filePath).trim();
-      return keyFromName === keyFromFile ? keyFromFile : null;
-    })
-    .filter(Boolean);
-
-  if (matchingKeys.length === 0) fail('chave IndexNow não encontrada');
-
-  const key = matchingKeys[0];
-  if (!INDEXNOW_KEY_PATTERN.test(key)) fail('chave IndexNow inválida');
-
+function indexNowKey(projectEnv) {
+  const key = projectEnv[KEY_ENV_KEY];
+  if (!key) fail(`${KEY_ENV_KEY} ausente no .env local`);
+  if (!INDEXNOW_KEY_PATTERN.test(key)) fail(`${KEY_ENV_KEY} inválida no .env local`);
   return key;
+}
+
+function assertMaterializedKeyFile(publicRoot, key) {
+  const keyPath = resolve(publicRoot, `${key}.txt`);
+  if (!existsSync(keyPath)) {
+    return;
+  }
+  if (text(keyPath).trim() !== key) {
+    fail('arquivo público IndexNow diverge do .env local');
+  }
 }
 
 function sitemapUrls(sitemapPath) {
@@ -133,7 +131,7 @@ function sanitizedSummary(label, endpoint, urlCount, status = null) {
   return `${label}: host=${CANONICAL_HOST} endpoint=${endpoint}${statusPart} urls=${urlCount} keyLocation=${REDACTED_KEY_LOCATION}`;
 }
 
-async function submit(endpoint, payload) {
+async function submit(endpoint, payload, envValues) {
   const response = await fetch(endpoint, {
     method: 'POST',
     headers: { 'content-type': 'application/json; charset=utf-8' },
@@ -141,12 +139,14 @@ async function submit(endpoint, payload) {
   });
 
   if (response.status === SUCCESS_HTTP_STATUS) {
-    console.log(sanitizedSummary('yandex-indexnow submitted', endpoint, payload.urlList.length, response.status));
+    console.log(sanitizeOutput(sanitizedSummary('yandex-indexnow submitted', endpoint, payload.urlList.length, response.status), envValues));
     return;
   }
 
   if (response.status === PENDING_HTTP_STATUS) {
-    console.log(sanitizedSummary('yandex-indexnow accepted-pending', endpoint, payload.urlList.length, response.status));
+    console.log(
+      sanitizeOutput(sanitizedSummary('yandex-indexnow accepted-pending', endpoint, payload.urlList.length, response.status), envValues),
+    );
     return;
   }
 
@@ -159,22 +159,25 @@ async function run() {
     return;
   }
 
-  const publicRoot = resolve(process.cwd(), process.env[PUBLIC_ROOT_ENV_KEY] || DEFAULT_PUBLIC_ROOT);
-  const sitemapPath = resolve(process.cwd(), process.env[SITEMAP_ENV_KEY] || DEFAULT_SITEMAP_PATH);
-  const endpoint = process.env[ENDPOINT_ENV_KEY] || DEFAULT_ENDPOINT;
-  const key = findIndexNowKey(publicRoot);
+  const projectEnv = readProjectEnv();
+  const envValues = loadProjectEnv();
+  const publicRoot = resolve(process.cwd(), envValues[PUBLIC_ROOT_ENV_KEY] || DEFAULT_PUBLIC_ROOT);
+  const sitemapPath = resolve(process.cwd(), envValues[SITEMAP_ENV_KEY] || DEFAULT_SITEMAP_PATH);
+  const endpoint = envValues[ENDPOINT_ENV_KEY] || DEFAULT_ENDPOINT;
+  const key = indexNowKey(projectEnv);
+  assertMaterializedKeyFile(publicRoot, key);
   const urlList = canonicalIndexableUrls(sitemapUrls(sitemapPath));
   const payload = buildPayload(key, urlList);
 
-  if (envFlag(DRY_RUN_ENV_KEY)) {
-    console.log(sanitizedSummary('yandex-indexnow dry-run', endpoint, urlList.length));
+  if (envFlag(envValues, DRY_RUN_ENV_KEY)) {
+    console.log(sanitizeOutput(sanitizedSummary('yandex-indexnow dry-run', endpoint, urlList.length), { ...envValues, ...projectEnv }));
     return;
   }
 
-  await submit(endpoint, payload);
+  await submit(endpoint, payload, { ...envValues, ...projectEnv });
 }
 
 run().catch((error) => {
-  console.error(error.message);
+  console.error(sanitizeOutput(error.message, readProjectEnv()));
   process.exit(1);
 });

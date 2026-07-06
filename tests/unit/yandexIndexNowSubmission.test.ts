@@ -1,10 +1,9 @@
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 
-const SCRIPT_PATH = 'scripts/submit-yandex-indexnow.mjs';
-const TEMP_ROOT = 'tmp/tests/yandex-indexnow';
-const TEMP_PUBLIC_ROOT = `${TEMP_ROOT}/public`;
+const SCRIPT_PATH = resolve(process.cwd(), 'scripts/submit-yandex-indexnow.mjs');
+const TEMP_ROOT = resolve(process.cwd(), 'tmp/tests/yandex-indexnow');
 const TEMP_SITEMAP_PATH = `${TEMP_ROOT}/dist/sitemap.xml`;
 const TEST_KEY = 'ab12cd34ef56ab78cd90ef12ab34cd56';
 const CANONICAL_HOST = 'brikaya.com';
@@ -15,8 +14,8 @@ function writeText(path: string, content: string) {
   writeFileSync(resolve(path), content);
 }
 
-function writeKeyFile(key = TEST_KEY) {
-  writeText(`${TEMP_PUBLIC_ROOT}/${key}.txt`, `${key}\n`);
+function writeEnv(key = TEST_KEY) {
+  writeText(`${TEMP_ROOT}/.env`, `BRIKAYA_INDEXNOW_KEY=${key}\n`);
 }
 
 function writeSitemap(urls: string[]) {
@@ -34,11 +33,10 @@ function writeSitemap(urls: string[]) {
 
 function runIndexNow(extraEnv: NodeJS.ProcessEnv = {}) {
   return execFileSync(process.execPath, [SCRIPT_PATH], {
-    cwd: process.cwd(),
+    cwd: TEMP_ROOT,
     env: {
       ...process.env,
-      BRIKAYA_INDEXNOW_PUBLIC_ROOT: resolve(TEMP_PUBLIC_ROOT),
-      BRIKAYA_INDEXNOW_SITEMAP: resolve(TEMP_SITEMAP_PATH),
+      BRIKAYA_INDEXNOW_SITEMAP: TEMP_SITEMAP_PATH,
       BRIKAYA_INDEXNOW_DRY_RUN: 'true',
       ...extraEnv,
     },
@@ -47,13 +45,20 @@ function runIndexNow(extraEnv: NodeJS.ProcessEnv = {}) {
 }
 
 function runIndexNowFailure(extraEnv: NodeJS.ProcessEnv = {}) {
-  try {
-    runIndexNow(extraEnv);
+  const result = spawnSync(process.execPath, [SCRIPT_PATH], {
+    cwd: TEMP_ROOT,
+    env: {
+      ...process.env,
+      BRIKAYA_INDEXNOW_SITEMAP: TEMP_SITEMAP_PATH,
+      BRIKAYA_INDEXNOW_DRY_RUN: 'true',
+      ...extraEnv,
+    },
+    encoding: 'utf8',
+  });
+  if (result.status === 0) {
     throw new Error('expected command to fail');
-  } catch (error) {
-    const commandError = error as { stdout?: Buffer | string; stderr?: Buffer | string; message?: string };
-    return `${commandError.stdout?.toString() || ''}${commandError.stderr?.toString() || ''}${commandError.message || ''}`;
   }
+  return `${result.stdout || ''}${result.stderr || ''}`;
 }
 
 describe('submit-yandex-indexnow', () => {
@@ -66,7 +71,7 @@ describe('submit-yandex-indexnow', () => {
   });
 
   it('faz dry-run com URLs canônicas do sitemap sem imprimir a chave', () => {
-    writeKeyFile();
+    writeEnv();
     writeSitemap(['https://brikaya.com/', 'https://brikaya.com/en/']);
 
     const output = runIndexNow();
@@ -79,7 +84,7 @@ describe('submit-yandex-indexnow', () => {
   });
 
   it('rejeita URLs fora do host canônico do Brikaya', () => {
-    writeKeyFile();
+    writeEnv();
     writeSitemap(['https://brikaya.com/', 'https://example.com/']);
 
     const output = runIndexNowFailure();
@@ -90,12 +95,12 @@ describe('submit-yandex-indexnow', () => {
 
   it('rejeita chave IndexNow inválida mesmo quando arquivo e conteúdo batem', () => {
     const invalidKey = 'abc';
-    writeKeyFile(invalidKey);
+    writeEnv(invalidKey);
     writeSitemap(['https://brikaya.com/']);
 
     const output = runIndexNowFailure();
 
-    expect(output).toContain('chave IndexNow inválida');
+    expect(output).toContain('BRIKAYA_INDEXNOW_KEY inválida');
     expect(output).not.toContain(invalidKey);
   });
 });

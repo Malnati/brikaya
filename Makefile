@@ -26,7 +26,7 @@ KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
 # Target padrão: mostrar help quando make é executado sem argumentos
 .DEFAULT_GOAL := help
 
-.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes cloudflare-env-check cloudflare-build cloudflare-domain cloudflare-deploy cloudflare-purge-cache cloudflare-public-check cloudflare-mobile-qa cloudflare-orientation-lock-qa cloudflare-ball-turret-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-powerups-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa cloudflare-offline-pwa-qa cloudflare-i18n-seo-qa cloudflare-reset-preferences-qa cloudflare-evasive-blocks-qa yandex-indexnow-dry-run yandex-indexnow-submit docker-build docker-up docker-down docker-logs docker-shell
+.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes codex-env-check codex-env-bootstrap codex-env-materialize codex-env-register cloudflare-env-check cloudflare-build cloudflare-domain cloudflare-deploy cloudflare-purge-cache cloudflare-public-check cloudflare-mobile-qa cloudflare-orientation-lock-qa cloudflare-ball-turret-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-powerups-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa cloudflare-offline-pwa-qa cloudflare-i18n-seo-qa cloudflare-reset-preferences-qa cloudflare-evasive-blocks-qa yandex-indexnow-dry-run yandex-indexnow-submit docker-build docker-up docker-down docker-logs docker-shell
 
 # Função para matar processos anteriores
 kill-processes:
@@ -56,12 +56,24 @@ build:
 	@npm run build
 	@echo "Projeto compilado com sucesso!"
 
+codex-env-check:
+	@npm run codex-env:check
+
+codex-env-bootstrap:
+	@npm run codex-env:bootstrap
+
+codex-env-materialize:
+	@npm run codex-env:materialize
+
+codex-env-register:
+	@npm run codex-env:register
+
 # Validar variáveis necessárias para Cloudflare Pages sem exibir valores sensíveis
-cloudflare-env-check:
+cloudflare-env-check: codex-env-check
 	@node scripts/cloudflare-pages.js env-check
 
 # Gerar build estático para Cloudflare Pages
-cloudflare-build:
+cloudflare-build: codex-env-check
 	@echo "Gerando build estático para Cloudflare Pages..."
 	@npm run build
 	@echo "Build estático gerado em $(BRIKAYA_CLOUDFLARE_PAGES_OUTPUT_DIR)"
@@ -150,10 +162,10 @@ cloudflare-reset-preferences-qa:
 cloudflare-evasive-blocks-qa:
 	@npm run test:cloudflare-evasive-blocks
 
-yandex-indexnow-dry-run:
+yandex-indexnow-dry-run: codex-env-check
 	@BRIKAYA_INDEXNOW_DRY_RUN=true npm run indexnow:yandex
 
-yandex-indexnow-submit:
+yandex-indexnow-submit: codex-env-check
 	@npm run indexnow:yandex
 
 # Executar o jogo em modo de desenvolvimento
@@ -288,6 +300,10 @@ help:
 	@echo "  setup          - Instalar dependências e compilar"
 	@echo ""
 	@echo "Cloudflare Pages sem custo:"
+	@echo "  codex-env-check    - Validar registry/.env/.env.example sem exibir valores"
+	@echo "  codex-env-bootstrap - Registrar valores atuais no .env local sem exibir valores"
+	@echo "  codex-env-materialize - Gerar artefatos públicos derivados do .env em dist"
+	@echo "  codex-env-register - Registrar uma variável no .env local sem exibir valor"
 	@echo "  cloudflare-env-check - Validar variáveis Cloudflare sem exibir valores"
 	@echo "  cloudflare-build     - Gerar build estático para Pages"
 	@echo "  cloudflare-domain    - Garantir domínio canônico e redirect para brikaya.com"
