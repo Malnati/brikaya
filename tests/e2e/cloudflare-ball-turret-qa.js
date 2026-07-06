@@ -24,6 +24,7 @@ const QA_SCENARIO = "ball-turret";
 const MENU_BUTTON_PATTERN = /menu/i;
 const CLOSE_MENU_PATTERN = /fechar menu|close menu/i;
 const GAME_MODE_HEADING_PATTERN = /modo de jogo|game mode/i;
+const GAME_MODE_OPTION_PATTERN = /^(torreta|turret|clássico|classic)$/i;
 const JOYSTICK_DIAGNOSTIC_TOGGLE_PATTERN =
   /registrar controle da torreta|record turret control/i;
 const JOYSTICK_DIAGNOSTIC_DOWNLOAD_PATTERN =
@@ -689,20 +690,35 @@ async function readBallTurretState(page) {
 
 async function readJoystickDiagnosticState(page) {
   return page.evaluate(
-    ({ joystickLayerTestId, playfieldLayerTestId, downloadPatternSource }) => {
+    ({
+      joystickLayerTestId,
+      playfieldLayerTestId,
+      togglePatternSource,
+      downloadPatternSource,
+      clearPatternSource,
+    }) => {
+      const togglePattern = new RegExp(togglePatternSource, "i");
       const downloadPattern = new RegExp(downloadPatternSource, "i");
+      const clearPattern = new RegExp(clearPatternSource, "i");
       const joystickLayer = document.querySelector(
         `[data-testid="${joystickLayerTestId}"]`,
       );
       const playfieldLayer = document.querySelector(
         `[data-testid="${playfieldLayerTestId}"]`,
       );
-      const downloadControl = Array.from(
-        document.querySelectorAll("button,a"),
-      ).find(
+      const controls = Array.from(document.querySelectorAll("button,a,label"));
+      const toggleControl = controls.find((control) =>
+        togglePattern.test(control.textContent || ""),
+      );
+      const downloadControl = controls.find(
         (control) =>
           downloadPattern.test(control.textContent || "") ||
           downloadPattern.test(control.getAttribute("aria-label") || ""),
+      );
+      const clearControl = controls.find(
+        (control) =>
+          clearPattern.test(control.textContent || "") ||
+          clearPattern.test(control.getAttribute("aria-label") || ""),
       );
       const readLayer = (layer) => {
         const rect = layer?.getBoundingClientRect();
@@ -724,6 +740,9 @@ async function readJoystickDiagnosticState(page) {
       return {
         joystickLayer: readLayer(joystickLayer),
         playfieldLayer: readLayer(playfieldLayer),
+        toggleExists: Boolean(toggleControl),
+        downloadExists: Boolean(downloadControl),
+        clearExists: Boolean(clearControl),
         downloadButtonDisabled: downloadControl
           ? downloadControl.tagName.toLowerCase() === "button"
             ? Boolean(downloadControl.disabled)
@@ -734,7 +753,9 @@ async function readJoystickDiagnosticState(page) {
     {
       joystickLayerTestId: JOYSTICK_DIAGNOSTIC_JOYSTICK_LAYER_TEST_ID,
       playfieldLayerTestId: JOYSTICK_DIAGNOSTIC_PLAYFIELD_LAYER_TEST_ID,
+      togglePatternSource: JOYSTICK_DIAGNOSTIC_TOGGLE_PATTERN.source,
       downloadPatternSource: JOYSTICK_DIAGNOSTIC_DOWNLOAD_PATTERN.source,
+      clearPatternSource: JOYSTICK_DIAGNOSTIC_CLEAR_PATTERN.source,
     },
   );
 }
@@ -815,55 +836,29 @@ async function setJoystickDiagnosticsEnabled(page, config) {
     MENU_BUTTON_PATTERN.source,
   );
   assert(menuOpened, `${config.name}: botão Menu não encontrado.`);
-  await page.waitForSelector(".settings-drawer", { timeout: 5000 });
-
-  const hiddenControlState = await page.evaluate(
-    ({ togglePatternSource, downloadPatternSource, clearPatternSource }) => {
-      const togglePattern = new RegExp(togglePatternSource, "i");
-      const downloadPattern = new RegExp(downloadPatternSource, "i");
-      const clearPattern = new RegExp(clearPatternSource, "i");
-      const labels = Array.from(document.querySelectorAll("label"));
-      const controls = Array.from(document.querySelectorAll("button,a"));
-      const matchesText = (control, pattern) =>
-        pattern.test(control.textContent || "") ||
-        pattern.test(control.getAttribute("aria-label") || "");
-
-      return {
-        toggleExists: labels.some((label) =>
-          togglePattern.test(label.textContent || ""),
-        ),
-        downloadExists: controls.some((control) =>
-          matchesText(control, downloadPattern),
-        ),
-        clearExists: controls.some((control) =>
-          matchesText(control, clearPattern),
-        ),
-        bodyHasDiagnosticCopy: togglePattern.test(
-          document.body.textContent || "",
-        ),
-      };
-    },
-    {
-      togglePatternSource: JOYSTICK_DIAGNOSTIC_TOGGLE_PATTERN.source,
-      downloadPatternSource: JOYSTICK_DIAGNOSTIC_DOWNLOAD_PATTERN.source,
-      clearPatternSource: JOYSTICK_DIAGNOSTIC_CLEAR_PATTERN.source,
-    },
+  await page.waitForFunction(
+    () => Boolean(document.querySelector("#game-settings-menu")),
+    { timeout: 5000 },
   );
 
+  const initialState = await readJoystickDiagnosticState(page);
+  const bodyHasDiagnosticCopy = await page.evaluate((togglePatternSource) => {
+    const togglePattern = new RegExp(togglePatternSource, "i");
+    return togglePattern.test(document.body.textContent || "");
+  }, JOYSTICK_DIAGNOSTIC_TOGGLE_PATTERN.source);
+
   assert(
-    !hiddenControlState.toggleExists,
-    `${config.name}: checkbox do registro da Torreta ficou visível.`,
+    !initialState.toggleExists &&
+      !initialState.downloadExists &&
+      !initialState.clearExists,
+    `${config.name}: menu expôs controles internos do registro da Torreta.`,
   );
   assert(
-    !hiddenControlState.downloadExists,
-    `${config.name}: download do registro da Torreta ficou visível.`,
+    initialState.downloadButtonDisabled === null,
+    `${config.name}: download interno da Torreta deve ficar oculto.`,
   );
   assert(
-    !hiddenControlState.clearExists,
-    `${config.name}: limpeza do registro da Torreta ficou visível.`,
-  );
-  assert(
-    !hiddenControlState.bodyHasDiagnosticCopy,
+    !bodyHasDiagnosticCopy,
     `${config.name}: texto de registro da Torreta ficou visível.`,
   );
 
@@ -878,6 +873,7 @@ async function setJoystickDiagnosticsEnabled(page, config) {
   );
 
   return {
+    defaultEnabled: false,
     controlsHidden: true,
     enabledForExercise: false,
   };
@@ -1509,22 +1505,23 @@ async function runViewport(page, baseUrl, config) {
     `${config.name}: trackball não resetou visualmente ao soltar.`,
   );
 
-  let diagnosticOverlayState =
+  const diagnosticOverlayState =
     config.name === "mobile-portrait"
       ? await readJoystickDiagnosticState(page)
       : null;
   if (config.name === "mobile-portrait") {
     debugLog(config.name, "validando camadas de registro ocultas");
-    diagnosticOverlayState = await readJoystickDiagnosticState(page);
     assert(
-      diagnosticOverlayState.joystickLayer.pointCount === 0 &&
+      !diagnosticOverlayState.joystickLayer.visible &&
+        diagnosticOverlayState.joystickLayer.pointCount === 0 &&
         diagnosticOverlayState.joystickLayer.lineCount === 0,
-      `${config.name}: desenho do registro apareceu sobre o joystick.`,
+      `${config.name}: registro interno apareceu sobre o joystick mesmo oculto no menu.`,
     );
     assert(
-      diagnosticOverlayState.playfieldLayer.pointCount === 0 &&
+      !diagnosticOverlayState.playfieldLayer.visible &&
+        diagnosticOverlayState.playfieldLayer.pointCount === 0 &&
         diagnosticOverlayState.playfieldLayer.lineCount === 0,
-      `${config.name}: desenho do registro apareceu na área do jogo.`,
+      `${config.name}: registro interno apareceu na área do jogo mesmo oculto no menu.`,
     );
   }
 
@@ -1544,16 +1541,28 @@ async function runViewport(page, baseUrl, config) {
     MENU_BUTTON_PATTERN.source,
   );
   assert(menuOpened, `${config.name}: botão Menu não encontrado.`);
+  await page.waitForFunction(
+    () => Boolean(document.querySelector("#game-settings-menu")),
+    { timeout: 5000 },
+  );
+
   const menuState = await readBallTurretState(page);
   assert(
     !menuState.hasGameModeHeading,
-    `${config.name}: seletor de modo não deve aparecer quando Torreta é padrão.`,
+    `${config.name}: menu ainda expõe seletor de modo.`,
   );
   assert(
     !menuState.buttons.some((button) =>
-      /^(torreta|turret|clássico|classic)$/i.test(button.text.trim()),
+      GAME_MODE_OPTION_PATTERN.test(button.text.trim()),
     ),
-    `${config.name}: botões de modo não devem aparecer quando Torreta é padrão.`,
+    `${config.name}: menu ainda expõe botão de modo antigo.`,
+  );
+  const menuDiagnosticState = await readJoystickDiagnosticState(page);
+  assert(
+    !menuDiagnosticState.toggleExists &&
+      !menuDiagnosticState.downloadExists &&
+      !menuDiagnosticState.clearExists,
+    `${config.name}: menu ainda expõe controles internos de registro.`,
   );
   if (config.name === "desktop") {
     ensureParentDirectory(menuScreenshotPath());
@@ -1619,7 +1628,11 @@ async function run() {
   console.log(`ball-turret qa ok: ${reportPath()}`);
 }
 
-run().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+run()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

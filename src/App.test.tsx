@@ -653,6 +653,10 @@ describe("App theme selector", () => {
     await renderApp();
 
     expect(mockLastGameProps?.gameMode).toBe("ball-turret");
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      "data-game-mode",
+      "ball-turret",
+    );
   });
 
   it("força modo torreta no cenário de QA", async () => {

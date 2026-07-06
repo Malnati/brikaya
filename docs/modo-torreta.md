@@ -32,7 +32,7 @@ Tornar **Torreta** o padrão permanente do Brikaya em todas as fases. A fantasia
 - O segmento ativo da cama elástica rebate a bolinha; o restante do anel é indicação visual.
 - Power-ups da Torreta saem do centro para a borda e são coletados ao tocar a borda.
 - Bolinhas da Torreta nascem em sequência por pontos diferentes da borda e seguem para dentro.
-- Evidência visual desktop, mobile e menu em `docs/assets/issues/ball-turret-mode/evidence/`.
+- Evidência visual desktop, mobile e menu em `docs/assets/issues/ball-turret-mode/evidence/` e nos diretórios específicos dos ajustes posteriores.
 
 ## Fora de escopo
 
@@ -47,6 +47,7 @@ Tornar **Torreta** o padrão permanente do Brikaya em todas as fases. A fantasia
 
 - Constantes: `src/constants/gameMode.ts`.
 - `App` fixa o modo ativo em Torreta e passa para `Game`.
+- Preferências antigas em `brikaya-game-mode` não alteram a experiência.
 - `Game` passa o modo para `useGameLoop`.
 - `useGameLoop` cria o `GameEngine` com o modo selecionado.
 
@@ -54,8 +55,8 @@ Tornar **Torreta** o padrão permanente do Brikaya em todas as fases. A fantasia
 
 - Renderizador dedicado: `src/logic/rendering/ballTurretRenderer.ts`.
 - `GameEngine` escolhe entre:
-  - modo clássico: campo radial + raquete;
-  - modo Torreta: fundo de torreta + cama elástica + vidro.
+  - experiência Torreta: fundo de torreta + cama elástica + vidro;
+  - modo clássico preservado apenas como compatibilidade interna de testes/lógica.
 - A lógica de física continua compartilhada onde preserva progressão.
 - A Torreta adiciona parametrização radial própria:
   - arco de blocos: `-π` a `π`;
@@ -85,6 +86,7 @@ Tornar **Torreta** o padrão permanente do Brikaya em todas as fases. A fantasia
 ### UI e linguagem
 
 - O menu não exibe seleção de modo.
+- O menu não expõe controles internos de histórico técnico nem diagnóstico do joystick.
 - Cópia final do usuário mantém linguagem de produto e não expõe detalhes de implementação.
 
 ## Cobertura de testes
@@ -112,11 +114,12 @@ Tornar **Torreta** o padrão permanente do Brikaya em todas as fases. A fantasia
 - `src/App.test.tsx`
   - usa `ball-turret` por padrão;
   - não mostra seletor no menu;
+  - não expõe histórico técnico nem diagnóstico do joystick no menu;
   - ignora preferência antiga de modo clássico;
   - força `ball-turret` por cenário de QA.
 - `src/logic/GameEngine.test.ts`
-  - modo clássico desenha raquete;
-  - modo Torreta chama renderizador de torreta;
+  - compatibilidade clássica desenha raquete;
+  - Torreta chama renderizador de torreta;
   - cenário de QA força torreta;
   - valida dobro de colunas na Torreta;
   - valida spawn inicial radial da bolinha;
@@ -129,7 +132,9 @@ Tornar **Torreta** o padrão permanente do Brikaya em todas as fases. A fantasia
 - `tests/e2e/cloudflare-ball-turret-qa.js`
   - abre `?qaScenario=ball-turret`;
   - valida que a Torreta está ativa sem seletor de modo;
-  - exercita cama elástica por mouse e teclado;
+  - valida controles internos de registro ocultos no menu;
+  - exercita cama elástica por mouse, teclado e joystick;
+  - valida que o joystick não aceita arrasto fora da área visual;
   - captura desktop, mobile e menu;
   - verifica canvas visível e HUD ativo;
   - bloqueia cópia pública com detalhes técnicos.
@@ -186,12 +191,13 @@ PATH=/opt/homebrew/opt/node@23/bin:$PATH \
 - Release inicial do modo: `v1.2.0` — `Brikaya v1.2.0 — Modo Torreta`.
 - Release do ajuste atual: `v1.2.1` — `Brikaya v1.2.1 — Torreta com cama elástica`.
 - Release 360°: `v1.2.2` — `Brikaya v1.2.2 — Torreta 360°`.
+- Ajustes posteriores: Torreta fixa, controles internos ocultos e bloco desviante sem flash visual.
 - Pacote atual: `1.2.2`.
 - Deploy: Cloudflare Pages com domínio canônico `https://brikaya.com/`.
 
 ## Evidências esperadas
 
-- PR da feature com screenshot centralizado em `## Evidência visual`.
+- PR da feature/ajuste com screenshot centralizado em `## Evidência visual`.
 - Release note versionada em `docs/releases/v1.2.2.md`.
 - Evidência visual versionada:
   - `docs/assets/issues/ball-turret-mode/evidence/evi-ball-turret-menu.png`
