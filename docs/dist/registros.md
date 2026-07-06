@@ -351,3 +351,14 @@ Critérios:
 - Validação local passou: `node --version` (`v23.5.0`), `make help`, `npm run codex-env:check`, `npm run test:semantic-file-names`, `npm run test:svg-assets`, `npm test -- --runInBand` (58 suítes / 370 testes) e `npm run build` (`localized-seo ok: locales=163, routes=2`).
 - Clarity/analytics/pixel/tag/SDK externo continuam bloqueados e não foram adicionados.
 - Buscadores: rechecagem Google/Bing/Yandex/Naver só deve ocorrer após merge/deploy público; Bing depende de quota gratuita diária; Baidu/Seznam continuam bloqueados quando exigirem identidade pública, CAPTCHA, ICP, telefone extra ou custo.
+
+
+## Atualização operacional — onda 163 publicada em 2026-07-06
+
+- Timestamp: 2026-07-06T18:26:21.735Z
+- Produção: `https://brikaya.com/` publicada via Cloudflare Pages; deploy `https://237f364f.brikaya-live.pages.dev`.
+- Sitemap público: 328 URLs; amostras `/ps/downloads/`, `/dv/downloads/`, `/or/downloads/`, `/sat/downloads/` e `/awa/downloads/` responderam 200 com `lang` correto e sem marcadores de Clarity/analytics/tag/pixel.
+- QA público: `make cloudflare-public-check`, `make cloudflare-i18n-seo-qa` e `make cloudflare-offline-pwa-qa` passaram; report i18n validou 163 hreflangs e 69 rotas de downloads amostradas.
+- IndexNow/Yandex: `make yandex-indexnow-submit` retornou `202 accepted-pending` para 328 URLs com chave redigida.
+- Chrome aba única: Google recebeu reenvio do sitemap; Bing recebeu sitemap e ficou em `Processing`; Bing URL Submission estava com quota 0; Yandex confirmou sitemap em fila e limite diário de reindexação atingido; Naver confirmou `sitemap.xml`, mas `/ps/` não entrou no histórico; Google Cloud Auth foi somente leitura; aba final ficou aberta em `https://brikaya.com/sitemap.xml`.
+- Pendências: Google/Bing/Yandex/Naver precisam reprocessar; Yahoo/DuckDuckGo dependem de Bing/crawl; Brave sem endpoint direto atual; Baidu/Seznam seguem bloqueados por cadastro externo/CAPTCHA/ICP/custo; Clarity continua desinstalado.
