@@ -90,7 +90,7 @@ Todos são SVG locais, sem raster, sem CDN, sem data URI, sem script embutido e 
 A implementação deve manter:
 
 - canonical `https://brikaya.com/downloads/`;
-- rotas localizadas para todos os 31 idiomas suportados, com `/downloads/` em `pt-BR` e `/<locale>/downloads/` para `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th`, `zh-CN`, `ar`, `ru`, `tr`, `nl`, `pl`, `uk`, `ms`, `zh-TW`, `pt-PT`, `es-ES`, `en-GB`, `fr-CA`, `bn`, `ur`, `ta` e `te`;
+- rotas localizadas para todos os 33 idiomas suportados, com `/downloads/` em `pt-BR` e `/<locale>/downloads/` para `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th`, `zh-CN`, `ar`, `ru`, `tr`, `nl`, `pl`, `uk`, `ms`, `zh-TW`, `pt-PT`, `es-ES`, `en-GB`, `fr-CA`, `bn`, `ur`, `fa`, `he`, `ta` e `te`;
 - sitemap com `/downloads/` e versões localizadas;
 - título e descrição localizados por idioma, sem fallback inglês em páginas não inglesas;
 - hreflang com todos os idiomas e `x-default`;
@@ -133,9 +133,9 @@ Publicação validada em 2026-07-06:
 
 - `make cloudflare-deploy` publicou `https://brikaya.com/`.
 - `make cloudflare-public-check` passou.
-- `make cloudflare-i18n-seo-qa` passou com downloads localizados para todos os 31 idiomas.
+- `make cloudflare-i18n-seo-qa` passou com downloads localizados para todos os 33 idiomas.
 - `make cloudflare-offline-pwa-qa` passou.
-- `make yandex-indexnow-submit` agora força envio real (`BRIKAYA_INDEXNOW_DRY_RUN=false`) e retornou `202 accepted-pending` para 64 URLs com chave redigida.
+- `make yandex-indexnow-submit` agora força envio real (`BRIKAYA_INDEXNOW_DRY_RUN=false`) e retornou `202 accepted-pending` para 68 URLs com chave redigida.
 
 Status multilíngue obrigatório:
 
@@ -155,12 +155,20 @@ Status de buscadores em 2026-07-06:
 - Baidu Search Resource Platform: cadastro internacional gratuito tentou Brasil na aba fornecida; Baidu retornou que registros de regiões externas não são suportados no momento. Não houve código SMS, CAPTCHA, documento, ICP, pagamento, serviço pago nem registro final de conta; valores pessoais não entram na documentação/evidência.
 - DuckDuckGo/Yahoo/Seznam/Yep/outros: sem painel direto obrigatório no escopo; cobertura por Bing/IndexNow/sitemap/robots/canonical/hreflang.
 
+
+Follow-up fa/he em 2026-07-06:
+
+- `fa` e `he` publicados com `dir="rtl"`, rotas home/downloads, SEO localizado e hreflang.
+- `make cloudflare-i18n-seo-qa` validou downloads em 33 idiomas e sitemap de 68 URLs.
+- Google Search Console recebeu reenvio do sitemap; Bing recebeu sitemap e quatro URLs `fa/he`; Yandex recebeu IndexNow com 68 URLs; Naver manteve sitemap e tentativa manual sem confirmação durável.
+- Clarity segue desinstalado.
+
 ## Atualização P13-P20 publicada em 2026-07-06
 
-- Página `/downloads/` publicada em 31 idiomas.
-- Novos idiomas: `ar`, `ru`, `tr`, `nl`, `pl`, `uk`, `ms`, `zh-TW`, `pt-PT`, `es-ES`, `en-GB`, `fr-CA`, `bn`, `ur`, `ta`, `te`.
-- RTL: `ar` e `ur` têm `dir="rtl"`; demais idiomas publicados como `dir="ltr"`.
-- `fa` e `he` ainda não têm catálogo público; ficam como candidatos futuros para a próxima rodada RTL.
-- `make cloudflare-i18n-seo-qa` validou `title`, canonical, hreflang e sitemap para downloads em todos os 31 idiomas.
-- `make yandex-indexnow-submit` enviou 64 URLs e retornou `202 accepted-pending` com chave redigida.
+- Página `/downloads/` publicada em 33 idiomas.
+- Novos idiomas: `ar`, `ru`, `tr`, `nl`, `pl`, `uk`, `ms`, `zh-TW`, `pt-PT`, `es-ES`, `en-GB`, `fr-CA`, `bn`, `ur`, `fa`, `he`, `ta`, `te`.
+- RTL: `ar`, `ur`, `fa` e `he` têm `dir="rtl"`; demais idiomas publicados como `dir="ltr"`.
+- `fa` e `he` agora têm catálogo público, rotas home/downloads, SEO e hreflang; próximos idiomas ficam fora desta rodada.
+- `make cloudflare-i18n-seo-qa` validou `title`, canonical, hreflang e sitemap para downloads em todos os 33 idiomas.
+- `make yandex-indexnow-submit` enviou 68 URLs e retornou `202 accepted-pending` com chave redigida.
 - Microsoft Clarity permanece desinstalado por política: não há pacote `@microsoft/clarity`, script `clarity.ms`, tag, pixel ou SDK externo no site publicado.

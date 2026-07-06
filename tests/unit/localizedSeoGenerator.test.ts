@@ -43,6 +43,8 @@ const LOCALIZED_LOCALES = [
   'fr-CA',
   'bn',
   'ur',
+  'fa',
+  'he',
   'ta',
   'te',
 ] as const;
@@ -88,6 +90,8 @@ describe('gerador SEO localizado', () => {
     expect(downloadsSeoBlock).toContain("title: 'تنزيل Brikaya");
     expect(downloadsSeoBlock).toContain("title: 'Скачать Brikaya");
     expect(downloadsSeoBlock).toContain("title: 'Brikaya ڈاؤن لوڈ کریں");
+    expect(downloadsSeoBlock).toContain("title: 'دانلود Brikaya");
+    expect(downloadsSeoBlock).toContain("title: 'הורדת Brikaya");
     expect(downloadsSeoBlock).toContain("title: 'Brikaya பதிவிறக்கவும்");
   });
 });

@@ -77,6 +77,8 @@ const EXPECTED_GLOBAL_LOCALES = [
   "fr-CA",
   "bn",
   "ur",
+  "fa",
+  "he",
   "ta",
   "te",
 ] as const;
@@ -95,6 +97,8 @@ const NEW_DOWNLOADS_SEO_EXPECTATIONS = [
   { locale: "fr-CA", title: "Télécharger Brikaya", description: "sans compte" },
   { locale: "bn", title: "Brikaya ডাউনলোড করুন", description: "অ্যাকাউন্ট ছাড়া" },
   { locale: "ur", title: "Brikaya ڈاؤن لوڈ کریں", description: "اکاؤنٹ کے بغیر" },
+  { locale: "fa", title: "دانلود Brikaya", description: "بدون حساب" },
+  { locale: "he", title: "הורדת Brikaya", description: "בלי חשבון" },
   { locale: "ta", title: "Brikaya பதிவிறக்கவும்", description: "கணக்கு இல்லாமல்" },
   { locale: "te", title: "Brikaya డౌన్‌లోడ్ చేయండి", description: "ఖాతా లేకుండా" },
 ] as const;
@@ -128,6 +132,8 @@ const DOWNLOADS_TITLE_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
   "fr-CA": "Télécharger Brikaya",
   bn: "Brikaya ডাউনলোড করুন",
   ur: "Brikaya ڈاؤن لوڈ کریں",
+  fa: "دانلود Brikaya",
+  he: "הורדת Brikaya",
   ta: "Brikaya பதிவிறக்கவும்",
   te: "Brikaya డౌన్‌లోడ్ చేయండి",
 };
@@ -161,6 +167,8 @@ const DOWNLOADS_DESCRIPTION_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
   "fr-CA": "sans compte",
   bn: "অ্যাকাউন্ট ছাড়া",
   ur: "اکاؤنٹ کے بغیر",
+  fa: "بدون حساب",
+  he: "בלי חשבון",
   ta: "கணக்கு இல்லாமல்",
   te: "ఖాతా లేకుండా",
 };
