@@ -83,6 +83,11 @@ const TESTED_LOCALES = [
   { locale: "tyv", path: "/tyv/", title: "Brikaya — блоктарны үжелээр аркада" },
   { locale: "kaa", path: "/kaa/", title: "Brikaya — bloklardı buzıw arkadası" },
   { locale: "sma", path: "/sma/", title: "Brikaya — blokkh jïhkieh speel" },
+  { locale: "la", path: "/la/", title: "Brikaya — arcadia frangendi lateres" },
+  { locale: "eo", path: "/eo/", title: "Brikaya — blokrompa arkado" },
+  { locale: "nds", path: "/nds/", title: "Brikaya — Blockbreker-Arkade" },
+  { locale: "hsb", path: "/hsb/", title: "Brikaya — arkada łamanja blokow" },
+  { locale: "wa", path: "/wa/", title: "Brikaya — djeu di cassaedje di blocs" },
 ];
 const ALL_HREFLANG_LOCALES = [
   "pt-BR",

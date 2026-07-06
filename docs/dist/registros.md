@@ -431,3 +431,15 @@ Critérios:
 - Clarity: painel indica projeto existente, mas instalação continua bloqueada; nenhum script, tag, SDK, pixel ou telemetria foi adicionado.
 - Aba única Chrome: reutilizada e deixada aberta em `https://brikaya.com/sitemap.xml`.
 - Pendências: Google/Bing/Yandex/Naver precisam reprocessar; Yahoo/DuckDuckGo dependem de Bing/crawl; Brave sem endpoint direto atual; Baidu/Seznam seguem bloqueados por cadastro externo/CAPTCHA/ICP/custo; Clarity continua desinstalado.
+
+
+## Atualização — onda 259 validada localmente
+
+- Timestamp: 2026-07-06T21:15:02Z
+- Próxima onda sem custo e sem telemetria: `la`, `eo`, `ia`, `ie`, `io`, `vo`, `an`, `mwl`, `ext`, `bar`, `hsb`, `dsb`, `nds`, `frr`, `stq`, `ksh`, `pcd`, `wa`, `li`, `vls`, `zea`, `frp`, `arp`, `mus`.
+- Total alvo após publicação: 259 idiomas e 520 URLs no sitemap (home + downloads por idioma, mais `/privacy/` e `/terms/`).
+- Validação local concluída: `node --version` (`v23.5.0`), `make help`, `npm run codex-env:check`, `npm run test:semantic-file-names`, `npm run test:svg-assets`, `npm test -- --runInBand` (58 suites / 371 testes) e `npm run build` (`localized-seo ok: locales=259, routes=2`).
+- Evidência visual local: `docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave259-la-downloads.png`; rota `/la/downloads/` respondeu 200, `lang=la`, `dir=ltr`, título/canonical localizados e sem Clarity/analytics/pixel.
+- RTL não muda nesta onda; nenhum idioma RTL novo foi adicionado.
+- Clarity permanece bloqueado/desinstalado: nenhum pixel, tag, SDK externo ou telemetria foi adicionado.
+- Buscadores após deploy: reenviar sitemap no Google/Bing, enviar IndexNow/Yandex, confirmar Naver e manter Baidu/Seznam bloqueados quando exigirem identidade, CAPTCHA, ICP, telefone extra ou custo.
