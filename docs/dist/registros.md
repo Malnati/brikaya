@@ -282,3 +282,13 @@ Critérios:
 - Clarity/analytics/pixel/tag/SDK externo continuam bloqueados e não foram adicionados.
 - Validação local: `node --version`, `make help`, `npm run codex-env:check`, `npm run test:semantic-file-names`, `npm run test:svg-assets`, `npm test -- --runInBand` e `npm run build` passaram; build gerou `localized-seo ok: locales=91, routes=2`.
 - Buscadores: nova submissão em Google/Bing/Yandex/Naver/Brave só deve ocorrer após deploy público; Bing tem quota diária limitada e a última rechecagem deixou quota restante 20.
+
+## Atualização operacional — onda 91 publicada em 2026-07-06
+
+- Timestamp: 2026-07-06T16:58:23.340Z
+- Produção: `https://brikaya.com/` publicada via Cloudflare Pages; deploy `https://1628c27e.brikaya-live.pages.dev`.
+- Sitemap público: 184 URLs; amostras `/is/downloads/`, `/mk/downloads/`, `/ca/downloads/`, `/mi/downloads/` e `/so/downloads/` responderam 200.
+- QA público: `make cloudflare-public-check`, `make cloudflare-i18n-seo-qa` e `make cloudflare-offline-pwa-qa` passaram; report i18n validou 91 hreflangs e 54 rotas de downloads amostradas.
+- IndexNow/Yandex: `make yandex-indexnow-submit` retornou `202 accepted-pending` para 184 URLs com chave redigida.
+- Chrome aba única: Google recebeu reenvio do sitemap; Bing recebeu 20 URLs até quota 0; Yandex recebeu 48 URLs em fila; Naver confirmou `sitemap.xml`; Brave retornou `Success`; aba final ficou aberta em `https://brikaya.com/sitemap.xml`.
+- Pendências: Google ainda mostra 88 páginas até reprocessar; Bing precisa próxima quota para as 28 URLs restantes da onda 91; Yandex/Naver/Brave ficam aguardando processamento; Seznam segue bloqueado por CAPTCHA; Baidu segue bloqueado por cadastro externo; Clarity continua desinstalado.

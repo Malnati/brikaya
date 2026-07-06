@@ -329,6 +329,11 @@ const TESTED_DOWNLOADS_LOCALES = [
   { locale: "af", path: "/af/downloads/", title: "Laai Brikaya af — gratis blaaier-speletjie" },
   { locale: "uz", path: "/uz/downloads/", title: "Brikaya yuklab olish — bepul brauzer o‘yini" },
   { locale: "my", path: "/my/downloads/", title: "Brikaya ဒေါင်းလုဒ်လုပ်ရန် — အခမဲ့ ဘရောက်ဇာဂိမ်း" },
+  { locale: "is", path: "/is/downloads/", title: "Sækja Brikaya — ókeypis vafraleikur" },
+  { locale: "mk", path: "/mk/downloads/", title: "Преземи Brikaya — бесплатна игра во прелистувач" },
+  { locale: "ca", path: "/ca/downloads/", title: "Baixa Brikaya — joc gratuït de navegador" },
+  { locale: "mi", path: "/mi/downloads/", title: "Tikiake Brikaya — kēmu pūtirotiro kore utu" },
+  { locale: "so", path: "/so/downloads/", title: "Soo dejiso Brikaya — ciyaar biraawsar bilaash ah" },
 ];
 const LANGUAGE_SELECT_SELECTOR = "#game-language-select";
 const MENU_BUTTON_SELECTOR = ".dashboard-menu-button";
