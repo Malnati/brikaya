@@ -234,3 +234,13 @@ Follow-up fa/he em 2026-07-06:
 - Brave Search: endpoint gratuito usado anteriormente retornou 404 na rechecagem; cobertura segue por sitemap/crawl/IndexNow quando suportado.
 - Clarity continua bloqueado/desinstalado: nenhum pixel, tag, analytics, SDK externo ou telemetria foi adicionado.
 
+## Atualização — onda 139 validada localmente
+
+- Timestamp: 2026-07-06T17:45:11.959607Z
+- Novos idiomas LTR adicionados nesta branch: `qu, ay, gn, nah, ht, pap, jv, su, ceb, ilo, war, haw, co, sc, fur, rm, lad, ast, vec, lmo, pms, nap, scn, sco`.
+- Total alvo após publicação: 139 idiomas e 280 URLs no sitemap (home + downloads por idioma, mais `/privacy/` e `/terms/`).
+- RTL não muda nesta onda: `ar`, `ur`, `fa` e `he` continuam como únicos idiomas `dir="rtl"`.
+- Screenshot de evidência local: `docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave139-qu-downloads.png`.
+- Validação local passou: `node --version` (`v23.5.0`), `make help`, `npm run codex-env:check`, `npm run test:semantic-file-names`, `npm run test:svg-assets`, `npm test -- --runInBand` (58 suites / 369 testes) e `npm run build` (`localized-seo ok: locales=139, routes=2`).
+- Clarity/analytics/pixel/tag/SDK externo continuam bloqueados e não foram adicionados.
+- Buscadores: rechecagem Google/Bing/Yandex/Naver só deve ocorrer após merge/deploy público; Bing depende de quota gratuita diária; Baidu/Seznam continuam bloqueados quando exigirem identidade pública, CAPTCHA, ICP, telefone extra ou custo.

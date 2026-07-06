@@ -195,6 +195,8 @@ const TIME_ZONE_LOCALE_MAP: readonly (readonly [string, AppLocale])[] = [
   ["Africa/Blantyre", "ny"],
   ["Africa/Dakar", "wo"],
   ["Africa/Asmara", "ti"],
+  ["America/Port-au-Prince", "ht"],
+  ["Pacific/Honolulu", "haw"],
 ];
 const TIME_ZONE_LOCALE_PREFIX_MAP: readonly (readonly [string, AppLocale])[] = [
   ["America/Argentina/", "es-419"],
@@ -333,6 +335,30 @@ function normalizeLocale(value: string | null | undefined): AppLocale | null {
   if (normalizedValue.startsWith("ff")) return "ff";
   if (normalizedValue.startsWith("om")) return "om";
   if (normalizedValue.startsWith("ti")) return "ti";
+  if (normalizedValue.startsWith("qu")) return "qu";
+  if (normalizedValue.startsWith("ay")) return "ay";
+  if (normalizedValue.startsWith("gn")) return "gn";
+  if (normalizedValue.startsWith("nah")) return "nah";
+  if (normalizedValue.startsWith("ht")) return "ht";
+  if (normalizedValue.startsWith("pap")) return "pap";
+  if (normalizedValue.startsWith("jv")) return "jv";
+  if (normalizedValue.startsWith("su")) return "su";
+  if (normalizedValue.startsWith("ceb")) return "ceb";
+  if (normalizedValue.startsWith("ilo")) return "ilo";
+  if (normalizedValue.startsWith("war")) return "war";
+  if (normalizedValue.startsWith("haw")) return "haw";
+  if (normalizedValue.startsWith("co")) return "co";
+  if (normalizedValue.startsWith("fur")) return "fur";
+  if (normalizedValue.startsWith("rm")) return "rm";
+  if (normalizedValue.startsWith("lad")) return "lad";
+  if (normalizedValue.startsWith("ast")) return "ast";
+  if (normalizedValue.startsWith("vec")) return "vec";
+  if (normalizedValue.startsWith("lmo")) return "lmo";
+  if (normalizedValue.startsWith("pms")) return "pms";
+  if (normalizedValue.startsWith("nap")) return "nap";
+  if (normalizedValue.startsWith("scn")) return "scn";
+  if (normalizedValue.startsWith("sco")) return "sco";
+  if (normalizedValue.startsWith("sc")) return "sc";
 
   return null;
 }
