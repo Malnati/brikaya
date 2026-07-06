@@ -223,6 +223,10 @@ export default function App() {
   const [joystickDiagnosticState, setJoystickDiagnosticState] = useState(
     createEmptyJoystickDiagnosticState,
   );
+  const [joystickDiagnosticDownloadUrl, setJoystickDiagnosticDownloadUrl] =
+    useState<string | null>(null);
+  const [joystickDiagnosticDownloadName, setJoystickDiagnosticDownloadName] =
+    useState("");
   const qaScenario = useMemo<GameQaScenario | null>(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const scenario = searchParams.get("qaScenario");
@@ -245,6 +249,13 @@ export default function App() {
   const activeGameMode =
     qaScenario === BALL_TURRET_QA_SCENARIO ? GAME_MODE_BALL_TURRET : gameMode;
   const hasJoystickDiagnosticSamples = joystickDiagnosticState.samples.length > 0;
+  const joystickDiagnosticSampleCountLabel = hasJoystickDiagnosticSamples
+    ? joystickDiagnosticState.samples.length === 1
+      ? t("menu.joystickDiagnosticCountOne")
+      : t("menu.joystickDiagnosticCountMany", {
+          count: joystickDiagnosticState.samples.length,
+        })
+    : t("menu.joystickDiagnosticEmpty");
 
   const audioSink = useMemo<GameAudioSink>(
     () => ({
@@ -280,10 +291,14 @@ export default function App() {
     [audioSink],
   );
 
-  const handleDownloadJoystickDiagnostic = useCallback(() => {
-    if (!hasJoystickDiagnosticSamples) return;
+  useEffect(() => {
+    if (!isMenuOpen || !hasJoystickDiagnosticSamples) {
+      setJoystickDiagnosticDownloadUrl(null);
+      setJoystickDiagnosticDownloadName("");
+      return undefined;
+    }
 
-    audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+    const downloadName = createJoystickDiagnosticDownloadName();
     const exportData = buildJoystickDiagnosticExport({
       ...joystickDiagnosticState,
       versionLabel: BUILD_VERSION_LABEL,
@@ -295,14 +310,23 @@ export default function App() {
       type: "application/json",
     });
     const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = createJoystickDiagnosticDownloadName();
-    document.body.appendChild(anchor);
-    anchor.click();
-    document.body.removeChild(anchor);
-    URL.revokeObjectURL(url);
-  }, [audioSink, hasJoystickDiagnosticSamples, joystickDiagnosticState]);
+    setJoystickDiagnosticDownloadUrl(url);
+    setJoystickDiagnosticDownloadName(downloadName);
+
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }, [
+    hasJoystickDiagnosticSamples,
+    isMenuOpen,
+    joystickDiagnosticState,
+  ]);
+
+  const handleDownloadJoystickDiagnostic = useCallback(() => {
+    if (!hasJoystickDiagnosticSamples) return;
+
+    audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+  }, [audioSink, hasJoystickDiagnosticSamples]);
 
   const handleClearJoystickDiagnostic = useCallback(() => {
     audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
@@ -1138,19 +1162,38 @@ export default function App() {
                   />
                   <span>{t("menu.joystickDiagnosticToggle")}</span>
                 </label>
-                <button
-                  type="button"
-                  onClick={handleDownloadJoystickDiagnostic}
-                  className="dashboard-button dashboard-button--secondary"
-                  disabled={!hasJoystickDiagnosticSamples}
-                  data-settings-action={SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD}
-                  data-testid={`settings-action-${SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD}`}
-                >
-                  <span aria-hidden="true" className="button-icon">
-                    ⇩
-                  </span>
-                  {t("menu.joystickDiagnosticDownload")}
-                </button>
+                <p className="settings-drawer__hint">
+                  {joystickDiagnosticSampleCountLabel}
+                </p>
+                {hasJoystickDiagnosticSamples &&
+                joystickDiagnosticDownloadUrl ? (
+                  <a
+                    href={joystickDiagnosticDownloadUrl}
+                    download={joystickDiagnosticDownloadName}
+                    onClick={handleDownloadJoystickDiagnostic}
+                    className="dashboard-button dashboard-button--secondary"
+                    data-settings-action={SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD}
+                    data-testid={`settings-action-${SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD}`}
+                  >
+                    <span aria-hidden="true" className="button-icon">
+                      ⇩
+                    </span>
+                    {t("menu.joystickDiagnosticDownload")}
+                  </a>
+                ) : (
+                  <button
+                    type="button"
+                    className="dashboard-button dashboard-button--secondary"
+                    disabled
+                    data-settings-action={SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD}
+                    data-testid={`settings-action-${SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD}`}
+                  >
+                    <span aria-hidden="true" className="button-icon">
+                      ⇩
+                    </span>
+                    {t("menu.joystickDiagnosticDownload")}
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={handleClearJoystickDiagnostic}

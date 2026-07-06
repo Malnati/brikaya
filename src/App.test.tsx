@@ -748,6 +748,7 @@ describe("App theme selector", () => {
     expect(
       screen.getByRole("button", { name: "Baixar registro da Torreta" }),
     ).toBeDisabled();
+    expect(screen.getByText("Nenhum registro ainda")).toBeInTheDocument();
 
     await user.click(diagnosticCheckbox);
 
@@ -759,9 +760,6 @@ describe("App theme selector", () => {
     const user = userEvent.setup();
     const createObjectUrl = jest.fn(() => "blob:joystick-diagnostic");
     const revokeObjectUrl = jest.fn();
-    const anchorClick = jest
-      .spyOn(HTMLAnchorElement.prototype, "click")
-      .mockImplementation(() => undefined);
     Object.defineProperty(URL, "createObjectURL", {
       configurable: true,
       value: createObjectUrl,
@@ -809,15 +807,17 @@ describe("App theme selector", () => {
       });
     });
 
-    const downloadButton = screen.getByRole("button", {
+    expect(await screen.findByText("1 ponto registrado")).toBeInTheDocument();
+    const downloadLink = await screen.findByRole("link", {
       name: "Baixar registro da Torreta",
     });
-    expect(downloadButton).toBeEnabled();
 
-    await user.click(downloadButton);
+    expect(downloadLink).toHaveAttribute("href", "blob:joystick-diagnostic");
+    expect(downloadLink).toHaveAttribute(
+      "download",
+      expect.stringMatching(/^brikaya-torreta-joystick-.*\.json$/),
+    );
 
-    expect(anchorClick).toHaveBeenCalledTimes(1);
-    expect(revokeObjectUrl).toHaveBeenCalledWith("blob:joystick-diagnostic");
     const blob = createObjectUrl.mock.calls[0][0] as Blob;
     const blobText = await new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
@@ -827,6 +827,15 @@ describe("App theme selector", () => {
     });
     expect(blobText).toContain("diagnosticSvg");
     expect(blobText).toContain("mappedCanvasPoint");
+
+    await user.click(
+      screen.getByRole("button", { name: "Limpar registro da Torreta" }),
+    );
+
+    expect(revokeObjectUrl).toHaveBeenCalledWith("blob:joystick-diagnostic");
+    expect(
+      screen.getByRole("button", { name: "Baixar registro da Torreta" }),
+    ).toBeDisabled();
   });
 
   it("encaminha cenário de QA de blocos desviantes para o jogo", async () => {

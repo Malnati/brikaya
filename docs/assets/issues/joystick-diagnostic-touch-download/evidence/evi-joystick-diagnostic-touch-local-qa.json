@@ -1,0 +1,1541 @@
+{
+  "checkedAt": "2026-07-06T03:01:15.246Z",
+  "publicUrl": "http://127.0.0.1:4173/?qaScenario=ball-turret",
+  "qaScenario": "ball-turret",
+  "results": [
+    {
+      "name": "desktop",
+      "joystickPlacement": "hidden",
+      "joystickExercise": {
+        "exercised": false,
+        "pathWithinControl": false,
+        "angleChecks": {},
+        "holdStableAngleDelta": 0,
+        "outsideIgnoredCheck": {
+          "angleUnchanged": false,
+          "visualUnchanged": false,
+          "outsideAngleRejected": false,
+          "beforeVisual": {
+            "x": 0,
+            "y": 0
+          },
+          "afterVisual": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "releaseVisual": {
+          "x": 0,
+          "y": 0,
+          "active": 0
+        },
+        "hitTarget": {
+          "hitsJoystick": false,
+          "tagName": "",
+          "className": "",
+          "testId": ""
+        },
+        "path": []
+      },
+      "diagnosticToggleState": null,
+      "diagnosticOverlayState": null,
+      "joystickDiagnosticDownload": null,
+      "menuState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya",
+          "Menu",
+          "Idioma",
+          "Modo de jogo",
+          "Aparência",
+          "Recordes",
+          "Privacidade",
+          "Dados do jogo"
+        ],
+        "hasGameModeHeading": true,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "Clássico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Torreta",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Automático por fase",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Arcade neon",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "CRT alto contraste",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Pôr do sol pixelado",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oceano noturno",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Selva laser",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Âmbar retrô",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Gelo cósmico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Ameixa elétrica",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Lima grafite",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Rubi profundo",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Metrô noturno",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oficina mecânica",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Laboratório clínico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Templo antigo",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Estação orbital",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Arcade neon",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "CRT alto contraste",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Pôr do sol pixelado",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oceano noturno",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Selva laser",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Âmbar retrô",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Gelo cósmico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Ameixa elétrica",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Lima grafite",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Rubi profundo",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Metrô noturno",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oficina mecânica",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Laboratório clínico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Templo antigo",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Estação orbital",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Retrô padrão",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Alto contraste",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Cabine pôr do sol",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Metrô realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oficina realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Laboratório realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Templo realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Órbita realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Arcade",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "CRT mono",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Blocos pixelados",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "◎Usar região para idioma",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "✓Revisar consentimento",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "≡Histórico",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "◈Colisões",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "⇩Baixar registro da Torreta",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "✕Limpar registro da Torreta",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↺Restaurar padrão",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 1056,
+          "height": 704,
+          "x": 192,
+          "y": 85
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "hasTrackballClass": true,
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 20|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 1633,
+          "brickQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 224,
+          "activeTrampolineArcCount": 2648,
+          "activeTrampolineCenterAngle": 1.5707963267948966,
+          "boundarySegmentCount": 18,
+          "reboundBoundarySegmentCount": 9,
+          "lossBoundarySegmentCount": 9
+        }
+      },
+      "gameplayState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 1056,
+          "height": 704,
+          "x": 192,
+          "y": 85
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "hasTrackballClass": true,
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 128,
+          "brickQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 16,
+          "activeTrampolineArcCount": 198,
+          "activeTrampolineCenterAngle": 1.5707963267948966,
+          "boundarySegmentCount": 18,
+          "reboundBoundarySegmentCount": 9,
+          "lossBoundarySegmentCount": 9
+        }
+      },
+      "postExerciseState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 1056,
+          "height": 704,
+          "x": 192,
+          "y": 85
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "hasTrackballClass": true,
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 20|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 1633,
+          "brickQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 224,
+          "activeTrampolineArcCount": 2648,
+          "activeTrampolineCenterAngle": 1.5707963267948966,
+          "boundarySegmentCount": 18,
+          "reboundBoundarySegmentCount": 9,
+          "lossBoundarySegmentCount": 9
+        }
+      }
+    },
+    {
+      "name": "mobile-portrait",
+      "joystickPlacement": "below",
+      "joystickExercise": {
+        "exercised": true,
+        "hitTarget": {
+          "hitsJoystick": true,
+          "tagName": "DIV",
+          "className": "game-turret-joystick game-turret-trackball",
+          "testId": "ball-turret-joystick"
+        },
+        "pathWithinControl": true,
+        "angleChecks": {
+          "right": {
+            "actualAngle": 0,
+            "expectedAngle": 0,
+            "angleMatches": true,
+            "visual": {
+              "x": 1,
+              "y": 0
+            }
+          },
+          "topRight": {
+            "actualAngle": -0.7853981633974492,
+            "expectedAngle": -0.7853981633974492,
+            "angleMatches": true,
+            "visual": {
+              "x": 0.6999999089027518,
+              "y": -0.6999999089027519
+            }
+          },
+          "bottomLeft": {
+            "actualAngle": 2.356194490192344,
+            "expectedAngle": 2.356194490192344,
+            "angleMatches": true,
+            "visual": {
+              "x": -0.6999999089027519,
+              "y": 0.6999999089027518
+            }
+          },
+          "left": {
+            "actualAngle": -3.141592653589793,
+            "expectedAngle": -3.141592653589793,
+            "angleMatches": true,
+            "visual": {
+              "x": -1,
+              "y": 0
+            }
+          },
+          "top": {
+            "actualAngle": -1.5707963267948966,
+            "expectedAngle": -1.5707963267948966,
+            "angleMatches": true,
+            "visual": {
+              "x": 0,
+              "y": -1
+            }
+          },
+          "topLeft": {
+            "actualAngle": -2.356194490192345,
+            "expectedAngle": -2.356194490192345,
+            "angleMatches": true,
+            "visual": {
+              "x": -0.6999999089027519,
+              "y": -0.6999999089027519
+            }
+          },
+          "bottom": {
+            "actualAngle": 1.5707963267948966,
+            "expectedAngle": 1.5707963267948966,
+            "angleMatches": true,
+            "visual": {
+              "x": 0,
+              "y": 1
+            }
+          },
+          "lowerLeftArc": {
+            "actualAngle": 2.2142976177827354,
+            "expectedAngle": 2.214297435588181,
+            "angleMatches": true,
+            "visual": {
+              "x": -0.5999999544513759,
+              "y": 0.7999996356110075
+            }
+          },
+          "bottomRight": {
+            "actualAngle": 0.7853981633974492,
+            "expectedAngle": 0.7853981633974492,
+            "angleMatches": true,
+            "visual": {
+              "x": 0.6999999089027518,
+              "y": 0.6999999089027518
+            }
+          }
+        },
+        "holdStableAngleDelta": 0,
+        "outsideIgnoredCheck": {
+          "angleUnchanged": true,
+          "visualUnchanged": true,
+          "outsideAngleRejected": true,
+          "beforeVisual": {
+            "x": 0.6999999089027518,
+            "y": 0.6999999089027518
+          },
+          "afterVisual": {
+            "x": 0.6999999089027518,
+            "y": 0.6999999089027518
+          },
+          "expectedIgnoredAngle": -0.7853981633974492,
+          "actualAngleAfterIgnoredMove": 0.7853981633974492
+        },
+        "outsideCircleInsideBoxIgnoredCheck": {
+          "angleUnchanged": true,
+          "visualUnchanged": true,
+          "outsideAngleRejected": false,
+          "beforeVisual": {
+            "x": -0.5999999544513759,
+            "y": 0.7999996356110075
+          },
+          "afterVisual": {
+            "x": -0.5999999544513759,
+            "y": 0.7999996356110075
+          },
+          "expectedIgnoredAngle": 2.356194490192344,
+          "actualAngleAfterIgnoredMove": 2.2142976177827354
+        },
+        "rightVisualX": 1,
+        "topVisualY": -1,
+        "bottomVisualY": 1,
+        "leftVisualX": -1,
+        "topRightVisual": {
+          "x": 0.6999999089027518,
+          "y": -0.6999999089027519
+        },
+        "topLeftVisual": {
+          "x": -0.6999999089027519,
+          "y": -0.6999999089027519
+        },
+        "bottomLeftVisual": {
+          "x": -0.6999999089027519,
+          "y": 0.6999999089027518
+        },
+        "bottomRightVisual": {
+          "x": 0.6999999089027518,
+          "y": 0.6999999089027518
+        },
+        "releaseVisual": {
+          "x": 0,
+          "y": 0,
+          "active": 0
+        },
+        "path": [
+          {
+            "x": 195,
+            "y": 465,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0.5,
+            "expectedAngle": null
+          },
+          {
+            "x": 262,
+            "y": 465,
+            "horizontalRatio": 1,
+            "verticalRatio": 0.5,
+            "expectedAngle": 0
+          },
+          {
+            "x": 241.89999999999998,
+            "y": 418.1,
+            "horizontalRatio": 0.85,
+            "verticalRatio": 0.15,
+            "expectedAngle": -0.7853981633974492
+          },
+          {
+            "x": 195,
+            "y": 398,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0,
+            "expectedAngle": -1.5707963267948966
+          },
+          {
+            "x": 148.1,
+            "y": 418.1,
+            "horizontalRatio": 0.15,
+            "verticalRatio": 0.15,
+            "expectedAngle": -2.356194490192345
+          },
+          {
+            "x": 128,
+            "y": 465,
+            "horizontalRatio": 0,
+            "verticalRatio": 0.5,
+            "expectedAngle": -3.141592653589793
+          },
+          {
+            "x": 148.1,
+            "y": 511.9,
+            "horizontalRatio": 0.15,
+            "verticalRatio": 0.85,
+            "expectedAngle": 2.356194490192344
+          },
+          {
+            "x": 195,
+            "y": 532,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 1,
+            "expectedAngle": 1.5707963267948966
+          },
+          {
+            "x": 154.8,
+            "y": 518.6,
+            "horizontalRatio": 0.2,
+            "verticalRatio": 0.9,
+            "expectedAngle": 2.214297435588181
+          },
+          {
+            "x": 241.89999999999998,
+            "y": 511.9,
+            "horizontalRatio": 0.85,
+            "verticalRatio": 0.85,
+            "expectedAngle": 0.7853981633974492
+          },
+          {
+            "x": 195,
+            "y": 465,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0.5,
+            "expectedAngle": null
+          }
+        ]
+      },
+      "diagnosticToggleState": {
+        "defaultEnabled": false,
+        "initialDownloadDisabled": true,
+        "enabledForExercise": true
+      },
+      "diagnosticOverlayState": {
+        "joystickLayer": {
+          "exists": true,
+          "visible": true,
+          "pointCount": 14,
+          "lineCount": 1
+        },
+        "playfieldLayer": {
+          "exists": true,
+          "visible": true,
+          "pointCount": 14,
+          "lineCount": 1
+        },
+        "downloadButtonDisabled": null
+      },
+      "joystickDiagnosticDownload": {
+        "beforeDownload": {
+          "joystickLayer": {
+            "exists": true,
+            "visible": true,
+            "pointCount": 14,
+            "lineCount": 1
+          },
+          "playfieldLayer": {
+            "exists": true,
+            "visible": true,
+            "pointCount": 14,
+            "lineCount": 1
+          },
+          "downloadButtonDisabled": false
+        },
+        "exportProof": {
+          "downloadName": "brikaya-torreta-joystick-2026-07-06T03-01-13-252Z.json",
+          "mimeType": "application/json",
+          "size": 24574,
+          "totalSamples": 14,
+          "acceptedSamples": 12,
+          "rejectedSamples": 2,
+          "hasMappedCanvasPoint": true,
+          "hasJoystickPoint": true,
+          "hasPaddleSnapshot": true,
+          "diagnosticSvgHasJoystick": true,
+          "diagnosticSvgHasTrampoline": true
+        }
+      },
+      "menuState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya",
+          "Menu",
+          "Idioma",
+          "Modo de jogo",
+          "Aparência",
+          "Recordes",
+          "Privacidade",
+          "Dados do jogo"
+        ],
+        "hasGameModeHeading": true,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "Clássico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Torreta",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Automático por fase",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Arcade neon",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "CRT alto contraste",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Pôr do sol pixelado",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oceano noturno",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Selva laser",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Âmbar retrô",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Gelo cósmico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Ameixa elétrica",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Lima grafite",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Rubi profundo",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Metrô noturno",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oficina mecânica",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Laboratório clínico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Templo antigo",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Estação orbital",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Arcade neon",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "CRT alto contraste",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Pôr do sol pixelado",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oceano noturno",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Selva laser",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Âmbar retrô",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Gelo cósmico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Ameixa elétrica",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Lima grafite",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Rubi profundo",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Metrô noturno",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oficina mecânica",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Laboratório clínico",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Templo antigo",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Estação orbital",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Retrô padrão",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Alto contraste",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Cabine pôr do sol",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Metrô realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Oficina realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Laboratório realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Templo realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Órbita realista",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Arcade",
+            "ariaLabel": "",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "CRT mono",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "Blocos pixelados",
+            "ariaLabel": "",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "◎Usar região para idioma",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "✓Revisar consentimento",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "≡Histórico",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "◈Colisões",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "✕Limpar registro da Torreta",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↺Restaurar padrão",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 390,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": true,
+          "width": 134,
+          "height": 134,
+          "x": 128,
+          "y": 398,
+          "hasTrackballClass": true,
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 100|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 8070,
+          "brickQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 1192,
+          "activeTrampolineArcCount": 9525,
+          "activeTrampolineCenterAngle": 0,
+          "boundarySegmentCount": 18,
+          "reboundBoundarySegmentCount": 9,
+          "lossBoundarySegmentCount": 9
+        }
+      },
+      "gameplayState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 390,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": true,
+          "width": 134,
+          "height": 134,
+          "x": 128,
+          "y": 398,
+          "hasTrackballClass": true,
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 120,
+          "brickQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 16,
+          "activeTrampolineArcCount": 150,
+          "activeTrampolineCenterAngle": 1.5707963267948966,
+          "boundarySegmentCount": 18,
+          "reboundBoundarySegmentCount": 9,
+          "lossBoundarySegmentCount": 9
+        }
+      },
+      "postExerciseState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 390,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": true,
+          "width": 134,
+          "height": 134,
+          "x": 128,
+          "y": 398,
+          "hasTrackballClass": true,
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 100|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 8070,
+          "brickQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 1192,
+          "activeTrampolineArcCount": 9525,
+          "activeTrampolineCenterAngle": 0,
+          "boundarySegmentCount": 18,
+          "reboundBoundarySegmentCount": 9,
+          "lossBoundarySegmentCount": 9
+        }
+      }
+    },
+    {
+      "name": "mobile-landscape",
+      "joystickPlacement": "blocked",
+      "orientationBlocked": true,
+      "joystickExercise": {
+        "exercised": false,
+        "skippedReason": "mobile landscape bloqueado por portrait obrigatório"
+      },
+      "menuState": null,
+      "gameplayState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 360,
+          "height": 240,
+          "x": 183,
+          "y": 75
+        },
+        "orientationBlocker": {
+          "exists": true,
+          "visible": true,
+          "role": "alertdialog",
+          "ariaLabel": "Você precisa de espaço para o joystick",
+          "text": "Você precisa de espaço para o joystick",
+          "width": 844,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": true,
+          "width": 114,
+          "height": 114,
+          "x": 547,
+          "y": 138,
+          "hasTrackballClass": true,
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 0,
+          "brickQuadrants": {
+            "left": false,
+            "right": false,
+            "top": false,
+            "bottom": false
+          },
+          "fullRingArcCount": 0,
+          "activeTrampolineArcCount": 0,
+          "activeTrampolineCenterAngle": null,
+          "boundarySegmentCount": 0,
+          "reboundBoundarySegmentCount": 0,
+          "lossBoundarySegmentCount": 0
+        }
+      },
+      "postExerciseState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 360,
+          "height": 240,
+          "x": 183,
+          "y": 75
+        },
+        "orientationBlocker": {
+          "exists": true,
+          "visible": true,
+          "role": "alertdialog",
+          "ariaLabel": "Você precisa de espaço para o joystick",
+          "text": "Você precisa de espaço para o joystick",
+          "width": 844,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": true,
+          "width": 114,
+          "height": 114,
+          "x": 547,
+          "y": 138,
+          "hasTrackballClass": true,
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 0,
+          "brickQuadrants": {
+            "left": false,
+            "right": false,
+            "top": false,
+            "bottom": false
+          },
+          "fullRingArcCount": 0,
+          "activeTrampolineArcCount": 0,
+          "activeTrampolineCenterAngle": null,
+          "boundarySegmentCount": 0,
+          "reboundBoundarySegmentCount": 0,
+          "lossBoundarySegmentCount": 0
+        }
+      }
+    }
+  ],
+  "screenshots": {
+    "menu": "/tmp/brikaya-joystick-touch-menu.png",
+    "desktop": "/tmp/brikaya-joystick-touch-desktop.png",
+    "mobile": "docs/assets/issues/joystick-diagnostic-touch-download/evidence/evi-ball-turret-mobile-before-diagnostic.png",
+    "mobileLandscape": "/tmp/brikaya-joystick-touch-landscape.png",
+    "joystickDiagnostic": "docs/assets/issues/joystick-diagnostic-touch-download/evidence/evi-joystick-diagnostic-touch-mobile.png"
+  }
+}
