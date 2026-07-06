@@ -1,6 +1,6 @@
 {
   "artifact": "evi-webmaster-i18n-global-status",
-  "updatedAt": "2026-07-06T19:08:23.926Z",
+  "updatedAt": "2026-07-06T19:20:54.335Z",
   "scope": {
     "canonicalOrigin": "https://brikaya.com",
     "routes": [
@@ -717,7 +717,7 @@
     {
       "platform": "Google Search Console",
       "panelUrl": "https://search.google.com/search-console/sitemaps?resource_id=sc-domain%3Abrikaya.com",
-      "status": "sitemap_submitted",
+      "status": "pending_processing",
       "actions": [
         "Sitemap resubmitted in authenticated panel after 376-URL deploy.",
         "Panel confirmation showed Sitemap enviado.",
@@ -774,7 +774,7 @@
         "/sas/",
         "/sas/downloads/"
       ],
-      "evidence": "Chrome panel confirmed Sitemap enviado; public sitemap has 376 URLs.",
+      "evidence": "Chrome panel showed https://brikaya.com/sitemap.xml processed with 376 pages; public sitemap now has 424 loc entries; duplicate submit attempts did not create a new row, so Google reprocessing remains pending.",
       "timestamp": "2026-07-06T18:49:54.804Z"
     },
     {
@@ -837,7 +837,7 @@
         "/sas/",
         "/sas/downloads/"
       ],
-      "evidence": "Bing panel displayed Success: https://brikaya.com/sitemap.xml is successfully submitted for processing; URL submission quota was 0 with reset in about 6 hours.",
+      "evidence": "Bing panel displayed Success: https://brikaya.com/sitemap.xml is successfully submitted for processing; row changed to Processing with 376 URLs discovered; URL Submission quota was 0 with reset in about 5 hours.",
       "timestamp": "2026-07-06T18:49:54.804Z"
     },
     {
@@ -872,7 +872,7 @@
         "/tt/downloads/",
         "/ban/downloads/"
       ],
-      "evidence": "Yandex Webmaster shows sitemap processing queue and daily reindex limit reached; IndexNow CLI returned status=202 urls=376.",
+      "evidence": "Yandex checklist still reports no processed Sitemap files; Sitemap page lists https://brikaya.com/sitemap.xml in the processing queue; duplicate add button disabled; IndexNow CLI returned status=202 urls=424.",
       "timestamp": "2026-07-06T18:49:54.804Z"
     },
     {
@@ -888,7 +888,7 @@
         "/sitemap.xml",
         "/ace/"
       ],
-      "evidence": "Naver panel listed sitemap.xml with registration date 26.07.04 10:16:30; /ace/ crawl attempt produced no durable history row.",
+      "evidence": "Naver panel listed sitemap.xml with registration date 26.07.04 10:16:30; manual /fy/ and full URL crawl attempts still returned warning: Please enter it in the correct URL format.",
       "timestamp": "2026-07-06T18:49:54.804Z"
     },
     {
@@ -1045,7 +1045,7 @@
         "/sas/",
         "/sas/downloads/"
       ],
-      "evidence": "IndexNow submission sanitized key values and returned accepted-pending for 376 URLs.",
+      "evidence": "IndexNow/Yandex accepted 424 URLs with sanitized keyLocation; public sitemap/robots/canonical/hreflang all published.",
       "timestamp": "2026-07-06T18:49:54.804Z"
     },
     {
@@ -1057,7 +1057,7 @@
         "Bing Webmaster Clarity navigation left untouched for activation."
       ],
       "routesCovered": [],
-      "evidence": "Public HTML sample and repository changes contain no Clarity install; policy blocks telemetry by default.",
+      "evidence": "Bing showed site is added to Clarity and can verify installation, but no Clarity script/tag/package was installed; public HTML samples contain no Clarity/analytics/pixel markers.",
       "timestamp": "2026-07-06T17:56:23.859785Z"
     }
   ],
@@ -1071,29 +1071,24 @@
   },
   "publicValidation": {
     "deployedTo": "https://brikaya.com/",
-    "cloudflareDeploy": "ok: https://055de4e1.brikaya-live.pages.dev deployed and brikaya.com updated",
-    "cloudflarePublicCheck": "passed after deploy",
-    "cloudflareI18nSeoQa": "passed at 2026-07-06T18:42:47.012Z with hreflangLocales=187, downloadsLocalesChecked=74",
-    "cloudflareOfflinePwaQa": "passed",
+    "cloudflareDeploy": "ok: https://df12b7a5.brikaya-live.pages.dev deployed and brikaya.com updated",
+    "cloudflarePublicCheck": "passed after deploy; public-trace-guard public=366",
+    "cloudflareI18nSeoQa": "passed at 2026-07-06T19:12:56.693Z with hreflangLocales=211, downloadsLocalesChecked=79",
+    "cloudflareOfflinePwaQa": "passed (make cloudflare-offline-pwa-qa exit 0)",
     "i18nSeoReport": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-public-validation.json",
     "publicSamples": {
-      "sitemap": "https://brikaya.com/sitemap.xml -> 200 loc_count=376",
+      "sitemap": "https://brikaya.com/sitemap.xml -> 200 loc_count=424",
       "robots": "https://brikaya.com/robots.txt -> 200",
       "downloads": [
-        "https://brikaya.com/ace/downloads/ -> 200 lang=ace dir=ltr title localized clarity=false analytics=false pixel=false",
-        "https://brikaya.com/bal/downloads/ -> 200 lang=bal dir=rtl title localized clarity=false analytics=false pixel=false",
-        "https://brikaya.com/chr/downloads/ -> 200 lang=chr dir=ltr title localized clarity=false analytics=false pixel=false",
-        "https://brikaya.com/tt/downloads/ -> 200 lang=tt dir=ltr title localized clarity=false analytics=false pixel=false",
-        "https://brikaya.com/ban/downloads/ -> 200 lang=ban dir=ltr title localized clarity=false analytics=false pixel=false"
-      ],
-      "rtlDownloads": [
-        "https://brikaya.com/bal/downloads/ -> 200 html lang=bal dir=rtl",
-        "https://brikaya.com/fa/downloads/ -> already published RTL",
-        "https://brikaya.com/he/downloads/ -> already published RTL"
+        "https://brikaya.com/fy/downloads/ -> 200 lang=fy dir=ltr title localized clarity=false analytics=false pixel=false",
+        "https://brikaya.com/se/downloads/ -> 200 lang=se dir=ltr title localized clarity=false analytics=false pixel=false",
+        "https://brikaya.com/iu/downloads/ -> 200 lang=iu dir=ltr title localized clarity=false analytics=false pixel=false",
+        "https://brikaya.com/nv/downloads/ -> 200 lang=nv dir=ltr title localized clarity=false analytics=false pixel=false",
+        "https://brikaya.com/tpi/downloads/ -> 200 lang=tpi dir=ltr title localized clarity=false analytics=false pixel=false"
       ],
       "clarityPublicCheck": "sampled public downloads HTML contained no clarity/analytics/googletag/gtag/pixel markers"
     },
-    "indexNowYandex": "accepted-pending status=202 urls=376 keyLocation=https://brikaya.com/[redacted].txt",
+    "indexNowYandex": "accepted-pending status=202 urls=424 keyLocation=https://brikaya.com/[redacted].txt",
     "clarityPublicCheck": "not installed; no package/script/tag/pixel/SDK added"
   },
   "browserAutomation": {
@@ -1103,7 +1098,7 @@
     "registeredThreadId": "019f3613-3c0d-7e43-a7b1-3aa0ea8b0f03",
     "newTabsOpenedByCodex": 0,
     "reusedSingleCodexWorkTab": true,
-    "reusedUserProvidedTabs": true,
+    "reusedUserProvidedTabs": false,
     "tabsLeftOpenAtFinish": 1,
     "finalUrls": [
       "https://brikaya.com/sitemap.xml"
@@ -1113,29 +1108,29 @@
     "stoppedAtPasswordPhoneDocumentOrPayment": false,
     "finalRegistrationSubmitted": false,
     "sensitiveFormValuesStored": false,
-    "notes": "Single registered Chrome tab reused. Google and Bing sitemaps resubmitted after 376-URL deploy. Yandex sitemap/checklist/reindex checked; manual quota exhausted, IndexNow accepted 376 URLs. Naver sitemap confirmed; /ace/ crawl attempt did not enter history. Google Cloud Auth read-only only; no OAuth publication. No Clarity activation, payment, CAPTCHA, OTP, password, personal document or phone action performed."
+    "notes": "Single registered Chrome tab reused and left open at https://brikaya.com/sitemap.xml. Google Search Console still showed processed sitemap count 376 while public sitemap is 424; duplicate submission attempt did not create a new row. Bing sitemap was successfully submitted for processing; URL Submission quota was 0. Yandex sitemap remains queued; duplicate add disabled, and IndexNow accepted 424 URLs. Naver sitemap confirmed; manual /fy/ crawl still rejected by URL-format warning. Clarity was read-only; no install or activation."
   },
   "p0ToP20": {
-    "P0": "ok_public_376_url_sitemap_robots_200_after_wave187_deploy",
-    "P1": "google_sitemap_resubmitted_processing_pending_panel_still_showed_328_until_376_processed",
-    "P2": "bing_sitemap_submitted_processing_pending_for_376_urls_url_submission_quota_0_reset_about_6h",
+    "P0": "ok_public_424_url_sitemap_robots_200_after_wave211_deploy",
+    "P1": "google_sitemap_public_424_pending_processing_panel_still_showed_376_until_reprocess",
+    "P2": "bing_sitemap_submitted_processing_pending_for_424_urls_url_submission_quota_0_reset_about_5h",
     "P3": "yahoo_covered_by_bing_pending_recrawl",
     "P4": "duckduckgo_covered_by_bing_duckduckbot_sitemap_robots_hreflang",
-    "P5": "yandex_indexnow_202_for_376_urls_sitemap_processing_manual_reindex_daily_limit_reached_favicon_warning_still_visible",
-    "P6": "naver_sitemap_confirmed_manual_ace_crawl_not_recorded_no_auth_sensitive_step",
+    "P5": "yandex_indexnow_202_for_424_urls_sitemap_processing_checklist_warning_until_processed",
+    "P6": "naver_sitemap_confirmed_manual_fy_crawl_blocked_url_format_warning",
     "P7": "baidu_blocked_external_registration_constraints_no_document_icp_payment",
     "P8": "brave_no_current_direct_submit_prior_endpoint_404_keep_crawl_path",
     "P9": "seznam_blocked_captcha_code_no_submission",
     "P10": "mojeek_no_direct_action_crawl_backlinks_needed",
     "P11": "other_metasearch_covered_by_google_bing_yandex_sitemap_indexnow_when_supported",
-    "P12": "snippet_sampling_pending_after_search_engines_reprocess_376_url_sitemap",
-    "P13": "wave_211_local_validated_pending_pr_merge_deploy_browser_recheck",
+    "P12": "snippet_sampling_pending_after_search_engines_reprocess_424_url_sitemap",
+    "P13": "wave_211_deployed_public_qa_passed_next_language_wave_future_scope",
     "P14": "regional_variants_previous_waves_done_more_variants_future_scope",
     "P15": "south_asia_wave_163_deployed_more_languages_future_scope",
-    "P16": "rtl_public_validated_ar_ur_fa_he_ps_sd_ks_dv_ckb_ug_yi_bal",
-    "P17": "local_i18n_tests_passed_211_hreflangs_and_wave211_downloads_sampled",
-    "P18": "local_sitemap_424_hreflang_211_build_passed_public_deploy_pending",
-    "P19": "evidence_updated_wave211_local_validation_pending_public_validation",
+    "P16": "rtl_public_validated_ar_ur_fa_he_ps_sd_ks_dv_ckb_ug_yi_bal_no_new_rtl_in_wave211",
+    "P17": "public_i18n_tests_passed_211_hreflangs_79_downloads_samples",
+    "P18": "sitemap_424_public_hreflang_211_html_report_passed",
+    "P19": "evidence_updated_wave211_public_validation_and_browser_recheck",
     "P20": "clarity_not_installed_blocked_by_privacy_policy"
   },
   "nextWave91": {
@@ -1343,7 +1338,7 @@
       }
     }
   },
-  "timestamp": "2026-07-06T19:08:23.926Z",
+  "timestamp": "2026-07-06T19:20:54.335Z",
   "nextWave139": {
     "status": "deployed_and_browser_rechecked",
     "locales": [
@@ -1757,7 +1752,7 @@
     }
   },
   "nextWave211": {
-    "status": "local_validated_pending_pr_merge_deploy_browser_recheck",
+    "status": "deployed_and_browser_rechecked",
     "locales": [
       "fy",
       "fo",
@@ -1857,8 +1852,33 @@
       "checkedHtml": "lang=iu dir=ltr title localized canonical=https://brikaya.com/iu/downloads/ clarity=false",
       "distSitemapLocs": 424
     },
-    "deployStatus": "pending_after_pr_merge",
-    "browserRecheck": "pending_after_deploy_same_registered_chrome_tab",
-    "noCostNoTelemetryBoundary": "kept: no paid service, no Clarity, no analytics, no pixel, no external telemetry SDK"
+    "deployStatus": "published",
+    "browserRecheck": {
+      "google": "sitemap panel still showed processed count 376; public sitemap 424 pending Google reprocess; duplicate submit did not create a new row",
+      "bing": "sitemap submitted successfully for processing; URL Submission quota 0 reset about 5h",
+      "yandex": "sitemap remains in processing queue; IndexNow accepted 424 URLs with status 202; checklist still warns until processing completes",
+      "naver": "sitemap.xml confirmed; manual /fy/ crawl and full URL crawl rejected by URL-format warning",
+      "clarity": "read-only check; site exists in Clarity panel but no install/activation performed"
+    },
+    "noCostNoTelemetryBoundary": "kept: no paid service, no Clarity, no analytics, no pixel, no external telemetry SDK",
+    "deployedAt": "2026-07-06T19:20:54.335Z",
+    "productionCommit": "142f09d65b6b4dbe512903146166170aa0877fb5",
+    "cloudflareDeploy": "https://df12b7a5.brikaya-live.pages.dev -> https://brikaya.com/",
+    "publicValidation": {
+      "deployedTo": "https://brikaya.com/",
+      "cloudflareDeploy": "ok: https://df12b7a5.brikaya-live.pages.dev deployed and brikaya.com updated",
+      "cloudflarePublicCheck": "passed after deploy",
+      "cloudflareI18nSeoQa": "passed at 2026-07-06T19:12:56.693Z with hreflangLocales=211, downloadsLocalesChecked=79",
+      "cloudflareOfflinePwaQa": "passed",
+      "indexNowYandex": "accepted-pending status=202 urls=424",
+      "publicSamples": [
+        "https://brikaya.com/fy/downloads/ -> 200 lang=fy dir=ltr title localized clarity=false analytics=false pixel=false",
+        "https://brikaya.com/se/downloads/ -> 200 lang=se dir=ltr title localized clarity=false analytics=false pixel=false",
+        "https://brikaya.com/iu/downloads/ -> 200 lang=iu dir=ltr title localized clarity=false analytics=false pixel=false",
+        "https://brikaya.com/nv/downloads/ -> 200 lang=nv dir=ltr title localized clarity=false analytics=false pixel=false",
+        "https://brikaya.com/tpi/downloads/ -> 200 lang=tpi dir=ltr title localized clarity=false analytics=false pixel=false"
+      ],
+      "trackingCheck": "no Clarity, no analytics, no googletag, no gtag, no pixel found in sampled public HTML"
+    }
   }
 }

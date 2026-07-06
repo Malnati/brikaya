@@ -310,3 +310,14 @@ Follow-up fa/he em 2026-07-06:
 - RTL não muda nesta onda: continuam `ar`, `ur`, `fa`, `he`, `ps`, `sd`, `ks`, `dv`, `ckb`, `ug`, `yi` e `bal`.
 - Clarity permanece bloqueado/desinstalado: nenhum pixel, tag, SDK externo ou telemetria foi adicionado.
 - Buscadores após deploy: reenviar sitemap no Google/Bing, enviar IndexNow/Yandex, confirmar Naver e manter Baidu/Seznam bloqueados quando exigirem identidade, CAPTCHA, ICP, telefone extra ou custo.
+
+
+## Atualização — onda 211 publicada em 2026-07-06
+
+- Publicação: PR #219 mergeado em `main` e deploy Cloudflare concluído em `https://brikaya.com/` via `https://df12b7a5.brikaya-live.pages.dev`.
+- Escopo publicado: 211 idiomas, 424 URLs no sitemap, hreflang completo e `x-default`.
+- QA público: `make cloudflare-public-check`, `make cloudflare-i18n-seo-qa` (211 hreflangs, 79 páginas de downloads amostradas), `make cloudflare-offline-pwa-qa` e `make yandex-indexnow-submit` (202, 424 URLs).
+- Amostras públicas: `/fy/downloads/`, `/se/downloads/`, `/iu/downloads/`, `/nv/downloads/`, `/tpi/downloads/` responderam 200 com `html lang` correto, `dir=ltr`, título localizado e sem Clarity/analytics/pixel.
+- Buscadores: Bing aceitou sitemap para processamento; Google ainda mostra 376 até reprocessar o sitemap 424; Yandex mantém sitemap em fila e IndexNow aceitou 424 URLs; Naver confirma sitemap, mas coleta manual `/fy/` segue bloqueada por aviso de formato.
+- Clarity: painel existe, mas instalação continua bloqueada; nenhum script, tag, SDK, pixel ou telemetria foi adicionado.
+- Aba única Chrome: reutilizada e deixada aberta em `https://brikaya.com/sitemap.xml`.
