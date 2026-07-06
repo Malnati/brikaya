@@ -341,3 +341,15 @@ Follow-up fa/he em 2026-07-06:
 - Evidência pública: `docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-public-validation.json` validou 235 hreflangs e 84 downloads amostrados.
 - Buscadores gratuitos: Google recebeu sitemap completo; Bing recebeu sitemap e ficou em processamento; Yandex recebeu IndexNow 472; Naver confirmou sitemap.
 - Limite preservado: sem pagamento, sem loja paga, sem Clarity, sem analytics, sem pixel, sem tag, sem SDK externo e sem coleta de dados pessoais do jogador.
+
+
+## Atualização — onda 259 validada localmente
+
+- Timestamp: 2026-07-06T21:15:02Z
+- Próxima onda sem custo e sem telemetria: `la`, `eo`, `ia`, `ie`, `io`, `vo`, `an`, `mwl`, `ext`, `bar`, `hsb`, `dsb`, `nds`, `frr`, `stq`, `ksh`, `pcd`, `wa`, `li`, `vls`, `zea`, `frp`, `arp`, `mus`.
+- Total alvo após publicação: 259 idiomas e 520 URLs no sitemap (home + downloads por idioma, mais `/privacy/` e `/terms/`).
+- Validação local concluída: `node --version` (`v23.5.0`), `make help`, `npm run codex-env:check`, `npm run test:semantic-file-names`, `npm run test:svg-assets`, `npm test -- --runInBand` (58 suites / 371 testes) e `npm run build` (`localized-seo ok: locales=259, routes=2`).
+- Evidência visual local: `docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave259-la-downloads.png`; rota `/la/downloads/` respondeu 200, `lang=la`, `dir=ltr`, título/canonical localizados e sem Clarity/analytics/pixel.
+- RTL não muda nesta onda; nenhum idioma RTL novo foi adicionado.
+- Clarity permanece bloqueado/desinstalado: nenhum pixel, tag, SDK externo ou telemetria foi adicionado.
+- Buscadores após deploy: reenviar sitemap no Google/Bing, enviar IndexNow/Yandex, confirmar Naver e manter Baidu/Seznam bloqueados quando exigirem identidade, CAPTCHA, ICP, telefone extra ou custo.
