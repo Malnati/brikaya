@@ -207,3 +207,18 @@ Follow-up fa/he em 2026-07-06:
 - IndexNow/Yandex: `make yandex-indexnow-submit` retornou `202 accepted-pending` para 184 URLs com chave redigida.
 - Chrome aba única: Google recebeu reenvio do sitemap; Bing recebeu 20 URLs até quota 0; Yandex recebeu 48 URLs em fila; Naver confirmou `sitemap.xml`; Brave retornou `Success`; aba final ficou aberta em `https://brikaya.com/sitemap.xml`.
 - Pendências: Google ainda mostra 88 páginas até reprocessar; Bing precisa próxima quota para as 28 URLs restantes da onda 91; Yandex/Naver/Brave ficam aguardando processamento; Seznam segue bloqueado por CAPTCHA; Baidu segue bloqueado por cadastro externo; Clarity continua desinstalado.
+
+## Atualização — onda 115 idiomas em implementação
+
+- Próxima onda sem custo e sem telemetria: `yo`, `ig`, `ha`, `zu`, `xh`, `st`, `tn`, `ts`, `ss`, `ve`, `nso`, `rw`, `rn`, `ln`, `lg`, `ak`, `ee`, `tw`, `sn`, `ny`, `wo`, `ff`, `om`, `ti`.
+- Total alvo após publicação: 115 idiomas e 232 URLs no sitemap (home + downloads por idioma, mais `/privacy/` e `/terms/`).
+- RTL não muda nesta onda: continuam `ar`, `ur`, `fa` e `he`; todos os novos idiomas desta onda são LTR.
+- Clarity permanece bloqueado/desinstalado: nenhum pixel, tag, SDK externo ou telemetria foi adicionado.
+- Buscadores após deploy: reenviar sitemap no Google, tentar Bing somente se houver quota gratuita, enviar IndexNow/Yandex, confirmar Naver/Brave e manter Baidu/Seznam bloqueados quando exigirem identidade, CAPTCHA, ICP, telefone extra ou custo.
+## Atualização — onda 115 validada localmente
+
+- Validação local concluída: `node --version` (`v23.5.0`), `make help`, `npm run codex-env:check`, `npm run test:semantic-file-names`, `npm run test:svg-assets`, `npm test -- --runInBand` e `npm run build` passaram.
+- Resultado do build: `localized-seo ok: locales=115, routes=2`.
+- Evidência visual local: `docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave115-yo-downloads.png`, rota `/yo/downloads/`, `lang=yo`, `dir=ltr`.
+- Próximo estado: PR, merge em `main`, deploy, QA público e rechecagem dos buscadores gratuitos.
+

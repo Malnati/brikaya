@@ -184,6 +184,17 @@ const TIME_ZONE_LOCALE_MAP: readonly (readonly [string, AppLocale])[] = [
   ["Pacific/Fiji", "fj"],
   ["Indian/Antananarivo", "mg"],
   ["Africa/Mogadishu", "so"],
+  ["Africa/Kigali", "rw"],
+  ["Africa/Bujumbura", "rn"],
+  ["Africa/Kinshasa", "ln"],
+  ["Africa/Kampala", "lg"],
+  ["Africa/Accra", "ak"],
+  ["Africa/Abidjan", "ak"],
+  ["Africa/Lome", "ee"],
+  ["Africa/Harare", "sn"],
+  ["Africa/Blantyre", "ny"],
+  ["Africa/Dakar", "wo"],
+  ["Africa/Asmara", "ti"],
 ];
 const TIME_ZONE_LOCALE_PREFIX_MAP: readonly (readonly [string, AppLocale])[] = [
   ["America/Argentina/", "es-419"],
@@ -298,6 +309,30 @@ function normalizeLocale(value: string | null | undefined): AppLocale | null {
   if (normalizedValue.startsWith("fj")) return "fj";
   if (normalizedValue.startsWith("mg")) return "mg";
   if (normalizedValue.startsWith("so")) return "so";
+  if (normalizedValue.startsWith("yo")) return "yo";
+  if (normalizedValue.startsWith("ig")) return "ig";
+  if (normalizedValue.startsWith("ha")) return "ha";
+  if (normalizedValue.startsWith("zu")) return "zu";
+  if (normalizedValue.startsWith("xh")) return "xh";
+  if (normalizedValue.startsWith("st")) return "st";
+  if (normalizedValue.startsWith("tn")) return "tn";
+  if (normalizedValue.startsWith("ts")) return "ts";
+  if (normalizedValue.startsWith("ss")) return "ss";
+  if (normalizedValue.startsWith("ve")) return "ve";
+  if (normalizedValue.startsWith("nso")) return "nso";
+  if (normalizedValue.startsWith("rw")) return "rw";
+  if (normalizedValue.startsWith("rn")) return "rn";
+  if (normalizedValue.startsWith("ln")) return "ln";
+  if (normalizedValue.startsWith("lg")) return "lg";
+  if (normalizedValue.startsWith("ak")) return "ak";
+  if (normalizedValue.startsWith("ee")) return "ee";
+  if (normalizedValue.startsWith("tw")) return "tw";
+  if (normalizedValue.startsWith("sn")) return "sn";
+  if (normalizedValue.startsWith("ny")) return "ny";
+  if (normalizedValue.startsWith("wo")) return "wo";
+  if (normalizedValue.startsWith("ff")) return "ff";
+  if (normalizedValue.startsWith("om")) return "om";
+  if (normalizedValue.startsWith("ti")) return "ti";
 
   return null;
 }
