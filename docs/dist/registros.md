@@ -493,3 +493,15 @@ Critérios:
 - Yandex Webmaster: checklist abriu autenticado e ainda mostra 3 recomendações; sem ação paga e sem CAPTCHA.
 - Naver Search Advisor: abriu fluxo autenticado/callback, mas tela continua sem confirmação operacional de coleta nova; sem CAPTCHA, OTP, senha ou custo visível.
 - Seznam Reporter/Webmaster: portal abriu autenticado/legível; IndexNow já foi enviado via endpoint oficial com status 200 para 570 URLs; painel fica para reprocessamento/crawl.
+
+## Atualização operacional em 2026-07-06 — monetização Google H5 sem campanha paga
+
+- AdSense autenticado em `https://adsense.google.com/adsense/u/0/pub-9571619183194136/sites/detail/url=brikaya.com` mostrou `brikaya.com`, verificou propriedade por snippet e aceitou `Pedir revisão`.
+- Estado superior após pedido: `Preparando`; etapa de revisão aparece como `Revisão solicitada`.
+- CMP certificado Google foi configurado pelo painel AdSense com três opções para regulamentações europeias: `Consentir`, `Não consentir`, `Gerenciar opções`.
+- O painel ainda mostrou ads.txt como `Não encontrado`; o projeto agora publica `/ads.txt` com o publisher público do AdSense e aguarda recrawl do AdSense.
+- Central de políticas do AdSense verificada em modo leitura: `Não encontramos nenhum problema`.
+- Implementação preparada sem campanha paga: snippet para revisão do site, flag runtime desligada por padrão, e chamada H5 `adBreak` apenas entre fases quando a liberação do Google existir.
+- H5 Games Ads / Ad Placement API segue pendente de liberação/aprovação do Google; o formulário oficial exige conta aprovada e dados adicionais de contato/empresa/telefone antes de submissão.
+- Guardrails mantidos: sem Google Ads campaign, sem orçamento, sem cartão, sem Clarity/pixel adicional, sem clique em anúncio real em QA e sem anúncio durante jogada ativa.
+- Documento operacional: [`docs/monetizacao-google.md`](../monetizacao-google.md).

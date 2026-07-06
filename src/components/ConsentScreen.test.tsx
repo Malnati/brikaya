@@ -32,7 +32,7 @@ describe("ConsentScreen", () => {
       }),
     ).not.toBeChecked();
     expect(
-      screen.getByText(/esta versão não mostra anúncios reais/i),
+      screen.getByText(/anúncios podem aparecer apenas entre fases/i),
     ).toBeInTheDocument();
     expect(document.body.textContent).not.toMatch(FORBIDDEN_TECHNICAL_COPY);
 

@@ -125,6 +125,17 @@
       ]
     },
     {
+      "name": "BRIKAYA_GOOGLE_ADSENSE_PUBLISHER_ID",
+      "classification": "public-config",
+      "required": false,
+      "source": "Google AdSense publisher ID for ads.txt and H5 Ads",
+      "commands": [
+        "npm run build",
+        "make cloudflare-deploy",
+        "browser-authenticated AdSense registration"
+      ]
+    },
+    {
       "name": "BRIKAYA_ASSET_MANIFEST_OUTPUT",
       "classification": "public-config",
       "required": false,

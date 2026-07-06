@@ -34,6 +34,7 @@
     "test:cloudflare-gameplay-basic": "node tests/e2e/cloudflare-gameplay-basic-qa.js",
     "test:cloudflare-ball-turret": "node tests/e2e/cloudflare-ball-turret-qa.js",
     "test:cloudflare-level-progression": "node tests/e2e/cloudflare-phase-transition-qa.js",
+    "test:cloudflare-interlevel-google-ads": "node tests/e2e/cloudflare-interlevel-google-ads-qa.js",
     "test:cloudflare-evasive-blocks": "node tests/e2e/cloudflare-evasive-blocks-qa.js",
     "test:cloudflare-reset-preferences": "node tests/e2e/cloudflare-reset-preferences-qa.js",
     "test:semantic-file-names": "node scripts/normalize-semantic-file-names.mjs --check",

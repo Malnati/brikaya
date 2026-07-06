@@ -81,6 +81,10 @@ import {
   createJoystickDiagnosticDownloadName,
   type JoystickDiagnosticSample,
 } from "./utils/joystickDiagnostics";
+import {
+  configureGoogleAdSound,
+  requestInterlevelGoogleAd,
+} from "./monetization/googleAds";
 
 LOG("🚦 App.tsx carregado");
 
@@ -104,6 +108,7 @@ const LASER_FAN_QA_SCENARIO = "laser-fan";
 const METAL_BLOCK_QA_SCENARIO = "metal-block";
 const EVASIVE_BLOCKS_QA_SCENARIO = "evasive-blocks";
 const BALL_TURRET_QA_SCENARIO = "ball-turret";
+const LEVEL_TRANSITION_EVENT_NAME = "brikaya:level-transition";
 const COUNTDOWN_FIRST_STEP_INDEX = 0;
 const COUNTDOWN_NEXT_STEP_INDEX = 1;
 const COUNTDOWN_TIMER_OFFSET = 1;
@@ -122,6 +127,24 @@ const INITIAL_COUNTDOWN_OVERLAY: GameCinematicOverlayState = {
   type: "countdown",
   value: CINEMATIC_COUNTDOWN_STEPS[COUNTDOWN_FIRST_STEP_INDEX],
 };
+
+type LevelTransitionEventPhase = "start" | "finish";
+
+function dispatchLevelTransitionEvent(
+  phase: LevelTransitionEventPhase,
+  payload: LevelTransitionPayload,
+) {
+  window.dispatchEvent(
+    new CustomEvent(LEVEL_TRANSITION_EVENT_NAME, {
+      detail: {
+        currentLevel: payload.currentLevel,
+        nextLevel: payload.nextLevel,
+        phase,
+        timestamp: Date.now(),
+      },
+    }),
+  );
+}
 
 function hasValidBoardRect(boardRect: GameBoardRect | null): boolean {
   return Boolean(
@@ -172,6 +195,7 @@ function GameApp() {
     hasPrivacyConsent && !shouldStartWithLanguageDetection;
   const [cinematicOverlay, setCinematicOverlay] =
     useState<GameCinematicOverlayState>(null);
+  const [isInterlevelAdActive, setIsInterlevelAdActive] = useState(false);
   const [boardRect, setBoardRect] = useState<GameBoardRect | null>(null);
   const [isInitialCountdownActive, setIsInitialCountdownActive] = useState(
     shouldStartWithInitialCountdown,
@@ -243,6 +267,8 @@ function GameApp() {
     return null;
   }, []);
   const activeGameMode =
+    qaScenario === "single-brick-phase-clear" ||
+    qaScenario === METAL_BLOCK_QA_SCENARIO ||
     qaScenario === EVASIVE_BLOCKS_QA_SCENARIO
       ? GAME_MODE_CLASSIC
       : GAME_MODE_BALL_TURRET;
@@ -785,28 +811,68 @@ function GameApp() {
     }
   }, [audioSink, isAudioMuted, toggleMusic]);
 
+  useEffect(() => {
+    configureGoogleAdSound(!isAudioMuted);
+  }, [isAudioMuted]);
+
   const handleLevelTransition = useCallback(
-    (payload: LevelTransitionPayload) => {
-      audioSink.playAudio(GAME_AUDIO_IDS.LEVEL_UP_OVERLAY);
-      setCinematicOverlay({
-        type: "levelUp",
-        nextLevel: payload.nextLevel,
-        speedLabel: `${payload.nextSpeedMultiplier.toFixed(
-          SPEED_LABEL_FRACTION_DIGITS,
-        )}${SPEED_LABEL_SUFFIX}`,
-      });
-      if (levelTimerRef.current) clearTimeout(levelTimerRef.current);
-      if (cinematicTimerRef.current) clearTimeout(cinematicTimerRef.current);
+    (payload: LevelTransitionPayload) =>
+      new Promise<void>((resolve) => {
+        let pauseFinished = false;
+        let adBreakFinished = false;
+        let resolved = false;
 
-      cinematicTimerRef.current = setTimeout(() => {
-        setCinematicOverlay(null);
-      }, LEVEL_UP_OVERLAY_VISIBLE_MS);
+        const finishTransition = () => {
+          if (resolved || !pauseFinished || !adBreakFinished) return;
 
-      levelTimerRef.current = setTimeout(() => {
-        setLevel(payload.nextLevel);
-      }, payload.pauseMs);
-    },
-    [audioSink],
+          resolved = true;
+          setIsInterlevelAdActive(false);
+          dispatchLevelTransitionEvent("finish", payload);
+          setLevel(payload.nextLevel);
+          resolve();
+        };
+
+        dispatchLevelTransitionEvent("start", payload);
+        audioSink.playAudio(GAME_AUDIO_IDS.LEVEL_UP_OVERLAY);
+        setCinematicOverlay({
+          type: "levelUp",
+          nextLevel: payload.nextLevel,
+          speedLabel: `${payload.nextSpeedMultiplier.toFixed(
+            SPEED_LABEL_FRACTION_DIGITS,
+          )}${SPEED_LABEL_SUFFIX}`,
+        });
+        if (levelTimerRef.current) clearTimeout(levelTimerRef.current);
+        if (cinematicTimerRef.current) clearTimeout(cinematicTimerRef.current);
+
+        cinematicTimerRef.current = setTimeout(() => {
+          setCinematicOverlay(null);
+        }, LEVEL_UP_OVERLAY_VISIBLE_MS);
+
+        levelTimerRef.current = setTimeout(() => {
+          pauseFinished = true;
+          finishTransition();
+        }, payload.pauseMs);
+
+        void requestInterlevelGoogleAd({
+          currentLevel: payload.currentLevel,
+          nextLevel: payload.nextLevel,
+          soundOn: !isAudioMuted,
+          beforeAd: () => {
+            setIsInterlevelAdActive(true);
+            audioManager.stopMusic();
+          },
+          afterAd: () => {
+            setIsInterlevelAdActive(false);
+            if (!isAudioMuted && !isMusicMuted) {
+              audioSink.startGameplayMusic();
+            }
+          },
+        }).then(() => {
+          adBreakFinished = true;
+          finishTransition();
+        });
+      }),
+    [audioSink, isAudioMuted, isMusicMuted],
   );
 
   const handleLevelChange = useCallback((nextLevel: number) => {
@@ -1147,6 +1213,7 @@ function GameApp() {
                 paused={
                   mobileOrientationLock.isBlocked ||
                   isMenuOpen ||
+                  isInterlevelAdActive ||
                   !hasPrivacyConsent ||
                   isLanguageDetectionVisible
                 }

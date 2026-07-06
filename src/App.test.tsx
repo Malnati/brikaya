@@ -33,7 +33,7 @@ interface MockGameProps {
   paused?: boolean;
   qaScenario?: string | null;
   onBoardRectChange?: (rect: TestBoardRect) => void;
-  onLevelTransition?: (payload: LevelTransitionPayload) => void;
+  onLevelTransition?: (payload: LevelTransitionPayload) => void | Promise<void>;
   onGameOver?: () => Promise<void> | void;
   imageSetId?: string;
   gameMode?: string;
@@ -244,6 +244,9 @@ describe("App theme selector", () => {
   });
 
   afterEach(() => {
+    delete window.__BRIKAYA_GOOGLE_ADS_ENABLED__;
+    delete window.adBreak;
+    delete window.adConfig;
     jest.restoreAllMocks();
     jest.useRealTimers();
   });
@@ -740,6 +743,16 @@ describe("App theme selector", () => {
     expect(mockLastGameProps?.gameMode).toBe("classic");
   });
 
+  it("mantém cenário de fase única em modo clássico para QA determinístico", async () => {
+    mockSystemTheme(true);
+    window.history.replaceState(null, "", "/?qaScenario=single-brick-phase-clear");
+
+    await renderApp();
+
+    expect(mockLastGameProps?.qaScenario).toBe("single-brick-phase-clear");
+    expect(mockLastGameProps?.gameMode).toBe("classic");
+  });
+
   it("encaminha cenário de QA de colisão da raquete para o jogo", async () => {
     mockSystemTheme(true);
     window.history.replaceState(null, "", "/?qaScenario=paddle-collision");
@@ -1222,6 +1235,63 @@ describe("App theme selector", () => {
       jest.advanceTimersByTime(LEVEL_UP_OVERLAY_VISIBLE_MS);
     });
     expect(screen.queryByTestId("level-toast")).not.toBeInTheDocument();
+  });
+
+  it("pausa o jogo enquanto anúncio entre fases está ativo", async () => {
+    jest.useFakeTimers();
+    mockSystemTheme(true);
+    window.__BRIKAYA_GOOGLE_ADS_ENABLED__ = true;
+    let capturedPlacement:
+      | {
+          beforeAd?: () => void;
+          afterAd?: () => void;
+          adBreakDone?: () => void;
+        }
+      | null = null;
+    window.adConfig = jest.fn();
+    window.adBreak = jest.fn((placement) => {
+      capturedPlacement = placement;
+      placement.beforeAd?.();
+    });
+
+    await renderApp();
+    publishTestBoardRect();
+
+    act(() => {
+      jest.advanceTimersByTime(COUNTDOWN_TOTAL_MS);
+    });
+
+    let transitionPromise: Promise<void> | void;
+    act(() => {
+      transitionPromise = mockLastGameProps?.onLevelTransition?.(
+        TEST_LEVEL_TRANSITION_PAYLOAD,
+      );
+    });
+
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      DATA_PAUSED_ATTRIBUTE,
+      PAUSED_TRUE_ATTRIBUTE_VALUE,
+    );
+
+    act(() => {
+      jest.advanceTimersByTime(TEST_LEVEL_TRANSITION_PAYLOAD.pauseMs);
+    });
+
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      DATA_PAUSED_ATTRIBUTE,
+      PAUSED_TRUE_ATTRIBUTE_VALUE,
+    );
+
+    await act(async () => {
+      capturedPlacement?.afterAd?.();
+      capturedPlacement?.adBreakDone?.();
+      await transitionPromise;
+    });
+
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      DATA_PAUSED_ATTRIBUTE,
+      PAUSED_FALSE_ATTRIBUTE_VALUE,
+    );
   });
 
   it("mantém tema padrão durante subida de fase", async () => {

@@ -13,4 +13,6 @@ Brikaya armazena preferências, pontuações e estatísticas no navegador do jog
 
 - Não coletar dados pessoais no jogo principal sem nova aprovação.
 - Não adicionar rastreamento externo ao runtime sem revisão de privacidade.
-- Manter anúncios futuros opcionais e separados da experiência principal.
+- Manter anúncios separados da experiência principal: somente entre fases, nunca durante uma jogada ativa e nunca como requisito para jogar.
+- Usar uma plataforma de consentimento certificada pelo Google antes de anúncios personalizados no Espaço Econômico Europeu, Reino Unido e Suíça.
+- Continuar a partida sem bloqueio quando anúncio, consentimento, internet ou demanda não estiverem disponíveis.
