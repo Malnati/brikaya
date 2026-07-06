@@ -167,6 +167,23 @@ const TIME_ZONE_LOCALE_MAP: readonly (readonly [string, AppLocale])[] = [
   ["Asia/Vientiane", "lo"],
   ["Asia/Yangon", "my"],
   ["Asia/Rangoon", "my"],
+  ["Atlantic/Reykjavik", "is"],
+  ["Europe/Dublin", "ga"],
+  ["Europe/Malta", "mt"],
+  ["Europe/Tirane", "sq"],
+  ["Europe/Skopje", "mk"],
+  ["Europe/Sarajevo", "bs"],
+  ["Asia/Ulaanbaatar", "mn"],
+  ["Asia/Dushanbe", "tg"],
+  ["Asia/Bishkek", "ky"],
+  ["Asia/Ashgabat", "tk"],
+  ["Europe/Minsk", "be"],
+  ["Europe/Luxembourg", "lb"],
+  ["Pacific/Apia", "sm"],
+  ["Pacific/Tongatapu", "to"],
+  ["Pacific/Fiji", "fj"],
+  ["Indian/Antananarivo", "mg"],
+  ["Africa/Mogadishu", "so"],
 ];
 const TIME_ZONE_LOCALE_PREFIX_MAP: readonly (readonly [string, AppLocale])[] = [
   ["America/Argentina/", "es-419"],
@@ -219,6 +236,8 @@ function normalizeLocale(value: string | null | undefined): AppLocale | null {
   if (normalizedValue.startsWith("ms")) return "ms";
   if (normalizedValue.startsWith("bn")) return "bn";
   if (normalizedValue.startsWith("ur")) return "ur";
+  if (normalizedValue.startsWith("fa")) return "fa";
+  if (normalizedValue.startsWith("he")) return "he";
   if (normalizedValue.startsWith("ta")) return "ta";
   if (normalizedValue.startsWith("te")) return "te";
   if (normalizedValue.startsWith("de")) return "de";
@@ -255,6 +274,30 @@ function normalizeLocale(value: string | null | undefined): AppLocale | null {
   if (normalizedValue.startsWith("km")) return "km";
   if (normalizedValue.startsWith("lo")) return "lo";
   if (normalizedValue.startsWith("my")) return "my";
+  if (normalizedValue.startsWith("is")) return "is";
+  if (normalizedValue.startsWith("ga")) return "ga";
+  if (normalizedValue.startsWith("cy")) return "cy";
+  if (normalizedValue.startsWith("mt")) return "mt";
+  if (normalizedValue.startsWith("sq")) return "sq";
+  if (normalizedValue.startsWith("mk")) return "mk";
+  if (normalizedValue.startsWith("bs")) return "bs";
+  if (normalizedValue.startsWith("mn")) return "mn";
+  if (normalizedValue.startsWith("tg")) return "tg";
+  if (normalizedValue.startsWith("ky")) return "ky";
+  if (normalizedValue.startsWith("tk")) return "tk";
+  if (normalizedValue.startsWith("be")) return "be";
+  if (normalizedValue.startsWith("lb")) return "lb";
+  if (normalizedValue.startsWith("eu")) return "eu";
+  if (normalizedValue.startsWith("ca")) return "ca";
+  if (normalizedValue.startsWith("gl")) return "gl";
+  if (normalizedValue.startsWith("oc")) return "oc";
+  if (normalizedValue.startsWith("br")) return "br";
+  if (normalizedValue.startsWith("mi")) return "mi";
+  if (normalizedValue.startsWith("sm")) return "sm";
+  if (normalizedValue.startsWith("to")) return "to";
+  if (normalizedValue.startsWith("fj")) return "fj";
+  if (normalizedValue.startsWith("mg")) return "mg";
+  if (normalizedValue.startsWith("so")) return "so";
 
   return null;
 }
