@@ -139,7 +139,7 @@ export interface VisualThemePreset extends AppearanceOption<VisualThemePresetId>
 
 export const DEFAULT_APPEARANCE_SELECTION = {
   themeId: THEME_NEON_ARCADE,
-  themeMode: THEME_MODE_AUTO,
+  themeMode: THEME_MODE_MANUAL,
   autoThemeSequence: THEME_IDS,
   autoThemeIndex: 0,
   imageSetId: IMAGE_SET_RETRO_DEFAULT,
@@ -480,37 +480,6 @@ export function resolveAppearanceSelection(input: {
   imageSetId: unknown;
   fontSetId: unknown;
 }): AppearanceSelection {
-  const storedThemeId = migrateStoredThemeId(input.themeId);
-  const autoThemeSequence =
-    parseStoredAutoThemeSequence(input.autoThemeSequence) ??
-    DEFAULT_APPEARANCE_SELECTION.autoThemeSequence;
-  const autoThemeIndex = parseStoredAutoThemeIndex(
-    input.autoThemeIndex,
-    autoThemeSequence.length,
-  );
-  const themeMode = isThemeMode(input.themeMode)
-    ? input.themeMode
-    : storedThemeId
-      ? THEME_MODE_MANUAL
-      : DEFAULT_APPEARANCE_SELECTION.themeMode;
-  const themeId =
-    themeMode === THEME_MODE_AUTO
-      ? autoThemeSequence[autoThemeIndex]
-      : (storedThemeId ?? DEFAULT_APPEARANCE_SELECTION.themeId);
-
-  return {
-    themeId,
-    themeMode,
-    autoThemeSequence,
-    autoThemeIndex,
-    imageSetId:
-      themeMode === THEME_MODE_AUTO
-        ? resolveVisualThemePresetByTheme(themeId).imageSetId
-        : isImageSetId(input.imageSetId)
-          ? input.imageSetId
-          : DEFAULT_APPEARANCE_SELECTION.imageSetId,
-    fontSetId: isFontSetId(input.fontSetId)
-      ? input.fontSetId
-      : DEFAULT_APPEARANCE_SELECTION.fontSetId,
-  };
+  void input;
+  return DEFAULT_APPEARANCE_SELECTION;
 }

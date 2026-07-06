@@ -1067,18 +1067,13 @@ async function run() {
     );
     assert(/Versão v\d+/.test(menuState.text), "Menu lateral sem versão vN.");
     assert(
-      menuState.text.includes("Aparência"),
-      "Menu lateral sem seção Aparência.",
+      !menuState.text.includes("Aparência"),
+      "Menu lateral ainda mostra seção Aparência.",
     );
-    for (const label of ["Conjuntos prontos", "Cores", "Imagens", "Fonte"]) {
-      assert(menuState.text.includes(label), `Menu lateral sem ${label}.`);
-    }
-    for (const optionId of APPEARANCE_OPTION_IDS) {
-      assert(
-        menuState.appearanceOptionIds.includes(optionId),
-        `Menu lateral sem opção de aparência ${optionId}.`,
-      );
-    }
+    assert(
+      menuState.appearanceOptionIds.length === 0,
+      "Menu lateral ainda mostra opções de aparência.",
+    );
     for (const action of [
       SETTINGS_ACTION_LOGS,
       SETTINGS_ACTION_COLLISIONS,

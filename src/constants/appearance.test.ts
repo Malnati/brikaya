@@ -113,7 +113,7 @@ describe("appearance contract", () => {
   it("define escolhas padrão humanas e persistíveis", () => {
     expect(DEFAULT_APPEARANCE_SELECTION).toEqual({
       themeId: "neon-arcade",
-      themeMode: THEME_MODE_AUTO,
+      themeMode: THEME_MODE_MANUAL,
       autoThemeSequence: EXPECTED_THEME_IDS,
       autoThemeIndex: 0,
       imageSetId: "retro-default",
@@ -202,7 +202,7 @@ describe("appearance contract", () => {
     expect(migrateStoredThemeId("invalid")).toBe(null);
   });
 
-  it("resolve seleção com fallback padrão", () => {
+  it("resolve seleção sempre no padrão visível", () => {
     expect(
       resolveAppearanceSelection({
         themeId: "pixel-sunset",
@@ -210,14 +210,7 @@ describe("appearance contract", () => {
         imageSetId: "sunset-cabinet",
         fontSetId: "block-pixel",
       }),
-    ).toEqual({
-      themeId: "pixel-sunset",
-      themeMode: THEME_MODE_MANUAL,
-      autoThemeSequence: EXPECTED_THEME_IDS,
-      autoThemeIndex: 0,
-      imageSetId: "sunset-cabinet",
-      fontSetId: "block-pixel",
-    });
+    ).toEqual(DEFAULT_APPEARANCE_SELECTION);
     expect(
       resolveAppearanceSelection({
         themeId: "store",
@@ -227,18 +220,14 @@ describe("appearance contract", () => {
     ).toEqual(DEFAULT_APPEARANCE_SELECTION);
   });
 
-  it("mantém tema salvo antigo como escolha manual", () => {
+  it("ignora tema salvo antigo e preserva padrão visível", () => {
     expect(
       resolveAppearanceSelection({
         themeId: "pixel-sunset",
         imageSetId: null,
         fontSetId: null,
       }),
-    ).toEqual({
-      ...DEFAULT_APPEARANCE_SELECTION,
-      themeId: "pixel-sunset",
-      themeMode: THEME_MODE_MANUAL,
-    });
+    ).toEqual(DEFAULT_APPEARANCE_SELECTION);
   });
 
   it("avança tema automático sem repetir antes de fechar ciclo", () => {

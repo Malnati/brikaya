@@ -3,27 +3,13 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   APPEARANCE_STORAGE_KEYS,
-  THEME_MODE_AUTO,
-  THEME_MODE_MANUAL,
+  DEFAULT_APPEARANCE_SELECTION,
   type AppearanceSelection,
   type FontSetId,
   type ImageSetId,
   type ThemeId,
   type VisualThemePresetId,
-  createAutoThemeSequence,
-  resolveVisualThemePreset,
-  resolveVisualThemePresetByTheme,
-  resolveNextAutoThemeState,
-  resolveAppearanceSelection,
 } from "../constants/appearance";
-
-function readStoredValue(key: string): string | null {
-  try {
-    return window.localStorage.getItem(key);
-  } catch {
-    return null;
-  }
-}
 
 function writeStoredValue(key: string, value: string) {
   try {
@@ -33,7 +19,8 @@ function writeStoredValue(key: string, value: string) {
   }
 }
 
-function writeStoredAutoThemeState(selection: AppearanceSelection) {
+function writeStoredFixedAppearance() {
+  const selection = DEFAULT_APPEARANCE_SELECTION;
   writeStoredValue(APPEARANCE_STORAGE_KEYS.theme, selection.themeId);
   writeStoredValue(APPEARANCE_STORAGE_KEYS.themeMode, selection.themeMode);
   writeStoredValue(
@@ -44,37 +31,8 @@ function writeStoredAutoThemeState(selection: AppearanceSelection) {
     APPEARANCE_STORAGE_KEYS.autoThemeIndex,
     String(selection.autoThemeIndex),
   );
-}
-
-function writeStoredImageSet(selection: AppearanceSelection) {
   writeStoredValue(APPEARANCE_STORAGE_KEYS.imageSet, selection.imageSetId);
-}
-
-function readInitialSelection(): AppearanceSelection {
-  const storedAutoThemeSequence = readStoredValue(
-    APPEARANCE_STORAGE_KEYS.autoThemeSequence,
-  );
-  const selection = resolveAppearanceSelection({
-    themeId: readStoredValue(APPEARANCE_STORAGE_KEYS.theme),
-    themeMode: readStoredValue(APPEARANCE_STORAGE_KEYS.themeMode),
-    autoThemeSequence: storedAutoThemeSequence,
-    autoThemeIndex: readStoredValue(APPEARANCE_STORAGE_KEYS.autoThemeIndex),
-    imageSetId: readStoredValue(APPEARANCE_STORAGE_KEYS.imageSet),
-    fontSetId: readStoredValue(APPEARANCE_STORAGE_KEYS.fontSet),
-  });
-
-  if (
-    selection.themeMode === THEME_MODE_AUTO &&
-    storedAutoThemeSequence === null
-  ) {
-    return {
-      ...selection,
-      autoThemeSequence: createAutoThemeSequence(selection.themeId),
-      autoThemeIndex: 0,
-    };
-  }
-
-  return selection;
+  writeStoredValue(APPEARANCE_STORAGE_KEYS.fontSet, selection.fontSetId);
 }
 
 function applyAppearance(selection: AppearanceSelection) {
@@ -84,103 +42,49 @@ function applyAppearance(selection: AppearanceSelection) {
 }
 
 export function useAppearancePreference() {
-  const initialSelection = useMemo(readInitialSelection, []);
+  const initialSelection = useMemo(() => DEFAULT_APPEARANCE_SELECTION, []);
   const [selection, setSelection] =
     useState<AppearanceSelection>(initialSelection);
 
   useEffect(() => {
     applyAppearance(selection);
+    writeStoredFixedAppearance();
   }, [selection]);
 
-  const selectTheme = useCallback((themeId: ThemeId) => {
-    setSelection((current) => {
-      const nextSelection: AppearanceSelection = {
-        ...current,
-        themeId,
-        themeMode: THEME_MODE_MANUAL,
-      };
-      writeStoredAutoThemeState(nextSelection);
-      return nextSelection;
-    });
+  const resetFixedAppearance = useCallback(() => {
+    setSelection(DEFAULT_APPEARANCE_SELECTION);
+    writeStoredFixedAppearance();
   }, []);
 
-  const selectVisualThemePreset = useCallback(
-    (visualThemePresetId: VisualThemePresetId) => {
-      setSelection((current) => {
-        const visualThemePreset = resolveVisualThemePreset(visualThemePresetId);
-        const nextSelection: AppearanceSelection = {
-          ...current,
-          themeId: visualThemePreset.themeId,
-          themeMode: THEME_MODE_MANUAL,
-          imageSetId: visualThemePreset.imageSetId,
-        };
-        writeStoredAutoThemeState(nextSelection);
-        writeStoredImageSet(nextSelection);
-        return nextSelection;
-      });
-    },
-    [],
+  const selectTheme = useCallback(
+    (_themeId: ThemeId) => resetFixedAppearance(),
+    [resetFixedAppearance],
   );
 
-  const selectAutomaticTheme = useCallback(() => {
-    setSelection((current) => {
-      const visualThemePreset = resolveVisualThemePresetByTheme(
-        current.themeId,
-      );
-      const nextSelection: AppearanceSelection = {
-        ...current,
-        themeMode: THEME_MODE_AUTO,
-        autoThemeSequence: createAutoThemeSequence(current.themeId),
-        autoThemeIndex: 0,
-        imageSetId: visualThemePreset.imageSetId,
-      };
-      writeStoredAutoThemeState(nextSelection);
-      writeStoredImageSet(nextSelection);
-      return nextSelection;
-    });
-  }, []);
+  const selectVisualThemePreset = useCallback(
+    (_visualThemePresetId: VisualThemePresetId) => resetFixedAppearance(),
+    [resetFixedAppearance],
+  );
 
-  const advanceAutoTheme = useCallback(() => {
-    setSelection((current) => {
-      if (current.themeMode !== THEME_MODE_AUTO) return current;
+  const selectAutomaticTheme = useCallback(
+    () => resetFixedAppearance(),
+    [resetFixedAppearance],
+  );
 
-      const autoThemeState = resolveNextAutoThemeState({
-        currentThemeId: current.themeId,
-        autoThemeSequence: current.autoThemeSequence,
-        autoThemeIndex: current.autoThemeIndex,
-      });
-      const visualThemePreset = resolveVisualThemePresetByTheme(
-        autoThemeState.themeId,
-      );
-      const nextSelection = {
-        ...current,
-        ...autoThemeState,
-        imageSetId: visualThemePreset.imageSetId,
-      };
-      writeStoredAutoThemeState(nextSelection);
-      writeStoredImageSet(nextSelection);
-      return nextSelection;
-    });
-  }, []);
+  const advanceAutoTheme = useCallback(
+    () => resetFixedAppearance(),
+    [resetFixedAppearance],
+  );
 
-  const selectImageSet = useCallback((imageSetId: ImageSetId) => {
-    setSelection((current) => {
-      const nextSelection: AppearanceSelection = {
-        ...current,
-        themeMode: THEME_MODE_MANUAL,
-        imageSetId,
-      };
-      writeStoredValue(APPEARANCE_STORAGE_KEYS.theme, nextSelection.themeId);
-      writeStoredValue(APPEARANCE_STORAGE_KEYS.themeMode, THEME_MODE_MANUAL);
-      writeStoredValue(APPEARANCE_STORAGE_KEYS.imageSet, imageSetId);
-      return nextSelection;
-    });
-  }, []);
+  const selectImageSet = useCallback(
+    (_imageSetId: ImageSetId) => resetFixedAppearance(),
+    [resetFixedAppearance],
+  );
 
-  const selectFontSet = useCallback((fontSetId: FontSetId) => {
-    setSelection((current) => ({ ...current, fontSetId }));
-    writeStoredValue(APPEARANCE_STORAGE_KEYS.fontSet, fontSetId);
-  }, []);
+  const selectFontSet = useCallback(
+    (_fontSetId: FontSetId) => resetFixedAppearance(),
+    [resetFixedAppearance],
+  );
 
   return {
     selection,
