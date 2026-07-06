@@ -14,7 +14,7 @@ const HOME_ROUTE_PATH = '/';
 const DOWNLOADS_ROUTE_PATH = '/downloads/';
 const LOCALIZED_ROUTES = [HOME_ROUTE_PATH, DOWNLOADS_ROUTE_PATH];
 const STATIC_PUBLIC_PATHS = ['/privacy/', '/terms/'];
-const RTL_LOCALES = new Set(['ar', 'ur', 'fa', 'he']);
+const RTL_LOCALES = new Set(['ar', 'ur', 'fa', 'he', 'ps', 'sd', 'ks', 'dv', 'ckb', 'ug', 'yi']);
 
 const LOCALES = [
   'pt-BR',
@@ -156,6 +156,30 @@ const LOCALES = [
   'nap',
   'scn',
   'sco',
+  'ps',
+  'sd',
+  'ks',
+  'dv',
+  'ckb',
+  'ug',
+  'yi',
+  'bo',
+  'dz',
+  'ku',
+  'or',
+  'as',
+  'sa',
+  'mai',
+  'bho',
+  'doi',
+  'mni',
+  'kok',
+  'sat',
+  'lus',
+  'brx',
+  'raj',
+  'hne',
+  'awa',
 ];
 const SEO = {
   'pt-BR': {
@@ -855,6 +879,126 @@ const SEO = {
     description: "Install or play Brikaya for free, nae accoont and nae payment; progress bides on yer device and ye can play offline efter the first visit.",
     ogDescription: "Brikaya — block breaker arcade",
   },
+  'ps': {
+    title: "Brikaya — د بلاک ماتولو ارکېډ",
+    description: "Brikaya وړیا نصب یا ولوبوئ، بې حسابه او بې پیسو؛ پرمختګ ستاسو په وسیله کې پاتې کېږي او له لومړۍ لیدنې وروسته آفلاین لوبېدای شي.",
+    ogDescription: "Brikaya — د بلاک ماتولو ارکېډ",
+  },
+  'sd': {
+    title: "Brikaya — بلاڪ ٽوڙڻ واري آرڪيڊ",
+    description: "Brikaya مفت ۾ انسٽال ڪريو يا کيڏو، اڪائونٽ ۽ ادائيگي کانسواءِ؛ اڳڀرائي توهان جي ڊوائيس تي رهندي ۽ پهرين وزٽ کان پوءِ آف لائن کيڏي سگهجي ٿي.",
+    ogDescription: "Brikaya — بلاڪ ٽوڙڻ واري آرڪيڊ",
+  },
+  'ks': {
+    title: "Brikaya — بلاک ٹوٚڑُن آرکیڈ",
+    description: "Brikaya مفت انسٹال کٔرِو یا کھیلو، اکاؤنٹ بغیر تہ ادائیگی بغیر؛ پیشرفت تُہندس آلہ منز رہان چھ تہ گوڈنک وزٹ پتہ آف لائن کھیلِتھ ہیکیو.",
+    ogDescription: "Brikaya — بلاک ٹوٚڑُن آرکیڈ",
+  },
+  'dv': {
+    title: "Brikaya — ބްލޮކް ފައްތާލާ އާކޭޑް",
+    description: "Brikaya ހިލޭ އިންސްޓޯލް ކުރޭ ނުވަތަ ކުޅޭ، އެކައުންޓް ނެތި އަދި ފައިސާ ނެތި؛ ކުރިއެރުން ތިބާގެ ޑިވައިސްގައި ބާކީ ވެސް، ފުރަތަމަ ވިސިޓް ފަހުން އޮފްލައިން ކުޅެވޭ.",
+    ogDescription: "Brikaya — ބްލޮކް ފައްތާލާ އާކޭޑް",
+  },
+  'ckb': {
+    title: "Brikaya — یاریی شکاندنی بلۆک",
+    description: "Brikaya بەخۆڕایی دابمەزرێنە یان بیگێڕە، بێ هەژمار و بێ پارەدان؛ پێشکەوتن لەسەر ئامێرەکەت دەمێنێتەوە و دوای سەردانی یەکەم دەتوانیت ئۆفلاین بیگێڕیت.",
+    ogDescription: "Brikaya — یاریی شکاندنی بلۆک",
+  },
+  'ug': {
+    title: "Brikaya — توساق چېقىش ئويۇنى",
+    description: "Brikaya نى ھەقسىز ئورنىتىڭ ياكى ئويناڭ، ھېساباتسىز ۋە پۇل تۆلىمەي؛ ئىلگىرىلەش ئۈسكۈنىڭىزدە ساقلىنىدۇ، تۇنجى زىيارەتتىن كېيىن تورسىز ئوينىلىدۇ.",
+    ogDescription: "Brikaya — توساق چېقىش ئويۇنى",
+  },
+  'yi': {
+    title: "Brikaya — בלאָק־ברעכער אַרקייד",
+    description: "אינסטאַלירן אָדער שפּילן Brikaya בחינם, אָן חשבון און אָן צאָלונג; דער פֿאָרשריט בלײַבט אויף דיין מיטל און מע קען שפּילן אָפֿליין נאָך דער ערשטער באַזוך.",
+    ogDescription: "Brikaya — בלאָק־ברעכער אַרקייד",
+  },
+  'bo': {
+    title: "Brikaya — བཀག་རྡོ་གཏོར་བའི་རྩེད་མོ",
+    description: "Brikaya རིན་མེད་དུ་སྒྲིག་འཇུག་ཡང་ན་རྩེད། ཐོ་ཁོངས་མེད་དང་སྤྲོད་དགོས་མེད། ཡར་རྒྱས་ཁྱེད་ཀྱི་འཕྲུལ་ཆས་ནང་ཉར་ཚགས་བྱས་ཏེ་ཐེངས་དང་པོའི་ལྟ་སྤྱོད་རྗེས་དྲ་མེད་དུ་རྩེད་ཐུབ།",
+    ogDescription: "Brikaya — བཀག་རྡོ་གཏོར་བའི་རྩེད་མོ",
+  },
+  'dz': {
+    title: "Brikaya — བཀག་རྡོ་གཏོར་རྩེད",
+    description: "Brikaya རིན་མེད་དུ་སྒྲིག་འཇུག་ཡང་ན་རྩེད། རྩིས་ཁྲ་མེད་དང་སྤྲོད་དགོས་མེད། ཡར་རྒྱས་འཕྲུལ་ཆས་ནང་ཉར་ཚགས་འབད་དེ་ཐེངས་དང་པོའི་ཤུལ་ལས་དྲ་མེད་དུ་རྩེད་ཚུགས།",
+    ogDescription: "Brikaya — བཀག་རྡོ་གཏོར་རྩེད",
+  },
+  'ku': {
+    title: "Brikaya — arcade şikandina blokan",
+    description: "Brikaya belaş saz bike an bilîze, bê hesab û bê pere; pêşketin li ser amûra te dimîne û piştî serdana yekem dikarî offline bilîzî.",
+    ogDescription: "Brikaya — arcade şikandina blokan",
+  },
+  'or': {
+    title: "Brikaya — ବ୍ଲକ୍ ଭାଙ୍ଗିବା ଆର୍କେଡ୍",
+    description: "Brikaya କୁ ମାଗଣାରେ ସ୍ଥାପନ କରନ୍ତୁ କିମ୍ବା ଖେଳନ୍ତୁ, ଖାତା ଓ ଦେୟ ବିନା; ପ୍ରଗତି ଆପଣଙ୍କ ଡିଭାଇସରେ ରହେ ଏବଂ ପ୍ରଥମ ଭ୍ରମଣ ପରେ ଅଫଲାଇନ୍ ଖେଳିପାରିବେ।",
+    ogDescription: "Brikaya — ବ୍ଲକ୍ ଭାଙ୍ଗିବା ଆର୍କେଡ୍",
+  },
+  'as': {
+    title: "Brikaya — ব্লক ভঙা আর্কেড",
+    description: "Brikaya বিনামূলীয়াকৈ ইনষ্টল কৰক বা খেলক, একাউন্ট আৰু পেমেন্ট নোহোৱাকৈ; অগ্ৰগতি আপোনাৰ ডিভাইচত থাকে আৰু প্ৰথম ভ্ৰমণৰ পিছত অফলাইন খেলিব পাৰে।",
+    ogDescription: "Brikaya — ব্লক ভঙা আর্কেড",
+  },
+  'sa': {
+    title: "Brikaya — खण्डभञ्जन-क्रीडा",
+    description: "Brikaya निःशुल्कं स्थापयतु वा क्रीडतु, लेखां विना भुगतानं विना च; प्रगतिः भवतः उपकरणे तिष्ठति, प्रथमदर्शनानन्तरं च ऑफलाइन क्रीडितुं शक्यते।",
+    ogDescription: "Brikaya — खण्डभञ्जन-क्रीडा",
+  },
+  'mai': {
+    title: "Brikaya — ब्लॉक तोड़य वाला आर्केड",
+    description: "Brikaya मुफ्त मे इंस्टॉल करू वा खेलू, खाता आ भुगतान बिना; प्रगति अहाँक डिवाइस पर रहैत अछि आ पहिल बेर देखलाक बाद ऑफलाइन खेलल जा सकैत अछि।",
+    ogDescription: "Brikaya — ब्लॉक तोड़य वाला आर्केड",
+  },
+  'bho': {
+    title: "Brikaya — ब्लॉक तोड़े वाला आर्केड",
+    description: "Brikaya मुफ्त में इंस्टॉल करीं भा खेलीं, खाता आ भुगतान बिना; प्रगति रउरा डिवाइस पर रहेला आ पहिला भेंट के बाद ऑफलाइन खेलल जा सकेला।",
+    ogDescription: "Brikaya — ब्लॉक तोड़े वाला आर्केड",
+  },
+  'doi': {
+    title: "Brikaya — ब्लॉक तोड़ने आला आर्केड",
+    description: "Brikaya मुफ्त इंस्टॉल करो या खेलो, खाते ते भुगतान बिना; तरक्की तुंदे डिवाइस च रहंदी ऐ ते पहली भेंट बाद ऑफलाइन खेड़ी सकदे ओ।",
+    ogDescription: "Brikaya — ब्लॉक तोड़ने आला आर्केड",
+  },
+  'mni': {
+    title: "Brikaya — ব্লক ভাঙার আর্কেড",
+    description: "Brikaya ফ্রি ইনস্টল তৌবিয়ু নত্রগা শানবিয়ু, একাউন্ট অমসুং পেমেন্ট নত্তনা; প্রোগ্রেস অসি নাহাক্কী ডিভাইসতা লৈগনি অমসুং অহানবা ভিজিট মতুংদা অফলাইন শানবা ইয়াগনি।",
+    ogDescription: "Brikaya — ব্লক ভাঙার আর্কেড",
+  },
+  'kok': {
+    title: "Brikaya — ब्लॉक फोडपी आर्केड",
+    description: "Brikaya मोफत इंस्टॉल करात वा खेळात, खाते आनी पेमेंट शिवाय; प्रगती तुमच्या डिव्हाइसांत उरता आनी पयल्या भेटी उपरांत ऑफलाइन खेळूंक शकता।",
+    ogDescription: "Brikaya — ब्लॉक फोडपी आर्केड",
+  },
+  'sat': {
+    title: "Brikaya — ᱵᱞᱚᱠ ᱨᱟᱯᱩᱫ ᱟᱨᱠᱮᱰ",
+    description: "Brikaya ᱯᱷᱨᱤ ᱤᱱᱥᱴᱚᱞ ᱵᱟᱝᱠᱷᱟᱱ ᱠᱷᱮᱞ ᱢᱮ, ᱟᱠᱟᱣᱱᱴ ᱵᱟᱝ ᱟᱨ ᱯᱮᱢᱮᱱᱴ ᱵᱟᱝ; ᱯᱨᱚᱜᱨᱮᱥ ᱟᱢᱟᱜ ᱰᱤᱵᱷᱟᱭᱥ ᱨᱮ ᱛᱟᱦᱮᱱᱟ ᱟᱨ ᱯᱟᱦᱤᱞ ᱵᱷᱤᱡᱤᱴ ᱛᱟᱭᱚᱢ ᱚᱯᱷᱞᱟᱭᱱ ᱠᱷᱮᱞ ᱢᱮ।",
+    ogDescription: "Brikaya — ᱵᱞᱚᱠ ᱨᱟᱯᱩᱫ ᱟᱨᱠᱮᱰ",
+  },
+  'lus': {
+    title: "Brikaya — block tihchhiat arcade",
+    description: "Brikaya chu free-in install emaw khel rawh, account leh payment tel lovin; hmasawnna chu i device-ah a awm reng a, visit hmasa ber hnuah offline-in i khel thei.",
+    ogDescription: "Brikaya — block tihchhiat arcade",
+  },
+  'brx': {
+    title: "Brikaya — ब्लक खारनाय आर्केड",
+    description: "Brikaya मुफ्ताव इंस्टल खालाम एबा खेल, एकाउन्ट आरो पेमेंट गैयाबालानो; प्रगति नोंथांनि डिभाइसाव थायो आरो गिबि भेटनि उनाव ऑफलाइन खेलनो हायो।",
+    ogDescription: "Brikaya — ब्लक खारनाय आर्केड",
+  },
+  'raj': {
+    title: "Brikaya — ब्लॉक तोड़ण रो आर्केड",
+    description: "Brikaya मुफ्त में इंस्टॉल करो या खेलो, खातो अर भुगतान बिना; प्रगति थारे डिवाइस पर रहसी अर पहली मुलाकात पाछे ऑफलाइन खेल सकसी।",
+    ogDescription: "Brikaya — ब्लॉक तोड़ण रो आर्केड",
+  },
+  'hne': {
+    title: "Brikaya — ब्लॉक तोड़े वाला आर्केड",
+    description: "Brikaya मुफ्त म इंस्टॉल करव या खेलव, खाता अउ भुगतान बिना; प्रगति तोर डिवाइस म रहिथे अउ पहिली भेंट के बाद ऑफलाइन खेले जा सकथे।",
+    ogDescription: "Brikaya — ब्लॉक तोड़े वाला आर्केड",
+  },
+  'awa': {
+    title: "Brikaya — ब्लॉक तोड़े वाला आर्केड",
+    description: "Brikaya मुफ्त मा इंस्टॉल करा या खेला, खाता अउर भुगतान बिना; प्रगति तोहरे डिवाइस पर रहत हय अउ पहिले देखे के बाद ऑफलाइन खेला जा सकत हय।",
+    ogDescription: "Brikaya — ब्लॉक तोड़े वाला आर्केड",
+  },
 };
 const DOWNLOADS_SEO = {
   'pt-BR': {
@@ -1553,6 +1697,126 @@ const DOWNLOADS_SEO = {
     title: "Dounload Brikaya — free brouser gemme",
     description: "Install or play Brikaya for free, nae accoont and nae payment; progress bides on yer device and ye can play offline efter the first visit. nae accoont.",
     ogDescription: "Dounload Brikaya — nae accoont",
+  },
+  'ps': {
+    title: "Brikaya ډاونلوډ کړئ — وړیا براوزر لوبه",
+    description: "Brikaya وړیا نصب یا ولوبوئ، بې حسابه او بې پیسو؛ پرمختګ ستاسو په وسیله کې پاتې کېږي او له لومړۍ لیدنې وروسته آفلاین لوبېدای شي. بې حسابه.",
+    ogDescription: "Brikaya ډاونلوډ کړئ — بې حسابه",
+  },
+  'sd': {
+    title: "Brikaya ڊائونلوڊ ڪريو — مفت برائوزر راند",
+    description: "Brikaya مفت ۾ انسٽال ڪريو يا کيڏو، اڪائونٽ ۽ ادائيگي کانسواءِ؛ اڳڀرائي توهان جي ڊوائيس تي رهندي ۽ پهرين وزٽ کان پوءِ آف لائن کيڏي سگهجي ٿي. اڪائونٽ کانسواءِ.",
+    ogDescription: "Brikaya ڊائونلوڊ ڪريو — اڪائونٽ کانسواءِ",
+  },
+  'ks': {
+    title: "Brikaya ڈاؤنلوڈ کٔرِو — مفت براوزر کھیل",
+    description: "Brikaya مفت انسٹال کٔرِو یا کھیلو، اکاؤنٹ بغیر تہ ادائیگی بغیر؛ پیشرفت تُہندس آلہ منز رہان چھ تہ گوڈنک وزٹ پتہ آف لائن کھیلِتھ ہیکیو. اکاؤنٹ بغیر.",
+    ogDescription: "Brikaya ڈاؤنلوڈ کٔرِو — اکاؤنٹ بغیر",
+  },
+  'dv': {
+    title: "Brikaya ޑައުންލޯޑް ކުރޭ — ހިލޭ ބްރައުޒަރ ގޭމް",
+    description: "Brikaya ހިލޭ އިންސްޓޯލް ކުރޭ ނުވަތަ ކުޅޭ، އެކައުންޓް ނެތި އަދި ފައިސާ ނެތި؛ ކުރިއެރުން ތިބާގެ ޑިވައިސްގައި ބާކީ ވެސް، ފުރަތަމަ ވިސިޓް ފަހުން އޮފްލައިން ކުޅެވޭ. އެކައުންޓް ނެތި.",
+    ogDescription: "Brikaya ޑައުންލޯޑް ކުރޭ — އެކައުންޓް ނެތި",
+  },
+  'ckb': {
+    title: "Brikaya دابەزێنە — یاریی وێبگەڕی بەخۆڕایی",
+    description: "Brikaya بەخۆڕایی دابمەزرێنە یان بیگێڕە، بێ هەژمار و بێ پارەدان؛ پێشکەوتن لەسەر ئامێرەکەت دەمێنێتەوە و دوای سەردانی یەکەم دەتوانیت ئۆفلاین بیگێڕیت. بێ هەژمار.",
+    ogDescription: "Brikaya دابەزێنە — بێ هەژمار",
+  },
+  'ug': {
+    title: "Brikaya نى چۈشۈرۈڭ — ھەقسىز توركۆرگۈچ ئويۇنى",
+    description: "Brikaya نى ھەقسىز ئورنىتىڭ ياكى ئويناڭ، ھېساباتسىز ۋە پۇل تۆلىمەي؛ ئىلگىرىلەش ئۈسكۈنىڭىزدە ساقلىنىدۇ، تۇنجى زىيارەتتىن كېيىن تورسىز ئوينىلىدۇ. ھېساباتسىز.",
+    ogDescription: "Brikaya نى چۈشۈرۈڭ — ھېساباتسىز",
+  },
+  'yi': {
+    title: "אַראָפּלאָדן Brikaya — פרייע בלעטערער־שפּיל",
+    description: "אינסטאַלירן אָדער שפּילן Brikaya בחינם, אָן חשבון און אָן צאָלונג; דער פֿאָרשריט בלײַבט אויף דיין מיטל און מע קען שפּילן אָפֿליין נאָך דער ערשטער באַזוך. אָן חשבון.",
+    ogDescription: "אַראָפּלאָדן Brikaya — אָן חשבון",
+  },
+  'bo': {
+    title: "Brikaya ཕབ་ལེན — སྤྱོད་ཆས་ནང་གི་རིན་མེད་རྩེད་མོ",
+    description: "Brikaya རིན་མེད་དུ་སྒྲིག་འཇུག་ཡང་ན་རྩེད། ཐོ་ཁོངས་མེད་དང་སྤྲོད་དགོས་མེད། ཡར་རྒྱས་ཁྱེད་ཀྱི་འཕྲུལ་ཆས་ནང་ཉར་ཚགས་བྱས་ཏེ་ཐེངས་དང་པོའི་ལྟ་སྤྱོད་རྗེས་དྲ་མེད་དུ་རྩེད་ཐུབ། ཐོ་ཁོངས་མེད.",
+    ogDescription: "Brikaya ཕབ་ལེན — ཐོ་ཁོངས་མེད",
+  },
+  'dz': {
+    title: "Brikaya ཕབ་ལེན — རིན་མེད་བྲའུ་ཟར་རྩེདམོ",
+    description: "Brikaya རིན་མེད་དུ་སྒྲིག་འཇུག་ཡང་ན་རྩེད། རྩིས་ཁྲ་མེད་དང་སྤྲོད་དགོས་མེད། ཡར་རྒྱས་འཕྲུལ་ཆས་ནང་ཉར་ཚགས་འབད་དེ་ཐེངས་དང་པོའི་ཤུལ་ལས་དྲ་མེད་དུ་རྩེད་ཚུགས། རྩིས་ཁྲ་མེད.",
+    ogDescription: "Brikaya ཕབ་ལེན — རྩིས་ཁྲ་མེད",
+  },
+  'ku': {
+    title: "Brikaya daxîne — lîstika gerokê belaş",
+    description: "Brikaya belaş saz bike an bilîze, bê hesab û bê pere; pêşketin li ser amûra te dimîne û piştî serdana yekem dikarî offline bilîzî. bê hesab.",
+    ogDescription: "Brikaya daxîne — bê hesab",
+  },
+  'or': {
+    title: "Brikaya ଡାଉନଲୋଡ୍ କରନ୍ତୁ — ମାଗଣା ବ୍ରାଉଜର ଖେଳ",
+    description: "Brikaya କୁ ମାଗଣାରେ ସ୍ଥାପନ କରନ୍ତୁ କିମ୍ବା ଖେଳନ୍ତୁ, ଖାତା ଓ ଦେୟ ବିନା; ପ୍ରଗତି ଆପଣଙ୍କ ଡିଭାଇସରେ ରହେ ଏବଂ ପ୍ରଥମ ଭ୍ରମଣ ପରେ ଅଫଲାଇନ୍ ଖେଳିପାରିବେ। ଖାତା ବିନା.",
+    ogDescription: "Brikaya ଡାଉନଲୋଡ୍ କରନ୍ତୁ — ଖାତା ବିନା",
+  },
+  'as': {
+    title: "Brikaya ডাউনল’ড কৰক — বিনামূলীয়া ব্ৰাউজাৰ খেল",
+    description: "Brikaya বিনামূলীয়াকৈ ইনষ্টল কৰক বা খেলক, একাউন্ট আৰু পেমেন্ট নোহোৱাকৈ; অগ্ৰগতি আপোনাৰ ডিভাইচত থাকে আৰু প্ৰথম ভ্ৰমণৰ পিছত অফলাইন খেলিব পাৰে। একাউন্ট নোহোৱাকৈ.",
+    ogDescription: "Brikaya ডাউনল’ড কৰক — একাউন্ট নোহোৱাকৈ",
+  },
+  'sa': {
+    title: "Brikaya अवतारयतु — निःशुल्कं ब्राउज़र-क्रीडनम्",
+    description: "Brikaya निःशुल्कं स्थापयतु वा क्रीडतु, लेखां विना भुगतानं विना च; प्रगतिः भवतः उपकरणे तिष्ठति, प्रथमदर्शनानन्तरं च ऑफलाइन क्रीडितुं शक्यते। लेखां विना.",
+    ogDescription: "Brikaya अवतारयतु — लेखां विना",
+  },
+  'mai': {
+    title: "Brikaya डाउनलोड करू — मुफ्त ब्राउज़र खेल",
+    description: "Brikaya मुफ्त मे इंस्टॉल करू वा खेलू, खाता आ भुगतान बिना; प्रगति अहाँक डिवाइस पर रहैत अछि आ पहिल बेर देखलाक बाद ऑफलाइन खेलल जा सकैत अछि। खाता बिना.",
+    ogDescription: "Brikaya डाउनलोड करू — खाता बिना",
+  },
+  'bho': {
+    title: "Brikaya डाउनलोड करीं — मुफ्त ब्राउजर खेल",
+    description: "Brikaya मुफ्त में इंस्टॉल करीं भा खेलीं, खाता आ भुगतान बिना; प्रगति रउरा डिवाइस पर रहेला आ पहिला भेंट के बाद ऑफलाइन खेलल जा सकेला। खाता बिना.",
+    ogDescription: "Brikaya डाउनलोड करीं — खाता बिना",
+  },
+  'doi': {
+    title: "Brikaya डाउनलोड करो — मुफ्त ब्राउजर खेल",
+    description: "Brikaya मुफ्त इंस्टॉल करो या खेलो, खाते ते भुगतान बिना; तरक्की तुंदे डिवाइस च रहंदी ऐ ते पहली भेंट बाद ऑफलाइन खेड़ी सकदे ओ। खाते बिना.",
+    ogDescription: "Brikaya डाउनलोड करो — खाते बिना",
+  },
+  'mni': {
+    title: "Brikaya ডাউনলোড তৌ — ফ্রি ব্রাউজার গেম",
+    description: "Brikaya ফ্রি ইনস্টল তৌবিয়ু নত্রগা শানবিয়ু, একাউন্ট অমসুং পেমেন্ট নত্তনা; প্রোগ্রেস অসি নাহাক্কী ডিভাইসতা লৈগনি অমসুং অহানবা ভিজিট মতুংদা অফলাইন শানবা ইয়াগনি। একাউন্ট নত্তনা.",
+    ogDescription: "Brikaya ডাউনলোড তৌ — একাউন্ট নত্তনা",
+  },
+  'kok': {
+    title: "Brikaya डाउनलोड करात — मोफत ब्राउजर खेळ",
+    description: "Brikaya मोफत इंस्टॉल करात वा खेळात, खाते आनी पेमेंट शिवाय; प्रगती तुमच्या डिव्हाइसांत उरता आनी पयल्या भेटी उपरांत ऑफलाइन खेळूंक शकता। खाते शिवाय.",
+    ogDescription: "Brikaya डाउनलोड करात — खाते शिवाय",
+  },
+  'sat': {
+    title: "Brikaya ᱰᱟᱣᱱᱞᱳᱰ ᱢᱮ — ᱯᱷᱨᱤ ᱵᱽᱨᱟᱣᱡᱟᱨ ᱠᱷᱮᱞ",
+    description: "Brikaya ᱯᱷᱨᱤ ᱤᱱᱥᱴᱚᱞ ᱵᱟᱝᱠᱷᱟᱱ ᱠᱷᱮᱞ ᱢᱮ, ᱟᱠᱟᱣᱱᱴ ᱵᱟᱝ ᱟᱨ ᱯᱮᱢᱮᱱᱴ ᱵᱟᱝ; ᱯᱨᱚᱜᱨᱮᱥ ᱟᱢᱟᱜ ᱰᱤᱵᱷᱟᱭᱥ ᱨᱮ ᱛᱟᱦᱮᱱᱟ ᱟᱨ ᱯᱟᱦᱤᱞ ᱵᱷᱤᱡᱤᱴ ᱛᱟᱭᱚᱢ ᱚᱯᱷᱞᱟᱭᱱ ᱠᱷᱮᱞ ᱢᱮ। ᱟᱠᱟᱣᱱᱴ ᱵᱟᱝ.",
+    ogDescription: "Brikaya ᱰᱟᱣᱱᱞᱳᱰ ᱢᱮ — ᱟᱠᱟᱣᱱᱴ ᱵᱟᱝ",
+  },
+  'lus': {
+    title: "Brikaya download rawh — browser game free",
+    description: "Brikaya chu free-in install emaw khel rawh, account leh payment tel lovin; hmasawnna chu i device-ah a awm reng a, visit hmasa ber hnuah offline-in i khel thei. account tel lovin.",
+    ogDescription: "Brikaya download rawh — account tel lovin",
+  },
+  'brx': {
+    title: "Brikaya डाउनलोड खालाम — मुफ्त ब्राउजर खेल",
+    description: "Brikaya मुफ्ताव इंस्टल खालाम एबा खेल, एकाउन्ट आरो पेमेंट गैयाबालानो; प्रगति नोंथांनि डिभाइसाव थायो आरो गिबि भेटनि उनाव ऑफलाइन खेलनो हायो। एकाउन्ट गैयाबालानो.",
+    ogDescription: "Brikaya डाउनलोड खालाम — एकाउन्ट गैयाबालानो",
+  },
+  'raj': {
+    title: "Brikaya डाउनलोड करो — मुफ्त ब्राउजर खेल",
+    description: "Brikaya मुफ्त में इंस्टॉल करो या खेलो, खातो अर भुगतान बिना; प्रगति थारे डिवाइस पर रहसी अर पहली मुलाकात पाछे ऑफलाइन खेल सकसी। खातो बिना.",
+    ogDescription: "Brikaya डाउनलोड करो — खातो बिना",
+  },
+  'hne': {
+    title: "Brikaya डाउनलोड करव — मुफ्त ब्राउजर खेल",
+    description: "Brikaya मुफ्त म इंस्टॉल करव या खेलव, खाता अउ भुगतान बिना; प्रगति तोर डिवाइस म रहिथे अउ पहिली भेंट के बाद ऑफलाइन खेले जा सकथे। खाता बिना.",
+    ogDescription: "Brikaya डाउनलोड करव — खाता बिना",
+  },
+  'awa': {
+    title: "Brikaya डाउनलोड करा — मुफ्त ब्राउजर खेल",
+    description: "Brikaya मुफ्त मा इंस्टॉल करा या खेला, खाता अउर भुगतान बिना; प्रगति तोहरे डिवाइस पर रहत हय अउ पहिले देखे के बाद ऑफलाइन खेला जा सकत हय। खाता बिना.",
+    ogDescription: "Brikaya डाउनलोड करा — खाता बिना",
   },
 };
 function metadataFor(locale, routePath) {

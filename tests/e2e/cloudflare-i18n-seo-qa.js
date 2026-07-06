@@ -63,6 +63,11 @@ const TESTED_LOCALES = [
   { locale: "jv", path: "/jv/", title: "Brikaya — arkade mecah blok" },
   { locale: "haw", path: "/haw/", title: "Brikaya — pāʻani wāwahi pōhaku" },
   { locale: "scn", path: "/scn/", title: "Brikaya — arcade spacca blocchi" },
+  { locale: "ps", path: "/ps/", title: "Brikaya — د بلاک ماتولو ارکېډ" },
+  { locale: "dv", path: "/dv/", title: "Brikaya — ބްލޮކް ފައްތާލާ އާކޭޑް" },
+  { locale: "or", path: "/or/", title: "Brikaya — ବ୍ଲକ୍ ଭାଙ୍ଗିବା ଆର୍କେଡ୍" },
+  { locale: "sat", path: "/sat/", title: "Brikaya — ᱵᱞᱚᱠ ᱨᱟᱯᱩᱫ ᱟᱨᱠᱮᱰ" },
+  { locale: "awa", path: "/awa/", title: "Brikaya — ब्लॉक तोड़े वाला आर्केड" },
 ];
 const ALL_HREFLANG_LOCALES = [
   "pt-BR",
@@ -204,6 +209,30 @@ const ALL_HREFLANG_LOCALES = [
   "nap",
   "scn",
   "sco",
+  "ps",
+  "sd",
+  "ks",
+  "dv",
+  "ckb",
+  "ug",
+  "yi",
+  "bo",
+  "dz",
+  "ku",
+  "or",
+  "as",
+  "sa",
+  "mai",
+  "bho",
+  "doi",
+  "mni",
+  "kok",
+  "sat",
+  "lus",
+  "brx",
+  "raj",
+  "hne",
+  "awa",
 ];
 const TESTED_DOWNLOADS_LOCALES = [
   {
@@ -442,6 +471,31 @@ const TESTED_DOWNLOADS_LOCALES = [
     path: "/scn/downloads/",
     title: "Scàrrica Brikaya — jocu di browser gratis",
   },
+  {
+    locale: "ps",
+    path: "/ps/downloads/",
+    title: "Brikaya ډاونلوډ کړئ — وړیا براوزر لوبه",
+  },
+  {
+    locale: "dv",
+    path: "/dv/downloads/",
+    title: "Brikaya ޑައުންލޯޑް ކުރޭ — ހިލޭ ބްރައުޒަރ ގޭމް",
+  },
+  {
+    locale: "or",
+    path: "/or/downloads/",
+    title: "Brikaya ଡାଉନଲୋଡ୍ କରନ୍ତୁ — ମାଗଣା ବ୍ରାଉଜର ଖେଳ",
+  },
+  {
+    locale: "sat",
+    path: "/sat/downloads/",
+    title: "Brikaya ᱰᱟᱣᱱᱞᱳᱰ ᱢᱮ — ᱯᱷᱨᱤ ᱵᱽᱨᱟᱣᱡᱟᱨ ᱠᱷᱮᱞ",
+  },
+  {
+    locale: "awa",
+    path: "/awa/downloads/",
+    title: "Brikaya डाउनलोड करा — मुफ्त ब्राउजर खेल",
+  },
 ];
 const LANGUAGE_SELECT_SELECTOR = "#game-language-select";
 const MENU_BUTTON_SELECTOR = ".dashboard-menu-button";
@@ -454,7 +508,7 @@ const MENU_OPEN_ATTEMPTS = 3;
 const MENU_OPEN_RETRY_TIMEOUT_MS = 5000;
 const CHINESE_MENU_TEXT = "隐私";
 const ROOT_CANONICAL = "https://brikaya.com/";
-const RTL_LOCALES = new Set(["ar", "ur", "fa", "he"]);
+const RTL_LOCALES = new Set(["ar", "ur", "fa", "he", "ps", "sd", "ks", "dv", "ckb", "ug", "yi"]);
 const BROWSER_AUTO_LANGUAGE = "es-MX";
 const BROWSER_AUTO_LANGUAGES = ["es-MX", "en-US"];
 const BROWSER_AUTO_EXPECTED_LOCALE = "es-419";

@@ -45,7 +45,7 @@ const LOCATION_LOCALE_SOURCE = "location";
 const PATH_SEGMENT_SEPARATOR = "/";
 const EMPTY_STRING = "";
 const TEMPLATE_PATTERN = /\{\{(\w+)\}\}/g;
-const RTL_LOCALE_PREFIXES = ["ar", "fa", "he", "ur"] as const;
+const RTL_LOCALE_PREFIXES = ["ar", "fa", "he", "ur", "ps", "sd", "ks", "dv", "ckb", "ug", "yi"] as const;
 
 function isRtlLocale(locale: string): boolean {
   return RTL_LOCALE_PREFIXES.some((prefix) => locale.toLowerCase().startsWith(prefix));
@@ -197,6 +197,9 @@ const TIME_ZONE_LOCALE_MAP: readonly (readonly [string, AppLocale])[] = [
   ["Africa/Asmara", "ti"],
   ["America/Port-au-Prince", "ht"],
   ["Pacific/Honolulu", "haw"],
+  ["Asia/Kabul", "ps"],
+  ["Asia/Male", "dv"],
+  ["Asia/Thimphu", "dz"],
 ];
 const TIME_ZONE_LOCALE_PREFIX_MAP: readonly (readonly [string, AppLocale])[] = [
   ["America/Argentina/", "es-419"],
@@ -304,6 +307,7 @@ function normalizeLocale(value: string | null | undefined): AppLocale | null {
   if (normalizedValue.startsWith("ca")) return "ca";
   if (normalizedValue.startsWith("gl")) return "gl";
   if (normalizedValue.startsWith("oc")) return "oc";
+  if (normalizedValue.startsWith("brx")) return "brx";
   if (normalizedValue.startsWith("br")) return "br";
   if (normalizedValue.startsWith("mi")) return "mi";
   if (normalizedValue.startsWith("sm")) return "sm";
@@ -359,6 +363,29 @@ function normalizeLocale(value: string | null | undefined): AppLocale | null {
   if (normalizedValue.startsWith("scn")) return "scn";
   if (normalizedValue.startsWith("sco")) return "sco";
   if (normalizedValue.startsWith("sc")) return "sc";
+  if (normalizedValue.startsWith("ps")) return "ps";
+  if (normalizedValue.startsWith("sd")) return "sd";
+  if (normalizedValue.startsWith("ks")) return "ks";
+  if (normalizedValue.startsWith("dv")) return "dv";
+  if (normalizedValue.startsWith("ckb")) return "ckb";
+  if (normalizedValue.startsWith("ug")) return "ug";
+  if (normalizedValue.startsWith("yi")) return "yi";
+  if (normalizedValue.startsWith("bo")) return "bo";
+  if (normalizedValue.startsWith("dz")) return "dz";
+  if (normalizedValue.startsWith("ku")) return "ku";
+  if (normalizedValue.startsWith("or")) return "or";
+  if (normalizedValue.startsWith("sat")) return "sat";
+  if (normalizedValue.startsWith("sa")) return "sa";
+  if (normalizedValue.startsWith("as")) return "as";
+  if (normalizedValue.startsWith("mai")) return "mai";
+  if (normalizedValue.startsWith("bho")) return "bho";
+  if (normalizedValue.startsWith("doi")) return "doi";
+  if (normalizedValue.startsWith("mni")) return "mni";
+  if (normalizedValue.startsWith("kok")) return "kok";
+  if (normalizedValue.startsWith("lus")) return "lus";
+  if (normalizedValue.startsWith("raj")) return "raj";
+  if (normalizedValue.startsWith("hne")) return "hne";
+  if (normalizedValue.startsWith("awa")) return "awa";
 
   return null;
 }
