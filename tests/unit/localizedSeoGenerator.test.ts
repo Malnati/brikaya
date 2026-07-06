@@ -105,6 +105,30 @@ const LOCALIZED_LOCALES = [
   "fj",
   "mg",
   "so",
+  "yo",
+  "ig",
+  "ha",
+  "zu",
+  "xh",
+  "st",
+  "tn",
+  "ts",
+  "ss",
+  "ve",
+  "nso",
+  "rw",
+  "rn",
+  "ln",
+  "lg",
+  "ak",
+  "ee",
+  "tw",
+  "sn",
+  "ny",
+  "wo",
+  "ff",
+  "om",
+  "ti",
 ] as const;
 
 function readProjectFile(filePath: string): string {
@@ -166,5 +190,13 @@ describe('gerador SEO localizado', () => {
     expect(downloadsSeoBlock).toContain("Baixa Brikaya");
     expect(downloadsSeoBlock).toContain("Tikiake Brikaya");
     expect(downloadsSeoBlock).toContain("Soo dejiso Brikaya");
+    expect(downloadsSeoBlock).toContain("Gba Brikaya silẹ");
+    expect(downloadsSeoBlock).toContain("Budata Brikaya");
+    expect(downloadsSeoBlock).toContain("Zazzage Brikaya");
+    expect(downloadsSeoBlock).toContain("Landa i-Brikaya");
+    expect(downloadsSeoBlock).toContain("Khuphela i-Brikaya");
+    expect(downloadsSeoBlock).toContain("Khoasolla Brikaya");
+    expect(downloadsSeoBlock).toContain("Folosa Brikaya");
+    expect(downloadsSeoBlock).toContain("Dawuniloda Brikaya");
   });
 });

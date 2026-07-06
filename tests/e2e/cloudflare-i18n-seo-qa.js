@@ -53,6 +53,11 @@ const TESTED_LOCALES = [
   { locale: "ca", path: "/ca/", title: "Brikaya — arcade de trencar blocs" },
   { locale: "mi", path: "/mi/", title: "Brikaya — kēmu wāwāhi poraka" },
   { locale: "so", path: "/so/", title: "Brikaya — arcade jabinta baloogyada" },
+  { locale: "yo", path: "/yo/", title: "Brikaya — ere fifọ bulọọki" },
+  { locale: "ha", path: "/ha/", title: "Brikaya — wasan fasa tubali" },
+  { locale: "zu", path: "/zu/", title: "Brikaya — i-arcade yokuphula amabhulokhi" },
+  { locale: "rw", path: "/rw/", title: "Brikaya — umukino wo kumena ibice" },
+  { locale: "ti", path: "/ti/", title: "Brikaya — ጸወታ ምስባር ብሎክ" },
 ];
 const ALL_HREFLANG_LOCALES = [
   "pt-BR",
@@ -146,6 +151,30 @@ const ALL_HREFLANG_LOCALES = [
   "fj",
   "mg",
   "so",
+  "yo",
+  "ig",
+  "ha",
+  "zu",
+  "xh",
+  "st",
+  "tn",
+  "ts",
+  "ss",
+  "ve",
+  "nso",
+  "rw",
+  "rn",
+  "ln",
+  "lg",
+  "ak",
+  "ee",
+  "tw",
+  "sn",
+  "ny",
+  "wo",
+  "ff",
+  "om",
+  "ti",
 ];
 const TESTED_DOWNLOADS_LOCALES = [
   {
@@ -334,6 +363,31 @@ const TESTED_DOWNLOADS_LOCALES = [
   { locale: "ca", path: "/ca/downloads/", title: "Baixa Brikaya — joc gratuït de navegador" },
   { locale: "mi", path: "/mi/downloads/", title: "Tikiake Brikaya — kēmu pūtirotiro kore utu" },
   { locale: "so", path: "/so/downloads/", title: "Soo dejiso Brikaya — ciyaar biraawsar bilaash ah" },
+  {
+    locale: "yo",
+    path: "/yo/downloads/",
+    title: "Gba Brikaya silẹ — ere aṣàwákiri ọfẹ",
+  },
+  {
+    locale: "ha",
+    path: "/ha/downloads/",
+    title: "Zazzage Brikaya — wasan burauza kyauta",
+  },
+  {
+    locale: "zu",
+    path: "/zu/downloads/",
+    title: "Landa i-Brikaya — umdlalo wesiphequluli wamahhala",
+  },
+  {
+    locale: "rw",
+    path: "/rw/downloads/",
+    title: "Kuramo Brikaya — umukino wa mushakisha w'ubuntu",
+  },
+  {
+    locale: "ti",
+    path: "/ti/downloads/",
+    title: "Brikaya ኣውርድ — ናጻ ናይ browser ጸወታ",
+  },
 ];
 const LANGUAGE_SELECT_SELECTOR = "#game-language-select";
 const MENU_BUTTON_SELECTOR = ".dashboard-menu-button";

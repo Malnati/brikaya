@@ -108,6 +108,30 @@ const LOCALES = [
   'fj',
   'mg',
   'so',
+  'yo',
+  'ig',
+  'ha',
+  'zu',
+  'xh',
+  'st',
+  'tn',
+  'ts',
+  'ss',
+  've',
+  'nso',
+  'rw',
+  'rn',
+  'ln',
+  'lg',
+  'ak',
+  'ee',
+  'tw',
+  'sn',
+  'ny',
+  'wo',
+  'ff',
+  'om',
+  'ti',
 ];
 const SEO = {
   'pt-BR': {
@@ -567,6 +591,126 @@ const SEO = {
     description: "Ku rakib ama ciyaar Brikaya bilaash, xisaab la'aan iyo lacag la'aan; horumarku wuxuu ku harayaa qalabka, waxaana la ciyaari karaa offline ka dib booqashada koowaad.",
     ogDescription: "Brikaya — arcade jabinta baloogyada",
   },
+  'yo': {
+    title: "Brikaya — ere fifọ bulọọki",
+    description: "Fi Brikaya sori ẹrọ tabi ṣere ni ọfẹ, laisi akọọlẹ ati laisi isanwo; ilọsiwaju wa lori ẹrọ rẹ ati pe o le ṣere lai si ayelujara lẹhin ibẹwo akọkọ.",
+    ogDescription: "Brikaya — ere fifọ bulọọki",
+  },
+  'ig': {
+    title: "Brikaya — egwuregwu igbaji blọọkụ",
+    description: "Wụnye ma ọ bụ kpọọ Brikaya n'efu, enweghị akaụntụ na enweghị ịkwụ ụgwọ; ọganihu na-anọ na ngwaọrụ gị ma enwere ike igwu offline mgbe nleta mbụ gasịrị.",
+    ogDescription: "Brikaya — egwuregwu igbaji blọọkụ",
+  },
+  'ha': {
+    title: "Brikaya — wasan fasa tubali",
+    description: "Shigar ko buga Brikaya kyauta, ba tare da asusu ba kuma ba tare da biya ba; ci gaba yana zama a kan na'urarka kuma ana iya bugawa ba tare da intanet ba bayan ziyarar farko.",
+    ogDescription: "Brikaya — wasan fasa tubali",
+  },
+  'zu': {
+    title: "Brikaya — i-arcade yokuphula amabhulokhi",
+    description: "Faka noma udlale i-Brikaya mahhala, ngaphandle kwe-akhawunti futhi ngaphandle kwenkokhelo; inqubekela phambili ihlala kudivayisi futhi ungadlala ungaxhunyiwe ngemva kokuvakasha kokuqala.",
+    ogDescription: "Brikaya — i-arcade yokuphula amabhulokhi",
+  },
+  'xh': {
+    title: "Brikaya — i-arcade yokuqhekeza iibhloko",
+    description: "Faka okanye udlale i-Brikaya simahla, ngaphandle kweakhawunti kwaye ngaphandle kwentlawulo; inkqubela ihlala kwisixhobo kwaye ungadlala ngaphandle kwe-intanethi emva kotyelelo lokuqala.",
+    ogDescription: "Brikaya — i-arcade yokuqhekeza iibhloko",
+  },
+  'st': {
+    title: "Brikaya — papali ea ho pshatla diboloko",
+    description: "Kenya kapa bapala Brikaya mahala, ntle le akhaonto ebile ntle le tefo; tsoelo-pele e lula sesebedisweng mme o ka bapala ntle le inthanete kamora ketelo ya pele.",
+    ogDescription: "Brikaya — papali ea ho pshatla diboloko",
+  },
+  'tn': {
+    title: "Brikaya — motshameko wa go thuba diboloko",
+    description: "Tsenya kgotsa tshameka Brikaya mahala, ntle le akhaonto le ntle le tuelo; kgatelopele e sala mo sedirisiweng mme o ka tshameka offline morago ga ketelo ya ntlha.",
+    ogDescription: "Brikaya — motshameko wa go thuba diboloko",
+  },
+  'ts': {
+    title: "Brikaya — ntlangu wo tshova tibuloko",
+    description: "Nghenisa kumbe tlanga Brikaya mahala, handle ka akhawunti naswona handle ka ku hakela; nhluvuko wu sala eka xitirhisiwa naswona u nga tlanga offline endzhaku ka ku endza ko sungula.",
+    ogDescription: "Brikaya — ntlangu wo tshova tibuloko",
+  },
+  'ss': {
+    title: "Brikaya — umdlalo wekwephula emabhulokhi",
+    description: "Faka noma udlale Brikaya mahhala, ngaphandle kwe-akhawunti nangaphandle kwenkokhelo; inqubekela phambili ihlala kudivayisi futhi ungadlala ngaphandle kwe-inthanethi ngemva kokuvakasha kokuqala.",
+    ogDescription: "Brikaya — umdlalo wekwephula emabhulokhi",
+  },
+  've': {
+    title: "Brikaya — mutambo wa u pwasha zwibuloko",
+    description: "Longelani kana tambani Brikaya mahala, hu si na akhaunthu na hu si na mbadelo; mvelaphanda i sala kha tshishumiswa nahone ni nga tamba offline nga murahu ha u dalela lwa u thoma.",
+    ogDescription: "Brikaya — mutambo wa u pwasha zwibuloko",
+  },
+  'nso': {
+    title: "Brikaya — papadi ya go pšhatla diboloko",
+    description: "Tsenya goba bapala Brikaya mahala, ntle le akhaonto le ntle le tefo; tšwelopele e dula sedirišweng gomme o ka bapala offline ka morago ga ketelo ya mathomo.",
+    ogDescription: "Brikaya — papadi ya go pšhatla diboloko",
+  },
+  'rw': {
+    title: "Brikaya — umukino wo kumena ibice",
+    description: "Shyira Brikaya cyangwa uyikine ku buntu, nta konti kandi nta kwishyura; iterambere riguma ku gikoresho kandi ushobora gukina udafite interineti nyuma y'uruzinduko rwa mbere.",
+    ogDescription: "Brikaya — umukino wo kumena ibice",
+  },
+  'rn': {
+    title: "Brikaya — umukino wo kumena amabuye",
+    description: "Shiramwo canke ukine Brikaya ku buntu, ata konti kandi ata kuriha; iterambere riguma ku gikoresho kandi ushobora gukina utari kuri interineti inyuma y'ugusura kwa mbere.",
+    ogDescription: "Brikaya — umukino wo kumena amabuye",
+  },
+  'ln': {
+    title: "Brikaya — lisano ya kobuka bablok",
+    description: "Tyá to sambá Brikaya ofele, konto te mpe mbongo te; bokoli etikala na aparɛyi mpe okoki kosakana offline nsima ya botali ya liboso.",
+    ogDescription: "Brikaya — lisano ya kobuka bablok",
+  },
+  'lg': {
+    title: "Brikaya — omuzannyo gw'okumenya bulooka",
+    description: "Teekamu oba zannya Brikaya ku bwereere, awatali akawunti era awatali kusasula; enkulaakulana esigala ku kyuma era osobola okuzannya nga toli ku yintaneeti oluvannyuma lw'okukyalira okusooka.",
+    ogDescription: "Brikaya — omuzannyo gw'okumenya bulooka",
+  },
+  'ak': {
+    title: "Brikaya — blɔk bubuw agodie",
+    description: "Fa Brikaya gu wo mfiri so anaa di agoru kwa, konto biara nni ho na sika biara nni ho; nkɔsoɔ no tena wo mfiri so na wubetumi adi agoru offline wɔ nsrahwɛ a edi kan akyi.",
+    ogDescription: "Brikaya — blɔk bubuw agodie",
+  },
+  'ee': {
+    title: "Brikaya — blɔk gbã ƒe asixɔxɔ",
+    description: "De Brikaya ɖe mɔ̃ dzi alo nɔ asixɔxɔ me dzodzro, akɔntabubu manɔmee eye fe manɔmee; ŋgɔyiyi nɔa wò mɔ̃ dzi eye àte ŋu adi asixɔxɔ offline le gbãtsɔtsɔ megbe.",
+    ogDescription: "Brikaya — blɔk gbã ƒe asixɔxɔ",
+  },
+  'tw': {
+    title: "Brikaya — blɔk bubuw agodie",
+    description: "Fa Brikaya gu wo mfiri so anaa di agoru kwa, konto biara nni ho na sika biara nni ho; nkɔsoɔ no tena wo mfiri so na wubetumi adi agoru offline wɔ nsrahwɛ a edi kan akyi.",
+    ogDescription: "Brikaya — blɔk bubuw agodie",
+  },
+  'sn': {
+    title: "Brikaya — mutambo wekupwanya mabhuroko",
+    description: "Isa kana tamba Brikaya mahara, pasina account uye pasina kubhadhara; kufambira mberi kunoramba kuri pamudziyo uye unogona kutamba offline mushure mekushanya kwekutanga.",
+    ogDescription: "Brikaya — mutambo wekupwanya mabhuroko",
+  },
+  'ny': {
+    title: "Brikaya — masewera ophwanya mabuloko",
+    description: "Ikani kapena sewerani Brikaya kwaulere, popanda akaunti komanso popanda kulipira; kupita patsogolo kumakhala pa chipangizo ndipo mungasewere offline mutayendera koyamba.",
+    ogDescription: "Brikaya — masewera ophwanya mabuloko",
+  },
+  'wo': {
+    title: "Brikaya — poom bu toj blok",
+    description: "Samp walla fo Brikaya ci lu amul fay, amul kont te amul fay; jëm kanam dina des ci sa jumtukaay te mën nga fo offline ginnaaw seetaan bu njëkk.",
+    ogDescription: "Brikaya — poom bu toj blok",
+  },
+  'ff': {
+    title: "Brikaya — fijirde mbusude bolok",
+    description: "Aaf walla fij Brikaya e ɗuum yoɓetaake, alaa konte e alaa yoɓde; jokkondiral maa hokka e masiŋol maa tee aɗa waawi fijde offline caggal yillagol adan.",
+    ogDescription: "Brikaya — fijirde mbusude bolok",
+  },
+  'om': {
+    title: "Brikaya — tapha bilookii caccabsuu",
+    description: "Brikaya bilisaan fe'i ykn taphadhu, herrega malee fi kaffaltii malee; tarkaanfiin meeshaa kee irratti hafa, daawwannaa jalqabaa booda offline taphachuu dandeessa.",
+    ogDescription: "Brikaya — tapha bilookii caccabsuu",
+  },
+  'ti': {
+    title: "Brikaya — ጸወታ ምስባር ብሎክ",
+    description: "Brikaya ብናጻ ጫን ወይ ተጻወት፣ ብዘይ ሒሳብን ብዘይ ክፍሊትን፤ ምዕባለ ኣብ መሳርሒኻ ይቕመጥ እና ድሕሪ ቀዳማይ ምብጻሕ offline ክትጻወት ትኽእል።",
+    ogDescription: "Brikaya — ጸወታ ምስባር ብሎክ",
+  },
 };
 const DOWNLOADS_SEO = {
   'pt-BR': {
@@ -1025,6 +1169,126 @@ const DOWNLOADS_SEO = {
     title: "Soo dejiso Brikaya — ciyaar biraawsar bilaash ah",
     description: "Ku rakib ama ciyaar Brikaya bilaash, xisaab la'aan iyo lacag la'aan; horumarku wuxuu ku harayaa qalabka, waxaana la ciyaari karaa offline ka dib booqashada koowaad. xisaab la'aan.",
     ogDescription: "Soo dejiso Brikaya — xisaab la'aan",
+  },
+  'yo': {
+    title: "Gba Brikaya silẹ — ere aṣàwákiri ọfẹ",
+    description: "Fi Brikaya sori ẹrọ tabi ṣere ni ọfẹ, laisi akọọlẹ ati laisi isanwo; ilọsiwaju wa lori ẹrọ rẹ ati pe o le ṣere lai si ayelujara lẹhin ibẹwo akọkọ. laisi akọọlẹ.",
+    ogDescription: "Gba Brikaya silẹ — laisi akọọlẹ",
+  },
+  'ig': {
+    title: "Budata Brikaya — egwuregwu nchọgharị efu",
+    description: "Wụnye ma ọ bụ kpọọ Brikaya n'efu, enweghị akaụntụ na enweghị ịkwụ ụgwọ; ọganihu na-anọ na ngwaọrụ gị ma enwere ike igwu offline mgbe nleta mbụ gasịrị. enweghị akaụntụ.",
+    ogDescription: "Budata Brikaya — enweghị akaụntụ",
+  },
+  'ha': {
+    title: "Zazzage Brikaya — wasan burauza kyauta",
+    description: "Shigar ko buga Brikaya kyauta, ba tare da asusu ba kuma ba tare da biya ba; ci gaba yana zama a kan na'urarka kuma ana iya bugawa ba tare da intanet ba bayan ziyarar farko. ba tare da asusu ba.",
+    ogDescription: "Zazzage Brikaya — ba tare da asusu ba",
+  },
+  'zu': {
+    title: "Landa i-Brikaya — umdlalo wesiphequluli wamahhala",
+    description: "Faka noma udlale i-Brikaya mahhala, ngaphandle kwe-akhawunti futhi ngaphandle kwenkokhelo; inqubekela phambili ihlala kudivayisi futhi ungadlala ungaxhunyiwe ngemva kokuvakasha kokuqala. ngaphandle kwe-akhawunti.",
+    ogDescription: "Landa i-Brikaya — ngaphandle kwe-akhawunti",
+  },
+  'xh': {
+    title: "Khuphela i-Brikaya — umdlalo webhrawuza wasimahla",
+    description: "Faka okanye udlale i-Brikaya simahla, ngaphandle kweakhawunti kwaye ngaphandle kwentlawulo; inkqubela ihlala kwisixhobo kwaye ungadlala ngaphandle kwe-intanethi emva kotyelelo lokuqala. ngaphandle kweakhawunti.",
+    ogDescription: "Khuphela i-Brikaya — ngaphandle kweakhawunti",
+  },
+  'st': {
+    title: "Khoasolla Brikaya — papali ea sebatli ea mahala",
+    description: "Kenya kapa bapala Brikaya mahala, ntle le akhaonto ebile ntle le tefo; tsoelo-pele e lula sesebedisweng mme o ka bapala ntle le inthanete kamora ketelo ya pele. ntle le akhaonto.",
+    ogDescription: "Khoasolla Brikaya — ntle le akhaonto",
+  },
+  'tn': {
+    title: "Folosa Brikaya — motshameko wa sebatli wa mahala",
+    description: "Tsenya kgotsa tshameka Brikaya mahala, ntle le akhaonto le ntle le tuelo; kgatelopele e sala mo sedirisiweng mme o ka tshameka offline morago ga ketelo ya ntlha. ntle le akhaonto.",
+    ogDescription: "Folosa Brikaya — ntle le akhaonto",
+  },
+  'ts': {
+    title: "Dawuniloda Brikaya — ntlangu wa browser wa mahala",
+    description: "Nghenisa kumbe tlanga Brikaya mahala, handle ka akhawunti naswona handle ka ku hakela; nhluvuko wu sala eka xitirhisiwa naswona u nga tlanga offline endzhaku ka ku endza ko sungula. handle ka akhawunti.",
+    ogDescription: "Dawuniloda Brikaya — handle ka akhawunti",
+  },
+  'ss': {
+    title: "Landa Brikaya — umdlalo wesiphequluli wamahhala",
+    description: "Faka noma udlale Brikaya mahhala, ngaphandle kwe-akhawunti nangaphandle kwenkokhelo; inqubekela phambili ihlala kudivayisi futhi ungadlala ngaphandle kwe-inthanethi ngemva kokuvakasha kokuqala. ngaphandle kwe-akhawunti.",
+    ogDescription: "Landa Brikaya — ngaphandle kwe-akhawunti",
+  },
+  've': {
+    title: "Dzhia Brikaya — mutambo wa browser wa mahala",
+    description: "Longelani kana tambani Brikaya mahala, hu si na akhaunthu na hu si na mbadelo; mvelaphanda i sala kha tshishumiswa nahone ni nga tamba offline nga murahu ha u dalela lwa u thoma. hu si na akhaunthu.",
+    ogDescription: "Dzhia Brikaya — hu si na akhaunthu",
+  },
+  'nso': {
+    title: "Laolla Brikaya — papadi ya sebatli ya mahala",
+    description: "Tsenya goba bapala Brikaya mahala, ntle le akhaonto le ntle le tefo; tšwelopele e dula sedirišweng gomme o ka bapala offline ka morago ga ketelo ya mathomo. ntle le akhaonto.",
+    ogDescription: "Laolla Brikaya — ntle le akhaonto",
+  },
+  'rw': {
+    title: "Kuramo Brikaya — umukino wa mushakisha w'ubuntu",
+    description: "Shyira Brikaya cyangwa uyikine ku buntu, nta konti kandi nta kwishyura; iterambere riguma ku gikoresho kandi ushobora gukina udafite interineti nyuma y'uruzinduko rwa mbere. nta konti.",
+    ogDescription: "Kuramo Brikaya — nta konti",
+  },
+  'rn': {
+    title: "Manura Brikaya — urukino rwa mucukumbuzi ku buntu",
+    description: "Shiramwo canke ukine Brikaya ku buntu, ata konti kandi ata kuriha; iterambere riguma ku gikoresho kandi ushobora gukina utari kuri interineti inyuma y'ugusura kwa mbere. ata konti.",
+    ogDescription: "Manura Brikaya — ata konti",
+  },
+  'ln': {
+    title: "Zwa Brikaya — lisano ya navigateur ya ofele",
+    description: "Tyá to sambá Brikaya ofele, konto te mpe mbongo te; bokoli etikala na aparɛyi mpe okoki kosakana offline nsima ya botali ya liboso. konto te.",
+    ogDescription: "Zwa Brikaya — konto te",
+  },
+  'lg': {
+    title: "Wanula Brikaya — omuzannyo gwa browser ogw'obwereere",
+    description: "Teekamu oba zannya Brikaya ku bwereere, awatali akawunti era awatali kusasula; enkulaakulana esigala ku kyuma era osobola okuzannya nga toli ku yintaneeti oluvannyuma lw'okukyalira okusooka. awatali akawunti.",
+    ogDescription: "Wanula Brikaya — awatali akawunti",
+  },
+  'ak': {
+    title: "Twe Brikaya — browser agodie a ɛyɛ kwa",
+    description: "Fa Brikaya gu wo mfiri so anaa di agoru kwa, konto biara nni ho na sika biara nni ho; nkɔsoɔ no tena wo mfiri so na wubetumi adi agoru offline wɔ nsrahwɛ a edi kan akyi. konto biara nni ho.",
+    ogDescription: "Twe Brikaya — konto biara nni ho",
+  },
+  'ee': {
+    title: "Ðe Brikaya — browser ƒe asixɔxɔ dzodzro",
+    description: "De Brikaya ɖe mɔ̃ dzi alo nɔ asixɔxɔ me dzodzro, akɔntabubu manɔmee eye fe manɔmee; ŋgɔyiyi nɔa wò mɔ̃ dzi eye àte ŋu adi asixɔxɔ offline le gbãtsɔtsɔ megbe. akɔntabubu manɔmee.",
+    ogDescription: "Ðe Brikaya — akɔntabubu manɔmee",
+  },
+  'tw': {
+    title: "Twe Brikaya — browser agodie a ɛyɛ kwa",
+    description: "Fa Brikaya gu wo mfiri so anaa di agoru kwa, konto biara nni ho na sika biara nni ho; nkɔsoɔ no tena wo mfiri so na wubetumi adi agoru offline wɔ nsrahwɛ a edi kan akyi. konto biara nni ho.",
+    ogDescription: "Twe Brikaya — konto biara nni ho",
+  },
+  'sn': {
+    title: "Dhawunirodha Brikaya — mutambo webhurawuza wemahara",
+    description: "Isa kana tamba Brikaya mahara, pasina account uye pasina kubhadhara; kufambira mberi kunoramba kuri pamudziyo uye unogona kutamba offline mushure mekushanya kwekutanga. pasina account.",
+    ogDescription: "Dhawunirodha Brikaya — pasina account",
+  },
+  'ny': {
+    title: "Tsitsani Brikaya — masewera a browser aulere",
+    description: "Ikani kapena sewerani Brikaya kwaulere, popanda akaunti komanso popanda kulipira; kupita patsogolo kumakhala pa chipangizo ndipo mungasewere offline mutayendera koyamba. popanda akaunti.",
+    ogDescription: "Tsitsani Brikaya — popanda akaunti",
+  },
+  'wo': {
+    title: "Yebbi Brikaya — poom navigateur bu amul fay",
+    description: "Samp walla fo Brikaya ci lu amul fay, amul kont te amul fay; jëm kanam dina des ci sa jumtukaay te mën nga fo offline ginnaaw seetaan bu njëkk. amul kont.",
+    ogDescription: "Yebbi Brikaya — amul kont",
+  },
+  'ff': {
+    title: "Aawto Brikaya — fijirde browser nde yoɓetaake",
+    description: "Aaf walla fij Brikaya e ɗuum yoɓetaake, alaa konte e alaa yoɓde; jokkondiral maa hokka e masiŋol maa tee aɗa waawi fijde offline caggal yillagol adan. alaa konte.",
+    ogDescription: "Aawto Brikaya — alaa konte",
+  },
+  'om': {
+    title: "Brikaya buusi — tapha browser bilisaa",
+    description: "Brikaya bilisaan fe'i ykn taphadhu, herrega malee fi kaffaltii malee; tarkaanfiin meeshaa kee irratti hafa, daawwannaa jalqabaa booda offline taphachuu dandeessa. herrega malee.",
+    ogDescription: "Brikaya buusi — herrega malee",
+  },
+  'ti': {
+    title: "Brikaya ኣውርድ — ናጻ ናይ browser ጸወታ",
+    description: "Brikaya ብናጻ ጫን ወይ ተጻወት፣ ብዘይ ሒሳብን ብዘይ ክፍሊትን፤ ምዕባለ ኣብ መሳርሒኻ ይቕመጥ እና ድሕሪ ቀዳማይ ምብጻሕ offline ክትጻወት ትኽእል። ብዘይ ሒሳብ.",
+    ogDescription: "Brikaya ኣውርድ — ብዘይ ሒሳብ",
   },
 };
 function metadataFor(locale, routePath) {
