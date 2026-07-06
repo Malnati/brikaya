@@ -442,7 +442,7 @@ describe("Bricks laser fan helpers", () => {
     expect(onBrickDestroyed).toHaveBeenCalledTimes(1);
   });
 
-  it("usa a animação de desaparecimento/reaparecimento após a evasão", async () => {
+  it("mantém bloco desviante visualmente estável após a evasão", async () => {
     const bricks = new Bricks(
       TEST_DIMENSIONS,
       undefined,
@@ -453,20 +453,15 @@ describe("Bricks laser fan helpers", () => {
     );
     const ball = createBall();
     const ctx = createAnimatedCanvasContext();
-    const dateSpy = jest.spyOn(Date, "now").mockReturnValue(1000);
 
-    try {
-      await bricks.collide(ball);
-      bricks.draw(ctx);
-      dateSpy.mockReturnValue(1400);
-      bricks.draw(ctx);
-    } finally {
-      dateSpy.mockRestore();
-    }
+    await bricks.collide(ball);
+    bricks.draw(ctx);
 
-    expect(ctx.save).toHaveBeenCalled();
-    expect(ctx.scale).toHaveBeenCalled();
-    expect(ctx.restore).toHaveBeenCalled();
+    expect(ctx.drawImage).toHaveBeenCalled();
+    expect(ctx.save).not.toHaveBeenCalled();
+    expect(ctx.scale).not.toHaveBeenCalled();
+    expect(ctx.restore).not.toHaveBeenCalled();
+    expect(ctx.globalAlpha).toBe(1);
   });
 
   it("desenha fallback sólido quando asset do bloco não está disponível", () => {

@@ -35,11 +35,6 @@ const METAL_BRICK_DENTED_TWO_HITS = 1;
 const METAL_BRICK_MIN_COUNT = 0;
 const METAL_BRICK_MAX_COUNT = 3;
 const EVASIVE_BRICK_COUNT = 3;
-const EVASIVE_BRICK_ANIMATION_MS = 520;
-const EVASIVE_BRICK_REAPPEAR_PROGRESS = 0.5;
-const EVASIVE_BRICK_MIN_SCALE = 0.08;
-const EVASIVE_BRICK_FULL_VISIBILITY = 1;
-const CENTER_DIVISOR = 2;
 const RADIAL_BRICK_FALLBACK_COLORS = [
   "#ff5d73",
   "#45d7ff",
@@ -72,7 +67,6 @@ interface Brick {
   hitsRemaining: number;
   isTouching: boolean;
   hasEvaded: boolean;
-  evasionStartedAt: number;
 }
 
 export interface DestroyedBrickSnapshot {
@@ -120,7 +114,6 @@ export class Bricks {
           hitsRemaining: BASIC_BRICK_HITS,
           isTouching: false,
           hasEvaded: false,
-          evasionStartedAt: 0,
         };
       }
     }
@@ -194,7 +187,6 @@ export class Bricks {
         hitsRemaining: BASIC_BRICK_HITS,
         isTouching: false,
         hasEvaded: false,
-        evasionStartedAt: 0,
       });
     }
     this.rows += 1;
@@ -437,7 +429,6 @@ export class Bricks {
       brick.status = BRICK_DESTROYED;
       brick.hitsRemaining = BRICK_DESTROYED;
       brick.isTouching = false;
-      brick.evasionStartedAt = 0;
       destroyed.push(snapshot);
     }
 
@@ -455,7 +446,6 @@ export class Bricks {
         brick.status = BRICK_DESTROYED;
         brick.hitsRemaining = BRICK_DESTROYED;
         brick.isTouching = false;
-        brick.evasionStartedAt = 0;
         destroyed.push(snapshot);
       }
     }
@@ -539,39 +529,8 @@ export class Bricks {
       this.resolveAssetPath(brickAssetRole),
     );
     const segment = this.getRadialBrickSegment(col, row);
-    if (!this.isBrickEvasionAnimating(brick)) {
-      this.drawBrickImage(ctx, brick, brickImage, brickX, brickY, segment);
-      return;
-    }
 
-    const visibility = this.getBrickEvasionVisibility(brick);
-    if (segment) {
-      ctx.save();
-      ctx.globalAlpha = visibility;
-      this.drawBrickImage(ctx, brick, brickImage, brickX, brickY, segment);
-      ctx.restore();
-      return;
-    }
-
-    const scale =
-      EVASIVE_BRICK_MIN_SCALE +
-      (EVASIVE_BRICK_FULL_VISIBILITY - EVASIVE_BRICK_MIN_SCALE) * visibility;
-    const centerX = brickX + this.dimensions.brickWidth / CENTER_DIVISOR;
-    const centerY = brickY + this.dimensions.brickHeight / CENTER_DIVISOR;
-
-    ctx.save();
-    ctx.globalAlpha = visibility;
-    ctx.translate(centerX, centerY);
-    ctx.scale(scale, scale);
-    this.drawBrickImage(
-      ctx,
-      brick,
-      brickImage,
-      -this.dimensions.brickWidth / CENTER_DIVISOR,
-      -this.dimensions.brickHeight / CENTER_DIVISOR,
-      segment,
-    );
-    ctx.restore();
+    this.drawBrickImage(ctx, brick, brickImage, brickX, brickY, segment);
   }
 
   private drawBrickImage(
@@ -677,34 +636,6 @@ export class Bricks {
     return RADIAL_BRICK_FALLBACK_COLORS[brick.colorIndex] ?? RADIAL_BRICK_FALLBACK_COLORS[FIRST_INDEX];
   }
 
-  private isBrickEvasionAnimating(brick: Brick): boolean {
-    return (
-      brick.evasionStartedAt > 0 &&
-      Date.now() - brick.evasionStartedAt <= EVASIVE_BRICK_ANIMATION_MS
-    );
-  }
-
-  private getBrickEvasionVisibility(brick: Brick): number {
-    const progress = Math.min(
-      EVASIVE_BRICK_FULL_VISIBILITY,
-      Math.max(
-        0,
-        (Date.now() - brick.evasionStartedAt) / EVASIVE_BRICK_ANIMATION_MS,
-      ),
-    );
-    if (progress <= EVASIVE_BRICK_REAPPEAR_PROGRESS) {
-      return (
-        EVASIVE_BRICK_FULL_VISIBILITY -
-        progress / EVASIVE_BRICK_REAPPEAR_PROGRESS
-      );
-    }
-
-    return (
-      (progress - EVASIVE_BRICK_REAPPEAR_PROGRESS) /
-      EVASIVE_BRICK_REAPPEAR_PROGRESS
-    );
-  }
-
   private assignRandomMetalBricks() {
     const activeBricks = this.getActiveBrickSnapshots();
     const reservedEvasiveSlots =
@@ -745,7 +676,6 @@ export class Bricks {
       brick.kind = BRICK_KIND_EVASIVE;
       brick.hitsRemaining = BASIC_BRICK_HITS;
       brick.hasEvaded = false;
-      brick.evasionStartedAt = 0;
     }
   }
 
@@ -782,7 +712,6 @@ export class Bricks {
   private hitBrick(brick: Brick): boolean {
     if (brick.kind === BRICK_KIND_EVASIVE && !brick.hasEvaded) {
       brick.hasEvaded = true;
-      brick.evasionStartedAt = Date.now();
       return false;
     }
 

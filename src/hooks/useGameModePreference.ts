@@ -2,33 +2,25 @@
 import { useCallback, useState } from "react";
 
 import {
+  GAME_MODE_BALL_TURRET,
   GAME_MODE_STORAGE_KEY,
-  resolveGameMode,
   type GameMode,
 } from "../constants/gameMode";
 
-function readStoredGameMode(): GameMode {
+function writeForcedGameMode(): void {
   try {
-    return resolveGameMode(window.localStorage.getItem(GAME_MODE_STORAGE_KEY));
-  } catch {
-    return resolveGameMode(null);
-  }
-}
-
-function writeStoredGameMode(gameMode: GameMode): void {
-  try {
-    window.localStorage.setItem(GAME_MODE_STORAGE_KEY, gameMode);
+    window.localStorage.setItem(GAME_MODE_STORAGE_KEY, GAME_MODE_BALL_TURRET);
   } catch {
     return;
   }
 }
 
 export function useGameModePreference() {
-  const [gameMode, setGameMode] = useState<GameMode>(readStoredGameMode);
+  const [gameMode, setGameMode] = useState<GameMode>(GAME_MODE_BALL_TURRET);
 
-  const selectGameMode = useCallback((nextGameMode: GameMode) => {
-    setGameMode(nextGameMode);
-    writeStoredGameMode(nextGameMode);
+  const selectGameMode = useCallback(() => {
+    setGameMode(GAME_MODE_BALL_TURRET);
+    writeForcedGameMode();
   }, []);
 
   return { gameMode, selectGameMode };
