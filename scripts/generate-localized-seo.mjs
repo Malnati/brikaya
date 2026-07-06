@@ -50,6 +50,16 @@ const LOCALES = [
   'he',
   'ta',
   'te',
+  'mr',
+  'gu',
+  'kn',
+  'ml',
+  'pa',
+  'el',
+  'sv',
+  'da',
+  'no',
+  'fi',
 ];
 const SEO = {
   'pt-BR': {
@@ -213,6 +223,56 @@ const SEO = {
     title: 'Brikaya — கட்டங்களை உடைக்கும் அர்கேட்',
     description: 'உங்கள் உலாவியில் இலவச கட்டம் உடைக்கும் அர்கேட் Brikaya விளையாடுங்கள்; முன்னேற்றம் சாதனத்தில் சேமிக்கப்படும், முதல் வருகைக்குப் பிறகு ஆஃப்லைனிலும் விளையாடலாம்.',
     ogDescription: 'கட்டங்களை உடைக்கவும், நிலைகளை முன்னேற்றவும், சாதனத்தில் முன்னேற்றத்துடன் உலாவியில் விளையாடவும்.',
+  },
+  'mr': {
+    title: "Brikaya — ब्लॉक ब्रेकर आर्केड",
+    description: "ब्राउझरमध्ये Brikaya खेळा: मोफत ब्लॉक ब्रेकर आर्केड, प्रगती तुमच्या डिव्हाइसवर जतन होते आणि पहिल्या भेटीनंतर ऑफलाइन खेळता येते.",
+    ogDescription: "ब्लॉक फोडा, पातळ्या पुढे न्या आणि प्रगती डिव्हाइसवर ठेवून ब्राउझरमध्ये खेळा.",
+  },
+  'gu': {
+    title: "Brikaya — બ્લોક બ્રેકર આર્કેડ",
+    description: "બ્રાઉઝરમાં Brikaya રમો: મફત બ્લોક બ્રેકર આર્કેડ, પ્રગતિ તમારા ઉપકરણમાં સાચવાય છે અને પ્રથમ મુલાકાત પછી ઑફલાઇન રમાય છે.",
+    ogDescription: "બ્લોક તોડો, સ્તર આગળ વધારો અને ઉપકરણમાં સાચવાયેલી પ્રગતિ સાથે બ્રાઉઝરમાં રમો.",
+  },
+  'kn': {
+    title: "Brikaya — ಬ್ಲಾಕ್ ಬ್ರೇಕರ್ ಆರ್ಕೇಡ್",
+    description: "ಬ್ರೌಸರ್‌ನಲ್ಲಿ Brikaya ಆಡಿ: ಉಚಿತ ಬ್ಲಾಕ್ ಬ್ರೇಕರ್ ಆರ್ಕೇಡ್, ಪ್ರಗತಿ ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಉಳಿಯುತ್ತದೆ ಮತ್ತು ಮೊದಲ ಭೇಟಿ ನಂತರ ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿ ಆಡಬಹುದು.",
+    ogDescription: "ಬ್ಲಾಕ್‌ಗಳನ್ನು ಒಡೆಯಿರಿ, ಹಂತಗಳನ್ನು ಮುಂದಕ್ಕೆ ತೆಗೆದುಕೊಂಡು ಸಾಧನದಲ್ಲಿ ಉಳಿದ ಪ್ರಗತಿಯೊಂದಿಗೆ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಆಡಿ.",
+  },
+  'ml': {
+    title: "Brikaya — ബ്ലോക്ക് ബ്രേക്കർ ആർക്കേഡ്",
+    description: "ബ്രൗസറിൽ Brikaya കളിക്കൂ: സൗജന്യ ബ്ലോക്ക് ബ്രേക്കർ ആർക്കേഡ്, പുരോഗതി നിങ്ങളുടെ ഉപകരണത്തിൽ സൂക്ഷിക്കും; ആദ്യ സന്ദർശനത്തിന് ശേഷം ഓഫ്‌ലൈൻ കളിക്കാം.",
+    ogDescription: "ബ്ലോക്കുകൾ തകർക്കുക, നിലകൾ മുന്നോട്ട് കൊണ്ടുപോകുക, ഉപകരണത്തിൽ സൂക്ഷിച്ച പുരോഗതിയോടെ ബ്രൗസറിൽ കളിക്കുക.",
+  },
+  'pa': {
+    title: "Brikaya — ਬਲਾਕ ਬ੍ਰੇਕਰ ਆਰਕੇਡ",
+    description: "ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ Brikaya ਖੇਡੋ: ਮੁਫ਼ਤ ਬਲਾਕ ਬ੍ਰੇਕਰ ਆਰਕੇਡ, ਤਰੱਕੀ ਤੁਹਾਡੇ ਡਿਵਾਈਸ ਵਿੱਚ ਰਹਿੰਦੀ ਹੈ ਅਤੇ ਪਹਿਲੀ ਵਾਰ ਖੋਲ੍ਹਣ ਤੋਂ ਬਾਅਦ ਆਫਲਾਈਨ ਖੇਡ ਸਕਦੇ ਹੋ।",
+    ogDescription: "ਬਲਾਕ ਤੋੜੋ, ਲੈਵਲ ਅੱਗੇ ਵਧਾਓ ਅਤੇ ਡਿਵਾਈਸ ਵਿੱਚ ਸੁਰੱਖਿਅਤ ਤਰੱਕੀ ਨਾਲ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਖੇਡੋ।",
+  },
+  'el': {
+    title: "Brikaya — arcade σπασίματος μπλοκ",
+    description: "Παίξτε Brikaya στο πρόγραμμα περιήγησης: δωρεάν arcade σπασίματος μπλοκ, με πρόοδο αποθηκευμένη στη συσκευή και παιχνίδι εκτός σύνδεσης μετά την πρώτη επίσκεψη.",
+    ogDescription: "Σπάστε μπλοκ, προχωρήστε επίπεδα και παίξτε στο πρόγραμμα περιήγησης με πρόοδο στη συσκευή.",
+  },
+  'sv': {
+    title: "Brikaya — blockbrytararkad",
+    description: "Spela Brikaya i webbläsaren: ett gratis blockbrytarspel med framsteg sparade på enheten och offlinespel efter första besöket.",
+    ogDescription: "Bryt block, gå vidare i nivåer och spela i webbläsaren med framsteg på enheten.",
+  },
+  'da': {
+    title: "Brikaya — blokbryder-arkade",
+    description: "Spil Brikaya i browseren: et gratis blokbryder-arkadespil med fremskridt gemt på din enhed og offline spil efter første besøg.",
+    ogDescription: "Knus blokke, gå videre gennem baner og spil i browseren med fremskridt på enheden.",
+  },
+  'no': {
+    title: "Brikaya — blokkbrekker-arkade",
+    description: "Spill Brikaya i nettleseren: et gratis blokkbrekker-arkadespill med fremdrift lagret på enheten og offline spill etter første besøk.",
+    ogDescription: "Knus blokker, gå videre i nivåer og spill i nettleseren med fremdrift på enheten.",
+  },
+  'fi': {
+    title: "Brikaya — palikanmurtaja-arcade",
+    description: "Pelaa Brikayaa selaimessa: ilmainen palikanmurtaja-arcade, jossa edistyminen tallentuu laitteellesi ja peli toimii offline-tilassa ensimmäisen käynnin jälkeen.",
+    ogDescription: "Riko palikoita, etene tasoilla ja pelaa selaimessa laitteelle tallennetulla edistymisellä.",
   },
   te: {
     title: 'Brikaya — బ్లాక్ బ్రేకర్ ఆర్కేడ్',
@@ -382,6 +442,56 @@ const DOWNLOADS_SEO = {
     title: 'Brikaya பதிவிறக்கவும் — இலவச உலாவி விளையாட்டு',
     description: 'கணக்கு இல்லாமல், கட்டணம் இல்லாமல் Brikaya-வை இலவசமாக நிறுவவும் அல்லது விளையாடவும்; முன்னேற்றம் சாதனத்தில் சேமிக்கப்படும், முதல் வருகைக்குப் பிறகு ஆஃப்லைனில் விளையாடலாம்.',
     ogDescription: 'Brikaya-வை உலாவியில் இலவசமாக விளையாடுங்கள், சாதனத்தில் நிறுவி கணக்கு இல்லாமல் தொடருங்கள்.',
+  },
+  'mr': {
+    title: "Brikaya डाउनलोड करा — मोफत ब्राउझर गेम",
+    description: "खाते नसताना, पैसे न देता Brikaya मोफत इन्स्टॉल करा किंवा खेळा; प्रगती डिव्हाइसवर राहते आणि पहिल्या भेटीनंतर ऑफलाइन खेळता येते.",
+    ogDescription: "खाते नसताना, पैसे न देता Brikaya मोफत इन्स्टॉल करा किंवा खेळा; प्रगती डिव्हाइसवर राहते आणि पहिल्या भेटीनंतर ऑफलाइन खेळता येते.",
+  },
+  'gu': {
+    title: "Brikaya ડાઉનલોડ કરો — મફત બ્રાઉઝર ગેમ",
+    description: "ખાતા વગર, ચુકવણી વગર Brikaya મફતમાં ઇન્સ્ટોલ કરો અથવા રમો; પ્રગતિ ઉપકરણમાં રહે છે અને પ્રથમ મુલાકાત પછી ઑફલાઇન રમાય છે.",
+    ogDescription: "ખાતા વગર, ચુકવણી વગર Brikaya મફતમાં ઇન્સ્ટોલ કરો અથવા રમો; પ્રગતિ ઉપકરણમાં રહે છે અને પ્રથમ મુલાકાત પછી ઑફલાઇન રમાય છે.",
+  },
+  'kn': {
+    title: "Brikaya ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ — ಉಚಿತ ಬ್ರೌಸರ್ ಆಟ",
+    description: "ಖಾತೆ ಇಲ್ಲದೆ, ಪಾವತಿ ಇಲ್ಲದೆ Brikaya ಅನ್ನು ಉಚಿತವಾಗಿ ಸ್ಥಾಪಿಸಿ ಅಥವಾ ಆಡಿ; ಪ್ರಗತಿ ಸಾಧನದಲ್ಲೇ ಉಳಿಯುತ್ತದೆ ಮತ್ತು ಮೊದಲ ಭೇಟಿ ನಂತರ ಆಫ್‌ಲೈನ್ ಆಟ ಲಭ್ಯ.",
+    ogDescription: "ಖಾತೆ ಇಲ್ಲದೆ, ಪಾವತಿ ಇಲ್ಲದೆ Brikaya ಅನ್ನು ಉಚಿತವಾಗಿ ಸ್ಥಾಪಿಸಿ ಅಥವಾ ಆಡಿ; ಪ್ರಗತಿ ಸಾಧನದಲ್ಲೇ ಉಳಿಯುತ್ತದೆ ಮತ್ತು ಮೊದಲ ಭೇಟಿ ನಂತರ ಆಫ್‌ಲೈನ್ ಆಟ ಲಭ್ಯ.",
+  },
+  'ml': {
+    title: "Brikaya ഡൗൺലോഡ് ചെയ്യുക — സൗജന്യ ബ്രൗസർ ഗെയിം",
+    description: "അക്കൗണ്ട് ഇല്ലാതെ, പണം ഇല്ലാതെ Brikaya സൗജന്യമായി ഇൻസ്റ്റാൾ ചെയ്യുകയോ കളിക്കുകയോ ചെയ്യാം; പുരോഗതി ഉപകരണത്തിൽ തന്നെ നിലനിൽക്കും, ആദ്യ സന്ദർശനത്തിന് ശേഷം ഓഫ്‌ലൈൻ കളിക്കാം.",
+    ogDescription: "അക്കൗണ്ട് ഇല്ലാതെ, പണം ഇല്ലാതെ Brikaya സൗജന്യമായി ഇൻസ്റ്റാൾ ചെയ്യുകയോ കളിക്കുകയോ ചെയ്യാം; പുരോഗതി ഉപകരണത്തിൽ തന്നെ നിലനിൽക്കും, ആദ്യ സന്ദർശനത്തിന് ശേഷം ഓഫ്‌ലൈൻ കളിക്കാം.",
+  },
+  'pa': {
+    title: "Brikaya ਡਾਊਨਲੋਡ ਕਰੋ — ਮੁਫ਼ਤ ਬ੍ਰਾਊਜ਼ਰ ਗੇਮ",
+    description: "ਖਾਤੇ ਤੋਂ ਬਿਨਾਂ, ਭੁਗਤਾਨ ਤੋਂ ਬਿਨਾਂ Brikaya ਮੁਫ਼ਤ ਇੰਸਟਾਲ ਕਰੋ ਜਾਂ ਖੇਡੋ; ਤਰੱਕੀ ਡਿਵਾਈਸ ਵਿੱਚ ਰਹਿੰਦੀ ਹੈ ਅਤੇ ਪਹਿਲੀ ਵਾਰ ਤੋਂ ਬਾਅਦ ਆਫਲਾਈਨ ਖੇਡ ਸਕਦੇ ਹੋ।",
+    ogDescription: "ਖਾਤੇ ਤੋਂ ਬਿਨਾਂ, ਭੁਗਤਾਨ ਤੋਂ ਬਿਨਾਂ Brikaya ਮੁਫ਼ਤ ਇੰਸਟਾਲ ਕਰੋ ਜਾਂ ਖੇਡੋ; ਤਰੱਕੀ ਡਿਵਾਈਸ ਵਿੱਚ ਰਹਿੰਦੀ ਹੈ ਅਤੇ ਪਹਿਲੀ ਵਾਰ ਤੋਂ ਬਾਅਦ ਆਫਲਾਈਨ ਖੇਡ ਸਕਦੇ ਹੋ।",
+  },
+  'el': {
+    title: "Λήψη Brikaya — δωρεάν παιχνίδι browser",
+    description: "Εγκαταστήστε ή παίξτε Brikaya δωρεάν, χωρίς λογαριασμό, χωρίς πληρωμή, με πρόοδο στη συσκευή και παιχνίδι εκτός σύνδεσης μετά την πρώτη επίσκεψη.",
+    ogDescription: "Εγκαταστήστε ή παίξτε Brikaya δωρεάν, χωρίς λογαριασμό, χωρίς πληρωμή, με πρόοδο στη συσκευή και παιχνίδι εκτός σύνδεσης μετά την πρώτη επίσκεψη.",
+  },
+  'sv': {
+    title: "Ladda ner Brikaya — gratis webbläsarspel",
+    description: "Installera eller spela Brikaya gratis, utan konto, utan betalning, med framsteg sparade på enheten och offlinespel efter första besöket.",
+    ogDescription: "Installera eller spela Brikaya gratis, utan konto, utan betalning, med framsteg sparade på enheten och offlinespel efter första besöket.",
+  },
+  'da': {
+    title: "Download Brikaya — gratis browserspil",
+    description: "Installer eller spil Brikaya gratis, uden konto, uden betaling, med fremskridt gemt på enheden og offline spil efter første besøg.",
+    ogDescription: "Installer eller spil Brikaya gratis, uden konto, uden betaling, med fremskridt gemt på enheden og offline spil efter første besøg.",
+  },
+  'no': {
+    title: "Last ned Brikaya — gratis nettleserspill",
+    description: "Installer eller spill Brikaya gratis, uten konto, uten betaling, med fremdrift lagret på enheten og offline spill etter første besøk.",
+    ogDescription: "Installer eller spill Brikaya gratis, uten konto, uten betaling, med fremdrift lagret på enheten og offline spill etter første besøk.",
+  },
+  'fi': {
+    title: "Lataa Brikaya — ilmainen selainpeli",
+    description: "Asenna tai pelaa Brikayaa ilmaiseksi, ilman tiliä, ilman maksua, edistyminen tallennettuna laitteelle ja offline-peli ensimmäisen käynnin jälkeen.",
+    ogDescription: "Asenna tai pelaa Brikayaa ilmaiseksi, ilman tiliä, ilman maksua, edistyminen tallennettuna laitteelle ja offline-peli ensimmäisen käynnin jälkeen.",
   },
   'te': {
     title: 'Brikaya డౌన్‌లోడ్ చేయండి — ఉచిత బ్రౌజర్ గేమ్',
