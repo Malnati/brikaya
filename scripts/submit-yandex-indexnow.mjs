@@ -1,4 +1,5 @@
 // scripts/submit-yandex-indexnow.mjs
+import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { loadProjectEnv, readProjectEnv, sanitizeOutput } from './load-project-env.mjs';
@@ -138,28 +139,65 @@ function sanitizedSummary(label, endpoint, urlCount, status = null) {
   return `${label}: host=${CANONICAL_HOST} endpoint=${endpoint}${statusPart} urls=${urlCount} keyLocation=${REDACTED_KEY_LOCATION}`;
 }
 
-async function submit(endpoint, payload, envValues) {
+async function fetchStatus(endpoint, payload) {
   const response = await fetch(endpoint, {
     method: 'POST',
     headers: { 'content-type': 'application/json; charset=utf-8' },
     body: JSON.stringify(payload),
   });
+  return response.status;
+}
 
+function curlStatus(endpoint, payload) {
+  const result = spawnSync(
+    'curl',
+    [
+      '--silent',
+      '--show-error',
+      '--output',
+      '/dev/null',
+      '--write-out',
+      '%{http_code}',
+      '--max-time',
+      '30',
+      '--request',
+      'POST',
+      '--header',
+      'content-type: application/json; charset=utf-8',
+      '--data-binary',
+      '@-',
+      endpoint,
+    ],
+    { input: JSON.stringify(payload), encoding: 'utf8' },
+  );
+
+  if (result.error) fail(`falha IndexNow: curl indisponível (${result.error.message})`);
+  if (result.status !== 0) fail(`falha IndexNow: curl status=${result.status}`);
+  return Number.parseInt((result.stdout || '').trim(), 10);
+}
+
+async function submit(endpoint, payload, envValues) {
   const label = serviceLabel(endpoint);
+  let status;
 
-  if (response.status === SUCCESS_HTTP_STATUS) {
-    console.log(sanitizeOutput(sanitizedSummary(`${label} submitted`, endpoint, payload.urlList.length, response.status), envValues));
+  try {
+    status = await fetchStatus(endpoint, payload);
+  } catch (error) {
+    if (label !== 'seznam-indexnow') throw error;
+    status = curlStatus(endpoint, payload);
+  }
+
+  if (status === SUCCESS_HTTP_STATUS) {
+    console.log(sanitizeOutput(sanitizedSummary(`${label} submitted`, endpoint, payload.urlList.length, status), envValues));
     return;
   }
 
-  if (response.status === PENDING_HTTP_STATUS) {
-    console.log(
-      sanitizeOutput(sanitizedSummary(`${label} accepted-pending`, endpoint, payload.urlList.length, response.status), envValues),
-    );
+  if (status === PENDING_HTTP_STATUS) {
+    console.log(sanitizeOutput(sanitizedSummary(`${label} accepted-pending`, endpoint, payload.urlList.length, status), envValues));
     return;
   }
 
-  fail(`falha IndexNow: status=${response.status}`);
+  fail(`falha IndexNow: status=${status}`);
 }
 
 async function run() {
