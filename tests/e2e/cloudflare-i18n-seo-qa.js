@@ -58,6 +58,11 @@ const TESTED_LOCALES = [
   { locale: "zu", path: "/zu/", title: "Brikaya — i-arcade yokuphula amabhulokhi" },
   { locale: "rw", path: "/rw/", title: "Brikaya — umukino wo kumena ibice" },
   { locale: "ti", path: "/ti/", title: "Brikaya — ጸወታ ምስባር ብሎክ" },
+  { locale: "qu", path: "/qu/", title: "Brikaya — bloquekunata pakichiy pukllay" },
+  { locale: "gn", path: "/gn/", title: "Brikaya — arcade ojokóva bloque" },
+  { locale: "jv", path: "/jv/", title: "Brikaya — arkade mecah blok" },
+  { locale: "haw", path: "/haw/", title: "Brikaya — pāʻani wāwahi pōhaku" },
+  { locale: "scn", path: "/scn/", title: "Brikaya — arcade spacca blocchi" },
 ];
 const ALL_HREFLANG_LOCALES = [
   "pt-BR",
@@ -175,6 +180,30 @@ const ALL_HREFLANG_LOCALES = [
   "ff",
   "om",
   "ti",
+  "qu",
+  "ay",
+  "gn",
+  "nah",
+  "ht",
+  "pap",
+  "jv",
+  "su",
+  "ceb",
+  "ilo",
+  "war",
+  "haw",
+  "co",
+  "sc",
+  "fur",
+  "rm",
+  "lad",
+  "ast",
+  "vec",
+  "lmo",
+  "pms",
+  "nap",
+  "scn",
+  "sco",
 ];
 const TESTED_DOWNLOADS_LOCALES = [
   {
@@ -387,6 +416,31 @@ const TESTED_DOWNLOADS_LOCALES = [
     locale: "ti",
     path: "/ti/downloads/",
     title: "Brikaya ኣውርድ — ናጻ ናይ browser ጸወታ",
+  },
+  {
+    locale: "qu",
+    path: "/qu/downloads/",
+    title: "Brikaya uraykachiy — mana qullqiyuq maskana pukllay",
+  },
+  {
+    locale: "gn",
+    path: "/gn/downloads/",
+    title: "Emboguejy Brikaya — ñanduti kundahára ñembosarái reigua",
+  },
+  {
+    locale: "jv",
+    path: "/jv/downloads/",
+    title: "Undhuh Brikaya — game browser gratis",
+  },
+  {
+    locale: "haw",
+    path: "/haw/downloads/",
+    title: "Hoʻoiho iā Brikaya — pāʻani polokalamu kele pūnaewele manuahi",
+  },
+  {
+    locale: "scn",
+    path: "/scn/downloads/",
+    title: "Scàrrica Brikaya — jocu di browser gratis",
   },
 ];
 const LANGUAGE_SELECT_SELECTOR = "#game-language-select";

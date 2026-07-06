@@ -132,6 +132,30 @@ const LOCALES = [
   'ff',
   'om',
   'ti',
+  'qu',
+  'ay',
+  'gn',
+  'nah',
+  'ht',
+  'pap',
+  'jv',
+  'su',
+  'ceb',
+  'ilo',
+  'war',
+  'haw',
+  'co',
+  'sc',
+  'fur',
+  'rm',
+  'lad',
+  'ast',
+  'vec',
+  'lmo',
+  'pms',
+  'nap',
+  'scn',
+  'sco',
 ];
 const SEO = {
   'pt-BR': {
@@ -711,6 +735,126 @@ const SEO = {
     description: "Brikaya ብናጻ ጫን ወይ ተጻወት፣ ብዘይ ሒሳብን ብዘይ ክፍሊትን፤ ምዕባለ ኣብ መሳርሒኻ ይቕመጥ እና ድሕሪ ቀዳማይ ምብጻሕ offline ክትጻወት ትኽእል።",
     ogDescription: "Brikaya — ጸወታ ምስባር ብሎክ",
   },
+  'qu': {
+    title: "Brikaya — bloquekunata pakichiy pukllay",
+    description: "Brikaya-ta mana qullqiyuq churay utaq pukllay, mana yupayniyuq, mana pagaspa; ñawpaqman puriyqa dispositivoykipi qhipakun, ñawpaq watukusqa qhipaman internet mana kaptinpas pukllawaq.",
+    ogDescription: "Brikaya — bloquekunata pakichiy pukllay",
+  },
+  'ay': {
+    title: "Brikaya — bloques p'akjaña anata",
+    description: "Brikaya inaki utt'ayaña jan ukax anataña, jan cuenta ukampi jan payllawi; nayrar sartañax dispositivoman qhiparaki ukat nayrïr mantawi qhipat offline anatasma.",
+    ogDescription: "Brikaya — bloques p'akjaña anata",
+  },
+  'gn': {
+    title: "Brikaya — arcade ojokóva bloque",
+    description: "Emohenda térã eñembosarái Brikaya rehe reigua, cuenta'ỹre ha jehepyme'ẽ'ỹre; ne ñemotenonde opyta ne mba'e'okápe ha ikatu eñembosarái conexión'ỹre oike rire peteĩha jey.",
+    ogDescription: "Brikaya — arcade ojokóva bloque",
+  },
+  'nah': {
+    title: "Brikaya — juego para romper bloques",
+    description: "Xikmana noso xijuega Brikaya gratis, amo cuenta ihuan amo tlaxtlahuili; moyektilis mokahua ipan moaparato ihuan huelis tijuega offline satepan achto nemilistli.",
+    ogDescription: "Brikaya — juego para romper bloques",
+  },
+  'ht': {
+    title: "Brikaya — jwèt kraze blòk",
+    description: "Enstale oswa jwe Brikaya gratis, san kont epi san peman; pwogrè a rete sou aparèy ou epi ou ka jwe san entènèt apre premye vizit la.",
+    ogDescription: "Brikaya — jwèt kraze blòk",
+  },
+  'pap': {
+    title: "Brikaya — wega di kibra blok",
+    description: "Instalá òf hunga Brikaya grátis, sin cuenta i sin pago; progreso ta keda riba bo aparato i bo por hunga offline despues di e promé bishita.",
+    ogDescription: "Brikaya — wega di kibra blok",
+  },
+  'jv': {
+    title: "Brikaya — arkade mecah blok",
+    description: "Pasang utawa main Brikaya gratis, tanpa akun lan tanpa mbayar; kemajuan tetep ana ing piranti lan bisa dimainake offline sawisé kunjungan kapisan.",
+    ogDescription: "Brikaya — arkade mecah blok",
+  },
+  'su': {
+    title: "Brikaya — arkade mecah blok",
+    description: "Pasang atawa ulin Brikaya gratis, tanpa akun jeung tanpa mayar; kamajuan tetep dina alat anjeun sarta bisa dimaénkeun offline sanggeus kunjungan kahiji.",
+    ogDescription: "Brikaya — arkade mecah blok",
+  },
+  'ceb': {
+    title: "Brikaya — arcade sa pagpikas og bloke",
+    description: "I-install o duwaa ang Brikaya nga libre, walay account ug walay bayad; ang progreso magpabilin sa imong device ug makaduwa offline human sa unang pagbisita.",
+    ogDescription: "Brikaya — arcade sa pagpikas og bloke",
+  },
+  'ilo': {
+    title: "Brikaya — arcade a mangburak kadagiti bloke",
+    description: "I-install wenno ay-ayamem ti Brikaya a libre, awan account ken awan bayad; agtalinaed ti progreso iti device mo ken mabalin a maay-ayam offline kalpasan ti umuna a bisita.",
+    ogDescription: "Brikaya — arcade a mangburak kadagiti bloke",
+  },
+  'war': {
+    title: "Brikaya — arcade hin pagbungkag hin bloke",
+    description: "I-install o uyaga an Brikaya nga libre, waray account ngan waray bayad; an progreso nagpapabilin ha imo device ngan puydi ma-uyag offline katapos han siyahan nga bisita.",
+    ogDescription: "Brikaya — arcade hin pagbungkag hin bloke",
+  },
+  'haw': {
+    title: "Brikaya — pāʻani wāwahi pōhaku",
+    description: "E hoʻouka a pāʻani iā Brikaya me ka manuahi, ʻaʻohe moʻokāki a ʻaʻohe uku; noho ka holomua ma kāu hāmeʻa a hiki ke pāʻani offline ma hope o ke kipa mua.",
+    ogDescription: "Brikaya — pāʻani wāwahi pōhaku",
+  },
+  'co': {
+    title: "Brikaya — arcade rompe blocchi",
+    description: "Installa o ghjoca Brikaya gratis, senza contu è senza pagamentu; u prugressu ferma nant'à u dispusitivu è si pò ghjucà offline dopu a prima visita.",
+    ogDescription: "Brikaya — arcade rompe blocchi",
+  },
+  'sc': {
+    title: "Brikaya — arcade de frànghere blocos",
+    description: "Installa o gioga Brikaya gratis, chentza contu e chentza pagamentu; su progressu abarrat in su dispositivu tuo e podes giogare offline a pustis de sa prima visita.",
+    ogDescription: "Brikaya — arcade de frànghere blocos",
+  },
+  'fur': {
+    title: "Brikaya — arcade par romp bloc",
+    description: "Instale o zuie Brikaya gratis, cence account e cence paiament; il progrès al reste sul dispositîf e si pues zuia offline dopo la prime visite.",
+    ogDescription: "Brikaya — arcade par romp bloc",
+  },
+  'rm': {
+    title: "Brikaya — arcade da rumper blocs",
+    description: "Installai u giugai Brikaya gratuitamain, senza conto e senza pajament; il progress resta sin tes apparat e ti pos giugar offline suenter l'emprima visita.",
+    ogDescription: "Brikaya — arcade da rumper blocs",
+  },
+  'lad': {
+    title: "Brikaya — arkada de romper blokos",
+    description: "Instala o djuga Brikaya gratis, sin kuenta i sin pagar; el progresso keda en tu aparato i se puede djugar offline despues de la primera vizita.",
+    ogDescription: "Brikaya — arkada de romper blokos",
+  },
+  'ast': {
+    title: "Brikaya — arcade de romper bloques",
+    description: "Instala o xuega Brikaya gratis, ensin cuenta y ensin pagu; el progresu queda nel to preséu y puedes xugar ensin conexón dempués de la primer visita.",
+    ogDescription: "Brikaya — arcade de romper bloques",
+  },
+  'vec': {
+    title: "Brikaya — arcade spaca-blòchi",
+    description: "Instala o zoga Brikaya gratis, senza account e senza pagamento; el progresso resta sul dispositivo e se pol zogar offline dopo la prima visita.",
+    ogDescription: "Brikaya — arcade spaca-blòchi",
+  },
+  'lmo': {
+    title: "Brikaya — arcade rompi blocch",
+    description: "Installa o giöga Brikaya gratis, senza account e senza pagament; el progress resta sul dispositiv e se pö giügà offline dopo la prima visita.",
+    ogDescription: "Brikaya — arcade rompi blocch",
+  },
+  'pms': {
+    title: "Brikaya — arcade a rompe bloch",
+    description: "Instala o gieuga Brikaya gratis, sensa account e sensa paghé; ël progress a resta an sël tò aparej e as peul gieughe offline dòp la prima vìsita.",
+    ogDescription: "Brikaya — arcade a rompe bloch",
+  },
+  'nap': {
+    title: "Brikaya — arcade rompe blocche",
+    description: "Installa o juoca Brikaya gratis, senza cunto e senza pavà; 'o prugresso resta ncopp'ô dispusitivo e se po' jucà offline doppo 'a primma visita.",
+    ogDescription: "Brikaya — arcade rompe blocche",
+  },
+  'scn': {
+    title: "Brikaya — arcade spacca blocchi",
+    description: "Installa o joca Brikaya gratis, senza cuntu e senza pagamentu; u prugressu resta ntô dispositivu e si po' jucari offline doppu a prima visita.",
+    ogDescription: "Brikaya — arcade spacca blocchi",
+  },
+  'sco': {
+    title: "Brikaya — block breaker arcade",
+    description: "Install or play Brikaya for free, nae accoont and nae payment; progress bides on yer device and ye can play offline efter the first visit.",
+    ogDescription: "Brikaya — block breaker arcade",
+  },
 };
 const DOWNLOADS_SEO = {
   'pt-BR': {
@@ -1289,6 +1433,126 @@ const DOWNLOADS_SEO = {
     title: "Brikaya ኣውርድ — ናጻ ናይ browser ጸወታ",
     description: "Brikaya ብናጻ ጫን ወይ ተጻወት፣ ብዘይ ሒሳብን ብዘይ ክፍሊትን፤ ምዕባለ ኣብ መሳርሒኻ ይቕመጥ እና ድሕሪ ቀዳማይ ምብጻሕ offline ክትጻወት ትኽእል። ብዘይ ሒሳብ.",
     ogDescription: "Brikaya ኣውርድ — ብዘይ ሒሳብ",
+  },
+  'qu': {
+    title: "Brikaya uraykachiy — mana qullqiyuq maskana pukllay",
+    description: "Brikaya-ta mana qullqiyuq churay utaq pukllay, mana yupayniyuq, mana pagaspa; ñawpaqman puriyqa dispositivoykipi qhipakun, ñawpaq watukusqa qhipaman internet mana kaptinpas pukllawaq. mana yupayniyuq.",
+    ogDescription: "Brikaya uraykachiy — mana yupayniyuq",
+  },
+  'ay': {
+    title: "Brikaya apaqaña — navegador ukana inaki anata",
+    description: "Brikaya inaki utt'ayaña jan ukax anataña, jan cuenta ukampi jan payllawi; nayrar sartañax dispositivoman qhiparaki ukat nayrïr mantawi qhipat offline anatasma. jan cuenta.",
+    ogDescription: "Brikaya apaqaña — jan cuenta",
+  },
+  'gn': {
+    title: "Emboguejy Brikaya — ñanduti kundahára ñembosarái reigua",
+    description: "Emohenda térã eñembosarái Brikaya rehe reigua, cuenta'ỹre ha jehepyme'ẽ'ỹre; ne ñemotenonde opyta ne mba'e'okápe ha ikatu eñembosarái conexión'ỹre oike rire peteĩha jey. cuenta'ỹre.",
+    ogDescription: "Emboguejy Brikaya — cuenta'ỹre",
+  },
+  'nah': {
+    title: "Temo Brikaya — juego gratis ipan navegador",
+    description: "Xikmana noso xijuega Brikaya gratis, amo cuenta ihuan amo tlaxtlahuili; moyektilis mokahua ipan moaparato ihuan huelis tijuega offline satepan achto nemilistli. amo cuenta.",
+    ogDescription: "Temo Brikaya — amo cuenta",
+  },
+  'ht': {
+    title: "Telechaje Brikaya — jwèt navigatè gratis",
+    description: "Enstale oswa jwe Brikaya gratis, san kont epi san peman; pwogrè a rete sou aparèy ou epi ou ka jwe san entènèt apre premye vizit la. san kont.",
+    ogDescription: "Telechaje Brikaya — san kont",
+  },
+  'pap': {
+    title: "Deskargá Brikaya — wega grátis den browser",
+    description: "Instalá òf hunga Brikaya grátis, sin cuenta i sin pago; progreso ta keda riba bo aparato i bo por hunga offline despues di e promé bishita. sin cuenta.",
+    ogDescription: "Deskargá Brikaya — sin cuenta",
+  },
+  'jv': {
+    title: "Undhuh Brikaya — game browser gratis",
+    description: "Pasang utawa main Brikaya gratis, tanpa akun lan tanpa mbayar; kemajuan tetep ana ing piranti lan bisa dimainake offline sawisé kunjungan kapisan. tanpa akun.",
+    ogDescription: "Undhuh Brikaya — tanpa akun",
+  },
+  'su': {
+    title: "Unduh Brikaya — kaulinan browser gratis",
+    description: "Pasang atawa ulin Brikaya gratis, tanpa akun jeung tanpa mayar; kamajuan tetep dina alat anjeun sarta bisa dimaénkeun offline sanggeus kunjungan kahiji. tanpa akun.",
+    ogDescription: "Unduh Brikaya — tanpa akun",
+  },
+  'ceb': {
+    title: "I-download ang Brikaya — libre nga duwa sa browser",
+    description: "I-install o duwaa ang Brikaya nga libre, walay account ug walay bayad; ang progreso magpabilin sa imong device ug makaduwa offline human sa unang pagbisita. walay account.",
+    ogDescription: "I-download ang Brikaya — walay account",
+  },
+  'ilo': {
+    title: "I-download ti Brikaya — libre a ay-ayam iti browser",
+    description: "I-install wenno ay-ayamem ti Brikaya a libre, awan account ken awan bayad; agtalinaed ti progreso iti device mo ken mabalin a maay-ayam offline kalpasan ti umuna a bisita. awan account.",
+    ogDescription: "I-download ti Brikaya — awan account",
+  },
+  'war': {
+    title: "I-download an Brikaya — libre nga uyag ha browser",
+    description: "I-install o uyaga an Brikaya nga libre, waray account ngan waray bayad; an progreso nagpapabilin ha imo device ngan puydi ma-uyag offline katapos han siyahan nga bisita. waray account.",
+    ogDescription: "I-download an Brikaya — waray account",
+  },
+  'haw': {
+    title: "Hoʻoiho iā Brikaya — pāʻani polokalamu kele pūnaewele manuahi",
+    description: "E hoʻouka a pāʻani iā Brikaya me ka manuahi, ʻaʻohe moʻokāki a ʻaʻohe uku; noho ka holomua ma kāu hāmeʻa a hiki ke pāʻani offline ma hope o ke kipa mua. ʻaʻohe moʻokāki.",
+    ogDescription: "Hoʻoiho iā Brikaya — ʻaʻohe moʻokāki",
+  },
+  'co': {
+    title: "Scaricà Brikaya — ghjocu di navigatore gratis",
+    description: "Installa o ghjoca Brikaya gratis, senza contu è senza pagamentu; u prugressu ferma nant'à u dispusitivu è si pò ghjucà offline dopu a prima visita. senza contu.",
+    ogDescription: "Scaricà Brikaya — senza contu",
+  },
+  'sc': {
+    title: "Iscàrriga Brikaya — giogu de navigadore gratis",
+    description: "Installa o gioga Brikaya gratis, chentza contu e chentza pagamentu; su progressu abarrat in su dispositivu tuo e podes giogare offline a pustis de sa prima visita. chentza contu.",
+    ogDescription: "Iscàrriga Brikaya — chentza contu",
+  },
+  'fur': {
+    title: "Discjame Brikaya — zûc di browser gratis",
+    description: "Instale o zuie Brikaya gratis, cence account e cence paiament; il progrès al reste sul dispositîf e si pues zuia offline dopo la prime visite. cence account.",
+    ogDescription: "Discjame Brikaya — cence account",
+  },
+  'rm': {
+    title: "Telechargiar Brikaya — gieu da navigatur gratuit",
+    description: "Installai u giugai Brikaya gratuitamain, senza conto e senza pajament; il progress resta sin tes apparat e ti pos giugar offline suenter l'emprima visita. senza conto.",
+    ogDescription: "Telechargiar Brikaya — senza conto",
+  },
+  'lad': {
+    title: "Deskargar Brikaya — djuego de browser gratis",
+    description: "Instala o djuga Brikaya gratis, sin kuenta i sin pagar; el progresso keda en tu aparato i se puede djugar offline despues de la primera vizita. sin kuenta.",
+    ogDescription: "Deskargar Brikaya — sin kuenta",
+  },
+  'ast': {
+    title: "Baxar Brikaya — xuegu de navegador gratis",
+    description: "Instala o xuega Brikaya gratis, ensin cuenta y ensin pagu; el progresu queda nel to preséu y puedes xugar ensin conexón dempués de la primer visita. ensin cuenta.",
+    ogDescription: "Baxar Brikaya — ensin cuenta",
+  },
+  'vec': {
+    title: "Descarga Brikaya — zogo de browser gratis",
+    description: "Instala o zoga Brikaya gratis, senza account e senza pagamento; el progresso resta sul dispositivo e se pol zogar offline dopo la prima visita. senza account.",
+    ogDescription: "Descarga Brikaya — senza account",
+  },
+  'lmo': {
+    title: "Scarica Brikaya — giögh de browser gratis",
+    description: "Installa o giöga Brikaya gratis, senza account e senza pagament; el progress resta sul dispositiv e se pö giügà offline dopo la prima visita. senza account.",
+    ogDescription: "Scarica Brikaya — senza account",
+  },
+  'pms': {
+    title: "Scaria Brikaya — gieugh ëd browser gratis",
+    description: "Instala o gieuga Brikaya gratis, sensa account e sensa paghé; ël progress a resta an sël tò aparej e as peul gieughe offline dòp la prima vìsita. sensa account.",
+    ogDescription: "Scaria Brikaya — sensa account",
+  },
+  'nap': {
+    title: "Scarica Brikaya — juoco 'e browser gratis",
+    description: "Installa o juoca Brikaya gratis, senza cunto e senza pavà; 'o prugresso resta ncopp'ô dispusitivo e se po' jucà offline doppo 'a primma visita. senza cunto.",
+    ogDescription: "Scarica Brikaya — senza cunto",
+  },
+  'scn': {
+    title: "Scàrrica Brikaya — jocu di browser gratis",
+    description: "Installa o joca Brikaya gratis, senza cuntu e senza pagamentu; u prugressu resta ntô dispositivu e si po' jucari offline doppu a prima visita. senza cuntu.",
+    ogDescription: "Scàrrica Brikaya — senza cuntu",
+  },
+  'sco': {
+    title: "Dounload Brikaya — free brouser gemme",
+    description: "Install or play Brikaya for free, nae accoont and nae payment; progress bides on yer device and ye can play offline efter the first visit. nae accoont.",
+    ogDescription: "Dounload Brikaya — nae accoont",
   },
 };
 function metadataFor(locale, routePath) {
