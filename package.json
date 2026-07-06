@@ -47,7 +47,7 @@
   "dependencies": {
     "@capacitor/android": "^7.4.4",
     "@capacitor/cli": "^7.4.4",
-    "@capacitor/core": "^7.4.2",
+    "@capacitor/core": "^8.4.1",
     "@capacitor/ios": "^7.4.4",
     "idb": "^7.1.1",
     "prettier": "^3.9.4",
