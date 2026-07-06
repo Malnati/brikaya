@@ -187,6 +187,30 @@ const EXPECTED_GLOBAL_LOCALES = [
   "nap",
   "scn",
   "sco",
+  "ps",
+  "sd",
+  "ks",
+  "dv",
+  "ckb",
+  "ug",
+  "yi",
+  "bo",
+  "dz",
+  "ku",
+  "or",
+  "as",
+  "sa",
+  "mai",
+  "bho",
+  "doi",
+  "mni",
+  "kok",
+  "sat",
+  "lus",
+  "brx",
+  "raj",
+  "hne",
+  "awa",
 ] as const;
 const NEW_DOWNLOADS_SEO_EXPECTATIONS = [
   { locale: "ar", title: "تنزيل Brikaya", description: "بدون حساب" },
@@ -313,6 +337,30 @@ const NEW_DOWNLOADS_SEO_EXPECTATIONS = [
   { locale: "nap", title: "Scarica Brikaya", description: "senza cunto" },
   { locale: "scn", title: "Scàrrica Brikaya", description: "senza cuntu" },
   { locale: "sco", title: "Dounload Brikaya", description: "nae accoont" },
+  { locale: "ps", title: "Brikaya ډاونلوډ کړئ", description: "بې حسابه" },
+  { locale: "sd", title: "Brikaya ڊائونلوڊ ڪريو", description: "اڪائونٽ کانسواءِ" },
+  { locale: "ks", title: "Brikaya ڈاؤنلوڈ کٔرِو", description: "اکاؤنٹ بغیر" },
+  { locale: "dv", title: "Brikaya ޑައުންލޯޑް ކުރޭ", description: "އެކައުންޓް ނެތި" },
+  { locale: "ckb", title: "Brikaya دابەزێنە", description: "بێ هەژمار" },
+  { locale: "ug", title: "Brikaya نى چۈشۈرۈڭ", description: "ھېساباتسىز" },
+  { locale: "yi", title: "אַראָפּלאָדן Brikaya", description: "אָן חשבון" },
+  { locale: "bo", title: "Brikaya ཕབ་ལེན", description: "ཐོ་ཁོངས་མེད" },
+  { locale: "dz", title: "Brikaya ཕབ་ལེན", description: "རྩིས་ཁྲ་མེད" },
+  { locale: "ku", title: "Brikaya daxîne", description: "bê hesab" },
+  { locale: "or", title: "Brikaya ଡାଉନଲୋଡ୍ କରନ୍ତୁ", description: "ଖାତା ବିନା" },
+  { locale: "as", title: "Brikaya ডাউনল’ড কৰক", description: "একাউন্ট নোহোৱাকৈ" },
+  { locale: "sa", title: "Brikaya अवतारयतु", description: "लेखां विना" },
+  { locale: "mai", title: "Brikaya डाउनलोड करू", description: "खाता बिना" },
+  { locale: "bho", title: "Brikaya डाउनलोड करीं", description: "खाता बिना" },
+  { locale: "doi", title: "Brikaya डाउनलोड करो", description: "खाते बिना" },
+  { locale: "mni", title: "Brikaya ডাউনলোড তৌ", description: "একাউন্ট নত্তনা" },
+  { locale: "kok", title: "Brikaya डाउनलोड करात", description: "खाते शिवाय" },
+  { locale: "sat", title: "Brikaya ᱰᱟᱣᱱᱞᱳᱰ ᱢᱮ", description: "ᱟᱠᱟᱣᱱᱴ ᱵᱟᱝ" },
+  { locale: "lus", title: "Brikaya download rawh", description: "account tel lovin" },
+  { locale: "brx", title: "Brikaya डाउनलोड खालाम", description: "एकाउन्ट गैयाबालानो" },
+  { locale: "raj", title: "Brikaya डाउनलोड करो", description: "खातो बिना" },
+  { locale: "hne", title: "Brikaya डाउनलोड करव", description: "खाता बिना" },
+  { locale: "awa", title: "Brikaya डाउनलोड करा", description: "खाता बिना" },
 ] as const;
 const DOWNLOADS_TITLE_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
   "pt-BR": "Baixar Brikaya",
@@ -454,6 +502,30 @@ const DOWNLOADS_TITLE_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
   nap: "Scarica Brikaya",
   scn: "Scàrrica Brikaya",
   sco: "Dounload Brikaya",
+  ps: "Brikaya ډاونلوډ کړئ",
+  sd: "Brikaya ڊائونلوڊ ڪريو",
+  ks: "Brikaya ڈاؤنلوڈ کٔرِو",
+  dv: "Brikaya ޑައުންލޯޑް ކުރޭ",
+  ckb: "Brikaya دابەزێنە",
+  ug: "Brikaya نى چۈشۈرۈڭ",
+  yi: "אַראָפּלאָדן Brikaya",
+  bo: "Brikaya ཕབ་ལེན",
+  dz: "Brikaya ཕབ་ལེན",
+  ku: "Brikaya daxîne",
+  or: "Brikaya ଡାଉନଲୋଡ୍ କରନ୍ତୁ",
+  as: "Brikaya ডাউনল’ড কৰক",
+  sa: "Brikaya अवतारयतु",
+  mai: "Brikaya डाउनलोड करू",
+  bho: "Brikaya डाउनलोड करीं",
+  doi: "Brikaya डाउनलोड करो",
+  mni: "Brikaya ডাউনলোড তৌ",
+  kok: "Brikaya डाउनलोड करात",
+  sat: "Brikaya ᱰᱟᱣᱱᱞᱳᱰ ᱢᱮ",
+  lus: "Brikaya download rawh",
+  brx: "Brikaya डाउनलोड खालाम",
+  raj: "Brikaya डाउनलोड करो",
+  hne: "Brikaya डाउनलोड करव",
+  awa: "Brikaya डाउनलोड करा",
 };
 const DOWNLOADS_DESCRIPTION_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
   "pt-BR": "sem conta",
@@ -595,6 +667,30 @@ const DOWNLOADS_DESCRIPTION_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
   nap: "senza cunto",
   scn: "senza cuntu",
   sco: "nae accoont",
+  ps: "بې حسابه",
+  sd: "اڪائونٽ کانسواءِ",
+  ks: "اکاؤنٹ بغیر",
+  dv: "އެކައުންޓް ނެތި",
+  ckb: "بێ هەژمار",
+  ug: "ھېساباتسىز",
+  yi: "אָן חשבון",
+  bo: "ཐོ་ཁོངས་མེད",
+  dz: "རྩིས་ཁྲ་མེད",
+  ku: "bê hesab",
+  or: "ଖାତା ବିନା",
+  as: "একাউন্ট নোহোৱাকৈ",
+  sa: "लेखां विना",
+  mai: "खाता बिना",
+  bho: "खाता बिना",
+  doi: "खाते बिना",
+  mni: "একাউন্ট নত্তনা",
+  kok: "खाते शिवाय",
+  sat: "ᱟᱠᱟᱣᱱᱴ ᱵᱟᱝ",
+  lus: "account tel lovin",
+  brx: "एकाउन्ट गैयाबालानो",
+  raj: "खातो बिना",
+  hne: "खाता बिना",
+  awa: "खाता बिना",
 };
 const LOCALIZED_APPEARANCE_KEYS: TranslationKey[] = [
   "appearance.option.auto-by-level",
@@ -802,7 +898,7 @@ describe("i18n offline do Brikaya", () => {
     expect(document.documentElement.lang).toBe(CHINESE_LOCALE);
   });
 
-  it("ativa direção RTL para rotas árabes e urdu sem inverter idiomas LTR", () => {
+  it("ativa direção RTL para rotas árabes, urdu e nova onda RTL sem inverter idiomas LTR", () => {
     window.history.replaceState(null, "", "/ar/");
 
     render(
@@ -813,6 +909,22 @@ describe("i18n offline do Brikaya", () => {
 
     expect(screen.getByText("ar")).toBeInTheDocument();
     expect(document.documentElement.lang).toBe("ar");
+    expect(document.documentElement).toHaveAttribute("dir", "rtl");
+  });
+
+
+
+  it("ativa direção RTL para dhivehi como locale RTL da onda 163", () => {
+    window.history.replaceState(null, "", "/dv/");
+
+    render(
+      <I18nProvider>
+        <LocaleProbe />
+      </I18nProvider>,
+    );
+
+    expect(screen.getByText("dv")).toBeInTheDocument();
+    expect(document.documentElement.lang).toBe("dv");
     expect(document.documentElement).toHaveAttribute("dir", "rtl");
   });
 

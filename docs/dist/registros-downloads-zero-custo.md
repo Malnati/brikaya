@@ -90,7 +90,7 @@ Todos são SVG locais, sem raster, sem CDN, sem data URI, sem script embutido e 
 A implementação deve manter:
 
 - canonical `https://brikaya.com/downloads/`;
-- rotas localizadas para todos os 67 idiomas suportados, com `/downloads/` em `pt-BR` e `/<locale>/downloads/` para `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th`, `zh-CN`, `ar`, `ru`, `tr`, `nl`, `pl`, `uk`, `ms`, `zh-TW`, `pt-PT`, `es-ES`, `en-GB`, `fr-CA`, `bn`, `ur`, `fa`, `he`, `ta` e `te`;
+- rotas localizadas para todos os 163 idiomas suportados após a onda 163 local; lista canônica: `pt-BR`, `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th`, `zh-CN`, `ar`, `ru`, `tr`, `nl`, `pl`, `uk`, `ms`, `zh-TW`, `pt-PT`, `es-ES`, `en-GB`, `fr-CA`, `bn`, `ur`, `fa`, `he`, `ta`, `te`, `mr`, `gu`, `kn`, `ml`, `pa`, `el`, `sv`, `da`, `no`, `fi`, `cs`, `ro`, `hu`, `bg`, `sk`, `sl`, `hr`, `sr`, `lt`, `lv`, `et`, `sw`, `af`, `am`, `ka`, `hy`, `az`, `kk`, `uz`, `ne`, `si`, `km`, `lo`, `my`, `is`, `ga`, `cy`, `mt`, `sq`, `mk`, `bs`, `mn`, `tg`, `ky`, `tk`, `be`, `lb`, `eu`, `ca`, `gl`, `oc`, `br`, `mi`, `sm`, `to`, `fj`, `mg`, `so`, `yo`, `ig`, `ha`, `zu`, `xh`, `st`, `tn`, `ts`, `ss`, `ve`, `nso`, `rw`, `rn`, `ln`, `lg`, `ak`, `ee`, `tw`, `sn`, `ny`, `wo`, `ff`, `om`, `ti`, `qu`, `ay`, `gn`, `nah`, `ht`, `pap`, `jv`, `su`, `ceb`, `ilo`, `war`, `haw`, `co`, `sc`, `fur`, `rm`, `lad`, `ast`, `vec`, `lmo`, `pms`, `nap`, `scn`, `sco`, `ps`, `sd`, `ks`, `dv`, `ckb`, `ug`, `yi`, `bo`, `dz`, `ku`, `or`, `as`, `sa`, `mai`, `bho`, `doi`, `mni`, `kok`, `sat`, `lus`, `brx`, `raj`, `hne`, `awa`;
 - sitemap com `/downloads/` e versões localizadas;
 - título e descrição localizados por idioma, sem fallback inglês em páginas não inglesas;
 - hreflang com todos os idiomas e `x-default`;
@@ -254,3 +254,15 @@ Follow-up fa/he em 2026-07-06:
 - IndexNow/Yandex: `make yandex-indexnow-submit` retornou `202 accepted-pending` para 280 URLs com chave redigida; Yandex manual colocou `qu` e `gn` em fila e esgotou a quota diária.
 - Chrome aba única: Google recebeu reenvio do sitemap; Bing recebeu sitemap e ficou em `Processing`; Naver confirmou `sitemap.xml`, mas coleta manual redirecionou para login/callback e foi interrompida; aba final ficou aberta em `https://brikaya.com/sitemap.xml`.
 - Pendências: Google/Bing/Yandex/Naver precisam reprocessar; Yahoo/DuckDuckGo dependem de Bing/crawl; Brave sem endpoint direto atual; Baidu/Seznam seguem bloqueados por cadastro externo/CAPTCHA/ICP/custo; Clarity continua desinstalado.
+
+
+## Atualização — onda 163 validada localmente
+
+- Timestamp: 2026-07-06T18:13:57.111Z
+- Novos idiomas adicionados nesta branch: `ps`, `sd`, `ks`, `dv`, `ckb`, `ug`, `yi`, `bo`, `dz`, `ku`, `or`, `as`, `sa`, `mai`, `bho`, `doi`, `mni`, `kok`, `sat`, `lus`, `brx`, `raj`, `hne`, `awa`.
+- Total alvo após publicação: 163 idiomas e 328 URLs no sitemap (home + downloads por idioma, mais `/privacy/` e `/terms/`).
+- RTL expandido: `ps`, `sd`, `ks`, `dv`, `ckb`, `ug` e `yi` entram como `dir="rtl"` junto de `ar`, `ur`, `fa` e `he`.
+- Screenshot de evidência local: `docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave163-dv-downloads.png`.
+- Validação local passou: `node --version` (`v23.5.0`), `make help`, `npm run codex-env:check`, `npm run test:semantic-file-names`, `npm run test:svg-assets`, `npm test -- --runInBand` (58 suítes / 370 testes) e `npm run build` (`localized-seo ok: locales=163, routes=2`).
+- Clarity/analytics/pixel/tag/SDK externo continuam bloqueados e não foram adicionados.
+- Buscadores: rechecagem Google/Bing/Yandex/Naver só deve ocorrer após merge/deploy público; Bing depende de quota gratuita diária; Baidu/Seznam continuam bloqueados quando exigirem identidade pública, CAPTCHA, ICP, telefone extra ou custo.
