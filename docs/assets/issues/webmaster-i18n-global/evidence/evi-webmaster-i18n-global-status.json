@@ -1,6 +1,6 @@
 {
   "artifact": "evi-webmaster-i18n-global-status",
-  "updatedAt": "2026-07-06T16:02:58.469Z",
+  "updatedAt": "2026-07-06T16:06:28.207Z",
   "scope": {
     "canonicalOrigin": "https://brikaya.com",
     "routes": [
@@ -247,7 +247,7 @@
       "npm run test:svg-assets => ok",
       "npm test -- --runInBand => 58 suites / 369 tests passed",
       "npm run build => localized-seo ok: locales=67, routes=2",
-      "make cloudflare-deploy => https://a3ae16e3.brikaya-live.pages.dev -> https://brikaya.com/",
+      "make cloudflare-deploy => https://b698f56e.brikaya-live.pages.dev -> https://brikaya.com/",
       "make cloudflare-public-check => ok",
       "make cloudflare-i18n-seo-qa => ok",
       "make cloudflare-offline-pwa-qa => exit 0",
@@ -569,7 +569,7 @@
   },
   "publicValidation": {
     "deployedTo": "https://brikaya.com/",
-    "cloudflareDeploy": "validated: https://a3ae16e3.brikaya-live.pages.dev -> https://brikaya.com/",
+    "cloudflareDeploy": "validated: https://b698f56e.brikaya-live.pages.dev -> https://brikaya.com/",
     "cloudflarePublicCheck": "validated",
     "cloudflareI18nSeoQa": "validated for 67 locales and 136 sitemap URLs",
     "cloudflareOfflinePwaQa": "validated",
@@ -579,7 +579,7 @@
       "httpStatus": 200,
       "urlCount": 136,
       "keyLocation": "https://brikaya.com/[redacted].txt",
-      "validatedAt": "2026-07-06T16:02:58.469Z"
+      "validatedAt": "2026-07-06T16:06:28.207Z"
     },
     "clarityPublicCheck": "validated not installed on https://brikaya.com/"
   },
@@ -616,7 +616,7 @@
     "P16": "validated_rtl_ar_ur_fa_he",
     "P17": "validated_i18n_tests_and_public_qa_67_locales",
     "P18": "validated_sitemap_hreflang_67_locales_136_urls",
-    "P19": "evidence_json_updated_sanitized_for_wave_67_final_deploy",
+    "P19": "evidence_json_updated_sanitized_for_wave_67_main_post_merge_deploy",
     "P20": "clarity_not_installed_blocked_by_privacy_policy"
   }
 }

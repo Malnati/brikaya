@@ -175,7 +175,7 @@ Follow-up fa/he em 2026-07-06:
 
 ## Atualização — onda 67 idiomas
 
-- Timestamp: 2026-07-06T15:42:53.386Z
+- Timestamp: 2026-07-06T16:06:28.207Z
 - Novos idiomas publicados: `mr`, `gu`, `kn`, `ml`, `pa`, `el`, `sv`, `da`, `no`, `fi`.
 - Site público: 20 novas rotas home/downloads responderam 200 e `sitemap.xml` publicou 136 URLs.
 - Google Search Console: sitemap reenviado; painel ainda mostrava 68 páginas antes do novo processamento.
