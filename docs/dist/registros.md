@@ -10,10 +10,84 @@ Manter `https://brikaya.com/` descobrível por buscadores sem custo, sem cobran�
 - Publicação padrão: Cloudflare Pages Direct Upload do diretório `dist/`.
 - Sitemap canônico: `https://brikaya.com/sitemap.xml`.
 - Robots canônico: `https://brikaya.com/robots.txt` com diretiva `Sitemap`.
-- Google Search Console já foi tratado em ciclo anterior.
+- Rotas públicas indexáveis: home e `/downloads/` em `pt-BR`, `en`, `es-419`, `en-IN`, `hi-IN`, `de`, `fr`, `it`, `ja`, `ko`, `id`, `vi`, `fil`, `th` e `zh-CN`.
+- Metadados de downloads devem ser localizados por idioma; não aceitar fallback inglês em páginas não inglesas.
+- Google Search Console em 2026-07-06:
+  - propriedade `sc-domain:brikaya.com` visível no Chrome autenticado;
+  - `https://brikaya.com/sitemap.xml` processado em 2026-07-06 com 32 páginas;
+  - inspeção de URL e solicitação manual de indexação concluídas para `/`, `/downloads/`, `/es-419/`, `/es-419/downloads/`, `/ja/`, `/ja/downloads/`, `/zh-CN/` e `/zh-CN/downloads/`.
+- Bing Webmaster Tools em 2026-07-06:
+  - site `brikaya.com` visível no painel autenticado;
+  - sitemap reenviado e em processamento;
+  - URL Inspection + Request indexing + confirmação `Submit` concluídos para as mesmas oito URLs principais;
+  - painel IndexNow mostrou URLs localizadas recentes; Microsoft Clarity não foi instalado.
 - Yandex Webmaster sinalizou duas ações:
   - 2026-07-04 02:30 — acelerar indexação do site.
   - 2026-07-04 16:04 — favicon não carregado para o snippet de busca.
+- Yandex em 2026-07-06:
+  - `https://brikaya.com/sitemap.xml` está na fila de processamento;
+  - reindexação manual de `https://brikaya.com/` e `https://brikaya.com/downloads/` ficou `In queue`;
+  - IndexNow retornou `202 accepted-pending` para 32 URLs com chave redigida.
+- Naver Search Advisor em 2026-07-06:
+  - painel mostrou `sitemap.xml` submetido desde 2026-07-04 10:16:30;
+  - o erro anterior de formato de URL não apareceu no estado submetido;
+  - rechecagem posterior redirecionou para login; não foi tentado senha, OTP, telefone ou documento.
+- Baidu Search Resource Platform em 2026-07-06:
+  - painel público/logged-out abriu no Chrome;
+  - não havia conta autenticada disponível;
+  - ação bloqueada em `blocked_auth` para preservar a regra de não inserir senha, telefone, documento, ICP, pagamento ou identidade pública.
+
+## Regra operacional de navegador
+
+Toda configuração feita por Codex via Chrome ou outro navegador no macOS deve usar uma única aba de trabalho:
+
+1. abrir uma aba no início quando não houver aba viva da rodada anterior;
+2. navegar todos os painéis nessa mesma aba;
+3. evitar abrir abas/janelas extras;
+4. fechar/release popups ou abas extras criadas pelo site, quando não forem necessárias;
+5. deixar a aba aberta ao final como handoff para a próxima iteração.
+
+Identificação operacional da aba: `Brikaya webmaster/i18n`.
+
+Exceção registrada em 2026-07-06: nenhuma aba nova foi criada pelo Codex, mas uma rechecagem do Naver redirecionou a aba reutilizada para OAuth/login e o Chrome bloqueou a automação por UI de extensão. Para não inserir credenciais nem quebrar os limites de privacidade, a checagem restante do Baidu usou uma aba `about:blank` já existente. Esse desvio fica registrado em `docs/assets/issues/webmaster-i18n-global/evidence/evi-webmaster-i18n-global-status.json`.
+
+Essa regra vale para:
+
+- Google Search Console;
+- Bing Webmaster Tools;
+- Yandex Webmaster;
+- Naver Search Advisor;
+- Baidu Search Resource Platform;
+- consulta de documentação DuckDuckGo/Yahoo/outros;
+- Gmail, somente quando necessário para código ou link de verificação webmaster.
+
+## Matriz de buscadores zero-custo
+
+| Plataforma | Ação esperada | Status aceito | Bloqueio |
+| --- | --- | --- | --- |
+| Google Search Console | Confirmar propriedade, sitemap, inspeção de `/`, `/downloads/` e amostras localizadas | `verified`, `sitemap_submitted`, `manual_index_requested` | reautenticação, CAPTCHA, limite temporário |
+| Bing Webmaster Tools | Confirmar/importar site, enviar sitemap e URLs principais | `verified`, `sitemap_submitted`, `manual_index_requested` | conta/permissão ausente |
+| Yahoo | Cobertura via Bing Webmaster Tools | `no_direct_action` | nenhum painel direto útil |
+| DuckDuckGo | Cobertura via sitemap, Bing e rastreamento próprio | `no_direct_action` | nenhum painel direto obrigatório |
+| Yandex Webmaster | Confirmar sitemap, favicon, notificações e reindexação | `verified`, `sitemap_submitted`, `indexnow_submitted` | Metrica/tag paga/telemetria não entra |
+| Naver Search Advisor | Confirmar verificação, corrigir submissão de sitemap e usar IndexNow | `verified`, `sitemap_submitted`, `indexnow_submitted` | conta, CAPTCHA ou formato rejeitado |
+| Baidu Search Resource Platform | Adicionar/verificar site e enviar sitemap se conta permitir | `verified`, `sitemap_submitted` | telefone novo, documento, ICP, pagamento ou identidade pública |
+| Seznam/Yep/outros | Cobrir via IndexNow quando suportado | `indexnow_submitted` ou `no_direct_action` | serviço pago ou conta indisponível |
+
+Microsoft Clarity deve permanecer sem instalação no Brikaya enquanto a regra de privacidade proibir pixel, tag, SDK externo ou rastreamento de sessão.
+
+Status executado em 2026-07-06:
+
+| Plataforma | Status | Evidência sanitizada |
+| --- | --- | --- |
+| Google Search Console | `manual_index_requested` | sitemap processado com 32 páginas; oito URLs principais inspecionadas e enviadas para fila |
+| Bing Webmaster Tools | `manual_index_requested` | sitemap reenviado; oito URLs principais submetidas; IndexNow listou URLs localizadas |
+| Yahoo | `no_direct_action` | submissão segue via Bing Webmaster Tools; sem painel separado no escopo |
+| DuckDuckGo | `no_direct_action` | descoberta coberta por Bing, sitemap, robots, canonical, hreflang e crawler próprio; sem tag/pixel |
+| Yandex Webmaster | `manual_index_requested` + `indexnow_submitted` | sitemap em fila; `/` e `/downloads/` em fila de reindexação; IndexNow `202` |
+| Naver Search Advisor | `sitemap_submitted` | `sitemap.xml` listado como submetido; rechecagem posterior bloqueada por login |
+| Baidu Search Resource Platform | `blocked_auth` | painel abriu deslogado; parada antes de login/telefone/documento |
+| Seznam/Yep/outros | `indexnow_submitted`/`no_direct_action` | cobertos por IndexNow quando suportado e por páginas públicas rastreáveis |
 
 ## Correção Yandex/favicon
 
@@ -87,6 +161,22 @@ Se houver acesso gratuito/autenticado ao Yandex Webmaster:
 
 Se Yandex Webmaster bloquear por sessão, autorização ou conta, registrar como pendência operacional. Não criar serviço pago, campanha, cartão, assinatura, overage ou tag de Metrica por padrão.
 
+## Internacionalização e downloads
+
+Critérios permanentes:
+
+- cada rota `/<locale>/` deve publicar `<html lang="<locale>">`, canonical limpo e hreflang para todos os idiomas;
+- cada rota `/<locale>/downloads/` deve publicar título e descrição no idioma da rota;
+- `pt-BR` continua em `/` e `/downloads/`;
+- todos os demais idiomas usam prefixo de rota;
+- `x-default` aponta para a rota `pt-BR`;
+- `/privacy/` e `/terms/` continuam páginas estáticas canônicas;
+- nenhuma página pública de downloads deve listar lojas pagas conhecidas como opção ativa.
+
+Falha que não pode regressar:
+
+- páginas como `/es-419/downloads/`, `/ja/downloads/` e `/zh-CN/downloads/` não podem ter título/descrição em inglês por fallback.
+
 ## Fora de escopo atual
 
 - Yandex Metrica: não adicionada por ser telemetria/script externo e por não ser necessária para corrigir favicon ou notificar mudança via IndexNow.
@@ -107,6 +197,9 @@ PATH="/opt/homebrew/bin:$PATH" npm run build
 /usr/bin/curl -sSI https://brikaya.com/favicon.svg
 /usr/bin/curl -sSI https://brikaya.com/sitemap.xml
 /usr/bin/curl -sSI https://brikaya.com/robots.txt
+/usr/bin/curl -sS https://brikaya.com/zh-CN/downloads/
+/usr/bin/curl -sS https://brikaya.com/ja/downloads/
+/usr/bin/curl -sS https://brikaya.com/es-419/downloads/
 ```
 
 Critérios:
@@ -115,4 +208,5 @@ Critérios:
 - `.env` local contém as variáveis obrigatórias, com valores omitidos em logs e permissão `0600`.
 - `/favicon.svg` público responde `200` com `content-type: image/svg+xml`.
 - `/sitemap.xml` e `/robots.txt` respondem `200`.
+- downloads localizados respondem `200` com título e descrição no idioma certo.
 - IndexNow retorna `200` ou `202` com saída sanitizada, sem imprimir a chave.

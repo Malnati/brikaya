@@ -71,4 +71,39 @@ describe("DownloadsPage", () => {
     expect(metadata.title).toContain("Baixar Brikaya");
     expect(metadata.description).toContain("sem conta");
   });
+
+  it("renderiza a página de downloads no idioma da rota localizada", () => {
+    const localizedExpectations = [
+      {
+        path: "/zh-CN/downloads/",
+        heading: "下载 Brikaya",
+        promise: "Brikaya 保持免费",
+      },
+      {
+        path: "/ja/downloads/",
+        heading: "Brikayaをダウンロード",
+        promise: "Brikayaは無料のまま",
+      },
+      {
+        path: "/ko/downloads/",
+        heading: "Brikaya 다운로드",
+        promise: "Brikaya는 계속 무료입니다",
+      },
+      {
+        path: "/hi-IN/downloads/",
+        heading: "Brikaya डाउनलोड करें",
+        promise: "Brikaya हमेशा मुफ़्त रहेगा",
+      },
+    ];
+
+    for (const { path, heading, promise } of localizedExpectations) {
+      const { unmount } = renderDownloadsPage(path);
+
+      expect(screen.getByRole("heading", { name: heading })).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: promise })).toBeInTheDocument();
+      expect(screen.queryByText("Download Brikaya")).not.toBeInTheDocument();
+
+      unmount();
+    }
+  });
 });

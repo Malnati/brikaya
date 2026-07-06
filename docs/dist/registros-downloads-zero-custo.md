@@ -90,8 +90,24 @@ Todos são SVG locais, sem raster, sem CDN, sem data URI, sem script embutido e 
 A implementação deve manter:
 
 - canonical `https://brikaya.com/downloads/`;
-- rotas localizadas como `/en/downloads/` quando o idioma ativo usa prefixo;
+- rotas localizadas para todos os idiomas suportados:
+  - `/en/downloads/`;
+  - `/es-419/downloads/`;
+  - `/en-IN/downloads/`;
+  - `/hi-IN/downloads/`;
+  - `/de/downloads/`;
+  - `/fr/downloads/`;
+  - `/it/downloads/`;
+  - `/ja/downloads/`;
+  - `/ko/downloads/`;
+  - `/id/downloads/`;
+  - `/vi/downloads/`;
+  - `/fil/downloads/`;
+  - `/th/downloads/`;
+  - `/zh-CN/downloads/`;
 - sitemap com `/downloads/` e versões localizadas;
+- título e descrição localizados por idioma, sem fallback inglês em páginas não inglesas;
+- hreflang com todos os idiomas e `x-default`;
 - fallback/offline após primeiro carregamento;
 - QRCode apontando somente para `https://brikaya.com/`.
 
@@ -112,6 +128,8 @@ QA público após deploy:
 ```bash
 make cloudflare-deploy
 make cloudflare-public-check
+make cloudflare-i18n-seo-qa
+make cloudflare-offline-pwa-qa
 ```
 
 Provas visuais esperadas:
@@ -124,3 +142,29 @@ Provas visuais esperadas:
 ## Status
 
 Implementação preparada para publicação Cloudflare Pages no domínio canônico. Submissões de lojas pagas não executadas por regra de custo zero.
+
+Publicação validada em 2026-07-06:
+
+- `make cloudflare-deploy` publicou `https://brikaya.com/`.
+- `make cloudflare-public-check` passou.
+- `make cloudflare-i18n-seo-qa` passou com downloads localizados para todos os 15 idiomas.
+- `make cloudflare-offline-pwa-qa` passou.
+- `make yandex-indexnow-submit` agora força envio real (`BRIKAYA_INDEXNOW_DRY_RUN=false`) e retornou `202 accepted-pending` para 32 URLs com chave redigida.
+
+Status multilíngue obrigatório:
+
+- `/downloads/` publica copy em `pt-BR`;
+- páginas prefixadas publicam copy e SEO no respectivo idioma;
+- `en` e `en-IN` podem usar copy em inglês;
+- todos os demais idiomas devem exibir título, descrição, botões, opções, instruções e compromisso de gratuidade no idioma local.
+
+Buscadores devem receber a versão canônica via sitemap e hreflang; quando houver painel gratuito, a submissão deve ser feita pela aba única `Brikaya webmaster/i18n`.
+
+Status de buscadores em 2026-07-06:
+
+- Google Search Console: sitemap processado e oito URLs principais com indexação manual solicitada.
+- Bing Webmaster Tools: sitemap reenviado, oito URLs principais submetidas, IndexNow com URLs localizadas recentes, sem ativar Clarity.
+- Yandex Webmaster: sitemap em fila, `/` e `/downloads/` em fila de reindexação.
+- Naver Search Advisor: `sitemap.xml` já submetido; rechecagem posterior parou em login sem inserir credenciais.
+- Baidu Search Resource Platform: bloqueado por falta de sessão autenticada; não foi feito login, telefone, documento, ICP ou pagamento.
+- DuckDuckGo/Yahoo/Seznam/Yep/outros: sem painel direto obrigatório no escopo; cobertura por Bing/IndexNow/sitemap/robots/canonical/hreflang.

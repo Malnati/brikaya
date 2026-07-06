@@ -12,6 +12,7 @@ import {
   type AppLocale,
 } from ".";
 import { EN_MESSAGES, I18N_MESSAGES, type TranslationKey } from "./messages";
+import { DOWNLOADS_ROUTE_PATH } from "../routes";
 
 const TEST_ROUTE = "/";
 const TEST_CAMPAIGN_SEARCH =
@@ -45,6 +46,40 @@ const MEXICO_TIME_ZONE = "America/Mexico_City";
 const INDIA_TIME_ZONE = "Asia/Kolkata";
 const UNSUPPORTED_TIME_ZONE = "Europe/Amsterdam";
 const ENGLISH_LOCALES = new Set<AppLocale>(["en", "en-IN"]);
+const DOWNLOADS_TITLE_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
+  "pt-BR": "Baixar Brikaya",
+  en: "Download Brikaya",
+  "es-419": "Descargar Brikaya",
+  "en-IN": "Download Brikaya",
+  "hi-IN": "Brikaya डाउनलोड",
+  de: "Brikaya herunterladen",
+  fr: "Télécharger Brikaya",
+  it: "Scarica Brikaya",
+  ja: "Brikayaをダウンロード",
+  ko: "Brikaya 다운로드",
+  id: "Unduh Brikaya",
+  vi: "Tải Brikaya",
+  fil: "I-download ang Brikaya",
+  th: "ดาวน์โหลด Brikaya",
+  "zh-CN": "下载 Brikaya",
+};
+const DOWNLOADS_DESCRIPTION_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
+  "pt-BR": "sem conta",
+  en: "no account",
+  "es-419": "sin cuenta",
+  "en-IN": "no account",
+  "hi-IN": "बिना खाते",
+  de: "ohne Konto",
+  fr: "sans compte",
+  it: "senza account",
+  ja: "アカウント不要",
+  ko: "계정 없이",
+  id: "tanpa akun",
+  vi: "không cần tài khoản",
+  fil: "walang account",
+  th: "ไม่ต้องมีบัญชี",
+  "zh-CN": "无需账号",
+};
 const LOCALIZED_APPEARANCE_KEYS: TranslationKey[] = [
   "appearance.option.auto-by-level",
   "appearance.option.neon-arcade",
@@ -139,6 +174,24 @@ describe("i18n offline do Brikaya", () => {
       expect(metadata.description.length).toBeGreaterThan(24);
       expect(metadata.canonicalUrl).toBe(getCanonicalUrl(locale));
       expect(getLocalePath(locale).startsWith(TEST_ROUTE)).toBe(true);
+    }
+  });
+
+  it("publica SEO de downloads localizado para todos os locales planejados", () => {
+    for (const locale of SUPPORTED_LOCALES) {
+      const metadata = getSeoMetadata(locale, DOWNLOADS_ROUTE_PATH);
+
+      expect(metadata.title).toContain(DOWNLOADS_TITLE_FRAGMENT_BY_LOCALE[locale]);
+      expect(metadata.description).toContain(
+        DOWNLOADS_DESCRIPTION_FRAGMENT_BY_LOCALE[locale],
+      );
+      expect(metadata.canonicalUrl).toBe(
+        getCanonicalUrl(locale, DOWNLOADS_ROUTE_PATH),
+      );
+      if (!ENGLISH_LOCALES.has(locale)) {
+        expect(metadata.title).not.toBe("Download Brikaya — free browser game");
+        expect(metadata.description).not.toContain("no account, no payment");
+      }
     }
   });
 

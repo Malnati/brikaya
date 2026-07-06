@@ -1,0 +1,240 @@
+{
+  "artifact": "evi-webmaster-i18n-global-status",
+  "updatedAt": "2026-07-06T12:15:54.853Z",
+  "scope": {
+    "canonicalOrigin": "https://brikaya.com",
+    "routes": [
+      "/",
+      "/downloads/",
+      "/en/",
+      "/en/downloads/",
+      "/es-419/",
+      "/es-419/downloads/",
+      "/en-IN/",
+      "/en-IN/downloads/",
+      "/hi-IN/",
+      "/hi-IN/downloads/",
+      "/de/",
+      "/de/downloads/",
+      "/fr/",
+      "/fr/downloads/",
+      "/it/",
+      "/it/downloads/",
+      "/ja/",
+      "/ja/downloads/",
+      "/ko/",
+      "/ko/downloads/",
+      "/id/",
+      "/id/downloads/",
+      "/vi/",
+      "/vi/downloads/",
+      "/fil/",
+      "/fil/downloads/",
+      "/th/",
+      "/th/downloads/",
+      "/zh-CN/",
+      "/zh-CN/downloads/"
+    ],
+    "locales": [
+      "pt-BR",
+      "en",
+      "es-419",
+      "en-IN",
+      "hi-IN",
+      "de",
+      "fr",
+      "it",
+      "ja",
+      "ko",
+      "id",
+      "vi",
+      "fil",
+      "th",
+      "zh-CN"
+    ],
+    "browserAutomationContract": {
+      "workTabLabel": "Brikaya webmaster/i18n",
+      "singleReusableTab": true,
+      "leaveOpenAtFinish": true
+    },
+    "privacyAndCostLimits": {
+      "noPaidPlans": true,
+      "noCards": true,
+      "noTrackingPixels": true,
+      "noExternalTelemetrySdk": true,
+      "noPlayerPersonalDataCollection": true
+    }
+  },
+  "localImplementation": {
+    "downloadsCopyLocalized": "validated",
+    "downloadsSeoLocalized": "validated",
+    "sitemapCoversLocalizedDownloads": "validated",
+    "noPaidStoreLinksInDownloadsUi": "validated",
+    "validationCommands": [
+      "node --version => v23.5.0",
+      "make help",
+      "npm run test:semantic-file-names",
+      "npm run test:svg-assets",
+      "npm test -- --runInBand => 58 suites / 365 tests passed",
+      "npm run build",
+      "make cloudflare-public-check",
+      "make cloudflare-i18n-seo-qa",
+      "make cloudflare-offline-pwa-qa",
+      "make -n yandex-indexnow-submit => BRIKAYA_INDEXNOW_DRY_RUN=false npm run indexnow:yandex"
+    ],
+    "localizedDownloadSamples": [
+      {
+        "path": "/es-419/downloads/",
+        "title": "Descargar Brikaya — juego gratis en el navegador"
+      },
+      {
+        "path": "/ja/downloads/",
+        "title": "Brikayaをダウンロード — 無料ブラウザゲーム"
+      },
+      {
+        "path": "/zh-CN/downloads/",
+        "title": "下载 Brikaya — 免费浏览器游戏"
+      },
+      {
+        "path": "/hi-IN/downloads/",
+        "title": "Brikaya डाउनलोड करें — मुफ़्त ब्राउज़र गेम"
+      }
+    ]
+  },
+  "searchEngines": [
+    {
+      "platform": "Google Search Console",
+      "panelUrl": "https://search.google.com/search-console/sitemaps?resource_id=sc-domain%3Abrikaya.com",
+      "status": "manual_index_requested",
+      "actions": [
+        "Domain property sc-domain:brikaya.com visible in authenticated Search Console",
+        "https://brikaya.com/sitemap.xml listed as Processed on 2026-07-06 with 32 discovered pages",
+        "URL inspection confirmed indexed state and manual indexing requested for /, /downloads/, /es-419/, /es-419/downloads/, /ja/, /ja/downloads/, /zh-CN/, /zh-CN/downloads/"
+      ],
+      "routesCovered": [
+        "/",
+        "/downloads/",
+        "/es-419/",
+        "/es-419/downloads/",
+        "/ja/",
+        "/ja/downloads/",
+        "/zh-CN/",
+        "/zh-CN/downloads/"
+      ],
+      "evidence": "Sanitized panel text observed: sitemap Processed, 32 pages; URL Inspection showed indexed state and queue confirmation after indexing requests"
+    },
+    {
+      "platform": "Bing Webmaster Tools",
+      "panelUrl": "https://www.bing.com/webmasters/sitemaps?siteUrl=https%3A%2F%2Fbrikaya.com",
+      "status": "manual_index_requested",
+      "actions": [
+        "Site brikaya.com visible in authenticated Bing Webmaster Tools",
+        "https://brikaya.com/sitemap.xml resubmitted on 2026-07-06; status Processing after prior Success state",
+        "URL Inspection + Request indexing + confirmation Submit completed for /, /downloads/, /es-419/, /es-419/downloads/, /ja/, /ja/downloads/, /zh-CN/, /zh-CN/downloads/",
+        "IndexNow dashboard showed 64 URLs submitted in the last 12 hours and latest localized downloads URLs present; Clarity was not enabled or installed"
+      ],
+      "routesCovered": [
+        "/",
+        "/downloads/",
+        "/es-419/",
+        "/es-419/downloads/",
+        "/ja/",
+        "/ja/downloads/",
+        "/zh-CN/",
+        "/zh-CN/downloads/"
+      ],
+      "evidence": "Sanitized panel text observed: sitemap submitted/processing; URL submitted successfully; IndexNow list includes localized downloads URLs"
+    },
+    {
+      "platform": "Yahoo Search",
+      "status": "no_direct_action",
+      "action": "No separate free webmaster action available in scope; coverage handled through Bing Webmaster Tools, sitemap, canonical and hreflang",
+      "evidence": "No paid setup, tracking or external script added"
+    },
+    {
+      "platform": "DuckDuckGo",
+      "status": "no_direct_action",
+      "action": "No site-specific console action required in scope; coverage handled through crawlable pages, sitemap, robots, canonical/hreflang and Bing/IndexNow discovery",
+      "evidence": "No paid setup, tracking or external script added"
+    },
+    {
+      "platform": "Yandex Webmaster",
+      "panelUrl": "https://webmaster.yandex.com/site/https:brikaya.com:443/indexing/sitemap/",
+      "status": "manual_index_requested",
+      "actions": [
+        "https://brikaya.com/sitemap.xml present in Yandex sitemap processing queue",
+        "Manual reindex requested for https://brikaya.com/ and https://brikaya.com/downloads/; both shown In queue with 2026-07-06 timestamp",
+        "Notifications checked; pending site-image/fav icon guidance remains visible while public favicon/assets are deployed",
+        "IndexNow/Yandex accepted-pending status=202 for 32 URLs after deploy"
+      ],
+      "routesCovered": [
+        "/",
+        "/downloads/"
+      ],
+      "evidence": "Sanitized panel text observed: sitemap queue; reindex In queue; IndexNow status=202 with key redacted"
+    },
+    {
+      "platform": "Naver Search Advisor",
+      "panelUrl": "https://searchadvisor.naver.com/console/site/request/sitemap?site=https%3A%2F%2Fbrikaya.com",
+      "status": "sitemap_submitted",
+      "actions": [
+        "https://brikaya.com visible as selected site in Search Advisor before session recheck expired",
+        "Sitemap table showed sitemap.xml registered on 2026-07-04 10:16:30",
+        "The earlier URL-format warning is no longer present in the observed submitted-sitemap state",
+        "A later revisit redirected to Naver sign-in; no password, OTP, phone or identity step was attempted"
+      ],
+      "evidence": "Sanitized panel text observed: Submitted sitemap table with sitemap.xml; later auth recheck blocked by sign-in only"
+    },
+    {
+      "platform": "Baidu Search Resource Platform",
+      "panelUrl": "https://ziyuan.baidu.com/site/index",
+      "status": "blocked_auth",
+      "actions": [
+        "Opened Baidu Search Resource Platform in Chrome",
+        "Platform showed public/logged-out Site Management page and Log in controls",
+        "No site addition or verification performed because authenticated account was not available and the next step would leave the no-password/no-phone/no-document boundary"
+      ],
+      "evidence": "Sanitized panel text observed: You are not logged in; Log in; add website prompt; no payment or tracking action performed"
+    },
+    {
+      "platform": "Seznam/Yep/IndexNow participants",
+      "status": "indexnow_submitted",
+      "action": "Covered through IndexNow-compatible discovery and public sitemap/robots/canonical/hreflang; no paid service used",
+      "evidence": "IndexNow accepted-pending status=202 for 32 canonical URLs and Bing IndexNow dashboard lists latest localized URLs"
+    }
+  ],
+  "sanitization": {
+    "secretValuesIncluded": false,
+    "emailScreenshotsIncluded": false,
+    "tokenValuesIncluded": false,
+    "personalDocumentIncluded": false
+  },
+  "publicValidation": {
+    "deployedTo": "https://brikaya.com/",
+    "cloudflareDeploy": "validated: https://fd31fe6d.brikaya-live.pages.dev -> https://brikaya.com/",
+    "cloudflarePublicCheck": "validated",
+    "cloudflareI18nSeoQa": "validated",
+    "cloudflareOfflinePwaQa": "validated",
+    "i18nSeoReport": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-public-validation.json",
+    "indexNowYandex": {
+      "status": "accepted-pending",
+      "httpStatus": 202,
+      "urlCount": 32,
+      "keyLocation": "https://brikaya.com/[redacted].txt",
+      "validatedAt": "2026-07-06T12:15:54.853Z"
+    },
+    "makefileIndexNowSubmitTarget": "validated by make -n; forces BRIKAYA_INDEXNOW_DRY_RUN=false"
+  },
+  "browserAutomation": {
+    "chromeProfile": "authenticated personal Chrome profile used where already signed in; no credentials printed",
+    "sessionName": "Brikaya webmaster/i18n",
+    "newTabsOpenedByCodex": false,
+    "workTabFinalUrl": "https://brikaya.com/sitemap.xml",
+    "workTabLeftOpenAtFinish": true,
+    "sensitiveScreenshotsStored": false,
+    "exception": "Existing Naver Search Advisor tab was reused first. A Naver OAuth/Chrome extension block appeared on recheck, so the remaining Baidu check used an already-open about:blank tab; no new browser tab was created. This deviation is documented instead of silently claiming perfect one-tab compliance.",
+    "popupsOrExtraTabsCreatedBySites": false,
+    "captchaOrOtpEncountered": false,
+    "stoppedAtPasswordPhoneDocumentOrPayment": true
+  }
+}

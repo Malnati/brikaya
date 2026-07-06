@@ -166,7 +166,7 @@ yandex-indexnow-dry-run: codex-env-check
 	@BRIKAYA_INDEXNOW_DRY_RUN=true npm run indexnow:yandex
 
 yandex-indexnow-submit: codex-env-check
-	@npm run indexnow:yandex
+	@BRIKAYA_INDEXNOW_DRY_RUN=false npm run indexnow:yandex
 
 # Executar o jogo em modo de desenvolvimento
 dev: kill-processes
