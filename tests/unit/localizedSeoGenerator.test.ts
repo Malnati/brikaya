@@ -272,6 +272,31 @@ const LOCALIZED_LOCALES = [
   'zea',
   'frp',
   'arp',
+  'en-AU',
+  'en-CA',
+  'en-NZ',
+  'en-ZA',
+  'es-MX',
+  'es-AR',
+  'es-CO',
+  'es-CL',
+  'es-PE',
+  'pt-AO',
+  'pt-MZ',
+  'fr-BE',
+  'fr-CH',
+  'de-AT',
+  'de-CH',
+  'it-CH',
+  'zh-HK',
+  'ar-SA',
+  'ar-EG',
+  'fa-AF',
+  'ps-AF',
+  'sd-IN',
+  'ks-IN',
+  'ug-CN',
+  'yi-001',
   'mus',
 ] as const;
 
@@ -341,6 +366,13 @@ describe('gerador SEO localizado', () => {
     expect(downloadsSeoBlock).toContain("Khuphela i-Brikaya");
     expect(downloadsSeoBlock).toContain("Khoasolla Brikaya");
     expect(downloadsSeoBlock).toContain("Folosa Brikaya");
+    expect(downloadsSeoBlock).toContain("Download Brikaya");
+    expect(downloadsSeoBlock).toContain("Descargar Brikaya");
+    expect(downloadsSeoBlock).toContain("Descarregar Brikaya");
+    expect(downloadsSeoBlock).toContain("下載 Brikaya");
+    expect(downloadsSeoBlock).toContain("تنزيل Brikaya");
+    expect(downloadsSeoBlock).toContain("Brikaya نى چۈشۈرۈش");
+    expect(downloadsSeoBlock).toContain("אַראָפּלאָדן Brikaya");
     expect(downloadsSeoBlock).toContain("Dawuniloda Brikaya");
   });
 });

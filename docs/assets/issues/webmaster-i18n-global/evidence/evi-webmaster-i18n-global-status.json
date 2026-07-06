@@ -1,6 +1,6 @@
 {
   "artifact": "evi-webmaster-i18n-global-status",
-  "updatedAt": "2026-07-06T21:29:28Z",
+  "updatedAt": "2026-07-06T22:00:00Z",
   "scope": {
     "canonicalOrigin": "https://brikaya.com",
     "routes": [
@@ -831,29 +831,22 @@
     "noPaidStoreLinksInDownloadsUi": "validated",
     "validationCommands": [
       "node --version -> v23.5.0",
-      "make help",
-      "npm run codex-env:check",
-      "npm run test:semantic-file-names",
-      "npm run test:svg-assets",
-      "npm test -- --runInBand -> 58 suites / 371 tests",
-      "npm run build -> localized-seo ok: locales=259, routes=2",
-      "make cloudflare-deploy -> ok: https://35327c32.brikaya-live.pages.dev deployed and brikaya.com updated",
-      "make cloudflare-public-check -> ok: public-trace-guard public=414",
-      "make cloudflare-i18n-seo-qa -> ok: hreflangLocales=259, downloadsLocalesChecked=84",
-      "make cloudflare-offline-pwa-qa -> ok",
-      "make yandex-indexnow-submit -> 202 accepted-pending urls=520"
+      "npm test -- --runInBand -> 58 suites / 372 tests",
+      "npm run build -> localized-seo ok: locales=284, routes=2",
+      "make seznam-indexnow-dry-run -> pending final validation before deploy"
     ],
     "localizedDownloadSamples": [
-      "/la/downloads/",
-      "/eo/downloads/",
-      "/nds/downloads/",
-      "/hsb/downloads/",
-      "/wa/downloads/"
+      "/en-AU/downloads/",
+      "/es-MX/downloads/",
+      "/pt-AO/downloads/",
+      "/zh-HK/downloads/",
+      "/ar-SA/downloads/",
+      "/ug-CN/downloads/"
     ],
-    "expandedLocalesP13P16": "wave259 published: la, eo, ia, ie, io, vo, an, mwl, ext, bar, hsb, dsb, nds, frr, stq, ksh, pcd, wa, li, vls, zea, frp, arp, mus",
-    "supportedLocaleCount": 259,
-    "sitemapUrlCount": 520,
-    "rtlSupport": "unchanged and validated for ar, ur, fa, he, ps, sd, ks, dv, ckb, ug, yi and bal; no new RTL locale in wave259",
+    "expandedLocalesP13P16": "wave284 local implementation: en-AU, en-CA, en-NZ, en-ZA, es-MX, es-AR, es-CO, es-CL, es-PE, pt-AO, pt-MZ, fr-BE, fr-CH, de-AT, de-CH, it-CH, zh-HK, ar-SA, ar-EG, fa-AF, ps-AF, sd-IN, ks-IN, ug-CN, yi-001",
+    "supportedLocaleCount": 284,
+    "sitemapUrlCount": 570,
+    "rtlSupport": "validated locally for existing RTL plus ar-SA, ar-EG, fa-AF, ps-AF, sd-IN, ks-IN, ug-CN, yi-001",
     "clarityInstalled": false,
     "clarityDecision": "blocked: no pixel/tag/SDK/telemetry by default",
     "wave139Screenshot": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave139-qu-downloads.png",
@@ -864,7 +857,9 @@
     "wave235Screenshot": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave235-ce-downloads.png",
     "wave235Preview": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave235-local-preview.json",
     "wave259Screenshot": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave259-la-downloads.png",
-    "wave259Preview": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave259-local-preview.json"
+    "wave259Preview": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave259-local-preview.json",
+    "wave284Screenshot": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave284-ar-sa-downloads.png",
+    "wave284Preview": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave284-local-preview.json"
   },
   "searchEngines": [
     {
@@ -1306,7 +1301,7 @@
     "notes": "Single registered Chrome tab reused and left open at https://brikaya.com/sitemap.xml. Google Search Console still showed processed sitemap count 472, but full URL resubmission for https://brikaya.com/sitemap.xml returned Sitemap enviado. Bing sitemap showed total URLs discovered 487 and sitemap row 472, then resubmission changed status to Processing; URL Submission quota was 0. Yandex checklist now shows 3 recommendations, sitemap remains queued, and IndexNow accepted 520 URLs. Naver sitemap.xml confirmed; /la/ crawl attempt did not add a new history row, while prior /fy/, /yo/, /cs/ and /fa/ remained visible. Clarity was read-only; no install or activation. No CAPTCHA/OTP/password/payment/document flow was completed."
   },
   "p0ToP20": {
-    "P0": "ok_public_520_url_sitemap_robots_200_after_wave259_deploy",
+    "P0": "local_570_url_sitemap_generated_public_deploy_pending",
     "P1": "google_sitemap_resubmitted_full_url_panel_confirmation_pending_processing_count_still_472_until_reprocess",
     "P2": "bing_sitemap_submitted_processing_pending_for_520_urls_url_submission_quota_0_reset_about_3h",
     "P3": "yahoo_covered_by_bing_pending_recrawl",
@@ -1314,18 +1309,18 @@
     "P5": "yandex_indexnow_202_for_520_urls_sitemap_processing_checklist_3_recommendations_until_processed",
     "P6": "naver_sitemap_confirmed_manual_la_crawl_not_added_to_history",
     "P7": "baidu_blocked_external_registration_constraints_no_document_icp_payment",
-    "P8": "brave_no_current_direct_submit_prior_endpoint_404_keep_crawl_path",
-    "P9": "seznam_blocked_captcha_code_no_submission",
+    "P8": "brave_no_current_direct_submit_keep_crawl_path_and_indexnow_when_supported",
+    "P9": "seznam_indexnow_target_added_panel_free_only_recheck_pending_after_deploy",
     "P10": "mojeek_no_direct_action_crawl_backlinks_needed",
     "P11": "other_metasearch_covered_by_google_bing_yandex_sitemap_indexnow_when_supported",
     "P12": "snippet_sampling_pending_after_search_engines_reprocess_520_url_sitemap",
-    "P13": "wave_259_deployed_24_new_ltr_locales_now_public",
-    "P14": "regional_variants_previous_waves_done_more_variants_future_scope",
+    "P13": "wave_284_local_25_new_locales_ready_for_pr_deploy",
+    "P14": "regional_variants_added_en_au_en_ca_en_nz_en_za_es_mx_es_ar_es_co_es_cl_es_pe_pt_ao_pt_mz_fr_be_fr_ch_de_at_de_ch_it_ch_zh_hk",
     "P15": "south_asia_wave_163_deployed_more_languages_future_scope",
-    "P16": "rtl_public_validated_ar_ur_fa_he_ps_sd_ks_dv_ckb_ug_yi_bal_no_new_rtl_in_wave259",
-    "P17": "public_i18n_tests_passed_259_hreflangs_84_downloads_sampled_wave259_public_samples_ok",
-    "P18": "sitemap_520_public_hreflang_259_html_report_passed",
-    "P19": "evidence_updated_wave259_public_validation_browser_recheck_and_search_status",
+    "P16": "rtl_local_validated_ar_sa_ar_eg_fa_af_ps_af_sd_in_ks_in_ug_cn_yi_001",
+    "P17": "local_i18n_tests_passed_284_locales_samples_wave284",
+    "P18": "local_sitemap_570_hreflang_284_generated_public_deploy_pending",
+    "P19": "evidence_updated_wave284_local_validation_pending_public_browser_recheck",
     "P20": "clarity_not_installed_blocked_by_privacy_policy"
   },
   "nextWave91": {
@@ -2296,6 +2291,85 @@
       },
       "indexNowYandex": "accepted-pending status=202 urls=520 keyLocation=https://brikaya.com/[redacted].txt",
       "clarityPublicCheck": "not installed; no package/script/tag/pixel/SDK added"
+    }
+  },
+  "nextWave284": {
+    "createdAt": "2026-07-06T22:00:00Z",
+    "locales": [
+      "en-AU",
+      "en-CA",
+      "en-NZ",
+      "en-ZA",
+      "es-MX",
+      "es-AR",
+      "es-CO",
+      "es-CL",
+      "es-PE",
+      "pt-AO",
+      "pt-MZ",
+      "fr-BE",
+      "fr-CH",
+      "de-AT",
+      "de-CH",
+      "it-CH",
+      "zh-HK",
+      "ar-SA",
+      "ar-EG",
+      "fa-AF",
+      "ps-AF",
+      "sd-IN",
+      "ks-IN",
+      "ug-CN",
+      "yi-001"
+    ],
+    "targetSupportedLocaleCount": 284,
+    "targetSitemapUrlCount": 570,
+    "routesAdded": 50,
+    "rtlAdded": [
+      "ar-SA",
+      "ar-EG",
+      "fa-AF",
+      "ps-AF",
+      "sd-IN",
+      "ks-IN",
+      "ug-CN",
+      "yi-001"
+    ],
+    "zeroCost": true,
+    "telemetryAdded": false,
+    "clarityInstalled": false,
+    "deployStatus": "local_validation_complete_pending_pr_merge_and_deploy",
+    "localValidation": {
+      "node": "v23.5.0",
+      "testResult": "58 suites / 372 tests passed",
+      "buildResult": "localized-seo ok: locales=284, routes=2",
+      "sitemapLocCount": 570,
+      "sampleRoutes": [
+        "/en-AU/downloads/",
+        "/es-MX/downloads/",
+        "/pt-AO/downloads/",
+        "/zh-HK/downloads/",
+        "/ar-SA/downloads/",
+        "/ug-CN/downloads/"
+      ],
+      "screenshot": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave284-ar-sa-downloads.png",
+      "preview": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave284-local-preview.json"
+    },
+    "seznam": {
+      "indexNowEndpoint": "https://search.seznam.cz/indexnow",
+      "panelPolicy": "free_only_stop_at_captcha_otp_phone_document_payment_public_personal_data",
+      "officialReferences": [
+        "https://o-seznam.cz/napoveda/vyhledavani/seznambot/sitemap-xml/",
+        "https://o-seznam.cz/napoveda/vyhledavani/seznambot/protokol-indexnow/",
+        "https://o-seznam.cz/napoveda/vyhledavani/seznam-webmaster/"
+      ]
+    },
+    "limitsPreserved": {
+      "noPaidPlans": true,
+      "noCards": true,
+      "noTrackingPixels": true,
+      "noExternalTelemetrySdk": true,
+      "noPlayerPersonalDataCollection": true
     }
   }
 }

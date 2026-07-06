@@ -1,0 +1,69 @@
+{
+  "checkedAt": "2026-07-06T21:59:10.296Z",
+  "source": "local dist preview",
+  "expectedSupportedLocales": 284,
+  "sitemapLocCount": 570,
+  "sampleResults": [
+    {
+      "locale": "en-AU",
+      "status": 200,
+      "lang": "en-AU",
+      "dir": "ltr",
+      "title": "Download Brikaya — free browser game",
+      "canonical": "https://brikaya.com/en-AU/downloads/",
+      "description": "Install or play Brikaya free for players in Australia, with no account and no payment; progress stays on your device and offline play works after the first visit. no account.",
+      "hasClarity": false
+    },
+    {
+      "locale": "es-MX",
+      "status": 200,
+      "lang": "es-MX",
+      "dir": "ltr",
+      "title": "Descargar Brikaya — juego gratis en el navegador",
+      "canonical": "https://brikaya.com/es-MX/downloads/",
+      "description": "Instala o juega Brikaya gratis para México, sin cuenta y sin pago; el progreso queda guardado en tu dispositivo y puedes jugar sin conexión después de la primera visita. sin cuenta.",
+      "hasClarity": false
+    },
+    {
+      "locale": "pt-AO",
+      "status": 200,
+      "lang": "pt-AO",
+      "dir": "ltr",
+      "title": "Descarregar Brikaya — jogo grátis no navegador",
+      "canonical": "https://brikaya.com/pt-AO/downloads/",
+      "description": "Instale ou jogue Brikaya grátis em Angola, sem conta e sem pagamento; o progresso fica guardado no seu aparelho e pode jogar offline após o primeiro acesso. sem conta.",
+      "hasClarity": false
+    },
+    {
+      "locale": "zh-HK",
+      "status": 200,
+      "lang": "zh-HK",
+      "dir": "ltr",
+      "title": "下載 Brikaya — 免費瀏覽器遊戲",
+      "canonical": "https://brikaya.com/zh-HK/downloads/",
+      "description": "在香港免費安裝或遊玩 Brikaya，無需帳戶，無需付款；進度保存在你的裝置上，首次造訪後可離線遊玩。 無需帳戶.",
+      "hasClarity": false
+    },
+    {
+      "locale": "ar-SA",
+      "status": 200,
+      "lang": "ar-SA",
+      "dir": "rtl",
+      "title": "تنزيل Brikaya — لعبة متصفح مجانية",
+      "canonical": "https://brikaya.com/ar-SA/downloads/",
+      "description": "ثبّت Brikaya أو العبها مجاناً في السعودية، بدون حساب وبدون دفع؛ يبقى التقدم على جهازك ويعمل اللعب دون اتصال بعد الزيارة الأولى. بدون حساب.",
+      "hasClarity": false
+    },
+    {
+      "locale": "ug-CN",
+      "status": 200,
+      "lang": "ug-CN",
+      "dir": "rtl",
+      "title": "Brikaya نى چۈشۈرۈش — ھەقسىز توركۆرگۈ ئويۇنى",
+      "canonical": "https://brikaya.com/ug-CN/downloads/",
+      "description": "جۇڭگودا Brikaya نى ھەقسىز قاچىلاڭ ياكى ئويناڭ، ھېسابات ۋە ھەق تۆلەش يوق؛ ئىلگىرىلەش ئۈسكۈنىڭىزدە ساقلىنىدۇ، تۇنجى زىيارەتتىن كېيىن تورسىز ئويناش ئىشلەيدۇ. ھېساباتسىز.",
+      "hasClarity": false
+    }
+  ],
+  "screenshot": "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave284-ar-sa-downloads.png"
+}

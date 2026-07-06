@@ -20,6 +20,7 @@ const TEST_CAMPAIGN_SEARCH =
 const TEST_TITLE_KEY = "seo.title";
 const PORTUGUESE_LOCALE: AppLocale = "pt-BR";
 const SPANISH_LOCALE: AppLocale = "es-419";
+const MEXICAN_SPANISH_LOCALE: AppLocale = "es-MX";
 const CHINESE_LOCALE: AppLocale = "zh-CN";
 const HINDI_LOCALE: AppLocale = "hi-IN";
 const ENGLISH_LOCALE: AppLocale = "en";
@@ -46,7 +47,7 @@ const GERMANY_TIME_ZONE = "Europe/Berlin";
 const MEXICO_TIME_ZONE = "America/Mexico_City";
 const INDIA_TIME_ZONE = "Asia/Kolkata";
 const UNSUPPORTED_TIME_ZONE = "Pacific/Kanton";
-const ENGLISH_LOCALES = new Set<AppLocale>(["en", "en-IN", "en-GB"]);
+const ENGLISH_LOCALES = new Set<AppLocale>(["en", "en-IN", "en-GB", "en-AU", "en-CA", "en-NZ", "en-ZA"]);
 const EXPECTED_GLOBAL_LOCALES = [
   "pt-BR",
   "en",
@@ -306,6 +307,31 @@ const EXPECTED_GLOBAL_LOCALES = [
   "zea",
   "frp",
   "arp",
+  "en-AU",
+  "en-CA",
+  "en-NZ",
+  "en-ZA",
+  "es-MX",
+  "es-AR",
+  "es-CO",
+  "es-CL",
+  "es-PE",
+  "pt-AO",
+  "pt-MZ",
+  "fr-BE",
+  "fr-CH",
+  "de-AT",
+  "de-CH",
+  "it-CH",
+  "zh-HK",
+  "ar-SA",
+  "ar-EG",
+  "fa-AF",
+  "ps-AF",
+  "sd-IN",
+  "ks-IN",
+  "ug-CN",
+  "yi-001",
   "mus",
 ] as const;
 const NEW_DOWNLOADS_SEO_EXPECTATIONS = [
@@ -552,6 +578,13 @@ const NEW_DOWNLOADS_SEO_EXPECTATIONS = [
   { locale: "zea", title: "Brikaya downloade", description: "zonder account" },
   { locale: "frp", title: "Tèlèchargiér Brikaya", description: "sen compto" },
   { locale: "arp", title: "Brikaya download", description: "no account" },
+  { locale: "en-AU", title: "Download Brikaya", description: "no account" },
+  { locale: "es-MX", title: "Descargar Brikaya", description: "sin cuenta" },
+  { locale: "pt-AO", title: "Descarregar Brikaya", description: "sem conta" },
+  { locale: "zh-HK", title: "下載 Brikaya", description: "無需帳戶" },
+  { locale: "ar-SA", title: "تنزيل Brikaya", description: "بدون حساب" },
+  { locale: "ug-CN", title: "Brikaya نى چۈشۈرۈش", description: "ھېساباتسىز" },
+  { locale: "yi-001", title: "אַראָפּלאָדן Brikaya", description: "אָן חשבון" },
   { locale: "mus", title: "Brikaya download", description: "no account" },
 ] as const;
 const DOWNLOADS_TITLE_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
@@ -814,6 +847,31 @@ const DOWNLOADS_TITLE_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
   "zea": "Brikaya downloade",
   "frp": "Tèlèchargiér Brikaya",
   "arp": "Brikaya download",
+  "en-AU": "Download Brikaya",
+  "en-CA": "Download Brikaya",
+  "en-NZ": "Download Brikaya",
+  "en-ZA": "Download Brikaya",
+  "es-MX": "Descargar Brikaya",
+  "es-AR": "Descargar Brikaya",
+  "es-CO": "Descargar Brikaya",
+  "es-CL": "Descargar Brikaya",
+  "es-PE": "Descargar Brikaya",
+  "pt-AO": "Descarregar Brikaya",
+  "pt-MZ": "Descarregar Brikaya",
+  "fr-BE": "Télécharger Brikaya",
+  "fr-CH": "Télécharger Brikaya",
+  "de-AT": "Brikaya herunterladen",
+  "de-CH": "Brikaya herunterladen",
+  "it-CH": "Scarica Brikaya",
+  "zh-HK": "下載 Brikaya",
+  "ar-SA": "تنزيل Brikaya",
+  "ar-EG": "تنزيل Brikaya",
+  "fa-AF": "دانلود Brikaya",
+  "ps-AF": "Brikaya ډاونلوډ کړئ",
+  "sd-IN": "Brikaya ڊائونلوڊ ڪريو",
+  "ks-IN": "Brikaya ڈاؤنلوڈ کرِو",
+  "ug-CN": "Brikaya نى چۈشۈرۈش",
+  "yi-001": "אַראָפּלאָדן Brikaya",
   "mus": "Brikaya download",
 
 };
@@ -1076,6 +1134,31 @@ const DOWNLOADS_DESCRIPTION_FRAGMENT_BY_LOCALE: Record<AppLocale, string> = {
   "zea": "zonder account",
   "frp": "sen compto",
   "arp": "no account",
+  "en-AU": "no account",
+  "en-CA": "no account",
+  "en-NZ": "no account",
+  "en-ZA": "no account",
+  "es-MX": "sin cuenta",
+  "es-AR": "sin cuenta",
+  "es-CO": "sin cuenta",
+  "es-CL": "sin cuenta",
+  "es-PE": "sin cuenta",
+  "pt-AO": "sem conta",
+  "pt-MZ": "sem conta",
+  "fr-BE": "sans compte",
+  "fr-CH": "sans compte",
+  "de-AT": "ohne Konto",
+  "de-CH": "ohne Konto",
+  "it-CH": "senza account",
+  "zh-HK": "無需帳戶",
+  "ar-SA": "بدون حساب",
+  "ar-EG": "بدون حساب",
+  "fa-AF": "بدون حساب",
+  "ps-AF": "له حساب پرته",
+  "sd-IN": "بغير اڪائونٽ",
+  "ks-IN": "اکاؤنٹ بغیر",
+  "ug-CN": "ھېساباتسىز",
+  "yi-001": "אָן חשבון",
   "mus": "no account",
 
 };
@@ -1354,12 +1437,12 @@ describe("i18n offline do Brikaya", () => {
       </I18nProvider>,
     );
 
-    expect(screen.getByText(SPANISH_LOCALE)).toBeInTheDocument();
-    expect(window.location.pathname).toBe(getLocalePath(SPANISH_LOCALE));
-    expect(document.documentElement.lang).toBe(SPANISH_LOCALE);
+    expect(screen.getByText(MEXICAN_SPANISH_LOCALE)).toBeInTheDocument();
+    expect(window.location.pathname).toBe(getLocalePath(MEXICAN_SPANISH_LOCALE));
+    expect(document.documentElement.lang).toBe(MEXICAN_SPANISH_LOCALE);
     expect(window.localStorage.setItem).not.toHaveBeenCalledWith(
       LOCALE_STORAGE_KEY,
-      SPANISH_LOCALE,
+      MEXICAN_SPANISH_LOCALE,
     );
   });
 

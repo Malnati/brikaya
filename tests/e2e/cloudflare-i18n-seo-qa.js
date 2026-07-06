@@ -87,6 +87,12 @@ const TESTED_LOCALES = [
   { locale: "eo", path: "/eo/", title: "Brikaya — blokrompa arkado" },
   { locale: "nds", path: "/nds/", title: "Brikaya — Blockbreker-Arkade" },
   { locale: "hsb", path: "/hsb/", title: "Brikaya — arkada łamanja blokow" },
+  { locale: "en-AU", path: "/en-AU/", title: "Brikaya — block breaker arcade for Australia" },
+  { locale: "es-MX", path: "/es-MX/", title: "Brikaya — arcade de romper bloques para México" },
+  { locale: "pt-AO", path: "/pt-AO/", title: "Brikaya — arcade de partir blocos para Angola" },
+  { locale: "zh-HK", path: "/zh-HK/", title: "Brikaya — 香港打磚塊街機" },
+  { locale: "ar-SA", path: "/ar-SA/", title: "Brikaya — أركيد كسر الكتل للسعودية" },
+  { locale: "ug-CN", path: "/ug-CN/", title: "Brikaya — جۇڭگو ئۈچۈن بۆلەك چېقىش ئاركىدى" },
   { locale: "wa", path: "/wa/", title: "Brikaya — djeu di cassaedje di blocs" },
 ];
 const ALL_HREFLANG_LOCALES = [
@@ -348,6 +354,31 @@ const ALL_HREFLANG_LOCALES = [
   "zea",
   "frp",
   "arp",
+  "en-AU",
+  "en-CA",
+  "en-NZ",
+  "en-ZA",
+  "es-MX",
+  "es-AR",
+  "es-CO",
+  "es-CL",
+  "es-PE",
+  "pt-AO",
+  "pt-MZ",
+  "fr-BE",
+  "fr-CH",
+  "de-AT",
+  "de-CH",
+  "it-CH",
+  "zh-HK",
+  "ar-SA",
+  "ar-EG",
+  "fa-AF",
+  "ps-AF",
+  "sd-IN",
+  "ks-IN",
+  "ug-CN",
+  "yi-001",
   "mus",
 ];
 const TESTED_DOWNLOADS_LOCALES = [
@@ -687,6 +718,36 @@ const TESTED_DOWNLOADS_LOCALES = [
     path: "/sma/downloads/",
     title: "Brikaya veedtjh — nuvhtie browser-speele",
   },
+  {
+    locale: "en-AU",
+    path: "/en-AU/downloads/",
+    title: "Download Brikaya — free browser game",
+  },
+  {
+    locale: "es-MX",
+    path: "/es-MX/downloads/",
+    title: "Descargar Brikaya — juego gratis en el navegador",
+  },
+  {
+    locale: "pt-AO",
+    path: "/pt-AO/downloads/",
+    title: "Descarregar Brikaya — jogo grátis no navegador",
+  },
+  {
+    locale: "zh-HK",
+    path: "/zh-HK/downloads/",
+    title: "下載 Brikaya — 免費瀏覽器遊戲",
+  },
+  {
+    locale: "ar-SA",
+    path: "/ar-SA/downloads/",
+    title: "تنزيل Brikaya — لعبة متصفح مجانية",
+  },
+  {
+    locale: "ug-CN",
+    path: "/ug-CN/downloads/",
+    title: "Brikaya نى چۈشۈرۈش — ھەقسىز توركۆرگۈ ئويۇنى",
+  },
 ];
 const LANGUAGE_SELECT_SELECTOR = "#game-language-select";
 const MENU_BUTTON_SELECTOR = ".dashboard-menu-button";
@@ -699,11 +760,11 @@ const MENU_OPEN_ATTEMPTS = 3;
 const MENU_OPEN_RETRY_TIMEOUT_MS = 5000;
 const CHINESE_MENU_TEXT = "隐私";
 const ROOT_CANONICAL = "https://brikaya.com/";
-const RTL_LOCALES = new Set(["ar", "ur", "fa", "he", "ps", "sd", "ks", "dv", "ckb", "ug", "yi", "bal"]);
+const RTL_LOCALES = new Set(["ar", "ur", "fa", "he", "ps", "sd", "ks", "dv", "ckb", "ug", "yi", "bal", "ar-SA", "ar-EG", "fa-AF", "ps-AF", "sd-IN", "ks-IN", "ug-CN", "yi-001"]);
 const BROWSER_AUTO_LANGUAGE = "es-MX";
 const BROWSER_AUTO_LANGUAGES = ["es-MX", "en-US"];
-const BROWSER_AUTO_EXPECTED_LOCALE = "es-419";
-const BROWSER_AUTO_EXPECTED_PATH = "/es-419/";
+const BROWSER_AUTO_EXPECTED_LOCALE = "es-MX";
+const BROWSER_AUTO_EXPECTED_PATH = "/es-MX/";
 const TIME_ZONE_AUTO_LANGUAGE = "eo-EO";
 const TIME_ZONE_AUTO_LANGUAGES = ["eo-EO"];
 const TIME_ZONE_AUTO_VALUE = "Europe/Berlin";

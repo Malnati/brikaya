@@ -83,6 +83,19 @@ describe('submit-yandex-indexnow', () => {
     expect(output).not.toContain(TEST_KEY);
   });
 
+  it('faz dry-run no endpoint IndexNow do Seznam sem imprimir a chave', () => {
+    writeEnv();
+    writeSitemap(['https://brikaya.com/', 'https://brikaya.com/en-AU/']);
+
+    const output = runIndexNow({ BRIKAYA_INDEXNOW_ENDPOINT: 'https://search.seznam.cz/indexnow' });
+
+    expect(output).toContain(`seznam-indexnow dry-run: host=${CANONICAL_HOST}`);
+    expect(output).toContain('endpoint=https://search.seznam.cz/indexnow');
+    expect(output).toContain('urls=2');
+    expect(output).toContain('keyLocation=https://brikaya.com/[redacted].txt');
+    expect(output).not.toContain(TEST_KEY);
+  });
+
   it('rejeita URLs fora do host canônico do Brikaya', () => {
     writeEnv();
     writeSitemap(['https://brikaya.com/', 'https://example.com/']);
