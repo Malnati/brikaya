@@ -217,13 +217,13 @@ function isPointInsideJoystickCircle(point, box) {
 async function clickButtonByPattern(page, patternSource) {
   return page.evaluate((source) => {
     const pattern = new RegExp(source, "i");
-    const button = Array.from(document.querySelectorAll("button")).find(
+    const control = Array.from(document.querySelectorAll("button,a")).find(
       (candidate) =>
         pattern.test(candidate.textContent || "") ||
         pattern.test(candidate.getAttribute("aria-label") || ""),
     );
-    if (!button) return false;
-    button.click();
+    if (!control) return false;
+    control.click();
     return true;
   }, patternSource);
 }
@@ -355,7 +355,11 @@ async function installJoystickDiagnosticDownloadProbe(page) {
           download: this.download,
           href: this.href,
         });
-        if (/brikaya-joystick-diagnostic-/.test(this.download)) {
+        if (
+          /brikaya-(?:torreta-joystick|joystick-diagnostic)-/.test(
+            this.download,
+          )
+        ) {
           return undefined;
         }
       }
@@ -661,10 +665,12 @@ async function readJoystickDiagnosticState(page) {
       const playfieldLayer = document.querySelector(
         `[data-testid="${playfieldLayerTestId}"]`,
       );
-      const downloadButton = Array.from(document.querySelectorAll("button")).find(
-        (button) =>
-          downloadPattern.test(button.textContent || "") ||
-          downloadPattern.test(button.getAttribute("aria-label") || ""),
+      const downloadControl = Array.from(
+        document.querySelectorAll("button,a"),
+      ).find(
+        (control) =>
+          downloadPattern.test(control.textContent || "") ||
+          downloadPattern.test(control.getAttribute("aria-label") || ""),
       );
       const readLayer = (layer) => {
         const rect = layer?.getBoundingClientRect();
@@ -686,8 +692,10 @@ async function readJoystickDiagnosticState(page) {
       return {
         joystickLayer: readLayer(joystickLayer),
         playfieldLayer: readLayer(playfieldLayer),
-        downloadButtonDisabled: downloadButton
-          ? Boolean(downloadButton.disabled)
+        downloadButtonDisabled: downloadControl
+          ? downloadControl.tagName.toLowerCase() === "button"
+            ? Boolean(downloadControl.disabled)
+            : false
           : null,
       };
     },
@@ -925,33 +933,59 @@ async function exerciseTrampoline(page) {
   await page.keyboard.press("ArrowRight");
 }
 
-async function dispatchJoystickPointer(page, type, point) {
-  await page.evaluate(
-    ({ joystickTestId, eventType, clientPoint }) => {
+async function readJoystickHitTarget(page, point) {
+  return page.evaluate(
+    ({ clientPoint, joystickTestId }) => {
+      const target = document.elementFromPoint(clientPoint.x, clientPoint.y);
       const joystick = document.querySelector(
         `[data-testid="${joystickTestId}"]`,
       );
-      if (!joystick) return false;
-
-      joystick.dispatchEvent(
-        new PointerEvent(eventType, {
-          bubbles: true,
-          cancelable: true,
-          clientX: clientPoint.x,
-          clientY: clientPoint.y,
-          isPrimary: true,
-          pointerId: 17,
-          pointerType: "touch",
-        }),
-      );
-      return true;
+      const targetTestId =
+        target instanceof Element ? target.getAttribute("data-testid") : "";
+      return {
+        hitsJoystick: Boolean(target && joystick && joystick.contains(target)),
+        tagName: target?.tagName || "",
+        className: String(target?.className || ""),
+        testId: targetTestId || "",
+      };
     },
     {
-      joystickTestId: JOYSTICK_TEST_ID,
-      eventType: type,
       clientPoint: point,
+      joystickTestId: JOYSTICK_TEST_ID,
     },
   );
+}
+
+async function dispatchJoystickTouch(touchClient, type, point) {
+  const touchTypeByPointerType = {
+    pointerdown: "touchStart",
+    pointermove: "touchMove",
+    pointerup: "touchEnd",
+    pointercancel: "touchCancel",
+  };
+  const touchType = touchTypeByPointerType[type];
+  if (!touchType) {
+    throw new Error(`Evento de toque do joystick não suportado: ${type}`);
+  }
+
+  const touchPoints =
+    touchType === "touchEnd" || touchType === "touchCancel"
+      ? []
+      : [
+          {
+            x: point.x,
+            y: point.y,
+            id: 17,
+            radiusX: 1,
+            radiusY: 1,
+            force: 1,
+          },
+        ];
+
+  await touchClient.send("Input.dispatchTouchEvent", {
+    type: touchType,
+    touchPoints,
+  });
 }
 
 async function exerciseJoystick(page) {
@@ -971,6 +1005,12 @@ async function exerciseJoystick(page) {
         afterVisual: { x: 0, y: 0 },
       },
       releaseVisual: { x: 0, y: 0, active: 0 },
+      hitTarget: {
+        hitsJoystick: false,
+        tagName: "",
+        className: "",
+        testId: "",
+      },
       path: [],
     };
   }
@@ -1026,9 +1066,11 @@ async function exerciseJoystick(page) {
     bottomRight,
     center,
   ];
+  const hitTarget = await readJoystickHitTarget(page, lowerLeftArc);
+  const touchClient = await page.target().createCDPSession();
 
   const moveAndRead = async (point) => {
-    await dispatchJoystickPointer(page, "pointermove", point);
+    await dispatchJoystickTouch(touchClient, "pointermove", point);
     await new Promise((resolve) => setTimeout(resolve, JOYSTICK_SETTLE_MS));
     const state = await readBallTurretState(page);
     return {
@@ -1045,7 +1087,7 @@ async function exerciseJoystick(page) {
     };
   };
 
-  await dispatchJoystickPointer(page, "pointerdown", center);
+  await dispatchJoystickTouch(touchClient, "pointerdown", center);
   await new Promise((resolve) => setTimeout(resolve, JOYSTICK_SETTLE_MS));
 
   const rightCheck = await moveAndRead(right);
@@ -1093,12 +1135,13 @@ async function exerciseJoystick(page) {
     expectedIgnoredAngle: outsideCheck.expectedAngle,
     actualAngleAfterIgnoredMove: outsideCheck.actualAngle,
   };
-  await dispatchJoystickPointer(page, "pointermove", center);
-  await dispatchJoystickPointer(page, "pointerup", center);
+  await dispatchJoystickTouch(touchClient, "pointermove", center);
+  await dispatchJoystickTouch(touchClient, "pointerup", center);
   const releaseState = await readBallTurretState(page);
 
   return {
     exercised: true,
+    hitTarget,
     pathWithinControl: path.every((point) =>
       isPointInsideJoystickCircle(point, box),
     ),
@@ -1323,6 +1366,11 @@ async function runViewport(page, baseUrl, config) {
   assert(
     config.joystickPlacement === "hidden" || joystickExercise.exercised,
     `${config.name}: joystick visível não respondeu ao exercício.`,
+  );
+  assert(
+    config.joystickPlacement === "hidden" ||
+      joystickExercise.hitTarget.hitsJoystick,
+    `${config.name}: zona invisível do campo cobriu o joystick; alvo real=${joystickExercise.hitTarget.tagName}.${joystickExercise.hitTarget.className} data-testid=${joystickExercise.hitTarget.testId}.`,
   );
   assert(
     config.joystickPlacement === "hidden" || joystickExercise.pathWithinControl,
