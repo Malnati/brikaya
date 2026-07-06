@@ -1534,7 +1534,7 @@
   "screenshots": {
     "menu": "/tmp/brikaya-joystick-touch-menu.png",
     "desktop": "/tmp/brikaya-joystick-touch-desktop.png",
-    "mobile": "docs/assets/issues/joystick-diagnostic-touch-download/evidence/evi-ball-turret-mobile-before-diagnostic.png",
+    "mobile": "docs/assets/issues/joystick-diagnostic-touch-download/evidence/evi-joystick-touch-mobile-before-diagnostic.png",
     "mobileLandscape": "/tmp/brikaya-joystick-touch-landscape.png",
     "joystickDiagnostic": "docs/assets/issues/joystick-diagnostic-touch-download/evidence/evi-joystick-diagnostic-touch-mobile.png"
   }
