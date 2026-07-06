@@ -70,6 +70,12 @@ const TEST_LEVEL_TRANSITION_PAYLOAD: LevelTransitionPayload = {
   nextReductionPerBrick: 0.336,
   nextInitialBrickCount: 15,
 };
+const TEST_AD_LEVEL_TRANSITION_PAYLOAD: LevelTransitionPayload = {
+  ...TEST_LEVEL_TRANSITION_PAYLOAD,
+  currentLevel: 3,
+  nextLevel: 4,
+  nextSpeedMultiplier: 1.36,
+};
 const SETTINGS_ACTION_LOGS_TEST_ID = "settings-action-logs";
 const SETTINGS_ACTION_RESET_SCORE_TEST_ID = "settings-action-reset-score";
 const SETTINGS_ACTION_RESET_PREFERENCES_TEST_ID =
@@ -753,6 +759,16 @@ describe("App theme selector", () => {
     expect(mockLastGameProps?.gameMode).toBe("classic");
   });
 
+  it("encaminha cenário de QA da fase 3 em modo clássico", async () => {
+    mockSystemTheme(true);
+    window.history.replaceState(null, "", "/?qaScenario=single-brick-phase3-clear");
+
+    await renderApp();
+
+    expect(mockLastGameProps?.qaScenario).toBe("single-brick-phase3-clear");
+    expect(mockLastGameProps?.gameMode).toBe("classic");
+  });
+
   it("encaminha cenário de QA de colisão da raquete para o jogo", async () => {
     mockSystemTheme(true);
     window.history.replaceState(null, "", "/?qaScenario=paddle-collision");
@@ -1240,6 +1256,7 @@ describe("App theme selector", () => {
   it("pausa o jogo enquanto anúncio entre fases está ativo", async () => {
     jest.useFakeTimers();
     mockSystemTheme(true);
+    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
     window.__BRIKAYA_GOOGLE_ADS_ENABLED__ = true;
     let capturedPlacement:
       | {
@@ -1264,8 +1281,22 @@ describe("App theme selector", () => {
     let transitionPromise: Promise<void> | void;
     act(() => {
       transitionPromise = mockLastGameProps?.onLevelTransition?.(
-        TEST_LEVEL_TRANSITION_PAYLOAD,
+        TEST_AD_LEVEL_TRANSITION_PAYLOAD,
       );
+    });
+
+    expect(window.adBreak).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: "brikaya_level_3_to_4",
+      }),
+    );
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      DATA_PAUSED_ATTRIBUTE,
+      PAUSED_TRUE_ATTRIBUTE_VALUE,
+    );
+
+    act(() => {
+      jest.advanceTimersByTime(TEST_AD_LEVEL_TRANSITION_PAYLOAD.pauseMs);
     });
 
     expect(screen.getByTestId("mock-game")).toHaveAttribute(
@@ -1274,20 +1305,104 @@ describe("App theme selector", () => {
     );
 
     act(() => {
-      jest.advanceTimersByTime(TEST_LEVEL_TRANSITION_PAYLOAD.pauseMs);
+      capturedPlacement?.afterAd?.();
+      capturedPlacement?.adBreakDone?.();
     });
 
+    expect(
+      await screen.findByRole("dialog", { name: "Volta ao jogo" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Bora voltar?")).toBeInTheDocument();
+    expect(
+      screen.getByText("Fase 4 vem ligeira. Olho na bolinha."),
+    ).toBeInTheDocument();
     expect(screen.getByTestId("mock-game")).toHaveAttribute(
       DATA_PAUSED_ATTRIBUTE,
       PAUSED_TRUE_ATTRIBUTE_VALUE,
     );
 
+    await user.click(
+      screen.getByRole("button", { name: "Voltar pro jogo" }),
+    );
     await act(async () => {
-      capturedPlacement?.afterAd?.();
-      capturedPlacement?.adBreakDone?.();
       await transitionPromise;
     });
 
+    expect(screen.queryByText("Bora voltar?")).not.toBeInTheDocument();
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      DATA_PAUSED_ATTRIBUTE,
+      PAUSED_FALSE_ATTRIBUTE_VALUE,
+    );
+  });
+
+  it("não solicita publicidade antes da terceira fase concluída", async () => {
+    jest.useFakeTimers();
+    mockSystemTheme(true);
+    window.__BRIKAYA_GOOGLE_ADS_ENABLED__ = true;
+    window.adConfig = jest.fn();
+    window.adBreak = jest.fn();
+
+    await renderApp();
+    publishTestBoardRect();
+
+    act(() => {
+      jest.advanceTimersByTime(COUNTDOWN_TOTAL_MS);
+    });
+
+    let transitionPromise: Promise<void> | void;
+    act(() => {
+      transitionPromise = mockLastGameProps?.onLevelTransition?.(
+        TEST_LEVEL_TRANSITION_PAYLOAD,
+      );
+    });
+
+    act(() => {
+      jest.advanceTimersByTime(TEST_LEVEL_TRANSITION_PAYLOAD.pauseMs);
+    });
+    await act(async () => {
+      await transitionPromise;
+    });
+
+    expect(window.adBreak).not.toHaveBeenCalled();
+    expect(screen.queryByText("Bora voltar?")).not.toBeInTheDocument();
+    expect(screen.getByTestId("mock-game")).toHaveAttribute(
+      DATA_PAUSED_ATTRIBUTE,
+      PAUSED_FALSE_ATTRIBUTE_VALUE,
+    );
+  });
+
+  it("não mostra mensagem de retorno quando a publicidade não preenche", async () => {
+    jest.useFakeTimers();
+    mockSystemTheme(true);
+    window.__BRIKAYA_GOOGLE_ADS_ENABLED__ = true;
+    window.adConfig = jest.fn();
+    window.adBreak = jest.fn((placement) => {
+      placement.adBreakDone?.({ breakStatus: "notReady" });
+    });
+
+    await renderApp();
+    publishTestBoardRect();
+
+    act(() => {
+      jest.advanceTimersByTime(COUNTDOWN_TOTAL_MS);
+    });
+
+    let transitionPromise: Promise<void> | void;
+    act(() => {
+      transitionPromise = mockLastGameProps?.onLevelTransition?.(
+        TEST_AD_LEVEL_TRANSITION_PAYLOAD,
+      );
+    });
+
+    act(() => {
+      jest.advanceTimersByTime(TEST_AD_LEVEL_TRANSITION_PAYLOAD.pauseMs);
+    });
+    await act(async () => {
+      await transitionPromise;
+    });
+
+    expect(window.adBreak).toHaveBeenCalledTimes(1);
+    expect(screen.queryByText("Bora voltar?")).not.toBeInTheDocument();
     expect(screen.getByTestId("mock-game")).toHaveAttribute(
       DATA_PAUSED_ATTRIBUTE,
       PAUSED_FALSE_ATTRIBUTE_VALUE,

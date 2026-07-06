@@ -14,6 +14,7 @@ import { ConsentScreen } from "./components/ConsentScreen";
 import { LanguageDetectionOverlay } from "./components/LanguageDetectionOverlay";
 import { MobileOrientationBlocker } from "./components/MobileOrientationBlocker";
 import { DownloadsPage } from "./components/DownloadsPage";
+import { PostAdResumePrompt } from "./components/PostAdResumePrompt";
 import GameLogViewer from "./components/GameLogViewer";
 import {
   GameCinematicOverlay,
@@ -84,6 +85,7 @@ import {
 import {
   configureGoogleAdSound,
   requestInterlevelGoogleAd,
+  shouldRequestInterlevelGoogleAd,
 } from "./monetization/googleAds";
 
 LOG("🚦 App.tsx carregado");
@@ -103,6 +105,7 @@ const UPDATE_PROGRESS_COMPLETE = 100;
 const UPDATE_PROGRESS_COMPLETE_STAGE = "reloading";
 const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
 const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
+const SINGLE_BRICK_PHASE_3_QA_SCENARIO = "single-brick-phase3-clear";
 const PADDLE_COLLISION_QA_SCENARIO = "paddle-collision";
 const LASER_FAN_QA_SCENARIO = "laser-fan";
 const METAL_BLOCK_QA_SCENARIO = "metal-block";
@@ -127,6 +130,11 @@ const INITIAL_COUNTDOWN_OVERLAY: GameCinematicOverlayState = {
   type: "countdown",
   value: CINEMATIC_COUNTDOWN_STEPS[COUNTDOWN_FIRST_STEP_INDEX],
 };
+
+interface PostAdResumePromptState {
+  nextLevel: number;
+  speedLabel: string;
+}
 
 type LevelTransitionEventPhase = "start" | "finish";
 
@@ -196,6 +204,8 @@ function GameApp() {
   const [cinematicOverlay, setCinematicOverlay] =
     useState<GameCinematicOverlayState>(null);
   const [isInterlevelAdActive, setIsInterlevelAdActive] = useState(false);
+  const [postAdResumePrompt, setPostAdResumePrompt] =
+    useState<PostAdResumePromptState | null>(null);
   const [boardRect, setBoardRect] = useState<GameBoardRect | null>(null);
   const [isInitialCountdownActive, setIsInitialCountdownActive] = useState(
     shouldStartWithInitialCountdown,
@@ -223,6 +233,7 @@ function GameApp() {
   const cinematicTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const countdownTimerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
   const ripTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const postAdResumeResolverRef = useRef<(() => void) | null>(null);
   const offlineReadyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
@@ -252,6 +263,8 @@ function GameApp() {
     const scenario = searchParams.get("qaScenario");
     if (scenario === "single-brick-phase-clear")
       return "single-brick-phase-clear";
+    if (scenario === SINGLE_BRICK_PHASE_3_QA_SCENARIO)
+      return SINGLE_BRICK_PHASE_3_QA_SCENARIO;
     if (scenario === LATE_PHASE_STABILITY_QA_SCENARIO)
       return LATE_PHASE_STABILITY_QA_SCENARIO;
     if (scenario === CINEMATIC_RIP_QA_SCENARIO)
@@ -268,6 +281,7 @@ function GameApp() {
   }, []);
   const activeGameMode =
     qaScenario === "single-brick-phase-clear" ||
+    qaScenario === SINGLE_BRICK_PHASE_3_QA_SCENARIO ||
     qaScenario === METAL_BLOCK_QA_SCENARIO ||
     qaScenario === EVASIVE_BLOCKS_QA_SCENARIO
       ? GAME_MODE_CLASSIC
@@ -459,6 +473,8 @@ function GameApp() {
         clearTimeout(updateInstalledTimerRef.current);
       if (languageDetectionTimerRef.current)
         clearTimeout(languageDetectionTimerRef.current);
+      postAdResumeResolverRef.current?.();
+      postAdResumeResolverRef.current = null;
     },
     [],
   );
@@ -815,15 +831,48 @@ function GameApp() {
     configureGoogleAdSound(!isAudioMuted);
   }, [isAudioMuted]);
 
+  const showPostAdResumePrompt = useCallback(
+    (payload: LevelTransitionPayload) =>
+      new Promise<void>((resolve) => {
+        postAdResumeResolverRef.current?.();
+        postAdResumeResolverRef.current = resolve;
+        setPostAdResumePrompt({
+          nextLevel: payload.nextLevel,
+          speedLabel: `${payload.nextSpeedMultiplier.toFixed(
+            SPEED_LABEL_FRACTION_DIGITS,
+          )}${SPEED_LABEL_SUFFIX}`,
+        });
+      }),
+    [],
+  );
+
+  const handlePostAdResume = useCallback(() => {
+    audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
+    setPostAdResumePrompt(null);
+    const resolve = postAdResumeResolverRef.current;
+    postAdResumeResolverRef.current = null;
+    resolve?.();
+    if (!isAudioMuted && !isMusicMuted) {
+      audioSink.startGameplayMusic();
+    }
+  }, [audioSink, isAudioMuted, isMusicMuted]);
+
   const handleLevelTransition = useCallback(
     (payload: LevelTransitionPayload) =>
       new Promise<void>((resolve) => {
         let pauseFinished = false;
         let adBreakFinished = false;
+        let resumePromptFinished = false;
         let resolved = false;
 
         const finishTransition = () => {
-          if (resolved || !pauseFinished || !adBreakFinished) return;
+          if (
+            resolved ||
+            !pauseFinished ||
+            !adBreakFinished ||
+            !resumePromptFinished
+          )
+            return;
 
           resolved = true;
           setIsInterlevelAdActive(false);
@@ -853,6 +902,13 @@ function GameApp() {
           finishTransition();
         }, payload.pauseMs);
 
+        if (!shouldRequestInterlevelGoogleAd(payload.currentLevel)) {
+          adBreakFinished = true;
+          resumePromptFinished = true;
+          finishTransition();
+          return;
+        }
+
         void requestInterlevelGoogleAd({
           currentLevel: payload.currentLevel,
           nextLevel: payload.nextLevel,
@@ -863,16 +919,21 @@ function GameApp() {
           },
           afterAd: () => {
             setIsInterlevelAdActive(false);
-            if (!isAudioMuted && !isMusicMuted) {
-              audioSink.startGameplayMusic();
-            }
           },
-        }).then(() => {
+        }).then(async (result) => {
           adBreakFinished = true;
+          if (result.shown) {
+            await showPostAdResumePrompt(payload);
+          } else {
+            resumePromptFinished = true;
+          }
+          if (result.shown) {
+            resumePromptFinished = true;
+          }
           finishTransition();
         });
       }),
-    [audioSink, isAudioMuted, isMusicMuted],
+    [audioSink, isAudioMuted, showPostAdResumePrompt],
   );
 
   const handleLevelChange = useCallback((nextLevel: number) => {
@@ -1214,6 +1275,7 @@ function GameApp() {
                   mobileOrientationLock.isBlocked ||
                   isMenuOpen ||
                   isInterlevelAdActive ||
+                  postAdResumePrompt !== null ||
                   !hasPrivacyConsent ||
                   isLanguageDetectionVisible
                 }
@@ -1290,6 +1352,13 @@ function GameApp() {
       />
       {mobileOrientationLock.isBlocked && <MobileOrientationBlocker />}
       {isLanguageDetectionVisible && <LanguageDetectionOverlay />}
+      {postAdResumePrompt && (
+        <PostAdResumePrompt
+          nextLevel={postAdResumePrompt.nextLevel}
+          speedLabel={postAdResumePrompt.speedLabel}
+          onResume={handlePostAdResume}
+        />
+      )}
       {!hasPrivacyConsent && (
         <ConsentScreen onAccept={handleAcceptPrivacyConsent} />
       )}

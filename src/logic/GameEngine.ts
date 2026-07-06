@@ -68,6 +68,7 @@ LOG("📦 GameEngine.ts carregado, gameLogger:", gameLogger);
 
 const ERROR_NO_2D_CONTEXT = "No 2D context";
 const SINGLE_BRICK_QA_SCENARIO = "single-brick-phase-clear";
+const SINGLE_BRICK_PHASE_3_QA_SCENARIO = "single-brick-phase3-clear";
 const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
 const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
 const PADDLE_COLLISION_QA_SCENARIO = "paddle-collision";
@@ -216,6 +217,7 @@ interface LaserFanResolution {
 
 export type GameQaScenario =
   | typeof SINGLE_BRICK_QA_SCENARIO
+  | typeof SINGLE_BRICK_PHASE_3_QA_SCENARIO
   | typeof LATE_PHASE_STABILITY_QA_SCENARIO
   | typeof CINEMATIC_RIP_QA_SCENARIO
   | typeof PADDLE_COLLISION_QA_SCENARIO
@@ -328,6 +330,9 @@ export class GameEngine {
 
     if (this.qaScenario === LATE_PHASE_STABILITY_QA_SCENARIO) {
       this.level = LATE_PHASE_STABILITY_LEVEL;
+    }
+    if (this.qaScenario === SINGLE_BRICK_PHASE_3_QA_SCENARIO) {
+      this.level = 3;
     }
 
     LOG(`⚽ Criando Ball...`);
@@ -578,6 +583,7 @@ export class GameEngine {
   private isSingleBrickQaScenario(): boolean {
     return (
       this.qaScenario === SINGLE_BRICK_QA_SCENARIO ||
+      this.qaScenario === SINGLE_BRICK_PHASE_3_QA_SCENARIO ||
       this.qaScenario === METAL_BLOCK_QA_SCENARIO
     );
   }

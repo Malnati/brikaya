@@ -26,6 +26,8 @@ const MAX_WAIT_FOR_LEVEL_MS = 30000;
 const MIN_INTERLEVEL_PAUSE_MS = 1500;
 const AD_HOLD_ASSERTION_DELAY_MS = 2200;
 const LEVEL_TRANSITION_EVENT_NAME = "brikaya:level-transition";
+const GOOGLE_REPORT_ONLY_FRAME_ANCESTORS_PATTERN =
+  /Framing 'https:\/\/www\.google\.com\/' violates the following report-only Content Security Policy directive: "frame-ancestors 'self'"/;
 
 function publicUrl() {
   return process.env.BRIKAYA_PUBLIC_URL || DEFAULT_PUBLIC_URL;
@@ -47,9 +49,13 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+function isIgnorableConsoleProblem(text) {
+  return GOOGLE_REPORT_ONLY_FRAME_ANCESTORS_PATTERN.test(text);
+}
+
 function withQaScenario(url) {
   const pageUrl = new URL(url);
-  pageUrl.searchParams.set("qaScenario", "single-brick-phase-clear");
+  pageUrl.searchParams.set("qaScenario", "single-brick-phase3-clear");
   return pageUrl.toString();
 }
 
@@ -158,13 +164,14 @@ async function installLevelTransitionRecorder(page) {
   }, LEVEL_TRANSITION_EVENT_NAME);
 }
 
-async function waitForTransitionFinish(page) {
+async function waitForTransitionFinish(page, nextLevel = 4) {
   await page.waitForFunction(
-    () =>
+    (expectedNextLevel) =>
       window.__BRIKAYA_LEVEL_TRANSITIONS__?.some(
-        (event) => event.phase === "finish" && event.nextLevel === 2,
+        (event) => event.phase === "finish" && event.nextLevel === expectedNextLevel,
       ),
     { timeout: MAX_WAIT_FOR_LEVEL_MS },
+    nextLevel,
   );
 }
 
@@ -230,7 +237,10 @@ async function prepareScenarioPage(browser, targetUrl, consoleProblems) {
   await page.setViewport(VIEWPORT);
   page.on("console", (message) => {
     if (["error", "warn"].includes(message.type())) {
-      consoleProblems.push({ type: message.type(), text: message.text() });
+      const text = message.text();
+      if (!isIgnorableConsoleProblem(text)) {
+        consoleProblems.push({ type: message.type(), text });
+      }
     }
   });
   page.on("pageerror", (error) =>
@@ -346,6 +356,27 @@ async function runHeldAdScenario(browser, targetUrl, consoleProblems) {
     );
 
     await page.evaluate(() => window.__BRIKAYA_TEST_AD_STATE__.finish());
+    await page.waitForSelector('[data-testid="post-ad-resume-prompt"]', {
+      timeout: MAX_WAIT_FOR_LEVEL_MS,
+    });
+    await page.screenshot({ path: screenshotPath(), fullPage: true });
+
+    const promptTransitions = await readTransitions(page);
+    assert(
+      !promptTransitions.some((event) => event.phase === "finish"),
+      "Fase seguinte iniciou antes do clique na mensagem pós-publicidade.",
+    );
+
+    const promptText = await page.$eval(
+      '[data-testid="post-ad-resume-prompt"]',
+      (element) => element.textContent.trim(),
+    );
+    assert(
+      promptText.includes("Fase 4") || promptText.includes("Level 4"),
+      `Mensagem pós-publicidade não orientou a volta à fase 4: ${promptText}`,
+    );
+
+    await page.click('[data-testid="post-ad-resume-cta"]');
     await waitForTransitionFinish(page);
 
     const adState = await readAdState(page);
@@ -357,7 +388,7 @@ async function runHeldAdScenario(browser, targetUrl, consoleProblems) {
     assert(adState.requests.length === 1, "Interstitial simulado não foi chamado uma vez.");
     assert(adState.requests[0].type === "next", "Interstitial não usou tipo next.");
     assert(
-      adState.requests[0].name === "brikaya_level_1_to_2",
+      adState.requests[0].name === "brikaya_level_3_to_4",
       `Nome de placement inesperado: ${adState.requests[0].name}`,
     );
     assert(adState.beforeCalls === 1, "beforeAd não foi chamado uma vez.");
@@ -388,6 +419,7 @@ async function runNoFillScenario(browser, targetUrl, consoleProblems) {
 
     const adState = await readAdState(page);
     const transitions = await readTransitions(page);
+    const promptVisible = await page.$('[data-testid="post-ad-resume-prompt"]');
     const start = transitions.find((event) => event.phase === "start");
     const finish = transitions.find((event) => event.phase === "finish");
     const pauseDeltaMs = finish.timestamp - start.timestamp;
@@ -395,6 +427,7 @@ async function runNoFillScenario(browser, targetUrl, consoleProblems) {
     assert(adState.requests.length === 1, "No-fill não chamou adBreak uma vez.");
     assert(adState.requests[0].type === "next", "No-fill não usou tipo next.");
     assert(adState.doneCalls === 1, "No-fill não retornou adBreakDone.");
+    assert(!promptVisible, "No-fill mostrou mensagem pós-publicidade.");
     assert(
       pauseDeltaMs >= MIN_INTERLEVEL_PAUSE_MS,
       `Pausa mínima no no-fill curta demais: ${pauseDeltaMs}ms.`,
@@ -421,11 +454,13 @@ async function runOfflineScenario(browser, targetUrl, consoleProblems) {
 
     const adState = await readAdState(page);
     const transitions = await readTransitions(page);
+    const promptVisible = await page.$('[data-testid="post-ad-resume-prompt"]');
     const start = transitions.find((event) => event.phase === "start");
     const finish = transitions.find((event) => event.phase === "finish");
     const pauseDeltaMs = finish.timestamp - start.timestamp;
 
     assert(adState.requests.length === 0, "Offline chamou adBreak.");
+    assert(!promptVisible, "Offline mostrou mensagem pós-publicidade.");
     assert(
       pauseDeltaMs >= MIN_INTERLEVEL_PAUSE_MS,
       `Pausa mínima offline curta demais: ${pauseDeltaMs}ms.`,
