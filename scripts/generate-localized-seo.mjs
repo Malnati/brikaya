@@ -228,6 +228,30 @@ const LOCALES = [
   'pau',
   'tpi',
   'ho',
+  'aa',
+  'av',
+  'ce',
+  'kv',
+  'udm',
+  'myv',
+  'mdf',
+  'mhr',
+  'mrj',
+  'tyv',
+  'alt',
+  'krc',
+  'kum',
+  'lez',
+  'inh',
+  'kbd',
+  'xal',
+  'nog',
+  'kaa',
+  'kjh',
+  'gag',
+  'rom',
+  'sma',
+  'smj',
 ];
 const SEO = {
   'pt-BR': {
@@ -1287,6 +1311,126 @@ const SEO = {
     description: "Instalem o pleim Brikaya moni lasi, account lasi na pei lasi; progress e noho ena device bona oi dibaia offline lasi hegeregerena first visit murina.",
     ogDescription: "Brikaya — blok dibaia gaim",
   },
+  'aa': {
+    title: "Brikaya — kubba le blokki baxxaqsa",
+    description: "Brikaya mayso mali oobbi hinnay ciyaari, akaawunt malee kee mayso malee; gexsitak roocih xoqoysima teet digirih addal daffeyta, naharsi gexsitih lakal offline ciyaari takkem.",
+    ogDescription: "Brikaya — kubba le blokki baxxaqsa",
+  },
+  'av': {
+    title: "Brikaya — блокал рихьизабулеб аркада",
+    description: "Brikaya кӀудиябго лъугьун я хӀалтӀизе, аккаунт гьечӀо ва тӀаса къимат гьечӀо; хӀалтӀи цӀунила дурго төхөөрөмжалда ва цебе вход кьолеб мехалда офлайн хӀалтӀизе мумкин.",
+    ogDescription: "Brikaya — блокал рихьизабулеб аркада",
+  },
+  'ce': {
+    title: "Brikaya — блокаш дохадан аркада",
+    description: "Brikaya ахча доцуш чуяха я ловза, аккаунт доцуш а түлов доцуш; хьалхалла хьайн гӀирсахь лелаш хуьлу, хьалха вахардан тӀаьхьа офлайн ловза мегар ду.",
+    ogDescription: "Brikaya — блокаш дохадан аркада",
+  },
+  'kv': {
+    title: "Brikaya — блокъяс жугӧдан аркада",
+    description: "Brikaya дон вылӧ ог тыр босьт либӧ ворс, аккаунттӧг да мынтӧмтӧг; водзӧ мунӧм тэнад устройствоын кольӧ, медводдза петкӧдчӧм бӧрын офлайн ворсны позьӧ.",
+    ogDescription: "Brikaya — блокъяс жугӧдан аркада",
+  },
+  'udm': {
+    title: "Brikaya — блокъёс пырытон аркада",
+    description: "Brikaya донсыз басьтэ но шудэ, аккаунттэк но төлонъёстэк; азьлань шудонъёс тонлэн устройствамын кисьматэ, первой пырем берысь офлайн шудыны луэ.",
+    ogDescription: "Brikaya — блокъёс пырытон аркада",
+  },
+  'myv': {
+    title: "Brikaya — блоктнэ лемдезь аркада",
+    description: "Brikaya таргамс эли налксемс апак максо, аккаунттэме ды максомадо; васенце совамодо мейле поладксось тонь устройствонь потмостонзо ашти, офлайн налксемс ули.",
+    ogDescription: "Brikaya — блоктнэ лемдезь аркада",
+  },
+  'mdf': {
+    title: "Brikaya — блокт лемдемань аркада",
+    description: "Brikaya таргамс али налхксемс аф максома, аккаунтфтома ды максомафтома; васенда сувафтома меле прогрессот тень устройствамс ашти, офлайн налхксемс ули.",
+    ogDescription: "Brikaya — блокт лемдемань аркада",
+  },
+  'mhr': {
+    title: "Brikaya — блок-влакым пудыраш аркада",
+    description: "Brikaya аксыз налаш але модаш, аккаунт деч посна да тӧлымаш деч посна; ончылкылык тыйын устройствам кодеш, икымше пурымаш деч вара офлайн модаш лиеш.",
+    ogDescription: "Brikaya — блок-влакым пудыраш аркада",
+  },
+  'mrj': {
+    title: "Brikaya — блок-влакым пудыраш аркада",
+    description: "Brikaya аксыз налаш але модаш, аккаунт деч посна да тӧлымаш деч посна; прогресс тыйын устройствам кодеш, икымше пурымаш деч вара офлайн модаш лиеш.",
+    ogDescription: "Brikaya — блок-влакым пудыраш аркада",
+  },
+  'tyv': {
+    title: "Brikaya — блоктарны үжелээр аркада",
+    description: "Brikaya-ны акшыг эвес чүктеп ал дээш ойну, аккаунт чок база төлбүр чок; илередиишкин сениң төхөөрөмжүңде артар, бирги кирген соң офлайн ойнаар арга бар.",
+    ogDescription: "Brikaya — блоктарны үжелээр аркада",
+  },
+  'alt': {
+    title: "Brikaya — блокторды сынындырар аркада",
+    description: "Brikaya-ны акча јок јӱкте не ойно, аккаунт јок ло тӧлӧӧ јок; озолыш сенин құрылғыңда артар, биринчи киргеннен кийин офлайн ойноорго болот.",
+    ogDescription: "Brikaya — блокторды сынындырар аркада",
+  },
+  'krc': {
+    title: "Brikaya — блокланы бузгъан аркада",
+    description: "Brikaya-ны акысыз жюкле неда ойна, аккаунтсуз эм тӧлеусюз; алгъа барыу сенин төхөөрөмжюнгде сакъланады, биринчи киргенден сора офлайн ойнаугъа боллукъду.",
+    ogDescription: "Brikaya — блокланы бузгъан аркада",
+  },
+  'kum': {
+    title: "Brikaya — блокланы сындыра оюну",
+    description: "Brikaya-ны акысыз юкле я ойна, аккаунтсуз ва тӧлемсиз; алга барыш сенин җайыңда сакъланар, биринчи киргенден сон офлайн ойнамагъа болар.",
+    ogDescription: "Brikaya — блокланы сындыра оюну",
+  },
+  'lez': {
+    title: "Brikaya — блокар чуьхвезвай аркада",
+    description: "Brikaya пулсуз къачу я къугъва, аккаунт галачир ва къимет галачир; илери фенавайди вунан төхөөрөмждал къалур, сад лагьай кьулухъ офлайн къугъваз жеда.",
+    ogDescription: "Brikaya — блокар чуьхвезвай аркада",
+  },
+  'inh': {
+    title: "Brikaya — блокаш дохадеш аркада",
+    description: "Brikaya ахча доацаш чуяха е ловза, аккаунт доацаш а түлов доацаш; хьалхалла хьо устройстве йола, хьалхарча вахардан тӀехьара офлайн ловза мегаргда.",
+    ogDescription: "Brikaya — блокаш дохадеш аркада",
+  },
+  'kbd': {
+    title: "Brikaya — блокхэр къутэу аркадэ",
+    description: "Brikaya псэущхьэу къутыгъэн еу ойын, аккаунтэнчърэ пщалъэхъуэнчърэ; пщэдзэу уикъуэншхъэ деж къэнэ, япэу къэкӀуэн нэужь офлайну ойын фае.",
+    ogDescription: "Brikaya — блокхэр къутэу аркадэ",
+  },
+  'xal': {
+    title: "Brikaya — блокуд эвдрүлх аркад",
+    description: "Brikaya-г үн төлбөргүй татх эсвэл тоглх, аккаунт уга ба төлбөр уга; ахиц чинь төхөөрөмжд үлдх, анхны оролтын дараа офлайн тоглх боломжта.",
+    ogDescription: "Brikaya — блокуд эвдрүлх аркад",
+  },
+  'nog': {
+    title: "Brikaya — блокларды сындырган аркада",
+    description: "Brikaya-ны акшасыз юкте не ойна, аккаунтсыз эм тӧлемсиз; илгерилеў сенин җайыңда сакланады, биринчи киргеннен сон офлайн ойнамагъа болады.",
+    ogDescription: "Brikaya — блокларды сындырган аркада",
+  },
+  'kaa': {
+    title: "Brikaya — bloklardı buzıw arkadası",
+    description: "Brikaya-nı tegin júkle ya oyına, akkauntsız hám tólemsiz; ilgerilew qurılmańda saqlanadı, birinshi kiriwden keyin oflayn oynaw múmkin.",
+    ogDescription: "Brikaya — bloklardı buzıw arkadası",
+  },
+  'kjh': {
+    title: "Brikaya — блоктарды сындырар аркада",
+    description: "Brikaya-ны тӧлӧӧс чоқ тӱзір не ойна, аккаунт чоқ па тӧлӧӧ чоқ; алға парыс паза құрылғыңда сақталча, пірінчі кірген соона офлайн ойнауға чарар.",
+    ogDescription: "Brikaya — блоктарды сындырар аркада",
+  },
+  'gag': {
+    title: "Brikaya — blok kıran arkada",
+    description: "Brikaya-nı bedava indir ya da oyna, hesapsız hem ödemesiz; ilerleme cihazında kalır, ilk girişten sora offline oynayabilirsin.",
+    ogDescription: "Brikaya — blok kıran arkada",
+  },
+  'rom': {
+    title: "Brikaya — khelipe te phagel blokura",
+    description: "Le tele vaj khele Brikaya bizo lovengo, bi kontosko thaj bi pokinimasqo; anglal-javipe ačhol pe tiri aparatura, thaj šaj khele offline pala o angluno dikhipe.",
+    ogDescription: "Brikaya — khelipe te phagel blokura",
+  },
+  'sma': {
+    title: "Brikaya — blokkh jïhkieh speel",
+    description: "Brikaya nuvhtie bïejh jallh speelieh, konto namhtah jïh maaksomh namhtah; åvtelen barkoe dov daeverisnie båata, jïh aalkoe-gæjhtoe mænngan offline speelieh.",
+    ogDescription: "Brikaya — blokkh jïhkieh speel",
+  },
+  'smj': {
+    title: "Brikaya — blohkaid muorraldit speallu",
+    description: "Brikaya nuvttá sajáduhte jali speala, konttu haga ja mávsso haga; ovddáneapmi báhcá du rusttega nanna ja vuostasj galledime maŋŋel sáhtá offline speallat.",
+    ogDescription: "Brikaya — blohkaid muorraldit speallu",
+  },
 };
 const DOWNLOADS_SEO = {
   'pt-BR': {
@@ -2345,6 +2489,126 @@ const DOWNLOADS_SEO = {
     title: "Daunlodem Brikaya — browser gaim moni lasi",
     description: "Instalem o pleim Brikaya moni lasi, account lasi na pei lasi; progress e noho ena device bona oi dibaia offline lasi hegeregerena first visit murina. account lasi.",
     ogDescription: "Daunlodem Brikaya — account lasi",
+  },
+  'aa': {
+    title: "Brikaya oobbi — mayso mali browser ciyaara",
+    description: "Brikaya mayso mali oobbi hinnay ciyaari, akaawunt malee kee mayso malee; gexsitak roocih xoqoysima teet digirih addal daffeyta, naharsi gexsitih lakal offline ciyaari takkem. akaawunt malee.",
+    ogDescription: "Brikaya oobbi — akaawunt malee",
+  },
+  'av': {
+    title: "Brikaya лъугьун — кӀудияб браузер хӀалтӀи",
+    description: "Brikaya кӀудиябго лъугьун я хӀалтӀизе, аккаунт гьечӀо ва тӀаса къимат гьечӀо; хӀалтӀи цӀунила дурго төхөөрөмжалда ва цебе вход кьолеб мехалда офлайн хӀалтӀизе мумкин. аккаунт гьечӀо.",
+    ogDescription: "Brikaya лъугьун — аккаунт гьечӀо",
+  },
+  'ce': {
+    title: "Brikaya чуяха — ахча доцуш браузер ловзар",
+    description: "Brikaya ахча доцуш чуяха я ловза, аккаунт доцуш а түлов доцуш; хьалхалла хьайн гӀирсахь лелаш хуьлу, хьалха вахардан тӀаьхьа офлайн ловза мегар ду. аккаунт доцуш.",
+    ogDescription: "Brikaya чуяха — аккаунт доцуш",
+  },
+  'kv': {
+    title: "Brikaya босьт — дон вылӧ ог тыр браузер ворсӧм",
+    description: "Brikaya дон вылӧ ог тыр босьт либӧ ворс, аккаунттӧг да мынтӧмтӧг; водзӧ мунӧм тэнад устройствоын кольӧ, медводдза петкӧдчӧм бӧрын офлайн ворсны позьӧ. аккаунттӧг.",
+    ogDescription: "Brikaya босьт — аккаунттӧг",
+  },
+  'udm': {
+    title: "Brikaya басьт — донсыз браузер шудон",
+    description: "Brikaya донсыз басьтэ но шудэ, аккаунттэк но төлонъёстэк; азьлань шудонъёс тонлэн устройствамын кисьматэ, первой пырем берысь офлайн шудыны луэ. аккаунттэк.",
+    ogDescription: "Brikaya басьт — аккаунттэк",
+  },
+  'myv': {
+    title: "Brikaya таргамс — апак максо браузерэнь налксемат",
+    description: "Brikaya таргамс эли налксемс апак максо, аккаунттэме ды максомадо; васенце совамодо мейле поладксось тонь устройствонь потмостонзо ашти, офлайн налксемс ули. аккаунттэме.",
+    ogDescription: "Brikaya таргамс — аккаунттэме",
+  },
+  'mdf': {
+    title: "Brikaya таргамс — аф максома браузеронь налхксемат",
+    description: "Brikaya таргамс али налхксемс аф максома, аккаунтфтома ды максомафтома; васенда сувафтома меле прогрессот тень устройствамс ашти, офлайн налхксемс ули. аккаунтфтома.",
+    ogDescription: "Brikaya таргамс — аккаунтфтома",
+  },
+  'mhr': {
+    title: "Brikaya налаш — аксыз браузер модыш",
+    description: "Brikaya аксыз налаш але модаш, аккаунт деч посна да тӧлымаш деч посна; ончылкылык тыйын устройствам кодеш, икымше пурымаш деч вара офлайн модаш лиеш. аккаунт деч посна.",
+    ogDescription: "Brikaya налаш — аккаунт деч посна",
+  },
+  'mrj': {
+    title: "Brikaya налаш — аксыз браузер модыш",
+    description: "Brikaya аксыз налаш але модаш, аккаунт деч посна да тӧлымаш деч посна; прогресс тыйын устройствам кодеш, икымше пурымаш деч вара офлайн модаш лиеш. аккаунт деч посна.",
+    ogDescription: "Brikaya налаш — аккаунт деч посна",
+  },
+  'tyv': {
+    title: "Brikaya чүктеп ал — акшыг эвес браузер оюн",
+    description: "Brikaya-ны акшыг эвес чүктеп ал дээш ойну, аккаунт чок база төлбүр чок; илередиишкин сениң төхөөрөмжүңде артар, бирги кирген соң офлайн ойнаар арга бар. аккаунт чок.",
+    ogDescription: "Brikaya чүктеп ал — аккаунт чок",
+  },
+  'alt': {
+    title: "Brikaya јӱкте — акча јок браузер ойын",
+    description: "Brikaya-ны акча јок јӱкте не ойно, аккаунт јок ло тӧлӧӧ јок; озолыш сенин құрылғыңда артар, биринчи киргеннен кийин офлайн ойноорго болот. аккаунт јок.",
+    ogDescription: "Brikaya јӱкте — аккаунт јок",
+  },
+  'krc': {
+    title: "Brikaya жюкле — акысыз браузер оюн",
+    description: "Brikaya-ны акысыз жюкле неда ойна, аккаунтсуз эм тӧлеусюз; алгъа барыу сенин төхөөрөмжюнгде сакъланады, биринчи киргенден сора офлайн ойнаугъа боллукъду. аккаунтсуз.",
+    ogDescription: "Brikaya жюкле — аккаунтсуз",
+  },
+  'kum': {
+    title: "Brikaya юкле — акысыз браузер оюну",
+    description: "Brikaya-ны акысыз юкле я ойна, аккаунтсуз ва тӧлемсиз; алга барыш сенин җайыңда сакъланар, биринчи киргенден сон офлайн ойнамагъа болар. аккаунтсуз.",
+    ogDescription: "Brikaya юкле — аккаунтсуз",
+  },
+  'lez': {
+    title: "Brikaya къачу — пулсуз браузер къугъун",
+    description: "Brikaya пулсуз къачу я къугъва, аккаунт галачир ва къимет галачир; илери фенавайди вунан төхөөрөмждал къалур, сад лагьай кьулухъ офлайн къугъваз жеда. аккаунт галачир.",
+    ogDescription: "Brikaya къачу — аккаунт галачир",
+  },
+  'inh': {
+    title: "Brikaya чуяха — ахча доацаш браузер ловзар",
+    description: "Brikaya ахча доацаш чуяха е ловза, аккаунт доацаш а түлов доацаш; хьалхалла хьо устройстве йола, хьалхарча вахардан тӀехьара офлайн ловза мегаргда. аккаунт доацаш.",
+    ogDescription: "Brikaya чуяха — аккаунт доацаш",
+  },
+  'kbd': {
+    title: "Brikaya къутыгъэн — псэущхьэ браузер ойын",
+    description: "Brikaya псэущхьэу къутыгъэн еу ойын, аккаунтэнчърэ пщалъэхъуэнчърэ; пщэдзэу уикъуэншхъэ деж къэнэ, япэу къэкӀуэн нэужь офлайну ойын фае. аккаунтэнчъ.",
+    ogDescription: "Brikaya къутыгъэн — аккаунтэнчъ",
+  },
+  'xal': {
+    title: "Brikaya татх — үн төлбөргүй браузер тоглх",
+    description: "Brikaya-г үн төлбөргүй татх эсвэл тоглх, аккаунт уга ба төлбөр уга; ахиц чинь төхөөрөмжд үлдх, анхны оролтын дараа офлайн тоглх боломжта. аккаунт уга.",
+    ogDescription: "Brikaya татх — аккаунт уга",
+  },
+  'nog': {
+    title: "Brikaya юкте — акшасыз браузер ойыны",
+    description: "Brikaya-ны акшасыз юкте не ойна, аккаунтсыз эм тӧлемсиз; илгерилеў сенин җайыңда сакланады, биринчи киргеннен сон офлайн ойнамагъа болады. аккаунтсыз.",
+    ogDescription: "Brikaya юкте — аккаунтсыз",
+  },
+  'kaa': {
+    title: "Brikaya júkle — tegin brauzer oyını",
+    description: "Brikaya-nı tegin júkle ya oyına, akkauntsız hám tólemsiz; ilgerilew qurılmańda saqlanadı, birinshi kiriwden keyin oflayn oynaw múmkin. akkauntsız.",
+    ogDescription: "Brikaya júkle — akkauntsız",
+  },
+  'kjh': {
+    title: "Brikaya тӱзір — тӧлӧӧс чоқ браузер ойын",
+    description: "Brikaya-ны тӧлӧӧс чоқ тӱзір не ойна, аккаунт чоқ па тӧлӧӧ чоқ; алға парыс паза құрылғыңда сақталча, пірінчі кірген соона офлайн ойнауға чарар. аккаунт чоқ.",
+    ogDescription: "Brikaya тӱзір — аккаунт чоқ",
+  },
+  'gag': {
+    title: "Brikaya indir — bedava browser oyunu",
+    description: "Brikaya-nı bedava indir ya da oyna, hesapsız hem ödemesiz; ilerleme cihazında kalır, ilk girişten sora offline oynayabilirsin. hesapsız.",
+    ogDescription: "Brikaya indir — hesapsız",
+  },
+  'rom': {
+    title: "Le Brikaya tele — bizo lovengo browser khel",
+    description: "Le tele vaj khele Brikaya bizo lovengo, bi kontosko thaj bi pokinimasqo; anglal-javipe ačhol pe tiri aparatura, thaj šaj khele offline pala o angluno dikhipe. bi kontosko.",
+    ogDescription: "Le Brikaya tele — bi kontosko",
+  },
+  'sma': {
+    title: "Brikaya veedtjh — nuvhtie browser-speele",
+    description: "Brikaya nuvhtie bïejh jallh speelieh, konto namhtah jïh maaksomh namhtah; åvtelen barkoe dov daeverisnie båata, jïh aalkoe-gæjhtoe mænngan offline speelieh. konto namhtah.",
+    ogDescription: "Brikaya veedtjh — konto namhtah",
+  },
+  'smj': {
+    title: "Brikaya viehkedij — nuvttá neahttalohkan-speallu",
+    description: "Brikaya nuvttá sajáduhte jali speala, konttu haga ja mávsso haga; ovddáneapmi báhcá du rusttega nanna ja vuostasj galledime maŋŋel sáhtá offline speallat. konttu haga.",
+    ogDescription: "Brikaya viehkedij — konttu haga",
   },
 };
 function metadataFor(locale, routePath) {

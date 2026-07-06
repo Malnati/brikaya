@@ -78,6 +78,11 @@ const TESTED_LOCALES = [
   { locale: "iu", path: "/iu/", title: "Brikaya — ᐅᔭᕋᓛᓂᒃ ᓯᖁᒥᑦᓯᓂᖅ" },
   { locale: "nv", path: "/nv/", title: "Brikaya — tsé bee dah naaznilí" },
   { locale: "tpi", path: "/tpi/", title: "Brikaya — gem bilong brukim blok" },
+  { locale: "aa", path: "/aa/", title: "Brikaya — kubba le blokki baxxaqsa" },
+  { locale: "ce", path: "/ce/", title: "Brikaya — блокаш дохадан аркада" },
+  { locale: "tyv", path: "/tyv/", title: "Brikaya — блоктарны үжелээр аркада" },
+  { locale: "kaa", path: "/kaa/", title: "Brikaya — bloklardı buzıw arkadası" },
+  { locale: "sma", path: "/sma/", title: "Brikaya — blokkh jïhkieh speel" },
 ];
 const ALL_HREFLANG_LOCALES = [
   "pt-BR",
@@ -291,6 +296,30 @@ const ALL_HREFLANG_LOCALES = [
   "pau",
   "tpi",
   "ho",
+  "aa",
+  "av",
+  "ce",
+  "kv",
+  "udm",
+  "myv",
+  "mdf",
+  "mhr",
+  "mrj",
+  "tyv",
+  "alt",
+  "krc",
+  "kum",
+  "lez",
+  "inh",
+  "kbd",
+  "xal",
+  "nog",
+  "kaa",
+  "kjh",
+  "gag",
+  "rom",
+  "sma",
+  "smj",
 ];
 const TESTED_DOWNLOADS_LOCALES = [
   {
@@ -603,6 +632,31 @@ const TESTED_DOWNLOADS_LOCALES = [
     locale: "tpi",
     path: "/tpi/downloads/",
     title: "Daunlodim Brikaya — fri browser gem",
+  },
+  {
+    locale: "aa",
+    path: "/aa/downloads/",
+    title: "Brikaya oobbi — mayso mali browser ciyaara",
+  },
+  {
+    locale: "ce",
+    path: "/ce/downloads/",
+    title: "Brikaya чуяха — ахча доцуш браузер ловзар",
+  },
+  {
+    locale: "tyv",
+    path: "/tyv/downloads/",
+    title: "Brikaya чүктеп ал — акшыг эвес браузер оюн",
+  },
+  {
+    locale: "kaa",
+    path: "/kaa/downloads/",
+    title: "Brikaya júkle — tegin brauzer oyını",
+  },
+  {
+    locale: "sma",
+    path: "/sma/downloads/",
+    title: "Brikaya veedtjh — nuvhtie browser-speele",
   },
 ];
 const LANGUAGE_SELECT_SELECTOR = "#game-language-select";
