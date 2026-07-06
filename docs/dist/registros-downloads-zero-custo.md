@@ -331,3 +331,13 @@ Follow-up fa/he em 2026-07-06:
 - Evidência visual local: `docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave235-ce-downloads.png`; rota `/ce/downloads/` respondeu 200, `lang=ce`, `dir=ltr`, título/canonical localizados e sem Clarity/analytics/pixel.
 - RTL não muda nesta onda; nenhum idioma RTL novo foi adicionado.
 - Clarity permanece bloqueado/desinstalado: nenhum pixel, tag, SDK externo ou telemetria foi adicionado.
+
+## Atualização — onda 235 publicada em 2026-07-06
+
+- `https://brikaya.com/downloads/` e rotas localizadas estão publicadas em 235 idiomas com sitemap público de 472 URLs.
+- Novos idiomas desta onda: `aa`, `av`, `ce`, `kv`, `udm`, `myv`, `mdf`, `mhr`, `mrj`, `tyv`, `alt`, `krc`, `kum`, `lez`, `inh`, `kbd`, `xal`, `nog`, `kaa`, `kjh`, `gag`, `rom`, `sma`, `smj`.
+- Nenhum idioma RTL novo nesta onda; RTL público continua em `ar`, `ur`, `fa`, `he`, `ps`, `sd`, `ks`, `dv`, `ckb`, `ug`, `yi` e `bal`.
+- Evidência local: `docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-wave235-ce-downloads.png` e `evi-brikaya-i18n-seo-wave235-local-preview.json`.
+- Evidência pública: `docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-public-validation.json` validou 235 hreflangs e 84 downloads amostrados.
+- Buscadores gratuitos: Google recebeu sitemap completo; Bing recebeu sitemap e ficou em processamento; Yandex recebeu IndexNow 472; Naver confirmou sitemap.
+- Limite preservado: sem pagamento, sem loja paga, sem Clarity, sem analytics, sem pixel, sem tag, sem SDK externo e sem coleta de dados pessoais do jogador.
