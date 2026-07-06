@@ -143,15 +143,12 @@ function getPublicUrl() {
 }
 
 function getScreenshotPath() {
-  return (
-    process.env.BRIKAYA_MOBILE_QA_SCREENSHOT || DEFAULT_SCREENSHOT_PATH
-  );
+  return process.env.BRIKAYA_MOBILE_QA_SCREENSHOT || DEFAULT_SCREENSHOT_PATH;
 }
 
 function getMenuScreenshotPath() {
   return (
-    process.env.BRIKAYA_MOBILE_MENU_SCREENSHOT ||
-    DEFAULT_MENU_SCREENSHOT_PATH
+    process.env.BRIKAYA_MOBILE_MENU_SCREENSHOT || DEFAULT_MENU_SCREENSHOT_PATH
   );
 }
 
@@ -1075,7 +1072,6 @@ async function run() {
       "Menu lateral ainda mostra opções de aparência.",
     );
     for (const action of [
-      SETTINGS_ACTION_LOGS,
       SETTINGS_ACTION_COLLISIONS,
       SETTINGS_ACTION_RESET_SCORE,
     ]) {
@@ -1085,6 +1081,14 @@ async function run() {
       );
     }
     assert(
+      !menuState.settingsActions.includes(SETTINGS_ACTION_LOGS),
+      "Menu lateral ainda mostra ação de logs.",
+    );
+    assert(
+      !/Histórico|Logs|Game history|Game logs/i.test(menuState.text),
+      "Menu lateral ainda mostra texto de logs.",
+    );
+    assert(
       menuPauseState.scoreStable,
       `Score mudou com menu aberto: ${menuPauseState.beforeScoreHudText} ` +
         `-> ${menuPauseState.afterScoreHudText}.`,
@@ -1093,24 +1097,8 @@ async function run() {
       menuPauseState.canvasFrameStable,
       "Canvas continuou renderizando com menu aberto.",
     );
-    const openedLogs = await clickSettingsAction(page, SETTINGS_ACTION_LOGS);
-    assert(openedLogs, "Botão de histórico não encontrado.");
-    await page.waitForFunction(
-      () => document.body.textContent?.includes("Histórico do jogo"),
-      { timeout: 10000 },
-    );
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    await openFirstEventDetails(
-      page,
-      "Painel de histórico abriu sem botão Atualizar disponível.",
-      "Nenhum evento disponível no painel de histórico.",
-    );
-    await waitForLogDetailLabels(page, SPEED_CURRENT_LABEL, LEVEL_TIME_LABEL);
     const indexedDbSummary = await readIndexedDbSummary(page);
-    const historyState = await collectLayoutState(page);
-
-    const closedLogs = await clickButtonByPattern(page, CLOSE_BUTTON_NAME);
-    assert(closedLogs, "Não foi possível fechar o painel de histórico.");
+    const historyState = null;
 
     await waitForInitialCountdownToFinish(page);
     const openedMenuForCollisions = await clickButtonByPattern(
@@ -1168,19 +1156,6 @@ async function run() {
     assert(
       indexedDbSummary.hasRequiredEvents,
       `Eventos obrigatórios ausentes: ${REQUIRED_EVENT_TYPES.join(", ")}.`,
-    );
-    assert(
-      !historyState.hasHorizontalOverflow,
-      "Tela de histórico tem overflow horizontal.",
-    );
-    assert(
-      historyState.buttons
-        .filter((button) => button.visibleInViewport)
-        .every((button) => button.hasTouchTarget),
-      `Botão visível em histórico menor que alvo touch mínimo: ${historyState.buttons
-        .filter((button) => button.visibleInViewport && !button.hasTouchTarget)
-        .map((button) => button.text)
-        .join(", ")}`,
     );
     assert(
       !statsState.hasHorizontalOverflow,

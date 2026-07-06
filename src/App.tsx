@@ -114,6 +114,7 @@ const SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_CLEAR = "joystick-diagnostic-clear";
 const SETTINGS_ACTION_COLLISIONS = "collisions";
 const SETTINGS_ACTION_RESET_SCORE = "reset-score";
 const SETTINGS_ACTION_RESET_PREFERENCES = "reset-preferences";
+const SHOW_DEBUG_LOG_CONTROLS = false;
 const INITIAL_COUNTDOWN_OVERLAY: GameCinematicOverlayState = {
   type: "countdown",
   value: CINEMATIC_COUNTDOWN_STEPS[COUNTDOWN_FIRST_STEP_INDEX],
@@ -232,7 +233,8 @@ export default function App() {
     return null;
   }, []);
   const activeGameMode = GAME_MODE_BALL_TURRET;
-  const hasJoystickDiagnosticSamples = joystickDiagnosticState.samples.length > 0;
+  const hasJoystickDiagnosticSamples =
+    joystickDiagnosticState.samples.length > 0;
   const joystickDiagnosticSampleCountLabel = hasJoystickDiagnosticSamples
     ? joystickDiagnosticState.samples.length === 1
       ? t("menu.joystickDiagnosticCountOne")
@@ -300,11 +302,7 @@ export default function App() {
     return () => {
       URL.revokeObjectURL(url);
     };
-  }, [
-    hasJoystickDiagnosticSamples,
-    isMenuOpen,
-    joystickDiagnosticState,
-  ]);
+  }, [hasJoystickDiagnosticSamples, isMenuOpen, joystickDiagnosticState]);
 
   const handleDownloadJoystickDiagnostic = useCallback(() => {
     if (!hasJoystickDiagnosticSamples) return;
@@ -1014,18 +1012,20 @@ export default function App() {
               </div>
               <div className="settings-drawer__section">
                 <h3>{t("menu.tools")}</h3>
-                <button
-                  type="button"
-                  onClick={handleOpenLogs}
-                  className="dashboard-button dashboard-button--secondary"
-                  data-settings-action={SETTINGS_ACTION_LOGS}
-                  data-testid={`settings-action-${SETTINGS_ACTION_LOGS}`}
-                >
-                  <span aria-hidden="true" className="button-icon">
-                    ≡
-                  </span>
-                  {t("menu.logs")}
-                </button>
+                {SHOW_DEBUG_LOG_CONTROLS ? (
+                  <button
+                    type="button"
+                    onClick={handleOpenLogs}
+                    className="dashboard-button dashboard-button--secondary"
+                    data-settings-action={SETTINGS_ACTION_LOGS}
+                    data-testid={`settings-action-${SETTINGS_ACTION_LOGS}`}
+                  >
+                    <span aria-hidden="true" className="button-icon">
+                      ≡
+                    </span>
+                    {t("menu.logs")}
+                  </button>
+                ) : null}
                 <button
                   type="button"
                   onClick={handleOpenCollisionStats}
@@ -1038,59 +1038,69 @@ export default function App() {
                   </span>
                   {t("menu.collisions")}
                 </button>
-                <label className="settings-drawer__toggle">
-                  <input
-                    type="checkbox"
-                    checked={isJoystickDiagnosticEnabled}
-                    onChange={handleJoystickDiagnosticToggle}
-                  />
-                  <span>{t("menu.joystickDiagnosticToggle")}</span>
-                </label>
-                <p className="settings-drawer__hint">
-                  {joystickDiagnosticSampleCountLabel}
-                </p>
-                {hasJoystickDiagnosticSamples &&
-                joystickDiagnosticDownloadUrl ? (
-                  <a
-                    href={joystickDiagnosticDownloadUrl}
-                    download={joystickDiagnosticDownloadName}
-                    onClick={handleDownloadJoystickDiagnostic}
-                    className="dashboard-button dashboard-button--secondary"
-                    data-settings-action={SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD}
-                    data-testid={`settings-action-${SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD}`}
-                  >
-                    <span aria-hidden="true" className="button-icon">
-                      ⇩
-                    </span>
-                    {t("menu.joystickDiagnosticDownload")}
-                  </a>
-                ) : (
-                  <button
-                    type="button"
-                    className="dashboard-button dashboard-button--secondary"
-                    disabled
-                    data-settings-action={SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD}
-                    data-testid={`settings-action-${SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD}`}
-                  >
-                    <span aria-hidden="true" className="button-icon">
-                      ⇩
-                    </span>
-                    {t("menu.joystickDiagnosticDownload")}
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={handleClearJoystickDiagnostic}
-                  className="dashboard-button dashboard-button--secondary"
-                  disabled={!hasJoystickDiagnosticSamples}
-                  data-settings-action={SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_CLEAR}
-                  data-testid={`settings-action-${SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_CLEAR}`}
-                >
-                  <span aria-hidden="true" className="button-icon">
-                    ✕
-                  </span>
-                  {t("menu.joystickDiagnosticClear")}
-                </button>
+                {SHOW_DEBUG_LOG_CONTROLS ? (
+                  <>
+                    <label className="settings-drawer__toggle">
+                      <input
+                        type="checkbox"
+                        checked={isJoystickDiagnosticEnabled}
+                        onChange={handleJoystickDiagnosticToggle}
+                      />
+                      <span>{t("menu.joystickDiagnosticToggle")}</span>
+                    </label>
+                    <p className="settings-drawer__hint">
+                      {joystickDiagnosticSampleCountLabel}
+                    </p>
+                    {hasJoystickDiagnosticSamples &&
+                    joystickDiagnosticDownloadUrl ? (
+                      <a
+                        href={joystickDiagnosticDownloadUrl}
+                        download={joystickDiagnosticDownloadName}
+                        onClick={handleDownloadJoystickDiagnostic}
+                        className="dashboard-button dashboard-button--secondary"
+                        data-settings-action={
+                          SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD
+                        }
+                        data-testid={`settings-action-${SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD}`}
+                      >
+                        <span aria-hidden="true" className="button-icon">
+                          ⇩
+                        </span>
+                        {t("menu.joystickDiagnosticDownload")}
+                      </a>
+                    ) : (
+                      <button
+                        type="button"
+                        className="dashboard-button dashboard-button--secondary"
+                        disabled
+                        data-settings-action={
+                          SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD
+                        }
+                        data-testid={`settings-action-${SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD}`}
+                      >
+                        <span aria-hidden="true" className="button-icon">
+                          ⇩
+                        </span>
+                        {t("menu.joystickDiagnosticDownload")}
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={handleClearJoystickDiagnostic}
+                      className="dashboard-button dashboard-button--secondary"
+                      disabled={!hasJoystickDiagnosticSamples}
+                      data-settings-action={
+                        SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_CLEAR
+                      }
+                      data-testid={`settings-action-${SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_CLEAR}`}
+                    >
+                      <span aria-hidden="true" className="button-icon">
+                        ✕
+                      </span>
+                      {t("menu.joystickDiagnosticClear")}
+                    </button>
+                  </>
+                ) : null}
                 <button
                   type="button"
                   onClick={handleResetScores}
@@ -1147,7 +1157,9 @@ export default function App() {
                   isLanguageDetectionVisible
                 }
                 onBoardRectChange={handleBoardRectChange}
-                joystickDiagnosticsEnabled={isJoystickDiagnosticEnabled}
+                joystickDiagnosticsEnabled={
+                  SHOW_DEBUG_LOG_CONTROLS && isJoystickDiagnosticEnabled
+                }
                 joystickDiagnosticSamples={joystickDiagnosticState.samples}
                 onJoystickDiagnosticSample={handleJoystickDiagnosticSample}
               />
@@ -1211,7 +1223,9 @@ export default function App() {
         isVisible={showCollisionStats}
         onClose={handleCloseCollisionStats}
       />
-      <GameLogViewer isVisible={showGameLogs} onClose={handleCloseLogs} />
+      {SHOW_DEBUG_LOG_CONTROLS ? (
+        <GameLogViewer isVisible={showGameLogs} onClose={handleCloseLogs} />
+      ) : null}
       <GameCinematicOverlay
         state={cinematicOverlay}
         imageSetId={selection.imageSetId}

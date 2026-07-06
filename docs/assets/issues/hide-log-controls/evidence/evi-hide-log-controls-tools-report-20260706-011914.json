@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-07-06T04:19:21.183Z",
+  "url": "http://127.0.0.1:4173/?qaScenario=ball-turret",
+  "drawerVisible": true,
+  "hiddenControls": {
+    "logsActionHidden": true,
+    "logsTextHidden": true,
+    "diagnosticToggleHidden": true,
+    "diagnosticDownloadHidden": true,
+    "diagnosticClearHidden": true
+  },
+  "visibleExpectedControls": {
+    "collisions": true,
+    "resetScore": true,
+    "resetPreferences": true
+  },
+  "inheritedHiddenControls": {
+    "appearanceHidden": true
+  },
+  "drawerText": "Menu×Versão v36IdiomaIdioma do jogoPortuguês (Brasil)EnglishEspañol latinoamericanoEnglish (India)हिन्दीDeutschFrançaisItaliano日本語한국어Bahasa IndonesiaTiếng ViệtFilipinoไทย简体中文RecordesMelhor partida 0Ainda sem recordesPrivacidadeA ajuda por região está desligada. O idioma do navegador será usado.◎Usar região para idiomaPolítica de privacidadeTermos✓Revisar consentimentoDados do jogo◈Colisões0Zerar pontuação↺Restaurar padrão"
+}
