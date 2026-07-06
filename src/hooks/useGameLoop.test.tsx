@@ -19,6 +19,7 @@ const mockStartPaddleDrag = jest.fn();
 const mockMovePaddleDrag = jest.fn();
 const mockEndPaddleDrag = jest.fn();
 const mockSetBallTurretControlVector = jest.fn();
+const mockGetPaddleDiagnosticSnapshot = jest.fn();
 const TOUCH_ZONE_TEST_ID = "paddle-touch-zone";
 const JOYSTICK_TEST_ID = "ball-turret-joystick";
 const TOUCH_START_EVENT_NAME = "touchstart";
@@ -70,6 +71,7 @@ jest.mock("../logic/GameEngine", () => ({
     movePaddleDrag: mockMovePaddleDrag,
     endPaddleDrag: mockEndPaddleDrag,
     setBallTurretControlVector: mockSetBallTurretControlVector,
+    getPaddleDiagnosticSnapshot: mockGetPaddleDiagnosticSnapshot,
   })),
 }));
 
@@ -84,12 +86,16 @@ function Harness({
   touchEnabled = false,
   joystickEnabled = false,
   gameMode = "classic",
+  joystickDiagnosticsEnabled = false,
+  onJoystickDiagnosticSample,
 }: {
   imageSetId: ImageSetId;
   paused?: boolean;
   touchEnabled?: boolean;
   joystickEnabled?: boolean;
   gameMode?: "classic" | "ball-turret";
+  joystickDiagnosticsEnabled?: boolean;
+  onJoystickDiagnosticSample?: (sample: unknown) => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const touchZoneRef = useRef<HTMLDivElement>(null);
@@ -111,6 +117,8 @@ function Harness({
     gameMode,
     touchZoneRef,
     joystickRef,
+    joystickDiagnosticsEnabled,
+    onJoystickDiagnosticSample,
   );
 
   return (
@@ -619,6 +627,121 @@ describe("useGameLoop", () => {
     expect(mockMovePaddleDrag).not.toHaveBeenCalled();
     expect(readStyleNumber(joystick, TRACKBALL_X_CSS_VAR)).toBeCloseTo(-0.6);
     expect(readStyleNumber(joystick, TRACKBALL_Y_CSS_VAR)).toBeCloseTo(0.8);
+  });
+
+
+  it("registra diagnóstico aceito com ponto do joystick e posição da cama elástica", async () => {
+    const onJoystickDiagnosticSample = jest.fn();
+    mockGetPaddleDiagnosticSnapshot.mockReturnValue({
+      x: 360,
+      y: 520,
+      width: 80,
+      height: 12,
+      radial: {
+        centerX: 400,
+        centerY: 300,
+        radius: 238,
+        thickness: 12,
+        startAngle: 1.4,
+        centerAngle: 1.57,
+        endAngle: 1.74,
+      },
+    });
+    const { container, getByTestId } = render(
+      <Harness
+        imageSetId={IMAGE_SET_RETRO_DEFAULT}
+        gameMode="ball-turret"
+        joystickEnabled
+        joystickDiagnosticsEnabled
+        onJoystickDiagnosticSample={onJoystickDiagnosticSample}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(GameEngine).toHaveBeenCalledTimes(1);
+    });
+
+    const canvas = container.querySelector("canvas") as HTMLCanvasElement;
+    const joystick = getByTestId(JOYSTICK_TEST_ID);
+    canvas.width = 800;
+    canvas.height = 600;
+    canvas.getBoundingClientRect = jest.fn(() => CANVAS_RECT);
+    joystick.getBoundingClientRect = jest.fn(() => JOYSTICK_RECT);
+
+    joystick.dispatchEvent(createPointerEvent(POINTER_DOWN_EVENT_NAME, 150, 300));
+
+    expect(onJoystickDiagnosticSample).toHaveBeenCalledWith(
+      expect.objectContaining({
+        phase: "start",
+        inputType: "pointer",
+        accepted: true,
+        clientPoint: { x: 150, y: 300 },
+        joystick: expect.objectContaining({
+          normalized: { x: 0.5, y: 1 },
+          visual: { x: 0, y: 1 },
+        }),
+        canvas: expect.objectContaining({
+          mappedClientPoint: { x: 220, y: 340 },
+          mappedCanvasPoint: { x: 400, y: 600 },
+        }),
+        paddle: expect.objectContaining({
+          radial: expect.objectContaining({ centerAngle: 1.57 }),
+        }),
+      }),
+    );
+  });
+
+  it("registra diagnóstico rejeitado quando o arrasto sai do círculo visual", async () => {
+    const onJoystickDiagnosticSample = jest.fn();
+    mockGetPaddleDiagnosticSnapshot.mockReturnValue({
+      x: 330,
+      y: 500,
+      width: 80,
+      height: 12,
+      radial: { centerAngle: 2.2 },
+    });
+    const { container, getByTestId } = render(
+      <Harness
+        imageSetId={IMAGE_SET_RETRO_DEFAULT}
+        gameMode="ball-turret"
+        joystickEnabled
+        joystickDiagnosticsEnabled
+        onJoystickDiagnosticSample={onJoystickDiagnosticSample}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(GameEngine).toHaveBeenCalledTimes(1);
+    });
+
+    const canvas = container.querySelector("canvas") as HTMLCanvasElement;
+    const joystick = getByTestId(JOYSTICK_TEST_ID);
+    canvas.width = 800;
+    canvas.height = 600;
+    canvas.getBoundingClientRect = jest.fn(() => CANVAS_RECT);
+    joystick.getBoundingClientRect = jest.fn(() => JOYSTICK_RECT);
+
+    joystick.dispatchEvent(createPointerEvent(POINTER_DOWN_EVENT_NAME, 150, 300));
+    mockMovePaddleDrag.mockClear();
+    onJoystickDiagnosticSample.mockClear();
+    joystick.dispatchEvent(createPointerEvent(POINTER_MOVE_EVENT_NAME, 100, 300));
+
+    expect(mockMovePaddleDrag).not.toHaveBeenCalled();
+    expect(onJoystickDiagnosticSample).toHaveBeenCalledWith(
+      expect.objectContaining({
+        phase: "move",
+        inputType: "pointer",
+        accepted: false,
+        reason: "outside-joystick-circle",
+        joystick: expect.objectContaining({
+          normalized: { x: 0, y: 1 },
+          visual: { x: -1, y: 1 },
+        }),
+        paddle: expect.objectContaining({
+          radial: expect.objectContaining({ centerAngle: 2.2 }),
+        }),
+      }),
+    );
   });
 
   it("usa touch como fallback absoluto do joystick espelhado", async () => {

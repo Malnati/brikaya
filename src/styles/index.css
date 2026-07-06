@@ -855,6 +855,47 @@ select {
     transform 120ms ease-out;
 }
 
+
+.joystick-diagnostic-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.joystick-diagnostic-layer--joystick {
+  border-radius: 999px;
+}
+
+.joystick-diagnostic-layer__line {
+  fill: none;
+  stroke: color-mix(in srgb, var(--color-accent) 86%, #ffffff);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.76;
+}
+
+.joystick-diagnostic-layer--playfield .joystick-diagnostic-layer__line {
+  stroke: #75f0a1;
+}
+
+.joystick-diagnostic-layer__point {
+  stroke: rgba(1, 12, 26, 0.8);
+  stroke-width: 0.9;
+}
+
+.joystick-diagnostic-layer__point--accepted {
+  fill: color-mix(in srgb, var(--color-accent) 88%, #ffffff);
+}
+
+.joystick-diagnostic-layer__point--rejected {
+  fill: #ffbf5a;
+}
+
 @media (pointer: coarse), (hover: none) {
   .game-paddle-touch-zone {
     display: block;
@@ -1815,6 +1856,26 @@ canvas {
 .settings-drawer__link {
   color: var(--bb-color-primary-strong);
   font-weight: 800;
+}
+
+
+.settings-drawer__toggle {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 8px 12px;
+  border: 1px solid color-mix(in srgb, var(--bb-color-outline) 24%, transparent);
+  border-radius: 12px;
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--color-panel) 72%, transparent);
+  font-weight: 700;
+}
+
+.settings-drawer__toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--bb-color-primary);
 }
 
 .language-selector {

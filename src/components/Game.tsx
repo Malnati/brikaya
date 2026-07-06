@@ -16,6 +16,7 @@ import {
   type ImageSetId,
 } from "../constants/appearance";
 import type { GameAudioSink } from "../constants/audio";
+import type { JoystickDiagnosticSample } from "../utils/joystickDiagnostics";
 import type { LevelTransitionPayload } from "../constants/game";
 import {
   GAME_MODE_BALL_TURRET,
@@ -38,6 +39,9 @@ interface GameProps {
   paused?: boolean;
   gameMode?: GameMode;
   onBoardRectChange?: (rect: GameBoardRect) => void;
+  joystickDiagnosticsEnabled?: boolean;
+  joystickDiagnosticSamples?: readonly JoystickDiagnosticSample[];
+  onJoystickDiagnosticSample?: (sample: JoystickDiagnosticSample) => void;
 }
 
 export interface GameBoardRect {
@@ -75,6 +79,11 @@ const GAME_BOARD_PLAYFIELD_CLASS_NAME = "game-board-playfield";
 const PADDLE_TOUCH_ZONE_CLASS_NAME = "game-paddle-touch-zone";
 const BALL_TURRET_JOYSTICK_CLASS_NAME =
   "game-turret-joystick game-turret-trackball";
+const JOYSTICK_DIAGNOSTIC_JOYSTICK_LAYER_TEST_ID =
+  "joystick-diagnostic-joystick-layer";
+const JOYSTICK_DIAGNOSTIC_PLAYFIELD_LAYER_TEST_ID =
+  "joystick-diagnostic-playfield-layer";
+const JOYSTICK_DIAGNOSTIC_VIEWBOX_SIZE = 100;
 
 function readPixelValue(value: string): number {
   const parsedValue = Number.parseFloat(value);
@@ -122,6 +131,92 @@ function readBoardRect(canvas: HTMLCanvasElement): GameBoardRect {
   };
 }
 
+
+function renderJoystickDiagnosticPolyline(
+  samples: readonly JoystickDiagnosticSample[],
+  getPoint: (sample: JoystickDiagnosticSample) => { x: number; y: number } | null,
+) {
+  const points = samples
+    .filter((sample) => sample.accepted)
+    .map(getPoint)
+    .filter((point): point is { x: number; y: number } => point !== null)
+    .map((point) => `${point.x},${point.y}`)
+    .join(" ");
+
+  if (!points) return null;
+
+  return <polyline className="joystick-diagnostic-layer__line" points={points} />;
+}
+
+function renderJoystickDiagnosticPoints(
+  samples: readonly JoystickDiagnosticSample[],
+  getPoint: (sample: JoystickDiagnosticSample) => { x: number; y: number } | null,
+) {
+  return samples.map((sample) => {
+    const point = getPoint(sample);
+    if (!point) return null;
+
+    return (
+      <circle
+        key={sample.sequence}
+        className={
+          sample.accepted
+            ? "joystick-diagnostic-layer__point joystick-diagnostic-layer__point--accepted"
+            : "joystick-diagnostic-layer__point joystick-diagnostic-layer__point--rejected"
+        }
+        cx={point.x}
+        cy={point.y}
+        r="2.2"
+      />
+    );
+  });
+}
+
+function renderJoystickDiagnosticLayer(
+  samples: readonly JoystickDiagnosticSample[],
+  testId: string,
+  className: string,
+  getPoint: (sample: JoystickDiagnosticSample) => { x: number; y: number } | null,
+) {
+  if (samples.length === 0) return null;
+
+  return (
+    <svg
+      aria-hidden="true"
+      className={className}
+      data-testid={testId}
+      viewBox={`0 0 ${JOYSTICK_DIAGNOSTIC_VIEWBOX_SIZE} ${JOYSTICK_DIAGNOSTIC_VIEWBOX_SIZE}`}
+      preserveAspectRatio="none"
+    >
+      {renderJoystickDiagnosticPolyline(samples, getPoint)}
+      {renderJoystickDiagnosticPoints(samples, getPoint)}
+    </svg>
+  );
+}
+
+function readJoystickDiagnosticPoint(sample: JoystickDiagnosticSample) {
+  const normalized = sample.joystick.normalized;
+  if (!normalized) return null;
+
+  return {
+    x: normalized.x * JOYSTICK_DIAGNOSTIC_VIEWBOX_SIZE,
+    y: normalized.y * JOYSTICK_DIAGNOSTIC_VIEWBOX_SIZE,
+  };
+}
+
+function readPlayfieldDiagnosticPoint(sample: JoystickDiagnosticSample) {
+  const mappedCanvasPoint = sample.canvas.mappedCanvasPoint;
+  if (!mappedCanvasPoint) return null;
+
+  const canvasWidth = sample.canvas.size.width || 1;
+  const canvasHeight = sample.canvas.size.height || 1;
+
+  return {
+    x: (mappedCanvasPoint.x / canvasWidth) * JOYSTICK_DIAGNOSTIC_VIEWBOX_SIZE,
+    y: (mappedCanvasPoint.y / canvasHeight) * JOYSTICK_DIAGNOSTIC_VIEWBOX_SIZE,
+  };
+}
+
 export default function Game({
   onScoreUpdate,
   onGameWon,
@@ -136,6 +231,9 @@ export default function Game({
   paused = false,
   gameMode = GAME_MODE_CLASSIC,
   onBoardRectChange,
+  joystickDiagnosticsEnabled = false,
+  joystickDiagnosticSamples = [],
+  onJoystickDiagnosticSample,
 }: GameProps) {
   const surfaceRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -148,6 +246,8 @@ export default function Game({
   const canvasSizeRef = useRef(canvasSize);
   const pendingBoardRectTargetRef = useRef<PendingBoardRectTarget | null>(null);
   const isBallTurretMode = gameMode === GAME_MODE_BALL_TURRET;
+  const shouldRenderJoystickDiagnostics =
+    isBallTurretMode && joystickDiagnosticsEnabled && joystickDiagnosticSamples.length > 0;
   const paddleTouchZoneCenterPercent = useMemo(() => {
     const dimensions = calculateDynamicDimensions(
       canvasSize.width,
@@ -274,6 +374,8 @@ export default function Game({
     gameMode,
     paddleTouchZoneRef,
     ballTurretJoystickRef,
+    joystickDiagnosticsEnabled,
+    onJoystickDiagnosticSample,
   );
   useColorDebug(canvasRef);
 
@@ -318,6 +420,13 @@ export default function Game({
                 transform: "none",
               }}
             />
+            {shouldRenderJoystickDiagnostics &&
+              renderJoystickDiagnosticLayer(
+                joystickDiagnosticSamples,
+                JOYSTICK_DIAGNOSTIC_PLAYFIELD_LAYER_TEST_ID,
+                "joystick-diagnostic-layer joystick-diagnostic-layer--playfield",
+                readPlayfieldDiagnosticPoint,
+              )}
           </div>
         </div>
         {isBallTurretMode && (
@@ -330,6 +439,13 @@ export default function Game({
             <span className="game-turret-joystick-pad" aria-hidden="true">
               <span className="game-turret-joystick-knob" />
             </span>
+            {shouldRenderJoystickDiagnostics &&
+              renderJoystickDiagnosticLayer(
+                joystickDiagnosticSamples,
+                JOYSTICK_DIAGNOSTIC_JOYSTICK_LAYER_TEST_ID,
+                "joystick-diagnostic-layer joystick-diagnostic-layer--joystick",
+                readJoystickDiagnosticPoint,
+              )}
           </div>
         )}
       </div>
