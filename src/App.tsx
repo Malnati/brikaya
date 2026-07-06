@@ -278,7 +278,11 @@ export default function App() {
   );
 
   useEffect(() => {
-    if (!isMenuOpen || !hasJoystickDiagnosticSamples) {
+    if (
+      !SHOW_DEBUG_LOG_CONTROLS ||
+      !isMenuOpen ||
+      !hasJoystickDiagnosticSamples
+    ) {
       setJoystickDiagnosticDownloadUrl(null);
       setJoystickDiagnosticDownloadName("");
       return undefined;

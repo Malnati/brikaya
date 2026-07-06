@@ -1,0 +1,1597 @@
+{
+  "checkedAt": "2026-07-06T04:25:38.935Z",
+  "publicUrl": "http://127.0.0.1:4173/?qaScenario=ball-turret",
+  "qaScenario": "ball-turret",
+  "results": [
+    {
+      "name": "desktop",
+      "joystickPlacement": "hidden",
+      "joystickExercise": {
+        "exercised": false,
+        "pathWithinControl": false,
+        "angleChecks": {},
+        "holdStableAngleDelta": 0,
+        "outsideIgnoredCheck": {
+          "angleUnchanged": false,
+          "visualUnchanged": false,
+          "outsideAngleRejected": false,
+          "beforeVisual": {
+            "x": 0,
+            "y": 0
+          },
+          "afterVisual": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "releaseVisual": {
+          "x": 0,
+          "y": 0,
+          "active": 0
+        },
+        "hitTarget": {
+          "hitsJoystick": false,
+          "tagName": "",
+          "className": "",
+          "testId": ""
+        },
+        "path": []
+      },
+      "diagnosticToggleState": null,
+      "diagnosticOverlayState": null,
+      "joystickDiagnosticDownload": null,
+      "menuState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya",
+          "Menu",
+          "Idioma",
+          "Recordes",
+          "Privacidade",
+          "Dados do jogo"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "◎Usar região para idioma",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "✓Revisar consentimento",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "◈Colisões",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↺Restaurar padrão",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 1056,
+          "height": 704,
+          "x": 192,
+          "y": 85
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "centerY": 0,
+          "hasTrackballClass": true,
+          "trackballSize": "132px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 20|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 1803,
+          "brickQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 256,
+          "activeTrampolineArcCount": 2996,
+          "activeTrampolineCenterAngle": 1.5707963267948966,
+          "boundarySegmentCount": 18,
+          "reboundBoundarySegmentCount": 9,
+          "lossBoundarySegmentCount": 9
+        }
+      },
+      "gameplayState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 1056,
+          "height": 704,
+          "x": 192,
+          "y": 85
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "centerY": 0,
+          "hasTrackballClass": true,
+          "trackballSize": "132px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 192,
+          "brickQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 24,
+          "activeTrampolineArcCount": 297,
+          "activeTrampolineCenterAngle": 1.5707963267948966,
+          "boundarySegmentCount": 18,
+          "reboundBoundarySegmentCount": 9,
+          "lossBoundarySegmentCount": 9
+        }
+      },
+      "postExerciseState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 1056,
+          "height": 704,
+          "x": 192,
+          "y": 85
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "centerY": 0,
+          "hasTrackballClass": true,
+          "trackballSize": "132px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 20|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 1803,
+          "brickQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 256,
+          "activeTrampolineArcCount": 2996,
+          "activeTrampolineCenterAngle": 1.5707963267948966,
+          "boundarySegmentCount": 18,
+          "reboundBoundarySegmentCount": 9,
+          "lossBoundarySegmentCount": 9
+        }
+      }
+    },
+    {
+      "name": "mobile-portrait",
+      "joystickPlacement": "below",
+      "joystickExercise": {
+        "exercised": true,
+        "hitTarget": {
+          "hitsJoystick": true,
+          "tagName": "DIV",
+          "className": "game-turret-joystick game-turret-trackball",
+          "testId": "ball-turret-joystick"
+        },
+        "pathWithinControl": true,
+        "angleChecks": {
+          "right": {
+            "actualAngle": 0,
+            "expectedAngle": 0,
+            "angleMatches": true,
+            "visual": {
+              "x": 1,
+              "y": 0
+            }
+          },
+          "topRight": {
+            "actualAngle": -0.785398328535841,
+            "expectedAngle": -0.7853981633974492,
+            "angleMatches": true,
+            "visual": {
+              "x": 0.6999999537612454,
+              "y": -0.7000001849550189
+            }
+          },
+          "bottomLeft": {
+            "actualAngle": 2.356194325053952,
+            "expectedAngle": 2.356194490192344,
+            "angleMatches": true,
+            "visual": {
+              "x": -0.6999999537612452,
+              "y": 0.700000184955019
+            }
+          },
+          "left": {
+            "actualAngle": -3.141592653589793,
+            "expectedAngle": -3.141592653589793,
+            "angleMatches": true,
+            "visual": {
+              "x": -1,
+              "y": 0
+            }
+          },
+          "top": {
+            "actualAngle": -1.5707963267948966,
+            "expectedAngle": -1.5707963267948966,
+            "angleMatches": true,
+            "visual": {
+              "x": 0,
+              "y": -1
+            }
+          },
+          "topLeft": {
+            "actualAngle": -2.356194325053951,
+            "expectedAngle": -2.356194490192345,
+            "angleMatches": true,
+            "visual": {
+              "x": -0.6999999537612452,
+              "y": -0.7000001849550189
+            }
+          },
+          "bottom": {
+            "actualAngle": 1.5707963267948966,
+            "expectedAngle": 1.5707963267948966,
+            "angleMatches": true,
+            "visual": {
+              "x": 0,
+              "y": 1
+            }
+          },
+          "lowerLeftArc": {
+            "actualAngle": 2.214297620543217,
+            "expectedAngle": 2.214297435588181,
+            "angleMatches": true,
+            "visual": {
+              "x": -0.6000000924775095,
+              "y": 0.799999815044981
+            }
+          },
+          "bottomRight": {
+            "actualAngle": 0.785398328535841,
+            "expectedAngle": 0.7853981633974492,
+            "angleMatches": true,
+            "visual": {
+              "x": 0.6999999537612454,
+              "y": 0.700000184955019
+            }
+          }
+        },
+        "holdStableAngleDelta": 0,
+        "outsideIgnoredCheck": {
+          "angleUnchanged": true,
+          "visualUnchanged": true,
+          "outsideAngleRejected": true,
+          "beforeVisual": {
+            "x": 0.6999999537612454,
+            "y": 0.700000184955019
+          },
+          "afterVisual": {
+            "x": 0.6999999537612454,
+            "y": 0.700000184955019
+          },
+          "expectedIgnoredAngle": -0.7853981633974492,
+          "actualAngleAfterIgnoredMove": 0.785398328535841
+        },
+        "outsideCircleInsideBoxIgnoredCheck": {
+          "angleUnchanged": true,
+          "visualUnchanged": true,
+          "outsideAngleRejected": false,
+          "beforeVisual": {
+            "x": -0.6000000924775095,
+            "y": 0.799999815044981
+          },
+          "afterVisual": {
+            "x": -0.6000000924775095,
+            "y": 0.799999815044981
+          },
+          "expectedIgnoredAngle": 2.356194490192344,
+          "actualAngleAfterIgnoredMove": 2.214297620543217
+        },
+        "rightVisualX": 1,
+        "topVisualY": -1,
+        "bottomVisualY": 1,
+        "leftVisualX": -1,
+        "topRightVisual": {
+          "x": 0.6999999537612454,
+          "y": -0.7000001849550189
+        },
+        "topLeftVisual": {
+          "x": -0.6999999537612452,
+          "y": -0.7000001849550189
+        },
+        "bottomLeftVisual": {
+          "x": -0.6999999537612452,
+          "y": 0.700000184955019
+        },
+        "bottomRightVisual": {
+          "x": 0.6999999537612454,
+          "y": 0.700000184955019
+        },
+        "releaseVisual": {
+          "x": 0,
+          "y": 0,
+          "active": 0
+        },
+        "path": [
+          {
+            "x": 195,
+            "y": 633,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0.5,
+            "expectedAngle": null
+          },
+          {
+            "x": 261,
+            "y": 633,
+            "horizontalRatio": 1,
+            "verticalRatio": 0.5,
+            "expectedAngle": 0
+          },
+          {
+            "x": 241.2,
+            "y": 586.8,
+            "horizontalRatio": 0.85,
+            "verticalRatio": 0.15,
+            "expectedAngle": -0.7853981633974492
+          },
+          {
+            "x": 195,
+            "y": 567,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0,
+            "expectedAngle": -1.5707963267948966
+          },
+          {
+            "x": 148.8,
+            "y": 586.8,
+            "horizontalRatio": 0.15,
+            "verticalRatio": 0.15,
+            "expectedAngle": -2.356194490192345
+          },
+          {
+            "x": 129,
+            "y": 633,
+            "horizontalRatio": 0,
+            "verticalRatio": 0.5,
+            "expectedAngle": -3.141592653589793
+          },
+          {
+            "x": 148.8,
+            "y": 679.2,
+            "horizontalRatio": 0.15,
+            "verticalRatio": 0.85,
+            "expectedAngle": 2.356194490192344
+          },
+          {
+            "x": 195,
+            "y": 699,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 1,
+            "expectedAngle": 1.5707963267948966
+          },
+          {
+            "x": 155.4,
+            "y": 685.8,
+            "horizontalRatio": 0.2,
+            "verticalRatio": 0.9,
+            "expectedAngle": 2.214297435588181
+          },
+          {
+            "x": 241.2,
+            "y": 679.2,
+            "horizontalRatio": 0.85,
+            "verticalRatio": 0.85,
+            "expectedAngle": 0.7853981633974492
+          },
+          {
+            "x": 195,
+            "y": 633,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0.5,
+            "expectedAngle": null
+          }
+        ]
+      },
+      "diagnosticToggleState": {
+        "defaultEnabled": false,
+        "controlsHidden": true,
+        "enabledForExercise": false
+      },
+      "diagnosticOverlayState": {
+        "joystickLayer": {
+          "exists": false,
+          "visible": false,
+          "pointCount": 0,
+          "lineCount": 0
+        },
+        "playfieldLayer": {
+          "exists": false,
+          "visible": false,
+          "pointCount": 0,
+          "lineCount": 0
+        },
+        "toggleExists": false,
+        "downloadExists": false,
+        "clearExists": false,
+        "downloadButtonDisabled": null
+      },
+      "joystickDiagnosticDownload": null,
+      "menuState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya",
+          "Menu",
+          "Idioma",
+          "Recordes",
+          "Privacidade",
+          "Dados do jogo"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "◎Usar região para idioma",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "✓Revisar consentimento",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "◈Colisões",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↺Restaurar padrão",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 390,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": true,
+          "width": 132,
+          "height": 132,
+          "x": 129,
+          "y": 567,
+          "bottom": 699,
+          "centerY": 633,
+          "hasTrackballClass": true,
+          "trackballSize": "132px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 90|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 7719,
+          "brickQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 1136,
+          "activeTrampolineArcCount": 8398,
+          "activeTrampolineCenterAngle": 0,
+          "boundarySegmentCount": 18,
+          "reboundBoundarySegmentCount": 9,
+          "lossBoundarySegmentCount": 9
+        }
+      },
+      "gameplayState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 390,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": true,
+          "width": 132,
+          "height": 132,
+          "x": 129,
+          "y": 567,
+          "bottom": 699,
+          "centerY": 633,
+          "hasTrackballClass": true,
+          "trackballSize": "132px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 20,
+          "brickQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 16,
+          "activeTrampolineArcCount": 150,
+          "activeTrampolineCenterAngle": 1.5707963267948966,
+          "boundarySegmentCount": 18,
+          "reboundBoundarySegmentCount": 9,
+          "lossBoundarySegmentCount": 9
+        }
+      },
+      "postExerciseState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 390,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": true,
+          "width": 132,
+          "height": 132,
+          "x": 129,
+          "y": 567,
+          "bottom": 699,
+          "centerY": 633,
+          "hasTrackballClass": true,
+          "trackballSize": "132px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 90|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 7719,
+          "brickQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 1136,
+          "activeTrampolineArcCount": 8398,
+          "activeTrampolineCenterAngle": 0,
+          "boundarySegmentCount": 18,
+          "reboundBoundarySegmentCount": 9,
+          "lossBoundarySegmentCount": 9
+        }
+      }
+    },
+    {
+      "name": "mobile-portrait-compact",
+      "joystickPlacement": "below",
+      "joystickExercise": {
+        "exercised": true,
+        "hitTarget": {
+          "hitsJoystick": true,
+          "tagName": "DIV",
+          "className": "game-turret-joystick game-turret-trackball",
+          "testId": "ball-turret-joystick"
+        },
+        "pathWithinControl": true,
+        "angleChecks": {
+          "right": {
+            "actualAngle": 0,
+            "expectedAngle": 0,
+            "angleMatches": true,
+            "visual": {
+              "x": 1,
+              "y": 0
+            }
+          },
+          "topRight": {
+            "actualAngle": -0.7853981633974492,
+            "expectedAngle": -0.7853981633974492,
+            "angleMatches": true,
+            "visual": {
+              "x": 0.7000003390842013,
+              "y": -0.7000003390842013
+            }
+          },
+          "bottomLeft": {
+            "actualAngle": 2.35619418743865,
+            "expectedAngle": 2.356194490192344,
+            "angleMatches": true,
+            "visual": {
+              "x": -0.6999999152289497,
+              "y": 0.7000003390842013
+            }
+          },
+          "left": {
+            "actualAngle": -3.141592653589793,
+            "expectedAngle": -3.141592653589793,
+            "angleMatches": true,
+            "visual": {
+              "x": -1,
+              "y": 0
+            }
+          },
+          "top": {
+            "actualAngle": -1.5707963267948966,
+            "expectedAngle": -1.5707963267948966,
+            "angleMatches": true,
+            "visual": {
+              "x": 0,
+              "y": -1
+            }
+          },
+          "topLeft": {
+            "actualAngle": -2.356194187438649,
+            "expectedAngle": -2.356194490192345,
+            "angleMatches": true,
+            "visual": {
+              "x": -0.6999999152289497,
+              "y": -0.7000003390842013
+            }
+          },
+          "bottom": {
+            "actualAngle": 1.5707963267948966,
+            "expectedAngle": 1.5707963267948966,
+            "angleMatches": true,
+            "visual": {
+              "x": 0,
+              "y": 1
+            }
+          },
+          "lowerLeftArc": {
+            "actualAngle": 2.21429777467244,
+            "expectedAngle": 2.214297435588181,
+            "angleMatches": true,
+            "visual": {
+              "x": -0.6000001695421007,
+              "y": 0.7999996609157987
+            }
+          },
+          "bottomRight": {
+            "actualAngle": 0.7853981633974492,
+            "expectedAngle": 0.7853981633974492,
+            "angleMatches": true,
+            "visual": {
+              "x": 0.7000003390842013,
+              "y": 0.7000003390842013
+            }
+          }
+        },
+        "holdStableAngleDelta": 0,
+        "outsideIgnoredCheck": {
+          "angleUnchanged": true,
+          "visualUnchanged": true,
+          "outsideAngleRejected": true,
+          "beforeVisual": {
+            "x": 0.7000003390842013,
+            "y": 0.7000003390842013
+          },
+          "afterVisual": {
+            "x": 0.7000003390842013,
+            "y": 0.7000003390842013
+          },
+          "expectedIgnoredAngle": -0.7853981633974492,
+          "actualAngleAfterIgnoredMove": 0.7853981633974492
+        },
+        "outsideCircleInsideBoxIgnoredCheck": {
+          "angleUnchanged": true,
+          "visualUnchanged": true,
+          "outsideAngleRejected": false,
+          "beforeVisual": {
+            "x": -0.6000001695421007,
+            "y": 0.7999996609157987
+          },
+          "afterVisual": {
+            "x": -0.6000001695421007,
+            "y": 0.7999996609157987
+          },
+          "expectedIgnoredAngle": 2.356194490192344,
+          "actualAngleAfterIgnoredMove": 2.21429777467244
+        },
+        "rightVisualX": 1,
+        "topVisualY": -1,
+        "bottomVisualY": 1,
+        "leftVisualX": -1,
+        "topRightVisual": {
+          "x": 0.7000003390842013,
+          "y": -0.7000003390842013
+        },
+        "topLeftVisual": {
+          "x": -0.6999999152289497,
+          "y": -0.7000003390842013
+        },
+        "bottomLeftVisual": {
+          "x": -0.6999999152289497,
+          "y": 0.7000003390842013
+        },
+        "bottomRightVisual": {
+          "x": 0.7000003390842013,
+          "y": 0.7000003390842013
+        },
+        "releaseVisual": {
+          "x": 0,
+          "y": 0,
+          "active": 0
+        },
+        "path": [
+          {
+            "x": 240,
+            "y": 528,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0.5,
+            "expectedAngle": null
+          },
+          {
+            "x": 276,
+            "y": 528,
+            "horizontalRatio": 1,
+            "verticalRatio": 0.5,
+            "expectedAngle": 0
+          },
+          {
+            "x": 265.2,
+            "y": 502.8,
+            "horizontalRatio": 0.85,
+            "verticalRatio": 0.15,
+            "expectedAngle": -0.7853981633974492
+          },
+          {
+            "x": 240,
+            "y": 492,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0,
+            "expectedAngle": -1.5707963267948966
+          },
+          {
+            "x": 214.8,
+            "y": 502.8,
+            "horizontalRatio": 0.15,
+            "verticalRatio": 0.15,
+            "expectedAngle": -2.356194490192345
+          },
+          {
+            "x": 204,
+            "y": 528,
+            "horizontalRatio": 0,
+            "verticalRatio": 0.5,
+            "expectedAngle": -3.141592653589793
+          },
+          {
+            "x": 214.8,
+            "y": 553.2,
+            "horizontalRatio": 0.15,
+            "verticalRatio": 0.85,
+            "expectedAngle": 2.356194490192344
+          },
+          {
+            "x": 240,
+            "y": 564,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 1,
+            "expectedAngle": 1.5707963267948966
+          },
+          {
+            "x": 218.4,
+            "y": 556.8,
+            "horizontalRatio": 0.2,
+            "verticalRatio": 0.9,
+            "expectedAngle": 2.214297435588181
+          },
+          {
+            "x": 265.2,
+            "y": 553.2,
+            "horizontalRatio": 0.85,
+            "verticalRatio": 0.85,
+            "expectedAngle": 0.7853981633974492
+          },
+          {
+            "x": 240,
+            "y": 528,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0.5,
+            "expectedAngle": null
+          }
+        ]
+      },
+      "diagnosticToggleState": null,
+      "diagnosticOverlayState": null,
+      "joystickDiagnosticDownload": null,
+      "menuState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya",
+          "Menu",
+          "Idioma",
+          "Recordes",
+          "Privacidade",
+          "Dados do jogo"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "◎Usar região para idioma",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "✓Revisar consentimento",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "◈Colisões",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↺Restaurar padrão",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 480,
+          "height": 640
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 480,
+          "height": 480,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": true,
+          "width": 72,
+          "height": 72,
+          "x": 204,
+          "y": 492,
+          "bottom": 564,
+          "centerY": 528,
+          "hasTrackballClass": true,
+          "trackballSize": "72px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 70|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 9461,
+          "brickQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 1000,
+          "activeTrampolineArcCount": 10727,
+          "activeTrampolineCenterAngle": 0,
+          "boundarySegmentCount": 18,
+          "reboundBoundarySegmentCount": 9,
+          "lossBoundarySegmentCount": 9
+        }
+      },
+      "gameplayState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 480,
+          "height": 640
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 480,
+          "height": 480,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": true,
+          "width": 72,
+          "height": 72,
+          "x": 204,
+          "y": 492,
+          "bottom": 564,
+          "centerY": 528,
+          "hasTrackballClass": true,
+          "trackballSize": "72px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 80,
+          "brickQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 16,
+          "activeTrampolineArcCount": 198,
+          "activeTrampolineCenterAngle": 1.5707963267948966,
+          "boundarySegmentCount": 18,
+          "reboundBoundarySegmentCount": 9,
+          "lossBoundarySegmentCount": 9
+        }
+      },
+      "postExerciseState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 480,
+          "height": 640
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 480,
+          "height": 480,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": true,
+          "width": 72,
+          "height": 72,
+          "x": 204,
+          "y": 492,
+          "bottom": 564,
+          "centerY": 528,
+          "hasTrackballClass": true,
+          "trackballSize": "72px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 70|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 9461,
+          "brickQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 1000,
+          "activeTrampolineArcCount": 10727,
+          "activeTrampolineCenterAngle": 0,
+          "boundarySegmentCount": 18,
+          "reboundBoundarySegmentCount": 9,
+          "lossBoundarySegmentCount": 9
+        }
+      }
+    },
+    {
+      "name": "mobile-landscape",
+      "joystickPlacement": "blocked",
+      "orientationBlocked": true,
+      "joystickExercise": {
+        "exercised": false,
+        "skippedReason": "mobile landscape bloqueado por portrait obrigatório"
+      },
+      "menuState": null,
+      "gameplayState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 360,
+          "height": 240,
+          "x": 184,
+          "y": 75
+        },
+        "orientationBlocker": {
+          "exists": true,
+          "visible": true,
+          "role": "alertdialog",
+          "ariaLabel": "Você precisa de espaço para o joystick",
+          "text": "Você precisa de espaço para o joystick",
+          "width": 844,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": true,
+          "width": 112,
+          "height": 112,
+          "x": 548,
+          "y": 139,
+          "bottom": 251,
+          "centerY": 195,
+          "hasTrackballClass": true,
+          "trackballSize": "112px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 0,
+          "brickQuadrants": {
+            "left": false,
+            "right": false,
+            "top": false,
+            "bottom": false
+          },
+          "fullRingArcCount": 0,
+          "activeTrampolineArcCount": 0,
+          "activeTrampolineCenterAngle": null,
+          "boundarySegmentCount": 0,
+          "reboundBoundarySegmentCount": 0,
+          "lossBoundarySegmentCount": 0
+        }
+      },
+      "postExerciseState": {
+        "title": "Brikaya — arcade de quebrar blocos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "↻",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 360,
+          "height": 240,
+          "x": 184,
+          "y": 75
+        },
+        "orientationBlocker": {
+          "exists": true,
+          "visible": true,
+          "role": "alertdialog",
+          "ariaLabel": "Você precisa de espaço para o joystick",
+          "text": "Você precisa de espaço para o joystick",
+          "width": 844,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": true,
+          "width": 112,
+          "height": 112,
+          "x": 548,
+          "y": 139,
+          "bottom": 251,
+          "centerY": 195,
+          "hasTrackballClass": true,
+          "trackballSize": "112px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "brickDrawCount": 0,
+          "brickQuadrants": {
+            "left": false,
+            "right": false,
+            "top": false,
+            "bottom": false
+          },
+          "fullRingArcCount": 0,
+          "activeTrampolineArcCount": 0,
+          "activeTrampolineCenterAngle": null,
+          "boundarySegmentCount": 0,
+          "reboundBoundarySegmentCount": 0,
+          "lossBoundarySegmentCount": 0
+        }
+      }
+    }
+  ],
+  "screenshots": {
+    "menu": "docs/assets/issues/force-turret-no-brick-flash/evidence/evi-force-turret-menu-no-selector.png",
+    "desktop": "/tmp/brikaya-force-turret-desktop.png",
+    "mobile": "docs/assets/issues/force-turret-no-brick-flash/evidence/evi-force-turret-mobile-default.png",
+    "mobileLandscape": "/tmp/brikaya-force-turret-landscape.png",
+    "joystickDiagnostic": null
+  }
+}
