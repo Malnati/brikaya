@@ -33,15 +33,17 @@ Manter `https://brikaya.com/` descobrível por buscadores sem custo, sem cobran�
   - o erro anterior de formato de URL não apareceu no estado submetido;
   - rechecagem posterior redirecionou para login; não foi tentado senha, OTP, telefone ou documento.
 - Baidu Search Resource Platform em 2026-07-06:
-  - painel público/logged-out abriu no Chrome;
-  - não havia conta autenticada disponível;
-  - ação bloqueada em `blocked_auth` para preservar a regra de não inserir senha, telefone, documento, ICP, pagamento ou identidade pública.
+  - aba de cadastro gratuita fornecida pelo usuário foi reutilizada no Chrome;
+  - rota internacional do cadastro permitiu selecionar Brasil no seletor de país/região;
+  - ao solicitar código de verificação com dado de contato autorizado pelo usuário, o Baidu retornou que registros de regiões externas, Hong Kong, Macau e Taiwan não são aceitos no momento;
+  - ação permanece bloqueada em `blocked_auth`; nenhum código SMS, CAPTCHA, documento, ICP, pagamento, serviço pago ou registro final de conta foi concluído;
+  - valores pessoais e senha não foram gravados em documentação, evidência ou screenshot público.
 
 
 ## Follow-up Naver/Baidu em 2026-07-06
 
 - Naver Search Advisor: aba fornecida pelo usuário mostrou `https://brikaya.com` selecionado e `sitemap.xml` na tabela de sitemaps submetidos com registro `26.07.04 10:16:30`. A tentativa de abrir “Web page collection” redirecionou para login/callback; nenhuma senha, OTP, CAPTCHA, telefone, documento ou pagamento foi informado.
-- Baidu: aba de cadastro fornecida pelo usuário exigia telefone e código de verificação; o botão de registro estava desabilitado após timeout da solicitação. A configuração continua bloqueada por privacidade/autenticação. Não foi submetido telefone, código, senha, documento, ICP ou pagamento.
+- Baidu: aba de cadastro fornecida pelo usuário foi reutilizada. A rota internacional aceitou Brasil no seletor, mas ao solicitar código de verificação o painel retornou: “Registration from overseas regions and Hong Kong, Macao and Taiwan is not currently supported.” A configuração continua bloqueada por autenticação/região suportada. Não foi inserido código SMS, CAPTCHA, documento, ICP, pagamento, serviço pago nem registro final de conta; valores pessoais e senha não foram registrados em evidência pública.
 - As duas abas foram mantidas abertas como handoff; nenhuma aba nova foi criada pelo Codex nesta continuação.
 
 ## Regra operacional de navegador
@@ -93,7 +95,7 @@ Status executado em 2026-07-06:
 | DuckDuckGo | `no_direct_action` | descoberta coberta por Bing, sitemap, robots, canonical, hreflang e crawler próprio; sem tag/pixel |
 | Yandex Webmaster | `manual_index_requested` + `indexnow_submitted` | sitemap em fila; `/` e `/downloads/` em fila de reindexação; IndexNow `202` |
 | Naver Search Advisor | `sitemap_submitted` | `sitemap.xml` listado como submetido; rechecagem posterior bloqueada por login |
-| Baidu Search Resource Platform | `blocked_auth` | painel abriu deslogado; parada antes de login/telefone/documento |
+| Baidu Search Resource Platform | `blocked_auth` | cadastro internacional gratuito tentou Brasil e retornou bloqueio para regiões externas; parada antes de SMS/CAPTCHA/documento/ICP/pagamento/registro final |
 | Seznam/Yep/outros | `indexnow_submitted`/`no_direct_action` | cobertos por IndexNow quando suportado e por páginas públicas rastreáveis |
 
 ## Correção Yandex/favicon

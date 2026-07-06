@@ -166,5 +166,5 @@ Status de buscadores em 2026-07-06:
 - Bing Webmaster Tools: sitemap reenviado, oito URLs principais submetidas, IndexNow com URLs localizadas recentes, sem ativar Clarity.
 - Yandex Webmaster: sitemap em fila, `/` e `/downloads/` em fila de reindexação.
 - Naver Search Advisor: `sitemap.xml` já submetido; rechecagem posterior parou em login sem inserir credenciais.
-- Baidu Search Resource Platform: bloqueado por falta de sessão autenticada; não foi feito login, telefone, documento, ICP ou pagamento.
+- Baidu Search Resource Platform: cadastro internacional gratuito tentou Brasil na aba fornecida; Baidu retornou que registros de regiões externas não são suportados no momento. Não houve código SMS, CAPTCHA, documento, ICP, pagamento, serviço pago nem registro final de conta; valores pessoais não entram na documentação/evidência.
 - DuckDuckGo/Yahoo/Seznam/Yep/outros: sem painel direto obrigatório no escopo; cobertura por Bing/IndexNow/sitemap/robots/canonical/hreflang.
