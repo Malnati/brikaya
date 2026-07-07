@@ -178,6 +178,7 @@ const LOADING_TEXT = "Carregando";
 const GAME_OVER_TEXT = "FIM DE JOGO!";
 const SCORE_TEXT_PREFIX = "Pontuação";
 const RESTART_HINT_TEXT = "Use ↻ para jogar novamente";
+const TURRET_SERVE_LOCK_TEXT = "Toque no controle para começar";
 const CENTER_DIVISOR = 2;
 const RADIAL_PLAYFIELD_FILL = "rgba(7, 14, 28, 0.92)";
 const RADIAL_PLAYFIELD_STROKE = "rgba(125, 249, 255, 0.72)";
@@ -246,6 +247,7 @@ export class GameEngine {
   private isStopped = true;
   private isPaused = false;
   private isTouching = false;
+  private isServeLocked = false;
   private isLevelTransitioning = false;
   private levelTransitionTimer: ReturnType<typeof setTimeout> | null = null;
   private level = 1;
@@ -269,8 +271,10 @@ export class GameEngine {
   private laserFanEffectTargets: LaserFanEffectTarget[] = [];
   private laserFanEffectTimer: ReturnType<typeof setTimeout> | null = null;
   private laserFanResolution: LaserFanResolution | null = null;
-  private readonly handleKeyDown = (event: KeyboardEvent) =>
+  private readonly handleKeyDown = (event: KeyboardEvent) => {
+    this.releaseServeLock();
     this.paddle.onKeyDown(event);
+  };
   private readonly handleKeyUp = (event: KeyboardEvent) =>
     this.paddle.onKeyUp(event);
   private readonly resolveAssetPath = (role: GameVisualAssetRole) =>
@@ -357,6 +361,7 @@ export class GameEngine {
     this.bricks = this.createBricks();
     this.prepareLaserFanQaPowerUp();
     this.startLevelSpeedTracking(this.level);
+    this.armServeLock();
 
     LOG(`🎮 GameEngine constructor finalizado`);
     this.setupListeners();
@@ -758,6 +763,29 @@ export class GameEngine {
     ball.setDirection(0);
   }
 
+  private shouldUseServeLock() {
+    return this.isBallTurretMode() && !this.qaScenario;
+  }
+
+  private armServeLock() {
+    this.isServeLocked = this.shouldUseServeLock();
+  }
+
+  private releaseServeLock() {
+    this.isServeLocked = false;
+  }
+
+  private drawServeLockPrompt() {
+    this.ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+    this.ctx.font = `${14 * Math.min(this.scaleX, this.scaleY)}px ${CANVAS_FONT_FAMILY}`;
+    this.ctx.textAlign = "center";
+    this.ctx.fillText(
+      TURRET_SERVE_LOCK_TEXT,
+      this.canvasSize.width / CENTER_DIVISOR,
+      this.radialGeometry.centerY + this.radialGeometry.radius * 0.42,
+    );
+  }
+
   private async preloadAssets() {
     LOG("🎮 Assets serão carregados sob demanda.");
     this.assetsLoaded = true;
@@ -906,6 +934,7 @@ export class GameEngine {
     this.resetLaserFanSpawnCounterForLevel();
     this.destroyedBricksSincePowerUp = 0;
     this.balls = [this.createBall(nextSpeedMultiplier)];
+    this.armServeLock();
     this.prepareQaBall();
     this.bricks = this.createBricks();
     this.startLevelSpeedTracking(nextLevel);
@@ -1739,6 +1768,7 @@ export class GameEngine {
 
   public startPaddleDrag(clientX: number, clientY?: number) {
     this.isTouching = true;
+    this.releaseServeLock();
     this.movePaddleFromClientPoint(clientX, clientY);
   }
 
@@ -1847,6 +1877,7 @@ export class GameEngine {
     this.isStopped = true;
     this.isPaused = false;
     this.isTouching = false;
+    this.isServeLocked = false;
     this.lastFrameTimestamp = 0;
     this.clearPowerUpEffects();
     this.clearLaserFanEffect();
@@ -1938,8 +1969,11 @@ export class GameEngine {
         this.drawPlayerControl();
         this.activePowerUp?.draw(this.ctx);
         this.drawLaserFanEffect();
-        if (this.isLevelTransitioning || isLaserFanAnimating) {
+        if (this.isLevelTransitioning || isLaserFanAnimating || this.isServeLocked) {
           this.balls.forEach((ball) => ball.draw(this.ctx));
+          if (this.isServeLocked) {
+            this.drawServeLockPrompt();
+          }
         } else {
           for (let i = this.balls.length - 1; i >= 0; i--) {
             const ball = this.balls[i];
