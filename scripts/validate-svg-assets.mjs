@@ -43,6 +43,22 @@ const DISALLOWED_SVG_PATTERNS = [
 ];
 const DISALLOWED_RUNTIME_RASTER_REFERENCE_PATTERN =
   /(?:\/assets\/visual\/|public\/assets\/visual\/)[^'"`\s)]*\.(?:png|jpe?g|webp|gif|ico)\b|(?:\/|public\/)favicon\.ico\b/i;
+const COMPONENT_BRICK_PATH_PATTERN = /public\/assets\/visual\/bricks\/spr-brick-/;
+const FORBIDDEN_COMPONENT_BACKPLATE_PATTERNS = [
+  {
+    pattern:
+      /<rect\b(?=[^>]*\bx=["']4["'])(?=[^>]*\by=["']5["'])(?=[^>]*\bwidth=["']88["'])(?=[^>]*\bheight=["']38["'])[^>]*>/i,
+    label: 'backplate retangular dominante 88x38',
+  },
+  {
+    pattern: /\bid=["'][^"']*-board["']/i,
+    label: 'gradiente ou definição de board',
+  },
+  {
+    pattern: /url\(\#[^)]+-board\)/i,
+    label: 'preenchimento de board',
+  },
+];
 
 const report = {
   ok: false,
@@ -119,6 +135,24 @@ function validateSvgContent(svgFiles) {
     }
   }
   return failures;
+}
+
+function validateComponentSilhouetteAssets(svgFiles) {
+  const componentSvgFiles = svgFiles.filter((svgFile) =>
+    COMPONENT_BRICK_PATH_PATTERN.test(svgFile.replaceAll('\\', '/')),
+  );
+  const failures = [];
+
+  for (const svgFile of componentSvgFiles) {
+    const source = read(svgFile);
+    for (const rule of FORBIDDEN_COMPONENT_BACKPLATE_PATTERNS) {
+      if (rule.pattern.test(source)) {
+        failures.push(`${svgFile} ainda usa ${rule.label}`);
+      }
+    }
+  }
+
+  return { failures, componentFiles: componentSvgFiles.length };
 }
 
 function validateRootFavicon() {
@@ -211,6 +245,11 @@ try {
   validateExpectedReferences(expectedRuntimeSvgPaths);
   validateRuntimeRasterReferences();
   validateRootFavicon();
+
+  const componentSilhouetteResult = validateComponentSilhouetteAssets(visualRuntimeSvgAssets);
+  addCheck('componentes eletrônicos usam silhueta própria sem backplate dominante', componentSilhouetteResult.failures, {
+    componentFiles: componentSilhouetteResult.componentFiles,
+  });
 
   addCheck(
     'conteúdo SVG é local e seguro',
