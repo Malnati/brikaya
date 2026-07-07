@@ -189,6 +189,8 @@ describe("Game", () => {
     expect(
       screen.getByTestId(BALL_TURRET_RIGHT_SWITCH_TEST_ID),
     ).toHaveAttribute("aria-label", "Interruptor direito");
+    expect(screen.queryByText("Esquerda")).not.toBeInTheDocument();
+    expect(screen.queryByText("Direita")).not.toBeInTheDocument();
     expect(playfield).not.toContainElement(joystick);
     expect(playfield).not.toContainElement(dualSwitches);
     expect(inputLayout).toContainElement(joystick);

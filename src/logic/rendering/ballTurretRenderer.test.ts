@@ -1,4 +1,6 @@
 import {
+  BALL_TURRET_LEFT_TRAMPOLINE_ACCENT,
+  BALL_TURRET_RIGHT_TRAMPOLINE_ACCENT,
   drawBallTurretBackdrop,
   drawBallTurretGlassOverlay,
   drawBallTurretTrampoline,
@@ -137,7 +139,10 @@ describe("ballTurretRenderer", () => {
     drawBallTurretTrampolines(
       ctx,
       { ...state, reducedEffects: true },
-      [leftPaddle, rightPaddle],
+      [
+        { paddlePosition: leftPaddle, accentColor: BALL_TURRET_LEFT_TRAMPOLINE_ACCENT },
+        { paddlePosition: rightPaddle, accentColor: BALL_TURRET_RIGHT_TRAMPOLINE_ACCENT },
+      ],
     );
 
     expect(ctx.arc).toHaveBeenCalledWith(
@@ -149,5 +154,16 @@ describe("ballTurretRenderer", () => {
     );
     expect(ctx.arc).toHaveBeenCalledWith(240, 160, 144, 0.02, 0.42);
     expect(ctx.moveTo).toHaveBeenCalledTimes(14);
+    expect(ctx.strokeStyle).toBe(BALL_TURRET_RIGHT_TRAMPOLINE_ACCENT);
+  });
+
+  it("mantém cor padrão para chamada legada com uma cama elástica", () => {
+    const ctx = createMockContext();
+    const state = createState();
+
+    drawBallTurretTrampoline(ctx, { ...state, reducedEffects: true });
+
+    expect(ctx.arc).toHaveBeenCalledWith(240, 160, 144, 1.2, 1.94);
+    expect(ctx.strokeStyle).toBe("rgba(255, 245, 184, 0.82)");
   });
 });

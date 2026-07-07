@@ -208,6 +208,8 @@ jest.mock("../utils/logger", () => ({
 }));
 
 jest.mock("./rendering/ballTurretRenderer", () => ({
+  BALL_TURRET_LEFT_TRAMPOLINE_ACCENT: "rgb(16, 215, 232)",
+  BALL_TURRET_RIGHT_TRAMPOLINE_ACCENT: "rgb(255, 43, 214)",
   drawBallTurretBackdrop: jest.fn(),
   drawBallTurretGlassOverlay: jest.fn(),
   drawBallTurretTrampoline: jest.fn(),
@@ -351,10 +353,16 @@ describe("GameEngine", () => {
       }),
       expect.arrayContaining([
         expect.objectContaining({
-          radial: expect.objectContaining({ centerAngle: expect.any(Number) }),
+          accentColor: "rgb(16, 215, 232)",
+          paddlePosition: expect.objectContaining({
+            radial: expect.objectContaining({ centerAngle: expect.any(Number) }),
+          }),
         }),
         expect.objectContaining({
-          radial: expect.objectContaining({ centerAngle: expect.any(Number) }),
+          accentColor: "rgb(255, 43, 214)",
+          paddlePosition: expect.objectContaining({
+            radial: expect.objectContaining({ centerAngle: expect.any(Number) }),
+          }),
         }),
       ]),
     );
@@ -420,10 +428,16 @@ describe("GameEngine", () => {
       }),
       expect.arrayContaining([
         expect.objectContaining({
-          radial: expect.objectContaining({ centerAngle: expect.any(Number) }),
+          accentColor: "rgb(16, 215, 232)",
+          paddlePosition: expect.objectContaining({
+            radial: expect.objectContaining({ centerAngle: expect.any(Number) }),
+          }),
         }),
         expect.objectContaining({
-          radial: expect.objectContaining({ centerAngle: expect.any(Number) }),
+          accentColor: "rgb(255, 43, 214)",
+          paddlePosition: expect.objectContaining({
+            radial: expect.objectContaining({ centerAngle: expect.any(Number) }),
+          }),
         }),
       ]),
     );
@@ -435,7 +449,7 @@ describe("GameEngine", () => {
     );
   });
 
-  it("move cada cama elástica da torreta até a extremidade em até 6 frames", () => {
+  it("move cada cama elástica da torreta em 360 graus sem travar nas extremidades", () => {
     const engine = new GameEngine(
       canvas,
       onScoreUpdate,
@@ -450,18 +464,32 @@ describe("GameEngine", () => {
       "ball-turret",
     );
 
-    engine.setDualSwitchDirection("left", -1);
-    (engine as any).updateDualSwitchTrampolines(6);
+    const fullCircle = Math.PI * 2;
+    expect((engine as any).dualTrampolineAngles.left).toBeCloseTo(Math.PI);
+    expect((engine as any).dualTrampolineAngles.right).toBeCloseTo(0);
 
-    expect((engine as any).dualTrampolinePositions.left).toBe(0);
-    expect((engine as any).dualTrampolinePositions.right).toBe(0.5);
+    engine.setDualSwitchDirection("left", -1);
+    (engine as any).updateDualSwitchTrampolines(80);
+
+    expect((engine as any).dualTrampolineAngles.left).toBeGreaterThanOrEqual(0);
+    expect((engine as any).dualTrampolineAngles.left).toBeLessThan(fullCircle);
+    expect((engine as any).dualTrampolineAngles.left).toBeCloseTo(
+      ((Math.PI - 0.09 * 80) % fullCircle + fullCircle) % fullCircle,
+    );
+    expect((engine as any).dualTrampolineAngles.right).toBe(0);
 
     engine.setDualSwitchDirection("left", 0);
     engine.setDualSwitchDirection("right", 1);
-    (engine as any).updateDualSwitchTrampolines(6);
+    (engine as any).updateDualSwitchTrampolines(80);
 
-    expect((engine as any).dualTrampolinePositions.left).toBe(0);
-    expect((engine as any).dualTrampolinePositions.right).toBe(1);
+    expect((engine as any).dualTrampolineAngles.right).toBeGreaterThanOrEqual(0);
+    expect((engine as any).dualTrampolineAngles.right).toBeLessThan(fullCircle);
+    expect((engine as any).dualTrampolineAngles.right).toBeCloseTo(
+      (0.09 * 80) % fullCircle,
+    );
+    expect((engine as any).dualTrampolineAngles.left).toBeCloseTo(
+      ((Math.PI - 0.09 * 80) % fullCircle + fullCircle) % fullCircle,
+    );
   });
 
   it("segura a bola da torreta inicial até o primeiro controle do jogador", async () => {

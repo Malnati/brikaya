@@ -60,10 +60,13 @@ import {
 } from "../utils/radialGeometry";
 import { LOG, ERROR } from "../utils/logger";
 import {
+  BALL_TURRET_LEFT_TRAMPOLINE_ACCENT,
+  BALL_TURRET_RIGHT_TRAMPOLINE_ACCENT,
   drawBallTurretBackdrop,
   drawBallTurretGlassOverlay,
   drawBallTurretTrampoline,
   drawBallTurretTrampolines,
+  type BallTurretTrampolineRenderItem,
 } from "./rendering/ballTurretRenderer";
 import { shouldUseReducedCanvasEffects } from "../utils/performanceMode";
 import {
@@ -189,9 +192,8 @@ const GAME_OVER_TEXT = "FIM DE JOGO!";
 const SCORE_TEXT_PREFIX = "Pontuação";
 const RESTART_HINT_TEXT = "Use ↻ para jogar novamente";
 const CENTER_DIVISOR = 2;
-const DUAL_TRAMPOLINE_LEFT_X_RATIO = -0.78;
-const DUAL_TRAMPOLINE_RIGHT_X_RATIO = 0.78;
-const DUAL_TRAMPOLINE_Y_RANGE_RATIO = 0.68;
+const DUAL_TRAMPOLINE_LEFT_START_ANGLE = Math.PI;
+const DUAL_TRAMPOLINE_RIGHT_START_ANGLE = 0;
 const DUAL_TRAMPOLINE_WIDTH_SCALE = 0.82;
 const DUAL_TRAMPOLINE_SPEED_PER_FRAME = 0.09;
 const RADIAL_PLAYFIELD_FILL = "rgba(7, 14, 28, 0.92)";
@@ -263,9 +265,9 @@ export class GameEngine {
     left: 0,
     right: 0,
   };
-  private dualTrampolinePositions: Record<TurretSwitchSide, number> = {
-    left: 0.5,
-    right: 0.5,
+  private dualTrampolineAngles: Record<TurretSwitchSide, number> = {
+    left: DUAL_TRAMPOLINE_LEFT_START_ANGLE,
+    right: DUAL_TRAMPOLINE_RIGHT_START_ANGLE,
   };
   private isLevelTransitioning = false;
   private levelTransitionTimer: ReturnType<typeof setTimeout> | null = null;
@@ -1953,6 +1955,11 @@ export class GameEngine {
     );
   }
 
+  private normalizeDualTrampolineAngle(angle: number): number {
+    return ((angle % FULL_CIRCLE_RADIANS) + FULL_CIRCLE_RADIANS) %
+      FULL_CIRCLE_RADIANS;
+  }
+
   private updateDualSwitchTrampolines(frameScale = 1) {
     if (!this.isDualSwitchControlMode()) return;
 
@@ -1961,27 +1968,21 @@ export class GameEngine {
       const direction = this.dualSwitchDirections[side];
       if (direction === 0) return;
 
-      this.dualTrampolinePositions[side] = Math.max(
-        0,
-        Math.min(
-          1,
-          this.dualTrampolinePositions[side] +
-            direction * DUAL_TRAMPOLINE_SPEED_PER_FRAME * safeFrameScale,
-        ),
+      this.dualTrampolineAngles[side] = this.normalizeDualTrampolineAngle(
+        this.dualTrampolineAngles[side] +
+          direction * DUAL_TRAMPOLINE_SPEED_PER_FRAME * safeFrameScale,
       );
     });
   }
 
   private getDualTrampolineAngle(side: TurretSwitchSide): number {
-    const horizontalRatio =
-      side === "left"
-        ? DUAL_TRAMPOLINE_LEFT_X_RATIO
-        : DUAL_TRAMPOLINE_RIGHT_X_RATIO;
-    const verticalRatio =
-      (this.dualTrampolinePositions[side] * 2 - 1) *
-      DUAL_TRAMPOLINE_Y_RANGE_RATIO;
+    return this.dualTrampolineAngles[side];
+  }
 
-    return Math.atan2(verticalRatio, horizontalRatio);
+  private getDualTrampolineAccentColor(side: TurretSwitchSide): string {
+    return side === "left"
+      ? BALL_TURRET_LEFT_TRAMPOLINE_ACCENT
+      : BALL_TURRET_RIGHT_TRAMPOLINE_ACCENT;
   }
 
   private getDualTrampolinePaddles(): RadialPaddleBounds[] {
@@ -1993,6 +1994,18 @@ export class GameEngine {
         DUAL_TRAMPOLINE_WIDTH_SCALE,
       ),
     );
+  }
+
+  private getDualTrampolineRenderItems(): BallTurretTrampolineRenderItem[] {
+    return (["left", "right"] as const).map((side) => ({
+      paddlePosition: calculateRadialPaddleBounds(
+        this.radialGeometry,
+        this.dimensions,
+        this.getDualTrampolineAngle(side),
+        DUAL_TRAMPOLINE_WIDTH_SCALE,
+      ),
+      accentColor: this.getDualTrampolineAccentColor(side),
+    }));
   }
 
   private getActivePaddlePositions(): RadialPaddleBounds[] | undefined {
@@ -2198,7 +2211,7 @@ export class GameEngine {
         drawBallTurretTrampolines(
           this.ctx,
           renderState,
-          this.getDualTrampolinePaddles(),
+          this.getDualTrampolineRenderItems(),
         );
         return;
       }
