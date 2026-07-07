@@ -314,7 +314,7 @@ const LOCALES = [
 ];
 const SEO = {
   'pt-BR': {
-    title: 'Brikaya — arcade de quebrar blocos',
+    title: 'Brikaya — arcade de circuitos eletrônicos',
     description: 'Jogue Brikaya, um arcade gratuito de quebrar blocos no navegador, com progresso salvo no seu aparelho e partida disponível mesmo sem conexão depois do primeiro acesso.',
     ogDescription: 'Destrua blocos, avance fases e jogue no navegador com progresso salvo no seu aparelho.',
   },
