@@ -20,7 +20,7 @@ const OPTIONAL_CONSENT_TIMEOUT_MS = 5000;
 const HTTP_OK = 200;
 const ROOT_LOCALE = "pt-BR";
 const TESTED_LOCALES = [
-  { locale: "pt-BR", path: "/", title: "Brikaya — arcade de quebrar blocos" },
+  { locale: "pt-BR", path: "/", title: "Brikaya — arcade de circuitos eletrônicos" },
   { locale: "en", path: "/en/", title: "Brikaya — block breaker arcade" },
   { locale: "es-419", path: "/es-419/", title: "Brikaya — arcade de romper bloques" },
   { locale: "zh-CN", path: "/zh-CN/", title: "Brikaya — 打砖块街机" },

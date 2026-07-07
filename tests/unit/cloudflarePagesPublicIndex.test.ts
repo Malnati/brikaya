@@ -1,5 +1,5 @@
 // tests/unit/cloudflarePagesPublicIndex.test.ts
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { execFileSync } from 'node:child_process';
 import { join, resolve } from 'node:path';
@@ -8,7 +8,7 @@ import { pathToFileURL } from 'node:url';
 const OUTPUT_DIR_KEY = 'BRIKAYA_CLOUDFLARE_PAGES_OUTPUT_DIR';
 const CUSTOM_DOMAIN_KEY = 'BRIKAYA_CLOUDFLARE_PAGES_CUSTOM_DOMAIN';
 const TEST_OUTPUT_DIR = 'dist';
-const TEST_TITLE = 'Brikaya — arcade de quebrar blocos';
+const TEST_TITLE = 'Brikaya — arcade de circuitos eletrônicos';
 const TEST_SCRIPT = 'assets/index-BWyDg29g.js';
 const TEST_STYLE = 'assets/index-DTNZft6S.css';
 const TEST_CUSTOM_DOMAIN = 'brikaya.com';
@@ -53,6 +53,14 @@ describe('cloudflare-pages public index verification', () => {
   afterEach(() => {
     process.chdir(originalCwd);
     rmSync(tempRoot, { recursive: true, force: true });
+  });
+
+  it('mantém o título público inicial alinhado ao título runtime pt-BR', () => {
+    const indexHtml = readFileSync(resolve(process.cwd(), 'index.html'), 'utf8');
+
+    expect(indexHtml).toContain(`<title>${TEST_TITLE}</title>`);
+    expect(indexHtml).toContain(`property="og:title" content="${TEST_TITLE}"`);
+    expect(indexHtml).toContain(`name="twitter:title" content="${TEST_TITLE}"`);
   });
 
   it('extrai título e bundles locais esperados do index.html gerado', async () => {
