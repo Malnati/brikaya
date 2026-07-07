@@ -178,7 +178,7 @@ export const IMAGE_SET_OPTIONS = [
 export const FONT_SET_OPTIONS = [
   { id: FONT_SET_ARCADE_UI, label: "Arcade" },
   { id: FONT_SET_CRT_MONO, label: "CRT mono" },
-  { id: FONT_SET_BLOCK_PIXEL, label: "Blocos pixel" },
+  { id: FONT_SET_BLOCK_PIXEL, label: "Pixel eletrônico" },
 ] as const satisfies readonly AppearanceOption<FontSetId>[];
 
 export const VISUAL_THEME_PRESET_OPTIONS = [

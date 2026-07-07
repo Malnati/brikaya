@@ -52,7 +52,7 @@ describe("DownloadsPage", () => {
       "src",
       "/assets/visual/ui/ui-downloads-qr-code.svg",
     );
-    expect(screen.getByAltText(/tabuleiro neon|neon brikaya board/i)).toHaveAttribute(
+    expect(screen.getByAltText(/placa neon|neon brikaya circuit board/i)).toHaveAttribute(
       "src",
       "/assets/visual/ui/ui-downloads-arcade-preview.svg",
     );
