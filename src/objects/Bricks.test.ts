@@ -103,10 +103,14 @@ function createRadialCanvasContext() {
     fillRect: jest.fn(),
     save: jest.fn(),
     restore: jest.fn(),
+    translate: jest.fn(),
+    rotate: jest.fn(),
     beginPath: jest.fn(),
     arc: jest.fn(),
     closePath: jest.fn(),
     clip: jest.fn(),
+    moveTo: jest.fn(),
+    lineTo: jest.fn(),
     stroke: jest.fn(),
   } as unknown as CanvasRenderingContext2D;
 }
@@ -263,8 +267,9 @@ describe("Bricks laser fan helpers", () => {
     expect(onBrickDestroyed).toHaveBeenCalledTimes(1);
   });
 
-  it("desenha componentes radiais sem recorte nem contorno de bloco", () => {
+  it("inclina componentes radiais pela tangente do aro sem recorte de célula", () => {
     const geometry = calculateRadialPlayfieldGeometry(480, 480, TEST_DIMENSIONS);
+    const segment = calculateRadialBrickSegment(geometry, TEST_DIMENSIONS, 0, 0);
     const bricks = new Bricks(
       TEST_DIMENSIONS,
       undefined,
@@ -279,9 +284,36 @@ describe("Bricks laser fan helpers", () => {
     bricks.draw(ctx);
 
     expect(ctx.drawImage).toHaveBeenCalled();
+    expect(ctx.translate).toHaveBeenCalledWith(
+      segment.centerX,
+      segment.centerY,
+    );
+    expect(ctx.rotate).toHaveBeenCalledWith(segment.centerAngle + Math.PI / 2);
     expect(ctx.arc).not.toHaveBeenCalled();
     expect(ctx.clip).not.toHaveBeenCalled();
-    expect(ctx.stroke).not.toHaveBeenCalled();
+  });
+
+  it("desenha trilhas de circuito dos aros antes dos componentes", () => {
+    const geometry = calculateRadialPlayfieldGeometry(480, 480, TEST_DIMENSIONS);
+    const bricks = new Bricks(
+      TEST_DIMENSIONS,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      createRandom(BASIC_BRICK_RANDOM_VALUES),
+      geometry,
+    );
+    const ctx = createRadialCanvasContext();
+
+    bricks.draw(ctx);
+
+    expect(ctx.moveTo).toHaveBeenCalled();
+    expect(ctx.lineTo).toHaveBeenCalled();
+    expect(ctx.stroke).toHaveBeenCalled();
+    expect(
+      (ctx.stroke as jest.Mock).mock.invocationCallOrder[0],
+    ).toBeLessThan((ctx.drawImage as jest.Mock).mock.invocationCallOrder[0]);
   });
 
   it("mantém bloco metálico ativo até o terceiro toque", async () => {

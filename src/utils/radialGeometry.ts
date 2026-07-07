@@ -62,6 +62,8 @@ export interface RadialPlayfieldGeometry {
 export interface RadialBrickSegment {
   centerX: number;
   centerY: number;
+  centerAngle: number;
+  centerRadius: number;
   startAngle: number;
   endAngle: number;
   innerRadius: number;
@@ -337,6 +339,8 @@ export function calculateRadialBrickSegment(
   return {
     centerX: geometry.centerX + Math.cos(midAngle) * midRadius,
     centerY: geometry.centerY + Math.sin(midAngle) * midRadius,
+    centerAngle: midAngle,
+    centerRadius: midRadius,
     startAngle,
     endAngle,
     innerRadius,

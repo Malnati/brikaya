@@ -143,6 +143,8 @@ export class Bricks {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
+    this.drawRadialCircuitTraces(ctx);
+
     for (let c = 0; c < this.dimensions.brickCols; c++) {
       for (let r = 0; r < this.rows; r++) {
         const b = this.bricks[c][r];
@@ -566,17 +568,60 @@ export class Bricks {
     brickImage: HTMLImageElement | null,
     segment: RadialBrickSegment,
   ) {
+    ctx.save();
+    ctx.translate(segment.centerX, segment.centerY);
+    ctx.rotate(segment.centerAngle + Math.PI / 2);
+
     if (brickImage) {
       ctx.drawImage(
         brickImage,
-        segment.bounds.x,
-        segment.bounds.y,
+        -segment.bounds.width / 2,
+        -segment.bounds.height / 2,
         segment.bounds.width,
         segment.bounds.height,
       );
     } else {
-      this.drawFallbackComponentShape(ctx, brick, segment.bounds);
+      this.drawFallbackComponentShape(ctx, brick, {
+        x: -segment.bounds.width / 2,
+        y: -segment.bounds.height / 2,
+        width: segment.bounds.width,
+        height: segment.bounds.height,
+      });
     }
+
+    ctx.restore();
+  }
+
+  private drawRadialCircuitTraces(ctx: CanvasRenderingContext2D) {
+    if (!this.geometry) return;
+
+    ctx.save();
+    ctx.strokeStyle = "rgba(168, 207, 255, 0.18)";
+    ctx.lineWidth = Math.max(1, this.dimensions.brickPadding * 0.22);
+
+    for (let row = 0; row < this.rows; row++) {
+      const start = calculateRadialBrickSegment(
+        this.geometry,
+        this.dimensions,
+        0,
+        row,
+        this.rows,
+      );
+      const end = calculateRadialBrickSegment(
+        this.geometry,
+        this.dimensions,
+        this.dimensions.brickCols - 1,
+        row,
+        this.rows,
+      );
+
+      ctx.beginPath();
+      ctx.moveTo(start.centerX, start.centerY);
+      ctx.lineTo(end.centerX, end.centerY);
+      ctx.stroke();
+    }
+
+    ctx.restore();
   }
 
   private getRadialBrickColor(brick: Brick): string {
