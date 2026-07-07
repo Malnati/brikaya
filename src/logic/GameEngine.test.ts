@@ -449,7 +449,7 @@ describe("GameEngine", () => {
     );
   });
 
-  it("move cada cama elástica da torreta em 360 graus sem travar nas extremidades", () => {
+  it("move cada cama elástica da torreta em 360 graus com velocidade proporcional sem travar nas extremidades", () => {
     const engine = new GameEngine(
       canvas,
       onScoreUpdate,
@@ -465,6 +465,9 @@ describe("GameEngine", () => {
     );
 
     const fullCircle = Math.PI * 2;
+    const baseSpeed = 0.045;
+    const maxScale = 1.33;
+    const minScale = 0.25;
     expect((engine as any).dualTrampolineAngles.left).toBeCloseTo(Math.PI);
     expect((engine as any).dualTrampolineAngles.right).toBeCloseTo(0);
 
@@ -474,21 +477,38 @@ describe("GameEngine", () => {
     expect((engine as any).dualTrampolineAngles.left).toBeGreaterThanOrEqual(0);
     expect((engine as any).dualTrampolineAngles.left).toBeLessThan(fullCircle);
     expect((engine as any).dualTrampolineAngles.left).toBeCloseTo(
-      (Math.PI + 0.09 * 80) % fullCircle,
+      (Math.PI + baseSpeed * maxScale * 80) % fullCircle,
     );
     expect((engine as any).dualTrampolineAngles.right).toBe(0);
 
-    engine.setDualSwitchDirection("left", 0);
-    engine.setDualSwitchDirection("right", 1);
+    engine.setDualSwitchDirection("left", 0.5);
+    (engine as any).updateDualSwitchTrampolines(80);
+
+    expect((engine as any).dualTrampolineAngles.left).toBeCloseTo(
+      (Math.PI + baseSpeed * maxScale * 80 - baseSpeed * (minScale + (maxScale - minScale) * 0.5) * 80) % fullCircle,
+    );
+
+    engine.setDualSwitchDirection("left", 0.05);
+    (engine as any).updateDualSwitchTrampolines(80);
+
+    expect((engine as any).dualTrampolineAngles.left).toBeCloseTo(
+      (Math.PI + baseSpeed * maxScale * 80 - baseSpeed * (minScale + (maxScale - minScale) * 0.5) * 80) % fullCircle,
+    );
+
+    engine.setDualSwitchDirection("right", 2);
     (engine as any).updateDualSwitchTrampolines(80);
 
     expect((engine as any).dualTrampolineAngles.right).toBeGreaterThanOrEqual(0);
     expect((engine as any).dualTrampolineAngles.right).toBeLessThan(fullCircle);
     expect((engine as any).dualTrampolineAngles.right).toBeCloseTo(
-      (0.09 * 80) % fullCircle,
+      (baseSpeed * maxScale * 80) % fullCircle,
     );
-    expect((engine as any).dualTrampolineAngles.left).toBeCloseTo(
-      (Math.PI + 0.09 * 80) % fullCircle,
+
+    engine.setDualSwitchDirection("right", Number.NaN);
+    (engine as any).updateDualSwitchTrampolines(80);
+
+    expect((engine as any).dualTrampolineAngles.right).toBeCloseTo(
+      (baseSpeed * maxScale * 80) % fullCircle,
     );
   });
 
@@ -546,7 +566,7 @@ describe("GameEngine", () => {
     );
   });
 
-  it("usa dobro de colunas e posiciona bola inicial na borda inferior da torreta", () => {
+  it("usa dobro de colunas e aponta a bola inicial da torreta para a cama elástica direita", () => {
     const engine = new GameEngine(
       canvas,
       onScoreUpdate,
@@ -576,7 +596,14 @@ describe("GameEngine", () => {
     ).toBeCloseTo(geometry.radius - ball.position.radius - 1, 1);
     expect(spawnX).toBeCloseTo(geometry.centerX, 5);
     expect(spawnY).toBeGreaterThan(geometry.centerY);
-    expect(ball.setDirection).toHaveBeenCalledWith(0);
+
+    const rightTrampolineX = geometry.centerX + geometry.paddleRadius;
+    const rightTrampolineY = geometry.centerY;
+    const expectedLaunchAngle = Math.atan2(
+      rightTrampolineX - spawnX,
+      spawnY - rightTrampolineY,
+    );
+    expect(ball.setDirection).toHaveBeenCalledWith(expectedLaunchAngle);
   });
 
   it("posiciona cenário RIP fora do anel e aponta a bola para perda imediata", () => {

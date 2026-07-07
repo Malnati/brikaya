@@ -41,6 +41,7 @@ const TOUCH_MOVE_CLIENT_Y = 512;
 const TRACKBALL_X_CSS_VAR = "--bb-turret-trackball-x";
 const TRACKBALL_Y_CSS_VAR = "--bb-turret-trackball-y";
 const TRACKBALL_ACTIVE_CSS_VAR = "--bb-turret-trackball-active";
+const SWITCH_AXIS_CSS_VAR = "--bb-turret-switch-axis";
 const JOYSTICK_RECT = {
   left: 100,
   top: 200,
@@ -907,7 +908,7 @@ describe("useGameLoop", () => {
     expect(joystick.style.getPropertyValue(TRACKBALL_ACTIVE_CSS_VAR)).toBe("0");
   });
 
-  it("controla interruptores esquerdo e direito de forma independente na torreta", async () => {
+  it("controla interruptores esquerdo e direito com velocidade proporcional na torreta", async () => {
     const { getByTestId } = render(
       <Harness
         imageSetId={IMAGE_SET_RETRO_DEFAULT}
@@ -928,14 +929,14 @@ describe("useGameLoop", () => {
       () =>
         ({
           top: 100,
-          height: 120,
+          height: 200,
         }) as DOMRect,
     );
     rightSwitch.getBoundingClientRect = jest.fn(
       () =>
         ({
           top: 100,
-          height: 120,
+          height: 200,
         }) as DOMRect,
     );
     leftSwitch.setPointerCapture = jest.fn();
@@ -943,20 +944,29 @@ describe("useGameLoop", () => {
     leftSwitch.releasePointerCapture = jest.fn();
     mockSetDualSwitchDirection.mockClear();
 
-    const pointerDownUp = createPointerEvent(POINTER_DOWN_EVENT_NAME, 100, 110);
-    const pointerMoveDown = createPointerEvent(POINTER_MOVE_EVENT_NAME, 100, 210);
-    const pointerUp = createPointerEvent(POINTER_UP_EVENT_NAME, 100, 210);
+    const pointerDownTop = createPointerEvent(POINTER_DOWN_EVENT_NAME, 100, 100);
+    const pointerMoveMidUp = createPointerEvent(POINTER_MOVE_EVENT_NAME, 100, 150);
+    const pointerMoveCenter = createPointerEvent(POINTER_MOVE_EVENT_NAME, 100, 200);
+    const pointerMoveBottom = createPointerEvent(POINTER_MOVE_EVENT_NAME, 100, 300);
+    const pointerUp = createPointerEvent(POINTER_UP_EVENT_NAME, 100, 300);
 
-    leftSwitch.dispatchEvent(pointerDownUp);
-    leftSwitch.dispatchEvent(pointerMoveDown);
+    leftSwitch.dispatchEvent(pointerDownTop);
+    leftSwitch.dispatchEvent(pointerMoveMidUp);
+    leftSwitch.dispatchEvent(pointerMoveCenter);
+    leftSwitch.dispatchEvent(pointerMoveBottom);
     leftSwitch.dispatchEvent(pointerUp);
 
-    expect(pointerDownUp.defaultPrevented).toBe(true);
-    expect(pointerMoveDown.defaultPrevented).toBe(true);
+    expect(pointerDownTop.defaultPrevented).toBe(true);
+    expect(pointerMoveMidUp.defaultPrevented).toBe(true);
+    expect(pointerMoveCenter.defaultPrevented).toBe(true);
+    expect(pointerMoveBottom.defaultPrevented).toBe(true);
     expect(pointerUp.defaultPrevented).toBe(true);
     expect(mockSetDualSwitchDirection).toHaveBeenNthCalledWith(1, "left", -1);
-    expect(mockSetDualSwitchDirection).toHaveBeenNthCalledWith(2, "left", 1);
+    expect(mockSetDualSwitchDirection).toHaveBeenNthCalledWith(2, "left", -0.5);
     expect(mockSetDualSwitchDirection).toHaveBeenNthCalledWith(3, "left", 0);
+    expect(mockSetDualSwitchDirection).toHaveBeenNthCalledWith(4, "left", 1);
+    expect(mockSetDualSwitchDirection).toHaveBeenNthCalledWith(5, "left", 0);
+    expect(leftSwitch.style.getPropertyValue(SWITCH_AXIS_CSS_VAR)).toBe("0");
     expect(leftSwitch.dataset.switchDirection).toBe("neutral");
 
     mockSetDualSwitchDirection.mockClear();
@@ -970,6 +980,7 @@ describe("useGameLoop", () => {
     expect(keyUp.defaultPrevented).toBe(true);
     expect(mockSetDualSwitchDirection).toHaveBeenNthCalledWith(1, "right", 1);
     expect(mockSetDualSwitchDirection).toHaveBeenNthCalledWith(2, "right", 0);
+    expect(rightSwitch.style.getPropertyValue(SWITCH_AXIS_CSS_VAR)).toBe("0");
   });
 
   it("não instala controle absoluto do joystick fora do modo torreta", async () => {
