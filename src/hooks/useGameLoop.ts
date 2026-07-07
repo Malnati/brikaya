@@ -171,7 +171,7 @@ function readMirroredTrackballInput(
 }
 
 export function useGameLoop(
-  canvasRef: RefObject<HTMLCanvasElement>,
+  canvasRef: RefObject<HTMLCanvasElement | null>,
   onScoreUpdate: (score: number) => void,
   onGameWon?: () => void,
   onGameOver?: () => void,
@@ -184,8 +184,8 @@ export function useGameLoop(
   imageSetId: ImageSetId = IMAGE_SET_RETRO_DEFAULT,
   paused = false,
   gameMode: GameMode = GAME_MODE_CLASSIC,
-  paddleTouchZoneRef?: RefObject<HTMLElement>,
-  ballTurretJoystickRef?: RefObject<HTMLElement>,
+  paddleTouchZoneRef?: RefObject<HTMLElement | null>,
+  ballTurretJoystickRef?: RefObject<HTMLElement | null>,
   joystickDiagnosticsEnabled = false,
   onJoystickDiagnosticSample?: (sample: JoystickDiagnosticSample) => void,
 ) {
