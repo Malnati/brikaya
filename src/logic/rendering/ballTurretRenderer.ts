@@ -29,6 +29,11 @@ const BOUNDARY_SEGMENT_GAP_RADIANS = 0.018;
 const BOUNDARY_SEGMENT_LINE_WIDTH_RATIO = 0.024;
 const BOUNDARY_REBOUND_STROKE = "rgba(73, 255, 199, 0.92)";
 const BOUNDARY_LOSS_STROKE = "rgba(255, 96, 120, 0.82)";
+export const BALL_TURRET_LEFT_TRAMPOLINE_ACCENT = "rgb(16, 215, 232)";
+export const BALL_TURRET_RIGHT_TRAMPOLINE_ACCENT = "rgb(255, 43, 214)";
+const BALL_TURRET_DEFAULT_TRAMPOLINE_ACCENT = "rgba(255, 245, 184, 0.82)";
+const BALL_TURRET_TRAMPOLINE_FRAME_STROKE = "rgba(16, 24, 34, 0.98)";
+const BALL_TURRET_TRAMPOLINE_HIGHLIGHT_STROKE = "rgba(248, 251, 255, 0.82)";
 const BOUNDARY_REBOUND_SHADOW = "rgba(73, 255, 199, 0.48)";
 const BOUNDARY_LOSS_SHADOW = "rgba(255, 96, 120, 0.36)";
 
@@ -58,6 +63,29 @@ interface TrampolineBounds {
   endAngle: number;
   centerAngle: number;
   thickness: number;
+}
+
+export interface BallTurretTrampolineRenderItem {
+  paddlePosition: BallTurretRenderState["paddlePosition"];
+  accentColor?: string;
+}
+
+type BallTurretTrampolineRenderInput =
+  | BallTurretRenderState["paddlePosition"]
+  | BallTurretTrampolineRenderItem;
+
+function readPaddlePosition(
+  input: BallTurretTrampolineRenderInput,
+): BallTurretRenderState["paddlePosition"] {
+  if ("paddlePosition" in input) return input.paddlePosition;
+
+  return input;
+}
+
+function readAccentColor(input: BallTurretTrampolineRenderInput): string {
+  if ("paddlePosition" in input && input.accentColor) return input.accentColor;
+
+  return BALL_TURRET_DEFAULT_TRAMPOLINE_ACCENT;
 }
 
 function createRadialFill(
@@ -235,11 +263,12 @@ export function drawBallTurretTrampoline(
 export function drawBallTurretTrampolines(
   ctx: CanvasRenderingContext2D,
   state: BallTurretRenderState,
-  paddlePositions: BallTurretRenderState["paddlePosition"][],
+  paddlePositions: BallTurretTrampolineRenderInput[],
 ): void {
-  const trampolines = paddlePositions.map((paddlePosition) =>
-    readTrampolineBounds({ ...state, paddlePosition }),
-  );
+  const trampolines = paddlePositions.map((input) => ({
+    ...readTrampolineBounds({ ...state, paddlePosition: readPaddlePosition(input) }),
+    accentColor: readAccentColor(input),
+  }));
   const trampoline = trampolines[0] ?? readTrampolineBounds(state);
   const reducedEffects = state.reducedEffects === true;
   const frameWidth = Math.max(
@@ -306,7 +335,7 @@ export function drawBallTurretTrampolines(
   ctx.shadowBlur = reducedEffects ? 0 : Math.max(5, trampoline.thickness * 0.42);
   trampolines.forEach((activeTrampoline) => {
     ctx.shadowBlur = reducedEffects ? 0 : Math.max(5, activeTrampoline.thickness * 0.42);
-    ctx.strokeStyle = "rgba(16, 24, 34, 0.98)";
+    ctx.strokeStyle = BALL_TURRET_TRAMPOLINE_FRAME_STROKE;
     ctx.lineWidth = frameWidth * 0.82;
     ctx.beginPath();
     ctx.arc(
@@ -319,7 +348,7 @@ export function drawBallTurretTrampolines(
     ctx.stroke();
 
     ctx.shadowBlur = reducedEffects ? 0 : Math.max(5, activeTrampoline.thickness * 0.42);
-    ctx.strokeStyle = "rgba(16, 215, 232, 0.94)";
+    ctx.strokeStyle = activeTrampoline.accentColor;
     ctx.lineWidth = fabricWidth;
     ctx.beginPath();
     ctx.arc(
@@ -332,7 +361,7 @@ export function drawBallTurretTrampolines(
     ctx.stroke();
 
     ctx.shadowBlur = 0;
-    ctx.strokeStyle = "rgba(248, 251, 255, 0.82)";
+    ctx.strokeStyle = BALL_TURRET_TRAMPOLINE_HIGHLIGHT_STROKE;
     ctx.lineWidth = highlightWidth;
     ctx.beginPath();
     ctx.arc(
@@ -360,9 +389,9 @@ export function drawBallTurretTrampolines(
     }
   }
 
-  ctx.strokeStyle = "rgba(255, 245, 184, 0.82)";
   ctx.lineWidth = Math.max(1.2, highlightWidth * 0.9);
   trampolines.forEach((activeTrampoline) => {
+    ctx.strokeStyle = activeTrampoline.accentColor;
     const activeSpringInnerRadius =
       activeTrampoline.radius -
       activeTrampoline.thickness * TRAMPOLINE_SPRING_INSET_RATIO;
@@ -384,7 +413,7 @@ export function drawBallTurretTrampolines(
       ctx.stroke();
     }
 
-    ctx.fillStyle = "rgba(255, 245, 184, 0.9)";
+    ctx.fillStyle = activeTrampoline.accentColor;
     const center = pointOnArc(
       activeTrampoline,
       activeTrampoline.radius,

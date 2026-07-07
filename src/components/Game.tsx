@@ -673,7 +673,6 @@ export default function Game({
                 tabIndex={0}
                 aria-label={BALL_TURRET_DUAL_SWITCH_LEFT_LABEL}
               >
-                <span className="game-turret-switch__label">Esquerda</span>
                 <span className="game-turret-switch__up" aria-hidden="true">▲</span>
                 <span className="game-turret-switch__thumb" aria-hidden="true" />
                 <span className="game-turret-switch__down" aria-hidden="true">▼</span>
@@ -686,7 +685,6 @@ export default function Game({
                 tabIndex={0}
                 aria-label={BALL_TURRET_DUAL_SWITCH_RIGHT_LABEL}
               >
-                <span className="game-turret-switch__label">Direita</span>
                 <span className="game-turret-switch__up" aria-hidden="true">▲</span>
                 <span className="game-turret-switch__thumb" aria-hidden="true" />
                 <span className="game-turret-switch__down" aria-hidden="true">▼</span>
