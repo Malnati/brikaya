@@ -1,18 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Diodo LED">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="LED diode" data-component-shape="led-diode" data-terminal-left="0 24" data-terminal-right="96 24">
   <defs>
     <linearGradient id="spr-brick-basic-yellow-metro-real-normal-body" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#fff0bd"/>
-      <stop offset="0.48" stop-color="#ffd166"/>
-      <stop offset="1" stop-color="#7a4a00"/>
+      <stop offset="0" stop-color="#c8fff8"/>
+      <stop offset="0.48" stop-color="#f9c54a"/>
+      <stop offset="1" stop-color="#07151d"/>
     </linearGradient>
+    <radialGradient id="spr-brick-basic-yellow-metro-real-normal-glow" cx="50%" cy="50%" r="60%">
+      <stop offset="0" stop-color="#c8fff8" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#f9c54a" stop-opacity="0"/>
+    </radialGradient>
   </defs>
-  <path d="M8 24h27M63 24h25" stroke="#8fc7ff" stroke-width="4" stroke-linecap="round"/>
-  <path d="M35 12l27 12-27 12z" fill="url(#spr-brick-basic-yellow-metro-real-normal-body)" stroke="#fff0bd" stroke-width="2" stroke-linejoin="round"/>
-  <path d="M63 11v26" stroke="#fff0bd" stroke-width="4" stroke-linecap="round"/>
-  <path d="M40 18l12 6-12 6" fill="none" stroke="#fff0bd" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity=".52"/>
-  <path d="M68 13l9-7M73 17l9-7" stroke="#fff0bd" stroke-width="2.2" stroke-linecap="round"/>
-  <path d="M77 6h-6v6M82 10h-6v6" fill="none" stroke="#fff0bd" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M16 19h12M72 29h10" stroke="#82b8ff2f" stroke-width="2" stroke-linecap="round"/>
-  <circle cx="10" cy="24" r="2" fill="#8fc7ff" opacity=".9"/>
-  <circle cx="86" cy="24" r="2" fill="#8fc7ff" opacity=".9"/>
+  <path d="M0 24H34M66 24H96" fill="none" stroke="#6ffff0" stroke-width="4" stroke-linecap="round"/>
+  <path d="M35 12L58 24L35 36Z" fill="url(#spr-brick-basic-yellow-metro-real-normal-body)" stroke="#c8fff8" stroke-width="2.4" stroke-linejoin="round"/>
+  <path d="M62 12L66 12L66 36L62 36Z" fill="#c8fff8" stroke="#07151d" stroke-width="1.6" stroke-linejoin="round"/>
+  <path d="M55 10L66 3M60 15L73 11" fill="none" stroke="#c8fff8" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M64 3L66 3L65 6M71 10L73 11L71 13" fill="none" stroke="#c8fff8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

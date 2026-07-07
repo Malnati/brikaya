@@ -44,7 +44,20 @@ const DISALLOWED_SVG_PATTERNS = [
 const DISALLOWED_RUNTIME_RASTER_REFERENCE_PATTERN =
   /(?:\/assets\/visual\/|public\/assets\/visual\/)[^'"`\s)]*\.(?:png|jpe?g|webp|gif|ico)\b|(?:\/|public\/)favicon\.ico\b/i;
 const COMPONENT_BRICK_PATH_PATTERN = /public\/assets\/visual\/bricks\/spr-brick-/;
+const REQUIRED_COMPONENT_SHAPE_ATTRIBUTES = [
+  'data-component-shape',
+  'data-terminal-left',
+  'data-terminal-right',
+];
 const FORBIDDEN_COMPONENT_BACKPLATE_PATTERNS = [
+  {
+    pattern: /<rect\b/i,
+    label: '<rect> usado como atalho de bloco ou forma geométrica comum',
+  },
+  {
+    pattern: /\b(?:board|backplate|cell|c[ée]lula)\b/i,
+    label: 'nome/metadata de board, backplate ou célula',
+  },
   {
     pattern:
       /<rect\b(?=[^>]*\bx=["']4["'])(?=[^>]*\by=["']5["'])(?=[^>]*\bwidth=["']88["'])(?=[^>]*\bheight=["']38["'])[^>]*>/i,
@@ -145,6 +158,12 @@ function validateComponentSilhouetteAssets(svgFiles) {
 
   for (const svgFile of componentSvgFiles) {
     const source = read(svgFile);
+    const svgOpenTag = source.match(/<svg\b[^>]*>/i)?.[0] ?? '';
+    for (const attribute of REQUIRED_COMPONENT_SHAPE_ATTRIBUTES) {
+      if (!new RegExp(`\\b${attribute}=["'][^"']+["']`, 'i').test(svgOpenTag)) {
+        failures.push(`${svgFile} não declara ${attribute} no <svg>`);
+      }
+    }
     for (const rule of FORBIDDEN_COMPONENT_BACKPLATE_PATTERNS) {
       if (rule.pattern.test(source)) {
         failures.push(`${svgFile} ainda usa ${rule.label}`);
