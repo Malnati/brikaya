@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-07-07T10:36:20.382Z",
+  "checkedAt": "2026-07-07T11:46:18.540Z",
   "publicUrl": "https://brikaya.com/?qaScenario=ball-turret",
   "qaScenario": "ball-turret",
   "results": [
@@ -38,10 +38,10 @@
         "angles": {
           "initialLeftAngle": -3.141592653589793,
           "initialRightAngle": 0,
-          "afterLeftLeftAngle": -2.424580833782848,
+          "afterLeftLeftAngle": -2.511412653589794,
           "afterLeftRightAngle": 0,
-          "afterRightLeftAngle": -2.424580833782848,
-          "afterRightRightAngle": 0.7170118198069453
+          "afterRightLeftAngle": -2.511412653589794,
+          "afterRightRightAngle": 0.6339599999999983
         }
       },
       "diagnosticToggleState": null,
@@ -173,7 +173,7 @@
           "x": 1176,
           "y": 395,
           "bottom": 531,
-          "text": "Esquerda▲▼Direita▲▼",
+          "text": "▲▼▲▼",
           "ariaLabel": "",
           "hidden": false,
           "switchDirection": ""
@@ -186,7 +186,7 @@
           "x": 1176,
           "y": 395,
           "bottom": 531,
-          "text": "Esquerda▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor esquerdo",
           "hidden": false,
           "switchDirection": "neutral"
@@ -199,7 +199,7 @@
           "x": 1256,
           "y": 395,
           "bottom": 531,
-          "text": "Direita▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor direito",
           "hidden": false,
           "switchDirection": "neutral"
@@ -216,22 +216,22 @@
           "width": 0,
           "height": 0
         },
-        "scoreHudText": "Fase 1|Score 60|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 20|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 4596,
+          "brickDrawCount": 2480,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 616,
-          "activeTrampolineArcCount": 462,
-          "activeTrampolineCenterAngle": 0.7170118198069453,
-          "leftActiveTrampolineCenterAngle": -2.424580833782848,
-          "rightActiveTrampolineCenterAngle": 0.7170118198069453,
+          "fullRingArcCount": 320,
+          "activeTrampolineArcCount": 240,
+          "activeTrampolineCenterAngle": 0.6339599999999983,
+          "leftActiveTrampolineCenterAngle": -2.511412653589794,
+          "rightActiveTrampolineCenterAngle": 0.6339599999999983,
           "hasLeftActiveTrampoline": true,
           "hasRightActiveTrampoline": true,
           "boundarySegmentCount": 18,
@@ -330,7 +330,7 @@
           "x": 1176,
           "y": 395,
           "bottom": 531,
-          "text": "Esquerda▲▼Direita▲▼",
+          "text": "▲▼▲▼",
           "ariaLabel": "",
           "hidden": false,
           "switchDirection": ""
@@ -343,7 +343,7 @@
           "x": 1176,
           "y": 395,
           "bottom": 531,
-          "text": "Esquerda▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor esquerdo",
           "hidden": false,
           "switchDirection": "neutral"
@@ -356,7 +356,7 @@
           "x": 1256,
           "y": 395,
           "bottom": 531,
-          "text": "Direita▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor direito",
           "hidden": false,
           "switchDirection": "neutral"
@@ -487,7 +487,7 @@
           "x": 1176,
           "y": 395,
           "bottom": 531,
-          "text": "Esquerda▲▼Direita▲▼",
+          "text": "▲▼▲▼",
           "ariaLabel": "",
           "hidden": false,
           "switchDirection": ""
@@ -500,7 +500,7 @@
           "x": 1176,
           "y": 395,
           "bottom": 531,
-          "text": "Esquerda▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor esquerdo",
           "hidden": false,
           "switchDirection": "neutral"
@@ -513,7 +513,7 @@
           "x": 1256,
           "y": 395,
           "bottom": 531,
-          "text": "Direita▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor direito",
           "hidden": false,
           "switchDirection": "neutral"
@@ -530,22 +530,22 @@
           "width": 0,
           "height": 0
         },
-        "scoreHudText": "Fase 1|Score 60|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 20|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 4596,
+          "brickDrawCount": 2480,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 616,
-          "activeTrampolineArcCount": 462,
-          "activeTrampolineCenterAngle": 0.7170118198069453,
-          "leftActiveTrampolineCenterAngle": -2.424580833782848,
-          "rightActiveTrampolineCenterAngle": 0.7170118198069453,
+          "fullRingArcCount": 320,
+          "activeTrampolineArcCount": 240,
+          "activeTrampolineCenterAngle": 0.6339599999999983,
+          "leftActiveTrampolineCenterAngle": -2.511412653589794,
+          "rightActiveTrampolineCenterAngle": 0.6339599999999983,
           "hasLeftActiveTrampoline": true,
           "hasRightActiveTrampoline": true,
           "boundarySegmentCount": 18,
@@ -813,10 +813,10 @@
         "angles": {
           "initialLeftAngle": -3.141592653589793,
           "initialRightAngle": 0,
-          "afterLeftLeftAngle": -2.424580833782848,
+          "afterLeftLeftAngle": -2.5103326535897956,
           "afterLeftRightAngle": 0,
-          "afterRightLeftAngle": -2.424580833782848,
-          "afterRightRightAngle": 0.7170118198069453
+          "afterRightLeftAngle": -2.5103326535897956,
+          "afterRightRightAngle": 0.6301800000000011
         }
       },
       "diagnosticToggleState": {
@@ -969,7 +969,7 @@
           "x": 12,
           "y": 490,
           "bottom": 626,
-          "text": "Esquerda▲▼Direita▲▼",
+          "text": "▲▼▲▼",
           "ariaLabel": "",
           "hidden": false,
           "switchDirection": ""
@@ -982,7 +982,7 @@
           "x": 12,
           "y": 490,
           "bottom": 626,
-          "text": "Esquerda▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor esquerdo",
           "hidden": false,
           "switchDirection": "neutral"
@@ -995,7 +995,7 @@
           "x": 306,
           "y": 490,
           "bottom": 626,
-          "text": "Direita▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor direito",
           "hidden": false,
           "switchDirection": "neutral"
@@ -1012,22 +1012,22 @@
           "width": 0,
           "height": 0
         },
-        "scoreHudText": "Fase 1|Score 150|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 70|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 7170,
+          "brickDrawCount": 7596,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 834,
-          "activeTrampolineArcCount": 441,
-          "activeTrampolineCenterAngle": 0.7170118198069453,
-          "leftActiveTrampolineCenterAngle": -2.424580833782848,
-          "rightActiveTrampolineCenterAngle": 0.7170118198069453,
+          "fullRingArcCount": 828,
+          "activeTrampolineArcCount": 438,
+          "activeTrampolineCenterAngle": 0.6301800000000011,
+          "leftActiveTrampolineCenterAngle": -2.5103326535897956,
+          "rightActiveTrampolineCenterAngle": 0.6301800000000011,
           "hasLeftActiveTrampoline": true,
           "hasRightActiveTrampoline": true,
           "boundarySegmentCount": 18,
@@ -1126,7 +1126,7 @@
           "x": 12,
           "y": 490,
           "bottom": 626,
-          "text": "Esquerda▲▼Direita▲▼",
+          "text": "▲▼▲▼",
           "ariaLabel": "",
           "hidden": false,
           "switchDirection": ""
@@ -1139,7 +1139,7 @@
           "x": 12,
           "y": 490,
           "bottom": 626,
-          "text": "Esquerda▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor esquerdo",
           "hidden": false,
           "switchDirection": "neutral"
@@ -1152,7 +1152,7 @@
           "x": 306,
           "y": 490,
           "bottom": 626,
-          "text": "Direita▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor direito",
           "hidden": false,
           "switchDirection": "neutral"
@@ -1283,7 +1283,7 @@
           "x": 12,
           "y": 490,
           "bottom": 626,
-          "text": "Esquerda▲▼Direita▲▼",
+          "text": "▲▼▲▼",
           "ariaLabel": "",
           "hidden": false,
           "switchDirection": ""
@@ -1296,7 +1296,7 @@
           "x": 12,
           "y": 490,
           "bottom": 626,
-          "text": "Esquerda▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor esquerdo",
           "hidden": false,
           "switchDirection": "neutral"
@@ -1309,7 +1309,7 @@
           "x": 306,
           "y": 490,
           "bottom": 626,
-          "text": "Direita▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor direito",
           "hidden": false,
           "switchDirection": "neutral"
@@ -1326,22 +1326,22 @@
           "width": 0,
           "height": 0
         },
-        "scoreHudText": "Fase 1|Score 150|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 70|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 7125,
+          "brickDrawCount": 7543,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 828,
-          "activeTrampolineArcCount": 435,
-          "activeTrampolineCenterAngle": 0.7170118198069453,
-          "leftActiveTrampolineCenterAngle": -2.424580833782848,
-          "rightActiveTrampolineCenterAngle": 0.7170118198069453,
+          "fullRingArcCount": 822,
+          "activeTrampolineArcCount": 432,
+          "activeTrampolineCenterAngle": 0.6301800000000011,
+          "leftActiveTrampolineCenterAngle": -2.5103326535897956,
+          "rightActiveTrampolineCenterAngle": 0.6301800000000011,
           "hasLeftActiveTrampoline": true,
           "hasRightActiveTrampoline": true,
           "boundarySegmentCount": 18,
@@ -1609,10 +1609,10 @@
         "angles": {
           "initialLeftAngle": -3.141592653589793,
           "initialRightAngle": 0,
-          "afterLeftLeftAngle": -2.424580833782848,
+          "afterLeftLeftAngle": -2.511952653589791,
           "afterLeftRightAngle": 0,
-          "afterRightLeftAngle": -2.424580833782848,
-          "afterRightRightAngle": 0.7170118198069453
+          "afterRightLeftAngle": -2.511952653589791,
+          "afterRightRightAngle": 0.6301799999999993
         }
       },
       "diagnosticToggleState": null,
@@ -1744,7 +1744,7 @@
           "x": 12,
           "y": 580,
           "bottom": 716,
-          "text": "Esquerda▲▼Direita▲▼",
+          "text": "▲▼▲▼",
           "ariaLabel": "",
           "hidden": false,
           "switchDirection": ""
@@ -1757,7 +1757,7 @@
           "x": 12,
           "y": 580,
           "bottom": 716,
-          "text": "Esquerda▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor esquerdo",
           "hidden": false,
           "switchDirection": "neutral"
@@ -1770,7 +1770,7 @@
           "x": 396,
           "y": 580,
           "bottom": 716,
-          "text": "Direita▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor direito",
           "hidden": false,
           "switchDirection": "neutral"
@@ -1787,22 +1787,22 @@
           "width": 0,
           "height": 0
         },
-        "scoreHudText": "Fase 1|Score 100|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 90|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 9948,
+          "brickDrawCount": 10267,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 828,
-          "activeTrampolineArcCount": 438,
-          "activeTrampolineCenterAngle": 0.7170118198069453,
-          "leftActiveTrampolineCenterAngle": -2.424580833782848,
-          "rightActiveTrampolineCenterAngle": 0.7170118198069453,
+          "fullRingArcCount": 822,
+          "activeTrampolineArcCount": 435,
+          "activeTrampolineCenterAngle": 0.6301799999999993,
+          "leftActiveTrampolineCenterAngle": -2.511952653589791,
+          "rightActiveTrampolineCenterAngle": 0.6301799999999993,
           "hasLeftActiveTrampoline": true,
           "hasRightActiveTrampoline": true,
           "boundarySegmentCount": 18,
@@ -1901,7 +1901,7 @@
           "x": 12,
           "y": 580,
           "bottom": 716,
-          "text": "Esquerda▲▼Direita▲▼",
+          "text": "▲▼▲▼",
           "ariaLabel": "",
           "hidden": false,
           "switchDirection": ""
@@ -1914,7 +1914,7 @@
           "x": 12,
           "y": 580,
           "bottom": 716,
-          "text": "Esquerda▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor esquerdo",
           "hidden": false,
           "switchDirection": "neutral"
@@ -1927,7 +1927,7 @@
           "x": 396,
           "y": 580,
           "bottom": 716,
-          "text": "Direita▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor direito",
           "hidden": false,
           "switchDirection": "neutral"
@@ -2058,7 +2058,7 @@
           "x": 12,
           "y": 580,
           "bottom": 716,
-          "text": "Esquerda▲▼Direita▲▼",
+          "text": "▲▼▲▼",
           "ariaLabel": "",
           "hidden": false,
           "switchDirection": ""
@@ -2071,7 +2071,7 @@
           "x": 12,
           "y": 580,
           "bottom": 716,
-          "text": "Esquerda▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor esquerdo",
           "hidden": false,
           "switchDirection": "neutral"
@@ -2084,7 +2084,7 @@
           "x": 396,
           "y": 580,
           "bottom": 716,
-          "text": "Direita▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor direito",
           "hidden": false,
           "switchDirection": "neutral"
@@ -2101,22 +2101,22 @@
           "width": 0,
           "height": 0
         },
-        "scoreHudText": "Fase 1|Score 100|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 90|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 9878,
+          "brickDrawCount": 10196,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 822,
-          "activeTrampolineArcCount": 432,
-          "activeTrampolineCenterAngle": 0.7170118198069453,
-          "leftActiveTrampolineCenterAngle": -2.424580833782848,
-          "rightActiveTrampolineCenterAngle": 0.7170118198069453,
+          "fullRingArcCount": 816,
+          "activeTrampolineArcCount": 429,
+          "activeTrampolineCenterAngle": 0.6301799999999993,
+          "leftActiveTrampolineCenterAngle": -2.511952653589791,
+          "rightActiveTrampolineCenterAngle": 0.6301799999999993,
           "hasLeftActiveTrampoline": true,
           "hasRightActiveTrampoline": true,
           "boundarySegmentCount": 18,
@@ -2229,7 +2229,7 @@
           "x": 520,
           "y": 160,
           "bottom": 272,
-          "text": "Esquerda▲▼Direita▲▼",
+          "text": "▲▼▲▼",
           "ariaLabel": "",
           "hidden": false,
           "switchDirection": ""
@@ -2242,7 +2242,7 @@
           "x": 520,
           "y": 160,
           "bottom": 272,
-          "text": "Esquerda▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor esquerdo",
           "hidden": false,
           "switchDirection": "neutral"
@@ -2255,7 +2255,7 @@
           "x": 624,
           "y": 160,
           "bottom": 272,
-          "text": "Direita▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor direito",
           "hidden": false,
           "switchDirection": "neutral"
@@ -2386,7 +2386,7 @@
           "x": 520,
           "y": 160,
           "bottom": 272,
-          "text": "Esquerda▲▼Direita▲▼",
+          "text": "▲▼▲▼",
           "ariaLabel": "",
           "hidden": false,
           "switchDirection": ""
@@ -2399,7 +2399,7 @@
           "x": 520,
           "y": 160,
           "bottom": 272,
-          "text": "Esquerda▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor esquerdo",
           "hidden": false,
           "switchDirection": "neutral"
@@ -2412,7 +2412,7 @@
           "x": 624,
           "y": 160,
           "bottom": 272,
-          "text": "Direita▲▼",
+          "text": "▲▼",
           "ariaLabel": "Interruptor direito",
           "hidden": false,
           "switchDirection": "neutral"

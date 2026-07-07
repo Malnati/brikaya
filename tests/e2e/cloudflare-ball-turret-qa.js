@@ -64,6 +64,7 @@ const JOYSTICK_MIN_RESPONSIVE_TRACKBALL_SIZE = 72;
 const SWITCH_MIN_PLAYFIELD_GAP_PX = 48;
 const SWITCH_MAX_EDGE_GAP_PX = 36;
 const DUAL_SWITCH_HOLD_MS = 760;
+const DUAL_SWITCH_DIRECTION_HOLD_MS = 120;
 const DUAL_SWITCH_SETTLE_MS = 160;
 const DUAL_SWITCH_MOVEMENT_MIN_SIN_DELTA = 0.08;
 const DUAL_SWITCH_STABLE_MAX_SIN_DELTA = 0.05;
@@ -1553,7 +1554,12 @@ async function readSwitchHitTarget(page, switchTestId, point) {
   );
 }
 
-async function holdSwitch(page, switchTestId, verticalRatio) {
+async function holdSwitch(
+  page,
+  switchTestId,
+  verticalRatio,
+  holdMs = DUAL_SWITCH_HOLD_MS,
+) {
   const switchHandle = await page.$(`[data-testid="${switchTestId}"]`);
   const box = await switchHandle?.boundingBox();
   if (!box || box.width === 0 || box.height === 0) {
@@ -1598,7 +1604,7 @@ async function holdSwitch(page, switchTestId, verticalRatio) {
           resolve(undefined);
         }, holdMs);
       }),
-    { clientPoint: point, holdMs: DUAL_SWITCH_HOLD_MS },
+    { clientPoint: point, holdMs },
   );
   await new Promise((resolve) => setTimeout(resolve, DUAL_SWITCH_SETTLE_MS));
 
@@ -1649,11 +1655,21 @@ async function exerciseDualSwitches(page) {
   const initialState = await readBallTurretState(page);
 
   await resetCanvasProbe(page);
-  const leftSwitchExercise = await holdSwitch(page, LEFT_SWITCH_TEST_ID, 0.22);
+  const leftSwitchExercise = await holdSwitch(
+    page,
+    LEFT_SWITCH_TEST_ID,
+    0.22,
+    DUAL_SWITCH_DIRECTION_HOLD_MS,
+  );
   const afterLeftState = await readBallTurretState(page);
 
   await resetCanvasProbe(page);
-  const rightSwitchExercise = await holdSwitch(page, RIGHT_SWITCH_TEST_ID, 0.78);
+  const rightSwitchExercise = await holdSwitch(
+    page,
+    RIGHT_SWITCH_TEST_ID,
+    0.78,
+    DUAL_SWITCH_DIRECTION_HOLD_MS,
+  );
   const afterRightState = await readBallTurretState(page);
 
   const initialLeftAngle = initialState.probe.leftActiveTrampolineCenterAngle;
