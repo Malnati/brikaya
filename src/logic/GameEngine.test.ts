@@ -24,6 +24,7 @@ import {
 } from "../constants/game";
 import { POINTS_PER_BRICK } from "../constants/gameState";
 import { GAME_AUDIO_IDS, type GameAudioSink } from "../constants/audio";
+import { GAME_MODE_BALL_TURRET } from "../constants/gameMode";
 import { calculatePowerUpSize } from "../constants/powerUps";
 import { GameEngine } from "./GameEngine";
 import {
@@ -1292,6 +1293,10 @@ describe("GameEngine", () => {
       undefined,
       onLevelTransition,
       "laser-fan",
+      undefined,
+      undefined,
+      undefined,
+      GAME_MODE_BALL_TURRET,
     );
     const dimensions = (engine as any).dimensions;
 
@@ -1365,7 +1370,16 @@ describe("GameEngine", () => {
     );
   });
 
-  it("mantém power-up de QA visível antes da coleta para captura publicada", () => {
+  it("mantém power-up de QA visível brevemente e coleta por limite radial", () => {
+    mockDestroyedLaserBricks = Array.from({ length: 5 }, (_, index) => ({
+      col: index,
+      row: 0,
+      colorIndex: index,
+      x: 40 + index * 44,
+      y: 72,
+      width: 36,
+      height: 18,
+    }));
     const engine = new GameEngine(
       canvas,
       onScoreUpdate,
@@ -1374,12 +1388,38 @@ describe("GameEngine", () => {
       undefined,
       onLevelTransition,
       "laser-fan",
+      undefined,
+      undefined,
+      undefined,
+      GAME_MODE_BALL_TURRET,
     );
+    const mockGameLogger = require("../storage/gameLogger").gameLogger;
 
-    for (let frame = 0; frame < 20; frame += 1) {
+    for (let frame = 0; frame < 3; frame += 1) {
       (engine as any).updatePowerUp();
     }
 
     expect((engine as any).activePowerUp).not.toBeNull();
+
+    for (let frame = 0; frame < 10; frame += 1) {
+      (engine as any).updatePowerUp();
+    }
+
+    expect((engine as any).activePowerUp).toBeNull();
+    expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_BRICK * 5);
+    expect(mockGameLogger.logPowerUp).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      "laser_fan",
+      "collect",
+    );
+    expect(mockGameLogger.logPowerUp).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      "laser_fan",
+      "activate",
+    );
   });
 });

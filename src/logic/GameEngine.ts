@@ -91,7 +91,7 @@ const LATE_PHASE_STABILITY_Y_RATIO = 0.65;
 const CINEMATIC_RIP_X_RATIO = 0.12;
 const CINEMATIC_RIP_Y_OFFSET = 2;
 const PADDLE_COLLISION_QA_BALL_INSET = 1;
-const LASER_FAN_QA_POWER_UP_Y_OFFSET = 64;
+const LASER_FAN_QA_POWER_UP_BOUNDARY_INSET = 12;
 const METAL_BLOCK_QA_RANDOM_VALUES = [0, 0.99] as const;
 const METAL_BLOCK_QA_RANDOM_FALLBACK = 0.99;
 const EVASIVE_BLOCKS_QA_RANDOM_VALUES = [
@@ -757,12 +757,30 @@ export class GameEngine {
     if (this.qaScenario !== LASER_FAN_QA_SCENARIO || this.qaScenarioConsumed)
       return;
 
+    const powerUpSize = this.getPowerUpSize();
+    const directionX = Math.cos(BALL_TURRET_BOTTOM_SPAWN_ANGLE);
+    const directionY = Math.sin(BALL_TURRET_BOTTOM_SPAWN_ANGLE);
+    const startRadius = Math.max(
+      0,
+      this.radialGeometry.radius -
+        powerUpSize / CENTER_DIVISOR -
+        LASER_FAN_QA_POWER_UP_BOUNDARY_INSET,
+    );
+
     this.activePowerUp = new PowerUp(
-      this.paddle.position.x + this.paddle.position.width / CENTER_DIVISOR,
-      this.paddle.position.y - LASER_FAN_QA_POWER_UP_Y_OFFSET,
+      this.radialGeometry.centerX + directionX * startRadius,
+      this.radialGeometry.centerY + directionY * startRadius,
       "laser_fan",
-      this.getPowerUpSize(),
+      powerUpSize,
       this.resolveAssetPath,
+      {
+        kind: "radial",
+        centerX: this.radialGeometry.centerX,
+        centerY: this.radialGeometry.centerY,
+        directionX,
+        directionY,
+        boundaryRadius: this.radialGeometry.radius,
+      },
     );
     this.laserFanSpawnsThisLevel = 1;
   }
