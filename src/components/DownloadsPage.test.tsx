@@ -128,4 +128,17 @@ describe("DownloadsPage", () => {
       unmount();
     }
   });
+
+  it("aponta links legais para o idioma principal correspondente", () => {
+    renderDownloadsPage("/fr-CA/downloads/");
+
+    const hrefs = screen
+      .getAllByRole("link")
+      .map((link) => link.getAttribute("href"));
+
+    expect(hrefs).toContain("/fr/about/");
+    expect(hrefs).toContain("/fr/legal/");
+    expect(hrefs).toContain("/fr/privacy/");
+    expect(hrefs).toContain("/fr/terms/");
+  });
 });

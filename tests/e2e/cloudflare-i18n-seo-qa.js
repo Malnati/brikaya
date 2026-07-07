@@ -775,7 +775,77 @@ const LOCALE_SOURCE_STORAGE_KEY = "brikaya-locale-source";
 const MANUAL_LOCALE_SOURCE = "manual";
 const SITEMAP_PATH = "/sitemap.xml";
 const ROBOTS_PATH = "/robots.txt";
-const STATIC_PUBLIC_PATHS = ["/privacy/", "/terms/"];
+const STATIC_PUBLIC_PATHS = [
+  "/about/",
+  "/legal/",
+  "/privacy/",
+  "/terms/",
+  "/user-agreement/",
+  "/license/",
+  "/data-deletion/",
+  "/cookies/",
+  "/support/",
+];
+const LEGAL_HREFLANG_SAMPLE_LOCALES = [
+  "en-US",
+  "pt-BR",
+  "es-419",
+  "fr",
+  "zh-CN",
+  "zh-TW",
+  "ar",
+];
+const TESTED_LEGAL_PAGES = [
+  {
+    locale: "en-US",
+    path: "/privacy/",
+    routePath: "/privacy/",
+    title: "Privacy policy — Brikaya",
+    bodySnippet: "Privacy policy",
+  },
+  {
+    locale: "pt-BR",
+    path: "/pt-BR/privacy/",
+    routePath: "/privacy/",
+    title: "Política de privacidade — Brikaya",
+    bodySnippet: "Política de Privacidade",
+  },
+  {
+    locale: "es-419",
+    path: "/es-419/terms/",
+    routePath: "/terms/",
+    title: "Condiciones de uso — Brikaya",
+    bodySnippet: "Condiciones de uso",
+  },
+  {
+    locale: "fr",
+    path: "/fr/legal/",
+    routePath: "/legal/",
+    title: "Mentions légales — Brikaya",
+    bodySnippet: "Légal",
+  },
+  {
+    locale: "zh-CN",
+    path: "/zh-CN/data-deletion/",
+    routePath: "/data-deletion/",
+    title: "数据删除 — Brikaya",
+    bodySnippet: "数据",
+  },
+  {
+    locale: "zh-TW",
+    path: "/zh-TW/legal/",
+    routePath: "/legal/",
+    title: "法律 — Brikaya",
+    bodySnippet: "法律",
+  },
+  {
+    locale: "ar",
+    path: "/ar/privacy/",
+    routePath: "/privacy/",
+    title: "سياسة الخصوصية — Brikaya",
+    bodySnippet: "الخصوصية",
+  },
+];
 const REPORT_JSON_SPACES = 2;
 
 function env(name, fallback) {
@@ -804,6 +874,10 @@ function assert(condition, message) {
 
 function canonicalFor(baseUrl, locale, path) {
   return locale === ROOT_LOCALE && path === "/" ? ROOT_CANONICAL : new URL(path, baseUrl).href;
+}
+
+function legalPathFor(locale, routePath) {
+  return locale === "en-US" ? routePath : `/${locale}${routePath}`;
 }
 
 function htmlLangPattern(locale) {
@@ -858,6 +932,48 @@ async function validateHtml(baseUrl, item) {
   return { url, status, canonical, locale: item.locale };
 }
 
+async function validateLegalHtml(baseUrl, item) {
+  const url = new URL(item.path, baseUrl).href;
+  const { status, body } = await fetchText(url);
+  const canonical = new URL(item.path, baseUrl).href;
+
+  assert(status === HTTP_OK, `${url} status=${status}`);
+  assert(
+    htmlLangPattern(item.locale).test(body),
+    `${url} sem lang ${item.locale}`,
+  );
+  assert(
+    body.includes(`<link rel="canonical" href="${canonical}" />`),
+    `${url} canonical legal incorreto`,
+  );
+  assert(
+    body.includes(`<title>${escapeHtml(item.title)}</title>`),
+    `${url} title legal incorreto`,
+  );
+  assert(body.includes(item.bodySnippet), `${url} sem trecho legal esperado`);
+  assert(!body.includes(".pages.dev"), `${url} contém pages.dev`);
+  assert(!body.includes('href="./assets/'), `${url} tem href asset relativo`);
+  assert(!body.includes('src="./assets/'), `${url} tem src asset relativo`);
+
+  for (const locale of LEGAL_HREFLANG_SAMPLE_LOCALES) {
+    assert(
+      body.includes(`hreflang="${locale}"`),
+      `${url} sem hreflang legal ${locale}`,
+    );
+    assert(
+      body.includes(
+        `href="${new URL(legalPathFor(locale, item.routePath), baseUrl).href}"`,
+      ),
+      `${url} sem href legal ${locale}`,
+    );
+  }
+  assert(body.includes('hreflang="x-default"'), `${url} sem x-default legal`);
+  assert(!body.includes('hreflang="en-AU"'), `${url} contém variante en-AU legal`);
+  assert(!body.includes('hreflang="fr-CA"'), `${url} contém variante fr-CA legal`);
+
+  return { url, status, canonical, locale: item.locale };
+}
+
 async function validateSitemapAndRobots(baseUrl) {
   const sitemapUrl = new URL(SITEMAP_PATH, baseUrl).href;
   const robotsUrl = new URL(ROBOTS_PATH, baseUrl).href;
@@ -887,6 +1003,20 @@ async function validateSitemapAndRobots(baseUrl) {
       `sitemap sem ${path}`,
     );
   }
+  for (const item of TESTED_LEGAL_PAGES) {
+    assert(
+      sitemap.body.includes(`<loc>${new URL(item.path, baseUrl).href}</loc>`),
+      `sitemap sem legal ${item.path}`,
+    );
+  }
+  assert(
+    !sitemap.body.includes(`<loc>${new URL("/en-AU/privacy/", baseUrl).href}</loc>`),
+    "sitemap contém variante legal en-AU",
+  );
+  assert(
+    !sitemap.body.includes(`<loc>${new URL("/fr-CA/privacy/", baseUrl).href}</loc>`),
+    "sitemap contém variante legal fr-CA",
+  );
   assert(robots.body.includes(`Sitemap: ${sitemapUrl}`), "robots sem sitemap");
 
   return {
@@ -1209,6 +1339,10 @@ async function run() {
   for (const item of [...TESTED_LOCALES, ...TESTED_DOWNLOADS_LOCALES]) {
     htmlResults.push(await validateHtml(baseUrl, item));
   }
+  const legalResults = [];
+  for (const item of TESTED_LEGAL_PAGES) {
+    legalResults.push(await validateLegalHtml(baseUrl, item));
+  }
   const sitemapRobots = await validateSitemapAndRobots(baseUrl);
   const runtime = await validateRuntimeLanguageSwitch(
     baseUrl,
@@ -1221,8 +1355,10 @@ async function run() {
     baseUrl,
     localesChecked: TESTED_LOCALES.map((item) => item.locale),
     downloadsLocalesChecked: TESTED_DOWNLOADS_LOCALES.map((item) => item.locale),
+    legalLocalesChecked: TESTED_LEGAL_PAGES.map((item) => item.locale),
     hreflangLocales: ALL_HREFLANG_LOCALES,
     htmlResults,
+    legalResults,
     sitemapRobots,
     runtime,
     browserLocaleRuntime,

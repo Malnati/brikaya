@@ -73,7 +73,14 @@ import {
   type AppLocale,
   type TranslationKey,
 } from "./i18n";
-import { isDownloadsRoute } from "./routes";
+import {
+  ABOUT_ROUTE_PATH,
+  LEGAL_ROUTE_PATH,
+  PRIVACY_ROUTE_PATH,
+  TERMS_ROUTE_PATH,
+  getLocalizedLegalPath,
+  isDownloadsRoute,
+} from "./routes";
 import { requestLocaleFromDeviceLocation } from "./i18n/locationLocale";
 import {
   appendJoystickDiagnosticSample,
@@ -180,6 +187,10 @@ export default function App() {
 
 function GameApp() {
   const { locale, setLocale, setLocaleFromLocation, t } = useI18n();
+  const privacyPath = getLocalizedLegalPath(locale, PRIVACY_ROUTE_PATH);
+  const termsPath = getLocalizedLegalPath(locale, TERMS_ROUTE_PATH);
+  const aboutPath = getLocalizedLegalPath(locale, ABOUT_ROUTE_PATH);
+  const legalPath = getLocalizedLegalPath(locale, LEGAL_ROUTE_PATH);
   const mobileOrientationLock = useMobileOrientationLock();
   const [score, setScore] = useState(0);
   const scoreRef = useRef(0);
@@ -1126,16 +1137,16 @@ function GameApp() {
                     ? t("language.disableRegion")
                     : t("language.reviewRegion")}
                 </button>
-                <a className="settings-drawer__link" href="/privacy/">
+                <a className="settings-drawer__link" href={privacyPath}>
                   {t("menu.privacyPolicy")}
                 </a>
-                <a className="settings-drawer__link" href="/terms/">
+                <a className="settings-drawer__link" href={termsPath}>
                   {t("menu.terms")}
                 </a>
-                <a className="settings-drawer__link" href="/about/">
+                <a className="settings-drawer__link" href={aboutPath}>
                   {t("menu.about")}
                 </a>
-                <a className="settings-drawer__link" href="/legal/">
+                <a className="settings-drawer__link" href={legalPath}>
                   {t("menu.legal")}
                 </a>
                 <button

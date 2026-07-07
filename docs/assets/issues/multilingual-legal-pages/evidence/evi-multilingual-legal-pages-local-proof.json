@@ -1,0 +1,69 @@
+{
+  "checkedAt": "2026-07-07T02:02:55.791Z",
+  "afterBuild": true,
+  "baseUrl": "http://127.0.0.1:4173",
+  "chrome": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "results": [
+    {
+      "slug": "evi-multilingual-legal-pages-legal-hub-en-us.png",
+      "path": "/legal/",
+      "viewport": {
+        "width": 1440,
+        "height": 1100,
+        "deviceScaleFactor": 1
+      },
+      "waitFor": "Legal and trust",
+      "url": "http://127.0.0.1:4173/legal/",
+      "status": 200,
+      "output": "docs/assets/issues/multilingual-legal-pages/evidence/evi-multilingual-legal-pages-legal-hub-en-us.png",
+      "state": {
+        "lang": "en-US",
+        "dir": "ltr",
+        "title": "Legal — Brikaya",
+        "canonical": "https://brikaya.com/legal/",
+        "h1": "Legal and trust"
+      }
+    },
+    {
+      "slug": "evi-multilingual-legal-pages-privacy-pt-br-mobile.png",
+      "path": "/pt-BR/privacy/",
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "deviceScaleFactor": 2,
+        "isMobile": true
+      },
+      "waitFor": "Política de Privacidade",
+      "url": "http://127.0.0.1:4173/pt-BR/privacy/",
+      "status": 200,
+      "output": "docs/assets/issues/multilingual-legal-pages/evidence/evi-multilingual-legal-pages-privacy-pt-br-mobile.png",
+      "state": {
+        "lang": "pt-BR",
+        "dir": "ltr",
+        "title": "Política de privacidade — Brikaya",
+        "canonical": "https://brikaya.com/pt-BR/privacy/",
+        "h1": "Política de Privacidade"
+      }
+    },
+    {
+      "slug": "evi-multilingual-legal-pages-data-deletion-ar-rtl.png",
+      "path": "/ar/data-deletion/",
+      "viewport": {
+        "width": 1440,
+        "height": 1100,
+        "deviceScaleFactor": 1
+      },
+      "waitFor": "حذف البيانات",
+      "url": "http://127.0.0.1:4173/ar/data-deletion/",
+      "status": 200,
+      "output": "docs/assets/issues/multilingual-legal-pages/evidence/evi-multilingual-legal-pages-data-deletion-ar-rtl.png",
+      "state": {
+        "lang": "ar",
+        "dir": "rtl",
+        "title": "حذف البيانات — Brikaya",
+        "canonical": "https://brikaya.com/ar/data-deletion/",
+        "h1": "حذف البيانات"
+      }
+    }
+  ]
+}

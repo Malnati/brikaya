@@ -514,3 +514,13 @@ Critérios:
 - Sitemap: deve incluir as novas rotas estáticas junto com home/downloads localizados após `npm run build`.
 - Search Console: após merge/deploy, reenviar `https://brikaya.com/sitemap.xml` e aguardar processamento; não tratar processamento pendente como erro de publicação.
 - Meta/Google: usar as URLs públicas `https://brikaya.com/privacy/`, `https://brikaya.com/terms/` e `https://brikaya.com/data-deletion/` quando algum painel pedir política, termos ou instrução de exclusão.
+
+## Atualização operacional em 2026-07-07 — páginas legais multilíngues e sitemap principal
+
+- Escopo implementado: páginas legais/trust com padrão `en-US` nas URLs raiz e versões localizadas geradas para os idiomas principais do jogo, sem variantes regionais duplicadas.
+- Páginas cobertas: Sobre, Legal, Privacidade, Termos, Contrato de usuário, Licença, Exclusão de dados, Cookies/anúncios e Suporte.
+- Sitemap alvo após build: 2.854 URLs (`284 * home/downloads` + `254 * 9 páginas legais`).
+- Exemplos que devem existir após publicação: `/privacy/`, `/pt-BR/privacy/`, `/es-419/terms/`, `/fr/legal/`, `/zh-CN/data-deletion/`, `/zh-TW/legal/`, `/ar/privacy/`.
+- Exemplos que não devem existir no sitemap legal: `/en-AU/privacy/`, `/en-GB/terms/`, `/fr-CA/privacy/`, `/de-CH/legal/`.
+- Guardrail mantido: sem campanha paga, cartão, loja paga, pixel novo, Clarity/script novo ou exposição de perfil pessoal.
+- Buscadores após deploy: reenviar `https://brikaya.com/sitemap.xml` no Google Search Console e Bing Webmaster Tools; usar `make yandex-indexnow-submit` e `make seznam-indexnow-submit`; confirmar Naver/Yandex/Seznam quando possível sem CAPTCHA, OTP, telefone, documento, custo ou publicação de identidade pessoal.
