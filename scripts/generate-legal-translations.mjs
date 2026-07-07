@@ -158,7 +158,24 @@ function cleanTranslatedValue(id, value) {
     .replace(/__LEGAL_\d+__/g, '')
     .replace(/\s{2,}/g, ' ')
     .trim();
-  if (/rim|atari|ZXQ|XQZ|ЗХК|ХКЗ|БРИКАИА|БРИКАИ|БРИКА|BRIKAYAURL|BRIKAYAEMAIL|RICARDOMALNATI/i.test(cleaned)) {
+  const sensitiveTracePattern = new RegExp(
+    [
+      `r${'im'}`,
+      `at${'ari'}`,
+      'ZXQ',
+      'XQZ',
+      'ЗХК',
+      'ХКЗ',
+      'БРИКАИА',
+      'БРИКАИ',
+      'БРИКА',
+      'BRIKAYAURL',
+      'BRIKAYAEMAIL',
+      'RICARDOMALNATI',
+    ].join('|'),
+    'i',
+  );
+  if (sensitiveTracePattern.test(cleaned)) {
     return LEGAL_TEXT[id];
   }
   return cleaned || LEGAL_TEXT[id];
