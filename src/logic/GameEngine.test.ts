@@ -435,6 +435,35 @@ describe("GameEngine", () => {
     );
   });
 
+  it("move cada cama elástica da torreta até a extremidade em até 12 frames", () => {
+    const engine = new GameEngine(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "ball-turret",
+    );
+
+    engine.setDualSwitchDirection("left", -1);
+    (engine as any).updateDualSwitchTrampolines(12);
+
+    expect((engine as any).dualTrampolinePositions.left).toBe(0);
+    expect((engine as any).dualTrampolinePositions.right).toBe(0.5);
+
+    engine.setDualSwitchDirection("left", 0);
+    engine.setDualSwitchDirection("right", 1);
+    (engine as any).updateDualSwitchTrampolines(12);
+
+    expect((engine as any).dualTrampolinePositions.left).toBe(0);
+    expect((engine as any).dualTrampolinePositions.right).toBe(1);
+  });
+
   it("segura a bola da torreta inicial até o primeiro controle do jogador", async () => {
     jest.spyOn(window, "requestAnimationFrame").mockReturnValue(0);
     jest.spyOn(canvas, "getBoundingClientRect").mockReturnValue({
