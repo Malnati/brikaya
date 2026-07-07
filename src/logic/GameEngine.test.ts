@@ -339,6 +339,51 @@ describe("GameEngine", () => {
     expect((engine as any).paddle.draw).not.toHaveBeenCalled();
   });
 
+  it("segura a bola da torreta inicial até o primeiro controle do jogador", async () => {
+    jest.spyOn(window, "requestAnimationFrame").mockReturnValue(0);
+    jest.spyOn(canvas, "getBoundingClientRect").mockReturnValue({
+      left: 0,
+      top: 0,
+      width: canvas.width,
+      height: canvas.height,
+    } as DOMRect);
+    const engine = new GameEngine(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "ball-turret",
+    );
+    const ball = mockBallInstances[0];
+
+    (engine as any).assetsLoaded = true;
+    (engine as any).isStopped = false;
+    (engine as any).lastFrameTimestamp = 1000;
+
+    await (engine as any).loop(1000 + 1000 / 60);
+
+    expect(ball.update).not.toHaveBeenCalled();
+    expect(ball.draw).toHaveBeenCalled();
+
+    engine.startPaddleDrag(canvas.width / 2, canvas.height);
+    await (engine as any).loop(1000 + 1000 / 30);
+
+    expect(ball.update).toHaveBeenCalledWith(
+      (engine as any).paddle,
+      (engine as any).bricks,
+      canvas.height,
+      expect.any(Object),
+      expect.any(Object),
+      expect.any(Number),
+    );
+  });
+
   it("usa dobro de colunas e posiciona bola inicial na borda inferior da torreta", () => {
     const engine = new GameEngine(
       canvas,
