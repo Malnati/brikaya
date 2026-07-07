@@ -1960,6 +1960,13 @@ export class GameEngine {
       FULL_CIRCLE_RADIANS;
   }
 
+  private readDualTrampolineAngularDirection(
+    side: TurretSwitchSide,
+    direction: TurretSwitchDirection,
+  ): number {
+    return side === "left" ? -direction : direction;
+  }
+
   private updateDualSwitchTrampolines(frameScale = 1) {
     if (!this.isDualSwitchControlMode()) return;
 
@@ -1970,7 +1977,9 @@ export class GameEngine {
 
       this.dualTrampolineAngles[side] = this.normalizeDualTrampolineAngle(
         this.dualTrampolineAngles[side] +
-          direction * DUAL_TRAMPOLINE_SPEED_PER_FRAME * safeFrameScale,
+          this.readDualTrampolineAngularDirection(side, direction) *
+            DUAL_TRAMPOLINE_SPEED_PER_FRAME *
+            safeFrameScale,
       );
     });
   }
