@@ -2582,6 +2582,10 @@ canvas {
       max(12px, env(safe-area-inset-right));
   }
 
+  .game-surface--ball-turret .game-turret-control-panel--joystick {
+    margin-top: var(--space-2);
+  }
+
   .game-surface--ball-turret .game-turret-dual-switches {
     width: 100%;
     justify-content: space-between;
@@ -2589,6 +2593,15 @@ canvas {
 
   .game-surface--ball-turret .game-turret-joystick {
     margin-top: var(--bb-turret-joystick-offset, var(--space-2));
+  }
+}
+
+@media (max-width: 480px) and (max-height: 700px) and (orientation: portrait) {
+  .game-surface--ball-turret .game-turret-joystick {
+    --bb-turret-trackball-size: 64px;
+    --bb-turret-trackball-knob-size: 24px;
+    --bb-turret-trackball-travel: 18px;
+    margin-top: 0;
   }
 }
 
