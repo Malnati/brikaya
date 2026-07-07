@@ -119,10 +119,11 @@ export class Paddle {
     this.syncRectFromRadialPosition(false);
   }
 
-  update() {
+  update(frameScale = 1) {
     if (this.dx !== 0) {
+      const safeFrameScale = Math.max(0, Number.isFinite(frameScale) ? frameScale : 1);
       this.centerAngle -=
-        (this.dx / this.geometry.paddleRadius) * RADIAL_PADDLE_DX_TO_ANGLE_RATIO;
+        ((this.dx * safeFrameScale) / this.geometry.paddleRadius) * RADIAL_PADDLE_DX_TO_ANGLE_RATIO;
       this.syncRectFromRadialPosition();
     }
   }

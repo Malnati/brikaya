@@ -116,6 +116,7 @@ const BALL_TURRET_SPAWN_BORDER_INSET = 1;
 const BALL_TURRET_BOTTOM_SPAWN_ANGLE = Math.PI / 2;
 const BALL_TURRET_POWER_UP_FALLBACK_ANGLE = -Math.PI / 2;
 const MAX_FRAME_DELTA_MS = 80;
+const FRAME_BASELINE_MS = 1000 / 60;
 const WIDE_PADDLE_SCALE = 1.45;
 const SLOW_BALL_MULTIPLIER = 0.75;
 const MULTIBALL_ANGLE_OFFSET = 0.42;
@@ -1208,11 +1209,11 @@ export class GameEngine {
     return calculatePowerUpSize(this.dimensions);
   }
 
-  private updatePowerUp() {
+  private updatePowerUp(frameScale = 1) {
     if (!this.activePowerUp || this.isLevelTransitioning || this.gameOver)
       return;
 
-    this.activePowerUp.update();
+    this.activePowerUp.update(frameScale);
     if (this.isBallTurretMode()) {
       if (this.activePowerUp.hasReachedRadialBoundary()) {
         const powerUpType = this.activePowerUp.getType();
@@ -1889,7 +1890,8 @@ export class GameEngine {
 
   private loop = (timestamp = readFrameTimestamp()) => {
     if (this.isStopped || this.isPaused) return;
-    this.calculateFrameDeltaMs(timestamp);
+    const deltaMs = this.calculateFrameDeltaMs(timestamp);
+    const frameScale = deltaMs / FRAME_BASELINE_MS;
     this.ctx.clearRect(0, 0, this.canvasSize.width, this.canvasSize.height);
 
     if (!this.assetsLoaded) {
@@ -1929,9 +1931,9 @@ export class GameEngine {
         this.drawGameBackdrop();
         this.bricks.draw(this.ctx);
         const isLaserFanAnimating = this.isLaserFanEffectActive();
-        this.paddle.update();
+        this.paddle.update(frameScale);
         if (!isLaserFanAnimating) {
-          this.updatePowerUp();
+          this.updatePowerUp(frameScale);
         }
         this.drawPlayerControl();
         this.activePowerUp?.draw(this.ctx);
@@ -1948,6 +1950,7 @@ export class GameEngine {
               this.canvasSize.height,
               this.getCurrentGameState(),
               this.audioSink,
+              frameScale,
             );
             if (!inPlay) {
               if (this.qaScenario === BALL_TURRET_QA_SCENARIO) {

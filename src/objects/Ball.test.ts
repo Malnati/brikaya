@@ -247,6 +247,80 @@ describe('Ball', () => {
     expect(ball.getCurrentSpeedMagnitude()).toBeGreaterThanOrEqual(config.minSpeed);
   });
 
+
+  it('mantém deslocamento equivalente entre 60Hz e 120Hz', () => {
+    const oneFrame60Hz = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const twoFrames120Hz = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const config = buildPhaseSpeedConfig(PHASE_ONE);
+    const bricks = { collide: jest.fn(() => false) };
+    const paddle = {
+      position: {
+        x: 0,
+        y: CANVAS_HEIGHT + 100,
+        width: DIMENSIONS.paddleWidth,
+        height: DIMENSIONS.paddleHeight,
+      },
+    };
+
+    oneFrame60Hz.applyPhaseSpeedConfig(config);
+    twoFrames120Hz.applyPhaseSpeedConfig(config);
+
+    oneFrame60Hz.update(
+      paddle,
+      bricks,
+      CANVAS_HEIGHT,
+      createGameState(oneFrame60Hz),
+      undefined,
+      1,
+    );
+    twoFrames120Hz.update(
+      paddle,
+      bricks,
+      CANVAS_HEIGHT,
+      createGameState(twoFrames120Hz),
+      undefined,
+      0.5,
+    );
+    twoFrames120Hz.update(
+      paddle,
+      bricks,
+      CANVAS_HEIGHT,
+      createGameState(twoFrames120Hz),
+      undefined,
+      0.5,
+    );
+
+    expect(twoFrames120Hz.position.y).toBeCloseTo(oneFrame60Hz.position.y, 5);
+  });
+
+  it('não move a bola quando frameScale é zero', () => {
+    const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const config = buildPhaseSpeedConfig(PHASE_ONE);
+    const bricks = { collide: jest.fn(() => false) };
+    const paddle = {
+      position: {
+        x: 0,
+        y: CANVAS_HEIGHT + 100,
+        width: DIMENSIONS.paddleWidth,
+        height: DIMENSIONS.paddleHeight,
+      },
+    };
+
+    ball.applyPhaseSpeedConfig(config);
+    const before = ball.position;
+
+    ball.update(
+      paddle,
+      bricks,
+      CANVAS_HEIGHT,
+      createGameState(ball),
+      undefined,
+      0,
+    );
+
+    expect(ball.position).toEqual(before);
+  });
+
   it('mantém a bolinha dentro do canvas ao bater na parede em alta velocidade', async () => {
     const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
     const config = buildPhaseSpeedConfig(LATE_PHASE);

@@ -35,16 +35,16 @@ const WIDE_CANVAS_WIDTH = 900;
 const DIMENSION_TEST_CANVAS_HEIGHT = 320;
 
 describe('game speed helpers', () => {
-  it('calcula velocidade máxima da fase 1 a partir da nova base 3x', () => {
+  it('calcula velocidade máxima da fase 1 a partir da nova base 2x', () => {
     const expected = calculateInitialBallSpeed(CANVAS_WIDTH)
       * FIRST_LEVEL_BASE_SPEED_MULTIPLIER
       * calculateLevelSpeedMultiplier(PHASE_ONE);
 
-    expect(FIRST_LEVEL_BASE_SPEED_MULTIPLIER).toBe(3);
+    expect(FIRST_LEVEL_BASE_SPEED_MULTIPLIER).toBe(2);
     expect(calculateLevelMaxSpeed(CANVAS_WIDTH, PHASE_ONE)).toBeCloseTo(expected, 5);
   });
 
-  it('usa base 3x para a velocidade máxima e spawn inicial da fase 1', () => {
+  it('usa base 2x para a velocidade máxima e spawn inicial da fase 1', () => {
     const expectedPhaseOneSpeed = calculateInitialBallSpeed(CANVAS_WIDTH) * FIRST_LEVEL_BASE_SPEED_MULTIPLIER;
 
     expect(calculateLevelMaxSpeed(CANVAS_WIDTH, PHASE_ONE)).toBeCloseTo(expectedPhaseOneSpeed, 5);
@@ -92,22 +92,22 @@ describe('game speed helpers', () => {
 
   it('mantém a fase 1 mobile com velocidade visível mínima e inicial', () => {
     expect(calculateLevelInitialSpawnSpeed(CANVAS_WIDTH, PHASE_ONE)).toBeCloseTo(
-      5.625,
+      3.75,
       5,
     );
     expect(calculateLevelMinSpeed(CANVAS_WIDTH, PHASE_ONE)).toBeCloseTo(
-      1.875,
+      1.25,
       5,
     );
   });
 
   it('mantém a fase 1 desktop com velocidade visível mínima e inicial', () => {
     expect(calculateLevelInitialSpawnSpeed(WIDE_CANVAS_WIDTH, PHASE_ONE)).toBeCloseTo(
-      7.5,
+      5,
       5,
     );
     expect(calculateLevelMinSpeed(WIDE_CANVAS_WIDTH, PHASE_ONE)).toBeCloseTo(
-      2.5,
+      1.667,
       5,
     );
   });

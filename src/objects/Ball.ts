@@ -160,14 +160,16 @@ export class Ball {
     },
     maxHeight: number,
     gameState: LoggedGameState,
-    audioSink?: GameAudioSink
+    audioSink?: GameAudioSink,
+    frameScale = 1
   ): boolean {
-    const motionSteps = this.getMotionStepCount();
+    const safeFrameScale = Math.max(0, Number.isFinite(frameScale) ? frameScale : 1);
+    const motionSteps = this.getMotionStepCount(safeFrameScale);
     let brickCollisionHandled = false;
 
     for (let step = 0; step < motionSteps; step += 1) {
-      this.x += this.dx / motionSteps;
-      this.y += this.dy / motionSteps;
+      this.x += (this.dx * safeFrameScale) / motionSteps;
+      this.y += (this.dy * safeFrameScale) / motionSteps;
 
       if (!brickCollisionHandled) {
         brickCollisionHandled = bricks.collide(this, gameState);
@@ -192,9 +194,10 @@ export class Ball {
     return true;
   }
 
-  private getMotionStepCount() {
+  private getMotionStepCount(frameScale = 1) {
     const maxStepDistance = Math.max(MIN_MOTION_STEPS, this.radius * MOTION_STEP_RADIUS_RATIO);
-    return Math.max(MIN_MOTION_STEPS, Math.ceil(this.getCurrentSpeedMagnitude() / maxStepDistance));
+    const frameDistance = this.getCurrentSpeedMagnitude() * Math.max(0, frameScale);
+    return Math.max(MIN_MOTION_STEPS, Math.ceil(frameDistance / maxStepDistance));
   }
 
   private resolveRectangularWallCollision(

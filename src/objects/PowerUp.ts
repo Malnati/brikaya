@@ -110,15 +110,17 @@ export class PowerUp {
     this.size = size;
   }
 
-  update(): void {
+  update(frameScale = 1): void {
+    const safeFrameScale = Math.max(0, Number.isFinite(frameScale) ? frameScale : 1);
+
     if (this.motion.kind === 'radial') {
       const speed = this.motion.speed ?? POWER_UP_RADIAL_SPEED;
-      this.x += this.motion.directionX * speed;
-      this.y += this.motion.directionY * speed;
+      this.x += this.motion.directionX * speed * safeFrameScale;
+      this.y += this.motion.directionY * speed * safeFrameScale;
       return;
     }
 
-    this.y += POWER_UP_FALL_SPEED;
+    this.y += POWER_UP_FALL_SPEED * safeFrameScale;
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
