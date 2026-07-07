@@ -15,7 +15,9 @@ function isColorDebugEnabled(): boolean {
   );
 }
 
-export function useColorDebug(canvasRef: React.RefObject<HTMLCanvasElement>) {
+export function useColorDebug(
+  canvasRef: React.RefObject<HTMLCanvasElement | null>,
+) {
   const debugIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
