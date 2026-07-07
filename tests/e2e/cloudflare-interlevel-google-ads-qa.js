@@ -28,6 +28,8 @@ const AD_HOLD_ASSERTION_DELAY_MS = 2200;
 const LEVEL_TRANSITION_EVENT_NAME = "brikaya:level-transition";
 const GOOGLE_REPORT_ONLY_FRAME_ANCESTORS_PATTERN =
   /Framing 'https:\/\/www\.google\.com\/' violates the following report-only Content Security Policy directive: "frame-ancestors 'self'"/;
+const OFFLINE_RESOURCE_LOAD_PATTERN =
+  /Failed to load resource: net::ERR_INTERNET_DISCONNECTED/;
 
 function publicUrl() {
   return process.env.BRIKAYA_PUBLIC_URL || DEFAULT_PUBLIC_URL;
@@ -50,7 +52,10 @@ function assert(condition, message) {
 }
 
 function isIgnorableConsoleProblem(text) {
-  return GOOGLE_REPORT_ONLY_FRAME_ANCESTORS_PATTERN.test(text);
+  return (
+    GOOGLE_REPORT_ONLY_FRAME_ANCESTORS_PATTERN.test(text) ||
+    OFFLINE_RESOURCE_LOAD_PATTERN.test(text)
+  );
 }
 
 function withQaScenario(url) {
