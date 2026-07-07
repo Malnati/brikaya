@@ -20,6 +20,7 @@ import {
   type RadialPlayfieldGeometry,
   type RectBounds,
 } from "../utils/radialGeometry";
+import type { ElectricImpactHandler } from "../utils/electricImpact";
 
 const BRICK_ACTIVE = 1;
 const BRICK_DESTROYED = 0;
@@ -107,6 +108,7 @@ export class Bricks {
     private resolveAssetPath: VisualAssetPathResolver = DEFAULT_GAME_VISUAL_ASSET_RESOLVER,
     private random: () => number = Math.random,
     private geometry?: RadialPlayfieldGeometry,
+    private onElectricImpact?: ElectricImpactHandler,
   ) {
     this.dimensions = dimensions;
     this.rows = dimensions.brickRows;
@@ -269,6 +271,7 @@ export class Bricks {
 
           {
             const ballVelocityBefore = ball.getVelocity();
+            this.emitComponentElectricImpact(ball.position, targetPosition, segment);
             if (segment && typeof ball.bounceFromRadialBrick === "function") {
               ball.bounceFromRadialBrick(segment.centerX, segment.centerY);
             } else {
@@ -393,6 +396,34 @@ export class Bricks {
       LOG(`💥 collide: ${destroyedCount} bloco(s) destruído(s)`);
     }
     return collided;
+  }
+
+  private emitComponentElectricImpact(
+    origin: { x: number; y: number },
+    bounds: RectBounds,
+    segment?: RadialBrickSegment,
+  ) {
+    if (!this.onElectricImpact) return;
+
+    const endpoints = segment
+      ? this.getRadialComponentTerminals(segment)
+      : {
+          left: {
+            x: bounds.x,
+            y: bounds.y + bounds.height / 2,
+          },
+          right: {
+            x: bounds.x + bounds.width,
+            y: bounds.y + bounds.height / 2,
+          },
+        };
+
+    this.onElectricImpact({
+      kind: "component",
+      origin: { x: origin.x, y: origin.y },
+      endpoints: [endpoints.left, endpoints.right],
+      bounds,
+    });
   }
 
   getRows(): number {

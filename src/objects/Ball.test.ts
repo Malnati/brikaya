@@ -508,6 +508,90 @@ describe('Ball', () => {
     expect(ball.getVelocity().dx).toBeLessThan(0);
   });
 
+  it('emite corrente elétrica transferida da bolinha para as extremidades da parede lateral', async () => {
+    const onElectricImpact = jest.fn();
+    const ball = new Ball(
+      CANVAS_WIDTH,
+      CANVAS_HEIGHT,
+      DIMENSIONS,
+      1,
+      undefined,
+      undefined,
+      onElectricImpact,
+    );
+    const bricks = { collide: jest.fn(() => false) };
+    const paddle = {
+      position: {
+        x: 0,
+        y: CANVAS_HEIGHT + 100,
+        width: DIMENSIONS.paddleWidth,
+        height: DIMENSIONS.paddleHeight,
+      },
+    };
+
+    ball.applyPhaseSpeedConfig(buildPhaseSpeedConfig(PHASE_ONE));
+    ball.setPosition(CANVAS_WIDTH - DIMENSIONS.ballRadius - 1, 120);
+    ball.setDirection(Math.PI / 2);
+
+    await ball.update(
+      paddle,
+      bricks,
+      CANVAS_HEIGHT,
+      createGameState(ball),
+    );
+
+    expect(onElectricImpact).toHaveBeenCalledWith({
+      kind: 'wall',
+      origin: { x: CANVAS_WIDTH, y: expect.any(Number) },
+      endpoints: [
+        { x: CANVAS_WIDTH, y: 0 },
+        { x: CANVAS_WIDTH, y: CANVAS_HEIGHT },
+      ],
+    });
+  });
+
+  it('emite corrente elétrica transferida da bolinha para as duas pontas do teto', async () => {
+    const onElectricImpact = jest.fn();
+    const ball = new Ball(
+      CANVAS_WIDTH,
+      CANVAS_HEIGHT,
+      DIMENSIONS,
+      1,
+      undefined,
+      undefined,
+      onElectricImpact,
+    );
+    const bricks = { collide: jest.fn(() => false) };
+    const paddle = {
+      position: {
+        x: 0,
+        y: CANVAS_HEIGHT + 100,
+        width: DIMENSIONS.paddleWidth,
+        height: DIMENSIONS.paddleHeight,
+      },
+    };
+
+    ball.applyPhaseSpeedConfig(buildPhaseSpeedConfig(PHASE_ONE));
+    ball.setPosition(CANVAS_WIDTH / CENTER_DIVISOR, DIMENSIONS.ballRadius - 1);
+    ball.setDirection(0);
+
+    await ball.update(
+      paddle,
+      bricks,
+      CANVAS_HEIGHT,
+      createGameState(ball),
+    );
+
+    expect(onElectricImpact).toHaveBeenCalledWith({
+      kind: 'ceiling',
+      origin: { x: CANVAS_WIDTH / CENTER_DIVISOR, y: 0 },
+      endpoints: [
+        { x: 0, y: 0 },
+        { x: CANVAS_WIDTH, y: 0 },
+      ],
+    });
+  });
+
   it('rebate na raquete em arco na borda radial inferior', async () => {
     const geometry = calculateRadialPlayfieldGeometry(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
     const paddle = {
@@ -615,7 +699,16 @@ describe('Ball', () => {
   it('na torreta rebate a bolinha nas partes ativas da borda', async () => {
     const geometry = calculateBallTurretPlayfieldGeometry(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
     const topPaddle = calculateRadialPaddleBounds(geometry, DIMENSIONS, -Math.PI / 2, 1);
-    const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS, 1, undefined, geometry);
+    const onElectricImpact = jest.fn();
+    const ball = new Ball(
+      CANVAS_WIDTH,
+      CANVAS_HEIGHT,
+      DIMENSIONS,
+      1,
+      undefined,
+      geometry,
+      onElectricImpact,
+    );
     const bricks = { collide: jest.fn().mockResolvedValue(false) };
     const bottomReboundSegment = calculateBallTurretBoundarySegments(PHASE_ONE)[0];
     const bottomReboundAngle =
@@ -633,6 +726,23 @@ describe('Ball', () => {
 
     expect(inPlay).toBe(true);
     expect(ball.getVelocity().dy).toBeLessThan(0);
+    expect(onElectricImpact).toHaveBeenCalledWith({
+      kind: 'radial-wall',
+      origin: {
+        x: geometry.centerX + Math.cos(bottomReboundAngle) * geometry.radius,
+        y: geometry.centerY + Math.sin(bottomReboundAngle) * geometry.radius,
+      },
+      endpoints: [
+        {
+          x: geometry.centerX + Math.cos(bottomReboundSegment.startAngle) * geometry.radius,
+          y: geometry.centerY + Math.sin(bottomReboundSegment.startAngle) * geometry.radius,
+        },
+        {
+          x: geometry.centerX + Math.cos(bottomReboundSegment.endAngle) * geometry.radius,
+          y: geometry.centerY + Math.sin(bottomReboundSegment.endAngle) * geometry.radius,
+        },
+      ],
+    });
   });
 
   it('na torreta perde a bolinha nas partes inativas da borda', async () => {

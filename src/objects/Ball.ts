@@ -21,6 +21,7 @@ import { ERROR, LOG } from '../utils/logger';
 import { gameLogger, type LoggedGameState } from '../storage/gameLogger';
 import { GAME_AUDIO_IDS, type GameAudioSink } from '../constants/audio';
 import {
+  calculateBallTurretBoundarySegments,
   calculateRadialPlayfieldGeometry,
   isBallTurretBoundarySegmentRebounding,
   isAngleBetween,
@@ -30,6 +31,10 @@ import {
   type RadialPlayfieldGeometry,
   type RectBounds,
 } from '../utils/radialGeometry';
+import type {
+  ElectricImpactHandler,
+  ElectricImpactPoint,
+} from '../utils/electricImpact';
 
 const BALL_INITIAL_Y_OFFSET = 30;
 const MAX_BOUNCE_ANGLE = Math.PI / 3; // 60 graus
@@ -89,7 +94,8 @@ export class Ball {
     private dimensions: DynamicGameDimensions,
     private speedMultiplier = 1,
     private resolveAssetPath: VisualAssetPathResolver = DEFAULT_GAME_VISUAL_ASSET_RESOLVER,
-    private geometry: RadialPlayfieldGeometry = calculateRadialPlayfieldGeometry(canvasWidth, canvasHeight, dimensions)
+    private geometry: RadialPlayfieldGeometry = calculateRadialPlayfieldGeometry(canvasWidth, canvasHeight, dimensions),
+    private onElectricImpact?: ElectricImpactHandler,
   ) {
     this.radius = this.dimensions.ballRadius;
     this.x = this.canvasWidth / 2;
@@ -247,6 +253,7 @@ export class Ball {
     this.x = wallType === 'right' ? rightLimit : leftLimit;
     this.dx = wallType === 'right' ? -Math.abs(this.dx) : Math.abs(this.dx);
     const velocityAfter = { dx: this.dx, dy: this.dy };
+    this.emitRectangularWallElectricImpact(wallType);
 
     gameLogger.logCollision(
       gameState,
@@ -283,6 +290,7 @@ export class Ball {
     this.y = this.radius;
     this.dy = Math.abs(this.dy);
     const velocityAfter = { dx: this.dx, dy: this.dy };
+    this.emitCeilingElectricImpact();
 
     gameLogger.logCollision(
       gameState,
@@ -562,6 +570,7 @@ export class Ball {
     this.currentSpeed = roundSpeedValue(Math.sqrt(this.dx * this.dx + this.dy * this.dy));
     this.clampInsideRadialBoundary();
     const velocityAfter = { dx: this.dx, dy: this.dy };
+    this.emitRadialWallElectricImpact(wallAngle);
 
     gameLogger.logCollision(
       gameState,
@@ -582,6 +591,73 @@ export class Ball {
       gameState,
       RADIAL_WALL_TYPE
     ).catch(error => ERROR('❌ Erro ao registrar colisão com parede:', error));
+  }
+
+  private emitRectangularWallElectricImpact(wallType: 'left' | 'right'): void {
+    if (!this.onElectricImpact) return;
+
+    const wallX = wallType === 'right' ? this.canvasWidth : 0;
+    this.onElectricImpact({
+      kind: 'wall',
+      origin: { x: wallX, y: this.y },
+      endpoints: [
+        { x: wallX, y: 0 },
+        { x: wallX, y: this.canvasHeight },
+      ],
+    });
+  }
+
+  private emitCeilingElectricImpact(): void {
+    if (!this.onElectricImpact) return;
+
+    this.onElectricImpact({
+      kind: 'ceiling',
+      origin: { x: this.x, y: 0 },
+      endpoints: [
+        { x: 0, y: 0 },
+        { x: this.canvasWidth, y: 0 },
+      ],
+    });
+  }
+
+  private emitRadialWallElectricImpact(wallAngle: number): void {
+    if (!this.onElectricImpact) return;
+
+    this.onElectricImpact({
+      kind: 'radial-wall',
+      origin: this.pointOnRadialWall(wallAngle),
+      endpoints: this.getRadialWallElectricEndpoints(wallAngle),
+    });
+  }
+
+  private getRadialWallElectricEndpoints(
+    wallAngle: number,
+  ): [ElectricImpactPoint, ElectricImpactPoint] {
+    if (this.geometry.trampolineIsFullRing) {
+      const hitSegment = calculateBallTurretBoundarySegments(this.level).find(
+        (segment) => isAngleBetween(wallAngle, segment.startAngle, segment.endAngle),
+      );
+
+      if (hitSegment) {
+        return [
+          this.pointOnRadialWall(hitSegment.startAngle),
+          this.pointOnRadialWall(hitSegment.endAngle),
+        ];
+      }
+    }
+
+    const localArcSpan = Math.PI / 4;
+    return [
+      this.pointOnRadialWall(wallAngle - localArcSpan),
+      this.pointOnRadialWall(wallAngle + localArcSpan),
+    ];
+  }
+
+  private pointOnRadialWall(angle: number): ElectricImpactPoint {
+    return {
+      x: this.geometry.centerX + Math.cos(angle) * this.geometry.radius,
+      y: this.geometry.centerY + Math.sin(angle) * this.geometry.radius,
+    };
   }
 
   private logRadialBallLost(
@@ -1033,7 +1109,8 @@ export class Ball {
       this.dimensions,
       this.speedMultiplier,
       this.resolveAssetPath,
-      this.geometry
+      this.geometry,
+      this.onElectricImpact,
     );
     clone.x = this.x;
     clone.y = this.y;
