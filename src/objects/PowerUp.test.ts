@@ -170,4 +170,67 @@ describe('PowerUp', () => {
     expect(powerUp.getPosition()).toEqual({ x: 136, y: 100 });
     expect(powerUp.hasReachedRadialBoundary()).toBe(true);
   });
+
+  it('mantém queda equivalente entre 60Hz e 120Hz', () => {
+    const oneFrame60Hz = new PowerUp(
+      POWER_UP_CENTER,
+      POWER_UP_TOP,
+      'multiball',
+      TEST_POWER_UP_SIZE,
+    );
+    const twoFrames120Hz = new PowerUp(
+      POWER_UP_CENTER,
+      POWER_UP_TOP,
+      'multiball',
+      TEST_POWER_UP_SIZE,
+    );
+
+    oneFrame60Hz.update(1);
+    twoFrames120Hz.update(0.5);
+    twoFrames120Hz.update(0.5);
+
+    expect(twoFrames120Hz.getPosition()).toEqual(oneFrame60Hz.getPosition());
+  });
+
+  it('mantém movimento radial equivalente entre 60Hz e 120Hz', () => {
+    const oneFrame60Hz = new PowerUp(
+      100,
+      100,
+      'multiball',
+      20,
+      undefined,
+      {
+        kind: 'radial',
+        centerX: 100,
+        centerY: 100,
+        directionX: 1,
+        directionY: 0,
+        boundaryRadius: 45,
+        speed: 12,
+      },
+    );
+    const twoFrames120Hz = new PowerUp(
+      100,
+      100,
+      'multiball',
+      20,
+      undefined,
+      {
+        kind: 'radial',
+        centerX: 100,
+        centerY: 100,
+        directionX: 1,
+        directionY: 0,
+        boundaryRadius: 45,
+        speed: 12,
+      },
+    );
+
+    oneFrame60Hz.update(1);
+    twoFrames120Hz.update(0.5);
+    twoFrames120Hz.update(0.5);
+
+    expect(twoFrames120Hz.getPosition()).toEqual(oneFrame60Hz.getPosition());
+  });
+
 });

@@ -614,6 +614,48 @@ describe("GameEngine", () => {
     requestAnimationFrameSpy.mockRestore();
   });
 
+
+  it("passa frameScale zero no primeiro frame para evitar salto inicial", async () => {
+    jest.spyOn(window, "requestAnimationFrame").mockReturnValue(0);
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+
+    (engine as any).assetsLoaded = true;
+    (engine as any).isStopped = false;
+
+    await (engine as any).loop(1000);
+
+    expect((engine as any).paddle.update).toHaveBeenCalledWith(0);
+    expect(mockBallInstances[0].update).toHaveBeenCalledWith(
+      (engine as any).paddle,
+      (engine as any).bricks,
+      canvas.height,
+      expect.any(Object),
+      expect.any(Object),
+      0,
+    );
+  });
+
+  it("normaliza frameScale pela base de 60Hz e limita frames longos", async () => {
+    jest.spyOn(window, "requestAnimationFrame").mockReturnValue(0);
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+
+    (engine as any).assetsLoaded = true;
+    (engine as any).isStopped = false;
+    (engine as any).lastFrameTimestamp = 1000;
+
+    await (engine as any).loop(1000 + 1000 / 120);
+    expect((engine as any).paddle.update.mock.calls.at(-1)?.[0]).toBeCloseTo(0.5, 5);
+    expect(mockBallInstances[0].update.mock.calls.at(-1)?.[5]).toBeCloseTo(0.5, 5);
+
+    await (engine as any).loop(1000 + 1000 / 120 + 1000 / 60);
+    expect((engine as any).paddle.update.mock.calls.at(-1)?.[0]).toBeCloseTo(1, 5);
+    expect(mockBallInstances[0].update.mock.calls.at(-1)?.[5]).toBeCloseTo(1, 5);
+
+    await (engine as any).loop(2000);
+    expect((engine as any).paddle.update.mock.calls.at(-1)?.[0]).toBeCloseTo(4.8, 5);
+    expect(mockBallInstances[0].update.mock.calls.at(-1)?.[5]).toBeCloseTo(4.8, 5);
+  });
+
   it("instrui reinício pelo ícone da tela principal no fim de jogo", async () => {
     const requestAnimationFrameSpy = jest
       .spyOn(window, "requestAnimationFrame")

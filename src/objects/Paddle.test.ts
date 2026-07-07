@@ -35,4 +35,22 @@ describe("Paddle", () => {
 
     expect(setTimeoutSpy).not.toHaveBeenCalled();
   });
+
+  it("mantém movimento de teclado equivalente entre 60Hz e 120Hz", () => {
+    const oneFrame60Hz = new Paddle(393, 852, DIMENSIONS);
+    const twoFrames120Hz = new Paddle(393, 852, DIMENSIONS);
+
+    oneFrame60Hz.onKeyDown({ key: "ArrowRight" } as KeyboardEvent);
+    twoFrames120Hz.onKeyDown({ key: "ArrowRight" } as KeyboardEvent);
+
+    oneFrame60Hz.update(1);
+    twoFrames120Hz.update(0.5);
+    twoFrames120Hz.update(0.5);
+
+    expect(twoFrames120Hz.position.radial.centerAngle).toBeCloseTo(
+      oneFrame60Hz.position.radial.centerAngle,
+      5,
+    );
+  });
+
 });
