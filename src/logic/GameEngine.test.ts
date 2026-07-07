@@ -566,7 +566,7 @@ describe("GameEngine", () => {
     );
   });
 
-  it("usa dobro de colunas e posiciona bola inicial na borda inferior da torreta", () => {
+  it("usa dobro de colunas e aponta a bola inicial da torreta para a cama elástica direita", () => {
     const engine = new GameEngine(
       canvas,
       onScoreUpdate,
@@ -596,7 +596,14 @@ describe("GameEngine", () => {
     ).toBeCloseTo(geometry.radius - ball.position.radius - 1, 1);
     expect(spawnX).toBeCloseTo(geometry.centerX, 5);
     expect(spawnY).toBeGreaterThan(geometry.centerY);
-    expect(ball.setDirection).toHaveBeenCalledWith(0);
+
+    const rightTrampolineX = geometry.centerX + geometry.paddleRadius;
+    const rightTrampolineY = geometry.centerY;
+    const expectedLaunchAngle = Math.atan2(
+      rightTrampolineX - spawnX,
+      spawnY - rightTrampolineY,
+    );
+    expect(ball.setDirection).toHaveBeenCalledWith(expectedLaunchAngle);
   });
 
   it("posiciona cenário RIP fora do anel e aponta a bola para perda imediata", () => {

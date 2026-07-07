@@ -797,14 +797,33 @@ export class GameEngine {
       this.radialGeometry.radius -
       ball.position.radius -
       BALL_TURRET_SPAWN_BORDER_INSET;
-
-    ball.setPosition(
+    const spawnX =
       this.radialGeometry.centerX +
-        Math.cos(BALL_TURRET_BOTTOM_SPAWN_ANGLE) * spawnRadius,
+      Math.cos(BALL_TURRET_BOTTOM_SPAWN_ANGLE) * spawnRadius;
+    const spawnY =
       this.radialGeometry.centerY +
-        Math.sin(BALL_TURRET_BOTTOM_SPAWN_ANGLE) * spawnRadius,
+      Math.sin(BALL_TURRET_BOTTOM_SPAWN_ANGLE) * spawnRadius;
+
+    ball.setPosition(spawnX, spawnY);
+    ball.setDirection(
+      this.calculateBallTurretInitialLaunchAngle(spawnX, spawnY),
     );
-    ball.setDirection(0);
+  }
+
+  private calculateBallTurretInitialLaunchAngle(
+    spawnX: number,
+    spawnY: number,
+  ) {
+    const targetX =
+      this.radialGeometry.centerX +
+      Math.cos(DUAL_TRAMPOLINE_RIGHT_START_ANGLE) *
+      this.radialGeometry.paddleRadius;
+    const targetY =
+      this.radialGeometry.centerY +
+      Math.sin(DUAL_TRAMPOLINE_RIGHT_START_ANGLE) *
+      this.radialGeometry.paddleRadius;
+
+    return Math.atan2(targetX - spawnX, spawnY - targetY);
   }
 
   private shouldUseServeLock() {
