@@ -1,18 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Capacitor">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Capacitor" data-component-shape="capacitor" data-terminal-left="0 24" data-terminal-right="96 24">
   <defs>
     <linearGradient id="spr-brick-basic-red-high-contrast-normal-body" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ffd0d8"/>
-      <stop offset="0.48" stop-color="#ff5d73"/>
-      <stop offset="1" stop-color="#7b1630"/>
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.48" stop-color="#ff4f67"/>
+      <stop offset="1" stop-color="#050505"/>
     </linearGradient>
+    <radialGradient id="spr-brick-basic-red-high-contrast-normal-glow" cx="50%" cy="50%" r="60%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ff4f67" stop-opacity="0"/>
+    </radialGradient>
   </defs>
-  <path d="M8 24h27M61 24h27" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
-  <path d="M14 18h12M70 30h12" stroke="#ffffff42" stroke-width="2" stroke-linecap="round"/>
-  <rect x="35" y="8" width="8" height="32" rx="2.5" fill="url(#spr-brick-basic-red-high-contrast-normal-body)" stroke="#ffd0d8" stroke-width="2"/>
-  <rect x="53" y="8" width="8" height="32" rx="2.5" fill="url(#spr-brick-basic-red-high-contrast-normal-body)" stroke="#ffd0d8" stroke-width="2"/>
-  <path d="M48 11v26" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" opacity=".72"/>
-  <path d="M70 15v8M66 19h8" stroke="#ffd0d8" stroke-width="2.2" stroke-linecap="round"/>
-  <path d="M21 33h9" stroke="#ff5d73" stroke-width="2.2" stroke-linecap="round"/>
-  <circle cx="10" cy="24" r="2" fill="#ffffff" opacity=".9"/>
-  <circle cx="86" cy="24" r="2" fill="#ffffff" opacity=".9"/>
+  <path d="M0 24H31M65 24H96" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+  <path d="M36 8C39 8 41 10.5 41 13.5V34.5C41 37.5 39 40 36 40C33 40 31 37.5 31 34.5V13.5C31 10.5 33 8 36 8Z" fill="url(#spr-brick-basic-red-high-contrast-normal-body)" stroke="#ffffff" stroke-width="2.2"/>
+  <path d="M60 8C63 8 65 10.5 65 13.5V34.5C65 37.5 63 40 60 40C57 40 55 37.5 55 34.5V13.5C55 10.5 57 8 60 8Z" fill="url(#spr-brick-basic-red-high-contrast-normal-body)" stroke="#ffffff" stroke-width="2.2"/>
+  <path d="M46 10V38M50 10V38" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" opacity="0.65"/>
+  <ellipse cx="48" cy="24" rx="21" ry="16" fill="url(#spr-brick-basic-red-high-contrast-normal-glow)"/>
 </svg>

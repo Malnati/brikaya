@@ -1,15 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Indutor">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Inductor" data-component-shape="inductor" data-terminal-left="0 24" data-terminal-right="96 24">
   <defs>
     <linearGradient id="spr-brick-basic-purple-temple-real-normal-body" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ead6ff"/>
-      <stop offset="0.48" stop-color="#b873ff"/>
-      <stop offset="1" stop-color="#4a237a"/>
+      <stop offset="0" stop-color="#ffe5a8"/>
+      <stop offset="0.48" stop-color="#b985d6"/>
+      <stop offset="1" stop-color="#231707"/>
     </linearGradient>
+    <radialGradient id="spr-brick-basic-purple-temple-real-normal-glow" cx="50%" cy="50%" r="60%">
+      <stop offset="0" stop-color="#ffe5a8" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#b985d6" stop-opacity="0"/>
+    </radialGradient>
   </defs>
-  <path d="M8 24h15M73 24h15" stroke="#ffc078" stroke-width="4" stroke-linecap="round"/>
-  <path d="M23 24c0-13 9-13 9 0s9 13 9 0 9-13 9 0 9 13 9 0 9-13 9 0 5 9 5 0" fill="none" stroke="url(#spr-brick-basic-purple-temple-real-normal-body)" stroke-width="6" stroke-linecap="round"/>
-  <path d="M25 18c13 7 30 7 45 0" fill="none" stroke="#ead6ff" stroke-width="1.8" stroke-linecap="round" opacity=".58"/>
-  <path d="M28 31c12-5 28-5 40 0" fill="none" stroke="#ffbe6e33" stroke-width="1.8" stroke-linecap="round"/>
-  <circle cx="10" cy="24" r="2" fill="#ffc078" opacity=".9"/>
-  <circle cx="86" cy="24" r="2" fill="#ffc078" opacity=".9"/>
+  <path d="M0 24H22M74 24H96" fill="none" stroke="#f6c16b" stroke-width="4" stroke-linecap="round"/>
+  <path d="M22 24C22 13 36 13 36 24S50 35 50 24S64 13 64 24S78 35 78 24" fill="none" stroke="url(#spr-brick-basic-purple-temple-real-normal-body)" stroke-width="8" stroke-linecap="round"/>
+  <path d="M22 24C22 13 36 13 36 24S50 35 50 24S64 13 64 24S78 35 78 24" fill="none" stroke="#ffe5a8" stroke-width="2.2" stroke-linecap="round" opacity="0.8"/>
+  <ellipse cx="50" cy="24" rx="31" ry="17" fill="url(#spr-brick-basic-purple-temple-real-normal-glow)"/>
 </svg>
