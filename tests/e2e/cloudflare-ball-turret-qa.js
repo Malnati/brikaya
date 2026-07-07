@@ -1956,7 +1956,7 @@ async function runViewport(page, baseUrl, config) {
   );
   assert(
     !config.expectSecondaryJoystick || joystickExercise.hitTarget.hitsJoystick,
-    `${config.name}: zona invisível do campo cobriu o joystick; alvo real=${joystickExercise.hitTarget.tagName}.${joystickExercise.hitTarget.className} data-testid=${joystickExercise.hitTarget.testId}.`,
+    `${config.name}: zona invisível do campo cobriu o joystick; alvo real=${joystickExercise.hitTarget?.tagName || "n/a"}.${joystickExercise.hitTarget?.className || "n/a"} data-testid=${joystickExercise.hitTarget?.testId || "n/a"}.`,
   );
   assert(
     !config.expectSecondaryJoystick || joystickExercise.pathWithinControl,

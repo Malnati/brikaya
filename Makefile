@@ -26,7 +26,7 @@ KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
 # Target padrão: mostrar help quando make é executado sem argumentos
 .DEFAULT_GOAL := help
 
-.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes codex-env-check codex-env-bootstrap codex-env-materialize codex-env-register cloudflare-env-check cloudflare-build cloudflare-domain cloudflare-deploy cloudflare-purge-cache cloudflare-public-check cloudflare-mobile-qa cloudflare-orientation-lock-qa cloudflare-ball-turret-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-interlevel-google-ads-qa cloudflare-powerups-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa cloudflare-offline-pwa-qa cloudflare-i18n-seo-qa cloudflare-reset-preferences-qa cloudflare-evasive-blocks-qa yandex-indexnow-dry-run yandex-indexnow-submit seznam-indexnow-dry-run seznam-indexnow-submit docker-build docker-up docker-down docker-logs docker-shell
+.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes codex-env-check codex-env-bootstrap codex-env-materialize codex-env-register cloudflare-env-check cloudflare-build cloudflare-domain cloudflare-deploy cloudflare-purge-cache cloudflare-public-check cloudflare-mobile-qa cloudflare-orientation-lock-qa cloudflare-ball-turret-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-interlevel-google-ads-qa cloudflare-powerups-qa cloudflare-laser-powerup-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa cloudflare-offline-pwa-qa cloudflare-i18n-seo-qa cloudflare-reset-preferences-qa cloudflare-evasive-blocks-qa yandex-indexnow-dry-run yandex-indexnow-submit seznam-indexnow-dry-run seznam-indexnow-submit docker-build docker-up docker-down docker-logs docker-shell
 
 # Função para matar processos anteriores
 kill-processes:
@@ -128,6 +128,9 @@ cloudflare-interlevel-google-ads-qa:
 
 cloudflare-powerups-qa:
 	@npm run test:cloudflare-powerups
+
+cloudflare-laser-powerup-qa:
+	@npm run test:cloudflare-laser-powerup
 
 cloudflare-high-scores-qa:
 	@npm run test:cloudflare-high-scores
@@ -327,6 +330,7 @@ help:
 	@echo "  cloudflare-level-progression-qa - Validar níveis progressivos no Cloudflare publicado"
 	@echo "  cloudflare-interlevel-google-ads-qa - Validar interstitial Google entre fases sem clicar anúncios reais"
 	@echo "  cloudflare-powerups-qa - Validar power-ups/especiais no Cloudflare publicado"
+	@echo "  cloudflare-laser-powerup-qa - Validar laser imediato no Cloudflare publicado"
 	@echo "  cloudflare-high-scores-qa - Validar recordes gerais locais no Cloudflare publicado"
 	@echo "  cloudflare-cinematic-effects-qa - Validar efeitos visuais cinematográficos no Cloudflare publicado"
 	@echo "  cloudflare-phase10-stability-qa - Validar estabilidade da bolinha após Fase 10 no Cloudflare publicado"
