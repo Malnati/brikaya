@@ -103,6 +103,8 @@ const PADDLE_TOUCH_ZONE_CLASS_NAME = "game-paddle-touch-zone";
 const BALL_TURRET_JOYSTICK_CLASS_NAME =
   "game-turret-joystick game-turret-trackball";
 const BALL_TURRET_CONTROL_PANEL_CLASS_NAME = "game-turret-control-panel";
+const BALL_TURRET_CONTROL_PANEL_JOYSTICK_CLASS_NAME =
+  "game-turret-control-panel--joystick";
 const BALL_TURRET_CONTROL_TOGGLE_CLASS_NAME = "game-turret-control-toggle";
 const BALL_TURRET_DUAL_SWITCHES_CLASS_NAME = "game-turret-dual-switches";
 const BALL_TURRET_SWITCH_CLASS_NAME = "game-turret-switch";
@@ -597,7 +599,16 @@ export default function Game({
           </div>
         </div>
         {isBallTurretMode && (
-          <div className={BALL_TURRET_CONTROL_PANEL_CLASS_NAME}>
+          <div
+            className={[
+              BALL_TURRET_CONTROL_PANEL_CLASS_NAME,
+              turretControlMode === TURRET_CONTROL_MODE_JOYSTICK
+                ? BALL_TURRET_CONTROL_PANEL_JOYSTICK_CLASS_NAME
+                : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
             <button
               type="button"
               className={BALL_TURRET_CONTROL_TOGGLE_CLASS_NAME}
