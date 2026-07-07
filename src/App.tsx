@@ -130,6 +130,7 @@ const SETTINGS_ACTION_LOGS = "logs";
 const SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_DOWNLOAD =
   "joystick-diagnostic-download";
 const SETTINGS_ACTION_JOYSTICK_DIAGNOSTIC_CLEAR = "joystick-diagnostic-clear";
+const SETTINGS_ACTION_RESTART_GAME = "restart-game";
 const SETTINGS_ACTION_RESET_SCORE = "reset-score";
 const SETTINGS_ACTION_RESET_PREFERENCES = "reset-preferences";
 const SHOW_DEBUG_LOG_CONTROLS = false;
@@ -984,17 +985,6 @@ function GameApp() {
               iconOnly
               className="game-icon-control game-icon-control--music"
             />
-            <button
-              type="button"
-              onClick={handleRestart}
-              className="dashboard-button dashboard-button--primary game-icon-control game-icon-control--restart"
-              aria-label={restartLabel}
-              title={restartLabel}
-            >
-              <span aria-hidden="true" className="button-icon">
-                ↻
-              </span>
-            </button>
           </div>
           <div className="score-hud" aria-label={t("hud.aria")}>
             <span className="score-hud__segment">
@@ -1239,6 +1229,20 @@ function GameApp() {
                     </button>
                   </>
                 ) : null}
+                <button
+                  type="button"
+                  onClick={handleRestart}
+                  className="dashboard-button dashboard-button--secondary"
+                  aria-label={restartLabel}
+                  title={restartLabel}
+                  data-settings-action={SETTINGS_ACTION_RESTART_GAME}
+                  data-testid={`settings-action-${SETTINGS_ACTION_RESTART_GAME}`}
+                >
+                  <span aria-hidden="true" className="button-icon">
+                    ↻
+                  </span>
+                  {restartLabel}
+                </button>
                 <button
                   type="button"
                   onClick={handleResetScores}
