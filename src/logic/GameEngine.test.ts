@@ -1342,6 +1342,75 @@ describe("GameEngine", () => {
     expect(Math.max(...fillAlphas)).toBeLessThanOrEqual(0.27);
   });
 
+  it("desenha corrente elétrica transferida da bolinha até as duas pontas do alvo", () => {
+    jest.useFakeTimers().setSystemTime(new Date("2026-07-04T00:00:00.000Z"));
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+
+    (engine as any).handleElectricImpact({
+      kind: "component",
+      origin: { x: 120, y: 180 },
+      endpoints: [
+        { x: 80, y: 180 },
+        { x: 180, y: 180 },
+      ],
+    });
+
+    jest.advanceTimersByTime(160);
+    (engine as any).drawElectricImpactEffects();
+
+    expect(mockContext.save).toHaveBeenCalled();
+    expect(mockContext.restore).toHaveBeenCalled();
+    expect(mockContext.moveTo).toHaveBeenCalledWith(120, 180);
+    expect(mockContext.lineTo).toHaveBeenCalled();
+    expect(mockContext.stroke).toHaveBeenCalled();
+    expect(mockContext.arc).toHaveBeenCalledWith(
+      120,
+      180,
+      expect.any(Number),
+      0,
+      Math.PI * 2,
+    );
+
+    jest.advanceTimersByTime(400);
+    (engine as any).drawElectricImpactEffects();
+
+    expect((engine as any).electricImpactEffects).toEqual([]);
+  });
+
+  it("reduz ramificações da corrente elétrica em canvas pequeno", () => {
+    jest.useFakeTimers().setSystemTime(new Date("2026-07-04T00:00:00.000Z"));
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+
+    (engine as any).handleElectricImpact({
+      kind: "wall",
+      origin: { x: 400, y: 220 },
+      endpoints: [
+        { x: 800, y: 0 },
+        { x: 800, y: 600 },
+      ],
+    });
+    jest.advanceTimersByTime(160);
+    (engine as any).drawElectricImpactEffects();
+    const fullStrokeCount = (mockContext.stroke as jest.Mock).mock.calls.length;
+
+    (mockContext.stroke as jest.Mock).mockClear();
+    (engine as any).electricImpactEffects = [];
+    (engine as any).canvasSize = { width: 320, height: 600 };
+    (engine as any).handleElectricImpact({
+      kind: "wall",
+      origin: { x: 300, y: 220 },
+      endpoints: [
+        { x: 320, y: 0 },
+        { x: 320, y: 600 },
+      ],
+    });
+    jest.advanceTimersByTime(160);
+    (engine as any).drawElectricImpactEffects();
+    const reducedStrokeCount = (mockContext.stroke as jest.Mock).mock.calls.length;
+
+    expect(fullStrokeCount).toBeGreaterThan(reducedStrokeCount);
+  });
+
   it("limita laser em leque a dois spawns por fase e continua outros power-ups", () => {
     const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
 

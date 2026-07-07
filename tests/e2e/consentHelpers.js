@@ -66,11 +66,19 @@ export async function seedPrivacyConsent(page) {
 }
 
 export async function waitForInitialCountdownToFinish(page) {
-  await page.waitForSelector(LANGUAGE_DETECTION_OVERLAY_SELECTOR, {
-    hidden: true,
-    timeout: INITIAL_COUNTDOWN_TIMEOUT_MS,
-  });
-  await page.waitForSelector(CINEMATIC_OVERLAY_SELECTOR, {
+  await waitForOverlayToHideIfPresent(
+    page,
+    LANGUAGE_DETECTION_OVERLAY_SELECTOR,
+  );
+  await waitForOverlayToHideIfPresent(page, CINEMATIC_OVERLAY_SELECTOR);
+}
+
+async function waitForOverlayToHideIfPresent(page, selector) {
+  const overlay = await page.$(selector);
+
+  if (!overlay) return;
+
+  await page.waitForSelector(selector, {
     hidden: true,
     timeout: INITIAL_COUNTDOWN_TIMEOUT_MS,
   });

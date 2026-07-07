@@ -69,6 +69,10 @@ import {
   type BallTurretTrampolineRenderItem,
 } from "./rendering/ballTurretRenderer";
 import { shouldUseReducedCanvasEffects } from "../utils/performanceMode";
+import type {
+  ElectricImpactEvent,
+  ElectricImpactPoint,
+} from "../utils/electricImpact";
 import {
   DEFAULT_TURRET_CONTROL_MODE,
   TURRET_CONTROL_MODE_DUAL_SWITCH,
@@ -178,6 +182,32 @@ const LASER_FAN_SEED_NORMALIZER = 997;
 const LASER_FAN_CRACK_EDGE_PADDING_RATIO = 0.16;
 const LASER_FAN_CRACK_BRANCH_LENGTH_RATIO = 0.36;
 const LASER_FAN_LINE_CAP: CanvasLineCap = "round";
+const ELECTRIC_IMPACT_VISIBLE_MS = 420;
+const ELECTRIC_IMPACT_MAX_ACTIVE = 18;
+const ELECTRIC_IMPACT_PROGRESS_MIN = 0;
+const ELECTRIC_IMPACT_PROGRESS_MAX = 1;
+const ELECTRIC_IMPACT_TRAVEL_COMPLETE_PROGRESS = 0.82;
+const ELECTRIC_IMPACT_FADE_START_PROGRESS = 0.68;
+const ELECTRIC_IMPACT_FULL_BRANCH_SEGMENTS = 7;
+const ELECTRIC_IMPACT_REDUCED_BRANCH_SEGMENTS = 3;
+const ELECTRIC_IMPACT_FULL_SIDE_BRANCHES = 2;
+const ELECTRIC_IMPACT_REDUCED_SIDE_BRANCHES = 0;
+const ELECTRIC_IMPACT_SIDE_BRANCH_START_PROGRESS = 0.22;
+const ELECTRIC_IMPACT_SIDE_BRANCH_LENGTH_RATIO = 0.16;
+const ELECTRIC_IMPACT_SIDE_BRANCH_ANGLE = Math.PI / 3.2;
+const ELECTRIC_IMPACT_ZIGZAG_AMPLITUDE = 5.2;
+const ELECTRIC_IMPACT_LINE_WIDTH = 1.85;
+const ELECTRIC_IMPACT_HALO_LINE_WIDTH = 4.8;
+const ELECTRIC_IMPACT_ORIGIN_PULSE_RADIUS = 7.5;
+const ELECTRIC_IMPACT_ENDPOINT_PULSE_RADIUS = 4.8;
+const ELECTRIC_IMPACT_ENDPOINT_START_PROGRESS = 0.86;
+const ELECTRIC_IMPACT_SEED_ENDPOINT_MULTIPLIER = 97;
+const ELECTRIC_IMPACT_SEED_SEQUENCE_MULTIPLIER = 2_654_435_761;
+const ELECTRIC_IMPACT_SEED_MODULO = 9_973;
+const ELECTRIC_IMPACT_SEED_NORMALIZER = 9_973;
+const ELECTRIC_IMPACT_CORE_COLOR = "rgba(238, 253, 255, 0.92)";
+const ELECTRIC_IMPACT_HALO_COLOR = "rgba(66, 224, 255, 0.34)";
+const ELECTRIC_IMPACT_SHADOW_COLOR = "rgba(77, 232, 255, 0.88)";
 const FULL_CIRCLE_RADIANS = Math.PI * 2;
 const BRICK_COLOR_AUDIO_IDS: AudioId[] = [
   GAME_AUDIO_IDS.BRICK_BREAK_RED,
@@ -228,6 +258,12 @@ interface LaserFanEffectTarget {
   width: number;
   height: number;
   index: number;
+  seed: number;
+}
+
+interface ElectricImpactEffect extends ElectricImpactEvent {
+  startedAt: number;
+  durationMs: number;
   seed: number;
 }
 
@@ -293,6 +329,8 @@ export class GameEngine {
   private laserFanEffectUntil = 0;
   private laserFanEffectTargets: LaserFanEffectTarget[] = [];
   private laserFanEffectTimer: ReturnType<typeof setTimeout> | null = null;
+  private electricImpactEffects: ElectricImpactEffect[] = [];
+  private electricImpactSequence = 0;
   private readonly handleKeyDown = (event: KeyboardEvent) => {
     this.releaseServeLock();
     this.paddle.onKeyDown(event);
@@ -301,6 +339,31 @@ export class GameEngine {
     this.paddle.onKeyUp(event);
   private readonly resolveAssetPath = (role: GameVisualAssetRole) =>
     resolveGameVisualAssetPath(this.imageSetId, role);
+  private readonly handleElectricImpact = (impact: ElectricImpactEvent) => {
+    const seed =
+      impact.seed ??
+      this.buildElectricImpactSeed(impact) +
+        this.electricImpactSequence * ELECTRIC_IMPACT_SEED_SEQUENCE_MULTIPLIER;
+    this.electricImpactSequence += 1;
+    this.electricImpactEffects.push({
+      ...impact,
+      origin: { ...impact.origin },
+      endpoints: [
+        { ...impact.endpoints[0] },
+        { ...impact.endpoints[1] },
+      ],
+      startedAt: Date.now(),
+      durationMs: ELECTRIC_IMPACT_VISIBLE_MS,
+      seed: Math.abs(seed),
+    });
+
+    if (this.electricImpactEffects.length > ELECTRIC_IMPACT_MAX_ACTIVE) {
+      this.electricImpactEffects.splice(
+        0,
+        this.electricImpactEffects.length - ELECTRIC_IMPACT_MAX_ACTIVE,
+      );
+    }
+  };
 
   private maxBrickRows = 0;
   private baseBrickRows = 0;
@@ -582,6 +645,7 @@ export class GameEngine {
         this.resolveAssetPath,
         brickQaRandom,
         this.radialGeometry,
+        this.handleElectricImpact,
       );
     }
 
@@ -593,6 +657,7 @@ export class GameEngine {
       this.resolveAssetPath,
       undefined,
       this.radialGeometry,
+      this.handleElectricImpact,
     );
   }
 
@@ -604,6 +669,7 @@ export class GameEngine {
       speedMultiplier,
       this.resolveAssetPath,
       this.radialGeometry,
+      this.handleElectricImpact,
     );
 
     this.positionBallForCurrentMode(ball);
@@ -1729,6 +1795,329 @@ export class GameEngine {
     );
   }
 
+  private buildElectricImpactSeed(impact: ElectricImpactEvent): number {
+    const endpointScore = impact.endpoints.reduce(
+      (score, endpoint, index) =>
+        score +
+        (endpoint.x * (index + 1) + endpoint.y * (index + 3)) *
+          ELECTRIC_IMPACT_SEED_ENDPOINT_MULTIPLIER,
+      0,
+    );
+
+    return Math.abs(
+      Math.round(
+        impact.origin.x * 31 +
+          impact.origin.y * 17 +
+          endpointScore +
+          impact.kind.length * 53,
+      ),
+    );
+  }
+
+  private clearElectricImpactEffects() {
+    this.electricImpactEffects = [];
+  }
+
+  private drawElectricImpactEffects() {
+    if (this.electricImpactEffects.length === 0) return;
+
+    const now = Date.now();
+    this.electricImpactEffects = this.electricImpactEffects.filter(
+      (effect) => now - effect.startedAt <= effect.durationMs,
+    );
+    if (this.electricImpactEffects.length === 0) return;
+
+    const reducedEffects = this.usesReducedCanvasEffects();
+    this.ctx.save();
+    try {
+      this.ctx.lineCap = "round";
+      this.ctx.lineJoin = "round";
+      this.ctx.globalCompositeOperation = "lighter";
+
+      for (const effect of this.electricImpactEffects) {
+        const progress = this.clampElectricImpactProgress(
+          (now - effect.startedAt) / effect.durationMs,
+        );
+        this.drawElectricImpactEffect(effect, progress, reducedEffects);
+      }
+    } finally {
+      this.ctx.restore();
+    }
+  }
+
+  private drawElectricImpactEffect(
+    effect: ElectricImpactEffect,
+    progress: number,
+    reducedEffects: boolean,
+  ) {
+    const travelProgress = this.easeElectricImpactProgress(
+      this.clampElectricImpactProgress(
+        progress / ELECTRIC_IMPACT_TRAVEL_COMPLETE_PROGRESS,
+      ),
+    );
+    const fadeAlpha = this.calculateElectricImpactFadeAlpha(progress);
+    const scale = Math.max(0.7, Math.min(this.scaleX, this.scaleY));
+
+    this.drawElectricImpactPulse(
+      effect.origin,
+      ELECTRIC_IMPACT_ORIGIN_PULSE_RADIUS * scale,
+      fadeAlpha * 0.72,
+    );
+
+    effect.endpoints.forEach((endpoint, endpointIndex) => {
+      this.drawElectricImpactBranch(
+        effect,
+        endpoint,
+        endpointIndex,
+        travelProgress,
+        fadeAlpha,
+        reducedEffects,
+        scale,
+      );
+      this.drawElectricImpactEndpointPulse(
+        endpoint,
+        progress,
+        fadeAlpha,
+        scale,
+      );
+    });
+  }
+
+  private drawElectricImpactBranch(
+    effect: ElectricImpactEffect,
+    endpoint: ElectricImpactPoint,
+    endpointIndex: number,
+    travelProgress: number,
+    fadeAlpha: number,
+    reducedEffects: boolean,
+    scale: number,
+  ) {
+    const segments = reducedEffects
+      ? ELECTRIC_IMPACT_REDUCED_BRANCH_SEGMENTS
+      : ELECTRIC_IMPACT_FULL_BRANCH_SEGMENTS;
+    const haloWidth = ELECTRIC_IMPACT_HALO_LINE_WIDTH * scale;
+    const coreWidth = ELECTRIC_IMPACT_LINE_WIDTH * scale;
+
+    this.ctx.shadowColor = ELECTRIC_IMPACT_SHADOW_COLOR;
+    this.ctx.shadowBlur = reducedEffects ? haloWidth : haloWidth * 1.7;
+    this.ctx.globalAlpha = fadeAlpha;
+    this.ctx.strokeStyle = ELECTRIC_IMPACT_HALO_COLOR;
+    this.ctx.lineWidth = haloWidth;
+    this.strokeElectricImpactPath(effect, endpoint, endpointIndex, travelProgress, segments, scale);
+
+    this.ctx.shadowBlur = reducedEffects ? coreWidth : coreWidth * 2.2;
+    this.ctx.globalAlpha = fadeAlpha * 0.95;
+    this.ctx.strokeStyle = ELECTRIC_IMPACT_CORE_COLOR;
+    this.ctx.lineWidth = coreWidth;
+    this.strokeElectricImpactPath(effect, endpoint, endpointIndex, travelProgress, segments, scale);
+
+    this.drawElectricImpactSideBranches(
+      effect,
+      endpoint,
+      endpointIndex,
+      travelProgress,
+      fadeAlpha,
+      reducedEffects,
+      scale,
+    );
+  }
+
+  private strokeElectricImpactPath(
+    effect: ElectricImpactEffect,
+    endpoint: ElectricImpactPoint,
+    endpointIndex: number,
+    travelProgress: number,
+    segments: number,
+    scale: number,
+  ) {
+    this.ctx.beginPath();
+    for (let step = 0; step <= segments; step += 1) {
+      const pathProgress = (step / segments) * travelProgress;
+      const point = this.calculateElectricImpactPathPoint(
+        effect,
+        endpoint,
+        endpointIndex,
+        pathProgress,
+        step,
+        scale,
+      );
+
+      if (step === 0) {
+        this.ctx.moveTo(point.x, point.y);
+      } else {
+        this.ctx.lineTo(point.x, point.y);
+      }
+    }
+    this.ctx.stroke();
+  }
+
+  private calculateElectricImpactPathPoint(
+    effect: ElectricImpactEffect,
+    endpoint: ElectricImpactPoint,
+    endpointIndex: number,
+    progress: number,
+    step: number,
+    scale: number,
+  ): ElectricImpactPoint {
+    const dx = endpoint.x - effect.origin.x;
+    const dy = endpoint.y - effect.origin.y;
+    const length = Math.max(1, Math.hypot(dx, dy));
+    const normalX = -dy / length;
+    const normalY = dx / length;
+    const jitter =
+      step === 0 || progress >= ELECTRIC_IMPACT_PROGRESS_MAX
+        ? 0
+        : (this.electricImpactUnitValue(effect.seed, endpointIndex * 17 + step) -
+            0.5) *
+          ELECTRIC_IMPACT_ZIGZAG_AMPLITUDE *
+          scale *
+          Math.sin(Math.PI * progress);
+
+    return {
+      x: effect.origin.x + dx * progress + normalX * jitter,
+      y: effect.origin.y + dy * progress + normalY * jitter,
+    };
+  }
+
+  private drawElectricImpactSideBranches(
+    effect: ElectricImpactEffect,
+    endpoint: ElectricImpactPoint,
+    endpointIndex: number,
+    travelProgress: number,
+    fadeAlpha: number,
+    reducedEffects: boolean,
+    scale: number,
+  ) {
+    const branchCount = reducedEffects
+      ? ELECTRIC_IMPACT_REDUCED_SIDE_BRANCHES
+      : ELECTRIC_IMPACT_FULL_SIDE_BRANCHES;
+    if (
+      branchCount === 0 ||
+      travelProgress < ELECTRIC_IMPACT_SIDE_BRANCH_START_PROGRESS
+    ) {
+      return;
+    }
+
+    const dx = endpoint.x - effect.origin.x;
+    const dy = endpoint.y - effect.origin.y;
+    const baseAngle = Math.atan2(dy, dx);
+    const distance = Math.hypot(dx, dy);
+
+    this.ctx.strokeStyle = ELECTRIC_IMPACT_CORE_COLOR;
+    this.ctx.lineWidth = Math.max(1, ELECTRIC_IMPACT_LINE_WIDTH * scale * 0.62);
+    this.ctx.shadowBlur = ELECTRIC_IMPACT_HALO_LINE_WIDTH * scale;
+    this.ctx.globalAlpha = fadeAlpha * 0.56;
+
+    for (let branchIndex = 0; branchIndex < branchCount; branchIndex += 1) {
+      const salt = endpointIndex * 101 + branchIndex * 29;
+      const startProgress =
+        (0.28 + this.electricImpactUnitValue(effect.seed, salt) * 0.46) *
+        travelProgress;
+      const branchLength =
+        distance *
+        ELECTRIC_IMPACT_SIDE_BRANCH_LENGTH_RATIO *
+        (0.62 + this.electricImpactUnitValue(effect.seed, salt + 1) * 0.54);
+      const branchDirection =
+        baseAngle +
+        (branchIndex % 2 === 0 ? -1 : 1) *
+          ELECTRIC_IMPACT_SIDE_BRANCH_ANGLE *
+          (0.72 + this.electricImpactUnitValue(effect.seed, salt + 2) * 0.5);
+      const branchStart = {
+        x: effect.origin.x + dx * startProgress,
+        y: effect.origin.y + dy * startProgress,
+      };
+
+      this.ctx.beginPath();
+      this.ctx.moveTo(branchStart.x, branchStart.y);
+      this.ctx.lineTo(
+        branchStart.x + Math.cos(branchDirection) * branchLength,
+        branchStart.y + Math.sin(branchDirection) * branchLength,
+      );
+      this.ctx.stroke();
+    }
+  }
+
+  private drawElectricImpactEndpointPulse(
+    endpoint: ElectricImpactPoint,
+    progress: number,
+    fadeAlpha: number,
+    scale: number,
+  ) {
+    if (progress < ELECTRIC_IMPACT_ENDPOINT_START_PROGRESS) return;
+
+    const endpointProgress = this.clampElectricImpactProgress(
+      (progress - ELECTRIC_IMPACT_ENDPOINT_START_PROGRESS) /
+        (ELECTRIC_IMPACT_PROGRESS_MAX - ELECTRIC_IMPACT_ENDPOINT_START_PROGRESS),
+    );
+    this.drawElectricImpactPulse(
+      endpoint,
+      ELECTRIC_IMPACT_ENDPOINT_PULSE_RADIUS * scale * endpointProgress,
+      fadeAlpha * endpointProgress,
+    );
+  }
+
+  private drawElectricImpactPulse(
+    point: ElectricImpactPoint,
+    radius: number,
+    alpha: number,
+  ) {
+    if (radius <= 0 || alpha <= 0) return;
+
+    this.ctx.shadowColor = ELECTRIC_IMPACT_SHADOW_COLOR;
+    this.ctx.shadowBlur = radius * 1.8;
+    this.ctx.globalAlpha = alpha;
+    this.ctx.fillStyle = ELECTRIC_IMPACT_HALO_COLOR;
+    this.ctx.beginPath();
+    this.ctx.arc(
+      point.x,
+      point.y,
+      radius,
+      ELECTRIC_IMPACT_PROGRESS_MIN,
+      FULL_CIRCLE_RADIANS,
+    );
+    this.ctx.fill();
+
+    this.ctx.globalAlpha = alpha * 0.72;
+    this.ctx.fillStyle = ELECTRIC_IMPACT_CORE_COLOR;
+    this.ctx.beginPath();
+    this.ctx.arc(
+      point.x,
+      point.y,
+      radius * 0.36,
+      ELECTRIC_IMPACT_PROGRESS_MIN,
+      FULL_CIRCLE_RADIANS,
+    );
+    this.ctx.fill();
+  }
+
+  private calculateElectricImpactFadeAlpha(progress: number): number {
+    if (progress <= ELECTRIC_IMPACT_FADE_START_PROGRESS) return 1;
+
+    const fadeProgress =
+      (progress - ELECTRIC_IMPACT_FADE_START_PROGRESS) /
+      (ELECTRIC_IMPACT_PROGRESS_MAX - ELECTRIC_IMPACT_FADE_START_PROGRESS);
+    return this.clampElectricImpactProgress(1 - fadeProgress);
+  }
+
+  private easeElectricImpactProgress(progress: number): number {
+    return 1 - Math.pow(1 - progress, 3);
+  }
+
+  private electricImpactUnitValue(seed: number, salt: number) {
+    return (
+      ((seed + salt * ELECTRIC_IMPACT_SEED_SEQUENCE_MULTIPLIER) %
+        ELECTRIC_IMPACT_SEED_MODULO) /
+      ELECTRIC_IMPACT_SEED_NORMALIZER
+    );
+  }
+
+  private clampElectricImpactProgress(value: number) {
+    return Math.max(
+      ELECTRIC_IMPACT_PROGRESS_MIN,
+      Math.min(ELECTRIC_IMPACT_PROGRESS_MAX, value),
+    );
+  }
+
   private logPowerUpEvent(
     powerUpType: PowerUpType,
     action: LoggedPowerUpAction,
@@ -1920,6 +2309,7 @@ export class GameEngine {
     this.lastFrameTimestamp = 0;
     this.clearPowerUpEffects();
     this.clearLaserFanEffect();
+    this.clearElectricImpactEffects();
     if (this.levelTransitionTimer) {
       clearTimeout(this.levelTransitionTimer);
       this.levelTransitionTimer = null;
@@ -2170,11 +2560,13 @@ export class GameEngine {
             ball.draw(this.ctx);
           }
         }
+        this.drawElectricImpactEffects();
         this.drawGameForeground();
         if (this.balls.length === 0) {
           // Game over - no balls left
           this.gameOver = true;
           this.clearLaserFanEffect();
+          this.clearElectricImpactEffects();
           this.audioSink.playAudio(GAME_AUDIO_IDS.GAME_OVER);
           this.audioSink.startMenuMusic();
 
@@ -2207,6 +2599,7 @@ export class GameEngine {
         if (error instanceof Error && error.message === "GAME_OVER") {
           this.gameOver = true;
           this.clearLaserFanEffect();
+          this.clearElectricImpactEffects();
           if (this.onGameOver) {
             this.onGameOver();
           }

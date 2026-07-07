@@ -1,0 +1,137 @@
+{
+  "checkedAt": "2026-07-07T21:25:30.686Z",
+  "publicUrl": "https://brikaya.com/?qaScenario=single-brick-phase-clear&fullEffects=1&gameplayTelemetry=1&evidence=electric-impact-vfx-1783459521489",
+  "title": "Brikaya — arcade de circuitos eletrônicos",
+  "electricImpactDraws": 68,
+  "electricImpactStrokeSamples": [
+    {
+      "strokeStyle": "rgba(66, 224, 255, 0.34)",
+      "lineWidth": 7.860000133514404,
+      "globalAlpha": 1,
+      "at": 7896
+    },
+    {
+      "strokeStyle": "rgba(238, 253, 255, 0.92)",
+      "lineWidth": 3.0293750762939453,
+      "globalAlpha": 0.95,
+      "at": 7896
+    },
+    {
+      "strokeStyle": "rgba(66, 224, 255, 0.34)",
+      "lineWidth": 7.860000133514404,
+      "globalAlpha": 1,
+      "at": 7896.100000023842
+    },
+    {
+      "strokeStyle": "rgba(238, 253, 255, 0.92)",
+      "lineWidth": 3.0293750762939453,
+      "globalAlpha": 0.95,
+      "at": 7896.100000023842
+    },
+    {
+      "strokeStyle": "rgba(66, 224, 255, 0.34)",
+      "lineWidth": 7.860000133514404,
+      "globalAlpha": 1,
+      "at": 7898.300000011921
+    },
+    {
+      "strokeStyle": "rgba(238, 253, 255, 0.92)",
+      "lineWidth": 3.0293750762939453,
+      "globalAlpha": 0.95,
+      "at": 7898.300000011921
+    },
+    {
+      "strokeStyle": "rgba(66, 224, 255, 0.34)",
+      "lineWidth": 7.860000133514404,
+      "globalAlpha": 1,
+      "at": 7898.300000011921
+    },
+    {
+      "strokeStyle": "rgba(238, 253, 255, 0.92)",
+      "lineWidth": 3.0293750762939453,
+      "globalAlpha": 0.95,
+      "at": 7898.300000011921
+    },
+    {
+      "strokeStyle": "rgba(66, 224, 255, 0.34)",
+      "lineWidth": 7.860000133514404,
+      "globalAlpha": 1,
+      "at": 7907.200000047684
+    },
+    {
+      "strokeStyle": "rgba(238, 253, 255, 0.92)",
+      "lineWidth": 3.0293750762939453,
+      "globalAlpha": 0.95,
+      "at": 7907.200000047684
+    },
+    {
+      "strokeStyle": "rgba(66, 224, 255, 0.34)",
+      "lineWidth": 7.860000133514404,
+      "globalAlpha": 1,
+      "at": 7907.200000047684
+    },
+    {
+      "strokeStyle": "rgba(238, 253, 255, 0.92)",
+      "lineWidth": 3.0293750762939453,
+      "globalAlpha": 0.95,
+      "at": 7907.200000047684
+    },
+    {
+      "strokeStyle": "rgba(66, 224, 255, 0.34)",
+      "lineWidth": 7.860000133514404,
+      "globalAlpha": 1,
+      "at": 7924.800000011921
+    },
+    {
+      "strokeStyle": "rgba(238, 253, 255, 0.92)",
+      "lineWidth": 3.0293750762939453,
+      "globalAlpha": 0.95,
+      "at": 7924.900000035763
+    },
+    {
+      "strokeStyle": "rgba(238, 253, 255, 0.92)",
+      "lineWidth": 1.8782124519348145,
+      "globalAlpha": 0.56,
+      "at": 7924.900000035763
+    },
+    {
+      "strokeStyle": "rgba(238, 253, 255, 0.92)",
+      "lineWidth": 1.8782124519348145,
+      "globalAlpha": 0.56,
+      "at": 7924.900000035763
+    },
+    {
+      "strokeStyle": "rgba(66, 224, 255, 0.34)",
+      "lineWidth": 7.860000133514404,
+      "globalAlpha": 1,
+      "at": 7924.900000035763
+    },
+    {
+      "strokeStyle": "rgba(238, 253, 255, 0.92)",
+      "lineWidth": 3.0293750762939453,
+      "globalAlpha": 0.95,
+      "at": 7924.900000035763
+    },
+    {
+      "strokeStyle": "rgba(238, 253, 255, 0.92)",
+      "lineWidth": 1.8782124519348145,
+      "globalAlpha": 0.56,
+      "at": 7924.900000035763
+    },
+    {
+      "strokeStyle": "rgba(238, 253, 255, 0.92)",
+      "lineWidth": 1.8782124519348145,
+      "globalAlpha": 0.56,
+      "at": 7924.900000035763
+    }
+  ],
+  "canvas": {
+    "x": 87,
+    "y": 129,
+    "width": 786,
+    "height": 524,
+    "right": 873,
+    "bottom": 653
+  },
+  "screenshotPath": "docs/assets/issues/electric-impact-vfx/evidence/evi-electric-impact-vfx-public-capture.png"
+}

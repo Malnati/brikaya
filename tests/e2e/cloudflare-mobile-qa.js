@@ -56,6 +56,7 @@ const MENU_BUTTON_NAME = /menu/i;
 const CLOSE_BUTTON_NAME = /fechar|×|✕/i;
 const SETTINGS_ACTION_LOGS = "logs";
 const SETTINGS_ACTION_COLLISIONS = "collisions";
+const SETTINGS_ACTION_RESTART_GAME = "restart-game";
 const SETTINGS_ACTION_RESET_SCORE = "reset-score";
 const PRE_GAME_ACCEPT_BUTTON_LABEL = "Aceitar e jogar";
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
@@ -898,11 +899,6 @@ async function run() {
     const musicIcon = mainButtons.find((button) =>
       ["Música", "Sem música"].includes(button.ariaLabel),
     );
-    const restartIcon = mainButtons.find(
-      (button) =>
-        /reiniciar|jogar de novo/i.test(button.ariaLabel) &&
-        button.text === "↻",
-    );
     assert(audioIcon, "Ícone de som não encontrado no canto principal.");
     assert(
       audioIcon.ariaLabel === "Sem som" && audioIcon.text === "×",
@@ -912,10 +908,6 @@ async function run() {
     assert(
       musicIcon.ariaLabel === "Música" && musicIcon.text === "♫",
       "Estado inicial da música não começou ativo.",
-    );
-    assert(
-      restartIcon,
-      "Ícone Reiniciar/Jogar de novo não encontrado no canto principal.",
     );
     assert(
       layoutState.canvas,
@@ -929,16 +921,18 @@ async function run() {
       !layoutState.publicityTextPresent,
       "Texto Publicidade não deve aparecer enquanto não há anúncio real.",
     );
+    const primaryControlsCenterX =
+      (Math.min(audioIcon.rect.x, musicIcon.rect.x) +
+        Math.max(audioIcon.rect.right, musicIcon.rect.right)) /
+      2;
     assert(
-      audioIcon.rect.x <= MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX &&
-        audioIcon.rect.bottom >=
-          layoutState.viewport.height - MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX,
-      "Ícone de som não ficou na base esquerda.",
-    );
-    assert(
-      restartIcon.rect.bottom >=
-        layoutState.viewport.height - MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX,
-      "Ícone Reiniciar não ficou na base da tela.",
+      audioIcon.rect.bottom >=
+        layoutState.viewport.height - MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX &&
+        musicIcon.rect.bottom >=
+          layoutState.viewport.height - MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX &&
+        Math.abs(primaryControlsCenterX - layoutState.viewport.width / 2) <=
+          MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX * 2,
+      "Ícones de som/música não ficaram centralizados na base.",
     );
     const menuButton = mainButtons.find((button) =>
       MENU_BUTTON_NAME.test(button.text),
@@ -950,13 +944,8 @@ async function run() {
         menuButton.rect.y <= MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX,
       "Menu não ficou no canto superior direito.",
     );
-    assert(
-      musicIcon.rect.bottom >=
-        layoutState.viewport.height - MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX,
-      "Ícone de música não ficou na base da tela.",
-    );
     if (layoutState.bottomSlot) {
-      for (const button of [audioIcon, musicIcon, restartIcon]) {
+      for (const button of [audioIcon, musicIcon]) {
         assert(
           button.rect.bottom <= layoutState.bottomSlot.y,
           `Ícone ${button.ariaLabel} invadiu a área de publicidade.`,
@@ -1068,8 +1057,8 @@ async function run() {
       "Menu lateral ainda mostra seção Partida.",
     );
     assert(
-      !/Reiniciar|Jogar de novo/.test(menuState.text),
-      "Menu lateral ainda mostra ação Reiniciar/Jogar de novo.",
+      /Reiniciar|Jogar de novo/.test(menuState.text),
+      "Menu lateral não mostra ação Reiniciar/Jogar de novo.",
     );
     assert(/Versão v\d+/.test(menuState.text), "Menu lateral sem versão vN.");
     assert(
@@ -1080,7 +1069,10 @@ async function run() {
       menuState.appearanceOptionIds.length === 0,
       "Menu lateral ainda mostra opções de aparência.",
     );
-    for (const action of [SETTINGS_ACTION_RESET_SCORE]) {
+    for (const action of [
+      SETTINGS_ACTION_RESTART_GAME,
+      SETTINGS_ACTION_RESET_SCORE,
+    ]) {
       assert(
         menuState.settingsActions.includes(action),
         `Menu lateral sem ação ${action}.`,

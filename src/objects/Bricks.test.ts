@@ -237,6 +237,42 @@ describe("Bricks laser fan helpers", () => {
     expect(onBrickDestroyed).toHaveBeenCalledTimes(1);
   });
 
+  it("emite corrente elétrica do impacto para os dois terminais do componente retangular", async () => {
+    const onElectricImpact = jest.fn();
+    const bricks = new Bricks(
+      TEST_DIMENSIONS,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      createRandom(BASIC_BRICK_RANDOM_VALUES),
+      undefined,
+      onElectricImpact,
+    );
+    const ball = createBall();
+
+    await bricks.collide(ball);
+
+    expect(onElectricImpact).toHaveBeenCalledTimes(1);
+    expect(onElectricImpact).toHaveBeenCalledWith({
+      kind: "component",
+      origin: { x: 40, y: BRICK_TOUCH_Y },
+      endpoints: [
+        { x: TEST_DIMENSIONS.brickOffsetLeft, y: BRICK_TOUCH_Y },
+        {
+          x: TEST_DIMENSIONS.brickOffsetLeft + TEST_DIMENSIONS.brickWidth,
+          y: BRICK_TOUCH_Y,
+        },
+      ],
+      bounds: {
+        x: TEST_DIMENSIONS.brickOffsetLeft,
+        y: TEST_DIMENSIONS.brickOffsetTop,
+        width: TEST_DIMENSIONS.brickWidth,
+        height: TEST_DIMENSIONS.brickHeight,
+      },
+    });
+  });
+
   it("usa segmento radial para colisão quando a arena circular está ativa", async () => {
     const geometry = calculateRadialPlayfieldGeometry(480, 480, TEST_DIMENSIONS);
     const segment = calculateRadialBrickSegment(geometry, TEST_DIMENSIONS, 0, 0);
@@ -267,6 +303,53 @@ describe("Bricks laser fan helpers", () => {
     expect(radialBounce).toHaveBeenCalledWith(segment.centerX, segment.centerY);
     expect(ball.bounceY).not.toHaveBeenCalled();
     expect(onBrickDestroyed).toHaveBeenCalledTimes(1);
+  });
+
+  it("emite corrente elétrica para os terminais tangenciais do componente radial", async () => {
+    const geometry = calculateRadialPlayfieldGeometry(480, 480, TEST_DIMENSIONS);
+    const segment = calculateRadialBrickSegment(geometry, TEST_DIMENSIONS, 0, 0);
+    const onElectricImpact = jest.fn();
+    const radialBounce = jest.fn();
+    const bricks = new Bricks(
+      TEST_DIMENSIONS,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      createRandom(BASIC_BRICK_RANDOM_VALUES),
+      geometry,
+      onElectricImpact,
+    );
+    const ball = {
+      ...createBall(),
+      position: {
+        x: segment.centerX,
+        y: segment.centerY,
+        radius: TEST_DIMENSIONS.ballRadius,
+      },
+      bounceFromRadialBrick: radialBounce,
+    };
+
+    await bricks.collide(ball);
+
+    expect(onElectricImpact).toHaveBeenCalledTimes(1);
+    const impact = onElectricImpact.mock.calls[0][0];
+    expect(impact.kind).toBe("component");
+    expect(impact.origin).toEqual({ x: segment.centerX, y: segment.centerY });
+    expect(impact.endpoints).toHaveLength(2);
+    expect(impact.endpoints[0]).not.toEqual(impact.endpoints[1]);
+    expect(
+      Math.hypot(
+        impact.endpoints[0].x - segment.centerX,
+        impact.endpoints[0].y - segment.centerY,
+      ),
+    ).toBeGreaterThan(0);
+    expect(
+      Math.hypot(
+        impact.endpoints[1].x - segment.centerX,
+        impact.endpoints[1].y - segment.centerY,
+      ),
+    ).toBeGreaterThan(0);
   });
 
   it("inclina componentes radiais pela tangente do aro sem recorte de célula", () => {
@@ -409,6 +492,31 @@ describe("Bricks laser fan helpers", () => {
     expect(ball.bounceY).toHaveBeenCalledTimes(3);
     expect(ball.registerBrickHit).toHaveBeenCalledTimes(1);
     expect(onBrickDestroyed).toHaveBeenCalledTimes(1);
+  });
+
+  it("emite corrente em bloco metálico sem repetir enquanto a bolinha ainda toca o mesmo componente", async () => {
+    const onElectricImpact = jest.fn();
+    const bricks = new Bricks(
+      TEST_DIMENSIONS,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      createRandom(FIRST_BRICK_METAL_RANDOM_VALUES),
+      undefined,
+      onElectricImpact,
+    );
+    const ball = createBall();
+
+    await bricks.collide(ball);
+    await bricks.collide(ball);
+
+    expect(bricks.isBrickActive(0, 0)).toBe(true);
+    expect(onElectricImpact).toHaveBeenCalledTimes(1);
+
+    await separateAndTouchBrick(bricks, ball);
+
+    expect(onElectricImpact).toHaveBeenCalledTimes(2);
   });
 
   it("amolda apenas o bloco metálico atingido a cada colisão", async () => {
