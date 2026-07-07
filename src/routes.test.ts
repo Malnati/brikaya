@@ -1,7 +1,12 @@
 import {
+  ABOUT_ROUTE_PATH,
+  DATA_DELETION_ROUTE_PATH,
   DOWNLOADS_ROUTE_PATH,
   HOME_ROUTE_PATH,
+  LEGAL_ROUTE_PATH,
+  PRIVACY_ROUTE_PATH,
   getLocalizedPublicPath,
+  getLocalizedLegalPath,
   getPublicRoutePath,
   isDownloadsRoute,
   stripLocalePrefix,
@@ -46,6 +51,27 @@ describe("public routes", () => {
     );
     expect(getLocalizedPublicPath("en", DEFAULT_LOCALE, HOME_ROUTE_PATH)).toBe(
       "/en/",
+    );
+  });
+
+  it("gera caminhos legais por idioma principal sem duplicar variantes", () => {
+    expect(getLocalizedLegalPath("en", PRIVACY_ROUTE_PATH)).toBe("/privacy/");
+    expect(getLocalizedLegalPath("en-AU", PRIVACY_ROUTE_PATH)).toBe("/privacy/");
+    expect(getLocalizedLegalPath("pt-BR", PRIVACY_ROUTE_PATH)).toBe(
+      "/pt-BR/privacy/",
+    );
+    expect(getLocalizedLegalPath("pt-PT", PRIVACY_ROUTE_PATH)).toBe(
+      "/pt-BR/privacy/",
+    );
+    expect(getLocalizedLegalPath("es-ES", PRIVACY_ROUTE_PATH)).toBe(
+      "/es-419/privacy/",
+    );
+    expect(getLocalizedLegalPath("fr-CA", ABOUT_ROUTE_PATH)).toBe("/fr/about/");
+    expect(getLocalizedLegalPath("zh-HK", LEGAL_ROUTE_PATH)).toBe(
+      "/zh-TW/legal/",
+    );
+    expect(getLocalizedLegalPath("ar-SA", DATA_DELETION_ROUTE_PATH)).toBe(
+      "/ar/data-deletion/",
     );
   });
 });

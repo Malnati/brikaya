@@ -1,8 +1,16 @@
 // scripts/generate-localized-seo.mjs
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
+import {
+  LEGAL_DEFAULT_LOCALE,
+  LEGAL_PATHS,
+  legalPageIds,
+  legalTranslationMissingIds,
+  renderLegalPage,
+} from './legal-page-content.mjs';
 
 const DIST_DIR = 'dist';
+const PUBLIC_DIR = 'public';
 const INDEX_FILE = 'index.html';
 const SITEMAP_FILE = 'sitemap.xml';
 const ROBOTS_FILE = 'robots.txt';
@@ -13,17 +21,7 @@ const XML_HEADER = '<?xml version="1.0" encoding="UTF-8"?>';
 const HOME_ROUTE_PATH = '/';
 const DOWNLOADS_ROUTE_PATH = '/downloads/';
 const LOCALIZED_ROUTES = [HOME_ROUTE_PATH, DOWNLOADS_ROUTE_PATH];
-const STATIC_PUBLIC_PATHS = [
-  '/about/',
-  '/legal/',
-  '/privacy/',
-  '/terms/',
-  '/user-agreement/',
-  '/license/',
-  '/data-deletion/',
-  '/cookies/',
-  '/support/',
-];
+const STATIC_PUBLIC_PATHS = LEGAL_PATHS;
 const RTL_LOCALES = new Set(['ar', 'ur', 'fa', 'he', 'ps', 'sd', 'ks', 'dv', 'ckb', 'ug', 'yi', 'bal', 'ar-SA', 'ar-EG', 'fa-AF', 'ps-AF', 'sd-IN', 'ks-IN', 'ug-CN', 'yi-001']);
 
 const LOCALES = [
@@ -312,6 +310,40 @@ const LOCALES = [
   'yi-001',
   'mus',
 ];
+
+function legalLocaleKey(locale) {
+  if (locale === 'zh-CN') return 'zh-Hans';
+  if (locale === 'zh-TW' || locale === 'zh-HK') return 'zh-Hant';
+  return locale.split('-')[0];
+}
+
+function primaryLegalLocales(locales) {
+  const preferred = new Map([
+    ['pt', 'pt-BR'],
+    ['es', 'es-419'],
+    ['hi', 'hi-IN'],
+    ['zh-Hans', 'zh-CN'],
+    ['zh-Hant', 'zh-TW'],
+  ]);
+  const groups = new Map();
+  for (const locale of locales) {
+    const key = legalLocaleKey(locale);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(locale);
+  }
+
+  return [...groups.entries()]
+    .filter(([key]) => key !== 'en')
+    .map(([key, values]) => {
+      const preferredLocale = preferred.get(key);
+      if (preferredLocale && values.includes(preferredLocale)) return preferredLocale;
+      return values.find((value) => !value.includes('-')) ?? values[0];
+    });
+}
+
+const LEGAL_LOCALIZED_LOCALES = primaryLegalLocales(LOCALES);
+const LEGAL_LOCALES = [LEGAL_DEFAULT_LOCALE, ...LEGAL_LOCALIZED_LOCALES];
+
 const SEO = {
   'pt-BR': {
     title: 'Brikaya — arcade de circuitos eletrônicos',
@@ -3188,8 +3220,21 @@ function canonicalUrl(locale, routePath = HOME_ROUTE_PATH) {
   return `${CANONICAL_ORIGIN}${localePath(locale, routePath)}`;
 }
 
+function legalLocalePath(locale, routePath) {
+  if (locale === LEGAL_DEFAULT_LOCALE) return routePath;
+  return `/${locale}${routePath}`;
+}
+
+function legalCanonicalUrl(locale, routePath) {
+  return `${CANONICAL_ORIGIN}${legalLocalePath(locale, routePath)}`;
+}
+
 function htmlTagFor(locale) {
   return `<html lang="${locale}" dir="${RTL_LOCALES.has(locale) ? 'rtl' : 'ltr'}">`;
+}
+
+function directionFor(locale) {
+  return RTL_LOCALES.has(locale) ? 'rtl' : 'ltr';
 }
 
 function hreflangLinks(routePath = HOME_ROUTE_PATH) {
@@ -3199,6 +3244,27 @@ function hreflangLinks(routePath = HOME_ROUTE_PATH) {
     ),
     `    <link rel="alternate" hreflang="x-default" href="${canonicalUrl(DEFAULT_LOCALE, routePath)}" />`,
   ].join('\n');
+}
+
+function legalHreflangLinks(routePath) {
+  return [
+    ...LEGAL_LOCALES.map((locale) =>
+      `    <link rel="alternate" hreflang="${locale}" href="${legalCanonicalUrl(locale, routePath)}" />`,
+    ),
+    `    <link rel="alternate" hreflang="x-default" href="${legalCanonicalUrl(LEGAL_DEFAULT_LOCALE, routePath)}" />`,
+  ].join('\n');
+}
+
+function ensureLegalTranslations() {
+  const requiredIds = legalPageIds();
+  const failures = LEGAL_LOCALIZED_LOCALES
+    .map((locale) => [locale, legalTranslationMissingIds(locale, requiredIds)])
+    .filter(([, missing]) => missing.length > 0);
+  if (failures.length === 0) return;
+  const details = failures
+    .map(([locale, missing]) => `${locale}: ${missing.slice(0, 8).join(', ')}${missing.length > 8 ? ', ...' : ''}`)
+    .join('\n');
+  throw new Error(`missing legal translations\n${details}`);
 }
 
 function replaceOrInsertHead(html, locale, routePath = HOME_ROUTE_PATH) {
@@ -3222,23 +3288,28 @@ function replaceOrInsertHead(html, locale, routePath = HOME_ROUTE_PATH) {
     .replace('    <meta name="theme-color"', `${hreflangLinks(routePath)}\n    <meta name="theme-color"`);
 }
 
-function buildSitemap() {
-  const localizedUrls = LOCALIZED_ROUTES.flatMap((routePath) =>
-    LOCALES.map((locale) => [
-      '  <url>',
-      `    <loc>${canonicalUrl(locale, routePath)}</loc>`,
-      `    <lastmod>${LASTMOD}</lastmod>`,
-      '  </url>',
-    ].join('\n')),
-  ).join('\n');
-  const staticUrls = STATIC_PUBLIC_PATHS.map((path) => [
+function sitemapUrlEntry(url) {
+  return [
     '  <url>',
-    `    <loc>${CANONICAL_ORIGIN}${path}</loc>`,
+    `    <loc>${url}</loc>`,
     `    <lastmod>${LASTMOD}</lastmod>`,
     '  </url>',
-  ].join('\n')).join('\n');
-  const urls = `${localizedUrls}\n${staticUrls}`;
+  ].join('\n');
+}
+
+function buildSitemap() {
+  const localizedUrls = LOCALIZED_ROUTES.flatMap((routePath) =>
+    LOCALES.map((locale) => sitemapUrlEntry(canonicalUrl(locale, routePath))),
+  ).join('\n');
+  const legalUrls = STATIC_PUBLIC_PATHS.flatMap((path) =>
+    LEGAL_LOCALES.map((locale) => sitemapUrlEntry(legalCanonicalUrl(locale, path))),
+  ).join('\n');
+  const urls = `${localizedUrls}\n${legalUrls}`;
   return `${XML_HEADER}\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+}
+
+function buildRobots() {
+  return `User-agent: *\nAllow: /\n\nSitemap: ${CANONICAL_ORIGIN}/sitemap.xml\n`;
 }
 
 function writeFile(path, content) {
@@ -3247,7 +3318,9 @@ function writeFile(path, content) {
 }
 
 function run() {
+  ensureLegalTranslations();
   const distRoot = resolve(process.cwd(), DIST_DIR);
+  const publicRoot = resolve(process.cwd(), PUBLIC_DIR);
   const rootIndexPath = join(distRoot, INDEX_FILE);
   const baseHtml = readFileSync(rootIndexPath, 'utf8');
 
@@ -3261,9 +3334,30 @@ function run() {
     }
   }
 
-  writeFile(join(distRoot, SITEMAP_FILE), buildSitemap());
-  writeFile(join(distRoot, ROBOTS_FILE), `User-agent: *\nAllow: /\n\nSitemap: ${CANONICAL_ORIGIN}/sitemap.xml\n`);
-  console.log(`localized-seo ok: locales=${LOCALES.length}, routes=${LOCALIZED_ROUTES.length}`);
+  for (const routePath of STATIC_PUBLIC_PATHS) {
+    for (const locale of LEGAL_LOCALES) {
+      const legalHtml = renderLegalPage({
+        locale,
+        path: routePath,
+        canonicalUrl: legalCanonicalUrl(locale, routePath),
+        alternateLinks: legalHreflangLinks(routePath),
+        dir: directionFor(locale),
+        localizedPath: legalLocalePath,
+      });
+      writeFile(join(distRoot, legalLocalePath(locale, routePath).replace(/^\//, ''), INDEX_FILE), legalHtml);
+      if (locale === LEGAL_DEFAULT_LOCALE) {
+        writeFile(join(publicRoot, routePath.replace(/^\//, ''), INDEX_FILE), legalHtml);
+      }
+    }
+  }
+
+  const sitemap = buildSitemap();
+  const robots = buildRobots();
+  writeFile(join(distRoot, SITEMAP_FILE), sitemap);
+  writeFile(join(distRoot, ROBOTS_FILE), robots);
+  writeFile(join(publicRoot, SITEMAP_FILE), sitemap);
+  writeFile(join(publicRoot, ROBOTS_FILE), robots);
+  console.log(`localized-seo ok: locales=${LOCALES.length}, routes=${LOCALIZED_ROUTES.length}, legalLocales=${LEGAL_LOCALES.length}, legalPages=${STATIC_PUBLIC_PATHS.length}`);
 }
 
 run();

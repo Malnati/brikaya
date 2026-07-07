@@ -1,5 +1,10 @@
 import {
+  ABOUT_ROUTE_PATH,
   DOWNLOADS_ROUTE_PATH,
+  LEGAL_ROUTE_PATH,
+  PRIVACY_ROUTE_PATH,
+  TERMS_ROUTE_PATH,
+  getLocalizedLegalPath,
   type PublicRoutePath,
 } from "../routes";
 import {
@@ -71,7 +76,7 @@ const DOWNLOAD_OPTIONS: DownloadOption[] = [
     statusKey: "downloads.option.included",
     imagePath: "/assets/visual/ui/ui-downloads-free-privacy.svg",
     imageAltKey: "downloads.option.privacy.alt",
-    href: "/privacy/",
+    href: PRIVACY_ROUTE_PATH,
   },
 ];
 
@@ -117,6 +122,10 @@ export function DownloadsPage() {
   const { locale, t } = useI18n();
   const homePath = getLocalePath(locale);
   const downloadsPath = localizedDownloadsPath(locale);
+  const privacyPath = getLocalizedLegalPath(locale, PRIVACY_ROUTE_PATH);
+  const termsPath = getLocalizedLegalPath(locale, TERMS_ROUTE_PATH);
+  const aboutPath = getLocalizedLegalPath(locale, ABOUT_ROUTE_PATH);
+  const legalPath = getLocalizedLegalPath(locale, LEGAL_ROUTE_PATH);
 
   return (
     <main className="downloads-page" aria-labelledby="downloads-title">
@@ -130,10 +139,10 @@ export function DownloadsPage() {
           <a href={downloadsPath} aria-current="page">
             {t("downloads.nav.downloads")}
           </a>
-          <a href="/privacy/">{t("downloads.nav.privacy")}</a>
-          <a href="/terms/">{t("downloads.nav.terms")}</a>
-          <a href="/about/">{t("downloads.nav.about")}</a>
-          <a href="/legal/">{t("downloads.nav.legal")}</a>
+          <a href={privacyPath}>{t("downloads.nav.privacy")}</a>
+          <a href={termsPath}>{t("downloads.nav.terms")}</a>
+          <a href={aboutPath}>{t("downloads.nav.about")}</a>
+          <a href={legalPath}>{t("downloads.nav.legal")}</a>
         </nav>
       </header>
 
@@ -168,7 +177,7 @@ export function DownloadsPage() {
         </div>
         <div className="downloads-option-grid">
           {DOWNLOAD_OPTIONS.map((option) => (
-            <a key={option.titleKey} className="downloads-option-card" href={option.href}>
+            <a key={option.titleKey} className="downloads-option-card" href={option.href === PRIVACY_ROUTE_PATH ? privacyPath : option.href}>
               <img src={option.imagePath} alt={t(option.imageAltKey)} />
               <span>{t(option.statusKey)}</span>
               <h3>{t(option.titleKey)}</h3>

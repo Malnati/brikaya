@@ -11,6 +11,9 @@ const RELATIVE_ASSET_HREF_PATTERN = 'href="./assets/';
 const ABSOLUTE_ASSET_HREF_PATTERN = 'href="/assets/';
 const RELATIVE_ASSET_SRC_PATTERN = 'src="./assets/';
 const ABSOLUTE_ASSET_SRC_PATTERN = 'src="/assets/';
+const LEGAL_CONTENT_PATH = 'scripts/legal-page-content.mjs';
+const LEGAL_TRANSLATIONS_PATH = 'scripts/legal-page-translations.json';
+const EXPECTED_PRIMARY_LEGAL_LOCALES = 253;
 const PRIVACY_PATH = "'/privacy/'";
 const TERMS_PATH = "'/terms/'";
 const LOCALIZED_LOCALES = [
@@ -318,11 +321,36 @@ describe('gerador SEO localizado', () => {
     expect(generator).toContain(ABSOLUTE_ASSET_SRC_PATTERN);
   });
 
-  it('inclui páginas públicas de privacidade e termos no sitemap gerado', () => {
+  it('declara páginas legais multilíngues com padrão en-US', () => {
     const generator = readProjectFile(GENERATOR_PATH);
+    const legalContent = readProjectFile(LEGAL_CONTENT_PATH);
 
-    expect(generator).toContain(PRIVACY_PATH);
-    expect(generator).toContain(TERMS_PATH);
+    expect(legalContent).toContain("LEGAL_DEFAULT_LOCALE = 'en-US'");
+    expect(legalContent).toContain(PRIVACY_PATH);
+    expect(legalContent).toContain(TERMS_PATH);
+    expect(legalContent).toContain("'/data-deletion/'");
+    expect(generator).toContain('LEGAL_LOCALES = [LEGAL_DEFAULT_LOCALE');
+    expect(generator).toContain('renderLegalPage({');
+    expect(generator).toContain('legalHreflangLinks(routePath)');
+    expect(generator).toContain('writeFile(join(publicRoot, SITEMAP_FILE), sitemap)');
+  });
+
+  it('mantém traduções legais para idiomas principais sem variantes regionais duplicadas', () => {
+    const payload = JSON.parse(readProjectFile(LEGAL_TRANSLATIONS_PATH)) as {
+      translations: Record<string, Record<string, string>>;
+    };
+    const translationLocales = Object.keys(payload.translations);
+
+    expect(translationLocales).toHaveLength(EXPECTED_PRIMARY_LEGAL_LOCALES);
+    expect(payload.translations['pt-BR']['privacy.h1']).not.toBe('Privacy policy');
+    expect(payload.translations['es-419']['terms.h1']).not.toBe('Terms of use');
+    expect(payload.translations.fr['legal.h1']).not.toBe('Legal and trust');
+    expect(payload.translations['zh-CN']['dataDeletion.h1']).toBeTruthy();
+    expect(payload.translations.ar['privacy.h1']).toBeTruthy();
+    expect(payload.translations).not.toHaveProperty('en');
+    expect(payload.translations).not.toHaveProperty('en-AU');
+    expect(payload.translations).not.toHaveProperty('fr-CA');
+    expect(payload.translations).not.toHaveProperty('de-CH');
   });
 
   it('declara metadados de downloads para todos os idiomas suportados', () => {

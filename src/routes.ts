@@ -2,8 +2,30 @@ import type { AppLocale } from "./i18n/messages";
 
 export const HOME_ROUTE_PATH = "/";
 export const DOWNLOADS_ROUTE_PATH = "/downloads/";
+export const ABOUT_ROUTE_PATH = "/about/";
+export const LEGAL_ROUTE_PATH = "/legal/";
+export const PRIVACY_ROUTE_PATH = "/privacy/";
+export const TERMS_ROUTE_PATH = "/terms/";
+export const USER_AGREEMENT_ROUTE_PATH = "/user-agreement/";
+export const LICENSE_ROUTE_PATH = "/license/";
+export const DATA_DELETION_ROUTE_PATH = "/data-deletion/";
+export const COOKIES_ROUTE_PATH = "/cookies/";
+export const SUPPORT_ROUTE_PATH = "/support/";
+
+export const LEGAL_ROUTE_PATHS = [
+  ABOUT_ROUTE_PATH,
+  LEGAL_ROUTE_PATH,
+  PRIVACY_ROUTE_PATH,
+  TERMS_ROUTE_PATH,
+  USER_AGREEMENT_ROUTE_PATH,
+  LICENSE_ROUTE_PATH,
+  DATA_DELETION_ROUTE_PATH,
+  COOKIES_ROUTE_PATH,
+  SUPPORT_ROUTE_PATH,
+] as const;
 
 export type PublicRoutePath = typeof HOME_ROUTE_PATH | typeof DOWNLOADS_ROUTE_PATH;
+export type LegalRoutePath = (typeof LEGAL_ROUTE_PATHS)[number];
 
 const PATH_SEPARATOR = "/";
 const EMPTY_PATH = "";
@@ -83,4 +105,35 @@ export function getLocalizedPublicPath(
   if (!routeSuffix) return `${PATH_SEPARATOR}${locale}${PATH_SEPARATOR}`;
 
   return `${PATH_SEPARATOR}${locale}${PATH_SEPARATOR}${routeSuffix}${PATH_SEPARATOR}`;
+}
+
+
+function getLegalLocaleKey(locale: AppLocale): string {
+  if (locale === "zh-CN") return "zh-Hans";
+  if (locale === "zh-TW" || locale === "zh-HK") return "zh-Hant";
+  return locale.split("-")[0];
+}
+
+export function getPrimaryLegalLocale(locale: AppLocale): AppLocale | "en-US" {
+  const key = getLegalLocaleKey(locale);
+  if (key === "en") return "en-US";
+  if (key === "pt") return "pt-BR";
+  if (key === "es") return "es-419";
+  if (key === "hi") return "hi-IN";
+  if (key === "zh-Hans") return "zh-CN";
+  if (key === "zh-Hant") return "zh-TW";
+
+  const baseLocale = locale.split("-")[0] as AppLocale;
+  return baseLocale;
+}
+
+export function getLocalizedLegalPath(
+  locale: AppLocale,
+  legalRoutePath: LegalRoutePath,
+): string {
+  const normalizedRoutePath = normalizePublicPath(legalRoutePath) as LegalRoutePath;
+  const legalLocale = getPrimaryLegalLocale(locale);
+  if (legalLocale === "en-US") return normalizedRoutePath;
+
+  return `${PATH_SEPARATOR}${legalLocale}${normalizedRoutePath}`;
 }

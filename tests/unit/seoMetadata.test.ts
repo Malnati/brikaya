@@ -20,6 +20,16 @@ const SITEMAP_DIRECTIVE = `Sitemap: ${SITEMAP_URL}`;
 const LOC_TAG = `<loc>${CANONICAL_URL}</loc>`;
 const PRIVACY_LOC_TAG = '<loc>https://brikaya.com/privacy/</loc>';
 const TERMS_LOC_TAG = '<loc>https://brikaya.com/terms/</loc>';
+const PORTUGUESE_PRIVACY_LOC_TAG = '<loc>https://brikaya.com/pt-BR/privacy/</loc>';
+const LATAM_TERMS_LOC_TAG = '<loc>https://brikaya.com/es-419/terms/</loc>';
+const FRENCH_LEGAL_LOC_TAG = '<loc>https://brikaya.com/fr/legal/</loc>';
+const SIMPLIFIED_CHINESE_DATA_DELETION_LOC_TAG =
+  '<loc>https://brikaya.com/zh-CN/data-deletion/</loc>';
+const ENGLISH_VARIANT_PRIVACY_LOC_TAG =
+  '<loc>https://brikaya.com/en-AU/privacy/</loc>';
+const FRENCH_VARIANT_PRIVACY_LOC_TAG =
+  '<loc>https://brikaya.com/fr-CA/privacy/</loc>';
+const EXPECTED_SITEMAP_LOC_COUNT = 2854;
 const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8"?>';
 const LOCALIZED_LOCALES = [
   'pt-BR',
@@ -338,11 +348,13 @@ describe('metadados públicos de descoberta do Brikaya', () => {
     expect(robots).toContain(SITEMAP_DIRECTIVE);
   });
 
-  it('publica sitemap XML mínimo com a URL canônica', () => {
+  it('publica sitemap XML com rotas públicas e páginas legais principais', () => {
     const sitemap = readProjectFile(SITEMAP_XML_PATH);
+    const locCount = (sitemap.match(/<loc>/g) ?? []).length;
 
     expect(sitemap.startsWith(XML_DECLARATION)).toBe(true);
     expect(sitemap).toContain('http://www.sitemaps.org/schemas/sitemap/0.9');
+    expect(locCount).toBe(EXPECTED_SITEMAP_LOC_COUNT);
     expect(sitemap).toContain(LOC_TAG);
     for (const locale of LOCALIZED_LOCALES) {
       const localizedUrl =
@@ -353,13 +365,28 @@ describe('metadados públicos de descoberta do Brikaya', () => {
     }
     expect(sitemap).toContain(PRIVACY_LOC_TAG);
     expect(sitemap).toContain(TERMS_LOC_TAG);
+    expect(sitemap).toContain(PORTUGUESE_PRIVACY_LOC_TAG);
+    expect(sitemap).toContain(LATAM_TERMS_LOC_TAG);
+    expect(sitemap).toContain(FRENCH_LEGAL_LOC_TAG);
+    expect(sitemap).toContain(SIMPLIFIED_CHINESE_DATA_DELETION_LOC_TAG);
+    expect(sitemap).not.toContain(ENGLISH_VARIANT_PRIVACY_LOC_TAG);
+    expect(sitemap).not.toContain(FRENCH_VARIANT_PRIVACY_LOC_TAG);
     expect(sitemap).not.toContain('.pages.dev');
   });
 
-  it('declara favicon SVG raiz também nas páginas públicas estáticas', () => {
+  it('declara metadados raiz em en-US nas páginas legais públicas', () => {
     const privacy = readProjectFile(PRIVACY_HTML_PATH);
     const terms = readProjectFile(TERMS_HTML_PATH);
 
+    expect(privacy).toContain('<html lang="en-US" dir="ltr">');
+    expect(privacy).toContain('<title>Privacy policy — Brikaya</title>');
+    expect(privacy).toContain('<link rel="canonical" href="https://brikaya.com/privacy/" />');
+    expect(privacy).toContain('hreflang="pt-BR"');
+    expect(privacy).toContain('href="https://brikaya.com/pt-BR/privacy/"');
+    expect(privacy).not.toContain('hreflang="en-AU"');
+    expect(privacy).not.toContain('href="https://brikaya.com/en-AU/privacy/"');
+    expect(terms).toContain('<html lang="en-US" dir="ltr">');
+    expect(terms).toContain('<title>Terms of use — Brikaya</title>');
     expect(privacy).toContain(ROOT_FAVICON_LINK);
     expect(terms).toContain(ROOT_FAVICON_LINK);
   });
