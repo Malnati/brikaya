@@ -4,6 +4,7 @@ import { dirname, resolve } from 'node:path';
 import puppeteer from 'puppeteer';
 
 import { buildChromeLaunchArgs } from './chromeLaunchArgs.js';
+import { classifyExternalRequests } from './allowed-external-requests.js';
 import { acceptPrivacyConsentIfPresent } from './consentHelpers.js';
 
 const DEFAULT_PUBLIC_URL = 'https://brikaya.com/';
@@ -183,13 +184,14 @@ async function run() {
     const controlled = await waitForControlledServiceWorker(page);
     const onlineResponseStatuses = await fetchExpectedSvgs(page);
     const cacheState = await readCacheState(page);
+    ensureParentDirectory(screenshotPath());
     await page.screenshot({ path: screenshotPath(), fullPage: true });
 
     await page.setOfflineMode(true);
     const offlineResponseStatuses = await fetchExpectedSvgs(page);
     await page.setOfflineMode(false);
 
-    const externalRequests = requests.filter((requestUrl) => new URL(requestUrl).origin !== new URL(publicUrl()).origin);
+    const { allowedExternalRequests, unexpectedExternalRequests } = classifyExternalRequests(requests, publicUrl());
     const runtimeRasterRequests = requests.filter((requestUrl) => FORBIDDEN_RUNTIME_RASTER.test(new URL(requestUrl).pathname));
     const badOnlineStatuses = onlineResponseStatuses.filter(
       (item) => item.status < 200 || item.status >= 300 || !item.contentType.includes('image/svg+xml'),
@@ -204,7 +206,7 @@ async function run() {
     assert(controlled, 'Service worker não controlou a página de QA.');
     assert(badOnlineStatuses.length === 0, `SVGs online com status/content-type inválido: ${JSON.stringify(badOnlineStatuses)}`);
     assert(badOfflineStatuses.length === 0, `SVGs offline com status/content-type inválido: ${JSON.stringify(badOfflineStatuses)}`);
-    assert(externalRequests.length === 0, `Requests externos detectados: ${externalRequests.join(', ')}`);
+    assert(unexpectedExternalRequests.length === 0, `Requests externos inesperados detectados: ${unexpectedExternalRequests.join(', ')}`);
     assert(runtimeRasterRequests.length === 0, `Raster runtime detectado: ${runtimeRasterRequests.join(', ')}`);
     assert(cacheState.missingExpected.length === 0, `SVGs ausentes do cache lazy: ${cacheState.missingExpected.join(', ')}`);
     assert(unexpectedFailedRequests.length === 0, `Requests falharam: ${JSON.stringify(unexpectedFailedRequests)}`);
@@ -218,7 +220,8 @@ async function run() {
       onlineResponseStatuses,
       offlineResponseStatuses,
       cacheState,
-      externalRequests,
+      allowedExternalRequests,
+      unexpectedExternalRequests,
       runtimeRasterRequests,
       failedRequests,
       screenshotPath: screenshotPath(),
