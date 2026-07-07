@@ -39,6 +39,10 @@ const ORIENTATION_BLOCKER_TEST_ID = "mobile-orientation-blocker";
 const ORIENTATION_BLOCKER_MESSAGE = "Você precisa de espaço para o joystick";
 const FULL_CIRCLE_TOLERANCE = 0.08;
 const JOYSTICK_TEST_ID = "ball-turret-joystick";
+const CONTROL_TOGGLE_TEST_ID = "ball-turret-control-toggle";
+const DUAL_SWITCHES_TEST_ID = "ball-turret-dual-switches";
+const LEFT_SWITCH_TEST_ID = "ball-turret-switch-left";
+const RIGHT_SWITCH_TEST_ID = "ball-turret-switch-right";
 const JOYSTICK_DIAGNOSTIC_JOYSTICK_LAYER_TEST_ID =
   "joystick-diagnostic-joystick-layer";
 const JOYSTICK_DIAGNOSTIC_PLAYFIELD_LAYER_TEST_ID =
@@ -57,6 +61,10 @@ const JOYSTICK_LOWER_HALF_CENTER_TOLERANCE_PX = 18;
 const JOYSTICK_MAX_TRACKBALL_SIZE = 132;
 const JOYSTICK_MIN_RESPONSIVE_TRACKBALL_SIZE = 72;
 const JOYSTICK_MIN_PLAYFIELD_GAP = 12;
+const DUAL_SWITCH_HOLD_MS = 520;
+const DUAL_SWITCH_SETTLE_MS = 160;
+const DUAL_SWITCH_MOVEMENT_MIN_SIN_DELTA = 0.08;
+const DUAL_SWITCH_STABLE_MAX_SIN_DELTA = 0.05;
 const BOUNDARY_SEGMENT_COUNT = 18;
 const BOUNDARY_PHASE_ONE_REBOUND_SEGMENTS = 9;
 const BOUNDARY_REBOUND_COLOR_FRAGMENT = "73, 255, 199";
@@ -382,6 +390,18 @@ async function installCanvasProbe(page) {
   });
 }
 
+async function resetCanvasProbe(page) {
+  await page.evaluate(() => {
+    const probe = window.__brikayaBallTurretProbe;
+    if (!probe) return;
+
+    probe.arcs = [];
+    probe.drawImages = [];
+    probe.ellipses = [];
+    probe.fillRects = [];
+  });
+}
+
 async function installJoystickDiagnosticDownloadProbe(page) {
   await page.evaluateOnNewDocument(() => {
     window.__brikayaJoystickDiagnosticDownloads = [];
@@ -450,6 +470,10 @@ async function readBallTurretState(page) {
       brickImagePatternSource,
       fullCircleTolerance,
       joystickTestId,
+      controlToggleTestId,
+      dualSwitchesTestId,
+      leftSwitchTestId,
+      rightSwitchTestId,
       orientationBlockerTestId,
       activeTrampolineArcMinSweep,
       boundaryReboundColorFragment,
@@ -470,11 +494,60 @@ async function readBallTurretState(page) {
       const joystick = document.querySelector(
         `[data-testid="${joystickTestId}"]`,
       );
+      const controlToggle = document.querySelector(
+        `[data-testid="${controlToggleTestId}"]`,
+      );
+      const dualSwitches = document.querySelector(
+        `[data-testid="${dualSwitchesTestId}"]`,
+      );
+      const leftSwitch = document.querySelector(
+        `[data-testid="${leftSwitchTestId}"]`,
+      );
+      const rightSwitch = document.querySelector(
+        `[data-testid="${rightSwitchTestId}"]`,
+      );
       const orientationBlocker = document.querySelector(
         `[data-testid="${orientationBlockerTestId}"]`,
       );
       const joystickRect = joystick?.getBoundingClientRect();
       const joystickStyle = joystick ? getComputedStyle(joystick) : null;
+      const readControlState = (element) => {
+        const rect = element?.getBoundingClientRect();
+        const style = element ? getComputedStyle(element) : null;
+
+        return rect
+          ? {
+              exists: true,
+              visible:
+                style?.display !== "none" &&
+                style?.visibility !== "hidden" &&
+                !element.hasAttribute("hidden") &&
+                rect.width > 0 &&
+                rect.height > 0,
+              width: rect.width,
+              height: rect.height,
+              x: rect.x,
+              y: rect.y,
+              bottom: rect.bottom,
+              text: element.textContent?.trim() || "",
+              ariaLabel: element.getAttribute("aria-label") || "",
+              hidden: element.hasAttribute("hidden"),
+              switchDirection: element.dataset?.switchDirection || "",
+            }
+          : {
+              exists: false,
+              visible: false,
+              width: 0,
+              height: 0,
+              x: 0,
+              y: 0,
+              bottom: 0,
+              text: "",
+              ariaLabel: "",
+              hidden: false,
+              switchDirection: "",
+            };
+      };
       const orientationBlockerRect =
         orientationBlocker?.getBoundingClientRect();
       const orientationBlockerStyle = orientationBlocker
@@ -574,6 +647,17 @@ async function readBallTurretState(page) {
               2,
           )
         : null;
+      const activeTrampolineBySide = activeTrampolineArcs.reduce(
+        (accumulator, arc) => {
+          const centerAngle = normalizeAngle(
+            (arc.startAngle + arc.endAngle) / 2,
+          );
+          const side = Math.cos(centerAngle) < 0 ? "left" : "right";
+          accumulator[side] = centerAngle;
+          return accumulator;
+        },
+        { left: null, right: null },
+      );
       const boundarySegmentArcs = probe.arcs.filter((arc) => {
         const strokeStyle = String(arc.strokeStyle || "");
         return (
@@ -716,6 +800,10 @@ async function readBallTurretState(page) {
               trackballY: "",
               trackballActive: "",
             },
+        controlToggle: readControlState(controlToggle),
+        dualSwitches: readControlState(dualSwitches),
+        leftSwitch: readControlState(leftSwitch),
+        rightSwitch: readControlState(rightSwitch),
         scoreHudText: scoreHud?.textContent || "",
         bodyHasInternalCopy: internalCopyPattern.test(
           document.body.textContent || "",
@@ -734,6 +822,12 @@ async function readBallTurretState(page) {
           fullRingArcCount: fullRingArcs.length,
           activeTrampolineArcCount: activeTrampolineArcs.length,
           activeTrampolineCenterAngle,
+          leftActiveTrampolineCenterAngle: activeTrampolineBySide.left,
+          rightActiveTrampolineCenterAngle: activeTrampolineBySide.right,
+          hasLeftActiveTrampoline:
+            Number.isFinite(activeTrampolineBySide.left),
+          hasRightActiveTrampoline:
+            Number.isFinite(activeTrampolineBySide.right),
           boundarySegmentCount: uniqueBoundarySegments.size,
           reboundBoundarySegmentCount: uniqueReboundBoundarySegments.size,
           lossBoundarySegmentCount: uniqueLossBoundarySegments.size,
@@ -747,6 +841,10 @@ async function readBallTurretState(page) {
       brickImagePatternSource: BRICK_IMAGE_PATTERN.source,
       fullCircleTolerance: FULL_CIRCLE_TOLERANCE,
       joystickTestId: JOYSTICK_TEST_ID,
+      controlToggleTestId: CONTROL_TOGGLE_TEST_ID,
+      dualSwitchesTestId: DUAL_SWITCHES_TEST_ID,
+      leftSwitchTestId: LEFT_SWITCH_TEST_ID,
+      rightSwitchTestId: RIGHT_SWITCH_TEST_ID,
       orientationBlockerTestId: ORIENTATION_BLOCKER_TEST_ID,
       activeTrampolineArcMinSweep: ACTIVE_TRAMPOLINE_ARC_MIN_SWEEP,
       boundaryReboundColorFragment: BOUNDARY_REBOUND_COLOR_FRAGMENT,
@@ -1019,6 +1117,10 @@ async function waitForOrientationBlocker(page, config) {
       exercised: false,
       skippedReason: "mobile landscape bloqueado por portrait obrigatório",
     },
+    dualSwitchExercise: {
+      exercised: false,
+      skippedReason: "mobile landscape bloqueado por portrait obrigatório",
+    },
     menuState: null,
     gameplayState: blockedState,
     postExerciseState: blockedState,
@@ -1281,6 +1383,181 @@ async function exerciseJoystick(page) {
   };
 }
 
+function angleVerticalValue(angle) {
+  return Number.isFinite(angle) ? Math.sin(angle) : Number.NaN;
+}
+
+function movedUp(beforeAngle, afterAngle) {
+  return (
+    Number.isFinite(beforeAngle) &&
+    Number.isFinite(afterAngle) &&
+    angleVerticalValue(afterAngle) <
+      angleVerticalValue(beforeAngle) - DUAL_SWITCH_MOVEMENT_MIN_SIN_DELTA
+  );
+}
+
+function movedDown(beforeAngle, afterAngle) {
+  return (
+    Number.isFinite(beforeAngle) &&
+    Number.isFinite(afterAngle) &&
+    angleVerticalValue(afterAngle) >
+      angleVerticalValue(beforeAngle) + DUAL_SWITCH_MOVEMENT_MIN_SIN_DELTA
+  );
+}
+
+function stayedVerticallyStable(beforeAngle, afterAngle) {
+  return (
+    Number.isFinite(beforeAngle) &&
+    Number.isFinite(afterAngle) &&
+    Math.abs(angleVerticalValue(afterAngle) - angleVerticalValue(beforeAngle)) <=
+      DUAL_SWITCH_STABLE_MAX_SIN_DELTA
+  );
+}
+
+async function readSwitchHitTarget(page, switchTestId, point) {
+  return page.evaluate(
+    ({ testId, clientPoint }) => {
+      const target = document.elementFromPoint(clientPoint.x, clientPoint.y);
+      const switchElement = document.querySelector(`[data-testid="${testId}"]`);
+      const targetTestId =
+        target instanceof Element ? target.getAttribute("data-testid") : "";
+
+      return {
+        hitsSwitch: Boolean(
+          target && switchElement && switchElement.contains(target),
+        ),
+        tagName: target?.tagName || "",
+        className: String(target?.className || ""),
+        testId: targetTestId || "",
+      };
+    },
+    {
+      testId: switchTestId,
+      clientPoint: point,
+    },
+  );
+}
+
+async function holdSwitch(page, switchTestId, verticalRatio) {
+  const switchHandle = await page.$(`[data-testid="${switchTestId}"]`);
+  const box = await switchHandle?.boundingBox();
+  if (!box || box.width === 0 || box.height === 0) {
+    return {
+      exercised: false,
+      hitTarget: {
+        hitsSwitch: false,
+        tagName: "",
+        className: "",
+        testId: "",
+      },
+    };
+  }
+
+  const point = {
+    x: box.x + box.width / 2,
+    y: box.y + box.height * verticalRatio,
+  };
+  const hitTarget = await readSwitchHitTarget(page, switchTestId, point);
+
+  await page.mouse.move(point.x, point.y);
+  await page.mouse.down();
+  await new Promise((resolve) => setTimeout(resolve, DUAL_SWITCH_HOLD_MS));
+  await page.mouse.up();
+  await new Promise((resolve) => setTimeout(resolve, DUAL_SWITCH_SETTLE_MS));
+
+  return {
+    exercised: true,
+    hitTarget,
+  };
+}
+
+async function exerciseDualSwitches(page) {
+  const toggleSelector = `[data-testid="${CONTROL_TOGGLE_TEST_ID}"]`;
+  await page.click(toggleSelector);
+  await page.waitForFunction(
+    ({ dualSwitchesTestId, leftSwitchTestId, rightSwitchTestId }) => {
+      const dualSwitches = document.querySelector(
+        `[data-testid="${dualSwitchesTestId}"]`,
+      );
+      const leftSwitch = document.querySelector(
+        `[data-testid="${leftSwitchTestId}"]`,
+      );
+      const rightSwitch = document.querySelector(
+        `[data-testid="${rightSwitchTestId}"]`,
+      );
+      const visible = (element) => {
+        const rect = element?.getBoundingClientRect();
+        const style = element ? getComputedStyle(element) : null;
+        return Boolean(
+          element &&
+            rect &&
+            rect.width > 0 &&
+            rect.height > 0 &&
+            !element.hasAttribute("hidden") &&
+            style?.display !== "none" &&
+            style?.visibility !== "hidden",
+        );
+      };
+
+      return visible(dualSwitches) && visible(leftSwitch) && visible(rightSwitch);
+    },
+    { timeout: 5000 },
+    {
+      dualSwitchesTestId: DUAL_SWITCHES_TEST_ID,
+      leftSwitchTestId: LEFT_SWITCH_TEST_ID,
+      rightSwitchTestId: RIGHT_SWITCH_TEST_ID,
+    },
+  );
+
+  await resetCanvasProbe(page);
+  await new Promise((resolve) => setTimeout(resolve, DUAL_SWITCH_SETTLE_MS));
+  const initialState = await readBallTurretState(page);
+
+  await resetCanvasProbe(page);
+  const leftSwitchExercise = await holdSwitch(page, LEFT_SWITCH_TEST_ID, 0.22);
+  const afterLeftState = await readBallTurretState(page);
+
+  await resetCanvasProbe(page);
+  const rightSwitchExercise = await holdSwitch(page, RIGHT_SWITCH_TEST_ID, 0.78);
+  const afterRightState = await readBallTurretState(page);
+
+  const initialLeftAngle = initialState.probe.leftActiveTrampolineCenterAngle;
+  const initialRightAngle = initialState.probe.rightActiveTrampolineCenterAngle;
+  const afterLeftLeftAngle = afterLeftState.probe.leftActiveTrampolineCenterAngle;
+  const afterLeftRightAngle = afterLeftState.probe.rightActiveTrampolineCenterAngle;
+  const afterRightLeftAngle = afterRightState.probe.leftActiveTrampolineCenterAngle;
+  const afterRightRightAngle = afterRightState.probe.rightActiveTrampolineCenterAngle;
+
+  return {
+    exercised: true,
+    controlsVisible:
+      initialState.controlToggle.visible &&
+      initialState.dualSwitches.visible &&
+      initialState.leftSwitch.visible &&
+      initialState.rightSwitch.visible,
+    joystickHidden: initialState.joystick.exists && !initialState.joystick.visible,
+    twoTrampolinesVisible:
+      initialState.probe.hasLeftActiveTrampoline &&
+      initialState.probe.hasRightActiveTrampoline,
+    leftSwitchExercise,
+    rightSwitchExercise,
+    leftSwitchMovedOnlyLeft:
+      movedUp(initialLeftAngle, afterLeftLeftAngle) &&
+      stayedVerticallyStable(initialRightAngle, afterLeftRightAngle),
+    rightSwitchMovedOnlyRight:
+      movedDown(afterLeftRightAngle, afterRightRightAngle) &&
+      stayedVerticallyStable(afterLeftLeftAngle, afterRightLeftAngle),
+    angles: {
+      initialLeftAngle,
+      initialRightAngle,
+      afterLeftLeftAngle,
+      afterLeftRightAngle,
+      afterRightLeftAngle,
+      afterRightRightAngle,
+    },
+  };
+}
+
 async function downloadJoystickDiagnostics(page, config) {
   debugLog(config.name, "validando botão de download do registro");
   const diagnosticBeforeDownload = await readJoystickDiagnosticState(page);
@@ -1454,14 +1731,23 @@ async function runViewport(page, baseUrl, config) {
     `${config.name}: blocos da Torreta não cobrem quatro quadrantes.`,
   );
   assertJoystickPlacement(config, gameplayState);
+  assert(
+    gameplayState.controlToggle.exists && gameplayState.controlToggle.visible,
+    `${config.name}: setinha para trocar controle ausente.`,
+  );
+  assert(
+    gameplayState.controlToggle.text.includes("Interruptores"),
+    `${config.name}: setinha não indica troca para interruptores.`,
+  );
+  assert(
+    gameplayState.dualSwitches.exists && !gameplayState.dualSwitches.visible,
+    `${config.name}: interruptores aparecem antes da troca de controle.`,
+  );
 
   const diagnosticToggleState =
     config.name === "mobile-portrait"
       ? await setJoystickDiagnosticsEnabled(page, config)
       : null;
-
-  ensureParentDirectory(config.screenshotPath);
-  await page.screenshot({ path: config.screenshotPath, fullPage: true });
 
   await exerciseTrampoline(page);
   debugLog(config.name, "exercitando joystick");
@@ -1572,6 +1858,42 @@ async function runViewport(page, baseUrl, config) {
     `${config.name}: trackball não resetou visualmente ao soltar.`,
   );
 
+  debugLog(config.name, "exercitando interruptores duplos");
+  const dualSwitchExercise = await exerciseDualSwitches(page);
+  assert(
+    dualSwitchExercise.controlsVisible,
+    `${config.name}: interruptores não ficaram visíveis após tocar na setinha.`,
+  );
+  assert(
+    dualSwitchExercise.joystickHidden,
+    `${config.name}: joystick não foi ocultado ao trocar para interruptores.`,
+  );
+  assert(
+    dualSwitchExercise.twoTrampolinesVisible,
+    `${config.name}: duas camas elásticas não foram desenhadas no modo interruptor.`,
+  );
+  assert(
+    dualSwitchExercise.leftSwitchExercise.exercised &&
+      dualSwitchExercise.leftSwitchExercise.hitTarget.hitsSwitch,
+    `${config.name}: interruptor esquerdo não recebeu o toque real.`,
+  );
+  assert(
+    dualSwitchExercise.rightSwitchExercise.exercised &&
+      dualSwitchExercise.rightSwitchExercise.hitTarget.hitsSwitch,
+    `${config.name}: interruptor direito não recebeu o toque real.`,
+  );
+  assert(
+    dualSwitchExercise.leftSwitchMovedOnlyLeft,
+    `${config.name}: interruptor esquerdo não moveu somente a cama elástica esquerda para cima.`,
+  );
+  assert(
+    dualSwitchExercise.rightSwitchMovedOnlyRight,
+    `${config.name}: interruptor direito não moveu somente a cama elástica direita para baixo.`,
+  );
+
+  ensureParentDirectory(config.screenshotPath);
+  await page.screenshot({ path: config.screenshotPath, fullPage: true });
+
   const diagnosticOverlayState =
     config.name === "mobile-portrait"
       ? await readJoystickDiagnosticState(page)
@@ -1642,6 +1964,7 @@ async function runViewport(page, baseUrl, config) {
     name: config.name,
     joystickPlacement: config.joystickPlacement,
     joystickExercise,
+    dualSwitchExercise,
     diagnosticToggleState,
     diagnosticOverlayState,
     joystickDiagnosticDownload,

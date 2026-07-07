@@ -19,9 +19,13 @@ const mockStartPaddleDrag = jest.fn();
 const mockMovePaddleDrag = jest.fn();
 const mockEndPaddleDrag = jest.fn();
 const mockSetBallTurretControlVector = jest.fn();
+const mockSetTurretControlMode = jest.fn();
+const mockSetDualSwitchDirection = jest.fn();
 const mockGetPaddleDiagnosticSnapshot = jest.fn();
 const TOUCH_ZONE_TEST_ID = "paddle-touch-zone";
 const JOYSTICK_TEST_ID = "ball-turret-joystick";
+const LEFT_SWITCH_TEST_ID = "ball-turret-switch-left";
+const RIGHT_SWITCH_TEST_ID = "ball-turret-switch-right";
 const TOUCH_START_EVENT_NAME = "touchstart";
 const TOUCH_MOVE_EVENT_NAME = "touchmove";
 const TOUCH_END_EVENT_NAME = "touchend";
@@ -71,6 +75,8 @@ jest.mock("../logic/GameEngine", () => ({
     movePaddleDrag: mockMovePaddleDrag,
     endPaddleDrag: mockEndPaddleDrag,
     setBallTurretControlVector: mockSetBallTurretControlVector,
+    setTurretControlMode: mockSetTurretControlMode,
+    setDualSwitchDirection: mockSetDualSwitchDirection,
     getPaddleDiagnosticSnapshot: mockGetPaddleDiagnosticSnapshot,
   })),
 }));
@@ -85,7 +91,9 @@ function Harness({
   paused = false,
   touchEnabled = false,
   joystickEnabled = false,
+  switchesEnabled = false,
   gameMode = "classic",
+  turretControlMode = "joystick",
   joystickDiagnosticsEnabled = false,
   onJoystickDiagnosticSample,
 }: {
@@ -93,13 +101,17 @@ function Harness({
   paused?: boolean;
   touchEnabled?: boolean;
   joystickEnabled?: boolean;
+  switchesEnabled?: boolean;
   gameMode?: "classic" | "ball-turret";
+  turretControlMode?: "joystick" | "dual-switch";
   joystickDiagnosticsEnabled?: boolean;
   onJoystickDiagnosticSample?: (sample: unknown) => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const touchZoneRef = useRef<HTMLDivElement>(null);
   const joystickRef = useRef<HTMLDivElement>(null);
+  const leftSwitchRef = useRef<HTMLDivElement>(null);
+  const rightSwitchRef = useRef<HTMLDivElement>(null);
 
   (useGameLoop as unknown as (...args: unknown[]) => void)(
     canvasRef,
@@ -115,8 +127,11 @@ function Harness({
     imageSetId,
     paused,
     gameMode,
+    turretControlMode,
     touchZoneRef,
     joystickRef,
+    leftSwitchRef,
+    rightSwitchRef,
     joystickDiagnosticsEnabled,
     onJoystickDiagnosticSample,
   );
@@ -129,6 +144,12 @@ function Harness({
       )}
       {joystickEnabled && (
         <div data-testid={JOYSTICK_TEST_ID} ref={joystickRef} />
+      )}
+      {switchesEnabled && (
+        <>
+          <div data-testid={LEFT_SWITCH_TEST_ID} ref={leftSwitchRef} />
+          <div data-testid={RIGHT_SWITCH_TEST_ID} ref={rightSwitchRef} />
+        </>
       )}
     </>
   );
@@ -156,6 +177,14 @@ function createPointerEvent(type: string, clientX: number, clientY: number) {
   Object.defineProperty(event, "pointerId", { value: 7 });
 
   return event as PointerEvent;
+}
+
+function createKeyboardEvent(type: string, key: string) {
+  const event = new Event(type, { bubbles: true, cancelable: true });
+
+  Object.defineProperty(event, "key", { value: key });
+
+  return event as KeyboardEvent;
 }
 
 function readStyleNumber(element: HTMLElement, propertyName: string) {
@@ -836,6 +865,71 @@ describe("useGameLoop", () => {
     expect(joystick.style.getPropertyValue(TRACKBALL_X_CSS_VAR)).toBe("0");
     expect(joystick.style.getPropertyValue(TRACKBALL_Y_CSS_VAR)).toBe("0");
     expect(joystick.style.getPropertyValue(TRACKBALL_ACTIVE_CSS_VAR)).toBe("0");
+  });
+
+  it("controla interruptores esquerdo e direito de forma independente na torreta", async () => {
+    const { getByTestId } = render(
+      <Harness
+        imageSetId={IMAGE_SET_RETRO_DEFAULT}
+        gameMode="ball-turret"
+        turretControlMode="dual-switch"
+        switchesEnabled
+      />,
+    );
+
+    await waitFor(() => {
+      expect(GameEngine).toHaveBeenCalledTimes(1);
+      expect(mockSetTurretControlMode).toHaveBeenCalledWith("dual-switch");
+    });
+
+    const leftSwitch = getByTestId(LEFT_SWITCH_TEST_ID);
+    const rightSwitch = getByTestId(RIGHT_SWITCH_TEST_ID);
+    leftSwitch.getBoundingClientRect = jest.fn(
+      () =>
+        ({
+          top: 100,
+          height: 120,
+        }) as DOMRect,
+    );
+    rightSwitch.getBoundingClientRect = jest.fn(
+      () =>
+        ({
+          top: 100,
+          height: 120,
+        }) as DOMRect,
+    );
+    leftSwitch.setPointerCapture = jest.fn();
+    leftSwitch.hasPointerCapture = jest.fn(() => true);
+    leftSwitch.releasePointerCapture = jest.fn();
+    mockSetDualSwitchDirection.mockClear();
+
+    const pointerDownUp = createPointerEvent(POINTER_DOWN_EVENT_NAME, 100, 110);
+    const pointerMoveDown = createPointerEvent(POINTER_MOVE_EVENT_NAME, 100, 210);
+    const pointerUp = createPointerEvent(POINTER_UP_EVENT_NAME, 100, 210);
+
+    leftSwitch.dispatchEvent(pointerDownUp);
+    leftSwitch.dispatchEvent(pointerMoveDown);
+    leftSwitch.dispatchEvent(pointerUp);
+
+    expect(pointerDownUp.defaultPrevented).toBe(true);
+    expect(pointerMoveDown.defaultPrevented).toBe(true);
+    expect(pointerUp.defaultPrevented).toBe(true);
+    expect(mockSetDualSwitchDirection).toHaveBeenNthCalledWith(1, "left", -1);
+    expect(mockSetDualSwitchDirection).toHaveBeenNthCalledWith(2, "left", 1);
+    expect(mockSetDualSwitchDirection).toHaveBeenNthCalledWith(3, "left", 0);
+    expect(leftSwitch.dataset.switchDirection).toBe("neutral");
+
+    mockSetDualSwitchDirection.mockClear();
+    const keyDown = createKeyboardEvent("keydown", "ArrowDown");
+    const keyUp = createKeyboardEvent("keyup", "ArrowDown");
+
+    rightSwitch.dispatchEvent(keyDown);
+    rightSwitch.dispatchEvent(keyUp);
+
+    expect(keyDown.defaultPrevented).toBe(true);
+    expect(keyUp.defaultPrevented).toBe(true);
+    expect(mockSetDualSwitchDirection).toHaveBeenNthCalledWith(1, "right", 1);
+    expect(mockSetDualSwitchDirection).toHaveBeenNthCalledWith(2, "right", 0);
   });
 
   it("não instala controle absoluto do joystick fora do modo torreta", async () => {
