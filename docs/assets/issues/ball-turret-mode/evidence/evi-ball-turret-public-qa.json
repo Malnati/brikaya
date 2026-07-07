@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-07-07T10:22:23.136Z",
+  "checkedAt": "2026-07-07T10:36:20.382Z",
   "publicUrl": "https://brikaya.com/?qaScenario=ball-turret",
   "qaScenario": "ball-turret",
   "results": [
@@ -216,11 +216,11 @@
           "width": 0,
           "height": 0
         },
-        "scoreHudText": "Fase 1|Score 50|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 60|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 4684,
+          "brickDrawCount": 4596,
           "brickQuadrants": {
             "left": true,
             "right": true,
@@ -530,11 +530,11 @@
           "width": 0,
           "height": 0
         },
-        "scoreHudText": "Fase 1|Score 50|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 60|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 4684,
+          "brickDrawCount": 4596,
           "brickQuadrants": {
             "left": true,
             "right": true,
@@ -1012,19 +1012,19 @@
           "width": 0,
           "height": 0
         },
-        "scoreHudText": "Fase 1|Score 140|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 150|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 7125,
+          "brickDrawCount": 7170,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 828,
-          "activeTrampolineArcCount": 438,
+          "fullRingArcCount": 834,
+          "activeTrampolineArcCount": 441,
           "activeTrampolineCenterAngle": 0.7170118198069453,
           "leftActiveTrampolineCenterAngle": -2.424580833782848,
           "rightActiveTrampolineCenterAngle": 0.7170118198069453,
@@ -1326,19 +1326,19 @@
           "width": 0,
           "height": 0
         },
-        "scoreHudText": "Fase 1|Score 140|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 150|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 7079,
+          "brickDrawCount": 7125,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 822,
-          "activeTrampolineArcCount": 432,
+          "fullRingArcCount": 828,
+          "activeTrampolineArcCount": 435,
           "activeTrampolineCenterAngle": 0.7170118198069453,
           "leftActiveTrampolineCenterAngle": -2.424580833782848,
           "rightActiveTrampolineCenterAngle": 0.7170118198069453,
@@ -1787,19 +1787,19 @@
           "width": 0,
           "height": 0
         },
-        "scoreHudText": "Fase 1|Score 120|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 100|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 9898,
+          "brickDrawCount": 9948,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 822,
-          "activeTrampolineArcCount": 435,
+          "fullRingArcCount": 828,
+          "activeTrampolineArcCount": 438,
           "activeTrampolineCenterAngle": 0.7170118198069453,
           "leftActiveTrampolineCenterAngle": -2.424580833782848,
           "rightActiveTrampolineCenterAngle": 0.7170118198069453,
@@ -2101,19 +2101,19 @@
           "width": 0,
           "height": 0
         },
-        "scoreHudText": "Fase 1|Score 120|Total 0|Recorde 0",
+        "scoreHudText": "Fase 1|Score 100|Total 0|Recorde 0",
         "bodyHasInternalCopy": false,
         "bodyHasOldAimCopy": false,
         "probe": {
-          "brickDrawCount": 9830,
+          "brickDrawCount": 9878,
           "brickQuadrants": {
             "left": true,
             "right": true,
             "top": true,
             "bottom": true
           },
-          "fullRingArcCount": 816,
-          "activeTrampolineArcCount": 429,
+          "fullRingArcCount": 822,
+          "activeTrampolineArcCount": 432,
           "activeTrampolineCenterAngle": 0.7170118198069453,
           "leftActiveTrampolineCenterAngle": -2.424580833782848,
           "rightActiveTrampolineCenterAngle": 0.7170118198069453,
