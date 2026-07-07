@@ -11,6 +11,7 @@ const EMPTY_STRING = "";
 const UTC_TIMESTAMP_PATTERN = /[-:.TZ]/g;
 const TIMESTAMP_LENGTH = 14;
 const SCRIPT_LABEL = "Service Worker version stamped";
+const BUILD_ID_ASSIGNMENT_PATTERN = /const BUILD_ID = "[^"]*";/;
 
 function buildTimestampId(date = new Date()) {
   return date
@@ -36,11 +37,13 @@ function stampServiceWorker(swFilePath, buildId) {
 
   const source = readFileSync(swFilePath, "utf8");
 
-  if (!source.includes(PLACEHOLDER)) {
+  const stampedSource = source.includes(PLACEHOLDER)
+    ? source.split(PLACEHOLDER).join(buildId)
+    : source.replace(BUILD_ID_ASSIGNMENT_PATTERN, `const BUILD_ID = "${buildId}";`);
+
+  if (stampedSource === source) {
     throw new Error(`Placeholder ausente em ${swFilePath}: ${PLACEHOLDER}`);
   }
-
-  const stampedSource = source.split(PLACEHOLDER).join(buildId);
   writeFileSync(swFilePath, stampedSource);
   return stampedSource;
 }
