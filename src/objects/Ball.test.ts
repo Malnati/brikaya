@@ -2,6 +2,7 @@
 import { describe, expect, it, jest } from '@jest/globals';
 
 import { Ball } from './Ball';
+import { sprBallPlayerDefault } from '../constants/visualAssets';
 import {
   calculateInitialBallSpeed,
   calculateLevelInitialSpawnSpeed,
@@ -20,6 +21,7 @@ import {
   calculateRadialPaddleBounds,
   calculateRadialPlayfieldGeometry,
 } from '../utils/radialGeometry';
+import { AssetLoader } from '../utils/assetLoader';
 
 jest.mock('../utils/assetLoader', () => ({
   AssetLoader: {
@@ -70,6 +72,46 @@ const INITIAL_BRICK_COUNT = DIMENSIONS.brickCols * DIMENSIONS.brickRows;
 const CENTER_DIVISOR = 2;
 const RADIAL_PADDLE_TEST_INSET = 1;
 const CARTESIAN_TO_BALL_DIRECTION_OFFSET = Math.PI / 2;
+const DESKTOP_CANVAS_WIDTH = 640;
+const CANVAS_IMAGE_SOURCE = {} as HTMLImageElement;
+
+type MockCanvasContext = CanvasRenderingContext2D & {
+  arc: jest.Mock;
+  createRadialGradient: jest.Mock;
+  drawImage: jest.Mock;
+  lineTo: jest.Mock;
+  moveTo: jest.Mock;
+  stroke: jest.Mock;
+};
+
+function createBallCanvasContext(): MockCanvasContext {
+  const gradient = {
+    addColorStop: jest.fn(),
+  } as unknown as CanvasGradient;
+
+  return {
+    save: jest.fn(),
+    restore: jest.fn(),
+    translate: jest.fn(),
+    createRadialGradient: jest.fn(() => gradient),
+    beginPath: jest.fn(),
+    arc: jest.fn(),
+    fill: jest.fn(),
+    stroke: jest.fn(),
+    moveTo: jest.fn(),
+    lineTo: jest.fn(),
+    closePath: jest.fn(),
+    drawImage: jest.fn(),
+    set fillStyle(_value: string | CanvasGradient | CanvasPattern) {},
+    set strokeStyle(_value: string | CanvasGradient | CanvasPattern) {},
+    set shadowColor(_value: string) {},
+    set shadowBlur(_value: number) {},
+    set lineCap(_value: CanvasLineCap) {},
+    set lineJoin(_value: CanvasLineJoin) {},
+    set lineWidth(_value: number) {},
+    set globalCompositeOperation(_value: GlobalCompositeOperation) {},
+  } as unknown as MockCanvasContext;
+}
 
 function buildPhaseSpeedConfig(level: number): PhaseSpeedConfig {
   const maxSpeed = calculateLevelMaxSpeed(CANVAS_WIDTH, level);
@@ -115,6 +157,112 @@ function placeBallAtTurretBoundary(
 }
 
 describe('Ball', () => {
+  it('desenha energia elétrica procedural para a bolinha padrão sem depender de imagem', () => {
+    const nowSpy = jest.spyOn(Date, 'now').mockReturnValue(12_345);
+    jest.mocked(AssetLoader.getOrLoadImage).mockClear();
+    jest.mocked(AssetLoader.getOrLoadImage).mockReturnValue(null);
+    const context = createBallCanvasContext();
+    const ball = new Ball(
+      DESKTOP_CANVAS_WIDTH,
+      CANVAS_HEIGHT,
+      DIMENSIONS,
+      1,
+      () => sprBallPlayerDefault,
+    );
+    const positionBefore = ball.position;
+    const velocityBefore = ball.getVelocity();
+
+    try {
+      ball.draw(context);
+    } finally {
+      nowSpy.mockRestore();
+    }
+
+    expect(AssetLoader.getOrLoadImage).not.toHaveBeenCalled();
+    expect(context.drawImage).not.toHaveBeenCalled();
+    expect(context.createRadialGradient).toHaveBeenCalledTimes(2);
+    expect(context.moveTo).toHaveBeenCalledTimes(5);
+    expect(context.lineTo).toHaveBeenCalled();
+    expect(context.stroke).toHaveBeenCalled();
+    expect(ball.position).toEqual(positionBefore);
+    expect(ball.getVelocity()).toEqual(velocityBefore);
+  });
+
+  it('reduz movimento elétrico procedural quando efeitos de canvas são reduzidos', () => {
+    jest.mocked(AssetLoader.getOrLoadImage).mockReturnValue(null);
+    const context = createBallCanvasContext();
+    const ball = new Ball(
+      CANVAS_WIDTH,
+      CANVAS_HEIGHT,
+      DIMENSIONS,
+      1,
+      () => sprBallPlayerDefault,
+    );
+    const nowSpy = jest.spyOn(Date, 'now').mockReturnValue(12_345);
+
+    try {
+      ball.draw(context);
+
+      expect(nowSpy).not.toHaveBeenCalled();
+      expect(context.moveTo).toHaveBeenCalledTimes(2);
+    } finally {
+      nowSpy.mockRestore();
+    }
+  });
+
+  it('usa fallback elétrico legível quando o gradiente procedural falha', () => {
+    jest.mocked(AssetLoader.getOrLoadImage).mockReturnValue(null);
+    const context = createBallCanvasContext();
+    context.createRadialGradient.mockImplementation(() => {
+      throw new Error('gradient unavailable');
+    });
+    const ball = new Ball(
+      DESKTOP_CANVAS_WIDTH,
+      CANVAS_HEIGHT,
+      DIMENSIONS,
+      1,
+      () => sprBallPlayerDefault,
+    );
+
+    ball.draw(context);
+
+    expect(AssetLoader.getOrLoadImage).not.toHaveBeenCalled();
+    expect(context.arc).toHaveBeenLastCalledWith(
+      DESKTOP_CANVAS_WIDTH / 2,
+      CANVAS_HEIGHT - 30,
+      DIMENSIONS.ballRadius,
+      0,
+      Math.PI * 2,
+    );
+    expect(context.stroke).toHaveBeenCalled();
+  });
+
+  it('mantém desenho por imagem para conjuntos que não usam a bolinha padrão', () => {
+    jest.mocked(AssetLoader.getOrLoadImage).mockReturnValueOnce(CANVAS_IMAGE_SOURCE);
+    const context = createBallCanvasContext();
+    const ball = new Ball(
+      DESKTOP_CANVAS_WIDTH,
+      CANVAS_HEIGHT,
+      DIMENSIONS,
+      1,
+      () => '/assets/visual/sprites/spr-ball-player-high-contrast-default.svg',
+    );
+
+    ball.draw(context);
+
+    expect(AssetLoader.getOrLoadImage).toHaveBeenCalledWith(
+      '/assets/visual/sprites/spr-ball-player-high-contrast-default.svg',
+    );
+    expect(context.drawImage).toHaveBeenCalledWith(
+      CANVAS_IMAGE_SOURCE,
+      DESKTOP_CANVAS_WIDTH / 2 - DIMENSIONS.ballRadius,
+      CANVAS_HEIGHT - 30 - DIMENSIONS.ballRadius,
+      DIMENSIONS.ballRadius * 2,
+      DIMENSIONS.ballRadius * 2,
+    );
+    expect(context.moveTo).not.toHaveBeenCalled();
+  });
+
   it('aplica multiplicador ao resetar para uma nova fase', () => {
     const multiplier = calculateLevelSpeedMultiplier(2);
     const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
