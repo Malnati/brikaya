@@ -1,7 +1,24 @@
-<!-- public/assets/visual/bricks/spr-brick-basic-blue-high-contrast-normal.svg -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Tijolo do jogo">
-  <rect x="4" y="5" width="88" height="38" rx="8" fill="#7df9ff" stroke="#f8f7ff" stroke-width="4"/>
-  <path d="M12 15h72" stroke="#ffffff" stroke-width="5" stroke-linecap="round" opacity="0.42"/>
-  <path d="M13 36h70" stroke="#02040a" stroke-width="5" stroke-linecap="round" opacity="0.38"/>
-  <path d="M34 7v34M62 7v34" stroke="#02040a" stroke-width="3" opacity="0.24"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Resistor">
+  <defs>
+    <linearGradient id="spr-brick-basic-blue-high-contrast-normal-board" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111820"/>
+      <stop offset="0.52" stop-color="#05070a"/>
+      <stop offset="1" stop-color="#064e67"/>
+    </linearGradient>
+    <linearGradient id="spr-brick-basic-blue-high-contrast-normal-part" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d8f7ff"/>
+      <stop offset="0.48" stop-color="#45d7ff"/>
+      <stop offset="1" stop-color="#064e67"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="5" width="88" height="38" rx="8" fill="url(#spr-brick-basic-blue-high-contrast-normal-board)" stroke="#ffffff" stroke-width="3"/>
+  <path d="M10 15h13M73 15h13M10 33h16M70 33h16M48 7v7M48 34v7" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" opacity=".76"/>
+  <path d="M14 24h68M30 10v28M66 10v28" stroke="#ffffff42" stroke-width="1.4" opacity=".9"/>
+  <circle cx="14" cy="15" r="2.1" fill="#ffffff" opacity=".88"/>
+  <circle cx="82" cy="33" r="2.1" fill="#ffffff" opacity=".88"/>
+  <path d="M12 24h18" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+  <path d="M66 24h18" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+  <rect x="30" y="14" width="36" height="20" rx="10" fill="url(#spr-brick-basic-blue-high-contrast-normal-part)" stroke="#d8f7ff" stroke-width="1.8"/>
+  <path d="M38 15v18M47 15v18M56 15v18" stroke="#064e67" stroke-width="2.2" opacity=".58"/>
+  <path d="M35 20h26" stroke="#d8f7ff" stroke-width="2" stroke-linecap="round" opacity=".6"/>
 </svg>

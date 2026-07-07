@@ -1,25 +1,26 @@
-<!-- public/assets/visual/bricks/spr-brick-metal-steel-dented-one.svg -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Tijolo metálico com um amassado">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Módulo blindado danificado">
   <defs>
-    <linearGradient id="metal-steel-dented-one" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#f5fbff"/>
-      <stop offset="0.22" stop-color="#93a1b1"/>
-      <stop offset="0.5" stop-color="#c7d2de"/>
-      <stop offset="0.78" stop-color="#5b6878"/>
-      <stop offset="1" stop-color="#eef6ff"/>
+    <linearGradient id="spr-brick-metal-steel-dented-one-board" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#122a46"/>
+      <stop offset="0.52" stop-color="#101a33"/>
+      <stop offset="1" stop-color="#475569"/>
     </linearGradient>
-    <radialGradient id="metal-dent-shadow-one" cx="0.45" cy="0.53" r="0.38">
-      <stop offset="0" stop-color="#263241" stop-opacity="0.74"/>
-      <stop offset="0.52" stop-color="#5f6e7e" stop-opacity="0.42"/>
-      <stop offset="1" stop-color="#f8fcff" stop-opacity="0"/>
-    </radialGradient>
+    <linearGradient id="spr-brick-metal-steel-dented-one-part" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7fbff"/>
+      <stop offset="0.48" stop-color="#c8d1dc"/>
+      <stop offset="1" stop-color="#475569"/>
+    </linearGradient>
   </defs>
-  <rect x="4" y="5" width="88" height="38" rx="8" fill="url(#metal-steel-dented-one)" stroke="#f4fbff" stroke-width="4"/>
-  <path d="M12 15h72" stroke="#ffffff" stroke-width="5" stroke-linecap="round" opacity="0.42"/>
-  <path d="M13 36h70" stroke="#1f2937" stroke-width="5" stroke-linecap="round" opacity="0.48"/>
-  <ellipse cx="43" cy="25" rx="17" ry="10" fill="url(#metal-dent-shadow-one)"/>
-  <path d="M31 23c7-7 19-8 27-1" fill="none" stroke="#edf6ff" stroke-width="3" stroke-linecap="round" opacity="0.58"/>
-  <path d="M30 9v30M48 13v22M66 9v30" stroke="#1f2937" stroke-width="3" opacity="0.32"/>
-  <circle cx="18" cy="24" r="3" fill="#2f3b4a" opacity="0.78"/>
-  <circle cx="78" cy="24" r="3" fill="#2f3b4a" opacity="0.78"/>
+  <rect x="4" y="5" width="88" height="38" rx="8" fill="url(#spr-brick-metal-steel-dented-one-board)" stroke="#bdfcff" stroke-width="3"/>
+  <path d="M10 15h13M73 15h13M10 33h16M70 33h16M48 7v7M48 34v7" stroke="#64f5d6" stroke-width="2.2" stroke-linecap="round" opacity=".76"/>
+  <path d="M14 24h68M30 10v28M66 10v28" stroke="#42f5d733" stroke-width="1.4" opacity=".9"/>
+  <circle cx="14" cy="15" r="2.1" fill="#64f5d6" opacity=".88"/>
+  <circle cx="82" cy="33" r="2.1" fill="#64f5d6" opacity=".88"/>
+  <rect x="24" y="11" width="48" height="26" rx="5" fill="url(#spr-brick-metal-steel-dented-one-part)" stroke="#f7fbff" stroke-width="2"/>
+  <path d="M30 17h36M30 31h36" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".34"/>
+  <circle cx="31" cy="18" r="2.2" fill="#475569" opacity=".76"/>
+  <circle cx="65" cy="18" r="2.2" fill="#475569" opacity=".76"/>
+  <circle cx="31" cy="30" r="2.2" fill="#475569" opacity=".76"/>
+  <circle cx="65" cy="30" r="2.2" fill="#475569" opacity=".76"/>
+  <path d="M57 17l-7 5 8 3-10 7" fill="none" stroke="#0f172a" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" opacity=".72"/>
 </svg>

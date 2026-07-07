@@ -283,7 +283,7 @@ describe("appearance contract", () => {
       "Órbita realista",
       "Arcade",
       "CRT mono",
-      "Blocos pixel",
+      "Pixel eletrônico",
     ]);
     expect(labels.some((label) => TECHNICAL_COPY_PATTERN.test(label))).toBe(
       false,

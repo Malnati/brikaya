@@ -1,7 +1,24 @@
-<!-- public/assets/visual/bricks/spr-brick-basic-red-sunset-normal.svg -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Tijolo do jogo">
-  <rect x="4" y="5" width="88" height="38" rx="8" fill="#ff365e" stroke="#ffe6f1" stroke-width="4"/>
-  <path d="M12 15h72" stroke="#ffffff" stroke-width="5" stroke-linecap="round" opacity="0.42"/>
-  <path d="M13 36h70" stroke="#16071f" stroke-width="5" stroke-linecap="round" opacity="0.38"/>
-  <path d="M34 7v34M62 7v34" stroke="#16071f" stroke-width="3" opacity="0.24"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Capacitor">
+  <defs>
+    <linearGradient id="spr-brick-basic-red-sunset-normal-board" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5b2433"/>
+      <stop offset="0.52" stop-color="#33142a"/>
+      <stop offset="1" stop-color="#7b1630"/>
+    </linearGradient>
+    <linearGradient id="spr-brick-basic-red-sunset-normal-part" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd0d8"/>
+      <stop offset="0.48" stop-color="#ff5d73"/>
+      <stop offset="1" stop-color="#7b1630"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="5" width="88" height="38" rx="8" fill="url(#spr-brick-basic-red-sunset-normal-board)" stroke="#ffe2a3" stroke-width="3"/>
+  <path d="M10 15h13M73 15h13M10 33h16M70 33h16M48 7v7M48 34v7" stroke="#ffcf66" stroke-width="2.2" stroke-linecap="round" opacity=".76"/>
+  <path d="M14 24h68M30 10v28M66 10v28" stroke="#ffd16638" stroke-width="1.4" opacity=".9"/>
+  <circle cx="14" cy="15" r="2.1" fill="#ffcf66" opacity=".88"/>
+  <circle cx="82" cy="33" r="2.1" fill="#ffcf66" opacity=".88"/>
+  <path d="M13 24h25M58 24h25" stroke="#ffcf66" stroke-width="3" stroke-linecap="round"/>
+  <rect x="38" y="12" width="6" height="24" rx="2" fill="url(#spr-brick-basic-red-sunset-normal-part)" stroke="#ffd0d8" stroke-width="1.4"/>
+  <rect x="52" y="12" width="6" height="24" rx="2" fill="url(#spr-brick-basic-red-sunset-normal-part)" stroke="#ffd0d8" stroke-width="1.4"/>
+  <path d="M69 15v8M65 19h8" stroke="#ffd0d8" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M23 16h8M23 32h8" stroke="#ff5d73" stroke-width="2" stroke-linecap="round" opacity=".75"/>
 </svg>

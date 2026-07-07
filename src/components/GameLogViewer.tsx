@@ -272,7 +272,7 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
                     Bolas: {event.gameState.ballsCount}
                   </div>
                   <div className="event-bricks">
-                    Blocos: {event.gameState.bricksRemaining}
+                    Componentes: {event.gameState.bricksRemaining}
                   </div>
                 </div>
 
@@ -283,7 +283,7 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
                       <div className="detail-grid">
                         <div>Pontuação: {event.gameState.score}</div>
                         <div>Bolas: {event.gameState.ballsCount}</div>
-                        <div>Blocos Restantes: {event.gameState.bricksRemaining}</div>
+                        <div>Componentes restantes: {event.gameState.bricksRemaining}</div>
                         <div>Nível: {event.gameState.level}</div>
                         <div>Vitória: {event.gameState.gameWon ? 'Sim' : 'Não'}</div>
                         <div>Game Over: {event.gameState.gameOver ? 'Sim' : 'Não'}</div>
@@ -300,8 +300,8 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
                       <h4>📐 Dimensões</h4>
                       <div className="detail-grid">
                         <div>Canvas: {event.gameState.canvasSize.width}x{event.gameState.canvasSize.height}</div>
-                        <div>Blocos: {event.gameState.gameDimensions.brickCols}x{event.gameState.gameDimensions.brickRows}</div>
-                        <div>Tamanho Bloco: {event.gameState.gameDimensions.brickWidth}x{event.gameState.gameDimensions.brickHeight}</div>
+                        <div>Componentes: {event.gameState.gameDimensions.brickCols}x{event.gameState.gameDimensions.brickRows}</div>
+                        <div>Tamanho componente: {event.gameState.gameDimensions.brickWidth}x{event.gameState.gameDimensions.brickHeight}</div>
                         <div>Raquete: {event.gameState.gameDimensions.paddleWidth}x{event.gameState.gameDimensions.paddleHeight}</div>
                         <div>Raio Bola: {event.gameState.gameDimensions.ballRadius}</div>
                       </div>
@@ -339,10 +339,10 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
                             <div>Posição do Hit: {(event.collisionInfo.hitPosition * 100).toFixed(1)}%</div>
                           )}
                           {event.collisionInfo.brickIndex && (
-                            <div>Bloco: [{event.collisionInfo.brickIndex.col}, {event.collisionInfo.brickIndex.row}]</div>
+                            <div>Componente: [{event.collisionInfo.brickIndex.col}, {event.collisionInfo.brickIndex.row}]</div>
                           )}
                           {event.collisionInfo.brickColorIndex !== undefined && (
-                            <div>Cor do Bloco: {event.collisionInfo.brickColorIndex}</div>
+                            <div>Circuito do componente: {event.collisionInfo.brickColorIndex}</div>
                           )}
                           {event.collisionInfo.velocityBefore && (
                             <div>Velocidade Antes: {formatVelocity(event.collisionInfo.velocityBefore)}</div>

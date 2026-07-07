@@ -487,7 +487,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco básico vermelho",
+    usage: "Capacitor",
   },
   {
     id: "spr-brick-basic-blue-normal",
@@ -498,7 +498,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco básico azul",
+    usage: "Resistor",
   },
   {
     id: "spr-brick-basic-green-normal",
@@ -509,7 +509,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco básico verde",
+    usage: "Chip integrado",
   },
   {
     id: "spr-brick-basic-yellow-normal",
@@ -520,7 +520,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco básico amarelo",
+    usage: "Diodo LED",
   },
   {
     id: "spr-brick-basic-purple-normal",
@@ -531,7 +531,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco básico roxo",
+    usage: "Indutor",
   },
   {
     id: "spr-brick-metal-steel-normal",
@@ -542,7 +542,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco metálico resistente",
+    usage: "Módulo blindado resistente",
   },
   {
     id: "spr-brick-metal-steel-dented-one",
@@ -553,7 +553,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "damaged",
     width: 48,
     height: 20,
-    usage: "Bloco metálico resistente com um amassado",
+    usage: "Módulo blindado danificado",
   },
   {
     id: "spr-brick-metal-steel-dented-two",
@@ -564,7 +564,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "critical",
     width: 48,
     height: 20,
-    usage: "Bloco metálico resistente com dois amassados",
+    usage: "Módulo blindado crítico",
   },
   {
     id: "vfx-countdown-circle-overlay",
@@ -795,7 +795,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco vermelho alto contraste",
+    usage: "Capacitor alto contraste",
   },
   {
     id: "spr-brick-basic-blue-high-contrast-normal",
@@ -806,7 +806,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco azul alto contraste",
+    usage: "Resistor alto contraste",
   },
   {
     id: "spr-brick-basic-green-high-contrast-normal",
@@ -817,7 +817,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco verde alto contraste",
+    usage: "Chip integrado alto contraste",
   },
   {
     id: "spr-brick-basic-yellow-high-contrast-normal",
@@ -828,7 +828,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco amarelo alto contraste",
+    usage: "Diodo LED alto contraste",
   },
   {
     id: "spr-brick-basic-purple-high-contrast-normal",
@@ -839,7 +839,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco roxo alto contraste",
+    usage: "Indutor alto contraste",
   },
   {
     id: "spr-brick-metal-steel-high-contrast-normal",
@@ -850,7 +850,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco metálico resistente alto contraste",
+    usage: "Módulo blindado alto contraste resistente",
   },
   {
     id: "spr-brick-metal-steel-high-contrast-dented-one",
@@ -861,7 +861,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "damaged",
     width: 48,
     height: 20,
-    usage: "Bloco metálico resistente alto contraste com um amassado",
+    usage: "Módulo blindado alto contraste danificado",
   },
   {
     id: "spr-brick-metal-steel-high-contrast-dented-two",
@@ -872,7 +872,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "critical",
     width: 48,
     height: 20,
-    usage: "Bloco metálico resistente alto contraste com dois amassados",
+    usage: "Módulo blindado alto contraste crítico",
   },
   {
     id: "vfx-countdown-circle-high-contrast-overlay",
@@ -1004,7 +1004,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco vermelho sunset",
+    usage: "Capacitor sunset",
   },
   {
     id: "spr-brick-basic-blue-sunset-normal",
@@ -1015,7 +1015,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco azul sunset",
+    usage: "Resistor sunset",
   },
   {
     id: "spr-brick-basic-green-sunset-normal",
@@ -1026,7 +1026,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco verde sunset",
+    usage: "Chip integrado sunset",
   },
   {
     id: "spr-brick-basic-yellow-sunset-normal",
@@ -1037,7 +1037,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco amarelo sunset",
+    usage: "Diodo LED sunset",
   },
   {
     id: "spr-brick-basic-purple-sunset-normal",
@@ -1048,7 +1048,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco roxo sunset",
+    usage: "Indutor sunset",
   },
   {
     id: "spr-brick-metal-steel-sunset-normal",
@@ -1059,7 +1059,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco metálico resistente sunset",
+    usage: "Módulo blindado sunset resistente",
   },
   {
     id: "spr-brick-metal-steel-sunset-dented-one",
@@ -1070,7 +1070,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "damaged",
     width: 48,
     height: 20,
-    usage: "Bloco metálico resistente sunset com um amassado",
+    usage: "Módulo blindado sunset danificado",
   },
   {
     id: "spr-brick-metal-steel-sunset-dented-two",
@@ -1081,7 +1081,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "critical",
     width: 48,
     height: 20,
-    usage: "Bloco metálico resistente sunset com dois amassados",
+    usage: "Módulo blindado sunset crítico",
   },
   {
     id: "vfx-countdown-circle-sunset-overlay",
@@ -1213,7 +1213,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco vermelho metrô realista",
+    usage: "Capacitor metrô realista",
   },
   {
     id: "spr-brick-basic-blue-metro-real-normal",
@@ -1224,7 +1224,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco azul metrô realista",
+    usage: "Resistor metrô realista",
   },
   {
     id: "spr-brick-basic-green-metro-real-normal",
@@ -1235,7 +1235,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco verde metrô realista",
+    usage: "Chip integrado metrô realista",
   },
   {
     id: "spr-brick-basic-yellow-metro-real-normal",
@@ -1246,7 +1246,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco amarelo metrô realista",
+    usage: "Diodo LED metrô realista",
   },
   {
     id: "spr-brick-basic-purple-metro-real-normal",
@@ -1257,7 +1257,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco roxo metrô realista",
+    usage: "Indutor metrô realista",
   },
   {
     id: "vfx-countdown-circle-metro-real-overlay",
@@ -1389,7 +1389,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco vermelho oficina realista",
+    usage: "Capacitor oficina realista",
   },
   {
     id: "spr-brick-basic-blue-garage-real-normal",
@@ -1400,7 +1400,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco azul oficina realista",
+    usage: "Resistor oficina realista",
   },
   {
     id: "spr-brick-basic-green-garage-real-normal",
@@ -1411,7 +1411,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco verde oficina realista",
+    usage: "Chip integrado oficina realista",
   },
   {
     id: "spr-brick-basic-yellow-garage-real-normal",
@@ -1422,7 +1422,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco amarelo oficina realista",
+    usage: "Diodo LED oficina realista",
   },
   {
     id: "spr-brick-basic-purple-garage-real-normal",
@@ -1433,7 +1433,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco roxo oficina realista",
+    usage: "Indutor oficina realista",
   },
   {
     id: "vfx-countdown-circle-garage-real-overlay",
@@ -1565,7 +1565,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco vermelho laboratório realista",
+    usage: "Capacitor laboratório realista",
   },
   {
     id: "spr-brick-basic-blue-lab-real-normal",
@@ -1576,7 +1576,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco azul laboratório realista",
+    usage: "Resistor laboratório realista",
   },
   {
     id: "spr-brick-basic-green-lab-real-normal",
@@ -1587,7 +1587,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco verde laboratório realista",
+    usage: "Chip integrado laboratório realista",
   },
   {
     id: "spr-brick-basic-yellow-lab-real-normal",
@@ -1598,7 +1598,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco amarelo laboratório realista",
+    usage: "Diodo LED laboratório realista",
   },
   {
     id: "spr-brick-basic-purple-lab-real-normal",
@@ -1609,7 +1609,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco roxo laboratório realista",
+    usage: "Indutor laboratório realista",
   },
   {
     id: "vfx-countdown-circle-lab-real-overlay",
@@ -1741,7 +1741,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco vermelho templo realista",
+    usage: "Capacitor templo realista",
   },
   {
     id: "spr-brick-basic-blue-temple-real-normal",
@@ -1752,7 +1752,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco azul templo realista",
+    usage: "Resistor templo realista",
   },
   {
     id: "spr-brick-basic-green-temple-real-normal",
@@ -1763,7 +1763,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco verde templo realista",
+    usage: "Chip integrado templo realista",
   },
   {
     id: "spr-brick-basic-yellow-temple-real-normal",
@@ -1774,7 +1774,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco amarelo templo realista",
+    usage: "Diodo LED templo realista",
   },
   {
     id: "spr-brick-basic-purple-temple-real-normal",
@@ -1785,7 +1785,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco roxo templo realista",
+    usage: "Indutor templo realista",
   },
   {
     id: "vfx-countdown-circle-temple-real-overlay",
@@ -1917,7 +1917,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco vermelho estação orbital realista",
+    usage: "Capacitor estação orbital realista",
   },
   {
     id: "spr-brick-basic-blue-orbital-real-normal",
@@ -1928,7 +1928,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco azul estação orbital realista",
+    usage: "Resistor estação orbital realista",
   },
   {
     id: "spr-brick-basic-green-orbital-real-normal",
@@ -1939,7 +1939,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco verde estação orbital realista",
+    usage: "Chip integrado estação orbital realista",
   },
   {
     id: "spr-brick-basic-yellow-orbital-real-normal",
@@ -1950,7 +1950,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco amarelo estação orbital realista",
+    usage: "Diodo LED estação orbital realista",
   },
   {
     id: "spr-brick-basic-purple-orbital-real-normal",
@@ -1961,7 +1961,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Bloco roxo estação orbital realista",
+    usage: "Indutor estação orbital realista",
   },
   {
     id: "vfx-countdown-circle-orbital-real-overlay",

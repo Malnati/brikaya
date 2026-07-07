@@ -1,1 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 20"><defs><linearGradient id="stone" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e5f6ff" stop-opacity=".72"/><stop offset=".18" stop-color="#d7c45d"/><stop offset="1" stop-color="#02060d"/></linearGradient></defs><rect x="1" y="1" width="46" height="18" rx="3" fill="url(#stone)"/><path d="M4 5h40M4 10h40M4 15h40" stroke="#172b42" stroke-width=".7" opacity=".45"/><path d="M11 2v16M24 2v16M37 2v16" stroke="#fff" stroke-width=".6" opacity=".18"/><path d="M5 4c8 2 17-1 28 1 5 1 8 2 10 1" fill="none" stroke="#fff" stroke-width=".8" opacity=".32"/><rect x="1.5" y="1.5" width="45" height="17" rx="2.5" fill="none" stroke="#8bdcff" stroke-width=".8" opacity=".48"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Diodo LED">
+  <defs>
+    <linearGradient id="spr-brick-basic-yellow-orbital-real-normal-board" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1c2e64"/>
+      <stop offset="0.52" stop-color="#090f24"/>
+      <stop offset="1" stop-color="#7a4a00"/>
+    </linearGradient>
+    <linearGradient id="spr-brick-basic-yellow-orbital-real-normal-part" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff0bd"/>
+      <stop offset="0.48" stop-color="#ffd166"/>
+      <stop offset="1" stop-color="#7a4a00"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="5" width="88" height="38" rx="8" fill="url(#spr-brick-basic-yellow-orbital-real-normal-board)" stroke="#e6f2ff" stroke-width="3"/>
+  <path d="M10 15h13M73 15h13M10 33h16M70 33h16M48 7v7M48 34v7" stroke="#a8cfff" stroke-width="2.2" stroke-linecap="round" opacity=".76"/>
+  <path d="M14 24h68M30 10v28M66 10v28" stroke="#9cc7ff35" stroke-width="1.4" opacity=".9"/>
+  <circle cx="14" cy="15" r="2.1" fill="#a8cfff" opacity=".88"/>
+  <circle cx="82" cy="33" r="2.1" fill="#a8cfff" opacity=".88"/>
+  <path d="M14 24h23M61 24h21" stroke="#a8cfff" stroke-width="3" stroke-linecap="round"/>
+  <path d="M37 13l24 11-24 11z" fill="url(#spr-brick-basic-yellow-orbital-real-normal-part)" stroke="#fff0bd" stroke-width="1.6"/>
+  <path d="M62 13v22" stroke="#fff0bd" stroke-width="3" stroke-linecap="round"/>
+  <path d="M65 13l9-7M70 17l9-7" stroke="#fff0bd" stroke-width="2" stroke-linecap="round" opacity=".78"/>
+  <path d="M75 6h-6v6M80 10h-6v6" fill="none" stroke="#fff0bd" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".78"/>
+</svg>

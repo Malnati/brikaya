@@ -1,18 +1,26 @@
-<!-- public/assets/visual/bricks/spr-brick-metal-steel-sunset-normal.svg -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Tijolo metálico">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Módulo blindado">
   <defs>
-    <linearGradient id="metal-steel-sunset-normal" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#fff4d6"/>
-      <stop offset="0.24" stop-color="#b49ba7"/>
-      <stop offset="0.5" stop-color="#f1d8c7"/>
-      <stop offset="0.8" stop-color="#5b4a62"/>
-      <stop offset="1" stop-color="#ffe6f1"/>
+    <linearGradient id="spr-brick-metal-steel-sunset-normal-board" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5b2433"/>
+      <stop offset="0.52" stop-color="#33142a"/>
+      <stop offset="1" stop-color="#475569"/>
+    </linearGradient>
+    <linearGradient id="spr-brick-metal-steel-sunset-normal-part" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7fbff"/>
+      <stop offset="0.48" stop-color="#c8d1dc"/>
+      <stop offset="1" stop-color="#475569"/>
     </linearGradient>
   </defs>
-  <rect x="4" y="5" width="88" height="38" rx="8" fill="url(#metal-steel-sunset-normal)" stroke="#ffe6f1" stroke-width="4"/>
-  <path d="M12 15h72" stroke="#ffffff" stroke-width="5" stroke-linecap="round" opacity="0.54"/>
-  <path d="M13 36h70" stroke="#16071f" stroke-width="5" stroke-linecap="round" opacity="0.48"/>
-  <path d="M30 9v30M48 7v34M66 9v30" stroke="#16071f" stroke-width="3" opacity="0.36"/>
-  <circle cx="18" cy="24" r="3" fill="#16071f" opacity="0.82"/>
-  <circle cx="78" cy="24" r="3" fill="#16071f" opacity="0.82"/>
+  <rect x="4" y="5" width="88" height="38" rx="8" fill="url(#spr-brick-metal-steel-sunset-normal-board)" stroke="#ffe2a3" stroke-width="3"/>
+  <path d="M10 15h13M73 15h13M10 33h16M70 33h16M48 7v7M48 34v7" stroke="#ffcf66" stroke-width="2.2" stroke-linecap="round" opacity=".76"/>
+  <path d="M14 24h68M30 10v28M66 10v28" stroke="#ffd16638" stroke-width="1.4" opacity=".9"/>
+  <circle cx="14" cy="15" r="2.1" fill="#ffcf66" opacity=".88"/>
+  <circle cx="82" cy="33" r="2.1" fill="#ffcf66" opacity=".88"/>
+  <rect x="24" y="11" width="48" height="26" rx="5" fill="url(#spr-brick-metal-steel-sunset-normal-part)" stroke="#f7fbff" stroke-width="2"/>
+  <path d="M30 17h36M30 31h36" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".34"/>
+  <circle cx="31" cy="18" r="2.2" fill="#475569" opacity=".76"/>
+  <circle cx="65" cy="18" r="2.2" fill="#475569" opacity=".76"/>
+  <circle cx="31" cy="30" r="2.2" fill="#475569" opacity=".76"/>
+  <circle cx="65" cy="30" r="2.2" fill="#475569" opacity=".76"/>
+
 </svg>
