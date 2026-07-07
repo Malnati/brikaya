@@ -785,7 +785,10 @@ export class GameEngine {
   }
 
   private shouldUseServeLock() {
-    return this.isBallTurretMode();
+    return (
+      this.isBallTurretMode() &&
+      (!this.qaScenario || this.qaScenario === BALL_TURRET_QA_SCENARIO)
+    );
   }
 
   private armServeLock() {
