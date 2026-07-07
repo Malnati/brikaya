@@ -37,15 +37,22 @@ function stampServiceWorker(swFilePath, buildId) {
 
   const source = readFileSync(swFilePath, "utf8");
 
-  const stampedSource = source.includes(PLACEHOLDER)
-    ? source.split(PLACEHOLDER).join(buildId)
-    : source.replace(BUILD_ID_ASSIGNMENT_PATTERN, `const BUILD_ID = "${buildId}";`);
-
-  if (stampedSource === source) {
-    throw new Error(`Placeholder ausente em ${swFilePath}: ${PLACEHOLDER}`);
+  if (source.includes(PLACEHOLDER)) {
+    const stampedSource = source.split(PLACEHOLDER).join(buildId);
+    writeFileSync(swFilePath, stampedSource);
+    return stampedSource;
   }
-  writeFileSync(swFilePath, stampedSource);
-  return stampedSource;
+
+  if (BUILD_ID_ASSIGNMENT_PATTERN.test(source)) {
+    const stampedSource = source.replace(
+      BUILD_ID_ASSIGNMENT_PATTERN,
+      `const BUILD_ID = "${buildId}";`,
+    );
+    writeFileSync(swFilePath, stampedSource);
+    return stampedSource;
+  }
+
+  throw new Error(`Placeholder ausente em ${swFilePath}: ${PLACEHOLDER}`);
 }
 
 function run() {
