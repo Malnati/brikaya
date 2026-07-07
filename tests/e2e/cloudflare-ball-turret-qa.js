@@ -256,11 +256,13 @@ async function installCanvasProbe(page) {
   await page.evaluateOnNewDocument(() => {
     const originalArc = CanvasRenderingContext2D.prototype.arc;
     const originalDrawImage = CanvasRenderingContext2D.prototype.drawImage;
+    const originalEllipse = CanvasRenderingContext2D.prototype.ellipse;
     const originalFillRect = CanvasRenderingContext2D.prototype.fillRect;
 
     window.__brikayaBallTurretProbe = {
       arcs: [],
       drawImages: [],
+      ellipses: [],
       fillRects: [],
     };
 
@@ -315,6 +317,39 @@ async function installCanvasProbe(page) {
       }
 
       return originalDrawImage.call(this, image, ...args);
+    };
+
+    CanvasRenderingContext2D.prototype.ellipse = function patchedEllipse(
+      x,
+      y,
+      radiusX,
+      radiusY,
+      rotation,
+      startAngle,
+      endAngle,
+      ...rest
+    ) {
+      window.__brikayaBallTurretProbe?.ellipses.push({
+        x,
+        y,
+        radiusX,
+        radiusY,
+        rotation,
+        startAngle,
+        endAngle,
+        fillStyle: String(this.fillStyle || ""),
+      });
+      return originalEllipse.call(
+        this,
+        x,
+        y,
+        radiusX,
+        radiusY,
+        rotation,
+        startAngle,
+        endAngle,
+        ...rest,
+      );
     };
 
     CanvasRenderingContext2D.prototype.fillRect = function patchedFillRect(
@@ -450,6 +485,7 @@ async function readBallTurretState(page) {
       const probe = window.__brikayaBallTurretProbe || {
         arcs: [],
         drawImages: [],
+        ellipses: [],
         fillRects: [],
       };
       const brickDraws = probe.drawImages
@@ -470,8 +506,26 @@ async function readBallTurretState(page) {
           x: draw.x + draw.width / 2,
           y: draw.y + draw.height / 2,
         }));
+      const fallbackEllipseBrickDraws = (probe.ellipses || [])
+        .filter(
+          (draw) =>
+            draw.radiusX > 0 &&
+            draw.radiusY > 0 &&
+            draw.radiusX < canvasWidth * 0.25 &&
+            draw.radiusY < canvasHeight * 0.25 &&
+            Math.abs(Math.abs(draw.endAngle - draw.startAngle) - Math.PI * 2) <
+              fullCircleTolerance,
+        )
+        .map((draw) => ({
+          x: draw.x,
+          y: draw.y,
+        }));
       const brickCenters =
-        brickDraws.length > 0 ? brickDraws : fallbackBrickDraws;
+        brickDraws.length > 0
+          ? brickDraws
+          : fallbackBrickDraws.length > 0
+            ? fallbackBrickDraws
+            : fallbackEllipseBrickDraws;
       const fullRingArcs = probe.arcs.filter(
         (arc) =>
           Math.abs(arc.x - centerX) < 2 &&
