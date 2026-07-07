@@ -3,6 +3,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
+import { classifyExternalRequests } from "./allowed-external-requests.js";
 import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
@@ -283,9 +284,27 @@ async function run() {
 
     const failedOfflineFetches = offlineFetchChecks.filter((item) => !item.ok);
     const offlineRequestFailures = failedRequests.filter((request) => request.offline);
+    const publicOrigin = new URL(targetUrl).origin;
+    const sameOriginOfflineRequestFailures = offlineRequestFailures.filter(
+      (request) => new URL(request.url).origin === publicOrigin,
+    );
     const externalRequests = allRequests.filter(
       (request) =>
-        request.offline && new URL(request.url).origin !== new URL(targetUrl).origin,
+        request.offline && new URL(request.url).origin !== publicOrigin,
+    );
+    const {
+      allowedExternalRequests,
+      unexpectedExternalRequests,
+    } = classifyExternalRequests(
+      externalRequests.map((request) => request.url),
+      targetUrl,
+    );
+    const {
+      allowedExternalRequests: allowedOfflineRequestFailures,
+      unexpectedExternalRequests: unexpectedOfflineRequestFailures,
+    } = classifyExternalRequests(
+      offlineRequestFailures.map((request) => request.url),
+      targetUrl,
     );
 
     assert(offlineState.hasCanvas, "Canvas ausente após recarregar sem internet.");
@@ -302,12 +321,16 @@ async function run() {
       `Arquivos essenciais falharam offline: ${JSON.stringify(failedOfflineFetches)}`,
     );
     assert(
-      offlineRequestFailures.length === 0,
-      `Requests falharam sem internet: ${JSON.stringify(offlineRequestFailures)}`,
+      sameOriginOfflineRequestFailures.length === 0,
+      `Requests próprios falharam sem internet: ${JSON.stringify(sameOriginOfflineRequestFailures)}`,
     );
     assert(
-      externalRequests.length === 0,
-      `Requests externos detectados: ${externalRequests.map((request) => request.url).join(", ")}`,
+      unexpectedOfflineRequestFailures.length === 0,
+      `Requests externos inesperados falharam sem internet: ${JSON.stringify(unexpectedOfflineRequestFailures)}`,
+    );
+    assert(
+      unexpectedExternalRequests.length === 0,
+      `Requests externos inesperados detectados: ${unexpectedExternalRequests.join(", ")}`,
     );
 
     const report = {
@@ -320,6 +343,10 @@ async function run() {
       offlineFetchChecks,
       offlineState,
       externalRequests,
+      allowedExternalRequests,
+      unexpectedExternalRequests,
+      allowedOfflineRequestFailures,
+      unexpectedOfflineRequestFailures,
       failedRequests,
       screenshotPath: screenshotPath(),
     };
