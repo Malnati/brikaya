@@ -126,7 +126,6 @@ const POWER_UP_ACTION_ACTIVATE: LoggedPowerUpAction = "activate";
 const POWER_UP_ACTION_EXPIRE: LoggedPowerUpAction = "expire";
 const POWER_UP_ACTION_MISS: LoggedPowerUpAction = "miss";
 const BALL_TURRET_BRICK_COLUMN_MULTIPLIER = 2;
-const BALL_TURRET_SPAWN_BORDER_INSET = 1;
 const BALL_TURRET_BOTTOM_SPAWN_ANGLE = Math.PI / 2;
 const BALL_TURRET_POWER_UP_FALLBACK_ANGLE = -Math.PI / 2;
 const MAX_FRAME_DELTA_MS = 80;
@@ -793,16 +792,8 @@ export class GameEngine {
   private positionBallForCurrentMode(ball: Ball) {
     if (!this.isBallTurretMode()) return;
 
-    const spawnRadius =
-      this.radialGeometry.radius -
-      ball.position.radius -
-      BALL_TURRET_SPAWN_BORDER_INSET;
-    const spawnX =
-      this.radialGeometry.centerX +
-      Math.cos(BALL_TURRET_BOTTOM_SPAWN_ANGLE) * spawnRadius;
-    const spawnY =
-      this.radialGeometry.centerY +
-      Math.sin(BALL_TURRET_BOTTOM_SPAWN_ANGLE) * spawnRadius;
+    const spawnX = this.radialGeometry.centerX;
+    const spawnY = this.radialGeometry.centerY;
 
     ball.setPosition(spawnX, spawnY);
     ball.setDirection(
@@ -817,11 +808,11 @@ export class GameEngine {
     const targetX =
       this.radialGeometry.centerX +
       Math.cos(DUAL_TRAMPOLINE_RIGHT_START_ANGLE) *
-      this.radialGeometry.paddleRadius;
+        this.radialGeometry.paddleRadius;
     const targetY =
       this.radialGeometry.centerY +
       Math.sin(DUAL_TRAMPOLINE_RIGHT_START_ANGLE) *
-      this.radialGeometry.paddleRadius;
+        this.radialGeometry.paddleRadius;
 
     return Math.atan2(targetX - spawnX, spawnY - targetY);
   }

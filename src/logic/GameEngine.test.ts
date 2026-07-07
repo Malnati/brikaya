@@ -566,7 +566,7 @@ describe("GameEngine", () => {
     );
   });
 
-  it("usa dobro de colunas e aponta a bola inicial da torreta para a cama elástica direita", () => {
+  it("usa dobro de colunas e posiciona bola inicial no centro da torreta mirando a cama elástica direita", () => {
     const engine = new GameEngine(
       canvas,
       onScoreUpdate,
@@ -591,11 +591,8 @@ describe("GameEngine", () => {
     expect(dimensions.brickCols).toBe(baseDimensions.brickCols * 2);
     expect(ball.setPosition).toHaveBeenCalled();
     const [spawnX, spawnY] = ball.setPosition.mock.calls[0];
-    expect(
-      Math.hypot(spawnX - geometry.centerX, spawnY - geometry.centerY),
-    ).toBeCloseTo(geometry.radius - ball.position.radius - 1, 1);
     expect(spawnX).toBeCloseTo(geometry.centerX, 5);
-    expect(spawnY).toBeGreaterThan(geometry.centerY);
+    expect(spawnY).toBeCloseTo(geometry.centerY, 5);
 
     const rightTrampolineX = geometry.centerX + geometry.paddleRadius;
     const rightTrampolineY = geometry.centerY;

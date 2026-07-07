@@ -1,0 +1,46 @@
+{
+  "checkedAt": "2026-07-07T20:59:32.282Z",
+  "publicUrl": "https://brikaya.com/?qaScenario=ball-turret",
+  "screenshotPath": "docs/assets/issues/ball-turret-center-spawn/evidence/evi-ball-turret-center-spawn-center-proof.png",
+  "assertion": "A região central do globo contém a bolinha elétrica inicial e a antiga posição inferior não contém o mesmo padrão visual.",
+  "result": "pass",
+  "canvas": {
+    "width": 1056,
+    "height": 704,
+    "clientWidth": 1056,
+    "clientHeight": 704
+  },
+  "expectedSpawn": {
+    "x": 528,
+    "y": 352
+  },
+  "oldBottomSpawn": {
+    "x": 528,
+    "y": 674
+  },
+  "centerSample": {
+    "point": {
+      "x": 528,
+      "y": 352
+    },
+    "radius": 25,
+    "pixels": 2601,
+    "brightCount": 526,
+    "electricCount": 536,
+    "maxLuma": 255,
+    "meanLuma": 96.61
+  },
+  "oldBottomSample": {
+    "point": {
+      "x": 528,
+      "y": 674
+    },
+    "radius": 25,
+    "pixels": 2601,
+    "brightCount": 0,
+    "electricCount": 0,
+    "maxLuma": 136.91,
+    "meanLuma": 55.5
+  },
+  "pageTitle": "Brikaya — arcade de circuitos eletrônicos"
+}
