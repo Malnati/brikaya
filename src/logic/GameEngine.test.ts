@@ -435,7 +435,7 @@ describe("GameEngine", () => {
     );
   });
 
-  it("move cada cama elástica da torreta até a extremidade em até 12 frames", () => {
+  it("move cada cama elástica da torreta até a extremidade em até 6 frames", () => {
     const engine = new GameEngine(
       canvas,
       onScoreUpdate,
@@ -451,14 +451,14 @@ describe("GameEngine", () => {
     );
 
     engine.setDualSwitchDirection("left", -1);
-    (engine as any).updateDualSwitchTrampolines(12);
+    (engine as any).updateDualSwitchTrampolines(6);
 
     expect((engine as any).dualTrampolinePositions.left).toBe(0);
     expect((engine as any).dualTrampolinePositions.right).toBe(0.5);
 
     engine.setDualSwitchDirection("left", 0);
     engine.setDualSwitchDirection("right", 1);
-    (engine as any).updateDualSwitchTrampolines(12);
+    (engine as any).updateDualSwitchTrampolines(6);
 
     expect((engine as any).dualTrampolinePositions.left).toBe(0);
     expect((engine as any).dualTrampolinePositions.right).toBe(1);
