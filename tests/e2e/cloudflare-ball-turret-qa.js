@@ -63,7 +63,7 @@ const JOYSTICK_MAX_TRACKBALL_SIZE = 132;
 const JOYSTICK_MIN_RESPONSIVE_TRACKBALL_SIZE = 72;
 const SWITCH_MIN_PLAYFIELD_GAP_PX = 48;
 const SWITCH_MAX_EDGE_GAP_PX = 36;
-const DUAL_SWITCH_HOLD_MS = 520;
+const DUAL_SWITCH_HOLD_MS = 760;
 const DUAL_SWITCH_SETTLE_MS = 160;
 const DUAL_SWITCH_MOVEMENT_MIN_SIN_DELTA = 0.08;
 const DUAL_SWITCH_STABLE_MAX_SIN_DELTA = 0.05;
@@ -1574,10 +1574,32 @@ async function holdSwitch(page, switchTestId, verticalRatio) {
   };
   const hitTarget = await readSwitchHitTarget(page, switchTestId, point);
 
-  await page.mouse.move(point.x, point.y);
-  await page.mouse.down();
-  await new Promise((resolve) => setTimeout(resolve, DUAL_SWITCH_HOLD_MS));
-  await page.mouse.up();
+  await switchHandle.evaluate(
+    (element, { clientPoint, holdMs }) =>
+      new Promise((resolve) => {
+        const pointerId = 31;
+        const dispatchPointer = (type) => {
+          element.dispatchEvent(
+            new PointerEvent(type, {
+              bubbles: true,
+              cancelable: true,
+              clientX: clientPoint.x,
+              clientY: clientPoint.y,
+              pointerId,
+              pointerType: "mouse",
+              isPrimary: true,
+            }),
+          );
+        };
+
+        dispatchPointer("pointerdown");
+        window.setTimeout(() => {
+          dispatchPointer("pointerup");
+          resolve(undefined);
+        }, holdMs);
+      }),
+    { clientPoint: point, holdMs: DUAL_SWITCH_HOLD_MS },
+  );
   await new Promise((resolve) => setTimeout(resolve, DUAL_SWITCH_SETTLE_MS));
 
   return {
