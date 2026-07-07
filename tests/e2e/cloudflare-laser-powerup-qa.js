@@ -111,6 +111,7 @@ function assert(condition, message) {
 function withQaScenario(url) {
   const pageUrl = new URL(url);
   pageUrl.searchParams.set("qaScenario", EXPECTED_QA_SCENARIO);
+  pageUrl.searchParams.set("gameplayTelemetry", "1");
   return pageUrl.toString();
 }
 
@@ -561,7 +562,13 @@ async function run() {
     const brickDestroyedEvents = proofEvents.filter(
       (event) => event.type === "brick_destroyed",
     );
-    const firstBrickDestroyedEvent = brickDestroyedEvents[0] || null;
+    const activatedPowerUpIndex = activatedPowerUpEvent
+      ? proofEvents.indexOf(activatedPowerUpEvent)
+      : -1;
+    const firstBrickDestroyedEvent =
+      proofEvents
+        .slice(Math.max(0, activatedPowerUpIndex + 1))
+        .find((event) => event.type === "brick_destroyed") || null;
     const levelCompleteEvents = events.filter(
       (event) => event.type === LEVEL_COMPLETE_EVENT_TYPE,
     );
