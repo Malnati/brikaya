@@ -474,7 +474,7 @@ describe("GameEngine", () => {
     expect((engine as any).dualTrampolineAngles.left).toBeGreaterThanOrEqual(0);
     expect((engine as any).dualTrampolineAngles.left).toBeLessThan(fullCircle);
     expect((engine as any).dualTrampolineAngles.left).toBeCloseTo(
-      (Math.PI + 0.09 * 80) % fullCircle,
+      (Math.PI + 0.045 * 80) % fullCircle,
     );
     expect((engine as any).dualTrampolineAngles.right).toBe(0);
 
@@ -485,10 +485,10 @@ describe("GameEngine", () => {
     expect((engine as any).dualTrampolineAngles.right).toBeGreaterThanOrEqual(0);
     expect((engine as any).dualTrampolineAngles.right).toBeLessThan(fullCircle);
     expect((engine as any).dualTrampolineAngles.right).toBeCloseTo(
-      (0.09 * 80) % fullCircle,
+      (0.045 * 80) % fullCircle,
     );
     expect((engine as any).dualTrampolineAngles.left).toBeCloseTo(
-      (Math.PI + 0.09 * 80) % fullCircle,
+      (Math.PI + 0.045 * 80) % fullCircle,
     );
   });
 
