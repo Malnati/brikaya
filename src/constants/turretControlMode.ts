@@ -7,4 +7,6 @@ export type TurretControlMode =
   | typeof TURRET_CONTROL_MODE_DUAL_SWITCH;
 
 export type TurretSwitchSide = "left" | "right";
-export type TurretSwitchDirection = -1 | 0 | 1;
+export const TURRET_SWITCH_DEAD_ZONE = 0.12;
+
+export type TurretSwitchDirection = number;

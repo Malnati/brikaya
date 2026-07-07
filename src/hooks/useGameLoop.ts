@@ -24,6 +24,7 @@ import {
   DEFAULT_TURRET_CONTROL_MODE,
   TURRET_CONTROL_MODE_DUAL_SWITCH,
   TURRET_CONTROL_MODE_JOYSTICK,
+  TURRET_SWITCH_DEAD_ZONE,
   type TurretControlMode,
   type TurretSwitchDirection,
   type TurretSwitchSide,
@@ -54,6 +55,7 @@ const POINTER_CANCEL_EVENT_NAME = "pointercancel";
 const TRACKBALL_VECTOR_X_CSS_VAR = "--bb-turret-trackball-x";
 const TRACKBALL_VECTOR_Y_CSS_VAR = "--bb-turret-trackball-y";
 const TRACKBALL_ACTIVE_CSS_VAR = "--bb-turret-trackball-active";
+const SWITCH_AXIS_CSS_VAR = "--bb-turret-switch-axis";
 const JOYSTICK_DEFAULT_VECTOR = "0";
 const JOYSTICK_ACTIVE_VECTOR = "1";
 const JOYSTICK_CIRCLE_HIT_TOLERANCE_PX = 0.5;
@@ -596,23 +598,36 @@ export function useGameLoop(
     ];
     const cleanups: Array<() => void> = [];
 
+    const normalizeSwitchAxis = (axis: number): TurretSwitchDirection => {
+      if (!Number.isFinite(axis)) return SWITCH_DIRECTION_NEUTRAL;
+
+      const clampedAxis = Math.max(SWITCH_DIRECTION_UP, Math.min(SWITCH_DIRECTION_DOWN, axis));
+      return Math.abs(clampedAxis) < TURRET_SWITCH_DEAD_ZONE
+        ? SWITCH_DIRECTION_NEUTRAL
+        : clampedAxis;
+    };
+
     const readSwitchDirection = (
       element: HTMLElement,
       clientY: number,
     ): TurretSwitchDirection => {
       const rect = element.getBoundingClientRect();
-      const middleY = rect.top + rect.height / 2;
+      const halfHeight = rect.height / 2;
+      if (halfHeight <= 0) return SWITCH_DIRECTION_NEUTRAL;
 
-      return clientY < middleY ? SWITCH_DIRECTION_UP : SWITCH_DIRECTION_DOWN;
+      const middleY = rect.top + halfHeight;
+      return normalizeSwitchAxis((clientY - middleY) / halfHeight);
     };
 
     for (const { element, side } of switchEntries) {
       if (!element) continue;
 
       const applyDirection = (direction: TurretSwitchDirection) => {
+        const normalizedDirection = normalizeSwitchAxis(direction);
         element.dataset.switchDirection =
-          direction < 0 ? "up" : direction > 0 ? "down" : "neutral";
-        engineRef.current?.setDualSwitchDirection(side, direction);
+          normalizedDirection < 0 ? "up" : normalizedDirection > 0 ? "down" : "neutral";
+        element.style.setProperty(SWITCH_AXIS_CSS_VAR, String(normalizedDirection));
+        engineRef.current?.setDualSwitchDirection(side, normalizedDirection);
       };
 
       const handlePointerDown = (event: PointerEvent) => {

@@ -72,6 +72,7 @@ import { shouldUseReducedCanvasEffects } from "../utils/performanceMode";
 import {
   DEFAULT_TURRET_CONTROL_MODE,
   TURRET_CONTROL_MODE_DUAL_SWITCH,
+  TURRET_SWITCH_DEAD_ZONE,
   type TurretControlMode,
   type TurretSwitchDirection,
   type TurretSwitchSide,
@@ -196,6 +197,8 @@ const DUAL_TRAMPOLINE_LEFT_START_ANGLE = Math.PI;
 const DUAL_TRAMPOLINE_RIGHT_START_ANGLE = 0;
 const DUAL_TRAMPOLINE_WIDTH_SCALE = 0.82;
 const DUAL_TRAMPOLINE_SPEED_PER_FRAME = 0.045;
+const DUAL_TRAMPOLINE_MIN_SPEED_SCALE = 0.25;
+const DUAL_TRAMPOLINE_MAX_SPEED_SCALE = 1.33;
 const RADIAL_PLAYFIELD_FILL = "rgba(7, 14, 28, 0.92)";
 const RADIAL_PLAYFIELD_STROKE = "rgba(125, 249, 255, 0.72)";
 const RADIAL_PLAYFIELD_INNER_STROKE = "rgba(255, 255, 255, 0.18)";
@@ -1942,8 +1945,9 @@ export class GameEngine {
     side: TurretSwitchSide,
     direction: TurretSwitchDirection,
   ) {
-    this.dualSwitchDirections[side] = direction;
-    if (direction !== 0) {
+    const normalizedDirection = this.normalizeDualSwitchDirectionInput(direction);
+    this.dualSwitchDirections[side] = normalizedDirection;
+    if (normalizedDirection !== 0) {
       this.releaseServeLock();
     }
   }
@@ -1960,11 +1964,34 @@ export class GameEngine {
       FULL_CIRCLE_RADIANS;
   }
 
+  private normalizeDualSwitchDirectionInput(
+    direction: TurretSwitchDirection,
+  ): TurretSwitchDirection {
+    if (!Number.isFinite(direction)) return 0;
+
+    const clampedDirection = Math.max(-1, Math.min(1, direction));
+    return Math.abs(clampedDirection) < TURRET_SWITCH_DEAD_ZONE
+      ? 0
+      : clampedDirection;
+  }
+
   private readDualTrampolineAngularDirection(
     side: TurretSwitchSide,
     direction: TurretSwitchDirection,
   ): number {
-    return side === "left" ? -direction : direction;
+    const signedDirection = Math.sign(direction);
+    return side === "left" ? -signedDirection : signedDirection;
+  }
+
+  private calculateDualTrampolineSpeedScale(
+    direction: TurretSwitchDirection,
+  ): number {
+    const intensity = Math.abs(direction);
+    if (intensity === 0) return 0;
+
+    return DUAL_TRAMPOLINE_MIN_SPEED_SCALE +
+      (DUAL_TRAMPOLINE_MAX_SPEED_SCALE - DUAL_TRAMPOLINE_MIN_SPEED_SCALE) *
+        intensity;
   }
 
   private updateDualSwitchTrampolines(frameScale = 1) {
@@ -1979,6 +2006,7 @@ export class GameEngine {
         this.dualTrampolineAngles[side] +
           this.readDualTrampolineAngularDirection(side, direction) *
             DUAL_TRAMPOLINE_SPEED_PER_FRAME *
+            this.calculateDualTrampolineSpeedScale(direction) *
             safeFrameScale,
       );
     });

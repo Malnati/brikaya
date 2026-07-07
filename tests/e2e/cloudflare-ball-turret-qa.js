@@ -50,6 +50,8 @@ const JOYSTICK_DIAGNOSTIC_JOYSTICK_LAYER_TEST_ID =
 const JOYSTICK_DIAGNOSTIC_PLAYFIELD_LAYER_TEST_ID =
   "joystick-diagnostic-playfield-layer";
 const MIN_TOUCH_TARGET_SIZE = 44;
+const SWITCH_MIN_HEIGHT = 190;
+const SWITCH_COMPACT_MIN_HEIGHT = 150;
 const ACTIVE_TRAMPOLINE_ARC_MIN_SWEEP = 0.2;
 const JOYSTICK_SETTLE_MS = 120;
 const JOYSTICK_STABILITY_PROOF_MS = 300;
@@ -65,6 +67,8 @@ const SWITCH_MIN_PLAYFIELD_GAP_PX = 48;
 const SWITCH_MAX_EDGE_GAP_PX = 36;
 const DUAL_SWITCH_HOLD_MS = 760;
 const DUAL_SWITCH_DIRECTION_HOLD_MS = 120;
+const DUAL_SWITCH_CENTER_HOLD_MS = 220;
+const DUAL_SWITCH_EDGE_HOLD_MS = 220;
 const DUAL_SWITCH_SETTLE_MS = 160;
 const DUAL_SWITCH_MOVEMENT_MIN_SIN_DELTA = 0.08;
 const DUAL_SWITCH_STABLE_MAX_SIN_DELTA = 0.05;
@@ -1071,6 +1075,14 @@ function assertDefaultSwitchControls(config, gameplayState) {
       rightSwitch.height >= MIN_TOUCH_TARGET_SIZE,
     `${config.name}: interruptores menores que alvo mínimo de toque.`,
   );
+  const expectedSwitchHeight = config.name.includes("compact")
+    ? SWITCH_COMPACT_MIN_HEIGHT
+    : SWITCH_MIN_HEIGHT;
+  assert(
+    leftSwitch.height >= expectedSwitchHeight &&
+      rightSwitch.height >= expectedSwitchHeight,
+    `${config.name}: interruptores não ganharam altura suficiente.`,
+  );
   assert(
     gameplayState.joystick.exists && !gameplayState.joystick.visible,
     `${config.name}: joystick deve ficar oculto por padrão.`,
@@ -1655,11 +1667,20 @@ async function exerciseDualSwitches(page) {
   const initialState = await readBallTurretState(page);
 
   await resetCanvasProbe(page);
+  const leftSwitchCenterExercise = await holdSwitch(
+    page,
+    LEFT_SWITCH_TEST_ID,
+    0.48,
+    DUAL_SWITCH_CENTER_HOLD_MS,
+  );
+  const afterLeftCenterState = await readBallTurretState(page);
+
+  await resetCanvasProbe(page);
   const leftSwitchExercise = await holdSwitch(
     page,
     LEFT_SWITCH_TEST_ID,
-    0.22,
-    DUAL_SWITCH_DIRECTION_HOLD_MS,
+    0.08,
+    DUAL_SWITCH_EDGE_HOLD_MS,
   );
   const afterLeftState = await readBallTurretState(page);
 
@@ -1667,13 +1688,17 @@ async function exerciseDualSwitches(page) {
   const rightSwitchExercise = await holdSwitch(
     page,
     RIGHT_SWITCH_TEST_ID,
-    0.78,
-    DUAL_SWITCH_DIRECTION_HOLD_MS,
+    0.92,
+    DUAL_SWITCH_EDGE_HOLD_MS,
   );
   const afterRightState = await readBallTurretState(page);
 
   const initialLeftAngle = initialState.probe.leftActiveTrampolineCenterAngle;
   const initialRightAngle = initialState.probe.rightActiveTrampolineCenterAngle;
+  const afterLeftCenterLeftAngle =
+    afterLeftCenterState.probe.leftActiveTrampolineCenterAngle;
+  const afterLeftCenterRightAngle =
+    afterLeftCenterState.probe.rightActiveTrampolineCenterAngle;
   const afterLeftLeftAngle = afterLeftState.probe.leftActiveTrampolineCenterAngle;
   const afterLeftRightAngle = afterLeftState.probe.rightActiveTrampolineCenterAngle;
   const afterRightLeftAngle = afterRightState.probe.leftActiveTrampolineCenterAngle;
@@ -1690,17 +1715,23 @@ async function exerciseDualSwitches(page) {
     twoTrampolinesVisible:
       initialState.probe.hasLeftActiveTrampoline &&
       initialState.probe.hasRightActiveTrampoline,
+    leftSwitchCenterExercise,
     leftSwitchExercise,
     rightSwitchExercise,
+    leftSwitchCenterBarelyMoved:
+      stayedVerticallyStable(initialLeftAngle, afterLeftCenterLeftAngle) &&
+      stayedVerticallyStable(initialRightAngle, afterLeftCenterRightAngle),
     leftSwitchMovedOnlyLeft:
-      movedUp(initialLeftAngle, afterLeftLeftAngle) &&
-      stayedVerticallyStable(initialRightAngle, afterLeftRightAngle),
+      movedUp(afterLeftCenterLeftAngle, afterLeftLeftAngle) &&
+      stayedVerticallyStable(afterLeftCenterRightAngle, afterLeftRightAngle),
     rightSwitchMovedOnlyRight:
       movedDown(afterLeftRightAngle, afterRightRightAngle) &&
       stayedVerticallyStable(afterLeftLeftAngle, afterRightLeftAngle),
     angles: {
       initialLeftAngle,
       initialRightAngle,
+      afterLeftCenterLeftAngle,
+      afterLeftCenterRightAngle,
       afterLeftLeftAngle,
       afterLeftRightAngle,
       afterRightLeftAngle,
@@ -1964,16 +1995,24 @@ async function runViewport(page, baseUrl, config) {
     `${config.name}: duas camas elásticas não foram desenhadas no modo interruptor.`,
   );
   assert(
+    dualSwitchExercise.leftSwitchCenterExercise.exercised,
+    `${config.name}: interruptor esquerdo não foi exercitado perto do centro.`,
+  );
+  assert(
     dualSwitchExercise.leftSwitchExercise.exercised,
-    `${config.name}: interruptor esquerdo não foi exercitado.`,
+    `${config.name}: interruptor esquerdo não foi exercitado na borda.`,
   );
   assert(
     dualSwitchExercise.rightSwitchExercise.exercised,
     `${config.name}: interruptor direito não foi exercitado.`,
   );
   assert(
+    dualSwitchExercise.leftSwitchCenterBarelyMoved,
+    `${config.name}: interruptor esquerdo perto do centro deveria quase parar a cama elástica.`,
+  );
+  assert(
     dualSwitchExercise.leftSwitchMovedOnlyLeft,
-    `${config.name}: interruptor esquerdo não moveu somente a cama elástica esquerda para cima.`,
+    `${config.name}: interruptor esquerdo na borda não acelerou somente a cama elástica esquerda para cima.`,
   );
   assert(
     dualSwitchExercise.rightSwitchMovedOnlyRight,
