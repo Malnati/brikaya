@@ -20,7 +20,6 @@ import {
   type RadialPlayfieldGeometry,
   type RectBounds,
 } from "../utils/radialGeometry";
-import { shouldUseReducedCanvasEffects } from "../utils/performanceMode";
 
 const BRICK_ACTIVE = 1;
 const BRICK_DESTROYED = 0;
@@ -44,10 +43,6 @@ const RADIAL_BRICK_FALLBACK_COLORS = [
   "#b873ff",
 ] as const;
 const RADIAL_BRICK_METAL_COLOR = "#aeb7c2";
-const RADIAL_BRICK_STROKE_COLOR = "rgba(255, 255, 255, 0.42)";
-const RADIAL_BRICK_SHADOW_COLOR = "rgba(0, 212, 255, 0.22)";
-const RADIAL_BRICK_SHADOW_BLUR = 8;
-const RADIAL_BRICK_LINE_WIDTH = 1.4;
 const BRICK_ASSET_ROLES = [
   GAME_VISUAL_ASSET_ROLES.brickRed,
   GAME_VISUAL_ASSET_ROLES.brickBlue,
@@ -556,13 +551,12 @@ export class Bricks {
         this.dimensions.brickHeight,
       );
     } else {
-      ctx.fillStyle = "#00d4ff";
-      ctx.fillRect(
-        brickX,
-        brickY,
-        this.dimensions.brickWidth,
-        this.dimensions.brickHeight,
-      );
+      this.drawFallbackComponentShape(ctx, brick, {
+        x: brickX,
+        y: brickY,
+        width: this.dimensions.brickWidth,
+        height: this.dimensions.brickHeight,
+      });
     }
   }
 
@@ -572,16 +566,6 @@ export class Bricks {
     brickImage: HTMLImageElement | null,
     segment: RadialBrickSegment,
   ) {
-    if (!this.geometry) return;
-    const reducedEffects = shouldUseReducedCanvasEffects(
-      this.geometry.radius * 2,
-    );
-
-    ctx.save();
-    this.traceRadialBrickPath(ctx, segment);
-    ctx.shadowColor = RADIAL_BRICK_SHADOW_COLOR;
-    ctx.shadowBlur = reducedEffects ? 0 : RADIAL_BRICK_SHADOW_BLUR;
-    ctx.clip();
     if (brickImage) {
       ctx.drawImage(
         brickImage,
@@ -591,53 +575,45 @@ export class Bricks {
         segment.bounds.height,
       );
     } else {
-      ctx.fillStyle = this.getRadialBrickColor(brick);
-      ctx.fillRect(
-        segment.bounds.x,
-        segment.bounds.y,
-        segment.bounds.width,
-        segment.bounds.height,
-      );
+      this.drawFallbackComponentShape(ctx, brick, segment.bounds);
     }
-    ctx.restore();
-
-    ctx.save();
-    this.traceRadialBrickPath(ctx, segment);
-    ctx.lineWidth = RADIAL_BRICK_LINE_WIDTH;
-    ctx.strokeStyle = RADIAL_BRICK_STROKE_COLOR;
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  private traceRadialBrickPath(
-    ctx: CanvasRenderingContext2D,
-    segment: RadialBrickSegment,
-  ) {
-    if (!this.geometry) return;
-
-    ctx.beginPath();
-    ctx.arc(
-      this.geometry.centerX,
-      this.geometry.centerY,
-      segment.outerRadius,
-      segment.startAngle,
-      segment.endAngle,
-    );
-    ctx.arc(
-      this.geometry.centerX,
-      this.geometry.centerY,
-      segment.innerRadius,
-      segment.endAngle,
-      segment.startAngle,
-      true,
-    );
-    ctx.closePath();
   }
 
   private getRadialBrickColor(brick: Brick): string {
     if (brick.kind === BRICK_KIND_METAL) return RADIAL_BRICK_METAL_COLOR;
 
     return RADIAL_BRICK_FALLBACK_COLORS[brick.colorIndex] ?? RADIAL_BRICK_FALLBACK_COLORS[FIRST_INDEX];
+  }
+
+  private drawFallbackComponentShape(
+    ctx: CanvasRenderingContext2D,
+    brick: Brick,
+    bounds: RectBounds,
+  ) {
+    const fillColor = this.getRadialBrickColor(brick);
+    const centerX = bounds.x + bounds.width / 2;
+    const centerY = bounds.y + bounds.height / 2;
+    const radiusX = bounds.width * 0.34;
+    const radiusY = bounds.height * 0.34;
+
+    ctx.fillStyle = fillColor;
+    if (
+      typeof ctx.beginPath === "function" &&
+      typeof ctx.ellipse === "function" &&
+      typeof ctx.fill === "function"
+    ) {
+      ctx.beginPath();
+      ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, Math.PI * 2);
+      ctx.fill();
+      return;
+    }
+
+    ctx.fillRect(
+      centerX - radiusX,
+      centerY - radiusY,
+      radiusX * 2,
+      radiusY * 2,
+    );
   }
 
   private assignRandomMetalBricks() {

@@ -1,24 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Diodo LED">
   <defs>
-    <linearGradient id="spr-brick-basic-yellow-garage-real-normal-board" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#323627"/>
-      <stop offset="0.52" stop-color="#1a1b16"/>
-      <stop offset="1" stop-color="#7a4a00"/>
-    </linearGradient>
-    <linearGradient id="spr-brick-basic-yellow-garage-real-normal-part" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="spr-brick-basic-yellow-garage-real-normal-body" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#fff0bd"/>
       <stop offset="0.48" stop-color="#ffd166"/>
       <stop offset="1" stop-color="#7a4a00"/>
     </linearGradient>
   </defs>
-  <rect x="4" y="5" width="88" height="38" rx="8" fill="url(#spr-brick-basic-yellow-garage-real-normal-board)" stroke="#f5e5ad" stroke-width="3"/>
-  <path d="M10 15h13M73 15h13M10 33h16M70 33h16M48 7v7M48 34v7" stroke="#e6c66a" stroke-width="2.2" stroke-linecap="round" opacity=".76"/>
-  <path d="M14 24h68M30 10v28M66 10v28" stroke="#ffd36b2b" stroke-width="1.4" opacity=".9"/>
-  <circle cx="14" cy="15" r="2.1" fill="#e6c66a" opacity=".88"/>
-  <circle cx="82" cy="33" r="2.1" fill="#e6c66a" opacity=".88"/>
-  <path d="M14 24h23M61 24h21" stroke="#e6c66a" stroke-width="3" stroke-linecap="round"/>
-  <path d="M37 13l24 11-24 11z" fill="url(#spr-brick-basic-yellow-garage-real-normal-part)" stroke="#fff0bd" stroke-width="1.6"/>
-  <path d="M62 13v22" stroke="#fff0bd" stroke-width="3" stroke-linecap="round"/>
-  <path d="M65 13l9-7M70 17l9-7" stroke="#fff0bd" stroke-width="2" stroke-linecap="round" opacity=".78"/>
-  <path d="M75 6h-6v6M80 10h-6v6" fill="none" stroke="#fff0bd" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".78"/>
+  <path d="M8 24h27M63 24h25" stroke="#e6c66a" stroke-width="4" stroke-linecap="round"/>
+  <path d="M35 12l27 12-27 12z" fill="url(#spr-brick-basic-yellow-garage-real-normal-body)" stroke="#fff0bd" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M63 11v26" stroke="#fff0bd" stroke-width="4" stroke-linecap="round"/>
+  <path d="M40 18l12 6-12 6" fill="none" stroke="#fff0bd" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity=".52"/>
+  <path d="M68 13l9-7M73 17l9-7" stroke="#fff0bd" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M77 6h-6v6M82 10h-6v6" fill="none" stroke="#fff0bd" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M16 19h12M72 29h10" stroke="#ffd36b2b" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="10" cy="24" r="2" fill="#e6c66a" opacity=".9"/>
+  <circle cx="86" cy="24" r="2" fill="#e6c66a" opacity=".9"/>
 </svg>

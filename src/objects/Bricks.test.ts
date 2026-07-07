@@ -97,6 +97,20 @@ function createAnimatedCanvasContext() {
   } as unknown as CanvasRenderingContext2D;
 }
 
+function createRadialCanvasContext() {
+  return {
+    drawImage: jest.fn(),
+    fillRect: jest.fn(),
+    save: jest.fn(),
+    restore: jest.fn(),
+    beginPath: jest.fn(),
+    arc: jest.fn(),
+    closePath: jest.fn(),
+    clip: jest.fn(),
+    stroke: jest.fn(),
+  } as unknown as CanvasRenderingContext2D;
+}
+
 async function separateAndTouchBrick(
   bricks: Bricks,
   ball: ReturnType<typeof createBall>,
@@ -247,6 +261,27 @@ describe("Bricks laser fan helpers", () => {
     expect(radialBounce).toHaveBeenCalledWith(segment.centerX, segment.centerY);
     expect(ball.bounceY).not.toHaveBeenCalled();
     expect(onBrickDestroyed).toHaveBeenCalledTimes(1);
+  });
+
+  it("desenha componentes radiais sem recorte nem contorno de bloco", () => {
+    const geometry = calculateRadialPlayfieldGeometry(480, 480, TEST_DIMENSIONS);
+    const bricks = new Bricks(
+      TEST_DIMENSIONS,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      createRandom(BASIC_BRICK_RANDOM_VALUES),
+      geometry,
+    );
+    const ctx = createRadialCanvasContext();
+
+    bricks.draw(ctx);
+
+    expect(ctx.drawImage).toHaveBeenCalled();
+    expect(ctx.arc).not.toHaveBeenCalled();
+    expect(ctx.clip).not.toHaveBeenCalled();
+    expect(ctx.stroke).not.toHaveBeenCalled();
   });
 
   it("mantém bloco metálico ativo até o terceiro toque", async () => {

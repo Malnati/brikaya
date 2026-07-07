@@ -1,27 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Módulo blindado crítico">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Módulo blindado danificado">
   <defs>
-    <linearGradient id="spr-brick-metal-steel-dented-two-board" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#122a46"/>
-      <stop offset="0.52" stop-color="#101a33"/>
-      <stop offset="1" stop-color="#475569"/>
-    </linearGradient>
-    <linearGradient id="spr-brick-metal-steel-dented-two-part" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="spr-brick-metal-steel-dented-two-body" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#f7fbff"/>
       <stop offset="0.48" stop-color="#c8d1dc"/>
       <stop offset="1" stop-color="#475569"/>
     </linearGradient>
   </defs>
-  <rect x="4" y="5" width="88" height="38" rx="8" fill="url(#spr-brick-metal-steel-dented-two-board)" stroke="#bdfcff" stroke-width="3"/>
-  <path d="M10 15h13M73 15h13M10 33h16M70 33h16M48 7v7M48 34v7" stroke="#64f5d6" stroke-width="2.2" stroke-linecap="round" opacity=".76"/>
-  <path d="M14 24h68M30 10v28M66 10v28" stroke="#42f5d733" stroke-width="1.4" opacity=".9"/>
-  <circle cx="14" cy="15" r="2.1" fill="#64f5d6" opacity=".88"/>
-  <circle cx="82" cy="33" r="2.1" fill="#64f5d6" opacity=".88"/>
-  <rect x="24" y="11" width="48" height="26" rx="5" fill="url(#spr-brick-metal-steel-dented-two-part)" stroke="#f7fbff" stroke-width="2"/>
-  <path d="M30 17h36M30 31h36" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".34"/>
-  <circle cx="31" cy="18" r="2.2" fill="#475569" opacity=".76"/>
-  <circle cx="65" cy="18" r="2.2" fill="#475569" opacity=".76"/>
-  <circle cx="31" cy="30" r="2.2" fill="#475569" opacity=".76"/>
-  <circle cx="65" cy="30" r="2.2" fill="#475569" opacity=".76"/>
-  <path d="M38 15l9 6-13 5 12 8M62 13l-8 7 11 5-9 9" fill="none" stroke="#0f172a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>
-       <circle cx="70" cy="30" r="3.2" fill="#ff5d73" opacity=".82"/>
+  <path d="M10 17h11M10 24h11M10 31h11M75 17h11M75 24h11M75 31h11" stroke="#64f5d6" stroke-width="3" stroke-linecap="round"/>
+  <path d="M25 10h42l6 6v16l-6 6H25l-6-6V16z" fill="url(#spr-brick-metal-steel-dented-two-body)" stroke="#f7fbff" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M29 17h36M29 31h36" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".34"/>
+  <circle cx="31" cy="18" r="2.2" fill="#475569" opacity=".8"/>
+  <circle cx="65" cy="18" r="2.2" fill="#475569" opacity=".8"/>
+  <circle cx="31" cy="30" r="2.2" fill="#475569" opacity=".8"/>
+  <circle cx="65" cy="30" r="2.2" fill="#475569" opacity=".8"/>
+  <path d="M31 14l8 4-7 5 10 6" fill="none" stroke="#101a33" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity=".78"/>
+  <path d="M65 29l-6 5h9" fill="none" stroke="#f7fbff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/>
+  <path d="M23 12l5-4M68 40l5-4" stroke="#42f5d733" stroke-width="2" stroke-linecap="round"/>
 </svg>
