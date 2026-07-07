@@ -93,9 +93,10 @@ function Harness({
   joystickEnabled = false,
   switchesEnabled = false,
   gameMode = "classic",
-  turretControlMode = "joystick",
+  turretControlMode = "dual-switch",
   joystickDiagnosticsEnabled = false,
   onJoystickDiagnosticSample,
+  onServeLockChange,
 }: {
   imageSetId: ImageSetId;
   paused?: boolean;
@@ -106,6 +107,7 @@ function Harness({
   turretControlMode?: "joystick" | "dual-switch";
   joystickDiagnosticsEnabled?: boolean;
   onJoystickDiagnosticSample?: (sample: unknown) => void;
+  onServeLockChange?: (locked: boolean) => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const touchZoneRef = useRef<HTMLDivElement>(null);
@@ -134,6 +136,7 @@ function Harness({
     rightSwitchRef,
     joystickDiagnosticsEnabled,
     onJoystickDiagnosticSample,
+    onServeLockChange,
   );
 
   return (
@@ -228,6 +231,33 @@ describe("useGameLoop", () => {
     expect(mockStart).toHaveBeenCalledTimes(1);
   });
 
+  it("inicia a torreta com interruptores duplos e publica callback de saque", async () => {
+    const onServeLockChange = jest.fn();
+
+    render(
+      <Harness
+        imageSetId={IMAGE_SET_RETRO_DEFAULT}
+        gameMode="ball-turret"
+        switchesEnabled
+        onServeLockChange={onServeLockChange}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(GameEngine).toHaveBeenCalledTimes(1);
+      expect(mockSetTurretControlMode).toHaveBeenCalledWith("dual-switch");
+    });
+
+    const constructorArgs = (GameEngine as jest.Mock).mock.calls[0];
+    expect(constructorArgs[10]).toBe("ball-turret");
+    expect(constructorArgs[11]).toBe("dual-switch");
+    expect(constructorArgs[12]).toEqual(expect.any(Function));
+
+    constructorArgs[12](true);
+
+    expect(onServeLockChange).toHaveBeenCalledWith(true);
+  });
+
   it("encaminha gestos touch da faixa sensível para o motor sem recriar a partida", async () => {
     const { getByTestId } = render(
       <Harness imageSetId={IMAGE_SET_RETRO_DEFAULT} touchEnabled />,
@@ -314,6 +344,7 @@ describe("useGameLoop", () => {
       <Harness
         imageSetId={IMAGE_SET_RETRO_DEFAULT}
         gameMode="ball-turret"
+        turretControlMode="joystick"
         joystickEnabled
       />,
     );
@@ -433,6 +464,7 @@ describe("useGameLoop", () => {
       <Harness
         imageSetId={IMAGE_SET_RETRO_DEFAULT}
         gameMode="ball-turret"
+        turretControlMode="joystick"
         joystickEnabled
       />,
     );
@@ -468,6 +500,7 @@ describe("useGameLoop", () => {
       <Harness
         imageSetId={IMAGE_SET_RETRO_DEFAULT}
         gameMode="ball-turret"
+        turretControlMode="joystick"
         joystickEnabled
       />,
     );
@@ -503,6 +536,7 @@ describe("useGameLoop", () => {
       <Harness
         imageSetId={IMAGE_SET_RETRO_DEFAULT}
         gameMode="ball-turret"
+        turretControlMode="joystick"
         joystickEnabled
       />,
     );
@@ -559,6 +593,7 @@ describe("useGameLoop", () => {
       <Harness
         imageSetId={IMAGE_SET_RETRO_DEFAULT}
         gameMode="ball-turret"
+        turretControlMode="joystick"
         joystickEnabled
       />,
     );
@@ -615,6 +650,7 @@ describe("useGameLoop", () => {
       <Harness
         imageSetId={IMAGE_SET_RETRO_DEFAULT}
         gameMode="ball-turret"
+        turretControlMode="joystick"
         joystickEnabled
       />,
     );
@@ -680,6 +716,7 @@ describe("useGameLoop", () => {
       <Harness
         imageSetId={IMAGE_SET_RETRO_DEFAULT}
         gameMode="ball-turret"
+        turretControlMode="joystick"
         joystickEnabled
         joystickDiagnosticsEnabled
         onJoystickDiagnosticSample={onJoystickDiagnosticSample}
@@ -733,6 +770,7 @@ describe("useGameLoop", () => {
       <Harness
         imageSetId={IMAGE_SET_RETRO_DEFAULT}
         gameMode="ball-turret"
+        turretControlMode="joystick"
         joystickEnabled
         joystickDiagnosticsEnabled
         onJoystickDiagnosticSample={onJoystickDiagnosticSample}
@@ -778,6 +816,7 @@ describe("useGameLoop", () => {
       <Harness
         imageSetId={IMAGE_SET_RETRO_DEFAULT}
         gameMode="ball-turret"
+        turretControlMode="joystick"
         joystickEnabled
       />,
     );
@@ -820,6 +859,7 @@ describe("useGameLoop", () => {
       <Harness
         imageSetId={IMAGE_SET_RETRO_DEFAULT}
         gameMode="ball-turret"
+        turretControlMode="joystick"
         joystickEnabled
       />,
     );

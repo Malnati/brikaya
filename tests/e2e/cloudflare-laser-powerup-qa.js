@@ -42,6 +42,7 @@ const GAME_LOG_DB_VERSION = 2;
 const MAX_WAIT_FOR_LASER_MS = 30000;
 const LASER_EFFECT_MIN_VISIBLE_MS = 2000;
 const LASER_EFFECT_SAMPLE_DELAY_MS = 1900;
+const LASER_IMMEDIATE_SCORE_MAX_MS = 300;
 const LASER_EFFECT_STROKE_COLOR_FRAGMENT = "255, 248, 199";
 const LASER_EFFECT_MIN_DRAW_COUNT = 9;
 const LASER_EFFECT_MIN_DRAW_SPAN_MS = 1000;
@@ -556,9 +557,22 @@ async function run() {
         event.metadata?.powerUpType === "laser_fan" &&
         event.metadata?.action === "activate",
     );
+    const activatedPowerUpEvent = activatedPowerUpEvents[0] || null;
+    const brickDestroyedEvents = proofEvents.filter(
+      (event) => event.type === "brick_destroyed",
+    );
+    const firstBrickDestroyedEvent = brickDestroyedEvents[0] || null;
     const levelCompleteEvents = events.filter(
       (event) => event.type === LEVEL_COMPLETE_EVENT_TYPE,
     );
+    const scoreDelayMs =
+      laserScoreEvent && activatedPowerUpEvent
+        ? laserScoreEvent.timestamp - activatedPowerUpEvent.timestamp
+        : null;
+    const firstBrickDelayMs =
+      firstBrickDestroyedEvent && activatedPowerUpEvent
+        ? firstBrickDestroyedEvent.timestamp - activatedPowerUpEvent.timestamp
+        : null;
     const report = {
       url: targetUrl,
       screenshotPath: outScreenshot,
@@ -568,6 +582,14 @@ async function run() {
       allEventTypes: events.map((event) => event.type),
       eventWindow: EVENT_WINDOW_THROUGH_FIRST_LASER_SCORE,
       laserScoreEvent: laserScoreEvent?.metadata || null,
+      laserScoreTiming: {
+        activateTimestamp: activatedPowerUpEvent?.timestamp || null,
+        scoreTimestamp: laserScoreEvent?.timestamp || null,
+        firstBrickDestroyedTimestamp: firstBrickDestroyedEvent?.timestamp || null,
+        scoreDelayMs,
+        firstBrickDelayMs,
+        immediateThresholdMs: LASER_IMMEDIATE_SCORE_MAX_MS,
+      },
       laserScoreEvents: laserScoreEvents.length,
       activatedPowerUpEvents: activatedPowerUpEvents.length,
       levelCompleteEvents: levelCompleteEvents.length,
@@ -605,6 +627,18 @@ async function run() {
     assert(
       laserScoreEvent?.metadata?.pointsAdded === EXPECTED_LASER_SCORE,
       "Laser não somou a pontuação dos cinco blocos.",
+    );
+    assert(
+      Number.isFinite(scoreDelayMs) &&
+        scoreDelayMs >= 0 &&
+        scoreDelayMs <= LASER_IMMEDIATE_SCORE_MAX_MS,
+      "Laser aguardou a animação antes de pontuar.",
+    );
+    assert(
+      Number.isFinite(firstBrickDelayMs) &&
+        firstBrickDelayMs >= 0 &&
+        firstBrickDelayMs <= LASER_IMMEDIATE_SCORE_MAX_MS,
+      "Laser aguardou a animação antes de destruir os blocos.",
     );
     assert(
       (byType.brick_destroyed || 0) >= EXPECTED_LASER_TARGET_COUNT,

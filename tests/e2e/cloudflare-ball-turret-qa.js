@@ -43,12 +43,13 @@ const CONTROL_TOGGLE_TEST_ID = "ball-turret-control-toggle";
 const DUAL_SWITCHES_TEST_ID = "ball-turret-dual-switches";
 const LEFT_SWITCH_TEST_ID = "ball-turret-switch-left";
 const RIGHT_SWITCH_TEST_ID = "ball-turret-switch-right";
+const START_MODAL_TEST_ID = "ball-turret-start-modal";
+const START_MODAL_TITLE_PATTERN = /pronto para jogar|ready to play/i;
 const JOYSTICK_DIAGNOSTIC_JOYSTICK_LAYER_TEST_ID =
   "joystick-diagnostic-joystick-layer";
 const JOYSTICK_DIAGNOSTIC_PLAYFIELD_LAYER_TEST_ID =
   "joystick-diagnostic-playfield-layer";
 const MIN_TOUCH_TARGET_SIZE = 44;
-const MIN_PORTRAIT_TRACKBALL_SIZE = 120;
 const ACTIVE_TRAMPOLINE_ARC_MIN_SWEEP = 0.2;
 const JOYSTICK_SETTLE_MS = 120;
 const JOYSTICK_STABILITY_PROOF_MS = 300;
@@ -60,7 +61,8 @@ const JOYSTICK_LOWER_HALF_CENTER_RATIO = 0.75;
 const JOYSTICK_LOWER_HALF_CENTER_TOLERANCE_PX = 18;
 const JOYSTICK_MAX_TRACKBALL_SIZE = 132;
 const JOYSTICK_MIN_RESPONSIVE_TRACKBALL_SIZE = 72;
-const JOYSTICK_MIN_PLAYFIELD_GAP = 12;
+const SWITCH_MIN_PLAYFIELD_GAP_PX = 48;
+const SWITCH_MAX_EDGE_GAP_PX = 36;
 const DUAL_SWITCH_HOLD_MS = 520;
 const DUAL_SWITCH_SETTLE_MS = 160;
 const DUAL_SWITCH_MOVEMENT_MIN_SIN_DELTA = 0.08;
@@ -78,9 +80,9 @@ const VIEWPORTS = [
   },
   {
     name: "mobile-portrait",
-    joystickPlacement: "below",
-    minTrackballSize: MIN_PORTRAIT_TRACKBALL_SIZE,
-    expectLowerHalfCenter: true,
+    joystickPlacement: "hidden",
+    switchPlacement: "portrait-edges",
+    expectSecondaryJoystick: true,
     screenshotPath: mobileScreenshotPath(),
     viewport: {
       width: 390,
@@ -92,9 +94,9 @@ const VIEWPORTS = [
   },
   {
     name: "mobile-portrait-compact",
-    joystickPlacement: "below",
-    minTrackballSize: JOYSTICK_MIN_RESPONSIVE_TRACKBALL_SIZE,
-    expectJoystickShrink: true,
+    joystickPlacement: "hidden",
+    switchPlacement: "portrait-edges",
+    expectSecondaryJoystick: true,
     screenshotPath: compactMobileScreenshotPath(),
     viewport: {
       width: 480,
@@ -474,6 +476,8 @@ async function readBallTurretState(page) {
       dualSwitchesTestId,
       leftSwitchTestId,
       rightSwitchTestId,
+      startModalTestId,
+      startModalTitlePatternSource,
       orientationBlockerTestId,
       activeTrampolineArcMinSweep,
       boundaryReboundColorFragment,
@@ -485,6 +489,10 @@ async function readBallTurretState(page) {
         "i",
       );
       const brickImagePattern = new RegExp(brickImagePatternSource, "i");
+      const startModalTitlePattern = new RegExp(
+        startModalTitlePatternSource,
+        "i",
+      );
       const gameModeHeadingPattern = new RegExp(
         gameModeHeadingPatternSource,
         "i",
@@ -505,6 +513,9 @@ async function readBallTurretState(page) {
       );
       const rightSwitch = document.querySelector(
         `[data-testid="${rightSwitchTestId}"]`,
+      );
+      const startModal = document.querySelector(
+        `[data-testid="${startModalTestId}"]`,
       );
       const orientationBlocker = document.querySelector(
         `[data-testid="${orientationBlockerTestId}"]`,
@@ -550,9 +561,11 @@ async function readBallTurretState(page) {
       };
       const orientationBlockerRect =
         orientationBlocker?.getBoundingClientRect();
+      const startModalRect = startModal?.getBoundingClientRect();
       const orientationBlockerStyle = orientationBlocker
         ? getComputedStyle(orientationBlocker)
         : null;
+      const startModalStyle = startModal ? getComputedStyle(startModal) : null;
       const canvasWidth = canvas?.width || 0;
       const canvasHeight = canvas?.height || 0;
       const centerX = canvasWidth / 2;
@@ -804,6 +817,37 @@ async function readBallTurretState(page) {
         dualSwitches: readControlState(dualSwitches),
         leftSwitch: readControlState(leftSwitch),
         rightSwitch: readControlState(rightSwitch),
+        startModal: startModalRect
+          ? {
+              exists: true,
+              visible:
+                startModalStyle?.display !== "none" &&
+                startModalStyle?.visibility !== "hidden" &&
+                startModalRect.width > 0 &&
+                startModalRect.height > 0,
+              role: startModal.getAttribute("role") || "",
+              ariaLabel: startModal.getAttribute("aria-label") || "",
+              text: startModal.textContent?.trim() || "",
+              hasTitle: startModalTitlePattern.test(
+                startModal.textContent || "",
+              ),
+              x: startModalRect.x,
+              y: startModalRect.y,
+              width: startModalRect.width,
+              height: startModalRect.height,
+            }
+          : {
+              exists: false,
+              visible: false,
+              role: "",
+              ariaLabel: "",
+              text: "",
+              hasTitle: false,
+              x: 0,
+              y: 0,
+              width: 0,
+              height: 0,
+            },
         scoreHudText: scoreHud?.textContent || "",
         bodyHasInternalCopy: internalCopyPattern.test(
           document.body.textContent || "",
@@ -845,6 +889,8 @@ async function readBallTurretState(page) {
       dualSwitchesTestId: DUAL_SWITCHES_TEST_ID,
       leftSwitchTestId: LEFT_SWITCH_TEST_ID,
       rightSwitchTestId: RIGHT_SWITCH_TEST_ID,
+      startModalTestId: START_MODAL_TEST_ID,
+      startModalTitlePatternSource: START_MODAL_TITLE_PATTERN.source,
       orientationBlockerTestId: ORIENTATION_BLOCKER_TEST_ID,
       activeTrampolineArcMinSweep: ACTIVE_TRAMPOLINE_ARC_MIN_SWEEP,
       boundaryReboundColorFragment: BOUNDARY_REBOUND_COLOR_FRAGMENT,
@@ -990,6 +1036,75 @@ function assertJoystickPlacement(config, gameplayState) {
     assert(
       joystick.x >= canvas.x + canvas.width - 1,
       `${config.name}: joystick não está à direita do tabuleiro em landscape.`,
+    );
+  }
+}
+
+function assertDefaultSwitchControls(config, gameplayState) {
+  const { canvas, viewport, controlToggle, dualSwitches, leftSwitch, rightSwitch } =
+    gameplayState;
+
+  assert(
+    controlToggle.exists && controlToggle.visible,
+    `${config.name}: setinha para trocar controle ausente.`,
+  );
+  assert(
+    controlToggle.text.includes("Joystick"),
+    `${config.name}: setinha não indica troca para joystick.`,
+  );
+  assert(
+    dualSwitches.exists && dualSwitches.visible,
+    `${config.name}: interruptores devem aparecer por padrão.`,
+  );
+  assert(
+    leftSwitch.exists &&
+      leftSwitch.visible &&
+      rightSwitch.exists &&
+      rightSwitch.visible,
+    `${config.name}: interruptores esquerdo/direito não estão visíveis.`,
+  );
+  assert(
+    leftSwitch.width >= MIN_TOUCH_TARGET_SIZE &&
+      leftSwitch.height >= MIN_TOUCH_TARGET_SIZE &&
+      rightSwitch.width >= MIN_TOUCH_TARGET_SIZE &&
+      rightSwitch.height >= MIN_TOUCH_TARGET_SIZE,
+    `${config.name}: interruptores menores que alvo mínimo de toque.`,
+  );
+  assert(
+    gameplayState.joystick.exists && !gameplayState.joystick.visible,
+    `${config.name}: joystick deve ficar oculto por padrão.`,
+  );
+  assert(
+    gameplayState.probe.hasLeftActiveTrampoline &&
+      gameplayState.probe.hasRightActiveTrampoline,
+    `${config.name}: duas camas elásticas não aparecem no primeiro estado.`,
+  );
+  assert(
+    gameplayState.startModal.exists &&
+      gameplayState.startModal.visible &&
+      gameplayState.startModal.role === "dialog" &&
+      gameplayState.startModal.hasTitle,
+    `${config.name}: modal inicial legível da Torreta não apareceu.`,
+  );
+
+  if (config.switchPlacement === "portrait-edges") {
+    const canvasBottom = canvas.y + canvas.height;
+    const leftGap = leftSwitch.x;
+    const rightGap = viewport.width - (rightSwitch.x + rightSwitch.width);
+
+    assert(
+      leftSwitch.y >= canvasBottom + SWITCH_MIN_PLAYFIELD_GAP_PX - 1 &&
+        rightSwitch.y >= canvasBottom + SWITCH_MIN_PLAYFIELD_GAP_PX - 1,
+      `${config.name}: interruptores não respeitam 0,5in abaixo do jogo.`,
+    );
+    assert(
+      leftGap <= SWITCH_MAX_EDGE_GAP_PX &&
+        rightGap <= SWITCH_MAX_EDGE_GAP_PX,
+      `${config.name}: interruptores não ficaram próximos das bordas laterais.`,
+    );
+    assert(
+      rightSwitch.x - (leftSwitch.x + leftSwitch.width) >= viewport.width * 0.45,
+      `${config.name}: interruptores ficaram próximos demais entre si.`,
     );
   }
 }
@@ -1472,8 +1587,6 @@ async function holdSwitch(page, switchTestId, verticalRatio) {
 }
 
 async function exerciseDualSwitches(page) {
-  const toggleSelector = `[data-testid="${CONTROL_TOGGLE_TEST_ID}"]`;
-  await page.click(toggleSelector);
   await page.waitForFunction(
     ({ dualSwitchesTestId, leftSwitchTestId, rightSwitchTestId }) => {
       const dualSwitches = document.querySelector(
@@ -1556,6 +1669,66 @@ async function exerciseDualSwitches(page) {
       afterRightRightAngle,
     },
   };
+}
+
+async function exerciseSecondaryJoystick(page, config) {
+  if (!config.expectSecondaryJoystick) {
+    return {
+      exercised: false,
+      skippedReason: "joystick secundário não exigido neste viewport",
+    };
+  }
+
+  await page.click(`[data-testid="${CONTROL_TOGGLE_TEST_ID}"]`);
+  await page.waitForFunction(
+    ({ joystickTestId, dualSwitchesTestId }) => {
+      const joystick = document.querySelector(`[data-testid="${joystickTestId}"]`);
+      const dualSwitches = document.querySelector(
+        `[data-testid="${dualSwitchesTestId}"]`,
+      );
+      const joystickRect = joystick?.getBoundingClientRect();
+      const joystickStyle = joystick ? getComputedStyle(joystick) : null;
+      return Boolean(
+        joystick &&
+          joystickRect &&
+          joystickRect.width > 0 &&
+          joystickRect.height > 0 &&
+          joystickStyle?.display !== "none" &&
+          !joystick.classList.contains("game-turret-joystick--hidden") &&
+          dualSwitches?.hasAttribute("hidden"),
+      );
+    },
+    { timeout: 5000 },
+    {
+      joystickTestId: JOYSTICK_TEST_ID,
+      dualSwitchesTestId: DUAL_SWITCHES_TEST_ID,
+    },
+  );
+
+  await resetCanvasProbe(page);
+  const joystickExercise = await exerciseJoystick(page);
+
+  await page.click(`[data-testid="${CONTROL_TOGGLE_TEST_ID}"]`);
+  await page.waitForFunction(
+    ({ joystickTestId, dualSwitchesTestId }) => {
+      const joystick = document.querySelector(`[data-testid="${joystickTestId}"]`);
+      const dualSwitches = document.querySelector(
+        `[data-testid="${dualSwitchesTestId}"]`,
+      );
+      return Boolean(
+        joystick?.classList.contains("game-turret-joystick--hidden") &&
+          dualSwitches &&
+          !dualSwitches.hasAttribute("hidden"),
+      );
+    },
+    { timeout: 5000 },
+    {
+      joystickTestId: JOYSTICK_TEST_ID,
+      dualSwitchesTestId: DUAL_SWITCHES_TEST_ID,
+    },
+  );
+
+  return joystickExercise;
 }
 
 async function downloadJoystickDiagnostics(page, config) {
@@ -1731,138 +1904,18 @@ async function runViewport(page, baseUrl, config) {
     `${config.name}: blocos da Torreta não cobrem quatro quadrantes.`,
   );
   assertJoystickPlacement(config, gameplayState);
-  assert(
-    gameplayState.controlToggle.exists && gameplayState.controlToggle.visible,
-    `${config.name}: setinha para trocar controle ausente.`,
-  );
-  assert(
-    gameplayState.controlToggle.text.includes("Interruptores"),
-    `${config.name}: setinha não indica troca para interruptores.`,
-  );
-  assert(
-    gameplayState.dualSwitches.exists && !gameplayState.dualSwitches.visible,
-    `${config.name}: interruptores aparecem antes da troca de controle.`,
-  );
+  assertDefaultSwitchControls(config, gameplayState);
 
   const diagnosticToggleState =
     config.name === "mobile-portrait"
       ? await setJoystickDiagnosticsEnabled(page, config)
       : null;
 
-  await exerciseTrampoline(page);
-  debugLog(config.name, "exercitando joystick");
-  const joystickExercise = await exerciseJoystick(page);
-  assert(
-    config.joystickPlacement === "hidden" || joystickExercise.exercised,
-    `${config.name}: joystick visível não respondeu ao exercício.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      joystickExercise.hitTarget.hitsJoystick,
-    `${config.name}: zona invisível do campo cobriu o joystick; alvo real=${joystickExercise.hitTarget.tagName}.${joystickExercise.hitTarget.className} data-testid=${joystickExercise.hitTarget.testId}.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" || joystickExercise.pathWithinControl,
-    `${config.name}: joystick exigiu arraste fora do círculo visual do controle.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      joystickExercise.rightVisualX > JOYSTICK_TRACKBALL_EDGE_AXIS_MIN,
-    `${config.name}: trackball não exibiu posição visual à direita.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      joystickExercise.leftVisualX < -JOYSTICK_TRACKBALL_EDGE_AXIS_MIN,
-    `${config.name}: trackball não exibiu posição visual à esquerda.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      joystickExercise.topVisualY < -JOYSTICK_TRACKBALL_EDGE_AXIS_MIN,
-    `${config.name}: trackball não exibiu posição visual no topo.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      joystickExercise.bottomVisualY > JOYSTICK_TRACKBALL_EDGE_AXIS_MIN,
-    `${config.name}: trackball não exibiu posição visual na base.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      (Math.abs(joystickExercise.topRightVisual.x) >=
-        JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
-        Math.abs(joystickExercise.topRightVisual.y) >=
-          JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
-        joystickExercise.topRightVisual.x > 0 &&
-        joystickExercise.topRightVisual.y < 0),
-    `${config.name}: trackball não alcançou canto superior direito.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      (Math.abs(joystickExercise.topLeftVisual.x) >=
-        JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
-        Math.abs(joystickExercise.topLeftVisual.y) >=
-          JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
-        joystickExercise.topLeftVisual.x < 0 &&
-        joystickExercise.topLeftVisual.y < 0),
-    `${config.name}: trackball não alcançou canto superior esquerdo.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      (Math.abs(joystickExercise.bottomLeftVisual.x) >=
-        JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
-        Math.abs(joystickExercise.bottomLeftVisual.y) >=
-          JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
-        joystickExercise.bottomLeftVisual.x < 0 &&
-        joystickExercise.bottomLeftVisual.y > 0),
-    `${config.name}: trackball não alcançou canto inferior esquerdo.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      (Math.abs(joystickExercise.bottomRightVisual.x) >=
-        JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
-        Math.abs(joystickExercise.bottomRightVisual.y) >=
-          JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
-        joystickExercise.bottomRightVisual.x > 0 &&
-        joystickExercise.bottomRightVisual.y > 0),
-    `${config.name}: trackball não alcançou canto inferior direito.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      Object.entries(joystickExercise.angleChecks).every(
-        ([, check]) => check.angleMatches,
-      ),
-    `${config.name}: joystick não espelhou todos os pontos absolutos no campo.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      joystickExercise.holdStableAngleDelta <= JOYSTICK_HOLD_MAX_ANGLE_DELTA,
-    `${config.name}: joystick continuou girando após segurar ponto absoluto.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      (joystickExercise.outsideIgnoredCheck.angleUnchanged &&
-        joystickExercise.outsideIgnoredCheck.visualUnchanged &&
-        joystickExercise.outsideIgnoredCheck.outsideAngleRejected),
-    `${config.name}: joystick aceitou movimento fora da área do controle.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      (joystickExercise.outsideCircleInsideBoxIgnoredCheck.angleUnchanged &&
-        joystickExercise.outsideCircleInsideBoxIgnoredCheck.visualUnchanged),
-    `${config.name}: joystick aceitou movimento fora do círculo visual do controle.`,
-  );
-  assert(
-    config.joystickPlacement === "hidden" ||
-      (joystickExercise.releaseVisual.x === 0 &&
-        joystickExercise.releaseVisual.y === 0 &&
-        joystickExercise.releaseVisual.active === 0),
-    `${config.name}: trackball não resetou visualmente ao soltar.`,
-  );
-
   debugLog(config.name, "exercitando interruptores duplos");
   const dualSwitchExercise = await exerciseDualSwitches(page);
   assert(
     dualSwitchExercise.controlsVisible,
-    `${config.name}: interruptores não ficaram visíveis após tocar na setinha.`,
+    `${config.name}: interruptores não ficaram visíveis por padrão.`,
   );
   assert(
     dualSwitchExercise.joystickHidden,
@@ -1894,6 +1947,114 @@ async function runViewport(page, baseUrl, config) {
   ensureParentDirectory(config.screenshotPath);
   await page.screenshot({ path: config.screenshotPath, fullPage: true });
 
+  await exerciseTrampoline(page);
+  debugLog(config.name, "validando joystick secundário");
+  const joystickExercise = await exerciseSecondaryJoystick(page, config);
+  assert(
+    !config.expectSecondaryJoystick || joystickExercise.exercised,
+    `${config.name}: joystick secundário não respondeu após tocar na setinha.`,
+  );
+  assert(
+    !config.expectSecondaryJoystick || joystickExercise.hitTarget.hitsJoystick,
+    `${config.name}: zona invisível do campo cobriu o joystick; alvo real=${joystickExercise.hitTarget.tagName}.${joystickExercise.hitTarget.className} data-testid=${joystickExercise.hitTarget.testId}.`,
+  );
+  assert(
+    !config.expectSecondaryJoystick || joystickExercise.pathWithinControl,
+    `${config.name}: joystick exigiu arraste fora do círculo visual do controle.`,
+  );
+  assert(
+    !config.expectSecondaryJoystick ||
+      joystickExercise.rightVisualX > JOYSTICK_TRACKBALL_EDGE_AXIS_MIN,
+    `${config.name}: trackball não exibiu posição visual à direita.`,
+  );
+  assert(
+    !config.expectSecondaryJoystick ||
+      joystickExercise.leftVisualX < -JOYSTICK_TRACKBALL_EDGE_AXIS_MIN,
+    `${config.name}: trackball não exibiu posição visual à esquerda.`,
+  );
+  assert(
+    !config.expectSecondaryJoystick ||
+      joystickExercise.topVisualY < -JOYSTICK_TRACKBALL_EDGE_AXIS_MIN,
+    `${config.name}: trackball não exibiu posição visual no topo.`,
+  );
+  assert(
+    !config.expectSecondaryJoystick ||
+      joystickExercise.bottomVisualY > JOYSTICK_TRACKBALL_EDGE_AXIS_MIN,
+    `${config.name}: trackball não exibiu posição visual na base.`,
+  );
+  assert(
+    !config.expectSecondaryJoystick ||
+      (Math.abs(joystickExercise.topRightVisual.x) >=
+        JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
+        Math.abs(joystickExercise.topRightVisual.y) >=
+          JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
+        joystickExercise.topRightVisual.x > 0 &&
+        joystickExercise.topRightVisual.y < 0),
+    `${config.name}: trackball não alcançou canto superior direito.`,
+  );
+  assert(
+    !config.expectSecondaryJoystick ||
+      (Math.abs(joystickExercise.topLeftVisual.x) >=
+        JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
+        Math.abs(joystickExercise.topLeftVisual.y) >=
+          JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
+        joystickExercise.topLeftVisual.x < 0 &&
+        joystickExercise.topLeftVisual.y < 0),
+    `${config.name}: trackball não alcançou canto superior esquerdo.`,
+  );
+  assert(
+    !config.expectSecondaryJoystick ||
+      (Math.abs(joystickExercise.bottomLeftVisual.x) >=
+        JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
+        Math.abs(joystickExercise.bottomLeftVisual.y) >=
+          JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
+        joystickExercise.bottomLeftVisual.x < 0 &&
+        joystickExercise.bottomLeftVisual.y > 0),
+    `${config.name}: trackball não alcançou canto inferior esquerdo.`,
+  );
+  assert(
+    !config.expectSecondaryJoystick ||
+      (Math.abs(joystickExercise.bottomRightVisual.x) >=
+        JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
+        Math.abs(joystickExercise.bottomRightVisual.y) >=
+          JOYSTICK_TRACKBALL_DIAGONAL_AXIS_MIN &&
+        joystickExercise.bottomRightVisual.x > 0 &&
+        joystickExercise.bottomRightVisual.y > 0),
+    `${config.name}: trackball não alcançou canto inferior direito.`,
+  );
+  assert(
+    !config.expectSecondaryJoystick ||
+      Object.entries(joystickExercise.angleChecks).every(
+        ([, check]) => check.angleMatches,
+      ),
+    `${config.name}: joystick não espelhou todos os pontos absolutos no campo.`,
+  );
+  assert(
+    !config.expectSecondaryJoystick ||
+      joystickExercise.holdStableAngleDelta <= JOYSTICK_HOLD_MAX_ANGLE_DELTA,
+    `${config.name}: joystick continuou girando após segurar ponto absoluto.`,
+  );
+  assert(
+    !config.expectSecondaryJoystick ||
+      (joystickExercise.outsideIgnoredCheck.angleUnchanged &&
+        joystickExercise.outsideIgnoredCheck.visualUnchanged &&
+        joystickExercise.outsideIgnoredCheck.outsideAngleRejected),
+    `${config.name}: joystick aceitou movimento fora da área do controle.`,
+  );
+  assert(
+    !config.expectSecondaryJoystick ||
+      (joystickExercise.outsideCircleInsideBoxIgnoredCheck.angleUnchanged &&
+        joystickExercise.outsideCircleInsideBoxIgnoredCheck.visualUnchanged),
+    `${config.name}: joystick aceitou movimento fora do círculo visual do controle.`,
+  );
+  assert(
+    !config.expectSecondaryJoystick ||
+      (joystickExercise.releaseVisual.x === 0 &&
+        joystickExercise.releaseVisual.y === 0 &&
+        joystickExercise.releaseVisual.active === 0),
+    `${config.name}: trackball não resetou visualmente ao soltar.`,
+  );
+
   const diagnosticOverlayState =
     config.name === "mobile-portrait"
       ? await readJoystickDiagnosticState(page)
@@ -1916,6 +2077,10 @@ async function runViewport(page, baseUrl, config) {
 
   await new Promise((resolve) => setTimeout(resolve, 120));
   const postExerciseState = await readBallTurretState(page);
+  assert(
+    !postExerciseState.startModal.visible,
+    `${config.name}: modal inicial continuou visível após interação.`,
+  );
   assert(
     !postExerciseState.bodyHasInternalCopy,
     `${config.name}: cópia pública expõe detalhe técnico após controle.`,

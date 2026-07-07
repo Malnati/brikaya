@@ -67,8 +67,8 @@ import {
 } from "./rendering/ballTurretRenderer";
 import { shouldUseReducedCanvasEffects } from "../utils/performanceMode";
 import {
+  DEFAULT_TURRET_CONTROL_MODE,
   TURRET_CONTROL_MODE_DUAL_SWITCH,
-  TURRET_CONTROL_MODE_JOYSTICK,
   type TurretControlMode,
   type TurretSwitchDirection,
   type TurretSwitchSide,
@@ -188,7 +188,6 @@ const LOADING_TEXT = "Carregando";
 const GAME_OVER_TEXT = "FIM DE JOGO!";
 const SCORE_TEXT_PREFIX = "Pontuação";
 const RESTART_HINT_TEXT = "Use ↻ para jogar novamente";
-const TURRET_SERVE_LOCK_TEXT = "Toque no controle para começar";
 const CENTER_DIVISOR = 2;
 const DUAL_TRAMPOLINE_LEFT_X_RATIO = -0.78;
 const DUAL_TRAMPOLINE_RIGHT_X_RATIO = 0.78;
@@ -228,10 +227,6 @@ interface LaserFanEffectTarget {
   seed: number;
 }
 
-interface LaserFanResolution {
-  targets: DestroyedBrickSnapshot[];
-}
-
 export type GameQaScenario =
   | typeof SINGLE_BRICK_QA_SCENARIO
   | typeof SINGLE_BRICK_PHASE_3_QA_SCENARIO
@@ -263,7 +258,7 @@ export class GameEngine {
   private isPaused = false;
   private isTouching = false;
   private isServeLocked = false;
-  private turretControlMode: TurretControlMode = TURRET_CONTROL_MODE_JOYSTICK;
+  private turretControlMode: TurretControlMode = DEFAULT_TURRET_CONTROL_MODE;
   private dualSwitchDirections: Record<TurretSwitchSide, TurretSwitchDirection> = {
     left: 0,
     right: 0,
@@ -294,7 +289,6 @@ export class GameEngine {
   private laserFanEffectUntil = 0;
   private laserFanEffectTargets: LaserFanEffectTarget[] = [];
   private laserFanEffectTimer: ReturnType<typeof setTimeout> | null = null;
-  private laserFanResolution: LaserFanResolution | null = null;
   private readonly handleKeyDown = (event: KeyboardEvent) => {
     this.releaseServeLock();
     this.paddle.onKeyDown(event);
@@ -321,8 +315,11 @@ export class GameEngine {
     private onLevelChange?: (level: number) => void,
     private imageSetId: ImageSetId = IMAGE_SET_RETRO_DEFAULT,
     private gameMode: GameMode = GAME_MODE_CLASSIC,
+    initialTurretControlMode: TurretControlMode = DEFAULT_TURRET_CONTROL_MODE,
+    private onServeLockChange?: (locked: boolean) => void,
   ) {
     LOG(`🚀 GameEngine constructor iniciado`);
+    this.turretControlMode = initialTurretControlMode;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error(ERROR_NO_2D_CONTEXT);
@@ -788,26 +785,22 @@ export class GameEngine {
   }
 
   private shouldUseServeLock() {
-    return this.isBallTurretMode() && !this.qaScenario;
+    return this.isBallTurretMode();
   }
 
   private armServeLock() {
-    this.isServeLocked = this.shouldUseServeLock();
+    this.setServeLock(this.shouldUseServeLock());
   }
 
   private releaseServeLock() {
-    this.isServeLocked = false;
+    this.setServeLock(false);
   }
 
-  private drawServeLockPrompt() {
-    this.ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
-    this.ctx.font = `${14 * Math.min(this.scaleX, this.scaleY)}px ${CANVAS_FONT_FAMILY}`;
-    this.ctx.textAlign = "center";
-    this.ctx.fillText(
-      TURRET_SERVE_LOCK_TEXT,
-      this.canvasSize.width / CENTER_DIVISOR,
-      this.radialGeometry.centerY + this.radialGeometry.radius * 0.42,
-    );
+  private setServeLock(locked: boolean) {
+    if (this.isServeLocked === locked) return;
+
+    this.isServeLocked = locked;
+    this.onServeLockChange?.(locked);
   }
 
   private async preloadAssets() {
@@ -1367,19 +1360,13 @@ export class GameEngine {
       LASER_FAN_TARGET_COUNT,
     );
     this.showLaserFanEffect(selectedBricks);
-    this.laserFanResolution = { targets: selectedBricks };
-    if (selectedBricks.length === 0) return;
+    this.resolveLaserFanPowerUp(selectedBricks);
   }
 
-  private finishLaserFanPowerUp() {
-    const resolution = this.laserFanResolution;
-    this.resetLaserFanEffectState();
-    if (!resolution) return;
+  private resolveLaserFanPowerUp(targets: DestroyedBrickSnapshot[]) {
+    if (targets.length === 0) return;
 
-    const destroyedBricks = this.bricks.destroySelectedActive(
-      resolution.targets,
-    );
-    this.laserFanResolution = null;
+    const destroyedBricks = this.bricks.destroySelectedActive(targets);
     if (destroyedBricks.length === 0) return;
 
     const scoreDelta = POINTS_PER_BRICK * destroyedBricks.length;
@@ -1465,14 +1452,13 @@ export class GameEngine {
       this.buildLaserFanEffectTargets(destroyedBricks);
     if (this.laserFanEffectTimer) clearTimeout(this.laserFanEffectTimer);
     this.laserFanEffectTimer = setTimeout(() => {
-      void this.finishLaserFanPowerUp();
+      this.resetLaserFanEffectState();
     }, LASER_FAN_EFFECT_VISIBLE_MS);
   }
 
   private clearLaserFanEffect() {
     if (this.laserFanEffectTimer) clearTimeout(this.laserFanEffectTimer);
     this.resetLaserFanEffectState();
-    this.laserFanResolution = null;
   }
 
   private resetLaserFanEffectState() {
@@ -1480,13 +1466,6 @@ export class GameEngine {
     this.laserFanEffectStartedAt = 0;
     this.laserFanEffectUntil = 0;
     this.laserFanEffectTargets = [];
-  }
-
-  private isLaserFanEffectActive() {
-    return (
-      this.laserFanEffectStartedAt !== 0 &&
-      Date.now() <= this.laserFanEffectUntil
-    );
   }
 
   private drawLaserFanEffect() {
@@ -1901,7 +1880,7 @@ export class GameEngine {
     this.isStopped = true;
     this.isPaused = false;
     this.isTouching = false;
-    this.isServeLocked = false;
+    this.releaseServeLock();
     this.lastFrameTimestamp = 0;
     this.clearPowerUpEffects();
     this.clearLaserFanEffect();
@@ -2057,20 +2036,14 @@ export class GameEngine {
       try {
         this.drawGameBackdrop();
         this.bricks.draw(this.ctx);
-        const isLaserFanAnimating = this.isLaserFanEffectActive();
         this.paddle.update(frameScale);
         this.updateDualSwitchTrampolines(frameScale);
-        if (!isLaserFanAnimating) {
-          this.updatePowerUp(frameScale);
-        }
+        this.updatePowerUp(frameScale);
         this.drawPlayerControl();
         this.activePowerUp?.draw(this.ctx);
         this.drawLaserFanEffect();
-        if (this.isLevelTransitioning || isLaserFanAnimating || this.isServeLocked) {
+        if (this.isLevelTransitioning || this.isServeLocked) {
           this.balls.forEach((ball) => ball.draw(this.ctx));
-          if (this.isServeLocked) {
-            this.drawServeLockPrompt();
-          }
         } else {
           for (let i = this.balls.length - 1; i >= 0; i--) {
             const ball = this.balls[i];
