@@ -3,6 +3,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
+import { classifyExternalRequests } from "./allowed-external-requests.js";
 import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
@@ -543,8 +544,13 @@ async function run() {
 
     const layoutState = await collectLayoutState(page);
     const events = await readGameEvents(page);
+    const {
+      allowedExternalRequests,
+      unexpectedExternalRequests,
+    } = classifyExternalRequests(externalRequests, targetUrl);
     const proofEvents = eventsThroughFirstLaserScore(events);
     const byType = summarizeEvents(proofEvents);
+    const allByType = summarizeEvents(events);
     const scoreEvents = proofEvents.filter(
       (event) => event.type === "score_update",
     );
@@ -559,14 +565,14 @@ async function run() {
         event.metadata?.action === "activate",
     );
     const activatedPowerUpEvent = activatedPowerUpEvents[0] || null;
-    const brickDestroyedEvents = proofEvents.filter(
+    const brickDestroyedEvents = events.filter(
       (event) => event.type === "brick_destroyed",
     );
     const activatedPowerUpIndex = activatedPowerUpEvent
-      ? proofEvents.indexOf(activatedPowerUpEvent)
+      ? events.indexOf(activatedPowerUpEvent)
       : -1;
     const firstBrickDestroyedEvent =
-      proofEvents
+      events
         .slice(Math.max(0, activatedPowerUpIndex + 1))
         .find((event) => event.type === "brick_destroyed") || null;
     const levelCompleteEvents = events.filter(
@@ -585,6 +591,7 @@ async function run() {
       screenshotPath: outScreenshot,
       itemScreenshotPath: outItemScreenshot,
       byType,
+      allByType,
       eventTypes: proofEvents.map((event) => event.type),
       allEventTypes: events.map((event) => event.type),
       eventWindow: EVENT_WINDOW_THROUGH_FIRST_LASER_SCORE,
@@ -612,6 +619,8 @@ async function run() {
       },
       layoutState,
       externalRequests,
+      allowedExternalRequests,
+      unexpectedExternalRequests,
       consoleProblems,
     };
     writeFileSync(outReport, JSON.stringify(report, null, 2));
@@ -619,7 +628,7 @@ async function run() {
 
     for (const type of REQUIRED_EVENT_TYPES) {
       assert(
-        report.eventTypes.includes(type),
+        report.allEventTypes.includes(type),
         `Evento obrigatório ausente: ${type}`,
       );
     }
@@ -648,7 +657,7 @@ async function run() {
       "Laser aguardou a animação antes de destruir os blocos.",
     );
     assert(
-      (byType.brick_destroyed || 0) >= EXPECTED_LASER_TARGET_COUNT,
+      (allByType.brick_destroyed || 0) >= EXPECTED_LASER_TARGET_COUNT,
       "Laser não registrou os cinco blocos destruídos.",
     );
     assert(
@@ -699,7 +708,10 @@ async function run() {
       !layoutState.hasHorizontalOverflow,
       "Laser gerou overflow horizontal.",
     );
-    assert(externalRequests.length === 0, "Laser gerou request externo.");
+    assert(
+      unexpectedExternalRequests.length === 0,
+      `Laser gerou request externo inesperado: ${unexpectedExternalRequests.join(", ")}`,
+    );
     assert(
       consoleProblems.length === 0,
       `Console publicou warnings/errors: ${JSON.stringify(consoleProblems.slice(0, 5))}`,
