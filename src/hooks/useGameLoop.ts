@@ -21,6 +21,7 @@ import {
   type GameMode,
 } from "../constants/gameMode";
 import {
+  DEFAULT_TURRET_CONTROL_MODE,
   TURRET_CONTROL_MODE_DUAL_SWITCH,
   TURRET_CONTROL_MODE_JOYSTICK,
   type TurretControlMode,
@@ -196,16 +197,18 @@ export function useGameLoop(
   imageSetId: ImageSetId = IMAGE_SET_RETRO_DEFAULT,
   paused = false,
   gameMode: GameMode = GAME_MODE_CLASSIC,
-  turretControlMode: TurretControlMode = TURRET_CONTROL_MODE_JOYSTICK,
+  turretControlMode: TurretControlMode = DEFAULT_TURRET_CONTROL_MODE,
   paddleTouchZoneRef?: RefObject<HTMLElement | null>,
   ballTurretJoystickRef?: RefObject<HTMLElement | null>,
   ballTurretLeftSwitchRef?: RefObject<HTMLElement | null>,
   ballTurretRightSwitchRef?: RefObject<HTMLElement | null>,
   joystickDiagnosticsEnabled = false,
   onJoystickDiagnosticSample?: (sample: JoystickDiagnosticSample) => void,
+  onServeLockChange?: (locked: boolean) => void,
 ) {
   const engineRef = useRef<GameEngine | null>(null);
   const joystickDiagnosticSequenceRef = useRef(0);
+  const onServeLockChangeRef = useRef(onServeLockChange);
   const callbacksRef = useRef<GameLoopCallbacks>({
     onScoreUpdate,
     onGameWon,
@@ -223,6 +226,10 @@ export function useGameLoop(
       onLevelChange,
     };
   }, [onScoreUpdate, onGameWon, onGameOver, onLevelTransition, onLevelChange]);
+
+  useEffect(() => {
+    onServeLockChangeRef.current = onServeLockChange;
+  }, [onServeLockChange]);
 
   useEffect(() => {
     if (startBlocked) {
@@ -257,6 +264,8 @@ export function useGameLoop(
         (level) => callbacksRef.current.onLevelChange?.(level),
         imageSetId,
         gameMode,
+        turretControlMode,
+        (locked) => onServeLockChangeRef.current?.(locked),
       );
       engineRef.current = engine;
       LOG(`🎮 GameEngine criado com sucesso, chamando start()...`);

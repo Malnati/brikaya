@@ -1,5 +1,5 @@
 // src/components/Game.test.tsx
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 
 import Game from "./Game";
 import { useGameLoop } from "../hooks/useGameLoop";
@@ -31,6 +31,7 @@ const BALL_TURRET_CONTROL_TOGGLE_TEST_ID = "ball-turret-control-toggle";
 const BALL_TURRET_DUAL_SWITCHES_TEST_ID = "ball-turret-dual-switches";
 const BALL_TURRET_LEFT_SWITCH_TEST_ID = "ball-turret-switch-left";
 const BALL_TURRET_RIGHT_SWITCH_TEST_ID = "ball-turret-switch-right";
+const BALL_TURRET_START_MODAL_TEST_ID = "ball-turret-start-modal";
 const BALL_TURRET_JOYSTICK_LABEL = "Controle da Torreta";
 
 describe("Game", () => {
@@ -89,12 +90,13 @@ describe("Game", () => {
       "retro-default",
       false,
       "classic",
-      "joystick",
+      "dual-switch",
       expect.anything(),
       expect.anything(),
       expect.anything(),
       expect.anything(),
       false,
+      undefined,
       undefined,
     );
   });
@@ -121,12 +123,13 @@ describe("Game", () => {
       "retro-default",
       true,
       "classic",
-      "joystick",
+      "dual-switch",
       expect.anything(),
       expect.anything(),
       expect.anything(),
       expect.anything(),
       false,
+      undefined,
       undefined,
     );
   });
@@ -148,17 +151,18 @@ describe("Game", () => {
       "retro-default",
       false,
       "ball-turret",
-      "joystick",
+      "dual-switch",
       expect.anything(),
       expect.anything(),
       expect.anything(),
       expect.anything(),
       false,
       undefined,
+      expect.any(Function),
     );
   });
 
-  it("renderiza joystick touch da torreta fora do playfield", () => {
+  it("renderiza interruptores da torreta por padrão fora do playfield", () => {
     const { container } = render(
       <Game onScoreUpdate={jest.fn()} gameMode="ball-turret" />,
     );
@@ -173,30 +177,11 @@ describe("Game", () => {
     expect(joystick).toHaveAttribute("aria-label", BALL_TURRET_JOYSTICK_LABEL);
     expect(joystick).toHaveClass("game-turret-joystick");
     expect(joystick).toHaveClass("game-turret-trackball");
+    expect(joystick).toHaveClass("game-turret-joystick--hidden");
+    expect(joystick).toHaveAttribute("aria-hidden", "true");
     expect(toggle).toBeInTheDocument();
-    expect(toggle).toHaveTextContent("Interruptores");
-    expect(dualSwitches).toHaveAttribute("hidden");
-    expect(playfield).not.toContainElement(joystick);
-    expect(inputLayout).toContainElement(joystick);
-  });
-
-  it("alterna do joystick para dois interruptores independentes da torreta", () => {
-    render(<Game onScoreUpdate={jest.fn()} gameMode="ball-turret" />);
-
-    const toggle = screen.getByTestId(BALL_TURRET_CONTROL_TOGGLE_TEST_ID);
-
-    fireEvent.click(toggle);
-
-    expect(screen.getByTestId(BALL_TURRET_JOYSTICK_TEST_ID)).toHaveClass(
-      "game-turret-joystick--hidden",
-    );
-    expect(screen.getByTestId(BALL_TURRET_JOYSTICK_TEST_ID)).toHaveAttribute(
-      "aria-hidden",
-      "true",
-    );
-    expect(
-      screen.getByTestId(BALL_TURRET_DUAL_SWITCHES_TEST_ID),
-    ).not.toHaveAttribute("hidden");
+    expect(toggle).toHaveTextContent("Joystick");
+    expect(dualSwitches).not.toHaveAttribute("hidden");
     expect(screen.getByTestId(BALL_TURRET_LEFT_SWITCH_TEST_ID)).toHaveAttribute(
       "aria-label",
       "Interruptor esquerdo",
@@ -204,6 +189,61 @@ describe("Game", () => {
     expect(
       screen.getByTestId(BALL_TURRET_RIGHT_SWITCH_TEST_ID),
     ).toHaveAttribute("aria-label", "Interruptor direito");
+    expect(playfield).not.toContainElement(joystick);
+    expect(playfield).not.toContainElement(dualSwitches);
+    expect(inputLayout).toContainElement(joystick);
+    expect(inputLayout).toContainElement(dualSwitches);
+  });
+
+  it("mantém joystick como opção secundária e volta aos interruptores", () => {
+    render(<Game onScoreUpdate={jest.fn()} gameMode="ball-turret" />);
+
+    const toggle = screen.getByTestId(BALL_TURRET_CONTROL_TOGGLE_TEST_ID);
+
+    fireEvent.click(toggle);
+
+    expect(screen.getByTestId(BALL_TURRET_JOYSTICK_TEST_ID)).not.toHaveClass(
+      "game-turret-joystick--hidden",
+    );
+    expect(screen.getByTestId(BALL_TURRET_JOYSTICK_TEST_ID)).not.toHaveAttribute(
+      "aria-hidden",
+    );
+    expect(
+      screen.getByTestId(BALL_TURRET_DUAL_SWITCHES_TEST_ID),
+    ).toHaveAttribute("hidden");
+    expect(toggle).toHaveTextContent("Interruptores");
+    expect(useGameLoop).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.any(Function),
+      undefined,
+      undefined,
+      expect.any(Object),
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      false,
+      "retro-default",
+      false,
+      "ball-turret",
+      "joystick",
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      false,
+      undefined,
+      expect.any(Function),
+    );
+
+    fireEvent.click(toggle);
+
+    expect(screen.getByTestId(BALL_TURRET_JOYSTICK_TEST_ID)).toHaveClass(
+      "game-turret-joystick--hidden",
+    );
+    expect(
+      screen.getByTestId(BALL_TURRET_DUAL_SWITCHES_TEST_ID),
+    ).not.toHaveAttribute("hidden");
     expect(toggle).toHaveTextContent("Joystick");
     expect(useGameLoop).toHaveBeenLastCalledWith(
       expect.anything(),
@@ -226,7 +266,32 @@ describe("Game", () => {
       expect.anything(),
       false,
       undefined,
+      expect.any(Function),
     );
+  });
+
+  it("mostra modal inicial da torreta enquanto o saque está bloqueado", () => {
+    render(<Game onScoreUpdate={jest.fn()} gameMode="ball-turret" />);
+    const serveLockCallback = (useGameLoop as jest.Mock).mock.calls.at(-1)?.at(-1);
+
+    act(() => {
+      serveLockCallback(true);
+    });
+
+    expect(screen.getByTestId(BALL_TURRET_START_MODAL_TEST_ID)).toHaveTextContent(
+      "Pronto para jogar",
+    );
+    expect(screen.getByTestId(BALL_TURRET_START_MODAL_TEST_ID)).toHaveTextContent(
+      "Use os interruptores para mover as camas elásticas.",
+    );
+
+    act(() => {
+      serveLockCallback(false);
+    });
+
+    expect(
+      screen.queryByTestId(BALL_TURRET_START_MODAL_TEST_ID),
+    ).not.toBeInTheDocument();
   });
 
 
@@ -291,6 +356,8 @@ describe("Game", () => {
         ]}
       />,
     );
+
+    fireEvent.click(screen.getByTestId(BALL_TURRET_CONTROL_TOGGLE_TEST_ID));
 
     const joystickLayer = screen.getByTestId("joystick-diagnostic-joystick-layer");
     const playfieldLayer = screen.getByTestId("joystick-diagnostic-playfield-layer");

@@ -48,6 +48,8 @@ const THREE_BRICKS_FORCE_METAL_RANDOM_VALUES = [0, 0, 0, 0.99, 0, 0, 0, 0];
 const BRICK_TOUCH_Y = 40;
 const SECOND_ROW_BRICK_TOUCH_Y = 70;
 const BRICK_SEPARATION_Y = 0;
+const RADIAL_COMPONENT_WIDTH_RATIO = 1.72;
+const RADIAL_COMPONENT_HEIGHT_RATIO = 1.44;
 
 function createRandom(values: number[]) {
   let index = 0;
@@ -270,6 +272,14 @@ describe("Bricks laser fan helpers", () => {
   it("inclina componentes radiais pela tangente do aro sem recorte de célula", () => {
     const geometry = calculateRadialPlayfieldGeometry(480, 480, TEST_DIMENSIONS);
     const segment = calculateRadialBrickSegment(geometry, TEST_DIMENSIONS, 0, 0);
+    const angularWidth = Math.abs(segment.endAngle - segment.startAngle);
+    const tangentSpan = segment.centerRadius * angularWidth;
+    const radialSpan = segment.outerRadius - segment.innerRadius;
+    const expectedWidth =
+      Math.max(1, Math.min(segment.bounds.width, tangentSpan)) *
+      RADIAL_COMPONENT_WIDTH_RATIO;
+    const expectedHeight =
+      Math.max(1, radialSpan) * RADIAL_COMPONENT_HEIGHT_RATIO;
     const bricks = new Bricks(
       TEST_DIMENSIONS,
       undefined,
@@ -289,6 +299,15 @@ describe("Bricks laser fan helpers", () => {
       segment.centerY,
     );
     expect(ctx.rotate).toHaveBeenCalledWith(segment.centerAngle + Math.PI / 2);
+    expect(ctx.drawImage).toHaveBeenCalledWith(
+      expect.anything(),
+      -expectedWidth / 2,
+      -expectedHeight / 2,
+      expectedWidth,
+      expectedHeight,
+    );
+    expect(expectedWidth).toBeGreaterThan(segment.bounds.width);
+    expect(expectedHeight).toBeGreaterThan(radialSpan);
     expect(ctx.arc).not.toHaveBeenCalled();
     expect(ctx.clip).not.toHaveBeenCalled();
   });

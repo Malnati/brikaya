@@ -301,7 +301,7 @@ describe("GameEngine", () => {
     expect((engine as any).paddle.draw).toHaveBeenCalled();
   });
 
-  it("renderiza camada torreta no modo ball-turret", async () => {
+  it("renderiza duas camas elásticas por padrão no modo ball-turret", async () => {
     const engine = new GameEngine(
       canvas,
       onScoreUpdate,
@@ -318,6 +318,7 @@ describe("GameEngine", () => {
 
     (engine as any).assetsLoaded = true;
     (engine as any).isStopped = false;
+    (engine as any).isServeLocked = false;
 
     await (engine as any).loop();
 
@@ -336,13 +337,57 @@ describe("GameEngine", () => {
       .calls[0][1].geometry;
     expect(turretGeometry.brickArcStartAngle).toBeCloseTo(-Math.PI);
     expect(turretGeometry.brickArcEndAngle).toBeCloseTo(Math.PI);
-    expect(drawBallTurretTrampoline).toHaveBeenCalled();
-    expect(drawBallTurretTrampolines).not.toHaveBeenCalled();
+    expect(drawBallTurretTrampoline).not.toHaveBeenCalled();
+    expect(drawBallTurretTrampolines).toHaveBeenCalledWith(
+      mockContext,
+      expect.objectContaining({
+        canvasSize: expect.objectContaining({
+          width: canvas.width,
+          height: canvas.height,
+        }),
+        geometry: expect.any(Object),
+        paddlePosition: expect.any(Object),
+      }),
+      expect.arrayContaining([
+        expect.objectContaining({
+          radial: expect.objectContaining({ centerAngle: expect.any(Number) }),
+        }),
+        expect.objectContaining({
+          radial: expect.objectContaining({ centerAngle: expect.any(Number) }),
+        }),
+      ]),
+    );
     expect(drawBallTurretGlassOverlay).toHaveBeenCalled();
     expect((engine as any).paddle.draw).not.toHaveBeenCalled();
   });
 
-  it("renderiza e usa duas camas elásticas quando os interruptores estão ativos", async () => {
+  it("mantém joystick como controle secundário no modo ball-turret", async () => {
+    const engine = new GameEngine(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "ball-turret",
+      "joystick",
+    );
+
+    (engine as any).assetsLoaded = true;
+    (engine as any).isStopped = false;
+    (engine as any).isServeLocked = false;
+
+    await (engine as any).loop();
+
+    expect(drawBallTurretTrampoline).toHaveBeenCalled();
+    expect(drawBallTurretTrampolines).not.toHaveBeenCalled();
+  });
+
+  it("renderiza e usa duas camas elásticas no primeiro frame da torreta", async () => {
     const engine = new GameEngine(
       canvas,
       onScoreUpdate,
@@ -362,7 +407,6 @@ describe("GameEngine", () => {
     (engine as any).isServeLocked = false;
     (engine as any).lastFrameTimestamp = 1000;
 
-    engine.setTurretControlMode("dual-switch");
     engine.setDualSwitchDirection("left", -1);
 
     await (engine as any).loop(1000 + 1000 / 60);
@@ -398,6 +442,7 @@ describe("GameEngine", () => {
       width: canvas.width,
       height: canvas.height,
     } as DOMRect);
+    const onServeLockChange = jest.fn();
     const engine = new GameEngine(
       canvas,
       onScoreUpdate,
@@ -410,6 +455,8 @@ describe("GameEngine", () => {
       undefined,
       undefined,
       "ball-turret",
+      "dual-switch",
+      onServeLockChange,
     );
     const ball = mockBallInstances[0];
 
@@ -421,10 +468,12 @@ describe("GameEngine", () => {
 
     expect(ball.update).not.toHaveBeenCalled();
     expect(ball.draw).toHaveBeenCalled();
+    expect(onServeLockChange).toHaveBeenCalledWith(true);
 
-    engine.startPaddleDrag(canvas.width / 2, canvas.height);
+    engine.setDualSwitchDirection("left", -1);
     await (engine as any).loop(1000 + 1000 / 30);
 
+    expect(onServeLockChange).toHaveBeenLastCalledWith(false);
     expect(ball.update).toHaveBeenCalledWith(
       (engine as any).paddle,
       (engine as any).bricks,
@@ -432,7 +481,10 @@ describe("GameEngine", () => {
       expect.any(Object),
       expect.any(Object),
       expect.any(Number),
-      undefined,
+      expect.arrayContaining([
+        expect.objectContaining({ radial: expect.any(Object) }),
+        expect.objectContaining({ radial: expect.any(Object) }),
+      ]),
     );
   });
 
@@ -1053,7 +1105,7 @@ describe("GameEngine", () => {
     expect(mockGameLogger.logBallAdded.mock.calls[1][0].ballsCount).toBe(3);
   });
 
-  it("ativa laser escolhendo cinco blocos e destruindo ao fim da animação", async () => {
+  it("ativa laser escolhendo cinco blocos e destruindo imediatamente", async () => {
     jest.useFakeTimers();
     mockDestroyedLaserBricks = [
       { col: 0, row: 0, colorIndex: 0, x: 10, y: 20, width: 50, height: 20 },
@@ -1086,9 +1138,11 @@ describe("GameEngine", () => {
     await (engine as any).activatePowerUp("laser_fan");
 
     expect(mockBricksInstances[0].selectRandomActive).toHaveBeenCalledWith(5);
-    expect(mockBricksInstances[0].destroySelectedActive).not.toHaveBeenCalled();
-    expect(onScoreUpdate).not.toHaveBeenCalled();
-    expect(mockGameLogger.logScoreUpdate).not.toHaveBeenCalled();
+    expect(mockBricksInstances[0].destroySelectedActive).toHaveBeenCalledWith(
+      mockDestroyedLaserBricks,
+    );
+    expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_BRICK * 5);
+    expect(mockGameLogger.logScoreUpdate).toHaveBeenCalledTimes(1);
     expect(mockGameLogger.logLevelComplete).not.toHaveBeenCalled();
     expect(onLevelTransition).not.toHaveBeenCalled();
     expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.POWERUP_COLLECT);
@@ -1106,13 +1160,8 @@ describe("GameEngine", () => {
     ).toBeGreaterThanOrEqual(2000);
     jest.advanceTimersByTime(LASER_FAN_EFFECT_VISIBLE_MS - 1);
     expect((engine as any).laserFanEffectUntil).toBeGreaterThan(Date.now());
-    expect(mockBricksInstances[0].destroySelectedActive).not.toHaveBeenCalled();
     await jest.advanceTimersByTimeAsync(1);
-    expect(mockBricksInstances[0].destroySelectedActive).toHaveBeenCalledWith(
-      mockDestroyedLaserBricks,
-    );
-    expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_BRICK * 5);
-    expect(mockGameLogger.logScoreUpdate).toHaveBeenCalledTimes(1);
+    expect(mockBricksInstances[0].destroySelectedActive).toHaveBeenCalledTimes(1);
     expect(mockGameLogger.logLevelComplete).not.toHaveBeenCalled();
     expect(onLevelTransition).not.toHaveBeenCalled();
     expect((engine as any).laserFanEffectStartedAt).toBe(0);
@@ -1120,6 +1169,24 @@ describe("GameEngine", () => {
     expect((engine as any).laserFanEffectTargets).toEqual([]);
     expect(mockGameLogger.logRestartGame).not.toHaveBeenCalled();
     expect(mockGameLogger.logGameStart).not.toHaveBeenCalled();
+  });
+
+  it("mantém física da bola enquanto a animação do laser aparece", async () => {
+    jest.useFakeTimers().setSystemTime(new Date("2026-07-04T00:00:00.000Z"));
+    jest.spyOn(window, "requestAnimationFrame").mockReturnValue(0);
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+
+    (engine as any).assetsLoaded = true;
+    (engine as any).isStopped = false;
+    (engine as any).lastFrameTimestamp = 1000;
+    (engine as any).showLaserFanEffect([
+      { col: 0, row: 0, colorIndex: 0, x: 10, y: 20, width: 50, height: 20 },
+    ]);
+
+    await (engine as any).loop(1000 + 1000 / 60);
+
+    expect(mockBallInstances[0].update).toHaveBeenCalled();
+    expect((engine as any).laserFanEffectTargets).toHaveLength(1);
   });
 
   it("completa fase quando os blocos aleatórios do laser esgotam o tabuleiro", async () => {
@@ -1142,7 +1209,6 @@ describe("GameEngine", () => {
     const mockGameLogger = require("../storage/gameLogger").gameLogger;
 
     await (engine as any).activatePowerUp("laser_fan");
-    await jest.advanceTimersByTimeAsync(LASER_FAN_EFFECT_VISIBLE_MS);
 
     expect(mockBricksInstances[0].selectRandomActive).toHaveBeenCalledWith(5);
     expect(mockBricksInstances[0].destroySelectedActive).toHaveBeenCalledWith(

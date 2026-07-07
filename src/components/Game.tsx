@@ -25,6 +25,7 @@ import {
   type GameMode,
 } from "../constants/gameMode";
 import {
+  DEFAULT_TURRET_CONTROL_MODE,
   TURRET_CONTROL_MODE_DUAL_SWITCH,
   TURRET_CONTROL_MODE_JOYSTICK,
   type TurretControlMode,
@@ -86,10 +87,14 @@ const BALL_TURRET_CONTROL_TOGGLE_TEST_ID = "ball-turret-control-toggle";
 const BALL_TURRET_DUAL_SWITCHES_TEST_ID = "ball-turret-dual-switches";
 const BALL_TURRET_LEFT_SWITCH_TEST_ID = "ball-turret-switch-left";
 const BALL_TURRET_RIGHT_SWITCH_TEST_ID = "ball-turret-switch-right";
+const BALL_TURRET_START_MODAL_TEST_ID = "ball-turret-start-modal";
 const BALL_TURRET_JOYSTICK_LABEL = "Controle da Torreta";
 const BALL_TURRET_CONTROL_TOGGLE_LABEL = "Trocar controle";
 const BALL_TURRET_DUAL_SWITCH_LEFT_LABEL = "Interruptor esquerdo";
 const BALL_TURRET_DUAL_SWITCH_RIGHT_LABEL = "Interruptor direito";
+const BALL_TURRET_START_MODAL_TITLE = "Pronto para jogar";
+const BALL_TURRET_START_MODAL_COPY =
+  "Use os interruptores para mover as camas elásticas.";
 const GAME_SURFACE_CLASS_NAME = "game-surface";
 const GAME_SURFACE_BALL_TURRET_CLASS_NAME = "game-surface--ball-turret";
 const GAME_BOARD_INPUT_LAYOUT_CLASS_NAME = "game-board-input-layout";
@@ -103,6 +108,7 @@ const BALL_TURRET_DUAL_SWITCHES_CLASS_NAME = "game-turret-dual-switches";
 const BALL_TURRET_SWITCH_CLASS_NAME = "game-turret-switch";
 const BALL_TURRET_SWITCH_LEFT_CLASS_NAME = "game-turret-switch--left";
 const BALL_TURRET_SWITCH_RIGHT_CLASS_NAME = "game-turret-switch--right";
+const BALL_TURRET_START_MODAL_CLASS_NAME = "game-turret-start-modal";
 const JOYSTICK_DIAGNOSTIC_JOYSTICK_LAYER_TEST_ID =
   "joystick-diagnostic-joystick-layer";
 const JOYSTICK_DIAGNOSTIC_PLAYFIELD_LAYER_TEST_ID =
@@ -309,12 +315,20 @@ export default function Game({
     height: CANVAS_HEIGHT,
   });
   const [turretControlMode, setTurretControlMode] =
-    useState<TurretControlMode>(TURRET_CONTROL_MODE_JOYSTICK);
+    useState<TurretControlMode>(DEFAULT_TURRET_CONTROL_MODE);
+  const [isTurretStartLocked, setIsTurretStartLocked] = useState(false);
   const canvasSizeRef = useRef(canvasSize);
   const pendingBoardRectTargetRef = useRef<PendingBoardRectTarget | null>(null);
   const isBallTurretMode = gameMode === GAME_MODE_BALL_TURRET;
+  const shouldShowTurretStartModal = isBallTurretMode && isTurretStartLocked;
   const shouldRenderJoystickDiagnostics =
     isBallTurretMode && joystickDiagnosticsEnabled && joystickDiagnosticSamples.length > 0;
+  const handleServeLockChange = useCallback(
+    (locked: boolean) => {
+      setIsTurretStartLocked(isBallTurretMode && locked);
+    },
+    [isBallTurretMode],
+  );
   const paddleTouchZoneCenterPercent = useMemo(() => {
     const dimensions = calculateDynamicDimensions(
       canvasSize.width,
@@ -473,6 +487,12 @@ export default function Game({
   }, [canvasSize, updateTurretJoystickLayout]);
 
   useLayoutEffect(() => {
+    if (isBallTurretMode && !startBlocked) return;
+
+    setIsTurretStartLocked(false);
+  }, [isBallTurretMode, startBlocked]);
+
+  useLayoutEffect(() => {
     canvasSizeRef.current = canvasSize;
     const pendingBoardRectTarget = pendingBoardRectTargetRef.current;
     if (pendingBoardRectTarget) {
@@ -510,6 +530,7 @@ export default function Game({
     ballTurretRightSwitchRef,
     joystickDiagnosticsEnabled,
     onJoystickDiagnosticSample,
+    isBallTurretMode ? handleServeLockChange : undefined,
   );
   useColorDebug(canvasRef);
 
@@ -543,6 +564,18 @@ export default function Game({
                 touchAction: TOUCH_ACTION_NONE,
               }}
             />
+            {shouldShowTurretStartModal && (
+              <div
+                className={BALL_TURRET_START_MODAL_CLASS_NAME}
+                data-testid={BALL_TURRET_START_MODAL_TEST_ID}
+                role="dialog"
+                aria-modal="false"
+                aria-label={BALL_TURRET_START_MODAL_TITLE}
+              >
+                <strong>{BALL_TURRET_START_MODAL_TITLE}</strong>
+                <span>{BALL_TURRET_START_MODAL_COPY}</span>
+              </div>
+            )}
             <div
               ref={paddleTouchZoneRef}
               className={PADDLE_TOUCH_ZONE_CLASS_NAME}
