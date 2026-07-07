@@ -57,6 +57,27 @@ describe("radialGeometry", () => {
     expect(segment.bounds.height).toBeGreaterThan(0);
   });
 
+  it("expõe ângulo e raio centrais para alinhar componentes ao aro", () => {
+    const geometry = calculateRadialPlayfieldGeometry(
+      TEST_CANVAS_WIDTH,
+      TEST_CANVAS_HEIGHT,
+      TEST_DIMENSIONS,
+    );
+    const segment = calculateRadialBrickSegment(
+      geometry,
+      TEST_DIMENSIONS,
+      2,
+      1,
+    );
+
+    expect(segment.centerAngle).toBeCloseTo(
+      (segment.startAngle + segment.endAngle) / 2,
+    );
+    expect(segment.centerRadius).toBeCloseTo(
+      (segment.innerRadius + segment.outerRadius) / 2,
+    );
+  });
+
   it("usa o raio máximo do centro até a borda superior do canvas", () => {
     const geometry = calculateRadialPlayfieldGeometry(
       TEST_CANVAS_WIDTH,
