@@ -8,12 +8,22 @@ const SITEMAP_FILE = 'sitemap.xml';
 const ROBOTS_FILE = 'robots.txt';
 const CANONICAL_ORIGIN = 'https://brikaya.com';
 const DEFAULT_LOCALE = 'pt-BR';
-const LASTMOD = '2026-07-06';
+const LASTMOD = '2026-07-07';
 const XML_HEADER = '<?xml version="1.0" encoding="UTF-8"?>';
 const HOME_ROUTE_PATH = '/';
 const DOWNLOADS_ROUTE_PATH = '/downloads/';
 const LOCALIZED_ROUTES = [HOME_ROUTE_PATH, DOWNLOADS_ROUTE_PATH];
-const STATIC_PUBLIC_PATHS = ['/privacy/', '/terms/'];
+const STATIC_PUBLIC_PATHS = [
+  '/about/',
+  '/legal/',
+  '/privacy/',
+  '/terms/',
+  '/user-agreement/',
+  '/license/',
+  '/data-deletion/',
+  '/cookies/',
+  '/support/',
+];
 const RTL_LOCALES = new Set(['ar', 'ur', 'fa', 'he', 'ps', 'sd', 'ks', 'dv', 'ckb', 'ug', 'yi', 'bal', 'ar-SA', 'ar-EG', 'fa-AF', 'ps-AF', 'sd-IN', 'ks-IN', 'ug-CN', 'yi-001']);
 
 const LOCALES = [

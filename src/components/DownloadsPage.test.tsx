@@ -43,6 +43,8 @@ describe("DownloadsPage", () => {
     expect(screen.queryByText(/Chrome Web Store/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Google Play/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Apple App Store/i)).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /sobre|about/i })).toHaveAttribute("href", "/about/");
+    expect(screen.getByRole("link", { name: /legal/i })).toHaveAttribute("href", "/legal/");
   });
 
   it("mostra QRCode, imagens locais e compromissos sem cadastro", () => {

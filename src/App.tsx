@@ -1132,6 +1132,12 @@ function GameApp() {
                 <a className="settings-drawer__link" href="/terms/">
                   {t("menu.terms")}
                 </a>
+                <a className="settings-drawer__link" href="/about/">
+                  {t("menu.about")}
+                </a>
+                <a className="settings-drawer__link" href="/legal/">
+                  {t("menu.legal")}
+                </a>
                 <button
                   type="button"
                   onClick={handleReviewPrivacyConsent}

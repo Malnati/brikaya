@@ -505,3 +505,12 @@ Critérios:
 - H5 Games Ads / Ad Placement API segue pendente de liberação/aprovação do Google; o formulário oficial exige conta aprovada e dados adicionais de contato/empresa/telefone antes de submissão.
 - Guardrails mantidos: sem Google Ads campaign, sem orçamento, sem cartão, sem Clarity/pixel adicional, sem clique em anúncio real em QA e sem anúncio durante jogada ativa e sem exibição em todas as transições de fase.
 - Documento operacional: [`docs/monetizacao-google.md`](../monetizacao-google.md).
+
+## Atualização operacional em 2026-07-07 — pacote legal e confiança pública
+
+- Escopo publicado: preparar URLs públicas para Sobre, Legal, Privacidade, Termos, Contrato de usuário, Licença, Exclusão de dados, Cookies/anúncios e Suporte.
+- Objetivo: antecipar exigências comuns de Google OAuth/App Branding, Meta Developers, buscadores e preparação futura para lojas, mantendo Brikaya como PWA gratuito sem conta de jogador.
+- Guardrail: sem campanha paga, sem cartão, sem loja paga, sem pixel novo, sem exposição de perfil pessoal e sem compromisso de custo.
+- Sitemap: deve incluir as novas rotas estáticas junto com home/downloads localizados após `npm run build`.
+- Search Console: após merge/deploy, reenviar `https://brikaya.com/sitemap.xml` e aguardar processamento; não tratar processamento pendente como erro de publicação.
+- Meta/Google: usar as URLs públicas `https://brikaya.com/privacy/`, `https://brikaya.com/terms/` e `https://brikaya.com/data-deletion/` quando algum painel pedir política, termos ou instrução de exclusão.
