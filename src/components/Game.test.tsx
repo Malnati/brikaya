@@ -1,5 +1,5 @@
 // src/components/Game.test.tsx
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 
 import Game from "./Game";
 import { useGameLoop } from "../hooks/useGameLoop";
@@ -27,6 +27,10 @@ const EXPECTED_PADDLE_TOUCH_ZONE_HEIGHT = "3in";
 const EXPECTED_PADDLE_TOUCH_ZONE_TOP_OFFSET = "- 96px";
 const EXPECTED_PADDLE_TOUCH_ZONE_TRANSFORM = "none";
 const BALL_TURRET_JOYSTICK_TEST_ID = "ball-turret-joystick";
+const BALL_TURRET_CONTROL_TOGGLE_TEST_ID = "ball-turret-control-toggle";
+const BALL_TURRET_DUAL_SWITCHES_TEST_ID = "ball-turret-dual-switches";
+const BALL_TURRET_LEFT_SWITCH_TEST_ID = "ball-turret-switch-left";
+const BALL_TURRET_RIGHT_SWITCH_TEST_ID = "ball-turret-switch-right";
 const BALL_TURRET_JOYSTICK_LABEL = "Controle da Torreta";
 
 describe("Game", () => {
@@ -85,6 +89,9 @@ describe("Game", () => {
       "retro-default",
       false,
       "classic",
+      "joystick",
+      expect.anything(),
+      expect.anything(),
       expect.anything(),
       expect.anything(),
       false,
@@ -114,6 +121,9 @@ describe("Game", () => {
       "retro-default",
       true,
       "classic",
+      "joystick",
+      expect.anything(),
+      expect.anything(),
       expect.anything(),
       expect.anything(),
       false,
@@ -138,6 +148,9 @@ describe("Game", () => {
       "retro-default",
       false,
       "ball-turret",
+      "joystick",
+      expect.anything(),
+      expect.anything(),
       expect.anything(),
       expect.anything(),
       false,
@@ -151,6 +164,8 @@ describe("Game", () => {
     );
 
     const joystick = screen.getByTestId(BALL_TURRET_JOYSTICK_TEST_ID);
+    const toggle = screen.getByTestId(BALL_TURRET_CONTROL_TOGGLE_TEST_ID);
+    const dualSwitches = screen.getByTestId(BALL_TURRET_DUAL_SWITCHES_TEST_ID);
     const playfield = container.querySelector(".game-board-playfield");
     const inputLayout = container.querySelector(".game-board-input-layout");
 
@@ -158,8 +173,60 @@ describe("Game", () => {
     expect(joystick).toHaveAttribute("aria-label", BALL_TURRET_JOYSTICK_LABEL);
     expect(joystick).toHaveClass("game-turret-joystick");
     expect(joystick).toHaveClass("game-turret-trackball");
+    expect(toggle).toBeInTheDocument();
+    expect(toggle).toHaveTextContent("Interruptores");
+    expect(dualSwitches).toHaveAttribute("hidden");
     expect(playfield).not.toContainElement(joystick);
     expect(inputLayout).toContainElement(joystick);
+  });
+
+  it("alterna do joystick para dois interruptores independentes da torreta", () => {
+    render(<Game onScoreUpdate={jest.fn()} gameMode="ball-turret" />);
+
+    const toggle = screen.getByTestId(BALL_TURRET_CONTROL_TOGGLE_TEST_ID);
+
+    fireEvent.click(toggle);
+
+    expect(screen.getByTestId(BALL_TURRET_JOYSTICK_TEST_ID)).toHaveClass(
+      "game-turret-joystick--hidden",
+    );
+    expect(screen.getByTestId(BALL_TURRET_JOYSTICK_TEST_ID)).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
+    expect(
+      screen.getByTestId(BALL_TURRET_DUAL_SWITCHES_TEST_ID),
+    ).not.toHaveAttribute("hidden");
+    expect(screen.getByTestId(BALL_TURRET_LEFT_SWITCH_TEST_ID)).toHaveAttribute(
+      "aria-label",
+      "Interruptor esquerdo",
+    );
+    expect(
+      screen.getByTestId(BALL_TURRET_RIGHT_SWITCH_TEST_ID),
+    ).toHaveAttribute("aria-label", "Interruptor direito");
+    expect(toggle).toHaveTextContent("Joystick");
+    expect(useGameLoop).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.any(Function),
+      undefined,
+      undefined,
+      expect.any(Object),
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      false,
+      "retro-default",
+      false,
+      "ball-turret",
+      "dual-switch",
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      false,
+      undefined,
+    );
   });
 
 

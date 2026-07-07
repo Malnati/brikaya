@@ -2,6 +2,7 @@ import {
   drawBallTurretBackdrop,
   drawBallTurretGlassOverlay,
   drawBallTurretTrampoline,
+  drawBallTurretTrampolines,
   type BallTurretRenderState,
 } from "./ballTurretRenderer";
 
@@ -109,5 +110,44 @@ describe("ballTurretRenderer", () => {
 
     expect(ctx.moveTo).toHaveBeenCalledTimes(7);
     expect((ctx as { shadowBlur?: number }).shadowBlur).toBe(0);
+  });
+
+  it("desenha duas camas elásticas ativas quando recebe dois lados", () => {
+    const ctx = createMockContext();
+    const state = createState();
+    const leftPaddle = {
+      ...state.paddlePosition,
+      radial: {
+        ...state.paddlePosition.radial,
+        startAngle: 2.72,
+        endAngle: 3.12,
+        centerAngle: 2.92,
+      },
+    };
+    const rightPaddle = {
+      ...state.paddlePosition,
+      radial: {
+        ...state.paddlePosition.radial,
+        startAngle: 0.02,
+        endAngle: 0.42,
+        centerAngle: 0.22,
+      },
+    };
+
+    drawBallTurretTrampolines(
+      ctx,
+      { ...state, reducedEffects: true },
+      [leftPaddle, rightPaddle],
+    );
+
+    expect(ctx.arc).toHaveBeenCalledWith(
+      240,
+      160,
+      144,
+      2.72,
+      3.12,
+    );
+    expect(ctx.arc).toHaveBeenCalledWith(240, 160, 144, 0.02, 0.42);
+    expect(ctx.moveTo).toHaveBeenCalledTimes(14);
   });
 });

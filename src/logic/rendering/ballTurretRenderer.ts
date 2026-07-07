@@ -229,7 +229,18 @@ export function drawBallTurretTrampoline(
   ctx: CanvasRenderingContext2D,
   state: BallTurretRenderState,
 ): void {
-  const trampoline = readTrampolineBounds(state);
+  drawBallTurretTrampolines(ctx, state, [state.paddlePosition]);
+}
+
+export function drawBallTurretTrampolines(
+  ctx: CanvasRenderingContext2D,
+  state: BallTurretRenderState,
+  paddlePositions: BallTurretRenderState["paddlePosition"][],
+): void {
+  const trampolines = paddlePositions.map((paddlePosition) =>
+    readTrampolineBounds({ ...state, paddlePosition }),
+  );
+  const trampoline = trampolines[0] ?? readTrampolineBounds(state);
   const reducedEffects = state.reducedEffects === true;
   const frameWidth = Math.max(
     8,
@@ -293,43 +304,46 @@ export function drawBallTurretTrampoline(
   ctx.stroke();
 
   ctx.shadowBlur = reducedEffects ? 0 : Math.max(5, trampoline.thickness * 0.42);
-  ctx.strokeStyle = "rgba(16, 24, 34, 0.98)";
-  ctx.lineWidth = frameWidth * 0.82;
-  ctx.beginPath();
-  ctx.arc(
-    trampoline.centerX,
-    trampoline.centerY,
-    trampoline.radius,
-    trampoline.startAngle,
-    trampoline.endAngle,
-  );
-  ctx.stroke();
+  trampolines.forEach((activeTrampoline) => {
+    ctx.shadowBlur = reducedEffects ? 0 : Math.max(5, activeTrampoline.thickness * 0.42);
+    ctx.strokeStyle = "rgba(16, 24, 34, 0.98)";
+    ctx.lineWidth = frameWidth * 0.82;
+    ctx.beginPath();
+    ctx.arc(
+      activeTrampoline.centerX,
+      activeTrampoline.centerY,
+      activeTrampoline.radius,
+      activeTrampoline.startAngle,
+      activeTrampoline.endAngle,
+    );
+    ctx.stroke();
 
-  ctx.shadowBlur = reducedEffects ? 0 : Math.max(5, trampoline.thickness * 0.42);
-  ctx.strokeStyle = "rgba(16, 215, 232, 0.94)";
-  ctx.lineWidth = fabricWidth;
-  ctx.beginPath();
-  ctx.arc(
-    trampoline.centerX,
-    trampoline.centerY,
-    trampoline.radius,
-    trampoline.startAngle,
-    trampoline.endAngle,
-  );
-  ctx.stroke();
+    ctx.shadowBlur = reducedEffects ? 0 : Math.max(5, activeTrampoline.thickness * 0.42);
+    ctx.strokeStyle = "rgba(16, 215, 232, 0.94)";
+    ctx.lineWidth = fabricWidth;
+    ctx.beginPath();
+    ctx.arc(
+      activeTrampoline.centerX,
+      activeTrampoline.centerY,
+      activeTrampoline.radius,
+      activeTrampoline.startAngle,
+      activeTrampoline.endAngle,
+    );
+    ctx.stroke();
 
-  ctx.shadowBlur = 0;
-  ctx.strokeStyle = "rgba(248, 251, 255, 0.82)";
-  ctx.lineWidth = highlightWidth;
-  ctx.beginPath();
-  ctx.arc(
-    trampoline.centerX,
-    trampoline.centerY,
-    trampoline.radius - fabricWidth * 0.22,
-    trampoline.startAngle,
-    trampoline.endAngle,
-  );
-  ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.strokeStyle = "rgba(248, 251, 255, 0.82)";
+    ctx.lineWidth = highlightWidth;
+    ctx.beginPath();
+    ctx.arc(
+      activeTrampoline.centerX,
+      activeTrampoline.centerY,
+      activeTrampoline.radius - fabricWidth * 0.22,
+      activeTrampoline.startAngle,
+      activeTrampoline.endAngle,
+    );
+    ctx.stroke();
+  });
 
   if (!reducedEffects) {
     ctx.strokeStyle = "rgba(227, 248, 255, 0.58)";
@@ -348,35 +362,44 @@ export function drawBallTurretTrampoline(
 
   ctx.strokeStyle = "rgba(255, 245, 184, 0.82)";
   ctx.lineWidth = Math.max(1.2, highlightWidth * 0.9);
-  for (let index = 0; index < TRAMPOLINE_SPRING_COUNT; index += 1) {
-    const ratio = index / Math.max(1, TRAMPOLINE_SPRING_COUNT - 1);
-    const angle =
-      trampoline.startAngle +
-      (trampoline.endAngle - trampoline.startAngle) * ratio;
-    const outer = pointOnArc(trampoline, springOuterRadius, angle);
-    const inner = pointOnArc(trampoline, springInnerRadius, angle);
+  trampolines.forEach((activeTrampoline) => {
+    const activeSpringInnerRadius =
+      activeTrampoline.radius -
+      activeTrampoline.thickness * TRAMPOLINE_SPRING_INSET_RATIO;
+    const activeSpringOuterRadius =
+      activeTrampoline.radius +
+      activeTrampoline.thickness * TRAMPOLINE_SPRING_INSET_RATIO;
 
+    for (let index = 0; index < TRAMPOLINE_SPRING_COUNT; index += 1) {
+      const ratio = index / Math.max(1, TRAMPOLINE_SPRING_COUNT - 1);
+      const angle =
+        activeTrampoline.startAngle +
+        (activeTrampoline.endAngle - activeTrampoline.startAngle) * ratio;
+      const outer = pointOnArc(activeTrampoline, activeSpringOuterRadius, angle);
+      const inner = pointOnArc(activeTrampoline, activeSpringInnerRadius, angle);
+
+      ctx.beginPath();
+      ctx.moveTo(outer.x, outer.y);
+      ctx.lineTo(inner.x, inner.y);
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = "rgba(255, 245, 184, 0.9)";
+    const center = pointOnArc(
+      activeTrampoline,
+      activeTrampoline.radius,
+      activeTrampoline.centerAngle,
+    );
     ctx.beginPath();
-    ctx.moveTo(outer.x, outer.y);
-    ctx.lineTo(inner.x, inner.y);
-    ctx.stroke();
-  }
-
-  ctx.fillStyle = "rgba(255, 245, 184, 0.9)";
-  const center = pointOnArc(
-    trampoline,
-    trampoline.radius,
-    trampoline.centerAngle,
-  );
-  ctx.beginPath();
-  ctx.arc(
-    center.x,
-    center.y,
-    Math.max(2.4, highlightWidth * 1.35),
-    0,
-    FULL_CIRCLE,
-  );
-  ctx.fill();
+    ctx.arc(
+      center.x,
+      center.y,
+      Math.max(2.4, highlightWidth * 1.35),
+      0,
+      FULL_CIRCLE,
+    );
+    ctx.fill();
+  });
   ctx.restore();
 }
 

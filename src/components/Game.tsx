@@ -24,6 +24,11 @@ import {
   GAME_MODE_CLASSIC,
   type GameMode,
 } from "../constants/gameMode";
+import {
+  TURRET_CONTROL_MODE_DUAL_SWITCH,
+  TURRET_CONTROL_MODE_JOYSTICK,
+  type TurretControlMode,
+} from "../constants/turretControlMode";
 import type { ReactNode } from "react";
 
 interface GameProps {
@@ -77,7 +82,14 @@ const PADDLE_TOUCH_ZONE_TOP_OFFSET = "1in";
 const PADDLE_TOUCH_ZONE_HEIGHT = "3in";
 const PADDLE_TOUCH_ZONE_TEST_ID = "paddle-touch-zone";
 const BALL_TURRET_JOYSTICK_TEST_ID = "ball-turret-joystick";
+const BALL_TURRET_CONTROL_TOGGLE_TEST_ID = "ball-turret-control-toggle";
+const BALL_TURRET_DUAL_SWITCHES_TEST_ID = "ball-turret-dual-switches";
+const BALL_TURRET_LEFT_SWITCH_TEST_ID = "ball-turret-switch-left";
+const BALL_TURRET_RIGHT_SWITCH_TEST_ID = "ball-turret-switch-right";
 const BALL_TURRET_JOYSTICK_LABEL = "Controle da Torreta";
+const BALL_TURRET_CONTROL_TOGGLE_LABEL = "Trocar controle";
+const BALL_TURRET_DUAL_SWITCH_LEFT_LABEL = "Interruptor esquerdo";
+const BALL_TURRET_DUAL_SWITCH_RIGHT_LABEL = "Interruptor direito";
 const GAME_SURFACE_CLASS_NAME = "game-surface";
 const GAME_SURFACE_BALL_TURRET_CLASS_NAME = "game-surface--ball-turret";
 const GAME_BOARD_INPUT_LAYOUT_CLASS_NAME = "game-board-input-layout";
@@ -85,6 +97,12 @@ const GAME_BOARD_PLAYFIELD_CLASS_NAME = "game-board-playfield";
 const PADDLE_TOUCH_ZONE_CLASS_NAME = "game-paddle-touch-zone";
 const BALL_TURRET_JOYSTICK_CLASS_NAME =
   "game-turret-joystick game-turret-trackball";
+const BALL_TURRET_CONTROL_PANEL_CLASS_NAME = "game-turret-control-panel";
+const BALL_TURRET_CONTROL_TOGGLE_CLASS_NAME = "game-turret-control-toggle";
+const BALL_TURRET_DUAL_SWITCHES_CLASS_NAME = "game-turret-dual-switches";
+const BALL_TURRET_SWITCH_CLASS_NAME = "game-turret-switch";
+const BALL_TURRET_SWITCH_LEFT_CLASS_NAME = "game-turret-switch--left";
+const BALL_TURRET_SWITCH_RIGHT_CLASS_NAME = "game-turret-switch--right";
 const JOYSTICK_DIAGNOSTIC_JOYSTICK_LAYER_TEST_ID =
   "joystick-diagnostic-joystick-layer";
 const JOYSTICK_DIAGNOSTIC_PLAYFIELD_LAYER_TEST_ID =
@@ -284,10 +302,14 @@ export default function Game({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const paddleTouchZoneRef = useRef<HTMLDivElement>(null);
   const ballTurretJoystickRef = useRef<HTMLDivElement>(null);
+  const ballTurretLeftSwitchRef = useRef<HTMLDivElement>(null);
+  const ballTurretRightSwitchRef = useRef<HTMLDivElement>(null);
   const [canvasSize, setCanvasSize] = useState({
     width: CANVAS_WIDTH,
     height: CANVAS_HEIGHT,
   });
+  const [turretControlMode, setTurretControlMode] =
+    useState<TurretControlMode>(TURRET_CONTROL_MODE_JOYSTICK);
   const canvasSizeRef = useRef(canvasSize);
   const pendingBoardRectTargetRef = useRef<PendingBoardRectTarget | null>(null);
   const isBallTurretMode = gameMode === GAME_MODE_BALL_TURRET;
@@ -313,7 +335,11 @@ export default function Game({
     if (!joystick) return;
 
     const canvas = canvasRef.current;
-    if (!isBallTurretMode || !canvas) {
+    if (
+      !isBallTurretMode ||
+      turretControlMode !== TURRET_CONTROL_MODE_JOYSTICK ||
+      !canvas
+    ) {
       removeTurretJoystickLayoutStyles(joystick);
       return;
     }
@@ -332,7 +358,7 @@ export default function Game({
     });
 
     setTurretJoystickLayoutStyles(joystick, layout);
-  }, [isBallTurretMode]);
+  }, [isBallTurretMode, turretControlMode]);
 
   useLayoutEffect(() => {
     const updateCanvasSize = () => {
@@ -477,8 +503,11 @@ export default function Game({
     imageSetId,
     paused,
     gameMode,
+    turretControlMode,
     paddleTouchZoneRef,
     ballTurretJoystickRef,
+    ballTurretLeftSwitchRef,
+    ballTurretRightSwitchRef,
     joystickDiagnosticsEnabled,
     onJoystickDiagnosticSample,
   );
@@ -535,22 +564,90 @@ export default function Game({
           </div>
         </div>
         {isBallTurretMode && (
-          <div
-            ref={ballTurretJoystickRef}
-            className={BALL_TURRET_JOYSTICK_CLASS_NAME}
-            data-testid={BALL_TURRET_JOYSTICK_TEST_ID}
-            aria-label={BALL_TURRET_JOYSTICK_LABEL}
-          >
-            <span className="game-turret-joystick-pad" aria-hidden="true">
-              <span className="game-turret-joystick-knob" />
-            </span>
-            {shouldRenderJoystickDiagnostics &&
-              renderJoystickDiagnosticLayer(
-                joystickDiagnosticSamples,
-                JOYSTICK_DIAGNOSTIC_JOYSTICK_LAYER_TEST_ID,
-                "joystick-diagnostic-layer joystick-diagnostic-layer--joystick",
-                readJoystickDiagnosticPoint,
-              )}
+          <div className={BALL_TURRET_CONTROL_PANEL_CLASS_NAME}>
+            <button
+              type="button"
+              className={BALL_TURRET_CONTROL_TOGGLE_CLASS_NAME}
+              data-testid={BALL_TURRET_CONTROL_TOGGLE_TEST_ID}
+              aria-label={BALL_TURRET_CONTROL_TOGGLE_LABEL}
+              title={BALL_TURRET_CONTROL_TOGGLE_LABEL}
+              onClick={() =>
+                setTurretControlMode((currentMode) =>
+                  currentMode === TURRET_CONTROL_MODE_JOYSTICK
+                    ? TURRET_CONTROL_MODE_DUAL_SWITCH
+                    : TURRET_CONTROL_MODE_JOYSTICK,
+                )
+              }
+            >
+              <span aria-hidden="true">↔</span>
+              <span className="game-turret-control-toggle__text">
+                {turretControlMode === TURRET_CONTROL_MODE_JOYSTICK
+                  ? "Interruptores"
+                  : "Joystick"}
+              </span>
+            </button>
+            <div
+              ref={ballTurretJoystickRef}
+              className={[
+                BALL_TURRET_JOYSTICK_CLASS_NAME,
+                turretControlMode === TURRET_CONTROL_MODE_JOYSTICK
+                  ? ""
+                  : "game-turret-joystick--hidden",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              data-testid={BALL_TURRET_JOYSTICK_TEST_ID}
+              aria-label={BALL_TURRET_JOYSTICK_LABEL}
+              aria-hidden={
+                turretControlMode === TURRET_CONTROL_MODE_JOYSTICK
+                  ? undefined
+                  : true
+              }
+            >
+              <span className="game-turret-joystick-pad" aria-hidden="true">
+                <span className="game-turret-joystick-knob" />
+              </span>
+              {shouldRenderJoystickDiagnostics &&
+                turretControlMode === TURRET_CONTROL_MODE_JOYSTICK &&
+                renderJoystickDiagnosticLayer(
+                  joystickDiagnosticSamples,
+                  JOYSTICK_DIAGNOSTIC_JOYSTICK_LAYER_TEST_ID,
+                  "joystick-diagnostic-layer joystick-diagnostic-layer--joystick",
+                  readJoystickDiagnosticPoint,
+                )}
+            </div>
+            <div
+              className={BALL_TURRET_DUAL_SWITCHES_CLASS_NAME}
+              data-testid={BALL_TURRET_DUAL_SWITCHES_TEST_ID}
+              hidden={turretControlMode !== TURRET_CONTROL_MODE_DUAL_SWITCH}
+            >
+              <div
+                ref={ballTurretLeftSwitchRef}
+                className={`${BALL_TURRET_SWITCH_CLASS_NAME} ${BALL_TURRET_SWITCH_LEFT_CLASS_NAME}`}
+                data-testid={BALL_TURRET_LEFT_SWITCH_TEST_ID}
+                role="button"
+                tabIndex={0}
+                aria-label={BALL_TURRET_DUAL_SWITCH_LEFT_LABEL}
+              >
+                <span className="game-turret-switch__label">Esquerda</span>
+                <span className="game-turret-switch__up" aria-hidden="true">▲</span>
+                <span className="game-turret-switch__thumb" aria-hidden="true" />
+                <span className="game-turret-switch__down" aria-hidden="true">▼</span>
+              </div>
+              <div
+                ref={ballTurretRightSwitchRef}
+                className={`${BALL_TURRET_SWITCH_CLASS_NAME} ${BALL_TURRET_SWITCH_RIGHT_CLASS_NAME}`}
+                data-testid={BALL_TURRET_RIGHT_SWITCH_TEST_ID}
+                role="button"
+                tabIndex={0}
+                aria-label={BALL_TURRET_DUAL_SWITCH_RIGHT_LABEL}
+              >
+                <span className="game-turret-switch__label">Direita</span>
+                <span className="game-turret-switch__up" aria-hidden="true">▲</span>
+                <span className="game-turret-switch__thumb" aria-hidden="true" />
+                <span className="game-turret-switch__down" aria-hidden="true">▼</span>
+              </div>
+            </div>
           </div>
         )}
       </div>

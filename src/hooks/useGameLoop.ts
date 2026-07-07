@@ -20,6 +20,13 @@ import {
   GAME_MODE_CLASSIC,
   type GameMode,
 } from "../constants/gameMode";
+import {
+  TURRET_CONTROL_MODE_DUAL_SWITCH,
+  TURRET_CONTROL_MODE_JOYSTICK,
+  type TurretControlMode,
+  type TurretSwitchDirection,
+  type TurretSwitchSide,
+} from "../constants/turretControlMode";
 
 interface CanvasSize {
   width: number;
@@ -49,6 +56,11 @@ const TRACKBALL_ACTIVE_CSS_VAR = "--bb-turret-trackball-active";
 const JOYSTICK_DEFAULT_VECTOR = "0";
 const JOYSTICK_ACTIVE_VECTOR = "1";
 const JOYSTICK_CIRCLE_HIT_TOLERANCE_PX = 0.5;
+const SWITCH_DIRECTION_UP: TurretSwitchDirection = -1;
+const SWITCH_DIRECTION_NEUTRAL: TurretSwitchDirection = 0;
+const SWITCH_DIRECTION_DOWN: TurretSwitchDirection = 1;
+const KEY_ARROW_UP = "ArrowUp";
+const KEY_ARROW_DOWN = "ArrowDown";
 
 function createRectSnapshot(rect: DOMRect) {
   return {
@@ -184,8 +196,11 @@ export function useGameLoop(
   imageSetId: ImageSetId = IMAGE_SET_RETRO_DEFAULT,
   paused = false,
   gameMode: GameMode = GAME_MODE_CLASSIC,
+  turretControlMode: TurretControlMode = TURRET_CONTROL_MODE_JOYSTICK,
   paddleTouchZoneRef?: RefObject<HTMLElement | null>,
   ballTurretJoystickRef?: RefObject<HTMLElement | null>,
+  ballTurretLeftSwitchRef?: RefObject<HTMLElement | null>,
+  ballTurretRightSwitchRef?: RefObject<HTMLElement | null>,
   joystickDiagnosticsEnabled = false,
   onJoystickDiagnosticSample?: (sample: JoystickDiagnosticSample) => void,
 ) {
@@ -267,6 +282,10 @@ export function useGameLoop(
   }, [paused, startBlocked]);
 
   useEffect(() => {
+    engineRef.current?.setTurretControlMode(turretControlMode);
+  }, [turretControlMode]);
+
+  useEffect(() => {
     if (!canvasSize) return;
     engineRef.current?.resize(canvasSize);
   }, [canvasSize]);
@@ -334,7 +353,14 @@ export function useGameLoop(
 
   useEffect(() => {
     const joystick = ballTurretJoystickRef?.current;
-    if (!joystick || gameMode !== GAME_MODE_BALL_TURRET) return undefined;
+    if (
+      !joystick ||
+      gameMode !== GAME_MODE_BALL_TURRET ||
+      turretControlMode !== TURRET_CONTROL_MODE_JOYSTICK
+    ) {
+      if (joystick) resetTrackballVisualVector(joystick);
+      return undefined;
+    }
 
     let isDraggingJoystick = false;
     let activeInputType: "pointer" | "touch" | null = null;
@@ -539,5 +565,114 @@ export function useGameLoop(
     gameMode,
     joystickDiagnosticsEnabled,
     onJoystickDiagnosticSample,
+    turretControlMode,
+  ]);
+
+  useEffect(() => {
+    if (
+      gameMode !== GAME_MODE_BALL_TURRET ||
+      turretControlMode !== TURRET_CONTROL_MODE_DUAL_SWITCH
+    ) {
+      engineRef.current?.setDualSwitchDirection("left", SWITCH_DIRECTION_NEUTRAL);
+      engineRef.current?.setDualSwitchDirection("right", SWITCH_DIRECTION_NEUTRAL);
+      return undefined;
+    }
+
+    const switchEntries: Array<{
+      element: HTMLElement | null | undefined;
+      side: TurretSwitchSide;
+    }> = [
+      { element: ballTurretLeftSwitchRef?.current, side: "left" },
+      { element: ballTurretRightSwitchRef?.current, side: "right" },
+    ];
+    const cleanups: Array<() => void> = [];
+
+    const readSwitchDirection = (
+      element: HTMLElement,
+      clientY: number,
+    ): TurretSwitchDirection => {
+      const rect = element.getBoundingClientRect();
+      const middleY = rect.top + rect.height / 2;
+
+      return clientY < middleY ? SWITCH_DIRECTION_UP : SWITCH_DIRECTION_DOWN;
+    };
+
+    for (const { element, side } of switchEntries) {
+      if (!element) continue;
+
+      const applyDirection = (direction: TurretSwitchDirection) => {
+        element.dataset.switchDirection =
+          direction < 0 ? "up" : direction > 0 ? "down" : "neutral";
+        engineRef.current?.setDualSwitchDirection(side, direction);
+      };
+
+      const handlePointerDown = (event: PointerEvent) => {
+        event.preventDefault();
+        applyDirection(readSwitchDirection(element, event.clientY));
+        try {
+          element.setPointerCapture?.(event.pointerId);
+        } catch {
+          // Captura opcional.
+        }
+      };
+      const handlePointerMove = (event: PointerEvent) => {
+        if (!element.hasPointerCapture?.(event.pointerId)) return;
+        event.preventDefault();
+        applyDirection(readSwitchDirection(element, event.clientY));
+      };
+      const handlePointerEnd = (event: PointerEvent) => {
+        event.preventDefault();
+        try {
+          element.releasePointerCapture?.(event.pointerId);
+        } catch {
+          // Captura opcional.
+        }
+        applyDirection(SWITCH_DIRECTION_NEUTRAL);
+      };
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.key !== KEY_ARROW_UP && event.key !== KEY_ARROW_DOWN) return;
+
+        event.preventDefault();
+        applyDirection(
+          event.key === KEY_ARROW_UP
+            ? SWITCH_DIRECTION_UP
+            : SWITCH_DIRECTION_DOWN,
+        );
+      };
+      const handleKeyUp = (event: KeyboardEvent) => {
+        if (event.key !== KEY_ARROW_UP && event.key !== KEY_ARROW_DOWN) return;
+
+        event.preventDefault();
+        applyDirection(SWITCH_DIRECTION_NEUTRAL);
+      };
+
+      applyDirection(SWITCH_DIRECTION_NEUTRAL);
+      element.addEventListener(POINTER_DOWN_EVENT_NAME, handlePointerDown);
+      element.addEventListener(POINTER_MOVE_EVENT_NAME, handlePointerMove);
+      element.addEventListener(POINTER_UP_EVENT_NAME, handlePointerEnd);
+      element.addEventListener(POINTER_CANCEL_EVENT_NAME, handlePointerEnd);
+      element.addEventListener("keydown", handleKeyDown);
+      element.addEventListener("keyup", handleKeyUp);
+      cleanups.push(() => {
+        element.removeEventListener(POINTER_DOWN_EVENT_NAME, handlePointerDown);
+        element.removeEventListener(POINTER_MOVE_EVENT_NAME, handlePointerMove);
+        element.removeEventListener(POINTER_UP_EVENT_NAME, handlePointerEnd);
+        element.removeEventListener(POINTER_CANCEL_EVENT_NAME, handlePointerEnd);
+        element.removeEventListener("keydown", handleKeyDown);
+        element.removeEventListener("keyup", handleKeyUp);
+        applyDirection(SWITCH_DIRECTION_NEUTRAL);
+      });
+    }
+
+    return () => {
+      cleanups.forEach((cleanup) => cleanup());
+      engineRef.current?.setDualSwitchDirection("left", SWITCH_DIRECTION_NEUTRAL);
+      engineRef.current?.setDualSwitchDirection("right", SWITCH_DIRECTION_NEUTRAL);
+    };
+  }, [
+    ballTurretLeftSwitchRef,
+    ballTurretRightSwitchRef,
+    gameMode,
+    turretControlMode,
   ]);
 }

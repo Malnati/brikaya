@@ -184,11 +184,17 @@ export class Ball {
     maxHeight: number,
     gameState: LoggedGameState,
     audioSink?: GameAudioSink,
-    frameScale = 1
+    frameScale = 1,
+    activePaddlePositions?: PaddlePosition[],
   ): boolean {
     const safeFrameScale = Math.max(0, Number.isFinite(frameScale) ? frameScale : 1);
     const motionSteps = this.getMotionStepCount(safeFrameScale);
     let brickCollisionHandled = false;
+    const fallbackPaddlePosition = paddle.position;
+    const activePaddles =
+      activePaddlePositions && activePaddlePositions.length > 0
+        ? activePaddlePositions
+        : fallbackPaddlePosition;
 
     for (let step = 0; step < motionSteps; step += 1) {
       this.x += (this.dx * safeFrameScale) / motionSteps;
@@ -199,10 +205,11 @@ export class Ball {
       }
 
       const inPlay = this.resolvePaddleCollisionOrLoss(
-        paddle.position,
+        activePaddles,
+        fallbackPaddlePosition,
         maxHeight,
         gameState,
-        audioSink
+        audioSink,
       );
 
       if (!inPlay) {
@@ -297,11 +304,22 @@ export class Ball {
   }
 
   private resolvePaddleCollisionOrLoss(
-    paddlePos: PaddlePosition,
+    paddlePos: PaddlePosition | PaddlePosition[],
+    fallbackPaddlePos: PaddlePosition,
     maxHeight: number,
     gameState: LoggedGameState,
     audioSink?: GameAudioSink
-  ) {
+  ): boolean {
+    if (Array.isArray(paddlePos)) {
+      return this.resolveMultiplePaddleCollisionOrLoss(
+        paddlePos,
+        fallbackPaddlePos,
+        maxHeight,
+        gameState,
+        audioSink,
+      );
+    }
+
     if (isRadialPaddleBounds(paddlePos)) {
       return this.resolveRadialBoundaryCollisionOrLoss(
         paddlePos,
@@ -377,6 +395,61 @@ export class Ball {
     ).catch(error => ERROR('❌ Erro ao registrar bola perdida:', error));
 
     return false;
+  }
+
+  private resolveMultiplePaddleCollisionOrLoss(
+    paddlePositions: PaddlePosition[],
+    fallbackPaddlePos: PaddlePosition,
+    maxHeight: number,
+    gameState: LoggedGameState,
+    audioSink?: GameAudioSink,
+  ): boolean {
+    const radialPaddles = paddlePositions.filter(isRadialPaddleBounds);
+    if (radialPaddles.length !== paddlePositions.length) {
+      return this.resolvePaddleCollisionOrLoss(
+        fallbackPaddlePos,
+        fallbackPaddlePos,
+        maxHeight,
+        gameState,
+        audioSink,
+      );
+    }
+
+    const polar = toPolar(this.position, this.geometry);
+    const boundaryRadius = this.geometry.radius - this.radius;
+
+    for (const radialPaddle of radialPaddles) {
+      if (
+        this.isMovingOutward(polar.angle) &&
+        this.hasReachedRadialPaddleBand(polar.radius, radialPaddle) &&
+        isAngleBetween(
+          polar.angle,
+          radialPaddle.radial.startAngle,
+          radialPaddle.radial.endAngle,
+        )
+      ) {
+        return this.resolveRadialBoundaryCollisionOrLoss(
+          radialPaddle,
+          gameState,
+          audioSink,
+        );
+      }
+    }
+
+    if (polar.radius < boundaryRadius) return true;
+
+    const lossPaddle = radialPaddles[0];
+    if (lossPaddle) {
+      return this.logRadialBallLost(lossPaddle, gameState, audioSink);
+    }
+
+    return this.resolvePaddleCollisionOrLoss(
+      fallbackPaddlePos,
+      fallbackPaddlePos,
+      maxHeight,
+      gameState,
+      audioSink,
+    );
   }
 
   private resolveRadialBoundaryCollisionOrLoss(

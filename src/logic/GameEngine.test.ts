@@ -30,6 +30,7 @@ import {
   drawBallTurretBackdrop,
   drawBallTurretGlassOverlay,
   drawBallTurretTrampoline,
+  drawBallTurretTrampolines,
 } from "./rendering/ballTurretRenderer";
 
 const mockBallInstances: any[] = [];
@@ -209,6 +210,7 @@ jest.mock("./rendering/ballTurretRenderer", () => ({
   drawBallTurretBackdrop: jest.fn(),
   drawBallTurretGlassOverlay: jest.fn(),
   drawBallTurretTrampoline: jest.fn(),
+  drawBallTurretTrampolines: jest.fn(),
 }));
 
 describe("GameEngine", () => {
@@ -335,8 +337,57 @@ describe("GameEngine", () => {
     expect(turretGeometry.brickArcStartAngle).toBeCloseTo(-Math.PI);
     expect(turretGeometry.brickArcEndAngle).toBeCloseTo(Math.PI);
     expect(drawBallTurretTrampoline).toHaveBeenCalled();
+    expect(drawBallTurretTrampolines).not.toHaveBeenCalled();
     expect(drawBallTurretGlassOverlay).toHaveBeenCalled();
     expect((engine as any).paddle.draw).not.toHaveBeenCalled();
+  });
+
+  it("renderiza e usa duas camas elásticas quando os interruptores estão ativos", async () => {
+    const engine = new GameEngine(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "ball-turret",
+    );
+
+    (engine as any).assetsLoaded = true;
+    (engine as any).isStopped = false;
+    (engine as any).isServeLocked = false;
+    (engine as any).lastFrameTimestamp = 1000;
+
+    engine.setTurretControlMode("dual-switch");
+    engine.setDualSwitchDirection("left", -1);
+
+    await (engine as any).loop(1000 + 1000 / 60);
+
+    expect(drawBallTurretTrampoline).not.toHaveBeenCalled();
+    expect(drawBallTurretTrampolines).toHaveBeenCalledWith(
+      mockContext,
+      expect.objectContaining({
+        paddlePosition: expect.any(Object),
+      }),
+      expect.arrayContaining([
+        expect.objectContaining({
+          radial: expect.objectContaining({ centerAngle: expect.any(Number) }),
+        }),
+        expect.objectContaining({
+          radial: expect.objectContaining({ centerAngle: expect.any(Number) }),
+        }),
+      ]),
+    );
+    expect(mockBallInstances[0].update.mock.calls.at(-1)?.[6]).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ radial: expect.any(Object) }),
+        expect.objectContaining({ radial: expect.any(Object) }),
+      ]),
+    );
   });
 
   it("segura a bola da torreta inicial até o primeiro controle do jogador", async () => {
@@ -381,6 +432,7 @@ describe("GameEngine", () => {
       expect.any(Object),
       expect.any(Object),
       expect.any(Number),
+      undefined,
     );
   });
 
@@ -677,6 +729,7 @@ describe("GameEngine", () => {
       expect.any(Object),
       expect.any(Object),
       0,
+      undefined,
     );
   });
 
