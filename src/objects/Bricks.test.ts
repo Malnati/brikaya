@@ -295,6 +295,18 @@ describe("Bricks laser fan helpers", () => {
 
   it("desenha trilhas de circuito dos aros antes dos componentes", () => {
     const geometry = calculateRadialPlayfieldGeometry(480, 480, TEST_DIMENSIONS);
+    const firstSegment = calculateRadialBrickSegment(
+      geometry,
+      TEST_DIMENSIONS,
+      0,
+      0,
+    );
+    const secondSegment = calculateRadialBrickSegment(
+      geometry,
+      TEST_DIMENSIONS,
+      1,
+      0,
+    );
     const bricks = new Bricks(
       TEST_DIMENSIONS,
       undefined,
@@ -311,6 +323,23 @@ describe("Bricks laser fan helpers", () => {
     expect(ctx.moveTo).toHaveBeenCalled();
     expect(ctx.lineTo).toHaveBeenCalled();
     expect(ctx.stroke).toHaveBeenCalled();
+    expect(ctx.stroke).toHaveBeenCalledTimes(
+      TEST_DIMENSIONS.brickRows * (TEST_DIMENSIONS.brickCols - 1),
+    );
+    const firstTraceStart = (ctx.moveTo as jest.Mock).mock.calls[0];
+    const firstTraceEnd = (ctx.lineTo as jest.Mock).mock.calls[0];
+    expect(
+      Math.hypot(
+        firstTraceStart[0] - firstSegment.centerX,
+        firstTraceStart[1] - firstSegment.centerY,
+      ),
+    ).toBeGreaterThan(0);
+    expect(
+      Math.hypot(
+        firstTraceEnd[0] - secondSegment.centerX,
+        firstTraceEnd[1] - secondSegment.centerY,
+      ),
+    ).toBeGreaterThan(0);
     expect(
       (ctx.stroke as jest.Mock).mock.invocationCallOrder[0],
     ).toBeLessThan((ctx.drawImage as jest.Mock).mock.invocationCallOrder[0]);
