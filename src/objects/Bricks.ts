@@ -43,6 +43,13 @@ const RADIAL_BRICK_FALLBACK_COLORS = [
   "#b873ff",
 ] as const;
 const RADIAL_BRICK_METAL_COLOR = "#aeb7c2";
+const RADIAL_COMPONENT_TANGENT_ROTATION = Math.PI / 2;
+const RADIAL_COMPONENT_WIDTH_RATIO = 0.86;
+const RADIAL_COMPONENT_HEIGHT_RATIO = 0.72;
+const RADIAL_COMPONENT_TRACE_COLOR = "rgba(130, 242, 255, 0.42)";
+const RADIAL_COMPONENT_TRACE_WIDTH_RATIO = 0.22;
+const FULL_CIRCLE = Math.PI * 2;
+const FULL_CIRCLE_EPSILON = 0.000001;
 const BRICK_ASSET_ROLES = [
   GAME_VISUAL_ASSET_ROLES.brickRed,
   GAME_VISUAL_ASSET_ROLES.brickBlue,
@@ -53,6 +60,17 @@ const BRICK_ASSET_ROLES = [
 
 type BrickKind =
   typeof BRICK_KIND_BASIC | typeof BRICK_KIND_METAL | typeof BRICK_KIND_EVASIVE;
+
+interface RadialComponentMetrics {
+  width: number;
+  height: number;
+  rotation: number;
+}
+
+interface RadialComponentTerminals {
+  left: { x: number; y: number };
+  right: { x: number; y: number };
+}
 
 interface Brick {
   x: number;
@@ -568,24 +586,26 @@ export class Bricks {
     brickImage: HTMLImageElement | null,
     segment: RadialBrickSegment,
   ) {
+    const metrics = this.getRadialComponentMetrics(segment);
+
     ctx.save();
     ctx.translate(segment.centerX, segment.centerY);
-    ctx.rotate(segment.centerAngle + Math.PI / 2);
+    ctx.rotate(metrics.rotation);
 
     if (brickImage) {
       ctx.drawImage(
         brickImage,
-        -segment.bounds.width / 2,
-        -segment.bounds.height / 2,
-        segment.bounds.width,
-        segment.bounds.height,
+        -metrics.width / 2,
+        -metrics.height / 2,
+        metrics.width,
+        metrics.height,
       );
     } else {
       this.drawFallbackComponentShape(ctx, brick, {
-        x: -segment.bounds.width / 2,
-        y: -segment.bounds.height / 2,
-        width: segment.bounds.width,
-        height: segment.bounds.height,
+        x: -metrics.width / 2,
+        y: -metrics.height / 2,
+        width: metrics.width,
+        height: metrics.height,
       });
     }
 
@@ -596,32 +616,111 @@ export class Bricks {
     if (!this.geometry) return;
 
     ctx.save();
-    ctx.strokeStyle = "rgba(168, 207, 255, 0.18)";
-    ctx.lineWidth = Math.max(1, this.dimensions.brickPadding * 0.22);
+    ctx.strokeStyle = RADIAL_COMPONENT_TRACE_COLOR;
+    ctx.lineWidth = Math.max(
+      1,
+      this.dimensions.brickPadding * RADIAL_COMPONENT_TRACE_WIDTH_RATIO,
+    );
+    ctx.lineCap = "round";
 
     for (let row = 0; row < this.rows; row++) {
-      const start = calculateRadialBrickSegment(
-        this.geometry,
-        this.dimensions,
-        0,
-        row,
-        this.rows,
-      );
-      const end = calculateRadialBrickSegment(
-        this.geometry,
-        this.dimensions,
-        this.dimensions.brickCols - 1,
-        row,
-        this.rows,
-      );
+      for (let col = 0; col < this.dimensions.brickCols - 1; col++) {
+        this.drawRadialCircuitTrace(ctx, col, col + 1, row);
+      }
 
-      ctx.beginPath();
-      ctx.moveTo(start.centerX, start.centerY);
-      ctx.lineTo(end.centerX, end.centerY);
-      ctx.stroke();
+      if (this.isBrickArcFullCircle()) {
+        this.drawRadialCircuitTrace(
+          ctx,
+          this.dimensions.brickCols - 1,
+          0,
+          row,
+        );
+      }
     }
 
     ctx.restore();
+  }
+
+  private drawRadialCircuitTrace(
+    ctx: CanvasRenderingContext2D,
+    leftCol: number,
+    rightCol: number,
+    row: number,
+  ) {
+    if (
+      !this.geometry ||
+      this.bricks[leftCol]?.[row]?.status !== BRICK_ACTIVE ||
+      this.bricks[rightCol]?.[row]?.status !== BRICK_ACTIVE
+    ) {
+      return;
+    }
+
+    const leftSegment = calculateRadialBrickSegment(
+      this.geometry,
+      this.dimensions,
+      leftCol,
+      row,
+      this.rows,
+    );
+    const rightSegment = calculateRadialBrickSegment(
+      this.geometry,
+      this.dimensions,
+      rightCol,
+      row,
+      this.rows,
+    );
+    const leftTerminals = this.getRadialComponentTerminals(leftSegment);
+    const rightTerminals = this.getRadialComponentTerminals(rightSegment);
+
+    ctx.beginPath();
+    ctx.moveTo(leftTerminals.right.x, leftTerminals.right.y);
+    ctx.lineTo(rightTerminals.left.x, rightTerminals.left.y);
+    ctx.stroke();
+  }
+
+  private isBrickArcFullCircle(): boolean {
+    if (!this.geometry) return false;
+
+    return (
+      Math.abs(this.geometry.brickArcEndAngle - this.geometry.brickArcStartAngle) >=
+      FULL_CIRCLE - FULL_CIRCLE_EPSILON
+    );
+  }
+
+  private getRadialComponentMetrics(
+    segment: RadialBrickSegment,
+  ): RadialComponentMetrics {
+    const angularWidth = Math.abs(segment.endAngle - segment.startAngle);
+    const tangentSpan = segment.centerRadius * angularWidth;
+    const radialSpan = segment.outerRadius - segment.innerRadius;
+
+    return {
+      width:
+        Math.max(1, Math.min(segment.bounds.width, tangentSpan)) *
+        RADIAL_COMPONENT_WIDTH_RATIO,
+      height: Math.max(1, radialSpan) * RADIAL_COMPONENT_HEIGHT_RATIO,
+      rotation: segment.centerAngle + RADIAL_COMPONENT_TANGENT_ROTATION,
+    };
+  }
+
+  private getRadialComponentTerminals(
+    segment: RadialBrickSegment,
+  ): RadialComponentTerminals {
+    const metrics = this.getRadialComponentMetrics(segment);
+    const terminalOffset = metrics.width / 2;
+    const tangentX = Math.cos(metrics.rotation);
+    const tangentY = Math.sin(metrics.rotation);
+
+    return {
+      left: {
+        x: segment.centerX - tangentX * terminalOffset,
+        y: segment.centerY - tangentY * terminalOffset,
+      },
+      right: {
+        x: segment.centerX + tangentX * terminalOffset,
+        y: segment.centerY + tangentY * terminalOffset,
+      },
+    };
   }
 
   private getRadialBrickColor(brick: Brick): string {

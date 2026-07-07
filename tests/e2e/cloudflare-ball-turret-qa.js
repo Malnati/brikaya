@@ -307,10 +307,15 @@ async function installCanvasProbe(page) {
       const src = image?.currentSrc || image?.src || "";
 
       if (Number.isFinite(x) && Number.isFinite(y)) {
+        const transform = this.getTransform?.();
+        const centerX = x + width / 2;
+        const centerY = y + height / 2;
         window.__brikayaBallTurretProbe?.drawImages.push({
           src,
           x,
           y,
+          screenX: transform ? transform.a * centerX + transform.c * centerY + transform.e : centerX,
+          screenY: transform ? transform.b * centerX + transform.d * centerY + transform.f : centerY,
           width,
           height,
         });
@@ -329,9 +334,12 @@ async function installCanvasProbe(page) {
       endAngle,
       ...rest
     ) {
+      const transform = this.getTransform?.();
       window.__brikayaBallTurretProbe?.ellipses.push({
         x,
         y,
+        screenX: transform ? transform.a * x + transform.c * y + transform.e : x,
+        screenY: transform ? transform.b * x + transform.d * y + transform.f : y,
         radiusX,
         radiusY,
         rotation,
@@ -358,9 +366,14 @@ async function installCanvasProbe(page) {
       width,
       height,
     ) {
+      const transform = this.getTransform?.();
+      const centerX = x + width / 2;
+      const centerY = y + height / 2;
       window.__brikayaBallTurretProbe?.fillRects.push({
         x,
         y,
+        screenX: transform ? transform.a * centerX + transform.c * centerY + transform.e : centerX,
+        screenY: transform ? transform.b * centerX + transform.d * centerY + transform.f : centerY,
         width,
         height,
       });
@@ -491,8 +504,8 @@ async function readBallTurretState(page) {
       const brickDraws = probe.drawImages
         .filter((draw) => brickImagePattern.test(draw.src))
         .map((draw) => ({
-          x: draw.x + draw.width / 2,
-          y: draw.y + draw.height / 2,
+          x: Number.isFinite(draw.screenX) ? draw.screenX : draw.x + draw.width / 2,
+          y: Number.isFinite(draw.screenY) ? draw.screenY : draw.y + draw.height / 2,
         }));
       const fallbackBrickDraws = probe.fillRects
         .filter(
@@ -503,8 +516,8 @@ async function readBallTurretState(page) {
             draw.height < canvasHeight * 0.5,
         )
         .map((draw) => ({
-          x: draw.x + draw.width / 2,
-          y: draw.y + draw.height / 2,
+          x: Number.isFinite(draw.screenX) ? draw.screenX : draw.x + draw.width / 2,
+          y: Number.isFinite(draw.screenY) ? draw.screenY : draw.y + draw.height / 2,
         }));
       const fallbackEllipseBrickDraws = (probe.ellipses || [])
         .filter(
@@ -517,8 +530,8 @@ async function readBallTurretState(page) {
               fullCircleTolerance,
         )
         .map((draw) => ({
-          x: draw.x,
-          y: draw.y,
+          x: Number.isFinite(draw.screenX) ? draw.screenX : draw.x,
+          y: Number.isFinite(draw.screenY) ? draw.screenY : draw.y,
         }));
       const brickCenters =
         brickDraws.length > 0
