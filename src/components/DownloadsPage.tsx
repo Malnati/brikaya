@@ -132,6 +132,8 @@ export function DownloadsPage() {
           </a>
           <a href="/privacy/">{t("downloads.nav.privacy")}</a>
           <a href="/terms/">{t("downloads.nav.terms")}</a>
+          <a href="/about/">{t("downloads.nav.about")}</a>
+          <a href="/legal/">{t("downloads.nav.legal")}</a>
         </nav>
       </header>
 

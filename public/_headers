@@ -20,6 +20,33 @@
 /downloads/
   Cache-Control: public, max-age=0, must-revalidate, no-transform
 
+/privacy/
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+
+/terms/
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+
+/about/
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+
+/legal/
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+
+/user-agreement/
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+
+/license/
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+
+/data-deletion/
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+
+/cookies/
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+
+/support/
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+
 /*/downloads/
   Cache-Control: public, max-age=0, must-revalidate, no-transform
 
