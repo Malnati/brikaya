@@ -266,8 +266,8 @@ describe("App theme selector", () => {
     expect(screen.getByRole("button", { name: "Sem som" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Música" })).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Reiniciar" }),
-    ).toBeInTheDocument();
+      screen.queryByRole("button", { name: "Reiniciar" }),
+    ).not.toBeInTheDocument();
     expect(
       screen.queryByLabelText("Aparência do jogo"),
     ).not.toBeInTheDocument();
@@ -688,8 +688,8 @@ describe("App theme selector", () => {
     const drawer = screen.getByRole("complementary", { name: "Menu do jogo" });
     expect(drawer).toBeInTheDocument();
     expect(
-      within(drawer).queryByRole("button", { name: "Reiniciar" }),
-    ).not.toBeInTheDocument();
+      within(drawer).getByRole("button", { name: "Reiniciar" }),
+    ).toBeInTheDocument();
     expect(within(drawer).queryByText("Partida")).not.toBeInTheDocument();
     expect(
       within(drawer).queryByRole("heading", { name: "Aparência" }),
@@ -971,21 +971,27 @@ describe("App theme selector", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("mostra controles principais como ícones discretos", async () => {
+  it("mostra controles de som como ícones discretos no topo", async () => {
     mockSystemTheme(true);
 
     await renderApp();
 
-    const audioButton = screen.getByRole("button", { name: "Sem som" });
-    const musicButton = screen.getByRole("button", { name: "Música" });
-    const restartButton = screen.getByRole("button", { name: "Reiniciar" });
+    const topControls = screen.getByLabelText("Controles principais");
+    const audioButton = within(topControls).getByRole("button", {
+      name: "Sem som",
+    });
+    const musicButton = within(topControls).getByRole("button", {
+      name: "Música",
+    });
 
+    expect(within(topControls).getAllByRole("button")).toHaveLength(2);
     expect(audioButton).toHaveTextContent("×");
     expect(audioButton).not.toHaveTextContent("Sem som");
     expect(musicButton).toHaveTextContent("♫");
     expect(musicButton).not.toHaveTextContent("Música");
-    expect(restartButton).toHaveTextContent("↻");
-    expect(restartButton).not.toHaveTextContent("Reiniciar");
+    expect(within(topControls).queryByRole("button", {
+      name: "Reiniciar",
+    })).not.toBeInTheDocument();
   });
 
   it("centraliza um único badge de pontuação no topo com controles principais", async () => {
@@ -1010,10 +1016,40 @@ describe("App theme selector", () => {
     expect(within(topControls).getByRole("button", { name: "Música" })).toBe(
       screen.getByRole("button", { name: "Música" }),
     );
-    expect(within(topControls).getByRole("button", { name: "Reiniciar" })).toBe(
-      screen.getByRole("button", { name: "Reiniciar" }),
-    );
+    expect(within(topControls).queryByRole("button", {
+      name: "Reiniciar",
+    })).not.toBeInTheDocument();
+    expect(within(topControls).getAllByRole("button")).toHaveLength(2);
     expect(mockLastGameProps?.boardControls).toBeUndefined();
+  });
+
+  it("move reinício para o menu lateral mantendo ação de partida", async () => {
+    mockSystemTheme(true);
+    const user = userEvent.setup();
+    const playAudio = jest
+      .spyOn(audioManager, "play")
+      .mockResolvedValue(undefined);
+
+    await renderApp();
+
+    expect(
+      within(screen.getByLabelText("Controles principais")).queryByRole(
+        "button",
+        { name: "Reiniciar" },
+      ),
+    ).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Menu" }));
+
+    const drawer = screen.getByRole("complementary", { name: "Menu do jogo" });
+    const restartButton = within(drawer).getByRole("button", {
+      name: "Reiniciar",
+    });
+    expect(restartButton).toHaveTextContent("↻");
+
+    await user.click(restartButton);
+
+    expect(playAudio).toHaveBeenCalledWith(GAME_AUDIO_IDS.RESTART);
   });
 
   it("alterna som preservando estado acessível no ícone", async () => {

@@ -1,0 +1,53 @@
+{
+  "baseUrl": "http://127.0.0.1:4173/",
+  "results": [
+    {
+      "prefix": "mobile",
+      "layout": {
+        "viewportWidth": 390,
+        "viewportHeight": 844,
+        "labels": [
+          "Sem som",
+          "Música"
+        ],
+        "buttonCount": 2,
+        "controlsCenterX": 195,
+        "pageCenterX": 195,
+        "centerDelta": 0,
+        "restartInTop": false,
+        "menuPresent": true,
+        "scoreCenterDelta": 195
+      },
+      "menu": {
+        "drawerPresent": true,
+        "restartPresent": true,
+        "restartText": "↻Reiniciar",
+        "restartAction": "restart-game"
+      }
+    },
+    {
+      "prefix": "desktop",
+      "layout": {
+        "viewportWidth": 1280,
+        "viewportHeight": 900,
+        "labels": [
+          "Sem som",
+          "Música"
+        ],
+        "buttonCount": 2,
+        "controlsCenterX": 640,
+        "pageCenterX": 640,
+        "centerDelta": 0,
+        "restartInTop": false,
+        "menuPresent": true,
+        "scoreCenterDelta": 0
+      },
+      "menu": {
+        "drawerPresent": true,
+        "restartPresent": true,
+        "restartText": "↻Reiniciar",
+        "restartAction": "restart-game"
+      }
+    }
+  ]
+}
