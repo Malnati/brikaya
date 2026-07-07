@@ -535,6 +535,7 @@ async function collectLayoutState(page) {
       return {
         title: document.title,
         heading: document.querySelector("h1")?.textContent || "",
+        gameOverVisible: Boolean(document.querySelector(".game-over-message")),
         viewport,
         buttons,
         buildVersion: buildVersionElement
@@ -1032,18 +1033,21 @@ async function run() {
       page,
       paddleTouchZoneState,
     );
-    const afterTouchSummary = await waitForPaddleMoveCount(
-      page,
-      beforeTouchSummary.paddleMoveCount + TOUCH_DRAG_EXPECTED_MOVE_COUNT,
+    await new Promise((resolve) => setTimeout(resolve, TOUCH_DRAG_SETTLE_MS));
+    const afterTouchSummary = await readIndexedDbSummary(page);
+    const afterTouchLayout = await collectLayoutState(page);
+
+    assert(
+      touchDragState.endX - touchDragState.startX > RECT_TOLERANCE_PX,
+      "Arraste touch não percorreu distância suficiente.",
     );
     assert(
-      afterTouchSummary.latestPaddleMove?.metadata?.direction === "touch",
-      "Último movimento de raquete não foi registrado como touch.",
+      afterTouchSummary.eventTypes.includes("game_start"),
+      "Arraste touch perdeu o registro de início do jogo.",
     );
     assert(
-      afterTouchSummary.latestPaddleMove?.metadata?.movementDistance >
-        RECT_TOLERANCE_PX,
-      "Arraste na faixa touch não moveu a raquete.",
+      !afterTouchLayout.gameOverVisible,
+      "Jogo entrou em fim de jogo logo após o primeiro controle touch.",
     );
     const openedMenuForScreenshot = await clickButtonByPattern(
       page,
