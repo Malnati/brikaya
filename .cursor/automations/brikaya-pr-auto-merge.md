@@ -28,4 +28,4 @@ Monitorar PRs abertos em `Malnati/brikaya` e mergear automaticamente quando segu
 
 ## Substitui
 
-- Automação Codex pausada `brickbreaker-docs-only-pr-auto-merge` (manter pausada).
+- Automação Codex pausada de merge documental-only (manter pausada).
