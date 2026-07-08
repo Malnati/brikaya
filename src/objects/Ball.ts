@@ -36,7 +36,6 @@ import type {
   ElectricImpactPoint,
 } from '../utils/electricImpact';
 
-const BALL_INITIAL_Y_OFFSET = 30;
 const MAX_BOUNCE_ANGLE = Math.PI / 3; // 60 graus
 const PADDLE_EDGE_ZONE_RATIO = 0.2;
 const MOTION_STEP_RADIUS_RATIO = 0.75;
@@ -98,8 +97,8 @@ export class Ball {
     private onElectricImpact?: ElectricImpactHandler,
   ) {
     this.radius = this.dimensions.ballRadius;
-    this.x = this.canvasWidth / 2;
-    this.y = this.canvasHeight - BALL_INITIAL_Y_OFFSET;
+    this.x = this.geometry.centerX;
+    this.y = this.geometry.centerY;
     const initialSpeed = calculateInitialBallSpeed(this.canvasWidth) * this.speedMultiplier;
     this.dx = 0;
     this.dy = -initialSpeed;
@@ -126,8 +125,8 @@ export class Ball {
     this.geometry = geometry ?? calculateRadialPlayfieldGeometry(canvasWidth, canvasHeight, dimensions);
     this.speedMultiplier = speedMultiplier;
     this.radius = dimensions.ballRadius;
-    this.x = canvasWidth / 2;
-    this.y = canvasHeight - BALL_INITIAL_Y_OFFSET;
+    this.x = this.geometry.centerX;
+    this.y = this.geometry.centerY;
     this.dx = 0;
     this.dy = -initialSpeed;
     this.currentSpeed = initialSpeed;

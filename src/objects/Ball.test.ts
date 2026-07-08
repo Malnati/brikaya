@@ -229,7 +229,7 @@ describe('Ball', () => {
     expect(AssetLoader.getOrLoadImage).not.toHaveBeenCalled();
     expect(context.arc).toHaveBeenLastCalledWith(
       DESKTOP_CANVAS_WIDTH / 2,
-      CANVAS_HEIGHT - 30,
+      CANVAS_HEIGHT / 2,
       DIMENSIONS.ballRadius,
       0,
       Math.PI * 2,
@@ -256,7 +256,7 @@ describe('Ball', () => {
     expect(context.drawImage).toHaveBeenCalledWith(
       CANVAS_IMAGE_SOURCE,
       DESKTOP_CANVAS_WIDTH / 2 - DIMENSIONS.ballRadius,
-      CANVAS_HEIGHT - 30 - DIMENSIONS.ballRadius,
+      CANVAS_HEIGHT / 2 - DIMENSIONS.ballRadius,
       DIMENSIONS.ballRadius * 2,
       DIMENSIONS.ballRadius * 2,
     );
@@ -270,9 +270,32 @@ describe('Ball', () => {
     ball.resetForLevel(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS, multiplier);
 
     const expectedSpeed = calculateInitialBallSpeed(CANVAS_WIDTH) * multiplier;
-    expect(ball.position).toEqual({ x: CANVAS_WIDTH / 2, y: CANVAS_HEIGHT - 30, radius: DIMENSIONS.ballRadius });
+    expect(ball.position).toEqual({
+      x: CANVAS_WIDTH / 2,
+      y: CANVAS_HEIGHT / 2,
+      radius: DIMENSIONS.ballRadius,
+    });
     expect(ball.getVelocity().dx).toBeCloseTo(0, 5);
     expect(ball.getVelocity().dy).toBeCloseTo(-expectedSpeed, 5);
+  });
+
+  it('inicia no centro geométrico do globo radial', () => {
+    const geometry = calculateRadialPlayfieldGeometry(
+      CANVAS_WIDTH,
+      CANVAS_HEIGHT,
+      DIMENSIONS,
+    );
+    const ball = new Ball(
+      CANVAS_WIDTH,
+      CANVAS_HEIGHT,
+      DIMENSIONS,
+      1,
+      undefined,
+      geometry,
+    );
+
+    expect(ball.position.x).toBeCloseTo(geometry.centerX, 5);
+    expect(ball.position.y).toBeCloseTo(geometry.centerY, 5);
   });
 
   it('respeita teto de velocidade da progressão de fases', () => {
