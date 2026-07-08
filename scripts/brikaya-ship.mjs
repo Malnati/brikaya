@@ -61,17 +61,18 @@ function validateMinimum() {
 }
 
 function findOpenPr(branch) {
+  const owner = REPO.split('/')[0];
   const listed = runOptional(CODEX_GH_ADMIN, [
     'pr',
     'list',
     '--repo',
     REPO,
     '--head',
-    `${REPO.split('/')[0]}:${branch}`,
+    `${owner}:${branch}`,
+    '--state',
+    'open',
     '--json',
     'number,url',
-    '--jq',
-    '.[0]',
   ]);
 
   if (!listed.ok || !listed.stdout) {
@@ -79,8 +80,19 @@ function findOpenPr(branch) {
   }
 
   try {
-    return JSON.parse(listed.stdout);
+    const parsed = JSON.parse(listed.stdout);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      return parsed[0];
+    }
+    if (parsed?.number) {
+      return parsed;
+    }
+    return null;
   } catch {
+    const urlMatch = listed.stdout.match(/https:\/\/github\.com\/[^\s]+/);
+    if (urlMatch) {
+      return { url: urlMatch[0] };
+    }
     return null;
   }
 }
