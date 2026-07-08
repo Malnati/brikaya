@@ -136,6 +136,12 @@ function runShip() {
   ]);
 
   if (!prCreate.ok) {
+    const existingAfterFailure = findOpenPr(branch);
+    if (existingAfterFailure?.url) {
+      console.log(`Push concluído. PR existente: ${existingAfterFailure.url}`);
+      console.log(`Preview esperado após CI: ${PREVIEW_URL}`);
+      return;
+    }
     throw new Error(`Falha ao criar PR:\n${prCreate.stderr}`);
   }
 
