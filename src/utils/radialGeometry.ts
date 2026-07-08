@@ -22,11 +22,17 @@ const LOSS_ARC_END_ANGLE = Math.PI * 0.84;
 const FULL_CIRCLE = Math.PI * 2;
 const FULL_CIRCLE_EPSILON = 0.000001;
 const MIN_RADIUS_FOR_ANGLE_EXPANSION = 1;
-export const BALL_TURRET_BOUNDARY_SEGMENT_COUNT = 18;
-export const BALL_TURRET_INITIAL_REBOUND_SEGMENT_COUNT = 9;
+export const BALL_TURRET_INITIAL_BOUNDARY_SEGMENT_COUNT = 4;
+export const BALL_TURRET_MAX_BOUNDARY_SEGMENT_COUNT = 18;
+export const BALL_TURRET_BOUNDARY_SEGMENT_GROWTH_PER_LEVEL = 2;
+/** @deprecated Use BALL_TURRET_MAX_BOUNDARY_SEGMENT_COUNT */
+export const BALL_TURRET_BOUNDARY_SEGMENT_COUNT =
+  BALL_TURRET_MAX_BOUNDARY_SEGMENT_COUNT;
+/** @deprecated Use calculateBallTurretReboundSegmentCount(1) */
+export const BALL_TURRET_INITIAL_REBOUND_SEGMENT_COUNT = Math.floor(
+  BALL_TURRET_INITIAL_BOUNDARY_SEGMENT_COUNT / 2,
+);
 export const BALL_TURRET_REBOUND_ZERO_LEVEL = 10;
-const BALL_TURRET_BOUNDARY_START_ANGLE =
-  Math.PI / 2 - FULL_CIRCLE / BALL_TURRET_BOUNDARY_SEGMENT_COUNT / 2;
 
 export interface CartesianPoint {
   x: number;
@@ -246,49 +252,59 @@ export function calculatePaddleAngleFromCanvasPoint(
   );
 }
 
-export function calculateBallTurretReboundSegmentCount(level: number): number {
+export function calculateBallTurretBoundarySegmentCount(level: number): number {
   const safeLevel = Math.max(1, Math.floor(level));
 
-  return Math.max(
-    0,
-    Math.min(
-      BALL_TURRET_INITIAL_REBOUND_SEGMENT_COUNT,
-      BALL_TURRET_REBOUND_ZERO_LEVEL - safeLevel,
-    ),
+  return Math.min(
+    BALL_TURRET_MAX_BOUNDARY_SEGMENT_COUNT,
+    BALL_TURRET_INITIAL_BOUNDARY_SEGMENT_COUNT +
+      (safeLevel - 1) * BALL_TURRET_BOUNDARY_SEGMENT_GROWTH_PER_LEVEL,
   );
+}
+
+export function calculateBallTurretReboundSegmentCount(level: number): number {
+  const safeLevel = Math.max(1, Math.floor(level));
+  const segmentCount = calculateBallTurretBoundarySegmentCount(safeLevel);
+  const maxReboundForRatio = Math.floor(segmentCount / 2);
+  const reboundBudget = BALL_TURRET_REBOUND_ZERO_LEVEL - safeLevel;
+
+  return Math.max(0, Math.min(maxReboundForRatio, reboundBudget));
+}
+
+function calculateBallTurretBoundaryStartAngle(segmentCount: number): number {
+  return Math.PI / 2 - FULL_CIRCLE / segmentCount / 2;
 }
 
 export function calculateBallTurretBoundarySegments(
   level: number,
 ): BallTurretBoundarySegment[] {
+  const segmentCount = calculateBallTurretBoundarySegmentCount(level);
   const reboundIndexes = calculateBallTurretReboundSegmentIndexes(level);
-  const segmentSpan = FULL_CIRCLE / BALL_TURRET_BOUNDARY_SEGMENT_COUNT;
+  const segmentSpan = FULL_CIRCLE / segmentCount;
+  const startAngle = calculateBallTurretBoundaryStartAngle(segmentCount);
 
-  return Array.from(
-    { length: BALL_TURRET_BOUNDARY_SEGMENT_COUNT },
-    (_, index) => {
-      const startAngle = BALL_TURRET_BOUNDARY_START_ANGLE + index * segmentSpan;
+  return Array.from({ length: segmentCount }, (_, index) => {
+    const segmentStartAngle = startAngle + index * segmentSpan;
 
-      return {
-        index,
-        startAngle,
-        endAngle: startAngle + segmentSpan,
-        rebounds: reboundIndexes.has(index),
-      };
-    },
-  );
+    return {
+      index,
+      startAngle: segmentStartAngle,
+      endAngle: segmentStartAngle + segmentSpan,
+      rebounds: reboundIndexes.has(index),
+    };
+  });
 }
 
 export function isBallTurretBoundarySegmentRebounding(
   angle: number,
   level: number,
 ): boolean {
-  const normalizedOffset = normalizeAngle(
-    angle - BALL_TURRET_BOUNDARY_START_ANGLE,
-  );
-  const segmentSpan = FULL_CIRCLE / BALL_TURRET_BOUNDARY_SEGMENT_COUNT;
+  const segmentCount = calculateBallTurretBoundarySegmentCount(level);
+  const startAngle = calculateBallTurretBoundaryStartAngle(segmentCount);
+  const normalizedOffset = normalizeAngle(angle - startAngle);
+  const segmentSpan = FULL_CIRCLE / segmentCount;
   const index = Math.min(
-    BALL_TURRET_BOUNDARY_SEGMENT_COUNT - 1,
+    segmentCount - 1,
     Math.floor(normalizedOffset / segmentSpan),
   );
 
@@ -296,13 +312,16 @@ export function isBallTurretBoundarySegmentRebounding(
 }
 
 function calculateBallTurretReboundSegmentIndexes(level: number): Set<number> {
+  const segmentCount = calculateBallTurretBoundarySegmentCount(level);
   const reboundSegmentCount = calculateBallTurretReboundSegmentCount(level);
+
+  if (reboundSegmentCount === 0) {
+    return new Set();
+  }
 
   return new Set(
     Array.from({ length: reboundSegmentCount }, (_, index) =>
-      Math.floor(
-        (index * BALL_TURRET_BOUNDARY_SEGMENT_COUNT) / reboundSegmentCount,
-      ),
+      Math.floor((index * segmentCount) / reboundSegmentCount),
     ),
   );
 }

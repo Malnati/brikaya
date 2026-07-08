@@ -2,9 +2,11 @@
 import type { DynamicGameDimensions } from "../constants/game";
 
 import {
-  BALL_TURRET_BOUNDARY_SEGMENT_COUNT,
+  BALL_TURRET_INITIAL_BOUNDARY_SEGMENT_COUNT,
   BALL_TURRET_INITIAL_REBOUND_SEGMENT_COUNT,
+  BALL_TURRET_MAX_BOUNDARY_SEGMENT_COUNT,
   BALL_TURRET_REBOUND_ZERO_LEVEL,
+  calculateBallTurretBoundarySegmentCount,
   calculateBallTurretBoundarySegments,
   calculateBallTurretPlayfieldGeometry,
   calculateBallTurretReboundSegmentCount,
@@ -165,26 +167,69 @@ describe("radialGeometry", () => {
       (segment) => segment.endAngle - segment.startAngle,
     );
 
-    expect(segments).toHaveLength(BALL_TURRET_BOUNDARY_SEGMENT_COUNT);
+    expect(segments).toHaveLength(BALL_TURRET_INITIAL_BOUNDARY_SEGMENT_COUNT);
     expect(reboundSegments).toHaveLength(
       BALL_TURRET_INITIAL_REBOUND_SEGMENT_COUNT,
     );
     segmentSpans.forEach((span) => {
       expect(span).toBeCloseTo((Math.PI * 2) / segments.length);
     });
-    expect(reboundSegments.map((segment) => segment.index)).toEqual([
-      0, 2, 4, 6, 8, 10, 12, 14, 16,
+    expect(reboundSegments.map((segment) => segment.index)).toEqual([0, 2]);
+  });
+
+  it("aumenta o total de partes da borda a cada fase até o teto de 18", () => {
+    expect(calculateBallTurretBoundarySegmentCount(1)).toBe(4);
+    expect(calculateBallTurretBoundarySegmentCount(2)).toBe(6);
+    expect(calculateBallTurretBoundarySegmentCount(5)).toBe(12);
+    expect(calculateBallTurretBoundarySegmentCount(8)).toBe(
+      BALL_TURRET_MAX_BOUNDARY_SEGMENT_COUNT,
+    );
+    expect(calculateBallTurretBoundarySegmentCount(99)).toBe(
+      BALL_TURRET_MAX_BOUNDARY_SEGMENT_COUNT,
+    );
+  });
+
+  it("mantém 50% de rebote nas fases iniciais enquanto o total cresce", () => {
+    const phaseTwoSegments = calculateBallTurretBoundarySegments(2);
+    const phaseTwoReboundSegments = phaseTwoSegments.filter(
+      (segment) => segment.rebounds,
+    );
+
+    expect(phaseTwoSegments).toHaveLength(6);
+    expect(phaseTwoReboundSegments).toHaveLength(3);
+    expect(phaseTwoReboundSegments.map((segment) => segment.index)).toEqual([
+      0, 2, 4,
     ]);
   });
 
   it("reduz proporcionalmente os segmentos que rebatem até zerar na fase 10", () => {
-    expect(calculateBallTurretReboundSegmentCount(1)).toBe(9);
-    expect(calculateBallTurretReboundSegmentCount(2)).toBe(8);
+    expect(calculateBallTurretReboundSegmentCount(1)).toBe(2);
+    expect(calculateBallTurretReboundSegmentCount(2)).toBe(3);
     expect(calculateBallTurretReboundSegmentCount(5)).toBe(5);
+    expect(calculateBallTurretReboundSegmentCount(8)).toBe(2);
+    expect(calculateBallTurretReboundSegmentCount(9)).toBe(1);
     expect(
       calculateBallTurretReboundSegmentCount(BALL_TURRET_REBOUND_ZERO_LEVEL),
     ).toBe(0);
     expect(calculateBallTurretReboundSegmentCount(99)).toBe(0);
+  });
+
+  it("atinge 18 partes na fase 8 e zera rebotes na fase 10", () => {
+    const phaseEightSegments = calculateBallTurretBoundarySegments(8);
+    const phaseTenSegments = calculateBallTurretBoundarySegments(10);
+
+    expect(phaseEightSegments).toHaveLength(
+      BALL_TURRET_MAX_BOUNDARY_SEGMENT_COUNT,
+    );
+    expect(
+      phaseEightSegments.filter((segment) => segment.rebounds),
+    ).toHaveLength(2);
+    expect(phaseTenSegments).toHaveLength(
+      BALL_TURRET_MAX_BOUNDARY_SEGMENT_COUNT,
+    );
+    expect(
+      phaseTenSegments.filter((segment) => segment.rebounds),
+    ).toHaveLength(0);
   });
 
   it("identifica pelo ângulo se a parte da borda rebate a bolinha", () => {
