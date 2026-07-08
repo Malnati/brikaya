@@ -426,15 +426,15 @@ describe("Bricks laser fan helpers", () => {
       Math.max(1, Math.min(firstSegment.bounds.width, tangentSpan)) *
       RADIAL_COMPONENT_WIDTH_RATIO;
     const capacitorTerminals = getComponentTerminalRatios(
-      GAME_VISUAL_ASSET_ROLES.brickRed,
+      GAME_VISUAL_ASSET_ROLES.brickPurple,
     );
-    const resistorTerminals = getComponentTerminalRatios(
+    const transistorTerminals = getComponentTerminalRatios(
       GAME_VISUAL_ASSET_ROLES.brickBlue,
     );
     const expectedRightOffset =
       (capacitorTerminals.right - 0.5) * expectedWidth;
     const expectedLeftOffset =
-      (resistorTerminals.left - 0.5) * expectedWidth;
+      (transistorTerminals.left - 0.5) * expectedWidth;
     const edgeOffset = expectedWidth / 2;
 
     bricks.draw(ctx);

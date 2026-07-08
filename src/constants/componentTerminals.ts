@@ -3,10 +3,10 @@ import { GAME_VISUAL_ASSET_ROLES, type GameVisualAssetRole } from "../utils/visu
 
 export type ComponentShape =
   | "capacitor"
-  | "resistor"
+  | "square-inductor"
+  | "transistor"
   | "chip"
   | "led-diode"
-  | "inductor"
   | "shield-module";
 
 export interface ComponentTerminalRatios {
@@ -18,21 +18,21 @@ const VIEWBOX_WIDTH = 96;
 
 export const COMPONENT_TERMINAL_RATIOS: Record<ComponentShape, ComponentTerminalRatios> = {
   capacitor: { left: 31 / VIEWBOX_WIDTH, right: 65 / VIEWBOX_WIDTH },
-  resistor: { left: 20 / VIEWBOX_WIDTH, right: 76 / VIEWBOX_WIDTH },
+  "square-inductor": { left: 24 / VIEWBOX_WIDTH, right: 72 / VIEWBOX_WIDTH },
+  transistor: { left: 26 / VIEWBOX_WIDTH, right: 70 / VIEWBOX_WIDTH },
   chip: { left: 21 / VIEWBOX_WIDTH, right: 75 / VIEWBOX_WIDTH },
   "led-diode": { left: 34 / VIEWBOX_WIDTH, right: 66 / VIEWBOX_WIDTH },
-  inductor: { left: 22 / VIEWBOX_WIDTH, right: 74 / VIEWBOX_WIDTH },
   "shield-module": { left: 25 / VIEWBOX_WIDTH, right: 71 / VIEWBOX_WIDTH },
 };
 
 const BRICK_ROLE_TO_COMPONENT_SHAPE: Partial<
   Record<GameVisualAssetRole, ComponentShape>
 > = {
-  [GAME_VISUAL_ASSET_ROLES.brickRed]: "capacitor",
-  [GAME_VISUAL_ASSET_ROLES.brickBlue]: "resistor",
+  [GAME_VISUAL_ASSET_ROLES.brickRed]: "square-inductor",
+  [GAME_VISUAL_ASSET_ROLES.brickBlue]: "transistor",
   [GAME_VISUAL_ASSET_ROLES.brickGreen]: "chip",
   [GAME_VISUAL_ASSET_ROLES.brickYellow]: "led-diode",
-  [GAME_VISUAL_ASSET_ROLES.brickPurple]: "inductor",
+  [GAME_VISUAL_ASSET_ROLES.brickPurple]: "capacitor",
   [GAME_VISUAL_ASSET_ROLES.brickMetalIntact]: "shield-module",
   [GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne]: "shield-module",
   [GAME_VISUAL_ASSET_ROLES.brickMetalDentedTwo]: "shield-module",

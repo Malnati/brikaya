@@ -487,7 +487,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Capacitor",
+    usage: "Indutor quadrado",
   },
   {
     id: "spr-brick-basic-blue-normal",
@@ -498,7 +498,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Resistor",
+    usage: "Transistor",
   },
   {
     id: "spr-brick-basic-green-normal",
@@ -531,7 +531,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Indutor",
+    usage: "Capacitor",
   },
   {
     id: "spr-brick-metal-steel-normal",
@@ -795,7 +795,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Capacitor alto contraste",
+    usage: "Indutor quadrado alto contraste",
   },
   {
     id: "spr-brick-basic-blue-high-contrast-normal",
@@ -806,7 +806,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Resistor alto contraste",
+    usage: "Transistor alto contraste",
   },
   {
     id: "spr-brick-basic-green-high-contrast-normal",
@@ -839,7 +839,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Indutor alto contraste",
+    usage: "Capacitor alto contraste",
   },
   {
     id: "spr-brick-metal-steel-high-contrast-normal",
@@ -1004,7 +1004,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Capacitor sunset",
+    usage: "Indutor quadrado sunset",
   },
   {
     id: "spr-brick-basic-blue-sunset-normal",
@@ -1015,7 +1015,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Resistor sunset",
+    usage: "Transistor sunset",
   },
   {
     id: "spr-brick-basic-green-sunset-normal",
@@ -1048,7 +1048,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Indutor sunset",
+    usage: "Capacitor sunset",
   },
   {
     id: "spr-brick-metal-steel-sunset-normal",
@@ -1213,7 +1213,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Capacitor metrô realista",
+    usage: "Indutor quadrado metrô realista",
   },
   {
     id: "spr-brick-basic-blue-metro-real-normal",
@@ -1224,7 +1224,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Resistor metrô realista",
+    usage: "Transistor metrô realista",
   },
   {
     id: "spr-brick-basic-green-metro-real-normal",
@@ -1257,7 +1257,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Indutor metrô realista",
+    usage: "Capacitor metrô realista",
   },
   {
     id: "vfx-countdown-circle-metro-real-overlay",
@@ -1389,7 +1389,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Capacitor oficina realista",
+    usage: "Indutor quadrado oficina realista",
   },
   {
     id: "spr-brick-basic-blue-garage-real-normal",
@@ -1400,7 +1400,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Resistor oficina realista",
+    usage: "Transistor oficina realista",
   },
   {
     id: "spr-brick-basic-green-garage-real-normal",
@@ -1433,7 +1433,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Indutor oficina realista",
+    usage: "Capacitor oficina realista",
   },
   {
     id: "vfx-countdown-circle-garage-real-overlay",
@@ -1565,7 +1565,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Capacitor laboratório realista",
+    usage: "Indutor quadrado laboratório realista",
   },
   {
     id: "spr-brick-basic-blue-lab-real-normal",
@@ -1576,7 +1576,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Resistor laboratório realista",
+    usage: "Transistor laboratório realista",
   },
   {
     id: "spr-brick-basic-green-lab-real-normal",
@@ -1609,7 +1609,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Indutor laboratório realista",
+    usage: "Capacitor laboratório realista",
   },
   {
     id: "vfx-countdown-circle-lab-real-overlay",
@@ -1741,7 +1741,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Capacitor templo realista",
+    usage: "Indutor quadrado templo realista",
   },
   {
     id: "spr-brick-basic-blue-temple-real-normal",
@@ -1752,7 +1752,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Resistor templo realista",
+    usage: "Transistor templo realista",
   },
   {
     id: "spr-brick-basic-green-temple-real-normal",
@@ -1785,7 +1785,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Indutor templo realista",
+    usage: "Capacitor templo realista",
   },
   {
     id: "vfx-countdown-circle-temple-real-overlay",
@@ -1917,7 +1917,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Capacitor estação orbital realista",
+    usage: "Indutor quadrado estação orbital realista",
   },
   {
     id: "spr-brick-basic-blue-orbital-real-normal",
@@ -1928,7 +1928,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Resistor estação orbital realista",
+    usage: "Transistor estação orbital realista",
   },
   {
     id: "spr-brick-basic-green-orbital-real-normal",
@@ -1961,7 +1961,7 @@ export const VISUAL_ASSET_CATALOG = [
     state: "normal",
     width: 48,
     height: 20,
-    usage: "Indutor estação orbital realista",
+    usage: "Capacitor estação orbital realista",
   },
   {
     id: "vfx-countdown-circle-orbital-real-overlay",
