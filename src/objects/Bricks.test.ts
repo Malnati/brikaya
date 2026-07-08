@@ -7,6 +7,7 @@ import {
   calculateRadialBrickSegment,
   calculateRadialPlayfieldGeometry,
 } from "../utils/radialGeometry";
+import { getComponentTerminalRatios } from "../constants/componentTerminals";
 
 jest.mock("../storage/gameLogger", () => ({
   gameLogger: {
@@ -419,6 +420,22 @@ describe("Bricks laser fan helpers", () => {
       geometry,
     );
     const ctx = createRadialCanvasContext();
+    const angularWidth = Math.abs(firstSegment.endAngle - firstSegment.startAngle);
+    const tangentSpan = firstSegment.centerRadius * angularWidth;
+    const expectedWidth =
+      Math.max(1, Math.min(firstSegment.bounds.width, tangentSpan)) *
+      RADIAL_COMPONENT_WIDTH_RATIO;
+    const capacitorTerminals = getComponentTerminalRatios(
+      GAME_VISUAL_ASSET_ROLES.brickRed,
+    );
+    const resistorTerminals = getComponentTerminalRatios(
+      GAME_VISUAL_ASSET_ROLES.brickBlue,
+    );
+    const expectedRightOffset =
+      (capacitorTerminals.right - 0.5) * expectedWidth;
+    const expectedLeftOffset =
+      (resistorTerminals.left - 0.5) * expectedWidth;
+    const edgeOffset = expectedWidth / 2;
 
     bricks.draw(ctx);
 
@@ -430,18 +447,24 @@ describe("Bricks laser fan helpers", () => {
     );
     const firstTraceStart = (ctx.moveTo as jest.Mock).mock.calls[0];
     const firstTraceEnd = (ctx.lineTo as jest.Mock).mock.calls[0];
-    expect(
-      Math.hypot(
-        firstTraceStart[0] - firstSegment.centerX,
-        firstTraceStart[1] - firstSegment.centerY,
-      ),
-    ).toBeGreaterThan(0);
-    expect(
-      Math.hypot(
-        firstTraceEnd[0] - secondSegment.centerX,
-        firstTraceEnd[1] - secondSegment.centerY,
-      ),
-    ).toBeGreaterThan(0);
+    const firstTraceStartDistance = Math.hypot(
+      firstTraceStart[0] - firstSegment.centerX,
+      firstTraceStart[1] - firstSegment.centerY,
+    );
+    const firstTraceEndDistance = Math.hypot(
+      firstTraceEnd[0] - secondSegment.centerX,
+      firstTraceEnd[1] - secondSegment.centerY,
+    );
+    expect(firstTraceStartDistance).toBeGreaterThan(0);
+    expect(firstTraceEndDistance).toBeGreaterThan(0);
+    expect(firstTraceStartDistance).toBeLessThan(edgeOffset);
+    expect(firstTraceEndDistance).toBeLessThan(edgeOffset);
+    expect(Math.abs(firstTraceStartDistance - Math.abs(expectedRightOffset))).toBeLessThan(
+      edgeOffset * 0.2,
+    );
+    expect(Math.abs(firstTraceEndDistance - Math.abs(expectedLeftOffset))).toBeLessThan(
+      edgeOffset * 0.2,
+    );
     expect(
       (ctx.stroke as jest.Mock).mock.invocationCallOrder[0],
     ).toBeLessThan((ctx.drawImage as jest.Mock).mock.invocationCallOrder[0]);

@@ -42,13 +42,23 @@ const DISALLOWED_SVG_PATTERNS = [
   { pattern: /@font-face/i, label: 'external font hook' },
 ];
 const DISALLOWED_RUNTIME_RASTER_REFERENCE_PATTERN =
-  /(?:\/assets\/visual\/|public\/assets\/visual\/)[^'"`\s)]*\.(?:png|jpe?g|webp|gif|ico)\b|(?:\/|public\/)favicon\.ico\b/i;
+  /(?:\/assets\/visual\/|public\/assets\/visual\/)(?!atlases\/|cinematics\/)[^'"`\s)]*\.(?:png|jpe?g|webp|gif|ico|avif)\b|(?:\/|public\/)favicon\.ico\b/i;
 const COMPONENT_BRICK_PATH_PATTERN = /public\/assets\/visual\/bricks\/spr-brick-/;
 const REQUIRED_COMPONENT_SHAPE_ATTRIBUTES = [
   'data-component-shape',
   'data-terminal-left',
   'data-terminal-right',
 ];
+const COMPONENT_TERMINAL_COORDINATES = {
+  capacitor: { left: '31 24', right: '65 24' },
+  resistor: { left: '20 24', right: '76 24' },
+  chip: { left: '21 24', right: '75 24' },
+  'led-diode': { left: '34 24', right: '66 24' },
+  inductor: { left: '22 24', right: '74 24' },
+  'shield-module': { left: '25 24', right: '71 24' },
+};
+const FORBIDDEN_COMPONENT_BORDER_LEAD_PATTERN =
+  /<path\b[^>]*\bd=["'][^"']*(?:M0 24H|M\d+(?:\.\d+)? 24H96)[^"']*["']/i;
 const FORBIDDEN_COMPONENT_BACKPLATE_PATTERNS = [
   {
     pattern: /<rect\b/i,
@@ -150,6 +160,14 @@ function validateSvgContent(svgFiles) {
   return failures;
 }
 
+function readComponentShapeAttributes(source) {
+  const svgOpenTag = source.match(/<svg\b[^>]*>/i)?.[0] ?? '';
+  const shape = svgOpenTag.match(/\bdata-component-shape=["']([^"']+)["']/i)?.[1];
+  const terminalLeft = svgOpenTag.match(/\bdata-terminal-left=["']([^"']+)["']/i)?.[1];
+  const terminalRight = svgOpenTag.match(/\bdata-terminal-right=["']([^"']+)["']/i)?.[1];
+  return { shape, terminalLeft, terminalRight };
+}
+
 function validateComponentSilhouetteAssets(svgFiles) {
   const componentSvgFiles = svgFiles.filter((svgFile) =>
     COMPONENT_BRICK_PATH_PATTERN.test(svgFile.replaceAll('\\', '/')),
@@ -168,6 +186,27 @@ function validateComponentSilhouetteAssets(svgFiles) {
       if (rule.pattern.test(source)) {
         failures.push(`${svgFile} ainda usa ${rule.label}`);
       }
+    }
+
+    const { shape, terminalLeft, terminalRight } = readComponentShapeAttributes(source);
+    const expectedTerminals = shape ? COMPONENT_TERMINAL_COORDINATES[shape] : undefined;
+    if (!expectedTerminals) {
+      failures.push(`${svgFile} usa data-component-shape desconhecido: ${shape ?? 'ausente'}`);
+    } else {
+      if (terminalLeft !== expectedTerminals.left) {
+        failures.push(
+          `${svgFile} data-terminal-left deve ser "${expectedTerminals.left}", recebeu "${terminalLeft ?? 'ausente'}"`,
+        );
+      }
+      if (terminalRight !== expectedTerminals.right) {
+        failures.push(
+          `${svgFile} data-terminal-right deve ser "${expectedTerminals.right}", recebeu "${terminalRight ?? 'ausente'}"`,
+        );
+      }
+    }
+
+    if (FORBIDDEN_COMPONENT_BORDER_LEAD_PATTERN.test(source)) {
+      failures.push(`${svgFile} ainda contém lead de borda (M0 24H… ou …H96)`);
     }
   }
 

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run codex-env:check && npm run test:semantic-file-names && npm run test:svg-assets && npm run test:trace-guard:unit && npm run test:trace-guard && tsc -p tsconfig.app.json && vite build && node scripts/generate-localized-seo.mjs && npm run codex-env:materialize && node scripts/generate-runtime-asset-manifest.mjs && node scripts/stamp-service-worker-version.mjs && npm run test:trace-guard -- --include-dist",
+    "build": "npm run codex-env:check && npm run test:semantic-file-names && npm run test:svg-assets && npm run test:visual-asset-policy:unit && npm run test:visual-asset-policy && npm run test:trace-guard:unit && npm run test:trace-guard && tsc -p tsconfig.app.json && vite build && node scripts/generate-localized-seo.mjs && npm run codex-env:materialize && node scripts/generate-runtime-asset-manifest.mjs && node scripts/stamp-service-worker-version.mjs && npm run test:trace-guard -- --include-dist",
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -26,6 +26,8 @@
     "test:cloudflare-svg-assets": "node tests/e2e/cloudflare-svg-assets-qa.js",
     "test:cinematic-media-assets": "node scripts/validate-cinematic-media-assets.mjs",
     "test:svg-assets": "node scripts/validate-svg-assets.mjs",
+    "test:visual-asset-policy": "node scripts/validate-visual-asset-policy.mjs",
+    "test:visual-asset-policy:unit": "node scripts/validate-visual-asset-policy.test.mjs",
     "test:audio-assets": "node scripts/validate-audio-assets.mjs",
     "test:asset-naming": "jest src/constants/assetNaming.test.ts --runInBand",
     "test:cloudflare-audio": "node tests/e2e/cloudflare-audio-qa.js",

@@ -21,6 +21,7 @@ import {
   type RectBounds,
 } from "../utils/radialGeometry";
 import type { ElectricImpactHandler } from "../utils/electricImpact";
+import { getComponentTerminalRatios } from "../constants/componentTerminals";
 
 const BRICK_ACTIVE = 1;
 const BRICK_DESTROYED = 0;
@@ -271,7 +272,7 @@ export class Bricks {
 
           {
             const ballVelocityBefore = ball.getVelocity();
-            this.emitComponentElectricImpact(ball.position, targetPosition, segment);
+            this.emitComponentElectricImpact(ball.position, targetPosition, b, segment);
             if (segment && typeof ball.bounceFromRadialBrick === "function") {
               ball.bounceFromRadialBrick(segment.centerX, segment.centerY);
             } else {
@@ -401,12 +402,13 @@ export class Bricks {
   private emitComponentElectricImpact(
     origin: { x: number; y: number },
     bounds: RectBounds,
+    brick: Brick,
     segment?: RadialBrickSegment,
   ) {
     if (!this.onElectricImpact) return;
 
     const endpoints = segment
-      ? this.getRadialComponentTerminals(segment)
+      ? this.getRadialComponentTerminals(segment, brick)
       : {
           left: {
             x: bounds.x,
@@ -700,8 +702,10 @@ export class Bricks {
       row,
       this.rows,
     );
-    const leftTerminals = this.getRadialComponentTerminals(leftSegment);
-    const rightTerminals = this.getRadialComponentTerminals(rightSegment);
+    const leftBrick = this.bricks[leftCol][row];
+    const rightBrick = this.bricks[rightCol][row];
+    const leftTerminals = this.getRadialComponentTerminals(leftSegment, leftBrick);
+    const rightTerminals = this.getRadialComponentTerminals(rightSegment, rightBrick);
 
     ctx.beginPath();
     ctx.moveTo(leftTerminals.right.x, leftTerminals.right.y);
@@ -736,20 +740,23 @@ export class Bricks {
 
   private getRadialComponentTerminals(
     segment: RadialBrickSegment,
+    brick: Brick,
   ): RadialComponentTerminals {
     const metrics = this.getRadialComponentMetrics(segment);
-    const terminalOffset = metrics.width / 2;
+    const terminalRatios = getComponentTerminalRatios(this.getBrickAssetRole(brick));
+    const leftOffset = (terminalRatios.left - 0.5) * metrics.width;
+    const rightOffset = (terminalRatios.right - 0.5) * metrics.width;
     const tangentX = Math.cos(metrics.rotation);
     const tangentY = Math.sin(metrics.rotation);
 
     return {
       left: {
-        x: segment.centerX - tangentX * terminalOffset,
-        y: segment.centerY - tangentY * terminalOffset,
+        x: segment.centerX + tangentX * leftOffset,
+        y: segment.centerY + tangentY * leftOffset,
       },
       right: {
-        x: segment.centerX + tangentX * terminalOffset,
-        y: segment.centerY + tangentY * terminalOffset,
+        x: segment.centerX + tangentX * rightOffset,
+        y: segment.centerY + tangentY * rightOffset,
       },
     };
   }
