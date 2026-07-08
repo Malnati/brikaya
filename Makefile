@@ -336,6 +336,8 @@ help:
 	@echo "  cloudflare-build     - Gerar build estático para Pages"
 	@echo "  cloudflare-domain    - Garantir domínio canônico e redirect para brikaya.com"
 	@echo "  cloudflare-deploy    - Publicar dist no Cloudflare Pages e manter brikaya.com canônico"
+	@echo "  cloudflare-deploy-preview - Publicar preview em dev.brikaya.com sem tocar produção"
+	@echo "  cloudflare-preview-check - Validar índice publicado em dev.brikaya.com"
 	@echo "  cloudflare-purge-cache - Limpar cache público de brikaya.com sem alterar origem"
 	@echo "  cloudflare-public-check - Validar que brikaya.com serve o build local"
 	@echo "  cloudflare-mobile-qa - Testar mobile default/logs contra Cloudflare publicado"
