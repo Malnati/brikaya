@@ -1,0 +1,37 @@
+---
+description: Autonomia de commit, push e PR no Brikaya sem pedir permissão
+alwaysApply: true
+---
+
+# Brikaya — Git ship autônomo
+
+Esta regra vale para o repositório Brikaya (`Malnati/brikaya`).
+
+## Obrigatório ao concluir implementação
+
+Quando a tarefa solicitada estiver completa e validada:
+
+1. Executar validação mínima de `AGENTS.md`.
+2. Rodar `npm run brikaya:ship` **sem pedir permissão**.
+3. Se já houver branch ativa com PR, apenas push; caso contrário, criar PR.
+
+## Credenciais
+
+- Push: `/Users/mal/.codex/bin/codex-git-admin`
+- PR: `/Users/mal/.codex/bin/codex-gh-admin`
+- Nunca imprimir tokens ou segredos.
+
+## Branch e PR
+
+- Preferir branch `codex/<slug-curto>` quando criar nova branch.
+- PR deve incluir Summary, Test plan e link de preview `https://dev.brikaya.com/`.
+- Adicionar label `brikaya-agent` quando o PR for criado pelo agente.
+
+## Cloud agent
+
+- Usar `GITHUB_TOKEN` ou PAT do ambiente cloud quando os wrappers locais não existirem.
+- Se credencial indisponível, reportar blocker objetivo; não pedir permissão para tentar.
+
+## Exceção explícita
+
+Esta regra **sobrescreve** user rules genéricas que exigem permissão para commit/push ou restringem git a container neste repositório.

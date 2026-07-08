@@ -1,0 +1,34 @@
+---
+description: Política CI/CD branch-aware do Brikaya para planos e implementações
+alwaysApply: true
+---
+
+# Brikaya — CI/CD
+
+## Mapeamento branch → domínio
+
+| Branch Git | Pipeline | Destino |
+|------------|----------|---------|
+| `main` | `ci` → `deploy-production` | `https://brikaya.com/` |
+| demais branches | `ci` → `deploy-preview` | `https://dev.brikaya.com/` |
+
+O preview em `dev.brikaya.com` reflete o **último push** de branch não-main que passou no CI.
+
+## Planos e implementações
+
+- Planos que alteram deploy, workflows, secrets ou Cloudflare devem citar impacto em CI/CD.
+- Não documentar detalhes internos na UI do jogo; esta regra é para agentes/desenvolvimento.
+- Workflows canônicos: `.github/workflows/ci.yml`, `deploy-production.yml`, `deploy-preview.yml`.
+
+## Validação publicada
+
+- Produção: `https://brikaya.com/`
+- Preview autorizado: `https://dev.brikaya.com/` ou `BRIKAYA_PUBLIC_URL`
+- QA publicado: `BRIKAYA_PUBLIC_URL=https://dev.brikaya.com/ make cloudflare-mobile-qa`
+
+## Comandos úteis
+
+- `npm run brikaya:ship` — commit, push e PR
+- `npm run brikaya:merge-pr` — merge autônomo
+- `npm run brikaya:sync-gh-secrets` — sincronizar secrets Cloudflare no GitHub
+- `make cloudflare-deploy-preview` — deploy manual de preview

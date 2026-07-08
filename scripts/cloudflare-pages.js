@@ -33,6 +33,10 @@ const PROJECT_NAME_KEY = 'BRIKAYA_CLOUDFLARE_PAGES_PROJECT_NAME';
 const BRANCH_KEY = 'BRIKAYA_CLOUDFLARE_PAGES_BRANCH';
 const OUTPUT_DIR_KEY = 'BRIKAYA_CLOUDFLARE_PAGES_OUTPUT_DIR';
 const CUSTOM_DOMAIN_KEY = 'BRIKAYA_CLOUDFLARE_PAGES_CUSTOM_DOMAIN';
+const PREVIEW_PROJECT_NAME_KEY = 'BRIKAYA_CLOUDFLARE_PAGES_PREVIEW_PROJECT_NAME';
+const PREVIEW_DOMAIN_KEY = 'BRIKAYA_CLOUDFLARE_PAGES_PREVIEW_DOMAIN';
+const PREVIEW_BRANCH_KEY = 'BRIKAYA_CLOUDFLARE_PAGES_PREVIEW_BRANCH';
+const ZONE_NAME_KEY = 'BRIKAYA_CLOUDFLARE_ZONE_NAME';
 const ACCOUNT_ID_KEY = 'CLOUDFLARE_ACCOUNT_ID';
 const API_TOKEN_KEY = 'CLOUDFLARE_API_TOKEN';
 const INDEX_HTML_FILE_NAME = 'index.html';
@@ -40,6 +44,10 @@ const DEFAULT_PAGES_PROJECT_NAME = 'brikaya-live';
 const DEFAULT_PAGES_BRANCH = 'main';
 const DEFAULT_OUTPUT_DIR = 'dist';
 const DEFAULT_CUSTOM_DOMAIN = 'brikaya.com';
+const DEFAULT_PREVIEW_PROJECT_NAME = 'brikaya-dev';
+const DEFAULT_PREVIEW_DOMAIN = 'dev.brikaya.com';
+const DEFAULT_PREVIEW_BRANCH = 'preview';
+const DEFAULT_ZONE_NAME = 'brikaya.com';
 const DEFAULT_REDIRECT_LIST_NAME = 'brikaya_pages_dev_redirects';
 const DEFAULT_REDIRECT_RULE_REF = 'brikaya_pages_dev_redirect';
 const DEFAULT_REDIRECT_RULESET_NAME = 'Brikaya canonical domain redirects';
@@ -105,29 +113,46 @@ const PROJECT_NAME_OPTION = '--project-name';
 const BRANCH_OPTION = '--branch';
 const PRODUCTION_BRANCH_OPTION = '--production-branch';
 const SKIP_CACHING_OPTION = '--skip-caching';
+const PREVIEW_REQUIRED_ENV_KEYS = [
+  ACCOUNT_ID_KEY,
+  API_TOKEN_KEY,
+  PREVIEW_PROJECT_NAME_KEY,
+  PREVIEW_BRANCH_KEY,
+  OUTPUT_DIR_KEY,
+  PREVIEW_DOMAIN_KEY
+];
 const COMMANDS = new Set([
   'env-check',
   'whoami',
   'project-list',
   'ensure-project',
+  'ensure-preview-project',
   'zone-check',
   'dns-state',
   'ensure-dns',
+  'ensure-preview-dns',
   'domain-list',
   'ensure-domain',
+  'ensure-preview-domain',
   'redirect-state',
   'ensure-pages-dev-redirect',
   'purge-public-cache',
   'verify-public-index',
-  'deploy'
+  'verify-preview-index',
+  'deploy',
+  'deploy-preview'
 ]);
 
 function loadEnvironment() {
-  if (!existsSync(PROJECT_ENV_FILE)) {
+  const hasRequiredFromProcess = REQUIRED_ENV_KEYS.every(key => process.env[key]);
+  if (!existsSync(PROJECT_ENV_FILE) && !hasRequiredFromProcess) {
     throw new Error('.env local ausente; execute npm run codex-env:bootstrap sem imprimir valores.');
   }
 
   const fileValues = ENV_FILE_PATHS.reduce((mergedValues, filePath) => {
+    if (!existsSync(filePath)) {
+      return mergedValues;
+    }
     return { ...mergedValues, ...readCodexEnvFile(filePath) };
   }, {});
 
@@ -137,7 +162,44 @@ function loadEnvironment() {
     [PROJECT_NAME_KEY]: fileValues[PROJECT_NAME_KEY] || process.env[PROJECT_NAME_KEY] || DEFAULT_PAGES_PROJECT_NAME,
     [BRANCH_KEY]: fileValues[BRANCH_KEY] || process.env[BRANCH_KEY] || DEFAULT_PAGES_BRANCH,
     [OUTPUT_DIR_KEY]: fileValues[OUTPUT_DIR_KEY] || process.env[OUTPUT_DIR_KEY] || DEFAULT_OUTPUT_DIR,
-    [CUSTOM_DOMAIN_KEY]: fileValues[CUSTOM_DOMAIN_KEY] || process.env[CUSTOM_DOMAIN_KEY] || DEFAULT_CUSTOM_DOMAIN
+    [CUSTOM_DOMAIN_KEY]: fileValues[CUSTOM_DOMAIN_KEY] || process.env[CUSTOM_DOMAIN_KEY] || DEFAULT_CUSTOM_DOMAIN,
+    [PREVIEW_PROJECT_NAME_KEY]:
+      fileValues[PREVIEW_PROJECT_NAME_KEY] || process.env[PREVIEW_PROJECT_NAME_KEY] || DEFAULT_PREVIEW_PROJECT_NAME,
+    [PREVIEW_DOMAIN_KEY]:
+      fileValues[PREVIEW_DOMAIN_KEY] || process.env[PREVIEW_DOMAIN_KEY] || DEFAULT_PREVIEW_DOMAIN,
+    [PREVIEW_BRANCH_KEY]:
+      fileValues[PREVIEW_BRANCH_KEY] || process.env[PREVIEW_BRANCH_KEY] || DEFAULT_PREVIEW_BRANCH,
+    [ZONE_NAME_KEY]: fileValues[ZONE_NAME_KEY] || process.env[ZONE_NAME_KEY] || DEFAULT_ZONE_NAME
+  };
+}
+
+function validatePreviewEnvironment(envValues) {
+  const missingKeys = PREVIEW_REQUIRED_ENV_KEYS.filter(key => !envValues[key]);
+
+  if (missingKeys.length > 0) {
+    throw new Error(`Variáveis preview ausentes: ${missingKeys.join(', ')}`);
+  }
+}
+
+function resolveZoneName(envValues, customDomain = envValues[CUSTOM_DOMAIN_KEY]) {
+  if (envValues[ZONE_NAME_KEY]) {
+    return envValues[ZONE_NAME_KEY];
+  }
+
+  const parts = customDomain.split('.');
+  if (parts.length <= 2) {
+    return customDomain;
+  }
+
+  return parts.slice(-2).join('.');
+}
+
+function buildPreviewEnvValues(envValues) {
+  return {
+    ...envValues,
+    [PROJECT_NAME_KEY]: envValues[PREVIEW_PROJECT_NAME_KEY],
+    [CUSTOM_DOMAIN_KEY]: envValues[PREVIEW_DOMAIN_KEY],
+    [BRANCH_KEY]: envValues[PREVIEW_BRANCH_KEY]
   };
 }
 
@@ -238,9 +300,9 @@ function buildPagesProjectsPath(envValues) {
   return `/accounts/${envValues[ACCOUNT_ID_KEY]}/pages/projects`;
 }
 
-function buildZonesPath(envValues) {
+function buildZonesPath(envValues, zoneName = resolveZoneName(envValues)) {
   const searchParams = new URLSearchParams({
-    [ZONE_NAME_SEARCH_PARAM]: envValues[CUSTOM_DOMAIN_KEY],
+    [ZONE_NAME_SEARCH_PARAM]: zoneName,
     [ACCOUNT_ID_SEARCH_PARAM]: envValues[ACCOUNT_ID_KEY]
   });
 
@@ -555,9 +617,25 @@ async function verifyPublicIndex(envValues) {
 }
 
 async function listZones(envValues) {
+  return listZonesForName(envValues, resolveZoneName(envValues));
+}
+
+async function getPrimaryZone(envValues, customDomain = envValues[CUSTOM_DOMAIN_KEY]) {
+  const zoneName = resolveZoneName(envValues, customDomain);
+  const zones = await listZonesForName(envValues, zoneName);
+  const zone = zones.find(candidateZone => getZoneName(candidateZone) === zoneName);
+
+  if (!zone) {
+    throw new Error(`Zona Cloudflare ausente para ${zoneName}.`);
+  }
+
+  return zone;
+}
+
+async function listZonesForName(envValues, zoneName) {
   validateEnvironment(envValues);
   const payload = await requestCloudflareApi(
-    buildZonesPath(envValues),
+    buildZonesPath(envValues, zoneName),
     {
       method: HTTP_GET
     },
@@ -566,7 +644,7 @@ async function listZones(envValues) {
   const zones = payload.result || API_RESULT_FALLBACK;
 
   if (zones.length === 0) {
-    console.log(`WARN zona não encontrada: ${envValues[CUSTOM_DOMAIN_KEY]}`);
+    console.log(`WARN zona não encontrada: ${zoneName}`);
     return zones;
   }
 
@@ -575,17 +653,6 @@ async function listZones(envValues) {
   });
 
   return zones;
-}
-
-async function getPrimaryZone(envValues) {
-  const zones = await listZones(envValues);
-  const zone = zones.find(candidateZone => getZoneName(candidateZone) === envValues[CUSTOM_DOMAIN_KEY]);
-
-  if (!zone) {
-    throw new Error(`Zona Cloudflare ausente para ${envValues[CUSTOM_DOMAIN_KEY]}.`);
-  }
-
-  return zone;
 }
 
 async function hasPublicARecords(envValues) {
@@ -986,6 +1053,29 @@ async function ensureProject(envValues) {
   );
 }
 
+async function ensurePreviewProject(envValues) {
+  validatePreviewEnvironment(envValues);
+  const previewEnvValues = buildPreviewEnvValues(envValues);
+  const projectName = previewEnvValues[PROJECT_NAME_KEY];
+  const projects = await listPagesProjects(previewEnvValues);
+  const projectExists = projects.some(project => getPagesProjectName(project) === projectName);
+
+  if (projectExists) {
+    console.log(`Projeto Pages preview já existe: ${projectName}`);
+    return;
+  }
+
+  runWrangler(
+    [
+      ...PROJECT_CREATE_COMMAND,
+      projectName,
+      PRODUCTION_BRANCH_OPTION,
+      previewEnvValues[BRANCH_KEY]
+    ],
+    previewEnvValues
+  );
+}
+
 function deploy(envValues) {
   validateEnvironment(envValues);
   runWrangler(
@@ -1000,6 +1090,41 @@ function deploy(envValues) {
     ],
     envValues
   );
+}
+
+function deployPreview(envValues) {
+  validatePreviewEnvironment(envValues);
+  const previewEnvValues = buildPreviewEnvValues(envValues);
+  runWrangler(
+    [
+      ...PAGES_DEPLOY_COMMAND,
+      previewEnvValues[OUTPUT_DIR_KEY],
+      PROJECT_NAME_OPTION,
+      previewEnvValues[PROJECT_NAME_KEY],
+      BRANCH_OPTION,
+      previewEnvValues[BRANCH_KEY],
+      SKIP_CACHING_OPTION
+    ],
+    previewEnvValues
+  );
+}
+
+async function ensurePreviewDomain(envValues) {
+  validatePreviewEnvironment(envValues);
+  const previewEnvValues = buildPreviewEnvValues(envValues);
+  return ensureDomain(previewEnvValues);
+}
+
+async function ensurePreviewDns(envValues) {
+  validatePreviewEnvironment(envValues);
+  const previewEnvValues = buildPreviewEnvValues(envValues);
+  return ensureDnsRecord(previewEnvValues);
+}
+
+async function verifyPreviewIndex(envValues) {
+  validatePreviewEnvironment(envValues);
+  const previewEnvValues = buildPreviewEnvValues(envValues);
+  return verifyPublicIndex(previewEnvValues);
 }
 
 async function run() {
@@ -1032,6 +1157,11 @@ async function run() {
     return;
   }
 
+  if (command === 'ensure-preview-project') {
+    await ensurePreviewProject(envValues);
+    return;
+  }
+
   if (command === 'zone-check') {
     await listZones(envValues);
     return;
@@ -1047,6 +1177,11 @@ async function run() {
     return;
   }
 
+  if (command === 'ensure-preview-dns') {
+    await ensurePreviewDns(envValues);
+    return;
+  }
+
   if (command === 'domain-list') {
     await listDomains(envValues);
     return;
@@ -1054,6 +1189,11 @@ async function run() {
 
   if (command === 'ensure-domain') {
     await ensureDomain(envValues);
+    return;
+  }
+
+  if (command === 'ensure-preview-domain') {
+    await ensurePreviewDomain(envValues);
     return;
   }
 
@@ -1074,6 +1214,16 @@ async function run() {
 
   if (command === 'verify-public-index') {
     await verifyPublicIndex(envValues);
+    return;
+  }
+
+  if (command === 'verify-preview-index') {
+    await verifyPreviewIndex(envValues);
+    return;
+  }
+
+  if (command === 'deploy-preview') {
+    deployPreview(envValues);
     return;
   }
 

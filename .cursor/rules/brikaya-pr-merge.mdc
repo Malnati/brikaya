@@ -1,0 +1,31 @@
+---
+description: Merge autônomo de PR com resolução de conflitos no Brikaya
+alwaysApply: true
+---
+
+# Brikaya — PR merge autônomo
+
+## Quando aplicar
+
+- Usuário pede merge.
+- Tarefa de entrega está concluída e existe PR aberto com CI verde.
+- Automação `brikaya-pr-auto-merge` dispara para PR com label `brikaya-agent`.
+
+## Fluxo obrigatório
+
+1. `git status --short` antes de checkout para preservar trabalho humano sujo.
+2. Rodar `npm run brikaya:merge-pr` **sem pedir permissão**.
+3. Aguardar check `ci` verde antes do merge.
+4. Resolver conflitos automaticamente seguindo `/Users/mal/.codex/templates/github-admin-conflict-resolution.md`.
+
+## Credenciais e admin
+
+- Merge preferencial: `/Users/mal/.codex/bin/codex-gh-admin pr merge --squash --delete-branch`
+- Fallback autorizado: `gh pr merge --admin --squash --delete-branch`
+- Push pós-rebase: `/Users/mal/.codex/bin/codex-git-admin push --force-with-lease`
+
+## Restrições
+
+- Não mergear com checks vermelhos.
+- Parar apenas em conflito semanticamente inseguro ou validação impossível.
+- Não pedir autorização humana para rebase, resolução documental/código seguro ou merge após CI verde.

@@ -60,6 +60,45 @@
       ]
     },
     {
+      "name": "BRIKAYA_CLOUDFLARE_PAGES_PREVIEW_PROJECT_NAME",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya Cloudflare Pages preview project",
+      "commands": [
+        "make cloudflare-deploy-preview",
+        "node scripts/cloudflare-pages.js deploy-preview"
+      ]
+    },
+    {
+      "name": "BRIKAYA_CLOUDFLARE_PAGES_PREVIEW_DOMAIN",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya preview custom domain",
+      "commands": [
+        "make cloudflare-deploy-preview",
+        "node scripts/cloudflare-pages.js verify-preview-index"
+      ]
+    },
+    {
+      "name": "BRIKAYA_CLOUDFLARE_PAGES_PREVIEW_BRANCH",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya Cloudflare Pages preview branch",
+      "commands": [
+        "make cloudflare-deploy-preview"
+      ]
+    },
+    {
+      "name": "BRIKAYA_CLOUDFLARE_ZONE_NAME",
+      "classification": "public-config",
+      "required": false,
+      "source": "Cloudflare DNS zone apex for Brikaya domains",
+      "commands": [
+        "node scripts/cloudflare-pages.js ensure-dns",
+        "node scripts/cloudflare-pages.js ensure-preview-dns"
+      ]
+    },
+    {
       "name": "BRIKAYA_INDEXNOW_KEY",
       "classification": "public-generated",
       "required": true,

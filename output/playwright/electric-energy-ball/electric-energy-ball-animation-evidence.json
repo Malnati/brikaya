@@ -1,0 +1,14 @@
+{
+  "url": "http://127.0.0.1:4173/?qaScenario=single-brick-phase-clear",
+  "imageSet": "electric-energy-ball",
+  "menuOptionPressed": "true",
+  "canvasFrameChanged": true,
+  "frameABytes": 250438,
+  "frameBBytes": 251462,
+  "capturedAt": "2026-07-07T13:50:55.661Z",
+  "files": [
+    "electric-energy-ball-menu-selected.png",
+    "electric-energy-ball-frame-a.png",
+    "electric-energy-ball-frame-b.png"
+  ]
+}
