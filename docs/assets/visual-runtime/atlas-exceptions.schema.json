@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://brikaya.com/schemas/atlas-exceptions.schema.json",
+  "title": "Brikaya SVG-first visual runtime exceptions",
+  "type": "object",
+  "required": ["version", "policy", "thresholds", "exceptions"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "const": 1 },
+    "policy": { "const": "svg-first-runtime-atlas-exceptions" },
+    "thresholds": {
+      "type": "object",
+      "required": ["heavyAnimationFrameCount", "manyDrawsPerFrame", "requiresProfiledP95Improvement"],
+      "additionalProperties": false,
+      "properties": {
+        "heavyAnimationFrameCount": { "const": 8 },
+        "manyDrawsPerFrame": { "const": 100 },
+        "requiresProfiledP95Improvement": { "const": true }
+      }
+    },
+    "exceptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "runtimePaths", "sourceSvgPaths", "reason", "evidencePath"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+          "kind": { "enum": ["atlas", "cinematic"] },
+          "runtimePaths": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "pattern": "^/assets/visual/(atlases|cinematics)/" }
+          },
+          "sourceSvgPaths": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "pattern": "^/assets/visual/.+\\.svg$" }
+          },
+          "reason": {
+            "enum": ["heavy-animation", "many-draws", "profiled-faster", "cinematic-background"]
+          },
+          "evidencePath": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

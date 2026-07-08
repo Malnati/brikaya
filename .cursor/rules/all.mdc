@@ -7,8 +7,12 @@ alwaysApply: true
 
 - Use Node.js v23.x para build, teste e publicação.
 - Mantenha o jogo principal offline-first após o primeiro carregamento.
-- Use apenas assets visuais SVG locais no runtime.
+- A política visual é SVG-first authoring → SVG runtime enquanto simples → atlas PNG/WebP só com exceção documentada por animação pesada, muitos draws ou profiling favorável.
+- Planos visuais devem declarar formato fonte, formato runtime, motivo técnico e evidência antes de implementar.
+- Use assets visuais SVG locais/offline para sprites, UI e VFX simples no runtime.
+- Atlas PNG/WebP runtime só pode existir em `public/assets/visual/atlases/`, com SVG fonte preservado e recibo em `docs/assets/visual-runtime/atlas-exceptions.json`.
+- AVIF nunca é formato padrão para sprites, UI, power-ups, tijolos, VFX ou atlases a 60 FPS; AVIF só pode ser fundo/cena/cinemática em `public/assets/visual/cinematics/` com justificativa e evidência.
 - Não exponha detalhes internos na UI final.
 - Não aceite cobrança, plano pago, overage, cartão ou campanha ativa sem aprovação explícita.
-- Validação local mínima: `node --version`, `make help`, `npm run test:semantic-file-names`, `npm run test:svg-assets`, `npm run build`.
+- Validação local mínima: `node --version`, `make help`, `npm run test:semantic-file-names`, `npm run test:svg-assets`, `npm run test:visual-asset-policy`, `npm run build`.
 - Validação publicada deve usar `https://brikaya.com/` ou `BRIKAYA_PUBLIC_URL` quando apontar para preview autorizado.

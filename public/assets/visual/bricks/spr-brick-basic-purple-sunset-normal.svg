@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Inductor" data-component-shape="inductor" data-terminal-left="0 24" data-terminal-right="96 24">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Inductor" data-component-shape="inductor" data-terminal-left="22 24" data-terminal-right="74 24">
   <defs>
     <linearGradient id="spr-brick-basic-purple-sunset-normal-body" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#ffe7a6"/>
@@ -10,7 +10,7 @@
       <stop offset="1" stop-color="#d78cff" stop-opacity="0"/>
     </radialGradient>
   </defs>
-  <path d="M0 24H22M74 24H96" fill="none" stroke="#ffd166" stroke-width="4" stroke-linecap="round"/>
+
   <path d="M22 24C22 13 36 13 36 24S50 35 50 24S64 13 64 24S78 35 78 24" fill="none" stroke="url(#spr-brick-basic-purple-sunset-normal-body)" stroke-width="8" stroke-linecap="round"/>
   <path d="M22 24C22 13 36 13 36 24S50 35 50 24S64 13 64 24S78 35 78 24" fill="none" stroke="#ffe7a6" stroke-width="2.2" stroke-linecap="round" opacity="0.8"/>
   <ellipse cx="50" cy="24" rx="31" ry="17" fill="url(#spr-brick-basic-purple-sunset-normal-glow)"/>

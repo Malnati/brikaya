@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Shielded module" data-component-shape="shield-module" data-terminal-left="0 24" data-terminal-right="96 24">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Shielded module" data-component-shape="shield-module" data-terminal-left="25 24" data-terminal-right="71 24">
   <defs>
     <linearGradient id="spr-brick-metal-steel-sunset-dented-two-body" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#ffe7a6"/>
@@ -10,7 +10,7 @@
       <stop offset="1" stop-color="#e0b38b" stop-opacity="0"/>
     </radialGradient>
   </defs>
-  <path d="M0 24H25M71 24H96" fill="none" stroke="#ffd166" stroke-width="4" stroke-linecap="round"/>
+
   <path d="M25 17H30M25 24H30M25 31H30M66 17H71M66 24H71M66 31H71" fill="none" stroke="#ffd166" stroke-width="3" stroke-linecap="round"/>
   <path d="M34 8H62L69 15V33L62 40H34L27 33V15Z" fill="url(#spr-brick-metal-steel-sunset-dented-two-body)" stroke="#ffe7a6" stroke-width="2.2" stroke-linejoin="round"/>
   <path d="M37 16H59M34 24H62M37 32H55" fill="none" stroke="#351225" stroke-width="2" stroke-linecap="round" opacity="0.52"/>
