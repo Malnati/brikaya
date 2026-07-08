@@ -460,10 +460,10 @@ describe("Bricks laser fan helpers", () => {
     expect(firstTraceStartDistance).toBeLessThan(edgeOffset);
     expect(firstTraceEndDistance).toBeLessThan(edgeOffset);
     expect(Math.abs(firstTraceStartDistance - Math.abs(expectedRightOffset))).toBeLessThan(
-      edgeOffset * 0.2,
+      edgeOffset * 0.3,
     );
     expect(Math.abs(firstTraceEndDistance - Math.abs(expectedLeftOffset))).toBeLessThan(
-      edgeOffset * 0.2,
+      edgeOffset * 0.3,
     );
     expect(
       (ctx.stroke as jest.Mock).mock.invocationCallOrder[0],

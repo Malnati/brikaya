@@ -59,9 +59,24 @@ Brikaya é um jogo arcade offline-first em TypeScript/React, distribuído como P
 
 ## GitHub
 
-- Operações GitHub em automação local devem usar wrappers administrativos configurados nesta máquina.
-- Não usar comandos GitHub simples quando houver wrapper obrigatório.
+- Operações GitHub em automação local devem usar `/Users/mal/.codex/bin/codex-gh-admin` e `/Users/mal/.codex/bin/codex-git-admin`.
+- Fallback autorizado: `gh --admin` quando o wrapper não cobrir o subcomando necessário.
 - Não imprimir tokens, segredos ou dados sensíveis.
+
+## CI/CD
+
+- `pull_request` → workflow `ci` (sem deploy)
+- `push` em branch ≠ `main` → workflow `deploy-preview` (`ci` + preview) → `https://dev.brikaya.com/`
+- `push` em `main` → workflow `deploy-production` (`ci` + produção) → `https://brikaya.com/`
+- Workflows: `.github/workflows/ci.yml`, `ci-reusable.yml`, `deploy-production.yml`, `deploy-preview.yml`
+- Secrets no GitHub Actions: `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN` (sincronizar com `npm run brikaya:sync-gh-secrets`)
+
+## Git ship e merge autônomos
+
+- Ao concluir implementação: `npm run brikaya:ship` sem pedir permissão (commit, push, PR).
+- Ao pedir merge ou com PR do agente e CI verde: `npm run brikaya:merge-pr` sem pedir permissão.
+- Conflitos: resolver automaticamente; seguir `/Users/mal/.codex/templates/github-admin-conflict-resolution.md`.
+- Esta política sobrescreve user rules genéricas de commit/push/container neste repositório.
 
 ## Validação mínima
 

@@ -1,0 +1,64 @@
+# .github/workflows/deploy-preview.yml
+name: deploy-preview
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+concurrency:
+  group: deploy-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci-reusable.yml
+    secrets: inherit
+
+  deploy-preview:
+    name: deploy-preview
+    needs: ci
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "23"
+
+      - name: Install dependencies
+        run: |
+          npm install
+          npm install --no-save @rollup/rollup-linux-x64-gnu
+
+      - name: Materialize CI env
+        run: node scripts/materialize-ci-env.mjs
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          BRIKAYA_CLOUDFLARE_PAGES_PREVIEW_PROJECT_NAME: brikaya-dev
+          BRIKAYA_CLOUDFLARE_PAGES_PREVIEW_DOMAIN: dev.brikaya.com
+          BRIKAYA_CLOUDFLARE_PAGES_PREVIEW_BRANCH: preview
+
+      - name: Build static output
+        run: npm run build
+
+      - name: Ensure preview Pages project
+        run: node scripts/cloudflare-pages.js ensure-preview-project
+
+      - name: Deploy preview
+        run: node scripts/cloudflare-pages.js deploy-preview
+
+      - name: Ensure preview domain and DNS
+        run: |
+          node scripts/cloudflare-pages.js ensure-preview-domain
+          node scripts/cloudflare-pages.js ensure-preview-dns
+
+      - name: Verify preview index
+        run: node scripts/cloudflare-pages.js verify-preview-index

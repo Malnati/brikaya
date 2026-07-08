@@ -15,6 +15,10 @@ BRIKAYA_CLOUDFLARE_PAGES_PROJECT_NAME=brikaya-live
 BRIKAYA_CLOUDFLARE_PAGES_BRANCH=main
 BRIKAYA_CLOUDFLARE_PAGES_OUTPUT_DIR=dist
 BRIKAYA_CLOUDFLARE_PAGES_CUSTOM_DOMAIN=brikaya.com
+BRIKAYA_CLOUDFLARE_PAGES_PREVIEW_PROJECT_NAME=brikaya-dev
+BRIKAYA_CLOUDFLARE_PAGES_PREVIEW_DOMAIN=dev.brikaya.com
+BRIKAYA_CLOUDFLARE_PAGES_PREVIEW_BRANCH=preview
+BRIKAYA_CLOUDFLARE_ZONE_NAME=brikaya.com
 
 # Process management
 KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
@@ -26,7 +30,7 @@ KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
 # Target padrão: mostrar help quando make é executado sem argumentos
 .DEFAULT_GOAL := help
 
-.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes codex-env-check codex-env-bootstrap codex-env-materialize codex-env-register cloudflare-env-check cloudflare-build cloudflare-domain cloudflare-deploy cloudflare-purge-cache cloudflare-public-check cloudflare-mobile-qa cloudflare-orientation-lock-qa cloudflare-ball-turret-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-interlevel-google-ads-qa cloudflare-powerups-qa cloudflare-laser-powerup-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa cloudflare-offline-pwa-qa cloudflare-i18n-seo-qa cloudflare-reset-preferences-qa cloudflare-evasive-blocks-qa yandex-indexnow-dry-run yandex-indexnow-submit seznam-indexnow-dry-run seznam-indexnow-submit docker-build docker-up docker-down docker-logs docker-shell
+.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes codex-env-check codex-env-bootstrap codex-env-materialize codex-env-register cloudflare-env-check cloudflare-build cloudflare-domain cloudflare-deploy cloudflare-deploy-preview cloudflare-preview-check cloudflare-purge-cache cloudflare-public-check cloudflare-mobile-qa cloudflare-orientation-lock-qa cloudflare-ball-turret-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-interlevel-google-ads-qa cloudflare-powerups-qa cloudflare-laser-powerup-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa cloudflare-offline-pwa-qa cloudflare-i18n-seo-qa cloudflare-reset-preferences-qa cloudflare-evasive-blocks-qa yandex-indexnow-dry-run yandex-indexnow-submit seznam-indexnow-dry-run seznam-indexnow-submit docker-build docker-up docker-down docker-logs docker-shell
 
 # Função para matar processos anteriores
 kill-processes:
@@ -94,6 +98,18 @@ cloudflare-deploy: cloudflare-env-check cloudflare-build
 	@node scripts/cloudflare-pages.js purge-public-cache
 	@node scripts/cloudflare-pages.js verify-public-index
 	@npm run test:trace-guard:public
+
+# Publicar preview em dev.brikaya.com sem tocar produção
+cloudflare-deploy-preview: cloudflare-env-check cloudflare-build
+	@node scripts/cloudflare-pages.js ensure-preview-project
+	@node scripts/cloudflare-pages.js deploy-preview
+	@node scripts/cloudflare-pages.js ensure-preview-domain
+	@node scripts/cloudflare-pages.js ensure-preview-dns
+	@node scripts/cloudflare-pages.js verify-preview-index
+
+# Verificar índice publicado no domínio de preview
+cloudflare-preview-check: cloudflare-env-check
+	@node scripts/cloudflare-pages.js verify-preview-index
 
 # Limpar cache público do domínio canônico sem alterar dados de origem
 cloudflare-purge-cache: cloudflare-env-check
@@ -320,6 +336,8 @@ help:
 	@echo "  cloudflare-build     - Gerar build estático para Pages"
 	@echo "  cloudflare-domain    - Garantir domínio canônico e redirect para brikaya.com"
 	@echo "  cloudflare-deploy    - Publicar dist no Cloudflare Pages e manter brikaya.com canônico"
+	@echo "  cloudflare-deploy-preview - Publicar preview em dev.brikaya.com sem tocar produção"
+	@echo "  cloudflare-preview-check - Validar índice publicado em dev.brikaya.com"
 	@echo "  cloudflare-purge-cache - Limpar cache público de brikaya.com sem alterar origem"
 	@echo "  cloudflare-public-check - Validar que brikaya.com serve o build local"
 	@echo "  cloudflare-mobile-qa - Testar mobile default/logs contra Cloudflare publicado"

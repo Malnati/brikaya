@@ -6,6 +6,18 @@
         "command": "node .cursor/hooks/visual-asset-policy-gate.mjs",
         "timeout": 120
       }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "node .cursor/hooks/brikaya-git-route-gate.mjs",
+        "timeout": 10
+      }
+    ],
+    "stop": [
+      {
+        "command": "node .cursor/hooks/brikaya-ship-reminder.mjs",
+        "timeout": 10
+      }
     ]
   }
 }

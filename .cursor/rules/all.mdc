@@ -15,4 +15,7 @@ alwaysApply: true
 - Não exponha detalhes internos na UI final.
 - Não aceite cobrança, plano pago, overage, cartão ou campanha ativa sem aprovação explícita.
 - Validação local mínima: `node --version`, `make help`, `npm run test:semantic-file-names`, `npm run test:svg-assets`, `npm run test:visual-asset-policy`, `npm run build`.
-- Validação publicada deve usar `https://brikaya.com/` ou `BRIKAYA_PUBLIC_URL` quando apontar para preview autorizado.
+- Validação publicada deve usar `https://brikaya.com/` ou `BRIKAYA_PUBLIC_URL` quando apontar para preview autorizado (`https://dev.brikaya.com/`).
+- CI/CD: `main` → brikaya.com; demais branches → dev.brikaya.com após `ci` verde.
+- Ao concluir tarefa: `npm run brikaya:ship` sem pedir permissão.
+- Ao pedir merge: `npm run brikaya:merge-pr` sem pedir permissão; usar `codex-gh-admin` ou `gh --admin`.
