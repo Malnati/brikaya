@@ -55,10 +55,10 @@ const REQUIRED_COMPONENT_SHAPE_ATTRIBUTES = [
 ];
 const COMPONENT_TERMINAL_COORDINATES = {
   capacitor: { left: '31 24', right: '65 24' },
-  resistor: { left: '20 24', right: '76 24' },
+  'square-inductor': { left: '24 24', right: '72 24' },
+  transistor: { left: '26 24', right: '70 24' },
   chip: { left: '21 24', right: '75 24' },
   'led-diode': { left: '34 24', right: '66 24' },
-  inductor: { left: '22 24', right: '74 24' },
   'shield-module': { left: '25 24', right: '71 24' },
 };
 const FORBIDDEN_COMPONENT_BORDER_LEAD_PATTERN =
