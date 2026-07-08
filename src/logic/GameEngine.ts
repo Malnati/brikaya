@@ -597,6 +597,9 @@ export class GameEngine {
         this.radialGeometry,
       ),
     );
+    if (this.isServeLocked) {
+      this.balls.forEach((ball) => this.positionBallForCurrentMode(ball));
+    }
     this.bricks.resize(this.dimensions, this.maxBrickRows, this.radialGeometry);
     this.activePowerUp?.setSize(this.getPowerUpSize());
   }
@@ -856,12 +859,12 @@ export class GameEngine {
   }
 
   private positionBallForCurrentMode(ball: Ball) {
-    if (!this.isBallTurretMode()) return;
-
     const spawnX = this.radialGeometry.centerX;
     const spawnY = this.radialGeometry.centerY;
 
     ball.setPosition(spawnX, spawnY);
+    if (!this.isBallTurretMode()) return;
+
     ball.setDirection(
       this.calculateBallTurretInitialLaunchAngle(spawnX, spawnY),
     );

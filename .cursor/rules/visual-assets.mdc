@@ -1,0 +1,38 @@
+---
+description: Política SVG-first para assets visuais do Brikaya
+globs: public/assets/visual/**,src/constants/visualAssets.ts,docs/assets/**,scripts/validate-*-asset*.mjs
+alwaysApply: false
+---
+
+# Política visual SVG-first
+
+## Pipeline ideal
+
+SVG-first authoring → SVG runtime enquanto simples → atlas PNG/WebP quando houver animação pesada, muitos draws, ou profiling provar ganho.
+
+## Antes de implementar assets visuais
+
+Todo plano visual deve declarar:
+
+1. **Formato fonte** — caminho SVG versionado
+2. **Formato runtime** — SVG / atlas PNG / atlas WebP / cinemática AVIF
+3. **Motivo técnico** — `heavy-animation`, `many-draws`, `profiled-faster` ou `cinematic-background`
+4. **Evidência** — caminho em `docs/assets/issues/**/evidence/`
+
+## Regras de formato
+
+- Sprites, UI, power-ups, tijolos e VFX simples: **SVG local/offline**
+- Atlas PNG/WebP: somente em `public/assets/visual/atlases/` com exceção em `docs/assets/visual-runtime/atlas-exceptions.json`
+- AVIF: **proibido** para sprites/atlas a 60 FPS; permitido só em `public/assets/visual/cinematics/` para fundo/cena
+- Proibido raster, data URI, CDN ou script embutido em SVG runtime simples
+
+## Referência
+
+Consulte [docs/assets/visual-runtime/README.md](../../docs/assets/visual-runtime/README.md) para exemplos aceitos e rejeitados.
+
+## Validação
+
+```bash
+npm run test:visual-asset-policy
+npm run test:svg-assets
+```

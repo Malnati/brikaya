@@ -96,6 +96,7 @@ jest.mock("../objects/Paddle", () => ({
     setPositionFromPoint: jest.fn(),
     setWidthScale: jest.fn(),
     reset: jest.fn(),
+    resize: jest.fn(),
     update: jest.fn(),
     draw: jest.fn(),
   })),
@@ -144,6 +145,7 @@ jest.mock("../objects/Ball", () => ({
         mockBall.position.y = y;
       }),
       setDirection: jest.fn(),
+      resize: jest.fn(),
       __setSpeedState: (partial: Partial<SpeedStateSnapshot>) => {
         speedState = { ...speedState, ...partial };
       },
@@ -168,6 +170,7 @@ jest.mock("../objects/Bricks", () => ({
       destroyAllActive: jest.fn(() => mockDestroyedLaserBricks),
       collide: jest.fn(),
       draw: jest.fn(),
+      resize: jest.fn(),
     };
 
     mockBricksInstances.push(mockBricks);
@@ -603,6 +606,49 @@ describe("GameEngine", () => {
     expect(ball.setDirection).toHaveBeenCalledWith(expectedLaunchAngle);
   });
 
+  it("posiciona bola inicial no centro do globo no modo clássico radial", () => {
+    const engine = new GameEngine(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+    );
+    const geometry = (engine as any).radialGeometry;
+    const ball = mockBallInstances[0];
+    const [spawnX, spawnY] = ball.setPosition.mock.calls[0];
+
+    expect(spawnX).toBeCloseTo(geometry.centerX, 5);
+    expect(spawnY).toBeCloseTo(geometry.centerY, 5);
+    expect(ball.setDirection).not.toHaveBeenCalled();
+  });
+
+  it("reancora a bola no centro do globo após resize com serve-lock ativo", () => {
+    const engine = new GameEngine(
+      canvas,
+      onScoreUpdate,
+      onGameWon,
+      onGameOver,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "ball-turret",
+    );
+    const ball = mockBallInstances[0];
+
+    ball.setPosition.mockClear();
+    (engine as any).isServeLocked = true;
+    engine.resize({ width: 960, height: 640 });
+    const geometry = (engine as any).radialGeometry;
+
+    expect(ball.setPosition).toHaveBeenCalledWith(
+      geometry.centerX,
+      geometry.centerY,
+    );
+  });
+
   it("posiciona cenário RIP fora do anel e aponta a bola para perda imediata", () => {
     const engine = new GameEngine(
       canvas,
@@ -615,7 +661,8 @@ describe("GameEngine", () => {
     );
     const geometry = (engine as any).radialGeometry;
     const ball = mockBallInstances[0];
-    const [spawnX, spawnY] = ball.setPosition.mock.calls[0];
+    const calls = ball.setPosition.mock.calls;
+    const [spawnX, spawnY] = calls[calls.length - 1];
 
     expect(spawnY).toBeGreaterThan(canvas.height);
     expect(ball.setDirection).toHaveBeenCalledWith(

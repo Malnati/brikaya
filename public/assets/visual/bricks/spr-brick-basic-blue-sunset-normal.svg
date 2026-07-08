@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Resistor" data-component-shape="resistor" data-terminal-left="0 24" data-terminal-right="96 24">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Resistor" data-component-shape="resistor" data-terminal-left="20 24" data-terminal-right="76 24">
   <defs>
     <linearGradient id="spr-brick-basic-blue-sunset-normal-body" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#ffe7a6"/>
@@ -10,7 +10,7 @@
       <stop offset="1" stop-color="#65d6ff" stop-opacity="0"/>
     </radialGradient>
   </defs>
-  <path d="M0 24H20M76 24H96" fill="none" stroke="#ffd166" stroke-width="4" stroke-linecap="round"/>
+
   <path d="M20 24L27 13H35L42 24L49 13H57L64 24L71 13H78L72 35H64L57 24L50 35H42L35 24L28 35H20L26 24Z" fill="url(#spr-brick-basic-blue-sunset-normal-body)" stroke="#ffe7a6" stroke-width="2" stroke-linejoin="round"/>
   <path d="M37 17L34 31M50 17L47 31M63 17L60 31" fill="none" stroke="#170812" stroke-width="2.5" stroke-linecap="round" opacity="0.72"/>
 </svg>
