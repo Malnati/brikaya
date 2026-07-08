@@ -12,4 +12,7 @@ npm run test:semantic-file-names
 echo "🔍 Verificando SVGs runtime..."
 npm run test:svg-assets
 
+echo "🔍 Verificando política visual SVG-first..."
+npm run test:visual-asset-policy
+
 echo "🎉 Pre-commit concluído sem vazamento de variáveis."

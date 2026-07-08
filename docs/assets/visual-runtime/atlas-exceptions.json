@@ -1,0 +1,11 @@
+{
+  "$schema": "./atlas-exceptions.schema.json",
+  "version": 1,
+  "policy": "svg-first-runtime-atlas-exceptions",
+  "thresholds": {
+    "heavyAnimationFrameCount": 8,
+    "manyDrawsPerFrame": 100,
+    "requiresProfiledP95Improvement": true
+  },
+  "exceptions": []
+}

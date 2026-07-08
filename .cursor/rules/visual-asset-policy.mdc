@@ -1,0 +1,20 @@
+---
+description: Política SVG-first para assets visuais do Brikaya
+globs: public/assets/visual/**,docs/assets/visual-runtime/**,src/constants/visualAssets.ts
+alwaysApply: false
+---
+
+# Política visual runtime — SVG-first
+
+Consulte a documentação canônica em `docs/assets/visual-runtime/README.md`.
+
+## Regras
+
+- SVG é fonte autoral e runtime padrão para sprites, UI e VFX simples.
+- Atlas PNG/WebP só em `public/assets/visual/atlases/`, com exceção em `docs/assets/visual-runtime/atlas-exceptions.json`.
+- AVIF só em `public/assets/visual/cinematics/` para fundo/cena/cinemática, nunca como sprite ou atlas de gameplay.
+- Todo plano visual deve declarar formato fonte, formato runtime, motivo técnico e evidência antes de implementar.
+
+## Antes de registrar exceção atlas
+
+Estender também: `scripts/generate-runtime-asset-manifest.mjs`, `src/constants/assets.test.ts`, `tests/e2e/cloudflare-svg-assets-qa.js` e o loader em `src/utils/visualAssetResolver.ts`.

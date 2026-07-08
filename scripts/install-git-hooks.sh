@@ -51,5 +51,5 @@ HOOK_EOF
 chmod +x "$PRE_COMMIT_HOOK" "$PRE_PUSH_HOOK" scripts/pre-commit-check.sh
 
 echo -e "${GREEN}✅ Git hooks instalados com sucesso.${NC}"
-echo -e "${BLUE}💡 pre-commit: scripts/pre-commit-check.sh${NC}"
+echo -e "${BLUE}💡 pre-commit: scripts/pre-commit-check.sh + npm run test:visual-asset-policy${NC}"
 echo -e "${BLUE}💡 pre-push: npm run codex-env:check${NC}"

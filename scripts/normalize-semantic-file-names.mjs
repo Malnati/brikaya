@@ -10,6 +10,8 @@ const HELP_MODE = '--help';
 const MODE_VALUES = new Set([CHECK_MODE, WRITE_MODE]);
 const ROOT_DIR = process.cwd();
 const PUBLIC_VISUAL_ROOT = 'public/assets/visual/';
+const PUBLIC_VISUAL_ATLAS_ROOT = 'public/assets/visual/atlases/';
+const PUBLIC_VISUAL_CINEMATIC_ROOT = 'public/assets/visual/cinematics/';
 const PUBLIC_AUDIO_ROOT = 'public/assets/audio/';
 const CODEX_THEME_ROOT = 'docs/assets/theme-planning/';
 const CODEX_ISSUES_ROOT = 'docs/assets/issues/';
@@ -44,6 +46,8 @@ const EVIDENCE_EXTENSIONS = new Set(['.json', '.png', '.jpg', '.jpeg', '.webp', 
 const TEXT_EVIDENCE_EXTENSIONS_TO_JSON = new Set(['.md', '.txt']);
 const JSON_EVIDENCE_EXTENSION = '.json';
 const RUNTIME_VISUAL_PATTERN = /^(spr|ui|vfx)-[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const RUNTIME_ATLAS_PATTERN = /^atlas-[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const RUNTIME_CINEMATIC_PATTERN = /^cinematic-[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const RUNTIME_AUDIO_PATTERN = /^(sfx|bgm)-[a-z0-9]+(?:-[a-z0-9]+)*-[0-9]{2}$/;
 const CODEX_THEME_PATTERN = /^codex-[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const CODEX_EVIDENCE_PATTERN = /^evi-[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -202,6 +206,8 @@ function isCodexEvidencePath(path) {
 }
 
 function governedKind(path) {
+  if (path.startsWith(PUBLIC_VISUAL_ATLAS_ROOT)) return 'runtime-visual-atlas';
+  if (path.startsWith(PUBLIC_VISUAL_CINEMATIC_ROOT)) return 'runtime-visual-cinematic';
   if (path.startsWith(PUBLIC_VISUAL_ROOT)) return 'runtime-visual';
   if (path.startsWith(PUBLIC_AUDIO_ROOT)) return 'runtime-audio';
   if (path.startsWith(CODEX_THEME_ROOT)) return 'codex-theme-planning';
@@ -225,6 +231,12 @@ function validateGovernedName(path) {
   if (!KEBAB_PATTERN.test(stem)) failures.push(`${path}: stem não está em kebab-case sem caracteres especiais`);
   if (kind === 'runtime-visual' && (extension !== '.svg' || !RUNTIME_VISUAL_PATTERN.test(stem))) {
     failures.push(`${path}: visual runtime deve usar spr/ui/vfx e .svg`);
+  }
+  if (kind === 'runtime-visual-atlas' && (!['.png', '.webp'].includes(extension) || !RUNTIME_ATLAS_PATTERN.test(stem))) {
+    failures.push(`${path}: atlas visual runtime deve usar atlas-* e .png/.webp`);
+  }
+  if (kind === 'runtime-visual-cinematic' && (!['.png', '.webp', '.avif'].includes(extension) || !RUNTIME_CINEMATIC_PATTERN.test(stem))) {
+    failures.push(`${path}: cinemática visual runtime deve usar cinematic-* e .png/.webp/.avif`);
   }
   if (kind === 'runtime-audio' && (!['.mp3', '.ogg'].includes(extension) || !RUNTIME_AUDIO_PATTERN.test(stem))) {
     failures.push(`${path}: áudio runtime deve usar sfx/bgm, sufixo numérico e .mp3/.ogg`);

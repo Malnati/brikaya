@@ -8,6 +8,10 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { dirname, extname, join, relative, resolve } from 'node:path';
+import {
+  findInvalidRuntimeVisualFiles,
+  loadVisualAssetPolicy,
+} from './validate-visual-asset-policy.mjs';
 
 const VISUAL_ASSET_SOURCE_PATH = 'src/constants/visualAssets.ts';
 const VISUAL_RUNTIME_ROOT = 'public/assets/visual';
@@ -190,8 +194,12 @@ function validateRootFavicon() {
 function validateDirectorySvgOnly(directory, label) {
   const files = collectFiles(directory);
   const invalidFiles = files.filter((file) => extname(file).toLowerCase() !== ALLOWED_VISUAL_EXTENSION);
-  addCheck(`${label} usa apenas SVG`, invalidFiles.map((file) => `${file} não é .svg`), {
+  const failures = directory === VISUAL_RUNTIME_ROOT
+    ? findInvalidRuntimeVisualFiles(files, loadVisualAssetPolicy())
+    : invalidFiles.map((file) => `${file} não é .svg`);
+  addCheck(`${label} usa SVG ou exceção raster governada`, failures, {
     scannedFiles: files.length,
+    nonSvgFiles: invalidFiles.length,
   });
   return files.filter((file) => extname(file).toLowerCase() === ALLOWED_VISUAL_EXTENSION);
 }
