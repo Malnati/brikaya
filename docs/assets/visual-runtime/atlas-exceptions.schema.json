@@ -31,17 +31,15 @@
           "runtimePaths": {
             "type": "array",
             "minItems": 1,
-            "items": { "type": "string", "pattern": "^/assets/visual/(atlases|cinematics)/" }
+            "items": { "type": "string", "pattern": "^/assets/visual/(atlases|cinematics)/[a-z0-9]+(-[a-z0-9]+)*\\.(png|webp|avif)$" }
           },
           "sourceSvgPaths": {
             "type": "array",
             "minItems": 1,
-            "items": { "type": "string", "pattern": "^/assets/visual/.+\\.svg$" }
+            "items": { "type": "string", "pattern": "^public/assets/visual/.+\\.svg$" }
           },
-          "reason": {
-            "enum": ["heavy-animation", "many-draws", "profiled-faster", "cinematic-background"]
-          },
-          "evidencePath": { "type": "string", "minLength": 1 }
+          "reason": { "enum": ["heavy-animation", "many-draws", "profiled-faster", "cinematic-background"] },
+          "evidencePath": { "type": "string", "pattern": "^docs/assets/issues/.+/(evidence|orientation)/.+$" }
         }
       }
     }

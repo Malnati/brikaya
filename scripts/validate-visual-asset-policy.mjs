@@ -11,18 +11,11 @@ import { dirname, extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const POLICY_PATH = 'docs/assets/visual-runtime/atlas-exceptions.json';
-export const REPORT_PATH =
-  process.env.BRIKAYA_VISUAL_ASSET_POLICY_REPORT ||
-  'tmp/reports/visual-asset-policy-guard.json';
+export const REPORT_PATH = process.env.BRIKAYA_VISUAL_ASSET_POLICY_REPORT || 'tmp/reports/visual-asset-policy-guard.json';
 export const VISUAL_RUNTIME_ROOT = 'public/assets/visual';
 export const ATLAS_RUNTIME_PREFIX = '/assets/visual/atlases/';
 export const CINEMATIC_RUNTIME_PREFIX = '/assets/visual/cinematics/';
-export const SOURCE_SCAN_ENTRIES = [
-  'src',
-  'public/sw.js',
-  'public/manifest.webmanifest',
-  'index.html',
-];
+export const SOURCE_SCAN_ENTRIES = ['src', 'public/sw.js', 'public/manifest.webmanifest', 'index.html'];
 export const POLICY_TEXT_FILES = ['AGENTS.md', '.cursor/rules/all.mdc'];
 export const ALLOWED_REASONS = new Set([
   'heavy-animation',
@@ -33,19 +26,9 @@ export const ALLOWED_REASONS = new Set([
 
 const ALLOWED_ATLAS_EXTENSIONS = new Set(['.png', '.webp']);
 const ALLOWED_CINEMATIC_EXTENSIONS = new Set(['.png', '.webp', '.avif']);
-const BLOCKED_VISUAL_RASTER_EXTENSIONS = new Set([
-  '.png',
-  '.webp',
-  '.avif',
-  '.jpg',
-  '.jpeg',
-  '.gif',
-  '.ico',
-]);
-const RUNTIME_VISUAL_RASTER_REFERENCE_PATTERN =
-  /['"`]((?:\/assets\/visual\/)[^'"`\s)]+\.(?:png|webp|avif|jpe?g|gif|ico))['"`]/gi;
-const PUBLIC_VISUAL_RASTER_REFERENCE_PATTERN =
-  /['"`]((?:public\/assets\/visual\/)[^'"`\s)]+\.(?:png|webp|avif|jpe?g|gif|ico))['"`]/gi;
+const BLOCKED_VISUAL_RASTER_EXTENSIONS = new Set(['.png', '.webp', '.avif', '.jpg', '.jpeg', '.gif', '.ico']);
+const RUNTIME_VISUAL_RASTER_REFERENCE_PATTERN = /['"`]((?:\/assets\/visual\/)[^'"`\s)]+\.(?:png|webp|avif|jpe?g|gif|ico))['"`]/gi;
+const PUBLIC_VISUAL_RASTER_REFERENCE_PATTERN = /['"`]((?:public\/assets\/visual\/)[^'"`\s)]+\.(?:png|webp|avif|jpe?g|gif|ico))['"`]/gi;
 const SVG_EXTENSION = '.svg';
 const POLICY_REQUIRED_SNIPPETS = [
   'SVG-first authoring',
@@ -54,38 +37,8 @@ const POLICY_REQUIRED_SNIPPETS = [
   'public/assets/visual/cinematics',
 ];
 
-const report = {
-  ok: false,
-  checkedAt: new Date().toISOString(),
-  reportPath: REPORT_PATH,
-  policyPath: POLICY_PATH,
-  checks: [],
-};
-
 function ensureParentDirectory(filePath) {
   mkdirSync(dirname(resolve(filePath)), { recursive: true });
-}
-
-function writeReport() {
-  ensureParentDirectory(REPORT_PATH);
-  writeFileSync(REPORT_PATH, `${JSON.stringify(report, null, 2)}\n`);
-}
-
-function fail(message) {
-  throw new Error(message);
-}
-
-function addCheck(name, failures, metadata = {}) {
-  const check = {
-    name,
-    ok: failures.length === 0,
-    failures,
-    ...metadata,
-  };
-  report.checks.push(check);
-  if (failures.length > 0) {
-    fail(`${name}: ${failures.join('; ')}`);
-  }
 }
 
 function readJson(path) {
@@ -104,9 +57,7 @@ export function collectFiles(path) {
 export function runtimePathFromPublicPath(path) {
   const normalized = path.replaceAll('\\', '/');
   if (normalized.startsWith('/assets/')) return normalized;
-  if (normalized.startsWith('public/')) {
-    return `/${normalized.slice('public/'.length)}`;
-  }
+  if (normalized.startsWith('public/')) return `/${normalized.slice('public/'.length)}`;
   return `/${relative(process.cwd(), resolve(path)).replaceAll('\\', '/').replace(/^public\//, '')}`;
 }
 
@@ -115,270 +66,248 @@ function isKebabId(value) {
 }
 
 function isStringArray(value) {
-  return (
-    Array.isArray(value) && value.every((item) => typeof item === 'string' && item.length > 0)
-  );
+  return Array.isArray(value) && value.every((item) => typeof item === 'string' && item.length > 0);
 }
 
 export function validateAtlasExceptionDocument(policy, options = {}) {
   const exists = options.exists || existsSync;
   const failures = [];
 
-  if (!policy || typeof policy !== 'object') {
-    return ['atlas-exceptions.json deve conter objeto JSON'];
-  }
+  if (!policy || typeof policy !== 'object') return ['atlas-exceptions.json deve conter objeto JSON'];
   if (policy.version !== 1) failures.push('version deve ser 1');
   if (policy.policy !== 'svg-first-runtime-atlas-exceptions') {
     failures.push('policy deve ser svg-first-runtime-atlas-exceptions');
   }
-
-  const thresholds = policy.thresholds;
-  if (!thresholds || typeof thresholds !== 'object') {
+  if (!policy.thresholds || typeof policy.thresholds !== 'object') {
     failures.push('thresholds ausente');
   } else {
-    if (thresholds.heavyAnimationFrameCount !== 8) {
+    if (policy.thresholds.heavyAnimationFrameCount !== 8) {
       failures.push('thresholds.heavyAnimationFrameCount deve ser 8');
     }
-    if (thresholds.manyDrawsPerFrame !== 100) {
+    if (policy.thresholds.manyDrawsPerFrame !== 100) {
       failures.push('thresholds.manyDrawsPerFrame deve ser 100');
     }
-    if (thresholds.requiresProfiledP95Improvement !== true) {
+    if (policy.thresholds.requiresProfiledP95Improvement !== true) {
       failures.push('thresholds.requiresProfiledP95Improvement deve ser true');
     }
   }
-
   if (!Array.isArray(policy.exceptions)) {
     failures.push('exceptions deve ser array');
     return failures;
   }
 
   const seenIds = new Set();
-  for (const exception of policy.exceptions) {
+  const seenRuntimePaths = new Set();
+
+  for (const [index, exception] of policy.exceptions.entries()) {
+    const prefix = `exceptions[${index}]`;
     if (!exception || typeof exception !== 'object') {
-      failures.push('exception inválida');
+      failures.push(`${prefix} deve ser objeto`);
       continue;
     }
-    if (!isKebabId(exception.id)) failures.push(`id inválido: ${exception.id}`);
-    if (seenIds.has(exception.id)) failures.push(`id duplicado: ${exception.id}`);
+    if (!isKebabId(exception.id)) failures.push(`${prefix}.id deve ser kebab-case`);
+    if (seenIds.has(exception.id)) failures.push(`${prefix}.id duplicado: ${exception.id}`);
     seenIds.add(exception.id);
 
     if (!['atlas', 'cinematic'].includes(exception.kind)) {
-      failures.push(`${exception.id}: kind inválido`);
+      failures.push(`${prefix}.kind deve ser atlas ou cinematic`);
     }
-    if (!isStringArray(exception.runtimePaths)) {
-      failures.push(`${exception.id}: runtimePaths inválido`);
+    if (!isStringArray(exception.runtimePaths) || exception.runtimePaths.length === 0) {
+      failures.push(`${prefix}.runtimePaths deve ser array não vazio`);
     }
-    if (!isStringArray(exception.sourceSvgPaths)) {
-      failures.push(`${exception.id}: sourceSvgPaths inválido`);
+    if (!isStringArray(exception.sourceSvgPaths) || exception.sourceSvgPaths.length === 0) {
+      failures.push(`${prefix}.sourceSvgPaths deve ser array não vazio`);
     }
     if (!ALLOWED_REASONS.has(exception.reason)) {
-      failures.push(`${exception.id}: reason inválido`);
+      failures.push(`${prefix}.reason inválido: ${exception.reason}`);
     }
-    if (typeof exception.evidencePath !== 'string' || !exception.evidencePath) {
-      failures.push(`${exception.id}: evidencePath ausente`);
-    }
-    if (typeof exception.evidencePath === 'string' && !exists(exception.evidencePath)) {
-      failures.push(`${exception.id}: evidencePath não existe: ${exception.evidencePath}`);
-    }
-
-    for (const runtimePath of exception.runtimePaths ?? []) {
-      if (exception.kind === 'atlas' && !runtimePath.startsWith(ATLAS_RUNTIME_PREFIX)) {
-        failures.push(`${exception.id}: atlas fora de ${ATLAS_RUNTIME_PREFIX}`);
-      }
-      if (exception.kind === 'cinematic' && !runtimePath.startsWith(CINEMATIC_RUNTIME_PREFIX)) {
-        failures.push(`${exception.id}: cinemática fora de ${CINEMATIC_RUNTIME_PREFIX}`);
-      }
-      const publicPath = `public${runtimePath}`;
-      if (!exists(publicPath)) {
-        failures.push(`${exception.id}: runtimePath ausente: ${publicPath}`);
-      }
+    if (typeof exception.evidencePath !== 'string' || exception.evidencePath.length === 0) {
+      failures.push(`${prefix}.evidencePath deve ser string não vazia`);
+    } else if (!exists(exception.evidencePath)) {
+      failures.push(`${prefix}.evidencePath ausente: ${exception.evidencePath}`);
     }
 
-    for (const sourcePath of exception.sourceSvgPaths ?? []) {
-      if (!sourcePath.startsWith('/assets/visual/') || !sourcePath.endsWith('.svg')) {
-        failures.push(`${exception.id}: sourceSvgPaths deve apontar para SVG runtime`);
-      }
-      const publicPath = `public${sourcePath}`;
-      if (!exists(publicPath)) {
-        failures.push(`${exception.id}: sourceSvgPath ausente: ${publicPath}`);
-      }
-    }
+    for (const runtimePath of exception.runtimePaths || []) {
+      const extension = extname(runtimePath).toLowerCase();
+      if (seenRuntimePaths.has(runtimePath)) failures.push(`${prefix}.runtimePaths duplicado: ${runtimePath}`);
+      seenRuntimePaths.add(runtimePath);
 
-    if (exception.kind === 'atlas' && exception.reason === 'cinematic-background') {
-      failures.push(`${exception.id}: atlas não pode usar reason cinematic-background`);
-    }
-    if (exception.kind === 'cinematic' && exception.reason !== 'cinematic-background') {
-      failures.push(`${exception.id}: cinemática deve usar reason cinematic-background`);
-    }
-  }
-
-  return failures;
-}
-
-function loadGovernedRuntimePaths(policy) {
-  const governed = new Set();
-  for (const exception of policy.exceptions ?? []) {
-    for (const runtimePath of exception.runtimePaths ?? []) {
-      governed.add(runtimePath);
-    }
-  }
-  return governed;
-}
-
-function validateVisualRuntimeRasterFiles(policy) {
-  const failures = [];
-  const governedRuntimePaths = loadGovernedRuntimePaths(policy);
-  const visualFiles = collectFiles(VISUAL_RUNTIME_ROOT);
-
-  for (const file of visualFiles) {
-    const extension = extname(file).toLowerCase();
-    if (!BLOCKED_VISUAL_RASTER_EXTENSIONS.has(extension)) continue;
-
-    const runtimePath = runtimePathFromPublicPath(file);
-    const normalized = file.replaceAll('\\', '/');
-
-    if (normalized.includes('/atlases/')) {
-      if (!ALLOWED_ATLAS_EXTENSIONS.has(extension)) {
-        failures.push(`${file}: atlas deve usar PNG ou WebP, não ${extension}`);
-      }
-      if (!governedRuntimePaths.has(runtimePath)) {
-        failures.push(`${file}: atlas raster sem exceção governada`);
-      }
-      continue;
-    }
-
-    if (normalized.includes('/cinematics/')) {
-      if (!ALLOWED_CINEMATIC_EXTENSIONS.has(extension)) {
-        failures.push(`${file}: cinemática deve usar PNG, WebP ou AVIF`);
-      }
-      if (!governedRuntimePaths.has(runtimePath)) {
-        failures.push(`${file}: cinemática raster sem exceção governada`);
-      }
-      continue;
-    }
-
-    failures.push(`${file}: raster visual fora de atlases/ ou cinematics/ governados`);
-  }
-
-  return failures;
-}
-
-function validateRuntimeRasterReferences(policy) {
-  const failures = [];
-  const governedRuntimePaths = loadGovernedRuntimePaths(policy);
-  const scannedFiles = SOURCE_SCAN_ENTRIES.flatMap((entry) => collectFiles(entry));
-
-  for (const sourceFile of scannedFiles) {
-    const source = readFileSync(sourceFile, 'utf8');
-    const matches = [
-      ...source.matchAll(RUNTIME_VISUAL_RASTER_REFERENCE_PATTERN),
-      ...source.matchAll(PUBLIC_VISUAL_RASTER_REFERENCE_PATTERN),
-    ];
-
-    for (const match of matches) {
-      const runtimePath = match[1].startsWith('public/')
-        ? runtimePathFromPublicPath(match[1])
-        : match[1];
-
-      if (runtimePath.includes('/atlases/') || runtimePath.includes('/cinematics/')) {
-        if (!governedRuntimePaths.has(runtimePath)) {
-          failures.push(`${sourceFile} referencia ${runtimePath} sem exceção governada`);
+      if (exception.kind === 'atlas') {
+        if (!runtimePath.startsWith(ATLAS_RUNTIME_PREFIX)) {
+          failures.push(`${prefix}.runtimePath de atlas deve estar em ${ATLAS_RUNTIME_PREFIX}: ${runtimePath}`);
         }
+        if (extension === '.avif') failures.push(`${prefix}: AVIF não pode ser atlas: ${runtimePath}`);
+        if (!ALLOWED_ATLAS_EXTENSIONS.has(extension)) {
+          failures.push(`${prefix}.runtimePath de atlas deve usar PNG/WebP: ${runtimePath}`);
+        }
+        if (exception.reason === 'cinematic-background') {
+          failures.push(`${prefix}.reason cinematic-background não pode justificar atlas`);
+        }
+      }
+
+      if (exception.kind === 'cinematic') {
+        if (!runtimePath.startsWith(CINEMATIC_RUNTIME_PREFIX)) {
+          failures.push(`${prefix}.runtimePath cinematic deve estar em ${CINEMATIC_RUNTIME_PREFIX}: ${runtimePath}`);
+        }
+        if (!ALLOWED_CINEMATIC_EXTENSIONS.has(extension)) {
+          failures.push(`${prefix}.runtimePath cinematic deve usar PNG/WebP/AVIF: ${runtimePath}`);
+        }
+        if (exception.reason !== 'cinematic-background') {
+          failures.push(`${prefix}.reason cinematic deve ser cinematic-background`);
+        }
+      }
+    }
+
+    for (const sourceSvgPath of exception.sourceSvgPaths || []) {
+      if (extname(sourceSvgPath).toLowerCase() !== SVG_EXTENSION) {
+        failures.push(`${prefix}.sourceSvgPaths deve apontar SVG: ${sourceSvgPath}`);
+      }
+      if (!exists(sourceSvgPath)) failures.push(`${prefix}.sourceSvgPath ausente: ${sourceSvgPath}`);
+    }
+  }
+
+  return failures;
+}
+
+export function allowedRuntimeRasterPaths(policy) {
+  const paths = new Set();
+  if (!policy || !Array.isArray(policy.exceptions)) return paths;
+  for (const exception of policy.exceptions) {
+    for (const runtimePath of exception.runtimePaths || []) paths.add(runtimePath);
+  }
+  return paths;
+}
+
+export function findInvalidRuntimeVisualFiles(files, policy) {
+  const failures = [];
+  const allowed = allowedRuntimeRasterPaths(policy);
+  for (const filePath of files) {
+    const extension = extname(filePath).toLowerCase();
+    if (!BLOCKED_VISUAL_RASTER_EXTENSIONS.has(extension)) continue;
+    const runtimePath = runtimePathFromPublicPath(filePath);
+    if (!allowed.has(runtimePath)) {
+      failures.push(`${filePath}: raster visual não governado por ${POLICY_PATH}`);
+      continue;
+    }
+    if (extension === '.avif' && !runtimePath.startsWith(CINEMATIC_RUNTIME_PREFIX)) {
+      failures.push(`${filePath}: AVIF só é permitido em ${CINEMATIC_RUNTIME_PREFIX}`);
+    }
+    if ((extension === '.png' || extension === '.webp') && !runtimePath.startsWith(ATLAS_RUNTIME_PREFIX) && !runtimePath.startsWith(CINEMATIC_RUNTIME_PREFIX)) {
+      failures.push(`${filePath}: PNG/WebP runtime só é permitido em atlas/cinematics governados`);
+    }
+  }
+  return failures;
+}
+
+function extractRuntimeRasterReferences(source) {
+  const references = [];
+  for (const match of source.matchAll(RUNTIME_VISUAL_RASTER_REFERENCE_PATTERN)) references.push(match[1]);
+  for (const match of source.matchAll(PUBLIC_VISUAL_RASTER_REFERENCE_PATTERN)) references.push(runtimePathFromPublicPath(match[1]));
+  return references;
+}
+
+export function findInvalidRuntimeVisualReferences(sourceFiles, policy) {
+  const failures = [];
+  const allowed = allowedRuntimeRasterPaths(policy);
+  for (const sourceFile of sourceFiles) {
+    for (const runtimePath of extractRuntimeRasterReferences(sourceFile.source)) {
+      const extension = extname(runtimePath).toLowerCase();
+      if (extension === '.avif' && !runtimePath.startsWith(CINEMATIC_RUNTIME_PREFIX)) {
+        failures.push(`${sourceFile.filePath}: AVIF não pode ser sprite/atlas/runtime 60 FPS: ${runtimePath}`);
         continue;
       }
-
-      failures.push(`${sourceFile} referencia raster visual proibido: ${runtimePath}`);
-    }
-  }
-
-  return { failures, scannedFiles: scannedFiles.length };
-}
-
-function validateAvifSpriteReferences() {
-  const failures = [];
-  const avifPattern =
-    /['"`]((?:\/assets\/visual\/|public\/assets\/visual\/)(?!cinematics\/)[^'"`\s)]+\.avif)['"`]/gi;
-  const scannedFiles = SOURCE_SCAN_ENTRIES.flatMap((entry) => collectFiles(entry));
-
-  for (const sourceFile of scannedFiles) {
-    const source = readFileSync(sourceFile, 'utf8');
-    for (const match of source.matchAll(avifPattern)) {
-      failures.push(`${sourceFile} referencia AVIF como sprite/runtime: ${match[1]}`);
-    }
-  }
-
-  return failures;
-}
-
-function validatePolicyTextFiles() {
-  const failures = [];
-  for (const file of POLICY_TEXT_FILES) {
-    if (!existsSync(file)) {
-      failures.push(`${file} ausente`);
-      continue;
-    }
-    const source = readFileSync(file, 'utf8');
-    for (const snippet of POLICY_REQUIRED_SNIPPETS) {
-      if (!source.includes(snippet)) {
-        failures.push(`${file} não contém "${snippet}"`);
+      if (!allowed.has(runtimePath)) {
+        failures.push(`${sourceFile.filePath}: referência raster visual sem exceção: ${runtimePath}`);
       }
     }
   }
   return failures;
 }
 
-function validateSvgOnlyDirectories() {
+export function validatePolicyText(policyTexts) {
   const failures = [];
-  const allowedRasterDirs = ['atlases', 'cinematics'];
-  const visualFiles = collectFiles(VISUAL_RUNTIME_ROOT);
-
-  for (const file of visualFiles) {
-    const extension = extname(file).toLowerCase();
-    if (extension === SVG_EXTENSION) continue;
-    const normalized = file.replaceAll('\\', '/');
-    const isAllowedDir = allowedRasterDirs.some((dir) => normalized.includes(`/${dir}/`));
-    if (!isAllowedDir) {
-      failures.push(`${file}: diretório visual runtime deve conter apenas SVG`);
+  for (const filePath of POLICY_TEXT_FILES) {
+    const source = policyTexts[filePath] || '';
+    for (const snippet of POLICY_REQUIRED_SNIPPETS) {
+      if (!source.includes(snippet)) failures.push(`${filePath} não contém política: ${snippet}`);
     }
   }
-
   return failures;
 }
 
-function runVisualAssetPolicyGuard() {
+export function loadVisualAssetPolicy(path = POLICY_PATH) {
+  return readJson(path);
+}
+
+function readSourceFiles(entries) {
+  return entries.flatMap((entry) => collectFiles(entry)).map((filePath) => ({
+    filePath,
+    source: readFileSync(filePath, 'utf8'),
+  }));
+}
+
+function addCheck(report, name, failures, metadata = {}) {
+  const check = { name, ok: failures.length === 0, failures, ...metadata };
+  report.checks.push(check);
+  if (failures.length > 0) throw new Error(`${name}: ${failures.join('; ')}`);
+}
+
+function writeReport(report) {
+  ensureParentDirectory(REPORT_PATH);
+  writeFileSync(REPORT_PATH, `${JSON.stringify(report, null, 2)}\n`);
+}
+
+export function validateVisualAssetPolicy(options = {}) {
+  const policyPath = options.policyPath || POLICY_PATH;
+  const visualRoot = options.visualRoot || VISUAL_RUNTIME_ROOT;
+  const report = {
+    ok: false,
+    checkedAt: new Date().toISOString(),
+    policyPath,
+    reportPath: REPORT_PATH,
+    visualRuntimeRoot: visualRoot,
+    checks: [],
+  };
+
   try {
-    if (!existsSync(POLICY_PATH)) fail(`${POLICY_PATH} ausente`);
-
-    const policy = readJson(POLICY_PATH);
-    addCheck('atlas-exceptions.json é válido', validateAtlasExceptionDocument(policy));
-    addCheck('política documentada em AGENTS/rules', validatePolicyTextFiles());
-    addCheck(
-      'raster visual governado só em atlases/cinematics',
-      validateVisualRuntimeRasterFiles(policy),
+    const policy = loadVisualAssetPolicy(policyPath);
+    const runtimeFiles = collectFiles(visualRoot);
+    const sourceFiles = readSourceFiles(SOURCE_SCAN_ENTRIES);
+    const policyTexts = Object.fromEntries(
+      POLICY_TEXT_FILES.map((filePath) => [filePath, existsSync(filePath) ? readFileSync(filePath, 'utf8') : '']),
     );
-    addCheck('diretórios runtime simples permanecem SVG-only', validateSvgOnlyDirectories());
 
-    const referenceResult = validateRuntimeRasterReferences(policy);
-    addCheck('referências runtime respeitam exceções governadas', referenceResult.failures, {
-      scannedFiles: referenceResult.scannedFiles,
+    addCheck(report, 'atlas-exceptions schema válido', validateAtlasExceptionDocument(policy), {
+      exceptions: Array.isArray(policy.exceptions) ? policy.exceptions.length : 0,
+    });
+    addCheck(report, 'arquivos raster runtime são exceções governadas', findInvalidRuntimeVisualFiles(runtimeFiles, policy), {
+      scannedFiles: runtimeFiles.length,
+      allowedRasterPaths: [...allowedRuntimeRasterPaths(policy)].sort(),
+    });
+    addCheck(report, 'referências runtime raster são exceções governadas', findInvalidRuntimeVisualReferences(sourceFiles, policy), {
+      scannedFiles: sourceFiles.length,
+    });
+    addCheck(report, 'AGENTS e Cursor declaram política visual', validatePolicyText(policyTexts), {
+      policyFiles: POLICY_TEXT_FILES,
     });
 
-    addCheck('AVIF não é usado como sprite/atlas', validateAvifSpriteReferences());
-
     report.ok = true;
-    writeReport();
-    console.log(`visual-asset-policy ok: report=${REPORT_PATH}`);
+    writeReport(report);
+    return report;
   } catch (error) {
     report.error = error.message;
-    writeReport();
+    writeReport(report);
+    throw error;
+  }
+}
+
+const isMain = process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1]);
+if (isMain) {
+  try {
+    const report = validateVisualAssetPolicy();
+    console.log(`visual-asset-policy ok: checks=${report.checks.length}, report=${REPORT_PATH}`);
+  } catch (error) {
     console.error(error);
     process.exit(1);
   }
-}
-
-const isMainModule =
-  process.argv[1] &&
-  resolve(process.argv[1]) === fileURLToPath(import.meta.url);
-if (isMainModule) {
-  runVisualAssetPolicyGuard();
 }

@@ -10,15 +10,18 @@
 
 ## Global Constraints
 
-- Do not create raster art without documented exception.
+- Do not alter `/Users/mal/.codex/AGENTS.md`.
+- Do not create raster art in this task.
 - SVG remains the default source and runtime format for simple sprites, UI, and VFX.
 - PNG/WebP atlas files require documented exceptions.
 - AVIF is prohibited for sprites and atlases; AVIF is allowed only for cinematic/background assets with evidence.
 
+---
+
 ## Tasks
 
-- [x] Update `AGENTS.md`, `.cursor/rules/all.mdc`, and `docs/assets/visual-runtime/**` with the policy.
-- [x] Add RED tests for the visual asset policy guard.
-- [x] Implement `scripts/validate-visual-asset-policy.mjs` and report output.
-- [x] Integrate the guard into `package.json`, pre-commit, SVG validator, and semantic-name validator.
-- [x] Run required validations and commit the result.
+- [ ] Update `AGENTS.md`, `.cursor/rules/all.mdc`, and `docs/assets/visual-runtime/**` with the policy.
+- [ ] Add RED tests for the visual asset policy guard.
+- [ ] Implement `scripts/validate-visual-asset-policy.mjs` and report output.
+- [ ] Integrate the guard into `package.json`, pre-commit, SVG validator, and semantic-name validator.
+- [ ] Run required validations and commit the result.

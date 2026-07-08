@@ -50,7 +50,9 @@
     "codex-env:check": "node scripts/validate-codex-env.mjs",
     "codex-env:register": "node scripts/register-codex-env-value.mjs",
     "codex-env:materialize": "node scripts/materialize-public-env-artifacts.mjs",
-    "codex-env:bootstrap": "node scripts/bootstrap-codex-env.mjs"
+    "codex-env:bootstrap": "node scripts/bootstrap-codex-env.mjs",
+    "test:visual-asset-policy": "node scripts/validate-visual-asset-policy.mjs",
+    "test:visual-asset-policy:unit": "node scripts/validate-visual-asset-policy.test.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.4.1",

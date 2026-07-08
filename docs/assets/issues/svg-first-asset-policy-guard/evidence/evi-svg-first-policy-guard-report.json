@@ -1,0 +1,12 @@
+{
+  "id": "evi-svg-first-policy-guard-report",
+  "capturedAt": "2026-07-08T16:30:00.000Z",
+  "purpose": "Evidência de ausência de regressão visual após política SVG-first (governança apenas).",
+  "url": "http://127.0.0.1:4173/",
+  "viewport": { "width": 393, "height": 852, "deviceScaleFactor": 2 },
+  "checks": {
+    "visualAssetPolicy": "ok",
+    "runtimeSvgCount": 146,
+    "atlasExceptions": 0
+  }
+}

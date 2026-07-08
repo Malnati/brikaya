@@ -8,6 +8,7 @@ node --version
 make help
 npm run test:semantic-file-names
 npm run test:svg-assets
+npm run test:visual-asset-policy
 npm run build
 ```
 
@@ -27,5 +28,5 @@ Use `BRIKAYA_BALL_TURRET_QA_REPORT`, `BRIKAYA_BALL_TURRET_MENU_SCREENSHOT`, `BRI
 ## Critérios
 
 - Sem regressão de jogo principal.
-- Sem assets visuais runtime fora de SVG local.
+- Sem raster runtime fora de SVG local ou exceção governada em `docs/assets/visual-runtime/atlas-exceptions.json`.
 - Sem dependência de rede para jogar após primeiro carregamento.

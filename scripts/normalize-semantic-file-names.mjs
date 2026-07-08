@@ -206,8 +206,8 @@ function isCodexEvidencePath(path) {
 }
 
 function governedKind(path) {
-  if (path.startsWith(PUBLIC_VISUAL_ATLAS_ROOT)) return 'runtime-atlas';
-  if (path.startsWith(PUBLIC_VISUAL_CINEMATIC_ROOT)) return 'runtime-cinematic';
+  if (path.startsWith(PUBLIC_VISUAL_ATLAS_ROOT)) return 'runtime-visual-atlas';
+  if (path.startsWith(PUBLIC_VISUAL_CINEMATIC_ROOT)) return 'runtime-visual-cinematic';
   if (path.startsWith(PUBLIC_VISUAL_ROOT)) return 'runtime-visual';
   if (path.startsWith(PUBLIC_AUDIO_ROOT)) return 'runtime-audio';
   if (path.startsWith(CODEX_THEME_ROOT)) return 'codex-theme-planning';
@@ -232,18 +232,11 @@ function validateGovernedName(path) {
   if (kind === 'runtime-visual' && (extension !== '.svg' || !RUNTIME_VISUAL_PATTERN.test(stem))) {
     failures.push(`${path}: visual runtime deve usar spr/ui/vfx e .svg`);
   }
-  if (
-    kind === 'runtime-atlas' &&
-    (!['.png', '.webp'].includes(extension) || !RUNTIME_ATLAS_PATTERN.test(stem))
-  ) {
-    failures.push(`${path}: atlas runtime deve usar atlas-* e .png/.webp`);
+  if (kind === 'runtime-visual-atlas' && (!['.png', '.webp'].includes(extension) || !RUNTIME_ATLAS_PATTERN.test(stem))) {
+    failures.push(`${path}: atlas visual runtime deve usar atlas-* e .png/.webp`);
   }
-  if (
-    kind === 'runtime-cinematic' &&
-    (!['.png', '.webp', '.avif'].includes(extension) ||
-      !RUNTIME_CINEMATIC_PATTERN.test(stem))
-  ) {
-    failures.push(`${path}: cinemática runtime deve usar cinematic-* e .png/.webp/.avif`);
+  if (kind === 'runtime-visual-cinematic' && (!['.png', '.webp', '.avif'].includes(extension) || !RUNTIME_CINEMATIC_PATTERN.test(stem))) {
+    failures.push(`${path}: cinemática visual runtime deve usar cinematic-* e .png/.webp/.avif`);
   }
   if (kind === 'runtime-audio' && (!['.mp3', '.ogg'].includes(extension) || !RUNTIME_AUDIO_PATTERN.test(stem))) {
     failures.push(`${path}: áudio runtime deve usar sfx/bgm, sufixo numérico e .mp3/.ogg`);
