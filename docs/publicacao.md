@@ -6,12 +6,13 @@ O domínio de desenvolvimento publicado é `https://dev.brikaya.com/`.
 
 ## CI/CD automático
 
-| Branch | Workflow | Destino |
-|--------|----------|---------|
-| `main` | `ci` → `deploy-production` | `https://brikaya.com/` |
-| demais | `ci` → `deploy-preview` | `https://dev.brikaya.com/` |
+| Evento | Workflow | Deploy |
+|--------|----------|--------|
+| `pull_request` | `ci` | não |
+| `push` em branch ≠ `main` | `deploy-preview` (`ci` + preview) | `https://dev.brikaya.com/` |
+| `push` em `main` | `deploy-production` (`ci` + produção) | `https://brikaya.com/` |
 
-O preview em `dev.brikaya.com` reflete o último push de branch não-main que passou no CI.
+O preview em `dev.brikaya.com` reflete o último **push** de branch não-main que passou no CI. PRs rodam apenas validação (`ci`) sem deploy.
 
 ## Comandos locais
 

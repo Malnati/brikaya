@@ -5,12 +5,13 @@ alwaysApply: true
 
 # Brikaya — CI/CD
 
-## Mapeamento branch → domínio
+## Mapeamento evento → domínio
 
-| Branch Git | Pipeline | Destino |
-|------------|----------|---------|
-| `main` | `ci` → `deploy-production` | `https://brikaya.com/` |
-| demais branches | `ci` → `deploy-preview` | `https://dev.brikaya.com/` |
+| Evento | Pipeline | Destino |
+|--------|----------|---------|
+| `pull_request` | `ci` | sem deploy |
+| `push` em branch ≠ `main` | `deploy-preview` (`ci` + preview) | `https://dev.brikaya.com/` |
+| `push` em `main` | `deploy-production` (`ci` + produção) | `https://brikaya.com/` |
 
 O preview em `dev.brikaya.com` reflete o **último push** de branch não-main que passou no CI.
 
@@ -18,7 +19,7 @@ O preview em `dev.brikaya.com` reflete o **último push** de branch não-main qu
 
 - Planos que alteram deploy, workflows, secrets ou Cloudflare devem citar impacto em CI/CD.
 - Não documentar detalhes internos na UI do jogo; esta regra é para agentes/desenvolvimento.
-- Workflows canônicos: `.github/workflows/ci.yml`, `deploy-production.yml`, `deploy-preview.yml`.
+- Workflows canônicos: `.github/workflows/ci.yml`, `ci-reusable.yml`, `deploy-production.yml`, `deploy-preview.yml`.
 
 ## Validação publicada
 

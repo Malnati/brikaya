@@ -65,9 +65,10 @@ Brikaya é um jogo arcade offline-first em TypeScript/React, distribuído como P
 
 ## CI/CD
 
-- `main` → workflow `ci` + `deploy-production` → `https://brikaya.com/`
-- demais branches → workflow `ci` + `deploy-preview` → `https://dev.brikaya.com/`
-- Workflows: `.github/workflows/ci.yml`, `deploy-production.yml`, `deploy-preview.yml`
+- `pull_request` → workflow `ci` (sem deploy)
+- `push` em branch ≠ `main` → workflow `deploy-preview` (`ci` + preview) → `https://dev.brikaya.com/`
+- `push` em `main` → workflow `deploy-production` (`ci` + produção) → `https://brikaya.com/`
+- Workflows: `.github/workflows/ci.yml`, `ci-reusable.yml`, `deploy-production.yml`, `deploy-preview.yml`
 - Secrets no GitHub Actions: `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN` (sincronizar com `npm run brikaya:sync-gh-secrets`)
 
 ## Git ship e merge autônomos

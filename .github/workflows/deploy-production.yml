@@ -2,17 +2,22 @@
 name: deploy-production
 
 on:
-  workflow_run:
-    workflows: [ci]
-    types: [completed]
-    branches: [main]
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: deploy-production-main
+  cancel-in-progress: true
 
 jobs:
+  ci:
+    uses: ./.github/workflows/ci-reusable.yml
+    secrets: inherit
+
   deploy-production:
     name: deploy-production
-    if: >-
-      github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.head_branch == 'main'
+    needs: ci
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -20,7 +25,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ github.sha }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
