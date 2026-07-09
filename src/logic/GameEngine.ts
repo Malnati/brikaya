@@ -21,7 +21,11 @@ import {
   calculateLevelMinSpeed,
   calculateLevelPreviousMaxSpeed,
   calculateLevelSpeedMultiplier,
+  calculateLaserFanTargetCount,
+  calculateMultiballBallCount,
   calculateSpeedReductionPerBrick,
+  calculateWidePaddleScale,
+  buildMultiballAngleOffsets,
   DynamicGameDimensions,
 } from "../constants/game";
 import { POINTS_PER_BRICK } from "../constants/gameState";
@@ -136,13 +140,10 @@ const BALL_TURRET_BOTTOM_SPAWN_ANGLE = Math.PI / 2;
 const BALL_TURRET_POWER_UP_FALLBACK_ANGLE = -Math.PI / 2;
 const MAX_FRAME_DELTA_MS = 80;
 const FRAME_BASELINE_MS = 1000 / 60;
-const WIDE_PADDLE_SCALE = 1.45;
 const SLOW_BALL_MULTIPLIER = 0.75;
-const MULTIBALL_ANGLE_OFFSET = 0.42;
 const HIGH_INTENSITY_SPEED_MULTIPLIER = 1.6;
 const LASER_FAN_MIN_PROGRESS = 0;
 const LASER_FAN_MAX_PROGRESS = 1;
-const LASER_FAN_TARGET_COUNT = 5;
 const LASER_FAN_TARGET_STAGGER_PROGRESS = 0.12;
 const LASER_FAN_TARGET_PROGRESS_WINDOW = 0.72;
 const LASER_FAN_CRACK_START_PROGRESS = 0.12;
@@ -1438,10 +1439,11 @@ export class GameEngine {
     if (powerUpType === "multiball") {
       const baseBall = this.balls[0];
       if (baseBall) {
-        const clones = [
-          baseBall.createClone(MULTIBALL_ANGLE_OFFSET),
-          baseBall.createClone(-MULTIBALL_ANGLE_OFFSET),
-        ];
+        const ballCount = calculateMultiballBallCount(this.level);
+        const angleOffsets = buildMultiballAngleOffsets(ballCount - 1);
+        const clones = angleOffsets.map((angleOffset) =>
+          baseBall.createClone(angleOffset),
+        );
         clones.forEach((clone) => {
           this.balls.push(clone);
           gameLogger
@@ -1461,7 +1463,7 @@ export class GameEngine {
     }
 
     if (powerUpType === "wide_paddle") {
-      this.paddle.setWidthScale(WIDE_PADDLE_SCALE);
+      this.paddle.setWidthScale(calculateWidePaddleScale(this.level));
       this.audioSink.playAudio(activationAudioId);
       this.schedulePowerUpExpiration(powerUpType, () => {
         this.paddle.setWidthScale(1);
@@ -1486,7 +1488,7 @@ export class GameEngine {
   private activateLaserFanPowerUp(activationAudioId: AudioId) {
     this.audioSink.playAudio(activationAudioId);
     const selectedBricks = this.bricks.selectRandomActive(
-      LASER_FAN_TARGET_COUNT,
+      calculateLaserFanTargetCount(this.level),
     );
     this.showLaserFanEffect(selectedBricks);
     this.resolveLaserFanPowerUp(selectedBricks);

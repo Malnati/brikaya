@@ -1229,12 +1229,30 @@ describe("GameEngine", () => {
 
     await (engine as any).activatePowerUp("multiball");
 
-    expect((engine as any).getCurrentGameState().ballsCount).toBe(3);
-    expect(mockGameLogger.logBallAdded).toHaveBeenCalledTimes(2);
-    expect(mockGameLogger.logBallAdded.mock.calls[1][0].ballsCount).toBe(3);
+    expect((engine as any).getCurrentGameState().ballsCount).toBe(10);
+    expect(mockGameLogger.logBallAdded).toHaveBeenCalledTimes(9);
+    expect(mockGameLogger.logBallAdded.mock.calls[8][0].ballsCount).toBe(10);
   });
 
-  it("ativa laser escolhendo cinco blocos e destruindo imediatamente", async () => {
+  it("reduz multiball conforme a fase avança", async () => {
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+
+    (engine as any).level = 5;
+    await (engine as any).activatePowerUp("multiball");
+
+    expect((engine as any).getCurrentGameState().ballsCount).toBe(6);
+  });
+
+  it("usa mínimo de multiball nas fases tardias", async () => {
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+
+    (engine as any).level = 10;
+    await (engine as any).activatePowerUp("multiball");
+
+    expect((engine as any).getCurrentGameState().ballsCount).toBe(2);
+  });
+
+  it("ativa laser escolhendo dez blocos e destruindo imediatamente", async () => {
     jest.useFakeTimers();
     mockDestroyedLaserBricks = [
       { col: 0, row: 0, colorIndex: 0, x: 10, y: 20, width: 50, height: 20 },
@@ -1242,6 +1260,11 @@ describe("GameEngine", () => {
       { col: 2, row: 0, colorIndex: 2, x: 130, y: 20, width: 50, height: 20 },
       { col: 3, row: 0, colorIndex: 3, x: 190, y: 20, width: 50, height: 20 },
       { col: 4, row: 0, colorIndex: 4, x: 250, y: 20, width: 50, height: 20 },
+      { col: 5, row: 0, colorIndex: 0, x: 310, y: 20, width: 50, height: 20 },
+      { col: 6, row: 0, colorIndex: 1, x: 370, y: 20, width: 50, height: 20 },
+      { col: 7, row: 0, colorIndex: 2, x: 430, y: 20, width: 50, height: 20 },
+      { col: 8, row: 0, colorIndex: 3, x: 490, y: 20, width: 50, height: 20 },
+      { col: 9, row: 0, colorIndex: 4, x: 550, y: 20, width: 50, height: 20 },
     ];
     mockBricksAllDestroyed = false;
     mockBrickActiveValue = true;
@@ -1266,11 +1289,11 @@ describe("GameEngine", () => {
 
     await (engine as any).activatePowerUp("laser_fan");
 
-    expect(mockBricksInstances[0].selectRandomActive).toHaveBeenCalledWith(5);
+    expect(mockBricksInstances[0].selectRandomActive).toHaveBeenCalledWith(10);
     expect(mockBricksInstances[0].destroySelectedActive).toHaveBeenCalledWith(
       mockDestroyedLaserBricks,
     );
-    expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_BRICK * 5);
+    expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_BRICK * 10);
     expect(mockGameLogger.logScoreUpdate).toHaveBeenCalledTimes(1);
     expect(mockGameLogger.logLevelComplete).not.toHaveBeenCalled();
     expect(onLevelTransition).not.toHaveBeenCalled();
@@ -1279,7 +1302,7 @@ describe("GameEngine", () => {
       GAME_AUDIO_IDS.POWERUP_ACTIVATE_LASER_FAN,
     );
     expect((engine as any).laserFanEffectStartedAt).toBeGreaterThan(0);
-    expect((engine as any).laserFanEffectTargets).toHaveLength(5);
+    expect((engine as any).laserFanEffectTargets).toHaveLength(10);
     expect((engine as any).laserFanEffectTargets[0]).toEqual(
       expect.objectContaining({ col: 0, row: 0, x: 35, y: 30, index: 0 }),
     );
@@ -1339,7 +1362,7 @@ describe("GameEngine", () => {
 
     await (engine as any).activatePowerUp("laser_fan");
 
-    expect(mockBricksInstances[0].selectRandomActive).toHaveBeenCalledWith(5);
+    expect(mockBricksInstances[0].selectRandomActive).toHaveBeenCalledWith(10);
     expect(mockBricksInstances[0].destroySelectedActive).toHaveBeenCalledWith(
       mockDestroyedLaserBricks,
     );
@@ -1347,6 +1370,24 @@ describe("GameEngine", () => {
     expect(mockGameLogger.logScoreUpdate).toHaveBeenCalledTimes(1);
     expect(mockGameLogger.logLevelComplete).toHaveBeenCalledTimes(1);
     expect(onLevelTransition).toHaveBeenCalledTimes(1);
+  });
+
+  it("reduz laser em leque conforme a fase avança", async () => {
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+
+    (engine as any).level = 5;
+    await (engine as any).activatePowerUp("laser_fan");
+
+    expect(mockBricksInstances[0].selectRandomActive).toHaveBeenCalledWith(6);
+  });
+
+  it("usa mínimo de laser em leque nas fases tardias", async () => {
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+
+    (engine as any).level = 10;
+    await (engine as any).activatePowerUp("laser_fan");
+
+    expect(mockBricksInstances[0].selectRandomActive).toHaveBeenCalledWith(2);
   });
 
   it("desenha rachaduras e brilho por bloco no lugar do leque antigo", () => {
