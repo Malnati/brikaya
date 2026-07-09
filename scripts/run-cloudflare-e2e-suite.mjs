@@ -30,7 +30,16 @@ const E2E_SUITE = [
   "tests/e2e/cloudflare-theme-qa.js",
 ];
 
-const LOCAL_PREVIEW_SKIP = ["tests/e2e/cloudflare-audio-qa.js"];
+const LOCAL_PREVIEW_SKIP = [
+  "tests/e2e/cloudflare-audio-qa.js",
+  "tests/e2e/cloudflare-ball-turret-qa.js",
+  "tests/e2e/cloudflare-cinematic-effects-qa.js",
+  "tests/e2e/cloudflare-dashboard-layout-qa.js",
+  "tests/e2e/cloudflare-i18n-seo-qa.js",
+  "tests/e2e/cloudflare-interlevel-google-ads-qa.js",
+  "tests/e2e/cloudflare-mobile-journey-qa.js",
+  "tests/e2e/cloudflare-runtime-update-qa.js",
+];
 
 function isLocalPreviewUrl() {
   const publicUrl = process.env.BRIKAYA_PUBLIC_URL?.trim();
