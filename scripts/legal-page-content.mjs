@@ -7,7 +7,7 @@ const MODULE_DIR = dirname(fileURLToPath(import.meta.url));
 const TRANSLATIONS_PATH = join(MODULE_DIR, 'legal-page-translations.json');
 
 export const LEGAL_DEFAULT_LOCALE = 'en-US';
-export const LEGAL_LASTMOD = '2026-07-07';
+export const LEGAL_LASTMOD = '2026-07-09';
 export const LEGAL_PATHS = [
   '/about/',
   '/legal/',
@@ -42,7 +42,7 @@ export const LEGAL_TEXT = {
   'link.userAgreement.title': 'User agreement',
   'link.userAgreement.body': 'Clear agreement for using Brikaya.',
   'link.license.title': 'License',
-  'link.license.body': 'Reserved rights and permitted use.',
+  'link.license.body': 'MIT License summary and attribution.',
   'link.dataDeletion.title': 'Data deletion',
   'link.dataDeletion.body': 'How to erase local data and ask for help.',
   'link.cookies.title': 'Cookies and ads',
@@ -95,7 +95,7 @@ export const LEGAL_TEXT = {
   'terms.lead': 'By using Brikaya, you agree to use the game fairly and follow these terms.',
   'terms.s1.heading': 'Use of the game',
   'terms.s1.body1': 'You may play Brikaya for personal entertainment. Do not misuse the game, interfere with access, or attempt to harm other users or the service.',
-  'terms.s1.body2': 'Do not copy, sell, repackage, or publish the game or its assets without written permission.',
+  'terms.s1.body2': 'You may also use and adapt the open source code under the MIT License, as described on the license page.',
   'terms.s2.heading': 'Free access and ads',
   'terms.s2.body1': 'The game is free to access. Optional ads may appear if they are approved and available.',
   'terms.s2.body2': 'No ad or promotional feature should require payment from the player to keep playing this version.',
@@ -119,17 +119,17 @@ export const LEGAL_TEXT = {
   'userAgreement.s4.body1': 'The agreement may be updated when the game changes. The latest version appears on this page.',
 
   'license.title': 'License — Brikaya',
-  'license.description': 'Brikaya license notice: proprietary game, reserved rights, and permitted personal play.',
+  'license.description': 'Brikaya is distributed under the MIT License. Source code may be used, modified, and shared with attribution.',
   'license.h1': 'License',
-  'license.lead': 'This page explains what you may do with Brikaya and what remains reserved.',
-  'license.s1.heading': 'Personal play license',
-  'license.s1.body1': 'You may access and play Brikaya for personal entertainment through the official site.',
-  'license.s1.body2': 'This permission does not transfer ownership of the game, brand, code, artwork, audio, or other content.',
-  'license.s2.heading': 'Reserved rights',
-  'license.s2.body1': 'Brikaya and its assets are proprietary. All rights not expressly allowed are reserved by Ricardo Malnati.',
-  'license.s3.heading': 'No redistribution',
-  'license.s3.body1': 'Do not copy, modify, sell, sublicense, upload, or redistribute Brikaya or its assets without written permission.',
-  'license.s4.heading': 'Open web access',
+  'license.lead': 'Brikaya is open source under the MIT License. This page summarizes what that means for players and developers.',
+  'license.s1.heading': 'MIT License',
+  'license.s1.body1': 'The Brikaya source code is licensed under the MIT License. You may use, copy, modify, merge, publish, distribute, sublicense, and sell copies of the software, subject to the conditions in the LICENSE file.',
+  'license.s1.body2': 'The full license text is available in the project repository and on this page.',
+  'license.s2.heading': 'Copyright',
+  'license.s2.body1': 'Copyright (c) 2026 Ricardo Malnati. The above copyright notice and permission notice must be included in all copies or substantial portions of the software.',
+  'license.s3.heading': 'Trademarks and official game',
+  'license.s3.body1': 'The MIT License applies to the software in this repository. The Brikaya name, brand, and the official game at https://brikaya.com/ remain the publisher product identity.',
+  'license.s4.heading': 'Official links',
   'license.s4.body1': 'Links to https://brikaya.com/ are welcome when they point to the official game and do not imply endorsement.',
 
   'dataDeletion.title': 'Data deletion — Brikaya',

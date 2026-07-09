@@ -88,5 +88,5 @@
     "node": ">=23 <24",
     "npm": ">=10 <11"
   },
-  "license": "UNLICENSED"
+  "license": "MIT"
 }

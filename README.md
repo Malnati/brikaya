@@ -68,4 +68,4 @@ Testes contra o site publicado usam `BRIKAYA_PUBLIC_URL` quando for necessário 
 
 ## Licença
 
-Brikaya é proprietário. Todos os direitos reservados. Veja [LICENSE](LICENSE).
+Brikaya é distribuído sob a [MIT License](LICENSE).

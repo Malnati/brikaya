@@ -33,7 +33,7 @@ Este pacote prepara Brikaya para cadastros gratuitos e revisões de plataformas 
 | Privacidade | `https://brikaya.com/privacy/` | `https://brikaya.com/es-419/privacy/` | Dados locais, consentimento, anúncios, contato e controle | Google OAuth privacy policy, Meta privacy policy, anúncios |
 | Termos | `https://brikaya.com/terms/` | `https://brikaya.com/de/terms/` | Uso, gratuidade, anúncios e restrições | OAuth/App branding, Meta app settings, revisão geral |
 | Contrato de usuário | `https://brikaya.com/user-agreement/` | `https://brikaya.com/it/user-agreement/` | Aceite pelo uso, conduta e direitos | Plataformas que pedem user agreement/EULA |
-| Licença | `https://brikaya.com/license/` | `https://brikaya.com/ja/license/` | Obra proprietária e direitos reservados | Revisão de IP/licenciamento |
+| Licença | `https://brikaya.com/license/` | `https://brikaya.com/ja/license/` | MIT License e resumo de uso do código | Revisão de IP/licenciamento |
 | Exclusão de dados | `https://brikaya.com/data-deletion/` | `https://brikaya.com/ar/data-deletion/` | Remoção de dados locais e contato | Meta Data Deletion Instructions, Google Play future readiness |
 | Cookies e anúncios | `https://brikaya.com/cookies/` | `https://brikaya.com/zh-CN/cookies/` | Escolhas salvas, cookies/armazenamento e anúncios | Consentimento/anúncios e transparência |
 | Suporte | `https://brikaya.com/support/` | `https://brikaya.com/hi-IN/support/` | Contato oficial e escopo de suporte | Requisitos de contato de plataformas |
@@ -55,7 +55,7 @@ Este pacote prepara Brikaya para cadastros gratuitos e revisões de plataformas 
 - Identidade pública: Brikaya e Ricardo Malnati; nenhum perfil pessoal público adicional.
 - Sem compromisso de pagamento: não ativar campanha, loja paga, cartão, overage, pixel novo ou serviço pago.
 - Sem conta de jogador nesta versão: `/data-deletion/` explica remoção local e canal de contato, não exclusão de perfil hospedado.
-- Licença pública: proprietária, todos os direitos reservados, sem abertura de código ou assets.
+- Licença pública: MIT License para o código-fonte; a página `/license/` resume permissões e atribuição.
 - Revisão jurídica externa: pendente e fora do escopo deste pacote; estas páginas são prontidão operacional para plataformas.
 
 ## Validação esperada
