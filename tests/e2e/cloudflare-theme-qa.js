@@ -32,19 +32,18 @@ function ensureParentDirectory(filePath) {
 }
 
 async function openMenu(page) {
-  const opened = await page.evaluate(
-    (menuButtonPatternSource) => {
-      const menuButtonPattern = new RegExp(menuButtonPatternSource, "i");
-      const buttons = Array.from(document.querySelectorAll("button"));
-      const menuButton = buttons.find((button) =>
-        menuButtonPattern.test(button.textContent || button.getAttribute("aria-label") || ""),
-      );
-      if (!menuButton) return false;
-      menuButton.click();
-      return true;
-    },
-    MENU_BUTTON_NAME.source,
-  );
+  const opened = await page.evaluate((menuButtonPatternSource) => {
+    const menuButtonPattern = new RegExp(menuButtonPatternSource, "i");
+    const buttons = Array.from(document.querySelectorAll("button"));
+    const menuButton = buttons.find((button) =>
+      menuButtonPattern.test(
+        button.textContent || button.getAttribute("aria-label") || "",
+      ),
+    );
+    if (!menuButton) return false;
+    menuButton.click();
+    return true;
+  }, MENU_BUTTON_NAME.source);
   assert(opened, "Botão Menu não encontrado.");
   await page.waitForSelector(".settings-drawer", { timeout: 10000 });
 }
@@ -55,7 +54,9 @@ async function closeMenu(page) {
     const buttons = Array.from(document.querySelectorAll("button"));
     buttons
       .find((button) =>
-        closeButtonPattern.test(button.textContent || button.getAttribute("aria-label") || ""),
+        closeButtonPattern.test(
+          button.textContent || button.getAttribute("aria-label") || "",
+        ),
       )
       ?.click();
   }, CLOSE_BUTTON_NAME.source);
@@ -76,7 +77,9 @@ async function collectAppearanceState(page) {
         drawerText: drawer?.textContent || "",
         appearanceOptionIds: Array.from(
           drawer?.querySelectorAll("[data-appearance-option-id]") || [],
-        ).map((option) => option.getAttribute("data-appearance-option-id") || ""),
+        ).map(
+          (option) => option.getAttribute("data-appearance-option-id") || "",
+        ),
       };
     },
     {
@@ -148,7 +151,8 @@ async function main() {
   const screenshotPath =
     process.env.BRIKAYA_THEME_QA_SCREENSHOT || DEFAULT_SCREENSHOT_PATH;
   const menuScreenshotPath =
-    process.env.BRIKAYA_THEME_QA_MENU_SCREENSHOT || DEFAULT_MENU_SCREENSHOT_PATH;
+    process.env.BRIKAYA_THEME_QA_MENU_SCREENSHOT ||
+    DEFAULT_MENU_SCREENSHOT_PATH;
 
   ensureParentDirectory(reportPath);
   ensureParentDirectory(screenshotPath);
@@ -158,7 +162,12 @@ async function main() {
 
   try {
     const page = await browser.newPage();
-    await page.setViewport({ width: 390, height: 844, deviceScaleFactor: 2, isMobile: true });
+    await page.setViewport({
+      width: 390,
+      height: 844,
+      deviceScaleFactor: 2,
+      isMobile: true,
+    });
     await page.goto(publicUrl, { waitUntil: "networkidle2", timeout: 60000 });
     await acceptPrivacyConsentIfPresent(page);
     await page.waitForFunction(

@@ -327,8 +327,12 @@ async function installCanvasProbe(page) {
           src,
           x,
           y,
-          screenX: transform ? transform.a * centerX + transform.c * centerY + transform.e : centerX,
-          screenY: transform ? transform.b * centerX + transform.d * centerY + transform.f : centerY,
+          screenX: transform
+            ? transform.a * centerX + transform.c * centerY + transform.e
+            : centerX,
+          screenY: transform
+            ? transform.b * centerX + transform.d * centerY + transform.f
+            : centerY,
           width,
           height,
         });
@@ -351,8 +355,12 @@ async function installCanvasProbe(page) {
       window.__brikayaBallTurretProbe?.ellipses.push({
         x,
         y,
-        screenX: transform ? transform.a * x + transform.c * y + transform.e : x,
-        screenY: transform ? transform.b * x + transform.d * y + transform.f : y,
+        screenX: transform
+          ? transform.a * x + transform.c * y + transform.e
+          : x,
+        screenY: transform
+          ? transform.b * x + transform.d * y + transform.f
+          : y,
         radiusX,
         radiusY,
         rotation,
@@ -385,8 +393,12 @@ async function installCanvasProbe(page) {
       window.__brikayaBallTurretProbe?.fillRects.push({
         x,
         y,
-        screenX: transform ? transform.a * centerX + transform.c * centerY + transform.e : centerX,
-        screenY: transform ? transform.b * centerX + transform.d * centerY + transform.f : centerY,
+        screenX: transform
+          ? transform.a * centerX + transform.c * centerY + transform.e
+          : centerX,
+        screenY: transform
+          ? transform.b * centerX + transform.d * centerY + transform.f
+          : centerY,
         width,
         height,
       });
@@ -593,8 +605,12 @@ async function readBallTurretState(page) {
       const brickDraws = probe.drawImages
         .filter((draw) => brickImagePattern.test(draw.src))
         .map((draw) => ({
-          x: Number.isFinite(draw.screenX) ? draw.screenX : draw.x + draw.width / 2,
-          y: Number.isFinite(draw.screenY) ? draw.screenY : draw.y + draw.height / 2,
+          x: Number.isFinite(draw.screenX)
+            ? draw.screenX
+            : draw.x + draw.width / 2,
+          y: Number.isFinite(draw.screenY)
+            ? draw.screenY
+            : draw.y + draw.height / 2,
         }));
       const fallbackBrickDraws = probe.fillRects
         .filter(
@@ -605,8 +621,12 @@ async function readBallTurretState(page) {
             draw.height < canvasHeight * 0.5,
         )
         .map((draw) => ({
-          x: Number.isFinite(draw.screenX) ? draw.screenX : draw.x + draw.width / 2,
-          y: Number.isFinite(draw.screenY) ? draw.screenY : draw.y + draw.height / 2,
+          x: Number.isFinite(draw.screenX)
+            ? draw.screenX
+            : draw.x + draw.width / 2,
+          y: Number.isFinite(draw.screenY)
+            ? draw.screenY
+            : draw.y + draw.height / 2,
         }));
       const fallbackEllipseBrickDraws = (probe.ellipses || [])
         .filter(
@@ -871,10 +891,10 @@ async function readBallTurretState(page) {
           activeTrampolineCenterAngle,
           leftActiveTrampolineCenterAngle: activeTrampolineBySide.left,
           rightActiveTrampolineCenterAngle: activeTrampolineBySide.right,
-          hasLeftActiveTrampoline:
-            Number.isFinite(activeTrampolineBySide.left),
-          hasRightActiveTrampoline:
-            Number.isFinite(activeTrampolineBySide.right),
+          hasLeftActiveTrampoline: Number.isFinite(activeTrampolineBySide.left),
+          hasRightActiveTrampoline: Number.isFinite(
+            activeTrampolineBySide.right,
+          ),
           boundarySegmentCount: uniqueBoundarySegments.size,
           reboundBoundarySegmentCount: uniqueReboundBoundarySegments.size,
           lossBoundarySegmentCount: uniqueLossBoundarySegments.size,
@@ -1044,8 +1064,14 @@ function assertJoystickPlacement(config, gameplayState) {
 }
 
 function assertDefaultSwitchControls(config, gameplayState) {
-  const { canvas, viewport, controlToggle, dualSwitches, leftSwitch, rightSwitch } =
-    gameplayState;
+  const {
+    canvas,
+    viewport,
+    controlToggle,
+    dualSwitches,
+    leftSwitch,
+    rightSwitch,
+  } = gameplayState;
 
   assert(
     controlToggle.exists && controlToggle.visible,
@@ -1109,12 +1135,12 @@ function assertDefaultSwitchControls(config, gameplayState) {
       `${config.name}: interruptores não respeitam 0,5in abaixo do jogo.`,
     );
     assert(
-      leftGap <= SWITCH_MAX_EDGE_GAP_PX &&
-        rightGap <= SWITCH_MAX_EDGE_GAP_PX,
+      leftGap <= SWITCH_MAX_EDGE_GAP_PX && rightGap <= SWITCH_MAX_EDGE_GAP_PX,
       `${config.name}: interruptores não ficaram próximos das bordas laterais.`,
     );
     assert(
-      rightSwitch.x - (leftSwitch.x + leftSwitch.width) >= viewport.width * 0.45,
+      rightSwitch.x - (leftSwitch.x + leftSwitch.width) >=
+        viewport.width * 0.45,
       `${config.name}: interruptores ficaram próximos demais entre si.`,
     );
   }
@@ -1535,8 +1561,9 @@ function stayedVerticallyStable(beforeAngle, afterAngle) {
   return (
     Number.isFinite(beforeAngle) &&
     Number.isFinite(afterAngle) &&
-    Math.abs(angleVerticalValue(afterAngle) - angleVerticalValue(beforeAngle)) <=
-      DUAL_SWITCH_STABLE_MAX_SIN_DELTA
+    Math.abs(
+      angleVerticalValue(afterAngle) - angleVerticalValue(beforeAngle),
+    ) <= DUAL_SWITCH_STABLE_MAX_SIN_DELTA
   );
 }
 
@@ -1641,16 +1668,18 @@ async function exerciseDualSwitches(page) {
         const style = element ? getComputedStyle(element) : null;
         return Boolean(
           element &&
-            rect &&
-            rect.width > 0 &&
-            rect.height > 0 &&
-            !element.hasAttribute("hidden") &&
-            style?.display !== "none" &&
-            style?.visibility !== "hidden",
+          rect &&
+          rect.width > 0 &&
+          rect.height > 0 &&
+          !element.hasAttribute("hidden") &&
+          style?.display !== "none" &&
+          style?.visibility !== "hidden",
         );
       };
 
-      return visible(dualSwitches) && visible(leftSwitch) && visible(rightSwitch);
+      return (
+        visible(dualSwitches) && visible(leftSwitch) && visible(rightSwitch)
+      );
     },
     { timeout: 5000 },
     {
@@ -1697,10 +1726,14 @@ async function exerciseDualSwitches(page) {
     afterLeftCenterState.probe.leftActiveTrampolineCenterAngle;
   const afterLeftCenterRightAngle =
     afterLeftCenterState.probe.rightActiveTrampolineCenterAngle;
-  const afterLeftLeftAngle = afterLeftState.probe.leftActiveTrampolineCenterAngle;
-  const afterLeftRightAngle = afterLeftState.probe.rightActiveTrampolineCenterAngle;
-  const afterRightLeftAngle = afterRightState.probe.leftActiveTrampolineCenterAngle;
-  const afterRightRightAngle = afterRightState.probe.rightActiveTrampolineCenterAngle;
+  const afterLeftLeftAngle =
+    afterLeftState.probe.leftActiveTrampolineCenterAngle;
+  const afterLeftRightAngle =
+    afterLeftState.probe.rightActiveTrampolineCenterAngle;
+  const afterRightLeftAngle =
+    afterRightState.probe.leftActiveTrampolineCenterAngle;
+  const afterRightRightAngle =
+    afterRightState.probe.rightActiveTrampolineCenterAngle;
 
   return {
     exercised: true,
@@ -1709,7 +1742,8 @@ async function exerciseDualSwitches(page) {
       initialState.dualSwitches.visible &&
       initialState.leftSwitch.visible &&
       initialState.rightSwitch.visible,
-    joystickHidden: initialState.joystick.exists && !initialState.joystick.visible,
+    joystickHidden:
+      initialState.joystick.exists && !initialState.joystick.visible,
     twoTrampolinesVisible:
       initialState.probe.hasLeftActiveTrampoline &&
       initialState.probe.hasRightActiveTrampoline,
@@ -1749,7 +1783,9 @@ async function exerciseSecondaryJoystick(page, config) {
   await page.click(`[data-testid="${CONTROL_TOGGLE_TEST_ID}"]`);
   await page.waitForFunction(
     ({ joystickTestId, dualSwitchesTestId }) => {
-      const joystick = document.querySelector(`[data-testid="${joystickTestId}"]`);
+      const joystick = document.querySelector(
+        `[data-testid="${joystickTestId}"]`,
+      );
       const dualSwitches = document.querySelector(
         `[data-testid="${dualSwitchesTestId}"]`,
       );
@@ -1757,12 +1793,12 @@ async function exerciseSecondaryJoystick(page, config) {
       const joystickStyle = joystick ? getComputedStyle(joystick) : null;
       return Boolean(
         joystick &&
-          joystickRect &&
-          joystickRect.width > 0 &&
-          joystickRect.height > 0 &&
-          joystickStyle?.display !== "none" &&
-          !joystick.classList.contains("game-turret-joystick--hidden") &&
-          dualSwitches?.hasAttribute("hidden"),
+        joystickRect &&
+        joystickRect.width > 0 &&
+        joystickRect.height > 0 &&
+        joystickStyle?.display !== "none" &&
+        !joystick.classList.contains("game-turret-joystick--hidden") &&
+        dualSwitches?.hasAttribute("hidden"),
       );
     },
     { timeout: 5000 },
@@ -1778,14 +1814,16 @@ async function exerciseSecondaryJoystick(page, config) {
   await page.click(`[data-testid="${CONTROL_TOGGLE_TEST_ID}"]`);
   await page.waitForFunction(
     ({ joystickTestId, dualSwitchesTestId }) => {
-      const joystick = document.querySelector(`[data-testid="${joystickTestId}"]`);
+      const joystick = document.querySelector(
+        `[data-testid="${joystickTestId}"]`,
+      );
       const dualSwitches = document.querySelector(
         `[data-testid="${dualSwitchesTestId}"]`,
       );
       return Boolean(
         joystick?.classList.contains("game-turret-joystick--hidden") &&
-          dualSwitches &&
-          !dualSwitches.hasAttribute("hidden"),
+        dualSwitches &&
+        !dualSwitches.hasAttribute("hidden"),
       );
     },
     { timeout: 5000 },

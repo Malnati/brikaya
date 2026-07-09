@@ -2,8 +2,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
-import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
-
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-reset-preferences-qa.json";
@@ -168,18 +167,26 @@ async function seedLocalState(page) {
       const acceptedAt = new Date().toISOString();
       window.localStorage.setItem(
         privacyKey,
-        JSON.stringify({ version: privacyVersion, acceptedAt, scope: privacyScope }),
+        JSON.stringify({
+          version: privacyVersion,
+          acceptedAt,
+          scope: privacyScope,
+        }),
       );
       window.localStorage.setItem(
         locationKey,
-        JSON.stringify({ version: locationVersion, acceptedAt, scope: locationScope }),
+        JSON.stringify({
+          version: locationVersion,
+          acceptedAt,
+          scope: locationScope,
+        }),
       );
       window.localStorage.setItem(localeKey, "es-419");
       window.localStorage.setItem(localeSourceKey, "manual");
       window.localStorage.setItem(localeDetectionKey, sentinelValue);
       window.localStorage.setItem(themeKey, "pixel-sunset");
       window.localStorage.setItem(themeModeKey, "manual");
-      window.localStorage.setItem(autoThemeSequenceKey, "[\"pixel-sunset\"]");
+      window.localStorage.setItem(autoThemeSequenceKey, '["pixel-sunset"]');
       window.localStorage.setItem(autoThemeIndexKey, "0");
       window.localStorage.setItem(imageSetKey, "sunset-cabinet");
       window.localStorage.setItem(fontSetKey, "block-pixel");
@@ -291,7 +298,9 @@ async function clearPublishedAppCache(page) {
       registrations.map((registration) => registration.unregister()),
     );
     const cacheNames = await window.caches.keys();
-    await Promise.all(cacheNames.map((cacheName) => window.caches.delete(cacheName)));
+    await Promise.all(
+      cacheNames.map((cacheName) => window.caches.delete(cacheName)),
+    );
   });
 }
 
@@ -494,7 +503,11 @@ async function run() {
   const screenshotFilePath = getScreenshotPath();
   const requests = [];
   const consoleProblems = [];
-  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"] }));
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({
+      extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"],
+    }),
+  );
 
   try {
     const page = await browser.newPage();
@@ -544,20 +557,29 @@ async function run() {
       "Confirmação de restauração não apareceu.",
     );
     assert(state.storageState.hasConsentScreen, "Tela inicial não voltou.");
-    assert(state.storageState.privacyConsent === null, "Consentimento persistiu.");
+    assert(
+      state.storageState.privacyConsent === null,
+      "Consentimento persistiu.",
+    );
     assert(
       state.storageState.languageLocationConsent === null,
       "Consentimento de região persistiu.",
     );
     assert(state.storageState.locale === null, "Idioma manual persistiu.");
-    assert(state.storageState.localeSource === null, "Origem de idioma persistiu.");
+    assert(
+      state.storageState.localeSource === null,
+      "Origem de idioma persistiu.",
+    );
     assert(
       state.storageState.localeDetection === null,
       "Detecção de idioma persistiu.",
     );
     assert(state.storageState.theme === null, "Tema persistiu.");
     assert(state.storageState.themeMode === null, "Modo de tema persistiu.");
-    assert(state.storageState.imageSet === null, "Conjunto de imagem persistiu.");
+    assert(
+      state.storageState.imageSet === null,
+      "Conjunto de imagem persistiu.",
+    );
     assert(state.storageState.fontSet === null, "Fonte persistiu.");
     assert(state.storageState.sentinel === null, "Sentinela local persistiu.");
     assert(state.scoreCount === 0, "Pontuações persistiram.");
@@ -573,7 +595,10 @@ async function run() {
       "Interface expõe cópia técnica para usuário final.",
     );
     assert(externalRequests.length === 0, "Reset gerou requests externos.");
-    assert(consoleProblems.length === 0, "Console publicado contém erros/warnings.");
+    assert(
+      consoleProblems.length === 0,
+      "Console publicado contém erros/warnings.",
+    );
 
     console.log(JSON.stringify(report, null, 2));
   } finally {

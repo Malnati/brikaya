@@ -2,7 +2,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
-import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 import { assertAllowedQaHostname } from "./publicQaEnv.js";
@@ -351,19 +351,20 @@ async function triggerRuntimeUpdateCheck(page) {
           document.dispatchEvent(new Event("visibilitychange"));
         } catch {}
 
-        const registration = await navigator.serviceWorker?.getRegistration(
-          scope,
-        );
+        const registration =
+          await navigator.serviceWorker?.getRegistration(scope);
         await registration?.update().catch(() => {});
         registration?.waiting?.postMessage({ type: skipWaitingMessage });
 
         if (!registration?.installing && !registration?.waiting) {
           const cacheBustUrl = new URL(swPath, window.location.origin);
           cacheBustUrl.searchParams.set(cacheBustParam, String(Date.now()));
-          const refreshedRegistration = await navigator.serviceWorker.register(
-            `${cacheBustUrl.pathname}${cacheBustUrl.search}`,
-            { scope, updateViaCache },
-          ).catch(() => null);
+          const refreshedRegistration = await navigator.serviceWorker
+            .register(`${cacheBustUrl.pathname}${cacheBustUrl.search}`, {
+              scope,
+              updateViaCache,
+            })
+            .catch(() => null);
           const pendingWorker =
             refreshedRegistration?.waiting || refreshedRegistration?.installing;
           pendingWorker?.postMessage({ type: skipWaitingMessage });
@@ -437,7 +438,12 @@ async function run() {
 
   const targetUrl = publicUrl();
   assertCanonicalUrl(targetUrl);
-  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ userDataDir: profileDir(), extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"] }));
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({
+      userDataDir: profileDir(),
+      extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"],
+    }),
+  );
   const page = await browser.newPage();
   const consoleProblems = [];
   const navigationEvents = [];

@@ -2,7 +2,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
-import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 import { assertAllowedQaHostname } from "./publicQaEnv.js";
@@ -348,11 +348,15 @@ async function run() {
   assertAllowedQaHostname(targetUrl);
 
   const consoleProblems = [];
-  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: [
-      "--no-first-run",
-      "--no-default-browser-check",
-      ...CHROME_LOW_RESOURCE_ARGS,
-    ] }));
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({
+      extraArgs: [
+        "--no-first-run",
+        "--no-default-browser-check",
+        ...CHROME_LOW_RESOURCE_ARGS,
+      ],
+    }),
+  );
 
   try {
     const page = await browser.newPage();

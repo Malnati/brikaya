@@ -2,7 +2,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
-import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
 import {
   acceptPrivacyConsentIfPresent,
@@ -130,9 +130,7 @@ function reportPath() {
 }
 
 function screenshotPath() {
-  return (
-    process.env.BRIKAYA_DASHBOARD_QA_SCREENSHOT || DEFAULT_SCREENSHOT_PATH
-  );
+  return process.env.BRIKAYA_DASHBOARD_QA_SCREENSHOT || DEFAULT_SCREENSHOT_PATH;
 }
 
 function desktopScreenshotPath() {
@@ -236,11 +234,15 @@ function isRecoverableBrowserError(error) {
 }
 
 function launchQaBrowser() {
-  return puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: [
-      "--no-first-run",
-      "--no-default-browser-check",
-      ...CHROME_LOW_RESOURCE_ARGS,
-    ] }));
+  return puppeteer.launch(
+    buildPuppeteerLaunchOptions({
+      extraArgs: [
+        "--no-first-run",
+        "--no-default-browser-check",
+        ...CHROME_LOW_RESOURCE_ARGS,
+      ],
+    }),
+  );
 }
 
 function viewportByScreenshotRole(screenshotRole) {

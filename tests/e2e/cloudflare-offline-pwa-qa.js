@@ -2,7 +2,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
-import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
 import { classifyExternalRequests } from "./allowed-external-requests.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
@@ -46,8 +46,7 @@ function reportPath() {
 
 function screenshotPath() {
   return (
-    process.env.BRIKAYA_OFFLINE_PWA_QA_SCREENSHOT ||
-    DEFAULT_SCREENSHOT_PATH
+    process.env.BRIKAYA_OFFLINE_PWA_QA_SCREENSHOT || DEFAULT_SCREENSHOT_PATH
   );
 }
 
@@ -70,7 +69,9 @@ async function clearRuntimeState(page) {
 
     if ("caches" in window) {
       const cacheNames = await caches.keys();
-      await Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName)));
+      await Promise.all(
+        cacheNames.map((cacheName) => caches.delete(cacheName)),
+      );
     }
 
     window.localStorage.clear();
@@ -192,34 +193,40 @@ async function collectOfflineState(page) {
 }
 
 async function fetchOfflinePaths(page) {
-  return page.evaluate(async (paths) =>
-    Promise.all(
-      paths.map(async (path) => {
-        try {
-          const response = await fetch(path);
-          return {
-            path,
-            ok: response.ok,
-            status: response.status,
-            contentType: response.headers.get("content-type") || "",
-          };
-        } catch (error) {
-          return {
-            path,
-            ok: false,
-            status: 0,
-            contentType: "",
-            error: error instanceof Error ? error.message : String(error),
-          };
-        }
-      }),
-    ),
-  OFFLINE_FETCH_PATHS);
+  return page.evaluate(
+    async (paths) =>
+      Promise.all(
+        paths.map(async (path) => {
+          try {
+            const response = await fetch(path);
+            return {
+              path,
+              ok: response.ok,
+              status: response.status,
+              contentType: response.headers.get("content-type") || "",
+            };
+          } catch (error) {
+            return {
+              path,
+              ok: false,
+              status: 0,
+              contentType: "",
+              error: error instanceof Error ? error.message : String(error),
+            };
+          }
+        }),
+      ),
+    OFFLINE_FETCH_PATHS,
+  );
 }
 
 async function run() {
   const targetUrl = publicUrl();
-  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"] }));
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({
+      extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"],
+    }),
+  );
   const page = await browser.newPage();
   const allRequests = [];
   const failedRequests = [];
@@ -266,7 +273,10 @@ async function run() {
 
     offlineStarted = true;
     await page.setOfflineMode(true);
-    await page.reload({ waitUntil: "domcontentloaded", timeout: MAX_NAVIGATION_MS });
+    await page.reload({
+      waitUntil: "domcontentloaded",
+      timeout: MAX_NAVIGATION_MS,
+    });
     await page.waitForSelector(CANVAS_SELECTOR, { timeout: MAX_NAVIGATION_MS });
     await acceptPrivacyConsentIfPresent(page);
 
@@ -277,7 +287,9 @@ async function run() {
     await page.screenshot({ path: screenshotPath(), fullPage: true });
 
     const failedOfflineFetches = offlineFetchChecks.filter((item) => !item.ok);
-    const offlineRequestFailures = failedRequests.filter((request) => request.offline);
+    const offlineRequestFailures = failedRequests.filter(
+      (request) => request.offline,
+    );
     const publicOrigin = new URL(targetUrl).origin;
     const sameOriginOfflineRequestFailures = offlineRequestFailures.filter(
       (request) => new URL(request.url).origin === publicOrigin,
@@ -286,13 +298,11 @@ async function run() {
       (request) =>
         request.offline && new URL(request.url).origin !== publicOrigin,
     );
-    const {
-      allowedExternalRequests,
-      unexpectedExternalRequests,
-    } = classifyExternalRequests(
-      externalRequests.map((request) => request.url),
-      targetUrl,
-    );
+    const { allowedExternalRequests, unexpectedExternalRequests } =
+      classifyExternalRequests(
+        externalRequests.map((request) => request.url),
+        targetUrl,
+      );
     const {
       allowedExternalRequests: allowedOfflineRequestFailures,
       unexpectedExternalRequests: unexpectedOfflineRequestFailures,
@@ -301,7 +311,10 @@ async function run() {
       targetUrl,
     );
 
-    assert(offlineState.hasCanvas, "Canvas ausente após recarregar sem internet.");
+    assert(
+      offlineState.hasCanvas,
+      "Canvas ausente após recarregar sem internet.",
+    );
     assert(
       offlineState.hasController,
       "Controle offline ausente após recarregar sem internet.",

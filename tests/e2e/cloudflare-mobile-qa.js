@@ -2,7 +2,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
-import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
 import {
   acceptPrivacyConsentIfPresent,
@@ -137,7 +137,9 @@ const MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX = 18;
 const RECT_TOLERANCE_PX = 2;
 
 function getPublicUrl() {
-  const publicUrl = new URL(process.env.BRIKAYA_PUBLIC_URL || DEFAULT_PUBLIC_URL);
+  const publicUrl = new URL(
+    process.env.BRIKAYA_PUBLIC_URL || DEFAULT_PUBLIC_URL,
+  );
   if (!publicUrl.searchParams.has(GAMEPLAY_TELEMETRY_QUERY_PARAM)) {
     publicUrl.searchParams.set(
       GAMEPLAY_TELEMETRY_QUERY_PARAM,
@@ -792,11 +794,15 @@ async function run() {
   ensureParentDirectory(reportPath);
 
   const consoleProblems = [];
-  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: [
-      "--no-first-run",
-      "--no-default-browser-check",
-      ...CHROME_LOW_RESOURCE_ARGS,
-    ] }));
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({
+      extraArgs: [
+        "--no-first-run",
+        "--no-default-browser-check",
+        ...CHROME_LOW_RESOURCE_ARGS,
+      ],
+    }),
+  );
 
   try {
     const page = await browser.newPage();

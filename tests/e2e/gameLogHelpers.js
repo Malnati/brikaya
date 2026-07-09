@@ -95,7 +95,9 @@ export async function clearRuntimeState(page) {
 
     if ("caches" in window) {
       const cacheNames = await caches.keys();
-      await Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName)));
+      await Promise.all(
+        cacheNames.map((cacheName) => caches.delete(cacheName)),
+      );
     }
 
     window.localStorage.clear();

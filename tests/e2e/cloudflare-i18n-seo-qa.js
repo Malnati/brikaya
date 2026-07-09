@@ -20,12 +20,24 @@ const OPTIONAL_CONSENT_TIMEOUT_MS = 5000;
 const HTTP_OK = 200;
 const ROOT_LOCALE = "pt-BR";
 const TESTED_LOCALES = [
-  { locale: "pt-BR", path: "/", title: "Brikaya — arcade de circuitos eletrônicos" },
+  {
+    locale: "pt-BR",
+    path: "/",
+    title: "Brikaya — arcade de circuitos eletrônicos",
+  },
   { locale: "en", path: "/en/", title: "Brikaya — block breaker arcade" },
-  { locale: "es-419", path: "/es-419/", title: "Brikaya — arcade de romper bloques" },
+  {
+    locale: "es-419",
+    path: "/es-419/",
+    title: "Brikaya — arcade de romper bloques",
+  },
   { locale: "zh-CN", path: "/zh-CN/", title: "Brikaya — 打砖块街机" },
   { locale: "ar", path: "/ar/", title: "Brikaya — أركيد كسر الكتل" },
-  { locale: "ru", path: "/ru/", title: "Brikaya — аркада с разбиванием блоков" },
+  {
+    locale: "ru",
+    path: "/ru/",
+    title: "Brikaya — аркада с разбиванием блоков",
+  },
   { locale: "nl", path: "/nl/", title: "Brikaya — blokbreker-arcade" },
   { locale: "zh-TW", path: "/zh-TW/", title: "Brikaya — 打磚塊街機" },
   { locale: "bn", path: "/bn/", title: "Brikaya — ব্লক ব্রেকার আর্কেড" },
@@ -43,7 +55,11 @@ const TESTED_LOCALES = [
   { locale: "no", path: "/no/", title: "Brikaya — blokkbrekker-arkade" },
   { locale: "fi", path: "/fi/", title: "Brikaya — palikanmurtaja-arcade" },
   { locale: "cs", path: "/cs/", title: "Brikaya — arkáda bourání bloků" },
-  { locale: "bg", path: "/bg/", title: "Brikaya — аркада за разбиване на блокове" },
+  {
+    locale: "bg",
+    path: "/bg/",
+    title: "Brikaya — аркада за разбиване на блокове",
+  },
   { locale: "sr", path: "/sr/", title: "Brikaya — аркада разбијања блокова" },
   { locale: "af", path: "/af/", title: "Brikaya — blokbreker-arkade" },
   { locale: "uz", path: "/uz/", title: "Brikaya — blok sindirish arkadasi" },
@@ -55,10 +71,18 @@ const TESTED_LOCALES = [
   { locale: "so", path: "/so/", title: "Brikaya — arcade jabinta baloogyada" },
   { locale: "yo", path: "/yo/", title: "Brikaya — ere fifọ bulọọki" },
   { locale: "ha", path: "/ha/", title: "Brikaya — wasan fasa tubali" },
-  { locale: "zu", path: "/zu/", title: "Brikaya — i-arcade yokuphula amabhulokhi" },
+  {
+    locale: "zu",
+    path: "/zu/",
+    title: "Brikaya — i-arcade yokuphula amabhulokhi",
+  },
   { locale: "rw", path: "/rw/", title: "Brikaya — umukino wo kumena ibice" },
   { locale: "ti", path: "/ti/", title: "Brikaya — ጸወታ ምስባር ብሎክ" },
-  { locale: "qu", path: "/qu/", title: "Brikaya — bloquekunata pakichiy pukllay" },
+  {
+    locale: "qu",
+    path: "/qu/",
+    title: "Brikaya — bloquekunata pakichiy pukllay",
+  },
   { locale: "gn", path: "/gn/", title: "Brikaya — arcade ojokóva bloque" },
   { locale: "jv", path: "/jv/", title: "Brikaya — arkade mecah blok" },
   { locale: "haw", path: "/haw/", title: "Brikaya — pāʻani wāwahi pōhaku" },
@@ -87,12 +111,32 @@ const TESTED_LOCALES = [
   { locale: "eo", path: "/eo/", title: "Brikaya — blokrompa arkado" },
   { locale: "nds", path: "/nds/", title: "Brikaya — Blockbreker-Arkade" },
   { locale: "hsb", path: "/hsb/", title: "Brikaya — arkada łamanja blokow" },
-  { locale: "en-AU", path: "/en-AU/", title: "Brikaya — block breaker arcade for Australia" },
-  { locale: "es-MX", path: "/es-MX/", title: "Brikaya — arcade de romper bloques para México" },
-  { locale: "pt-AO", path: "/pt-AO/", title: "Brikaya — arcade de partir blocos para Angola" },
+  {
+    locale: "en-AU",
+    path: "/en-AU/",
+    title: "Brikaya — block breaker arcade for Australia",
+  },
+  {
+    locale: "es-MX",
+    path: "/es-MX/",
+    title: "Brikaya — arcade de romper bloques para México",
+  },
+  {
+    locale: "pt-AO",
+    path: "/pt-AO/",
+    title: "Brikaya — arcade de partir blocos para Angola",
+  },
   { locale: "zh-HK", path: "/zh-HK/", title: "Brikaya — 香港打磚塊街機" },
-  { locale: "ar-SA", path: "/ar-SA/", title: "Brikaya — أركيد كسر الكتل للسعودية" },
-  { locale: "ug-CN", path: "/ug-CN/", title: "Brikaya — جۇڭگو ئۈچۈن بۆلەك چېقىش ئاركىدى" },
+  {
+    locale: "ar-SA",
+    path: "/ar-SA/",
+    title: "Brikaya — أركيد كسر الكتل للسعودية",
+  },
+  {
+    locale: "ug-CN",
+    path: "/ug-CN/",
+    title: "Brikaya — جۇڭگو ئۈچۈن بۆلەك چېقىش ئاركىدى",
+  },
   { locale: "wa", path: "/wa/", title: "Brikaya — djeu di cassaedje di blocs" },
 ];
 const ALL_HREFLANG_LOCALES = [
@@ -547,27 +591,111 @@ const TESTED_DOWNLOADS_LOCALES = [
     path: "/te/downloads/",
     title: "Brikaya డౌన్‌లోడ్ చేయండి — ఉచిత బ్రౌజర్ గేమ్",
   },
-  { locale: "mr", path: "/mr/downloads/", title: "Brikaya डाउनलोड करा — मोफत ब्राउझर गेम" },
-  { locale: "gu", path: "/gu/downloads/", title: "Brikaya ડાઉનલોડ કરો — મફત બ્રાઉઝર ગેમ" },
-  { locale: "kn", path: "/kn/downloads/", title: "Brikaya ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ — ಉಚಿತ ಬ್ರೌಸರ್ ಆಟ" },
-  { locale: "ml", path: "/ml/downloads/", title: "Brikaya ഡൗൺലോഡ് ചെയ്യുക — സൗജന്യ ബ്രൗസർ ഗെയിം" },
-  { locale: "pa", path: "/pa/downloads/", title: "Brikaya ਡਾਊਨਲੋਡ ਕਰੋ — ਮੁਫ਼ਤ ਬ੍ਰਾਊਜ਼ਰ ਗੇਮ" },
-  { locale: "el", path: "/el/downloads/", title: "Λήψη Brikaya — δωρεάν παιχνίδι browser" },
-  { locale: "sv", path: "/sv/downloads/", title: "Ladda ner Brikaya — gratis webbläsarspel" },
-  { locale: "da", path: "/da/downloads/", title: "Download Brikaya — gratis browserspil" },
-  { locale: "no", path: "/no/downloads/", title: "Last ned Brikaya — gratis nettleserspill" },
-  { locale: "fi", path: "/fi/downloads/", title: "Lataa Brikaya — ilmainen selainpeli" },
-  { locale: "cs", path: "/cs/downloads/", title: "Stáhnout Brikaya — bezplatná hra v prohlížeči" },
-  { locale: "bg", path: "/bg/downloads/", title: "Изтеглете Brikaya — безплатна игра в браузъра" },
-  { locale: "sr", path: "/sr/downloads/", title: "Преузми Brikaya — бесплатна игра у прегледачу" },
-  { locale: "af", path: "/af/downloads/", title: "Laai Brikaya af — gratis blaaier-speletjie" },
-  { locale: "uz", path: "/uz/downloads/", title: "Brikaya yuklab olish — bepul brauzer o‘yini" },
-  { locale: "my", path: "/my/downloads/", title: "Brikaya ဒေါင်းလုဒ်လုပ်ရန် — အခမဲ့ ဘရောက်ဇာဂိမ်း" },
-  { locale: "is", path: "/is/downloads/", title: "Sækja Brikaya — ókeypis vafraleikur" },
-  { locale: "mk", path: "/mk/downloads/", title: "Преземи Brikaya — бесплатна игра во прелистувач" },
-  { locale: "ca", path: "/ca/downloads/", title: "Baixa Brikaya — joc gratuït de navegador" },
-  { locale: "mi", path: "/mi/downloads/", title: "Tikiake Brikaya — kēmu pūtirotiro kore utu" },
-  { locale: "so", path: "/so/downloads/", title: "Soo dejiso Brikaya — ciyaar biraawsar bilaash ah" },
+  {
+    locale: "mr",
+    path: "/mr/downloads/",
+    title: "Brikaya डाउनलोड करा — मोफत ब्राउझर गेम",
+  },
+  {
+    locale: "gu",
+    path: "/gu/downloads/",
+    title: "Brikaya ડાઉનલોડ કરો — મફત બ્રાઉઝર ગેમ",
+  },
+  {
+    locale: "kn",
+    path: "/kn/downloads/",
+    title: "Brikaya ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ — ಉಚಿತ ಬ್ರೌಸರ್ ಆಟ",
+  },
+  {
+    locale: "ml",
+    path: "/ml/downloads/",
+    title: "Brikaya ഡൗൺലോഡ് ചെയ്യുക — സൗജന്യ ബ്രൗസർ ഗെയിം",
+  },
+  {
+    locale: "pa",
+    path: "/pa/downloads/",
+    title: "Brikaya ਡਾਊਨਲੋਡ ਕਰੋ — ਮੁਫ਼ਤ ਬ੍ਰਾਊਜ਼ਰ ਗੇਮ",
+  },
+  {
+    locale: "el",
+    path: "/el/downloads/",
+    title: "Λήψη Brikaya — δωρεάν παιχνίδι browser",
+  },
+  {
+    locale: "sv",
+    path: "/sv/downloads/",
+    title: "Ladda ner Brikaya — gratis webbläsarspel",
+  },
+  {
+    locale: "da",
+    path: "/da/downloads/",
+    title: "Download Brikaya — gratis browserspil",
+  },
+  {
+    locale: "no",
+    path: "/no/downloads/",
+    title: "Last ned Brikaya — gratis nettleserspill",
+  },
+  {
+    locale: "fi",
+    path: "/fi/downloads/",
+    title: "Lataa Brikaya — ilmainen selainpeli",
+  },
+  {
+    locale: "cs",
+    path: "/cs/downloads/",
+    title: "Stáhnout Brikaya — bezplatná hra v prohlížeči",
+  },
+  {
+    locale: "bg",
+    path: "/bg/downloads/",
+    title: "Изтеглете Brikaya — безплатна игра в браузъра",
+  },
+  {
+    locale: "sr",
+    path: "/sr/downloads/",
+    title: "Преузми Brikaya — бесплатна игра у прегледачу",
+  },
+  {
+    locale: "af",
+    path: "/af/downloads/",
+    title: "Laai Brikaya af — gratis blaaier-speletjie",
+  },
+  {
+    locale: "uz",
+    path: "/uz/downloads/",
+    title: "Brikaya yuklab olish — bepul brauzer o‘yini",
+  },
+  {
+    locale: "my",
+    path: "/my/downloads/",
+    title: "Brikaya ဒေါင်းလုဒ်လုပ်ရန် — အခမဲ့ ဘရောက်ဇာဂိမ်း",
+  },
+  {
+    locale: "is",
+    path: "/is/downloads/",
+    title: "Sækja Brikaya — ókeypis vafraleikur",
+  },
+  {
+    locale: "mk",
+    path: "/mk/downloads/",
+    title: "Преземи Brikaya — бесплатна игра во прелистувач",
+  },
+  {
+    locale: "ca",
+    path: "/ca/downloads/",
+    title: "Baixa Brikaya — joc gratuït de navegador",
+  },
+  {
+    locale: "mi",
+    path: "/mi/downloads/",
+    title: "Tikiake Brikaya — kēmu pūtirotiro kore utu",
+  },
+  {
+    locale: "so",
+    path: "/so/downloads/",
+    title: "Soo dejiso Brikaya — ciyaar biraawsar bilaash ah",
+  },
   {
     locale: "yo",
     path: "/yo/downloads/",
@@ -760,7 +888,28 @@ const MENU_OPEN_ATTEMPTS = 3;
 const MENU_OPEN_RETRY_TIMEOUT_MS = 5000;
 const CHINESE_MENU_TEXT = "隐私";
 const ROOT_CANONICAL = canonicalOrigin();
-const RTL_LOCALES = new Set(["ar", "ur", "fa", "he", "ps", "sd", "ks", "dv", "ckb", "ug", "yi", "bal", "ar-SA", "ar-EG", "fa-AF", "ps-AF", "sd-IN", "ks-IN", "ug-CN", "yi-001"]);
+const RTL_LOCALES = new Set([
+  "ar",
+  "ur",
+  "fa",
+  "he",
+  "ps",
+  "sd",
+  "ks",
+  "dv",
+  "ckb",
+  "ug",
+  "yi",
+  "bal",
+  "ar-SA",
+  "ar-EG",
+  "fa-AF",
+  "ps-AF",
+  "sd-IN",
+  "ks-IN",
+  "ug-CN",
+  "yi-001",
+]);
 const BROWSER_AUTO_LANGUAGE = "es-MX";
 const BROWSER_AUTO_LANGUAGES = ["es-MX", "en-US"];
 const BROWSER_AUTO_EXPECTED_LOCALE = "es-MX";
@@ -873,7 +1022,9 @@ function assert(condition, message) {
 }
 
 function canonicalFor(baseUrl, locale, path) {
-  return locale === ROOT_LOCALE && path === "/" ? ROOT_CANONICAL : new URL(path, baseUrl).href;
+  return locale === ROOT_LOCALE && path === "/"
+    ? ROOT_CANONICAL
+    : new URL(path, baseUrl).href;
 }
 
 function legalPathFor(locale, routePath) {
@@ -968,8 +1119,14 @@ async function validateLegalHtml(baseUrl, item) {
     );
   }
   assert(body.includes('hreflang="x-default"'), `${url} sem x-default legal`);
-  assert(!body.includes('hreflang="en-AU"'), `${url} contém variante en-AU legal`);
-  assert(!body.includes('hreflang="fr-CA"'), `${url} contém variante fr-CA legal`);
+  assert(
+    !body.includes('hreflang="en-AU"'),
+    `${url} contém variante en-AU legal`,
+  );
+  assert(
+    !body.includes('hreflang="fr-CA"'),
+    `${url} contém variante fr-CA legal`,
+  );
 
   return { url, status, canonical, locale: item.locale };
 }
@@ -1010,11 +1167,15 @@ async function validateSitemapAndRobots(baseUrl) {
     );
   }
   assert(
-    !sitemap.body.includes(`<loc>${new URL("/en-AU/privacy/", baseUrl).href}</loc>`),
+    !sitemap.body.includes(
+      `<loc>${new URL("/en-AU/privacy/", baseUrl).href}</loc>`,
+    ),
     "sitemap contém variante legal en-AU",
   );
   assert(
-    !sitemap.body.includes(`<loc>${new URL("/fr-CA/privacy/", baseUrl).href}</loc>`),
+    !sitemap.body.includes(
+      `<loc>${new URL("/fr-CA/privacy/", baseUrl).href}</loc>`,
+    ),
     "sitemap contém variante legal fr-CA",
   );
   assert(robots.body.includes(`Sitemap: ${sitemapUrl}`), "robots sem sitemap");
@@ -1345,7 +1506,9 @@ async function run() {
     checkedAt: new Date().toISOString(),
     baseUrl,
     localesChecked: TESTED_LOCALES.map((item) => item.locale),
-    downloadsLocalesChecked: TESTED_DOWNLOADS_LOCALES.map((item) => item.locale),
+    downloadsLocalesChecked: TESTED_DOWNLOADS_LOCALES.map(
+      (item) => item.locale,
+    ),
     legalLocalesChecked: TESTED_LEGAL_PAGES.map((item) => item.locale),
     hreflangLocales: ALL_HREFLANG_LOCALES,
     htmlResults,

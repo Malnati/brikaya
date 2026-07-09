@@ -2,8 +2,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
-import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
-
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH =
@@ -40,9 +39,7 @@ function publicUrl() {
 }
 
 function reportPath() {
-  return (
-    process.env.BRIKAYA_LOCATION_LANGUAGE_QA_REPORT || DEFAULT_REPORT_PATH
-  );
+  return process.env.BRIKAYA_LOCATION_LANGUAGE_QA_REPORT || DEFAULT_REPORT_PATH;
 }
 
 function screenshotPath() {
@@ -102,7 +99,11 @@ async function clickButtonByText(page, label) {
 async function run() {
   const targetUrl = publicUrl();
   const origin = new URL(targetUrl).origin;
-  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"] }));
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({
+      extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"],
+    }),
+  );
   const page = await browser.newPage();
   const requests = [];
   const failedRequests = [];

@@ -2,13 +2,14 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
-import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-gameplay-basic-qa.json";
-const DEFAULT_SCREENSHOT_PATH = "tmp/screenshots/cloudflare-gameplay-basic-qa.png";
+const DEFAULT_SCREENSHOT_PATH =
+  "tmp/screenshots/cloudflare-gameplay-basic-qa.png";
 const VIEWPORT = {
   width: 393,
   height: 852,
@@ -37,15 +38,12 @@ function publicUrl() {
 }
 
 function reportPath() {
-  return (
-    process.env.BRIKAYA_GAMEPLAY_BASIC_QA_REPORT || DEFAULT_REPORT_PATH
-  );
+  return process.env.BRIKAYA_GAMEPLAY_BASIC_QA_REPORT || DEFAULT_REPORT_PATH;
 }
 
 function screenshotPath() {
   return (
-    process.env.BRIKAYA_GAMEPLAY_BASIC_QA_SCREENSHOT ||
-    DEFAULT_SCREENSHOT_PATH
+    process.env.BRIKAYA_GAMEPLAY_BASIC_QA_SCREENSHOT || DEFAULT_SCREENSHOT_PATH
   );
 }
 
@@ -75,7 +73,9 @@ async function clearRuntimeState(page) {
 
     if ("caches" in window) {
       const cacheNames = await caches.keys();
-      await Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName)));
+      await Promise.all(
+        cacheNames.map((cacheName) => caches.delete(cacheName)),
+      );
     }
 
     window.localStorage.clear();
@@ -157,7 +157,8 @@ async function collectGameplayState(page) {
               rect.right <= window.innerWidth &&
               rect.bottom <= window.innerHeight,
             hasTouchTarget:
-              rect.width >= minTouchTargetSize && rect.height >= minTouchTargetSize,
+              rect.width >= minTouchTargetSize &&
+              rect.height >= minTouchTargetSize,
           };
         },
       );
@@ -204,8 +205,14 @@ async function exerciseInput(page) {
 
   if (!canvasBox) return;
 
-  await page.mouse.move(canvasBox.x + canvasBox.width * 0.25, canvasBox.y + canvasBox.height * 0.9);
-  await page.mouse.move(canvasBox.x + canvasBox.width * 0.75, canvasBox.y + canvasBox.height * 0.9);
+  await page.mouse.move(
+    canvasBox.x + canvasBox.width * 0.25,
+    canvasBox.y + canvasBox.height * 0.9,
+  );
+  await page.mouse.move(
+    canvasBox.x + canvasBox.width * 0.75,
+    canvasBox.y + canvasBox.height * 0.9,
+  );
   await page.keyboard.press("ArrowLeft");
   await page.keyboard.press("ArrowRight");
 }
@@ -267,7 +274,11 @@ function summarizeEvents(events) {
 
 async function run() {
   const targetUrl = publicUrl();
-  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"] }));
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({
+      extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"],
+    }),
+  );
   const page = await browser.newPage();
   const requests = [];
   const failedRequests = [];
@@ -307,7 +318,9 @@ async function run() {
     const { state, events } = await waitForGameplayProgress(page);
     const eventSummary = summarizeEvents(events);
     const eventTypes = Object.keys(eventSummary);
-    const visibleButtons = state.buttons.filter((button) => button.visibleInViewport);
+    const visibleButtons = state.buttons.filter(
+      (button) => button.visibleInViewport,
+    );
     let externalRequests = requests.filter(
       (requestUrl) => new URL(requestUrl).origin !== new URL(targetUrl).origin,
     );
@@ -315,14 +328,19 @@ async function run() {
     await page.screenshot({ path: screenshotPath(), fullPage: true });
 
     assert(state.hasCanvas, "Canvas não apareceu no gameplay básico.");
-    assert(state.canvas?.width > 0 && state.canvas?.height > 0, "Canvas sem área útil.");
+    assert(
+      state.canvas?.width > 0 && state.canvas?.height > 0,
+      "Canvas sem área útil.",
+    );
     assert(state.score > 0, `Score não avançou: ${state.scoreHudText}`);
     assert(
       REQUIRED_EVENT_TYPES.every((eventType) => eventTypes.includes(eventType)),
       `Eventos obrigatórios ausentes: ${JSON.stringify(eventSummary)}`,
     );
     assert(
-      FORBIDDEN_EVENT_TYPES.every((eventType) => !eventTypes.includes(eventType)),
+      FORBIDDEN_EVENT_TYPES.every(
+        (eventType) => !eventTypes.includes(eventType),
+      ),
       `Evento proibido no fluxo básico: ${JSON.stringify(eventSummary)}`,
     );
     assert(
@@ -337,10 +355,22 @@ async function run() {
       visibleButtons.every((button) => button.hasTouchTarget),
       `Botão visível menor que 44px: ${JSON.stringify(visibleButtons)}`,
     );
-    assert(!state.bodyHasInternalCopy, "Interface expõe termo técnico interno.");
-    assert(externalRequests.length === 0, `Requests externos: ${externalRequests.join(", ")}`);
-    assert(failedRequests.length === 0, `Requests falharam: ${JSON.stringify(failedRequests)}`);
-    assert(consoleProblems.length === 0, `Console com problemas: ${JSON.stringify(consoleProblems)}`);
+    assert(
+      !state.bodyHasInternalCopy,
+      "Interface expõe termo técnico interno.",
+    );
+    assert(
+      externalRequests.length === 0,
+      `Requests externos: ${externalRequests.join(", ")}`,
+    );
+    assert(
+      failedRequests.length === 0,
+      `Requests falharam: ${JSON.stringify(failedRequests)}`,
+    );
+    assert(
+      consoleProblems.length === 0,
+      `Console com problemas: ${JSON.stringify(consoleProblems)}`,
+    );
 
     await clearRuntimeState(page);
     await page.goto(scenarioUrl(targetUrl, PADDLE_COLLISION_QA_SCENARIO), {
@@ -352,7 +382,10 @@ async function run() {
     const paddleRegression = await waitForPaddleCollision(page);
     const paddleEventSummary = summarizeEvents(paddleRegression.events);
     const paddleCollision = paddleRegression.paddleCollision;
-    assert(paddleCollision, `Colisão com raquete não registrada: ${JSON.stringify(paddleEventSummary)}`);
+    assert(
+      paddleCollision,
+      `Colisão com raquete não registrada: ${JSON.stringify(paddleEventSummary)}`,
+    );
     assert(
       paddleCollision.collisionInfo.velocityBefore.dy > 0,
       `Bolinha não estava saindo antes da raquete: ${JSON.stringify(paddleCollision.collisionInfo.velocityBefore)}`,
@@ -372,9 +405,18 @@ async function run() {
     externalRequests = requests.filter(
       (requestUrl) => new URL(requestUrl).origin !== new URL(targetUrl).origin,
     );
-    assert(externalRequests.length === 0, `Requests externos: ${externalRequests.join(", ")}`);
-    assert(failedRequests.length === 0, `Requests falharam: ${JSON.stringify(failedRequests)}`);
-    assert(consoleProblems.length === 0, `Console com problemas: ${JSON.stringify(consoleProblems)}`);
+    assert(
+      externalRequests.length === 0,
+      `Requests externos: ${externalRequests.join(", ")}`,
+    );
+    assert(
+      failedRequests.length === 0,
+      `Requests falharam: ${JSON.stringify(failedRequests)}`,
+    );
+    assert(
+      consoleProblems.length === 0,
+      `Console com problemas: ${JSON.stringify(consoleProblems)}`,
+    );
 
     const report = {
       ok: true,

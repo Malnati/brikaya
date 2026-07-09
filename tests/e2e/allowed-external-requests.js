@@ -1,13 +1,13 @@
 // tests/e2e/allowed-external-requests.js
 const APPROVED_EXTERNAL_HOSTNAMES = new Set([
-  'pagead2.googlesyndication.com',
-  'googleads.g.doubleclick.net',
-  'ep1.adtrafficquality.google',
-  'ep2.adtrafficquality.google',
+  "pagead2.googlesyndication.com",
+  "googleads.g.doubleclick.net",
+  "ep1.adtrafficquality.google",
+  "ep2.adtrafficquality.google",
 ]);
 
-const GOOGLE_RECAPTCHA_HOSTNAME = 'www.google.com';
-const GOOGLE_RECAPTCHA_PATH_PREFIX = '/recaptcha/';
+const GOOGLE_RECAPTCHA_HOSTNAME = "www.google.com";
+const GOOGLE_RECAPTCHA_PATH_PREFIX = "/recaptcha/";
 
 function parseUrl(candidateUrl) {
   try {

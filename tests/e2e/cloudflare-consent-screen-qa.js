@@ -2,7 +2,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
-import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
 import {
   PRIVACY_CONSENT_STORAGE_KEY,
@@ -49,9 +49,7 @@ function reportPath() {
 }
 
 function screenshotPath() {
-  return (
-    process.env.BRIKAYA_CONSENT_QA_SCREENSHOT || DEFAULT_SCREENSHOT_PATH
-  );
+  return process.env.BRIKAYA_CONSENT_QA_SCREENSHOT || DEFAULT_SCREENSHOT_PATH;
 }
 
 function ensureParentDirectory(filePath) {
@@ -170,7 +168,11 @@ async function collectConsentState(page) {
 
 async function run() {
   const targetUrl = publicUrl();
-  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"] }));
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({
+      extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"],
+    }),
+  );
   const page = await browser.newPage();
   const requests = [];
   const failedRequests = [];

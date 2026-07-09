@@ -2,7 +2,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
-import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
@@ -31,7 +31,8 @@ const MENU_BUTTON_PATTERN = /menu/i;
 const MENU_DRAWER_SELECTOR = "#game-settings-menu";
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const MENU_READY_TIMEOUT_MS = 7000;
-const INTERNAL_COPY_PATTERN = /service worker|cache|runtime|dataset|localStorage|IndexedDB|PWA/i;
+const INTERNAL_COPY_PATTERN =
+  /service worker|cache|runtime|dataset|localStorage|IndexedDB|PWA/i;
 
 function getPublicUrl() {
   const pageUrl = new URL(process.env.BRIKAYA_PUBLIC_URL || DEFAULT_PUBLIC_URL);
@@ -45,8 +46,7 @@ function getReportPath() {
 
 function getScreenshotPath() {
   return (
-    process.env.BRIKAYA_HIGH_SCORES_QA_SCREENSHOT ||
-    DEFAULT_SCREENSHOT_PATH
+    process.env.BRIKAYA_HIGH_SCORES_QA_SCREENSHOT || DEFAULT_SCREENSHOT_PATH
   );
 }
 
@@ -190,7 +190,9 @@ async function collectHighScoreState(page) {
       bestText,
       ranks,
       drawerText,
-      bodyHasInternalCopy: internalCopyPattern.test(document.body.textContent || ""),
+      bodyHasInternalCopy: internalCopyPattern.test(
+        document.body.textContent || "",
+      ),
       viewport: {
         width: window.innerWidth,
         height: window.innerHeight,
@@ -224,7 +226,11 @@ async function run() {
   const screenshotFilePath = getScreenshotPath();
   const requests = [];
   const consoleProblems = [];
-  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"] }));
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({
+      extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"],
+    }),
+  );
 
   try {
     const page = await browser.newPage();
@@ -284,8 +290,14 @@ async function run() {
       !state.bodyHasInternalCopy,
       "Interface expõe cópia técnica para usuário final.",
     );
-    assert(externalRequests.length === 0, "Recordes geraram requests externos.");
-    assert(consoleProblems.length === 0, "Console publicado contém erros/warnings.");
+    assert(
+      externalRequests.length === 0,
+      "Recordes geraram requests externos.",
+    );
+    assert(
+      consoleProblems.length === 0,
+      "Console publicado contém erros/warnings.",
+    );
 
     console.log(JSON.stringify(report, null, 2));
   } finally {

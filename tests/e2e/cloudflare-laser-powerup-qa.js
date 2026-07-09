@@ -2,7 +2,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
-import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
 import { classifyExternalRequests } from "./allowed-external-requests.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
@@ -92,10 +92,7 @@ function screenshotPath() {
 }
 
 function itemScreenshotPath() {
-  return env(
-    "BRIKAYA_LASER_QA_ITEM_SCREENSHOT",
-    DEFAULT_ITEM_SCREENSHOT_PATH,
-  );
+  return env("BRIKAYA_LASER_QA_ITEM_SCREENSHOT", DEFAULT_ITEM_SCREENSHOT_PATH);
 }
 
 function ensureParentDirectory(filePath) {
@@ -490,11 +487,15 @@ async function run() {
 
   const consoleProblems = [];
   const externalRequests = [];
-  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: [
-      "--no-first-run",
-      "--no-default-browser-check",
-      ...CHROME_LOW_RESOURCE_ARGS,
-    ] }));
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({
+      extraArgs: [
+        "--no-first-run",
+        "--no-default-browser-check",
+        ...CHROME_LOW_RESOURCE_ARGS,
+      ],
+    }),
+  );
 
   try {
     const page = await browser.newPage();
@@ -535,10 +536,8 @@ async function run() {
 
     const layoutState = await collectLayoutState(page);
     const events = await readGameEvents(page);
-    const {
-      allowedExternalRequests,
-      unexpectedExternalRequests,
-    } = classifyExternalRequests(externalRequests, targetUrl);
+    const { allowedExternalRequests, unexpectedExternalRequests } =
+      classifyExternalRequests(externalRequests, targetUrl);
     const proofEvents = eventsThroughFirstLaserScore(events);
     const byType = summarizeEvents(proofEvents);
     const allByType = summarizeEvents(events);
@@ -590,7 +589,8 @@ async function run() {
       laserScoreTiming: {
         activateTimestamp: activatedPowerUpEvent?.timestamp || null,
         scoreTimestamp: laserScoreEvent?.timestamp || null,
-        firstBrickDestroyedTimestamp: firstBrickDestroyedEvent?.timestamp || null,
+        firstBrickDestroyedTimestamp:
+          firstBrickDestroyedEvent?.timestamp || null,
         scoreDelayMs,
         firstBrickDelayMs,
         immediateThresholdMs: LASER_IMMEDIATE_SCORE_MAX_MS,

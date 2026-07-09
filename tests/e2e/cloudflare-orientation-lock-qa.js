@@ -2,7 +2,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
-import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
@@ -30,8 +30,7 @@ const CHROME_LOW_RESOURCE_ARGS = [
 const MAX_QA_DEVICE_SCALE_FACTOR = 1;
 const ORIENTATION_BLOCKER_SELECTOR =
   '[data-testid="mobile-orientation-blocker"]';
-const BALL_TURRET_JOYSTICK_SELECTOR =
-  '[data-testid="ball-turret-joystick"]';
+const BALL_TURRET_JOYSTICK_SELECTOR = '[data-testid="ball-turret-joystick"]';
 const EXPECTED_MESSAGE = "Você precisa de espaço para o joystick";
 const IMMERSIVE_ROOT_CLASS = "bb-landscape-immersive";
 const MENU_BUTTON_PATTERN = /menu/i;
@@ -106,11 +105,15 @@ function withQuery(targetUrl, params = {}) {
 }
 
 function launchQaBrowser() {
-  return puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: [
-      "--no-first-run",
-      "--no-default-browser-check",
-      ...CHROME_LOW_RESOURCE_ARGS,
-    ] }));
+  return puppeteer.launch(
+    buildPuppeteerLaunchOptions({
+      extraArgs: [
+        "--no-first-run",
+        "--no-default-browser-check",
+        ...CHROME_LOW_RESOURCE_ARGS,
+      ],
+    }),
+  );
 }
 
 async function closeBrowser(browser) {
@@ -199,7 +202,8 @@ async function collectState(page, label) {
           scrollHeight: document.documentElement.scrollHeight,
         },
         maxTouchPoints: navigator.maxTouchPoints || 0,
-        pointerCoarse: window.matchMedia?.("(pointer: coarse)").matches || false,
+        pointerCoarse:
+          window.matchMedia?.("(pointer: coarse)").matches || false,
         hoverNone: window.matchMedia?.("(hover: none)").matches || false,
         heading: document.querySelector("h1")?.textContent || "",
         blocker: blocker
@@ -265,7 +269,10 @@ function assertBlockerVisible(state) {
 }
 
 function assertBlockerAbsent(state) {
-  assert(!state.blocker, `${state.label}: bloqueio portrait apareceu indevido.`);
+  assert(
+    !state.blocker,
+    `${state.label}: bloqueio portrait apareceu indevido.`,
+  );
   assert(
     !state.hasHorizontalOverflow,
     `${state.label}: houve overflow horizontal.`,
@@ -273,20 +280,21 @@ function assertBlockerAbsent(state) {
 }
 
 async function clickMenu(page) {
-  const clicked = await page.evaluate(({ source, flags }) => {
-    const matcher = new RegExp(source, flags);
-    const button = Array.from(document.querySelectorAll("button")).find(
-      (candidate) =>
-        matcher.test(
-          candidate.textContent ||
-            candidate.getAttribute("aria-label") ||
-            "",
-        ),
-    );
-    if (!(button instanceof HTMLElement)) return false;
-    button.click();
-    return true;
-  }, { source: MENU_BUTTON_PATTERN.source, flags: MENU_BUTTON_PATTERN.flags });
+  const clicked = await page.evaluate(
+    ({ source, flags }) => {
+      const matcher = new RegExp(source, flags);
+      const button = Array.from(document.querySelectorAll("button")).find(
+        (candidate) =>
+          matcher.test(
+            candidate.textContent || candidate.getAttribute("aria-label") || "",
+          ),
+      );
+      if (!(button instanceof HTMLElement)) return false;
+      button.click();
+      return true;
+    },
+    { source: MENU_BUTTON_PATTERN.source, flags: MENU_BUTTON_PATTERN.flags },
+  );
   assert(clicked, "Botão Menu não foi encontrado.");
 }
 
@@ -449,10 +457,10 @@ async function run() {
     await page.screenshot({ path: screenshots.desktopLandscape });
 
     await page.setViewport(puppeteerViewport(mobilePortrait));
-    await page.goto(
-      withQuery(targetUrl, { qaScenario: "ball-turret" }),
-      { waitUntil: "networkidle0", timeout: 60000 },
-    );
+    await page.goto(withQuery(targetUrl, { qaScenario: "ball-turret" }), {
+      waitUntil: "networkidle0",
+      timeout: 60000,
+    });
     await page.waitForSelector("canvas", { timeout: 30000 });
     await acceptPrivacyConsentIfPresent(page);
     await page.waitForSelector(BALL_TURRET_JOYSTICK_SELECTOR, {
