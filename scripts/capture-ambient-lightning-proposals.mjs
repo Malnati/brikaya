@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import fs from "node:fs";
+import http from "node:http";
 import path from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 import { buildPuppeteerLaunchOptions } from "../tests/e2e/browserLauncher.js";
 import puppeteer from "puppeteer";
 
@@ -12,7 +13,44 @@ const proposalsDir = path.join(
   "docs/assets/issues/ambient-electric-lightning/proposals",
 );
 const previewPath = path.join(proposalsDir, "preview.html");
-const previewUrl = pathToFileURL(previewPath).href;
+
+const MIME_TYPES = {
+  ".html": "text/html; charset=utf-8",
+  ".mjs": "text/javascript; charset=utf-8",
+  ".js": "text/javascript; charset=utf-8",
+  ".json": "application/json; charset=utf-8",
+  ".png": "image/png",
+};
+
+function startStaticServer(rootDir) {
+  return new Promise((resolve, reject) => {
+    const server = http.createServer((request, response) => {
+      const requestPath = decodeURIComponent(new URL(request.url ?? "/", "http://localhost").pathname);
+      const safePath = path.normalize(requestPath).replace(/^(\.\.[/\\])+/, "");
+      const filePath = path.join(rootDir, safePath === "/" ? "preview.html" : safePath);
+
+      if (!filePath.startsWith(rootDir) || !fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
+        response.writeHead(404);
+        response.end("Not found");
+        return;
+      }
+
+      const extension = path.extname(filePath);
+      response.writeHead(200, { "Content-Type": MIME_TYPES[extension] ?? "application/octet-stream" });
+      fs.createReadStream(filePath).pipe(response);
+    });
+
+    server.on("error", reject);
+    server.listen(0, "127.0.0.1", () => {
+      const address = server.address();
+      if (!address || typeof address === "string") {
+        reject(new Error("Falha ao iniciar servidor estático"));
+        return;
+      }
+      resolve({ server, baseUrl: `http://127.0.0.1:${address.port}` });
+    });
+  });
+}
 
 const VARIANTS = [
   { id: "pulse", folder: "variant-a-pulse" },
@@ -32,8 +70,9 @@ function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
 }
 
-async function captureSet(page, variant, mode, outputDir) {
-  await page.goto(previewUrl, { waitUntil: "networkidle0" });
+async function captureSet(page, baseUrl, variant, mode, outputDir) {
+  await page.goto(`${baseUrl}/preview.html`, { waitUntil: "networkidle0" });
+  await page.waitForFunction(() => window.__proposalCapture?.renderFrame);
   const captures = [];
 
   for (const frame of FRAME_CAPTURES) {
@@ -70,6 +109,7 @@ async function main() {
     throw new Error(`Preview não encontrado: ${previewPath}`);
   }
 
+  const { server, baseUrl } = await startStaticServer(proposalsDir);
   const browser = await puppeteer.launch(buildPuppeteerLaunchOptions());
 
   const manifest = {
@@ -87,7 +127,7 @@ async function main() {
       for (const mode of MODES) {
         const outputDir = path.join(proposalsDir, variant.folder);
         ensureDir(outputDir);
-        const captures = await captureSet(page, variant.id, mode, outputDir);
+        const captures = await captureSet(page, baseUrl, variant.id, mode, outputDir);
         manifest.sets.push({
           variant: variant.id,
           mode,
@@ -99,6 +139,9 @@ async function main() {
     }
   } finally {
     await browser.close();
+    await new Promise((resolve, reject) => {
+      server.close((error) => (error ? reject(error) : resolve()));
+    });
   }
 
   const manifestPath = path.join(proposalsDir, "capture-manifest.json");

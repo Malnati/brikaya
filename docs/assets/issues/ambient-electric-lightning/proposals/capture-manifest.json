@@ -1,0 +1,255 @@
+{
+  "generatedAt": "2026-07-09T22:24:45.137Z",
+  "previewPath": "docs/assets/issues/ambient-electric-lightning/proposals/preview.html",
+  "frameCaptures": [
+    {
+      "name": "01",
+      "timestamp": 1000,
+      "seed": 11
+    },
+    {
+      "name": "02",
+      "timestamp": 1180,
+      "seed": 11
+    },
+    {
+      "name": "03",
+      "timestamp": 1360,
+      "seed": 11
+    },
+    {
+      "name": "04",
+      "timestamp": 1520,
+      "seed": 11
+    },
+    {
+      "name": "05",
+      "timestamp": 1720,
+      "seed": 11
+    }
+  ],
+  "sets": [
+    {
+      "variant": "pulse",
+      "mode": "classic",
+      "outputDir": "docs/assets/issues/ambient-electric-lightning/proposals/variant-a-pulse",
+      "captures": [
+        {
+          "fileName": "classic-frame-01.png",
+          "timestamp": 1000,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:24:49.965Z"
+        },
+        {
+          "fileName": "classic-frame-02.png",
+          "timestamp": 1180,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:24:50.431Z"
+        },
+        {
+          "fileName": "classic-frame-03.png",
+          "timestamp": 1360,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:24:50.529Z"
+        },
+        {
+          "fileName": "classic-frame-04.png",
+          "timestamp": 1520,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:24:50.594Z"
+        },
+        {
+          "fileName": "classic-frame-05.png",
+          "timestamp": 1720,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:24:50.663Z"
+        }
+      ]
+    },
+    {
+      "variant": "pulse",
+      "mode": "turret",
+      "outputDir": "docs/assets/issues/ambient-electric-lightning/proposals/variant-a-pulse",
+      "captures": [
+        {
+          "fileName": "turret-frame-01.png",
+          "timestamp": 1000,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:24:57.226Z"
+        },
+        {
+          "fileName": "turret-frame-02.png",
+          "timestamp": 1180,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:24:57.353Z"
+        },
+        {
+          "fileName": "turret-frame-03.png",
+          "timestamp": 1360,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:24:57.470Z"
+        },
+        {
+          "fileName": "turret-frame-04.png",
+          "timestamp": 1520,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:24:57.568Z"
+        },
+        {
+          "fileName": "turret-frame-05.png",
+          "timestamp": 1720,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:24:57.686Z"
+        }
+      ]
+    },
+    {
+      "variant": "arcade",
+      "mode": "classic",
+      "outputDir": "docs/assets/issues/ambient-electric-lightning/proposals/variant-b-arcade",
+      "captures": [
+        {
+          "fileName": "classic-frame-01.png",
+          "timestamp": 1000,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:24:58.528Z"
+        },
+        {
+          "fileName": "classic-frame-02.png",
+          "timestamp": 1180,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:24:58.611Z"
+        },
+        {
+          "fileName": "classic-frame-03.png",
+          "timestamp": 1360,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:24:58.694Z"
+        },
+        {
+          "fileName": "classic-frame-04.png",
+          "timestamp": 1520,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:24:58.809Z"
+        },
+        {
+          "fileName": "classic-frame-05.png",
+          "timestamp": 1720,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:24:59.029Z"
+        }
+      ]
+    },
+    {
+      "variant": "arcade",
+      "mode": "turret",
+      "outputDir": "docs/assets/issues/ambient-electric-lightning/proposals/variant-b-arcade",
+      "captures": [
+        {
+          "fileName": "turret-frame-01.png",
+          "timestamp": 1000,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:25:02.459Z"
+        },
+        {
+          "fileName": "turret-frame-02.png",
+          "timestamp": 1180,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:25:06.883Z"
+        },
+        {
+          "fileName": "turret-frame-03.png",
+          "timestamp": 1360,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:25:08.934Z"
+        },
+        {
+          "fileName": "turret-frame-04.png",
+          "timestamp": 1520,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:25:09.036Z"
+        },
+        {
+          "fileName": "turret-frame-05.png",
+          "timestamp": 1720,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:25:09.136Z"
+        }
+      ]
+    },
+    {
+      "variant": "storm",
+      "mode": "classic",
+      "outputDir": "docs/assets/issues/ambient-electric-lightning/proposals/variant-c-storm",
+      "captures": [
+        {
+          "fileName": "classic-frame-01.png",
+          "timestamp": 1000,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:25:09.915Z"
+        },
+        {
+          "fileName": "classic-frame-02.png",
+          "timestamp": 1180,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:25:09.997Z"
+        },
+        {
+          "fileName": "classic-frame-03.png",
+          "timestamp": 1360,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:25:10.085Z"
+        },
+        {
+          "fileName": "classic-frame-04.png",
+          "timestamp": 1520,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:25:10.169Z"
+        },
+        {
+          "fileName": "classic-frame-05.png",
+          "timestamp": 1720,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:25:10.234Z"
+        }
+      ]
+    },
+    {
+      "variant": "storm",
+      "mode": "turret",
+      "outputDir": "docs/assets/issues/ambient-electric-lightning/proposals/variant-c-storm",
+      "captures": [
+        {
+          "fileName": "turret-frame-01.png",
+          "timestamp": 1000,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:25:10.878Z"
+        },
+        {
+          "fileName": "turret-frame-02.png",
+          "timestamp": 1180,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:25:10.976Z"
+        },
+        {
+          "fileName": "turret-frame-03.png",
+          "timestamp": 1360,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:25:11.074Z"
+        },
+        {
+          "fileName": "turret-frame-04.png",
+          "timestamp": 1520,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:25:11.227Z"
+        },
+        {
+          "fileName": "turret-frame-05.png",
+          "timestamp": 1720,
+          "seed": 11,
+          "capturedAt": "2026-07-09T22:25:12.951Z"
+        }
+      ]
+    }
+  ]
+}

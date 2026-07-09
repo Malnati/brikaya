@@ -1,0 +1,17 @@
+{
+  "feature": "ambient-electric-lightning",
+  "defaultVariant": "arcade",
+  "validatedAt": "2026-07-09T00:00:00.000Z",
+  "modes": ["classic", "turret"],
+  "variants": ["pulse", "arcade", "storm"],
+  "proposalArtifacts": {
+    "previewHtml": "docs/assets/issues/ambient-electric-lightning/proposals/preview.html",
+    "captureManifest": "docs/assets/issues/ambient-electric-lightning/proposals/capture-manifest.json"
+  },
+  "runtimeModules": [
+    "src/logic/rendering/electricLightningRenderer.ts",
+    "src/logic/rendering/ambientElectricBackground.ts"
+  ],
+  "queryParam": "lightning",
+  "reducedEffectsPolicy": "max-one-bolt-every-4s"
+}

@@ -252,6 +252,7 @@ describe("GameEngine", () => {
       moveTo: jest.fn(),
       lineTo: jest.fn(),
       stroke: jest.fn(),
+      clip: jest.fn(),
       save: jest.fn(),
       restore: jest.fn(),
       fillStyle: "",
@@ -1497,6 +1498,29 @@ describe("GameEngine", () => {
     const reducedStrokeCount = (mockContext.stroke as jest.Mock).mock.calls.length;
 
     expect(fullStrokeCount).toBeGreaterThan(reducedStrokeCount);
+  });
+
+  it("desenha raios elétricos ambiente no backdrop do playfield", () => {
+    jest.useFakeTimers().setSystemTime(new Date("2026-07-09T00:00:00.000Z"));
+    const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
+
+    (engine as any).ambientElectricBackground.forceBolt(
+      {
+        centerX: (engine as any).radialGeometry.centerX,
+        centerY: (engine as any).radialGeometry.centerY,
+        radius: (engine as any).radialGeometry.radius,
+      },
+      Date.now(),
+    );
+
+    jest.advanceTimersByTime(120);
+    (engine as any).drawAmbientElectricBackground();
+
+    expect(mockContext.save).toHaveBeenCalled();
+    expect(mockContext.clip).toHaveBeenCalled();
+    expect(mockContext.stroke).toHaveBeenCalled();
+    expect(mockContext.fill).toHaveBeenCalled();
+    expect(mockContext.restore).toHaveBeenCalled();
   });
 
   it("limita laser em leque a dois spawns por fase e continua outros power-ups", () => {
