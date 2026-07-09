@@ -20,6 +20,7 @@ import {
   calculateBallTurretPlayfieldGeometry,
   calculateRadialPaddleBounds,
   calculateRadialPlayfieldGeometry,
+  getBallTurretLossArcRange,
 } from '../utils/radialGeometry';
 import { AssetLoader } from '../utils/assetLoader';
 
@@ -788,6 +789,29 @@ describe('Ball', () => {
     );
 
     expect(inPlay).toBe(false);
+  });
+
+  it('na torreta rebate a bolinha nas bordas dos slots de perda estreitos', async () => {
+    const geometry = calculateBallTurretPlayfieldGeometry(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
+    const topPaddle = calculateRadialPaddleBounds(geometry, DIMENSIONS, -Math.PI / 2, 1);
+    const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS, 1, undefined, geometry);
+    const components = { collide: jest.fn().mockResolvedValue(false) };
+    const lossSegment = calculateBallTurretBoundarySegments(PHASE_ONE)[1];
+    const lossRange = getBallTurretLossArcRange(lossSegment, PHASE_ONE);
+    const lossEdgeAngle = (lossSegment.startAngle + lossRange.startAngle) / 2;
+
+    ball.applyPhaseSpeedConfig(buildPhaseSpeedConfig(PHASE_ONE));
+    placeBallAtTurretBoundary(ball, geometry, lossEdgeAngle);
+
+    const inPlay = await ball.update(
+      { position: topPaddle },
+      components,
+      CANVAS_HEIGHT,
+      createGameState(ball),
+    );
+
+    expect(inPlay).toBe(true);
+    expect(ball.getVelocity().dy).toBeLessThan(0);
   });
 
   it('na fase 10 da torreta não mantém partes da borda rebatendo', async () => {
