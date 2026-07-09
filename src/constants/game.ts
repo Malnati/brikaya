@@ -25,6 +25,14 @@ export const CINEMATIC_COUNTDOWN_TOTAL_MS =
 export const CINEMATIC_RIP_VISIBLE_MS = 1800;
 export const LASER_FAN_MAX_SPAWNS_PER_LEVEL = 2;
 export const LASER_FAN_EFFECT_VISIBLE_MS = 2000;
+export const MULTIBALL_MAX_BALL_COUNT = 10;
+export const MULTIBALL_MIN_BALL_COUNT = 2;
+export const LASER_FAN_MAX_TARGET_COUNT = 10;
+export const LASER_FAN_MIN_TARGET_COUNT = 2;
+export const WIDE_PADDLE_MAX_SCALE = 1.9;
+export const WIDE_PADDLE_MIN_SCALE = 1.45;
+export const POWER_UP_PHASE_DECAY_PHASES = 9;
+export const MULTIBALL_MAX_FAN_SPREAD = 0.84;
 export const LEVEL_SPEED_STEP = 0.12;
 export const MAX_LEVEL_SPEED_MULTIPLIER = 2.2;
 export const LEVEL_BRICK_ROW_STEP = 1;
@@ -116,6 +124,79 @@ export function calculateLevelSpeedMultiplier(level: number): number {
     1 + (level - 1) * LEVEL_SPEED_STEP,
     MAX_LEVEL_SPEED_MULTIPLIER,
   );
+}
+
+export function calculatePhaseScaledCount(
+  level: number,
+  maxCount: number,
+  minCount: number,
+  decayPhases = POWER_UP_PHASE_DECAY_PHASES,
+): number {
+  const safeLevel = Math.max(1, Math.floor(level));
+  if (safeLevel <= 1) {
+    return maxCount;
+  }
+
+  const safeDecayPhases = Math.max(2, Math.floor(decayPhases));
+  const step = (maxCount - minCount) / (safeDecayPhases - 1);
+  return Math.max(minCount, Math.round(maxCount - (safeLevel - 1) * step));
+}
+
+export function calculatePhaseScaledScale(
+  level: number,
+  maxScale: number,
+  minScale: number,
+  decayPhases = POWER_UP_PHASE_DECAY_PHASES,
+): number {
+  const safeLevel = Math.max(1, Math.floor(level));
+  if (safeLevel <= 1) {
+    return maxScale;
+  }
+
+  const safeDecayPhases = Math.max(2, Math.floor(decayPhases));
+  const step = (maxScale - minScale) / (safeDecayPhases - 1);
+  return Math.max(minScale, maxScale - (safeLevel - 1) * step);
+}
+
+export function calculateMultiballBallCount(level: number): number {
+  return calculatePhaseScaledCount(
+    level,
+    MULTIBALL_MAX_BALL_COUNT,
+    MULTIBALL_MIN_BALL_COUNT,
+  );
+}
+
+export function calculateLaserFanTargetCount(level: number): number {
+  return calculatePhaseScaledCount(
+    level,
+    LASER_FAN_MAX_TARGET_COUNT,
+    LASER_FAN_MIN_TARGET_COUNT,
+  );
+}
+
+export function calculateWidePaddleScale(level: number): number {
+  return calculatePhaseScaledScale(
+    level,
+    WIDE_PADDLE_MAX_SCALE,
+    WIDE_PADDLE_MIN_SCALE,
+  );
+}
+
+export function buildMultiballAngleOffsets(cloneCount: number): number[] {
+  if (cloneCount <= 0) {
+    return [];
+  }
+
+  if (cloneCount === 1) {
+    return [0];
+  }
+
+  const spread = MULTIBALL_MAX_FAN_SPREAD;
+  const step = (2 * spread) / (cloneCount + 1);
+
+  return Array.from({ length: cloneCount }, (_, index) => {
+    return -spread + step * (index + 1);
+  });
 }
 
 export function calculateLevelBrickRows(

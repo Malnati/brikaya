@@ -21,7 +21,7 @@ import { shouldUseReducedCanvasEffects } from '../utils/performanceMode';
 const KEY_LEFT = 'ArrowLeft';
 const KEY_RIGHT = 'ArrowRight';
 const PADDLE_MIN_SCALE = 1;
-const PADDLE_MAX_SCALE = 1.8;
+const PADDLE_MAX_SCALE = 2;
 const PADDLE_DEFAULT_SCALE = 1;
 const PADDLE_START_CENTER_ANGLE = Math.PI / 2;
 const RADIAL_PADDLE_LINE_CAP: CanvasLineCap = 'round';

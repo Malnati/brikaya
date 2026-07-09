@@ -18,6 +18,10 @@ import {
   calculateLevelPreviousMaxSpeed,
   calculateLevelSpeedMultiplier,
   calculateSpeedReductionPerBrick,
+  calculateMultiballBallCount,
+  calculateLaserFanTargetCount,
+  calculateWidePaddleScale,
+  buildMultiballAngleOffsets,
   roundSpeedValue,
 } from './game';
 
@@ -25,6 +29,8 @@ const CANVAS_WIDTH = 393;
 const PHASE_ONE = 1;
 const PHASE_TWO = 2;
 const PHASE_FIVE = 5;
+const PHASE_NINE = 9;
+const PHASE_TEN = 10;
 const INITIAL_BRICK_COUNT = 10;
 const BASE_BRICK_ROWS = 2;
 const MAX_BRICK_ROWS = 5;
@@ -184,5 +190,32 @@ describe('game speed helpers', () => {
         DIMENSION_TEST_CANVAS_HEIGHT,
       ).paddleWidth,
     ).toBe(PADDLE_WIDTH_MAX);
+  });
+});
+
+describe('phase power-up scaling', () => {
+  it.each([
+    [PHASE_ONE, 10, 10, 1.9],
+    [PHASE_TWO, 9, 9, 1.844],
+    [PHASE_FIVE, 6, 6, 1.675],
+    [PHASE_NINE, 2, 2, 1.45],
+    [PHASE_TEN, 2, 2, 1.45],
+  ])(
+    'escala multiball, laser e raquete na fase %s',
+    (level, expectedBalls, expectedLaserTargets, expectedPaddleScale) => {
+      expect(calculateMultiballBallCount(level)).toBe(expectedBalls);
+      expect(calculateLaserFanTargetCount(level)).toBe(expectedLaserTargets);
+      expect(calculateWidePaddleScale(level)).toBeCloseTo(expectedPaddleScale, 3);
+    },
+  );
+
+  it('distribui offsets de multiball simetricamente sem duplicatas', () => {
+    const offsets = buildMultiballAngleOffsets(9);
+
+    expect(offsets).toHaveLength(9);
+    expect(new Set(offsets).size).toBe(9);
+    expect(offsets[0]).toBeCloseTo(-0.672, 3);
+    expect(offsets[8]).toBeCloseTo(0.672, 3);
+    expect(offsets.reduce((sum, value) => sum + value, 0)).toBeCloseTo(0, 3);
   });
 });
