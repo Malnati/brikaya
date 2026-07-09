@@ -16,6 +16,8 @@ const LEGACY_TEXT = [
   'Public copy must not mention',
   joinParts(['Bre', 'ak', 'out']) + ',',
   joinParts(['At', 'ari']) + ',',
+  joinParts(['Bl', 'ock', 'bre', 'aker']) + ',',
+  joinParts(['Bl', 'ock', '-', 'bre', 'aker']) + ',',
   'or',
   joinParts(['MI', 'T']),
   joinParts(['Lic', 'ense']) + '.'
@@ -27,10 +29,16 @@ const SOURCE_FILE = 'src/App.tsx';
 assert.deepEqual(findForbiddenTraces(CLEAN_TEXT, CLEAN_FILE), []);
 
 const findings = findForbiddenTraces(LEGACY_TEXT, CLEAN_FILE);
-assert.equal(findings.length, 3);
+assert.equal(findings.length, 5);
 assert.deepEqual(
   findings.map((finding) => finding.id),
-  ['legacy-game-title', 'sensitive-comparison-b', 'project-license-old-a']
+  [
+    'legacy-project-compound-de',
+    'legacy-project-hyphenated',
+    'legacy-game-title',
+    'sensitive-comparison-b',
+    'project-license-old-a',
+  ]
 );
 
 assert.equal(shouldSkipPath(GENERATED_FILE), true);

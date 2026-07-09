@@ -371,8 +371,8 @@ const SEO = {
     ogDescription: 'ब्लॉक तोड़ें, लेवल बढ़ाएँ और ब्राउज़र में खेलें, प्रगति आपके डिवाइस पर सेव रहती है।',
   },
   de: {
-    title: 'Brikaya — Blockbreaker-Arcade',
-    description: 'Spiele Brikaya, ein kostenloses Blockbreaker-Arcade im Browser, mit lokal gespeichertem Fortschritt und Offline-Spiel nach dem ersten Besuch.',
+    title: 'Brikaya — Brikaya-Arcade',
+    description: 'Spiele Brikaya, ein kostenloses Brikaya-Arcade im Browser, mit lokal gespeichertem Fortschritt und Offline-Spiel nach dem ersten Besuch.',
     ogDescription: 'Zerstöre Blöcke, steige Level auf und spiele im Browser mit lokal gespeichertem Fortschritt.',
   },
   fr: {
@@ -1703,14 +1703,14 @@ const SEO = {
     ogDescription: "Brikaya — arcade casse-briques pour la Suisse",
   },
   'de-AT': {
-    title: "Brikaya — Blockbreaker-Arcade für Österreich",
+    title: "Brikaya — Brikaya-Arcade für Österreich",
     description: "Installiere oder spiele Brikaya kostenlos in Österreich, ohne Konto und ohne Zahlung; der Fortschritt bleibt auf deinem Gerät und Offline-Spiel funktioniert nach dem ersten Besuch.",
-    ogDescription: "Brikaya — Blockbreaker-Arcade für Österreich",
+    ogDescription: "Brikaya — Brikaya-Arcade für Österreich",
   },
   'de-CH': {
-    title: "Brikaya — Blockbreaker-Arcade für die Schweiz",
+    title: "Brikaya — Brikaya-Arcade für die Schweiz",
     description: "Installiere oder spiele Brikaya kostenlos in der Schweiz, ohne Konto und ohne Zahlung; der Fortschritt bleibt auf deinem Gerät und Offline-Spiel funktioniert nach dem ersten Besuch.",
-    ogDescription: "Brikaya — Blockbreaker-Arcade für die Schweiz",
+    ogDescription: "Brikaya — Brikaya-Arcade für die Schweiz",
   },
   'it-CH': {
     title: "Brikaya — arcade rompi blocchi per la Svizzera",

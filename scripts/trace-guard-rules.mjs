@@ -25,6 +25,8 @@ function boundedPhrasePattern(leftParts, rightParts) {
 export const FORBIDDEN_TRACE_PATTERNS = [
   { id: 'legacy-project-token', pattern: textPattern(['br', 'ick', 'bre', 'aker']) },
   { id: 'legacy-project-phrase', pattern: phrasePattern(['br', 'ick'], ['bre', 'aker']) },
+  { id: 'legacy-project-compound-de', pattern: textPattern(['bl', 'ock', 'bre', 'aker']) },
+  { id: 'legacy-project-hyphenated', pattern: textPattern(['bl', 'ock', '-', 'bre', 'aker']) },
   { id: 'legacy-game-title', pattern: textPattern(['bre', 'ak', 'out']) },
   { id: 'sensitive-comparison-a', pattern: textPattern(['ark', 'an', 'oid']) },
   { id: 'sensitive-comparison-b', pattern: textPattern(['at', 'ari']) },
