@@ -8,6 +8,7 @@ jobs:
   ci:
     name: ci
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -16,11 +17,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "23"
+          cache: npm
 
       - name: Install dependencies
         run: |
-          npm install
+          npm config set fetch-retries 3
+          npm config set fetch-timeout 120000
+          npm ci
           npm install --no-save @rollup/rollup-linux-x64-gnu
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: true
 
       - name: Materialize CI env
         run: node scripts/materialize-ci-env.mjs
