@@ -118,6 +118,7 @@ const LASER_FAN_QA_SCENARIO = "laser-fan";
 const METAL_BLOCK_QA_SCENARIO = "metal-block";
 const EVASIVE_BLOCKS_QA_SCENARIO = "evasive-blocks";
 const BALL_TURRET_QA_SCENARIO = "ball-turret";
+const BALL_TURRET_LOSE_QA_SCENARIO = "ball-turret-lose";
 const LEVEL_TRANSITION_EVENT_NAME = "brikaya:level-transition";
 const COUNTDOWN_FIRST_STEP_INDEX = 0;
 const COUNTDOWN_NEXT_STEP_INDEX = 1;
@@ -288,6 +289,8 @@ function GameApp() {
     if (scenario === EVASIVE_BLOCKS_QA_SCENARIO)
       return EVASIVE_BLOCKS_QA_SCENARIO;
     if (scenario === BALL_TURRET_QA_SCENARIO) return BALL_TURRET_QA_SCENARIO;
+    if (scenario === BALL_TURRET_LOSE_QA_SCENARIO)
+      return BALL_TURRET_LOSE_QA_SCENARIO;
     if (scenario === AUDIO_QA_SCENARIO) return AUDIO_QA_SCENARIO;
     return null;
   }, []);
