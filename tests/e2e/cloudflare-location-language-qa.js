@@ -2,16 +2,13 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
-
-import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH =
   "docs/assets/issues/location-consent-auto-locale/evidence/evi-location-consent-auto-locale-location-flow-report.json";
 const DEFAULT_SCREENSHOT_PATH =
   "docs/assets/issues/location-consent-auto-locale/evidence/evi-location-consent-auto-locale-location-overlay.png";
-const CHROME_EXECUTABLE_PATH =
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const VIEWPORT = {
   width: 393,
   height: 852,
@@ -42,9 +39,7 @@ function publicUrl() {
 }
 
 function reportPath() {
-  return (
-    process.env.BRIKAYA_LOCATION_LANGUAGE_QA_REPORT || DEFAULT_REPORT_PATH
-  );
+  return process.env.BRIKAYA_LOCATION_LANGUAGE_QA_REPORT || DEFAULT_REPORT_PATH;
 }
 
 function screenshotPath() {
@@ -104,11 +99,11 @@ async function clickButtonByText(page, label) {
 async function run() {
   const targetUrl = publicUrl();
   const origin = new URL(targetUrl).origin;
-  const browser = await puppeteer.launch({
-    headless: "new",
-    executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs(["--no-sandbox", "--disable-setuid-sandbox"]),
-  });
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({
+      extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"],
+    }),
+  );
   const page = await browser.newPage();
   const requests = [];
   const failedRequests = [];

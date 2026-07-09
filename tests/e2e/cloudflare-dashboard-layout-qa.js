@@ -2,12 +2,13 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
-import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
 import {
   acceptPrivacyConsentIfPresent,
   waitForInitialCountdownToFinish,
 } from "./consentHelpers.js";
+import { assertAllowedQaHostname } from "./publicQaEnv.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-dashboard-layout.json";
@@ -24,8 +25,6 @@ const RESPONSIVE_VIEWPORT_MATRIX_PATH = new URL(
   "./responsiveViewportMatrix.json",
   import.meta.url,
 );
-const CHROME_EXECUTABLE_PATH =
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const CHROME_LOW_RESOURCE_ARGS = [
   "--disable-background-networking",
   "--disable-background-timer-throttling",
@@ -131,9 +130,7 @@ function reportPath() {
 }
 
 function screenshotPath() {
-  return (
-    process.env.BRIKAYA_DASHBOARD_QA_SCREENSHOT || DEFAULT_SCREENSHOT_PATH
-  );
+  return process.env.BRIKAYA_DASHBOARD_QA_SCREENSHOT || DEFAULT_SCREENSHOT_PATH;
 }
 
 function desktopScreenshotPath() {
@@ -237,15 +234,15 @@ function isRecoverableBrowserError(error) {
 }
 
 function launchQaBrowser() {
-  return puppeteer.launch({
-    headless: "new",
-    executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs([
-      "--no-first-run",
-      "--no-default-browser-check",
-      ...CHROME_LOW_RESOURCE_ARGS,
-    ]),
-  });
+  return puppeteer.launch(
+    buildPuppeteerLaunchOptions({
+      extraArgs: [
+        "--no-first-run",
+        "--no-default-browser-check",
+        ...CHROME_LOW_RESOURCE_ARGS,
+      ],
+    }),
+  );
 }
 
 function viewportByScreenshotRole(screenshotRole) {
@@ -660,10 +657,7 @@ async function waitForCinematicOverlayToClear(page) {
 async function run() {
   const targetUrl = publicUrl();
   const parsed = new URL(targetUrl);
-  assert(
-    parsed.hostname === "brikaya.com",
-    `URL precisa ser brikaya.com: ${targetUrl}`,
-  );
+  assertAllowedQaHostname(targetUrl);
 
   const outReport = reportPath();
   const outScreenshot = screenshotPath();

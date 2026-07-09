@@ -2,16 +2,15 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
-import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
+import { assertAllowedQaHostname } from "./publicQaEnv.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-interlevel-google-ads.json";
 const DEFAULT_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-interlevel-google-ads.png";
-const CHROME_EXECUTABLE_PATH =
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const VIEWPORT = {
   width: 393,
   height: 852,
@@ -40,7 +39,9 @@ function reportPath() {
 }
 
 function screenshotPath() {
-  return process.env.BRIKAYA_INTERLEVEL_AD_QA_SCREENSHOT || DEFAULT_SCREENSHOT_PATH;
+  return (
+    process.env.BRIKAYA_INTERLEVEL_AD_QA_SCREENSHOT || DEFAULT_SCREENSHOT_PATH
+  );
 }
 
 function ensureParentDirectory(filePath) {
@@ -173,7 +174,8 @@ async function waitForTransitionFinish(page, nextLevel = 4) {
   await page.waitForFunction(
     (expectedNextLevel) =>
       window.__BRIKAYA_LEVEL_TRANSITIONS__?.some(
-        (event) => event.phase === "finish" && event.nextLevel === expectedNextLevel,
+        (event) =>
+          event.phase === "finish" && event.nextLevel === expectedNextLevel,
       ),
     { timeout: MAX_WAIT_FOR_LEVEL_MS },
     nextLevel,
@@ -390,8 +392,14 @@ async function runHeldAdScenario(browser, targetUrl, consoleProblems) {
     const finish = transitions.find((event) => event.phase === "finish");
     const pauseDeltaMs = finish.timestamp - start.timestamp;
 
-    assert(adState.requests.length === 1, "Interstitial simulado não foi chamado uma vez.");
-    assert(adState.requests[0].type === "next", "Interstitial não usou tipo next.");
+    assert(
+      adState.requests.length === 1,
+      "Interstitial simulado não foi chamado uma vez.",
+    );
+    assert(
+      adState.requests[0].type === "next",
+      "Interstitial não usou tipo next.",
+    );
     assert(
       adState.requests[0].name === "brikaya_level_3_to_4",
       `Nome de placement inesperado: ${adState.requests[0].name}`,
@@ -429,7 +437,10 @@ async function runNoFillScenario(browser, targetUrl, consoleProblems) {
     const finish = transitions.find((event) => event.phase === "finish");
     const pauseDeltaMs = finish.timestamp - start.timestamp;
 
-    assert(adState.requests.length === 1, "No-fill não chamou adBreak uma vez.");
+    assert(
+      adState.requests.length === 1,
+      "No-fill não chamou adBreak uma vez.",
+    );
     assert(adState.requests[0].type === "next", "No-fill não usou tipo next.");
     assert(adState.doneCalls === 1, "No-fill não retornou adBreakDone.");
     assert(!promptVisible, "No-fill mostrou mensagem pós-publicidade.");
@@ -499,7 +510,8 @@ async function runNoConsentScenario(browser, targetUrl, consoleProblems) {
     assert(adState.requests.length === 0, "Sem consentimento chamou adBreak.");
     assert(transitions.length === 0, "Sem consentimento iniciou transição.");
     assert(
-      dialogText.includes("Antes de jogar") || dialogText.includes("Before playing"),
+      dialogText.includes("Antes de jogar") ||
+        dialogText.includes("Before playing"),
       "Tela de consentimento não permaneceu visível.",
     );
 
@@ -520,14 +532,14 @@ async function run() {
   ensureParentDirectory(screenshotPath());
 
   const parsed = new URL(targetUrl);
-  assert(parsed.hostname === "brikaya.com", `URL precisa ser brikaya.com: ${targetUrl}`);
+  assertAllowedQaHostname(targetUrl);
 
   const consoleProblems = [];
-  const browser = await puppeteer.launch({
-    headless: "new",
-    executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs(["--no-first-run", "--no-default-browser-check"]),
-  });
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({
+      extraArgs: ["--no-first-run", "--no-default-browser-check"],
+    }),
+  );
 
   try {
     const report = {
@@ -536,7 +548,11 @@ async function run() {
       heldAd: await runHeldAdScenario(browser, targetUrl, consoleProblems),
       noFill: await runNoFillScenario(browser, targetUrl, consoleProblems),
       offline: await runOfflineScenario(browser, targetUrl, consoleProblems),
-      noConsent: await runNoConsentScenario(browser, targetUrl, consoleProblems),
+      noConsent: await runNoConsentScenario(
+        browser,
+        targetUrl,
+        consoleProblems,
+      ),
       consoleProblems,
     };
 

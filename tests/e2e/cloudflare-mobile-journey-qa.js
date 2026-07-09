@@ -5,9 +5,7 @@ import { dirname, resolve } from "node:path";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 import { launchBrowser, createMobilePage } from "./browserLauncher.js";
 import { MOBILE_BROWSER_PROFILES } from "./mobileBrowserProfiles.js";
-import {
-  assertConsentScreenScrollable,
-} from "./scrollHelpers.js";
+import { assertConsentScreenScrollable } from "./scrollHelpers.js";
 import {
   clearRuntimeState,
   readGameEvents,
@@ -138,7 +136,10 @@ async function waitForCanvas(page) {
 
 async function dismissBallTurretStartModal(page, profileLabel) {
   const switchHandle = await page.$(`[data-testid="${LEFT_SWITCH_TEST_ID}"]`);
-  assert(switchHandle, `${profileLabel}: interruptor esquerdo da torreta ausente.`);
+  assert(
+    switchHandle,
+    `${profileLabel}: interruptor esquerdo da torreta ausente.`,
+  );
 
   const rect = await switchHandle.boundingBox();
   assert(rect, `${profileLabel}: interruptor esquerdo sem área tocável.`);
@@ -241,11 +242,11 @@ async function runTorretaStart(page, profile) {
     const style = modal ? window.getComputedStyle(modal) : null;
     return Boolean(
       modal &&
-        style?.display !== "none" &&
-        style?.visibility !== "hidden" &&
-        rect &&
-        rect.width > 0 &&
-        rect.height > 0,
+      style?.display !== "none" &&
+      style?.visibility !== "hidden" &&
+      rect &&
+      rect.width > 0 &&
+      rect.height > 0,
     );
   }, START_MODAL_TEST_ID);
 
@@ -356,7 +357,9 @@ async function runFirstAd(page, profile) {
     () => window.__BRIKAYA_TEST_AD_STATE__?.active === true,
     { timeout: 30000 },
   );
-  await new Promise((resolve) => setTimeout(resolve, AD_HOLD_ASSERTION_DELAY_MS));
+  await new Promise((resolve) =>
+    setTimeout(resolve, AD_HOLD_ASSERTION_DELAY_MS),
+  );
 
   const transitions = await page.evaluate(
     () => window.__BRIKAYA_LEVEL_TRANSITIONS__ || [],
@@ -404,7 +407,10 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
   await acceptPrivacyConsentIfPresent(page);
   await waitForCanvas(page);
 
-  if (scenarioCheck.id === "ball-turret" || scenarioCheck.id === "ball-turret-lose") {
+  if (
+    scenarioCheck.id === "ball-turret" ||
+    scenarioCheck.id === "ball-turret-lose"
+  ) {
     await dismissBallTurretStartModal(page, profile.label);
   }
 
@@ -456,7 +462,9 @@ async function runProfile(browser, profile, targetUrl, consoleProblems) {
 
     const scenarioResults = [];
     for (const scenarioCheck of SCENARIO_CHECKS) {
-      scenarioResults.push(await runScenarioCheck(page, profile, scenarioCheck));
+      scenarioResults.push(
+        await runScenarioCheck(page, profile, scenarioCheck),
+      );
     }
 
     return {

@@ -67,7 +67,10 @@ async function runProfile(browser, profile, targetUrl) {
       `${profile.label}: título de consentimento ausente.`,
     );
 
-    const scrollResult = await assertConsentScreenScrollable(page, profile.label);
+    const scrollResult = await assertConsentScreenScrollable(
+      page,
+      profile.label,
+    );
     const finalMetrics = await readConsentScrollMetrics(page);
 
     return {

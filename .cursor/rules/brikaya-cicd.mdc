@@ -9,11 +9,11 @@ alwaysApply: true
 
 | Evento | Pipeline | Destino |
 |--------|----------|---------|
-| `pull_request` | `ci` | sem deploy |
+| `pull_request` | `ci` (build + jest + e2e local) | sem deploy |
 | `push` em branch ≠ `main` | `deploy-preview` (`ci` + preview) | `https://dev.brikaya.com/` |
 | `push` em `main` | `deploy-production` (`ci` + produção) | `https://brikaya.com/` |
 
-O preview em `dev.brikaya.com` reflete o **último push** de branch não-main que passou no CI.
+O preview em `dev.brikaya.com` reflete o **último push** de branch não-main que passou no CI (gate e2e incluso).
 
 ## Planos e implementações
 
@@ -26,6 +26,7 @@ O preview em `dev.brikaya.com` reflete o **último push** de branch não-main qu
 - Produção: `https://brikaya.com/`
 - Preview autorizado: `https://dev.brikaya.com/` ou `BRIKAYA_PUBLIC_URL`
 - QA publicado: `BRIKAYA_PUBLIC_URL=https://dev.brikaya.com/ make cloudflare-mobile-qa`
+- Suíte e2e local (mesmo gate do CI): `BRIKAYA_PUBLIC_URL=http://127.0.0.1:7979/ make cloudflare-e2e-qa`
 
 ## Comandos úteis
 

@@ -2,10 +2,11 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
 import { classifyExternalRequests } from "./allowed-external-requests.js";
-import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
+import { isAllowedQaHostname } from "./publicQaEnv.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-laser-powerup-qa.json";
@@ -13,8 +14,6 @@ const DEFAULT_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-laser-powerup-qa.png";
 const DEFAULT_ITEM_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-laser-powerup-item.png";
-const CHROME_EXECUTABLE_PATH =
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const CHROME_LOW_RESOURCE_ARGS = [
   "--disable-background-networking",
   "--disable-background-timer-throttling",
@@ -75,8 +74,6 @@ const BROWSER_CLOSE_TIMEOUT_MESSAGE = "browser close timeout";
 const BROWSER_KILL_SIGNAL = "SIGKILL";
 const BLANK_PAGE_URL = "about:blank";
 const BLANK_PAGE_WAIT_UNTIL = "domcontentloaded";
-const CANONICAL_HOST = "brikaya.com";
-const PAGES_PREVIEW_HOST_SUFFIX = ".pages.dev";
 
 function env(name, fallback) {
   return process.env[name] || fallback;
@@ -95,10 +92,7 @@ function screenshotPath() {
 }
 
 function itemScreenshotPath() {
-  return env(
-    "BRIKAYA_LASER_QA_ITEM_SCREENSHOT",
-    DEFAULT_ITEM_SCREENSHOT_PATH,
-  );
+  return env("BRIKAYA_LASER_QA_ITEM_SCREENSHOT", DEFAULT_ITEM_SCREENSHOT_PATH);
 }
 
 function ensureParentDirectory(filePath) {
@@ -117,9 +111,7 @@ function withQaScenario(url) {
 }
 
 function isAllowedPublishedHost(hostname) {
-  return (
-    hostname === CANONICAL_HOST || hostname.endsWith(PAGES_PREVIEW_HOST_SUFFIX)
-  );
+  return isAllowedQaHostname(hostname);
 }
 
 function qaViewport() {
@@ -495,15 +487,15 @@ async function run() {
 
   const consoleProblems = [];
   const externalRequests = [];
-  const browser = await puppeteer.launch({
-    headless: "new",
-    executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs([
-      "--no-first-run",
-      "--no-default-browser-check",
-      ...CHROME_LOW_RESOURCE_ARGS,
-    ]),
-  });
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({
+      extraArgs: [
+        "--no-first-run",
+        "--no-default-browser-check",
+        ...CHROME_LOW_RESOURCE_ARGS,
+      ],
+    }),
+  );
 
   try {
     const page = await browser.newPage();
@@ -544,10 +536,8 @@ async function run() {
 
     const layoutState = await collectLayoutState(page);
     const events = await readGameEvents(page);
-    const {
-      allowedExternalRequests,
-      unexpectedExternalRequests,
-    } = classifyExternalRequests(externalRequests, targetUrl);
+    const { allowedExternalRequests, unexpectedExternalRequests } =
+      classifyExternalRequests(externalRequests, targetUrl);
     const proofEvents = eventsThroughFirstLaserScore(events);
     const byType = summarizeEvents(proofEvents);
     const allByType = summarizeEvents(events);
@@ -599,7 +589,8 @@ async function run() {
       laserScoreTiming: {
         activateTimestamp: activatedPowerUpEvent?.timestamp || null,
         scoreTimestamp: laserScoreEvent?.timestamp || null,
-        firstBrickDestroyedTimestamp: firstBrickDestroyedEvent?.timestamp || null,
+        firstBrickDestroyedTimestamp:
+          firstBrickDestroyedEvent?.timestamp || null,
         scoreDelayMs,
         firstBrickDelayMs,
         immediateThresholdMs: LASER_IMMEDIATE_SCORE_MAX_MS,

@@ -26,7 +26,7 @@ export function resolveChromeExecutablePath() {
   return undefined;
 }
 
-export async function launchBrowser(options = {}) {
+export function buildPuppeteerLaunchOptions(options = {}) {
   const executablePath = resolveChromeExecutablePath();
   const launchOptions = {
     headless: options.headless ?? "new",
@@ -40,7 +40,15 @@ export async function launchBrowser(options = {}) {
     launchOptions.executablePath = executablePath;
   }
 
-  return puppeteer.launch(launchOptions);
+  if (options.userDataDir) {
+    launchOptions.userDataDir = options.userDataDir;
+  }
+
+  return launchOptions;
+}
+
+export async function launchBrowser(options = {}) {
+  return puppeteer.launch(buildPuppeteerLaunchOptions(options));
 }
 
 export async function createMobilePage(browser, profile) {

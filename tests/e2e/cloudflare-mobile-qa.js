@@ -2,8 +2,8 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
-import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
 import {
   acceptPrivacyConsentIfPresent,
   waitForInitialCountdownToFinish,
@@ -23,8 +23,6 @@ const RESPONSIVE_VIEWPORT_MATRIX_PATH = new URL(
 const SOURCE_INDEX_FILE_NAME = "index.html";
 const SOURCE_INDEX_PATH = resolve(process.cwd(), SOURCE_INDEX_FILE_NAME);
 const PUBLIC_TITLE_PATTERN = /<title>(.*?)<\/title>/i;
-const CHROME_EXECUTABLE_PATH =
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const CHROME_LOW_RESOURCE_ARGS = [
   "--disable-background-networking",
   "--disable-background-timer-throttling",
@@ -139,7 +137,9 @@ const MOBILE_FIXED_CONTROL_EDGE_OFFSET_PX = 18;
 const RECT_TOLERANCE_PX = 2;
 
 function getPublicUrl() {
-  const publicUrl = new URL(process.env.BRIKAYA_PUBLIC_URL || DEFAULT_PUBLIC_URL);
+  const publicUrl = new URL(
+    process.env.BRIKAYA_PUBLIC_URL || DEFAULT_PUBLIC_URL,
+  );
   if (!publicUrl.searchParams.has(GAMEPLAY_TELEMETRY_QUERY_PARAM)) {
     publicUrl.searchParams.set(
       GAMEPLAY_TELEMETRY_QUERY_PARAM,
@@ -794,15 +794,15 @@ async function run() {
   ensureParentDirectory(reportPath);
 
   const consoleProblems = [];
-  const browser = await puppeteer.launch({
-    headless: "new",
-    executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs([
-      "--no-first-run",
-      "--no-default-browser-check",
-      ...CHROME_LOW_RESOURCE_ARGS,
-    ]),
-  });
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({
+      extraArgs: [
+        "--no-first-run",
+        "--no-default-browser-check",
+        ...CHROME_LOW_RESOURCE_ARGS,
+      ],
+    }),
+  );
 
   try {
     const page = await browser.newPage();

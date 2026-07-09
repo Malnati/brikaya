@@ -47,6 +47,7 @@
     "test:cloudflare-consent-scroll": "node tests/e2e/cloudflare-consent-scroll-qa.js",
     "test:cloudflare-location-language": "node tests/e2e/cloudflare-location-language-qa.js",
     "test:cloudflare-mobile-journey": "node tests/e2e/cloudflare-mobile-journey-qa.js",
+    "test:cloudflare-e2e": "node scripts/run-cloudflare-e2e-suite.mjs",
     "test:trace-guard": "node scripts/validate-public-trace-guard.mjs",
     "test:trace-guard:public": "node scripts/validate-public-trace-guard.mjs --public-url https://brikaya.com/",
     "test:trace-guard:unit": "node scripts/validate-public-trace-guard.test.mjs",

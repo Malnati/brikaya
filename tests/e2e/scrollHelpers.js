@@ -93,9 +93,9 @@ export async function assertConsentScreenScrollable(page, profileLabel) {
     await page.evaluate(
       ({ selector, label }) => {
         const screen = document.querySelector(selector);
-        const acceptButton = Array.from(document.querySelectorAll("button")).find(
-          (button) => button.textContent?.trim() === label,
-        );
+        const acceptButton = Array.from(
+          document.querySelectorAll("button"),
+        ).find((button) => button.textContent?.trim() === label);
         if (screen && acceptButton) {
           acceptButton.scrollIntoView({ block: "end" });
         }
