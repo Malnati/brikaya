@@ -73,6 +73,11 @@ import {
   drawBallTurretTrampolines,
   type BallTurretTrampolineRenderItem,
 } from "./rendering/ballTurretRenderer";
+import {
+  AmbientElectricBackground,
+  readLightningVariantSearchParam,
+  resolveAmbientElectricVariant,
+} from "./rendering/ambientElectricBackground";
 import { shouldUseReducedCanvasEffects } from "../utils/performanceMode";
 import type {
   ElectricImpactEvent,
@@ -342,6 +347,7 @@ export class GameEngine {
   private laserFanEffectTimer: ReturnType<typeof setTimeout> | null = null;
   private electricImpactEffects: ElectricImpactEffect[] = [];
   private electricImpactSequence = 0;
+  private readonly ambientElectricBackground: AmbientElectricBackground;
   private readonly handleKeyDown = (event: KeyboardEvent) => {
     this.releaseServeLock();
     this.paddle.onKeyDown(event);
@@ -398,6 +404,9 @@ export class GameEngine {
   ) {
     LOG(`🚀 GameEngine constructor iniciado`);
     this.turretControlMode = initialTurretControlMode;
+    this.ambientElectricBackground = new AmbientElectricBackground(
+      resolveAmbientElectricVariant(readLightningVariantSearchParam()),
+    );
 
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error(ERROR_NO_2D_CONTEXT);
@@ -2582,6 +2591,7 @@ export class GameEngine {
     } else {
       // Normal game rendering
       try {
+        this.tickAmbientElectricBackground();
         this.drawGameBackdrop();
         this.components.draw(this.ctx);
         this.paddle.update(frameScale);
@@ -2708,10 +2718,32 @@ export class GameEngine {
         reducedEffects: this.usesReducedCanvasEffects(),
         paddlePosition: this.paddle.position,
       });
-      return;
+    } else {
+      this.drawRadialPlayfield();
     }
 
-    this.drawRadialPlayfield();
+    this.drawAmbientElectricBackground();
+  }
+
+  private tickAmbientElectricBackground(): void {
+    this.ambientElectricBackground.tick(
+      {
+        centerX: this.radialGeometry.centerX,
+        centerY: this.radialGeometry.centerY,
+        radius: this.radialGeometry.radius,
+      },
+      Date.now(),
+      this.usesReducedCanvasEffects(),
+    );
+  }
+
+  private drawAmbientElectricBackground(): void {
+    this.ambientElectricBackground.draw(
+      this.ctx,
+      this.radialGeometry,
+      Date.now(),
+      this.usesReducedCanvasEffects(),
+    );
   }
 
   private drawPlayerControl() {

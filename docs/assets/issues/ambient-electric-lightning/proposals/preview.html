@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Brikaya — Proposta de raios elétricos de fundo</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #080816;
+        --panel: #101024;
+        --text: #eef6ff;
+        --accent: #42e0ff;
+        --muted: #8aa0b8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background:
+          radial-gradient(
+            circle at 10% 0%,
+            rgba(66, 224, 255, 0.18),
+            transparent 28%
+          ),
+          var(--bg);
+        color: var(--text);
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      main {
+        width: min(920px, 100%);
+        display: grid;
+        gap: 16px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 1.35rem;
+        font-weight: 600;
+      }
+
+      p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid rgba(125, 249, 255, 0.18);
+        border-radius: 12px;
+        padding: 16px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .controls label,
+      .controls button,
+      .controls select {
+        font: inherit;
+      }
+
+      .controls button,
+      .controls select {
+        background: rgba(8, 16, 32, 0.92);
+        color: var(--text);
+        border: 1px solid rgba(125, 249, 255, 0.28);
+        border-radius: 8px;
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+
+      .controls button[aria-pressed="true"],
+      .controls button.active {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px rgba(66, 224, 255, 0.4);
+      }
+
+      .canvas-wrap {
+        display: grid;
+        place-items: center;
+        background: #050510;
+        border-radius: 12px;
+        padding: 12px;
+      }
+
+      canvas {
+        width: min(800px, 100%);
+        height: auto;
+        border-radius: 8px;
+        background: transparent;
+      }
+
+      .status {
+        font-size: 0.92rem;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Raios elétricos de fundo — proposta visual</h1>
+        <p>
+          Compare as variantes Pulse, Arcade e Storm nos fundos clássico e torreta.
+          Use os controles para pausar, reiniciar a seed ou forçar um raio.
+        </p>
+      </header>
+
+      <section class="panel">
+        <div class="controls" role="toolbar" aria-label="Controles da proposta">
+          <label>
+            Variante
+            <select id="variant-select">
+              <option value="pulse">Pulse (sutil)</option>
+              <option value="arcade" selected>Arcade (equilibrado)</option>
+              <option value="storm">Storm (tempestade)</option>
+            </select>
+          </label>
+
+          <button type="button" id="mode-classic" class="active" aria-pressed="true">
+            Clássico
+          </button>
+          <button type="button" id="mode-turret" aria-pressed="false">Torreta</button>
+          <button type="button" id="pause-btn">Pausar</button>
+          <button type="button" id="reset-btn">Reiniciar seed</button>
+          <button type="button" id="force-btn">Forçar raio</button>
+        </div>
+
+        <div class="canvas-wrap">
+          <canvas id="preview-canvas" width="800" height="600" aria-label="Preview dos raios elétricos"></canvas>
+        </div>
+
+        <p class="status" id="status-line">Variante Arcade · modo Clássico · raios ativos: 0</p>
+      </section>
+    </main>
+
+    <script type="module">
+      import {
+        AmbientElectricProposal,
+        AMBIENT_ELECTRIC_PRESETS,
+        createProposalGeometry,
+        drawClassicBackdrop,
+        drawTurretBackdrop,
+      } from "./ambient-lightning-proposal.mjs";
+
+      const canvas = document.getElementById("preview-canvas");
+      const ctx = canvas.getContext("2d");
+      const variantSelect = document.getElementById("variant-select");
+      const modeClassicBtn = document.getElementById("mode-classic");
+      const modeTurretBtn = document.getElementById("mode-turret");
+      const pauseBtn = document.getElementById("pause-btn");
+      const resetBtn = document.getElementById("reset-btn");
+      const forceBtn = document.getElementById("force-btn");
+      const statusLine = document.getElementById("status-line");
+
+      const geometry = createProposalGeometry(canvas.width, canvas.height);
+      const ambient = new AmbientElectricProposal("arcade");
+      let backdropMode = "classic";
+      let animationFrame = 0;
+      let seedCounter = 0;
+
+      function setBackdropMode(mode) {
+        backdropMode = mode;
+        const isClassic = mode === "classic";
+        modeClassicBtn.classList.toggle("active", isClassic);
+        modeTurretBtn.classList.toggle("active", !isClassic);
+        modeClassicBtn.setAttribute("aria-pressed", String(isClassic));
+        modeTurretBtn.setAttribute("aria-pressed", String(!isClassic));
+      }
+
+      function drawBackdrop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (backdropMode === "classic") {
+          drawClassicBackdrop(ctx, geometry);
+        } else {
+          drawTurretBackdrop(ctx, geometry, {
+            width: canvas.width,
+            height: canvas.height,
+          });
+        }
+      }
+
+      function updateStatus(now) {
+        const preset = AMBIENT_ELECTRIC_PRESETS[ambient.variant];
+        statusLine.textContent = `Variante ${preset.label} · modo ${
+          backdropMode === "classic" ? "Clássico" : "Torreta"
+        } · raios ativos: ${ambient.bolts.length}`;
+        void now;
+      }
+
+      function render(now) {
+        drawBackdrop();
+        ambient.tick(geometry, now);
+        ambient.draw(ctx, geometry, now);
+        updateStatus(now);
+        animationFrame = requestAnimationFrame(render);
+      }
+
+      variantSelect.addEventListener("change", () => {
+        ambient.setVariant(variantSelect.value);
+        ambient.reset(performance.now());
+      });
+
+      modeClassicBtn.addEventListener("click", () => setBackdropMode("classic"));
+      modeTurretBtn.addEventListener("click", () => setBackdropMode("turret"));
+
+      pauseBtn.addEventListener("click", () => {
+        ambient.setPaused(!ambient.paused);
+        pauseBtn.textContent = ambient.paused ? "Retomar" : "Pausar";
+      });
+
+      resetBtn.addEventListener("click", () => {
+        seedCounter += 1;
+        ambient.setManualSeed(seedCounter * 97);
+        ambient.reset(performance.now());
+      });
+
+      forceBtn.addEventListener("click", () => {
+        ambient.forceBolt(geometry, performance.now());
+      });
+
+      const initialParams = new URLSearchParams(window.location.search);
+      const initialVariant = initialParams.get("variant");
+      if (initialVariant && AMBIENT_ELECTRIC_PRESETS[initialVariant]) {
+        variantSelect.value = initialVariant;
+        ambient.setVariant(initialVariant);
+      }
+      const initialMode = initialParams.get("mode");
+      if (initialMode === "turret") {
+        setBackdropMode("turret");
+      }
+
+      ambient.reset(performance.now());
+      animationFrame = requestAnimationFrame(render);
+
+      window.__proposalCapture = {
+        renderFrame({ variant, mode, timestamp, seed = 0, forceBolts = 3 }) {
+          variantSelect.value = variant;
+          ambient.setVariant(variant);
+          ambient.setManualSeed(seed);
+          ambient.setPaused(true);
+          setBackdropMode(mode === "turret" ? "turret" : "classic");
+
+          ambient.reset(timestamp);
+          for (let index = 0; index < forceBolts; index += 1) {
+            ambient.forceBolt(geometry, timestamp + index * 40);
+          }
+          ambient.tick(geometry, timestamp);
+
+          drawBackdrop();
+          ambient.draw(ctx, geometry, timestamp);
+          updateStatus(timestamp);
+        },
+      };
+    </script>
+  </body>
+</html>
