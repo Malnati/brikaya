@@ -62,3 +62,18 @@ jobs:
 
       - name: Verify preview index
         run: node scripts/cloudflare-pages.js verify-preview-index
+
+      - name: Install Chrome for E2E
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget gnupg
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: E2E mobile journey (preview)
+        env:
+          BRIKAYA_PUBLIC_URL: https://dev.brikaya.com/
+          BRIKAYA_CHROME_EXECUTABLE: /usr/bin/google-chrome-stable
+        run: npm run test:cloudflare-mobile-journey

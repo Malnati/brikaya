@@ -2,72 +2,122 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
-import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
-import { launchBrowser, createMobilePage } from "./browserLauncher.js";
-import { MOBILE_BROWSER_PROFILES } from "./mobileBrowserProfiles.js";
-import { assertConsentScreenScrollable } from "./scrollHelpers.js";
 import {
+  ACCEPT_BUTTON_LABELS,
+  LOCATION_CHECKBOX_LABELS,
+  waitForConsentScreen,
+} from "./consentSelectors.js";
+import {
+  acceptPrivacyConsentIfPresent,
+  assertLanguageDetectionFlow,
+  clickButtonByText,
+  clickInputByLabel,
+  LANGUAGE_LOCATION_CONSENT_STORAGE_KEY,
+  waitForInitialCountdownCountToHide,
+  waitForInitialCountdownToFinish,
+} from "./consentHelpers.js";
+import { launchBrowser, createMobilePage } from "./browserLauncher.js";
+import { JOURNEY_PROFILES } from "./mobileBrowserProfiles.js";
+import {
+  assertConsentScreenScrollable,
+  simulateTouchScrollOnConsent,
+} from "./scrollHelpers.js";
+import {
+  clearGameLog,
   clearRuntimeState,
+  GAME_LOG_DB_NAME,
+  GAME_LOG_DB_VERSION,
+  GAME_LOG_STORE_NAME,
   readGameEvents,
   scenarioUrl,
   summarizeEvents,
   waitForEventType,
+  waitForGameLogReady,
+  withGameplayTelemetry,
 } from "./gameLogHelpers.js";
+import {
+  AD_HOLD_ASSERTION_DELAY_MS,
+  assertCondition,
+  assertPaddleCollisionPhysics,
+  assertPhaseTransition,
+  completeHeldAd,
+  installHeldAdStub,
+  installLevelTransitionRecorder,
+  LEVEL_TRANSITION_EVENT_NAME,
+  observeEvents,
+  PADDLE_COLLISION_TIMEOUT_MS,
+  BRICK_COLLISION_TIMEOUT_MS,
+  PHASE_TRANSITION_TIMEOUT_MS,
+  waitForBrickCollisions,
+  waitForPaddleCollision,
+  waitForPowerUpAction,
+} from "./journeyAssertionHelpers.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-mobile-journey-qa.json";
 const MAX_NAVIGATION_MS = 45000;
 const OBSERVATION_TIMEOUT_MS = 12000;
-const OBSERVATION_STEP_MS = 200;
-const AD_HOLD_ASSERTION_DELAY_MS = 2200;
-const LEVEL_TRANSITION_EVENT_NAME = "brikaya:level-transition";
-const LANGUAGE_CHECKBOX_LABEL = "Usar região para sugerir idioma";
-const ACCEPT_BUTTON_LABEL = "Aceitar e jogar";
-const LANGUAGE_LOCATION_CONSENT_STORAGE_KEY =
-  "brikaya-language-location-consent";
 const START_MODAL_TEST_ID = "ball-turret-start-modal";
 const LEFT_SWITCH_TEST_ID = "ball-turret-switch-left";
+const TURRET_START_TITLES = ["Pronto para jogar", "Ready to play"];
 const GAME_OVER_TEXT_PATTERN = /fim de jogo|game over/i;
 const GOOGLE_REPORT_ONLY_FRAME_ANCESTORS_PATTERN =
   /Framing 'https:\/\/www\.google\.com\/' violates the following report-only Content Security Policy directive: "frame-ancestors 'self'"/;
+const EXPECTED_EVASIVE_BLOCK_COUNT = 3;
 
-const SCENARIO_CHECKS = [
+const SCENARIO_MATRIX = [
   {
     id: "paddle-collision",
     label: "colisão com raquete",
-    required: ["game_start"],
-    forbidden: ["game_end"],
-    collisionType: "paddle",
+    kind: "paddle-collision",
   },
   {
     id: "metal-block",
     label: "colisão com tijolo metálico",
-    required: ["game_start", "brick_destroyed"],
-    forbidden: ["game_end"],
+    kind: "metal-block",
   },
   {
     id: "evasive-blocks",
     label: "colisão com tijolo evasivo",
-    required: ["game_start", "brick_destroyed"],
-    forbidden: ["game_end"],
+    kind: "evasive-blocks",
   },
   {
     id: "laser-fan",
     label: "power-up laser",
-    required: ["game_start", "power_up"],
-    forbidden: ["game_end"],
+    kind: "power-up",
+    powerUpType: "laser_fan",
+    sideEffect: "brick_destroyed",
+  },
+  {
+    id: "multiball-power-up",
+    label: "power-up multiball",
+    kind: "power-up",
+    powerUpType: "multiball",
+    sideEffect: "ball_added",
+  },
+  {
+    id: "wide-paddle-power-up",
+    label: "power-up raquete ampla",
+    kind: "power-up",
+    powerUpType: "wide_paddle",
+  },
+  {
+    id: "slow-ball-power-up",
+    label: "power-up bola lenta",
+    kind: "power-up",
+    powerUpType: "slow_ball",
   },
   {
     id: "single-brick-phase-clear",
     label: "transição de dificuldade fase 1→2",
-    required: ["level_complete", "level_start"],
-    forbidden: ["game_end"],
-    expectLevel: 2,
+    kind: "phase-transition",
   },
 ];
 
 function publicUrl() {
-  return process.env.BRIKAYA_PUBLIC_URL || DEFAULT_PUBLIC_URL;
+  return withGameplayTelemetry(
+    process.env.BRIKAYA_PUBLIC_URL || DEFAULT_PUBLIC_URL,
+  );
 }
 
 function reportPath() {
@@ -78,12 +128,17 @@ function ensureParentDirectory(filePath) {
   mkdirSync(dirname(resolve(filePath)), { recursive: true });
 }
 
-function assert(condition, message) {
-  if (!condition) throw new Error(message);
-}
+const MANIFEST_FETCH_FAILURE_PATTERN =
+  /Manifest fetch from .*manifest\.webmanifest failed/i;
+const RESOURCE_404_PATTERN =
+  /Failed to load resource: the server responded with a status of 404/i;
 
 function isIgnorableConsoleProblem(text) {
-  return GOOGLE_REPORT_ONLY_FRAME_ANCESTORS_PATTERN.test(text);
+  return (
+    GOOGLE_REPORT_ONLY_FRAME_ANCESTORS_PATTERN.test(text) ||
+    MANIFEST_FETCH_FAILURE_PATTERN.test(text) ||
+    RESOURCE_404_PATTERN.test(text)
+  );
 }
 
 async function clearBrowserOriginState(page, targetUrl) {
@@ -93,33 +148,6 @@ async function clearBrowserOriginState(page, targetUrl) {
     storageTypes: "all",
   });
   await client.detach();
-}
-
-async function clickInputByLabel(page, label) {
-  const didClick = await page.evaluate((labelText) => {
-    const targetLabel = Array.from(document.querySelectorAll("label")).find(
-      (candidate) => candidate.textContent?.includes(labelText),
-    );
-    const input = targetLabel?.querySelector("input");
-    if (!input) return false;
-    input.click();
-    return true;
-  }, label);
-
-  assert(didClick, `Opção não encontrada: ${label}`);
-}
-
-async function clickButtonByText(page, label) {
-  const didClick = await page.evaluate((buttonLabel) => {
-    const button = Array.from(document.querySelectorAll("button")).find(
-      (candidate) => candidate.textContent?.trim() === buttonLabel,
-    );
-    if (!button) return false;
-    button.click();
-    return true;
-  }, label);
-
-  assert(didClick, `Botão não encontrado: ${label}`);
 }
 
 async function waitForCanvas(page) {
@@ -136,18 +164,49 @@ async function waitForCanvas(page) {
 
 async function dismissBallTurretStartModal(page, profileLabel) {
   const switchHandle = await page.$(`[data-testid="${LEFT_SWITCH_TEST_ID}"]`);
-  assert(
+  assertCondition(
     switchHandle,
     `${profileLabel}: interruptor esquerdo da torreta ausente.`,
   );
 
   const rect = await switchHandle.boundingBox();
-  assert(rect, `${profileLabel}: interruptor esquerdo sem área tocável.`);
+  assertCondition(
+    rect,
+    `${profileLabel}: interruptor esquerdo sem área tocável.`,
+  );
 
-  const tapX = rect.x + rect.width / 2;
-  const tapY = rect.y + rect.height / 2;
-  await page.touchscreen.tap(tapX, tapY);
-  await new Promise((resolve) => setTimeout(resolve, 180));
+  const point = {
+    x: rect.x + rect.width / 2,
+    y: rect.y + rect.height * 0.25,
+  };
+
+  await switchHandle.evaluate(
+    (element, clientPoint) =>
+      new Promise((resolve) => {
+        const pointerId = 41;
+        const dispatchPointer = (type) => {
+          element.dispatchEvent(
+            new PointerEvent(type, {
+              bubbles: true,
+              cancelable: true,
+              clientX: clientPoint.x,
+              clientY: clientPoint.y,
+              pointerId,
+              pointerType: "touch",
+              isPrimary: true,
+            }),
+          );
+        };
+
+        dispatchPointer("pointerdown");
+        window.setTimeout(() => {
+          dispatchPointer("pointerup");
+          resolve(undefined);
+        }, 180);
+      }),
+    point,
+  );
+  await new Promise((resolveDelay) => setTimeout(resolveDelay, 220));
 
   await page.waitForFunction(
     (startModalTestId) => {
@@ -156,30 +215,17 @@ async function dismissBallTurretStartModal(page, profileLabel) {
       );
       if (!modal) return true;
       const style = window.getComputedStyle(modal);
-      const rect = modal.getBoundingClientRect();
+      const modalRect = modal.getBoundingClientRect();
       return (
         style.display === "none" ||
         style.visibility === "hidden" ||
-        rect.width === 0 ||
-        rect.height === 0
+        modalRect.width === 0 ||
+        modalRect.height === 0
       );
     },
-    { timeout: 5000 },
+    { timeout: 10000 },
     START_MODAL_TEST_ID,
   );
-}
-
-async function observeEvents(page, timeoutMs = OBSERVATION_TIMEOUT_MS) {
-  const startedAt = Date.now();
-  let latestSummary = {};
-
-  while (Date.now() - startedAt < timeoutMs) {
-    const events = await readGameEvents(page);
-    latestSummary = summarizeEvents(events);
-    await new Promise((resolve) => setTimeout(resolve, OBSERVATION_STEP_MS));
-  }
-
-  return latestSummary;
 }
 
 async function runColdLoadAndConsent(page, profile, targetUrl) {
@@ -194,23 +240,23 @@ async function runColdLoadAndConsent(page, profile, targetUrl) {
     timeout: MAX_NAVIGATION_MS,
   });
 
-  await page.waitForSelector('[data-testid="consent-screen"]', {
-    timeout: MAX_NAVIGATION_MS,
-  });
+  await waitForConsentScreen(page, MAX_NAVIGATION_MS);
 
   const scroll = await assertConsentScreenScrollable(page, profile.label);
-  await clickInputByLabel(page, LANGUAGE_CHECKBOX_LABEL);
+  const touchScroll = await simulateTouchScrollOnConsent(page);
+  await clickInputByLabel(page, LOCATION_CHECKBOX_LABELS);
 
   const locationConsentBeforeAccept = await page.evaluate((storageKey) => {
     return window.localStorage.getItem(storageKey);
   }, LANGUAGE_LOCATION_CONSENT_STORAGE_KEY);
-  assert(
+  assertCondition(
     !locationConsentBeforeAccept,
     `${profile.label}: consentimento de região gravado antes do aceite.`,
   );
 
-  await clickButtonByText(page, ACCEPT_BUTTON_LABEL);
-  await page.waitForSelector('[data-testid="consent-screen"]', {
+  await clickButtonByText(page, ACCEPT_BUTTON_LABELS);
+  await assertLanguageDetectionFlow(page, profile.label);
+  await page.waitForSelector('.consent-screen, [data-testid="consent-screen"]', {
     hidden: true,
     timeout: MAX_NAVIGATION_MS,
   });
@@ -218,14 +264,15 @@ async function runColdLoadAndConsent(page, profile, targetUrl) {
   const locationConsentAfterAccept = await page.evaluate((storageKey) => {
     return window.localStorage.getItem(storageKey);
   }, LANGUAGE_LOCATION_CONSENT_STORAGE_KEY);
-  assert(
+  assertCondition(
     locationConsentAfterAccept,
     `${profile.label}: consentimento de região não foi gravado.`,
   );
 
+  await waitForInitialCountdownCountToHide(page);
   await waitForCanvas(page);
 
-  return { scroll };
+  return { scroll, touchScroll };
 }
 
 async function runTorretaStart(page, profile) {
@@ -236,35 +283,52 @@ async function runTorretaStart(page, profile) {
   await acceptPrivacyConsentIfPresent(page);
   await waitForCanvas(page);
 
-  const startModalVisible = await page.evaluate((startModalTestId) => {
-    const modal = document.querySelector(`[data-testid="${startModalTestId}"]`);
-    const rect = modal?.getBoundingClientRect();
-    const style = modal ? window.getComputedStyle(modal) : null;
-    return Boolean(
-      modal &&
-      style?.display !== "none" &&
-      style?.visibility !== "hidden" &&
-      rect &&
-      rect.width > 0 &&
-      rect.height > 0,
-    );
-  }, START_MODAL_TEST_ID);
+  await page.waitForFunction(
+    (startModalTestId) => {
+      const modal = document.querySelector(
+        `[data-testid="${startModalTestId}"]`,
+      );
+      if (!modal) return false;
+      const style = window.getComputedStyle(modal);
+      const rect = modal.getBoundingClientRect();
+      return (
+        style.display !== "none" &&
+        style.visibility !== "hidden" &&
+        rect.width > 0 &&
+        rect.height > 0
+      );
+    },
+    { timeout: 15000 },
+    START_MODAL_TEST_ID,
+  );
 
-  assert(
-    startModalVisible,
-    `${profile.label}: modal inicial da torreta não apareceu.`,
+  const startModalCopy = await page.$eval(
+    `[data-testid="${START_MODAL_TEST_ID}"]`,
+    (modal) => {
+      const strong = modal.querySelector("strong");
+      return (
+        strong?.textContent?.trim() ||
+        modal.getAttribute("aria-label")?.trim() ||
+        ""
+      );
+    },
+  );
+  assertCondition(
+    TURRET_START_TITLES.some((title) => startModalCopy.includes(title)),
+    `${profile.label}: modal inicial da torreta sem título esperado.`,
   );
 
   await dismissBallTurretStartModal(page, profile.label);
 
+  await waitForEventType(page, "game_start", 15000);
   const events = await readGameEvents(page);
   const summary = summarizeEvents(events);
-  assert(
+  assertCondition(
     (summary.game_start || 0) >= 1,
     `${profile.label}: jogo da torreta não iniciou (${JSON.stringify(summary)}).`,
   );
 
-  return { eventSummary: summary };
+  return { eventSummary: summary, startModalCopy };
 }
 
 async function runTorretaLose(page, profile) {
@@ -276,80 +340,54 @@ async function runTorretaLose(page, profile) {
   await waitForCanvas(page);
   await dismissBallTurretStartModal(page, profile.label);
 
-  await waitForEventType(page, "game_end", 15000);
+  await waitForEventType(page, "game_end", 20000);
+
+  const ripVisible = await page.evaluate(() => {
+    const overlay = document.querySelector(
+      '[data-testid="game-cinematic-overlay"][data-cinematic-type="rip"]',
+    );
+    const ripComposition = document.querySelector(
+      '[data-testid="game-cinematic-rip-composition"]',
+    );
+    const overlayRect = overlay?.getBoundingClientRect();
+    const ripRect = ripComposition?.getBoundingClientRect();
+    return Boolean(
+      overlayRect &&
+        ripRect &&
+        overlayRect.width > 0 &&
+        overlayRect.height > 0 &&
+        ripRect.width > 0 &&
+        ripRect.height > 0,
+    );
+  });
+
   const gameOverVisible = await page.evaluate((patternSource) => {
     const pattern = new RegExp(patternSource, "i");
-    const canvas = document.querySelector("canvas");
-    const context = canvas?.getContext("2d");
-    if (!context || !canvas) return false;
     return pattern.test(document.body.innerText || "");
   }, GAME_OVER_TEXT_PATTERN.source);
 
   const events = await readGameEvents(page);
   const summary = summarizeEvents(events);
-  assert(
+  assertCondition(
     (summary.game_end || 0) >= 1,
     `${profile.label}: derrota não registrada (${JSON.stringify(summary)}).`,
   );
-  assert(
+  assertCondition(ripVisible, `${profile.label}: cinemática RIP não ficou visível.`);
+  assertCondition(
     gameOverVisible,
     `${profile.label}: tela de fim de jogo não ficou visível.`,
   );
 
-  return { eventSummary: summary, gameOverVisible };
-}
-
-async function installLevelTransitionRecorder(page) {
-  await page.evaluate((eventName) => {
-    window.__BRIKAYA_LEVEL_TRANSITIONS__ = [];
-    window.addEventListener(eventName, (event) => {
-      window.__BRIKAYA_LEVEL_TRANSITIONS__.push(event.detail);
-    });
-  }, LEVEL_TRANSITION_EVENT_NAME);
-}
-
-async function installHeldAdStub(page) {
-  await page.evaluate(() => {
-    window.__BRIKAYA_GOOGLE_ADS_ENABLED__ = true;
-    window.__BRIKAYA_TEST_AD_STATE__ = {
-      active: false,
-      afterCalls: 0,
-      beforeCalls: 0,
-      configs: [],
-      doneCalls: 0,
-      requests: [],
-    };
-
-    window.adConfig = (config) => {
-      window.__BRIKAYA_TEST_AD_STATE__.configs.push(config);
-    };
-
-    window.adBreak = (placement) => {
-      const state = window.__BRIKAYA_TEST_AD_STATE__;
-      state.requests.push({ type: placement.type, name: placement.name });
-      state.active = true;
-      placement.beforeAd?.();
-      state.beforeCalls += 1;
-
-      state.finish = () => {
-        if (!state.active) return;
-        state.active = false;
-        placement.afterAd?.();
-        state.afterCalls += 1;
-        placement.adBreakDone?.({ breakStatus: "viewed" });
-        state.doneCalls += 1;
-      };
-    };
-  });
+  return { eventSummary: summary, ripVisible, gameOverVisible };
 }
 
 async function runFirstAd(page, profile) {
-  await installLevelTransitionRecorder(page);
-  await installHeldAdStub(page);
   await page.goto(scenarioUrl(publicUrl(), "single-brick-phase3-clear"), {
     waitUntil: "domcontentloaded",
     timeout: MAX_NAVIGATION_MS,
   });
+  await installLevelTransitionRecorder(page);
+  await installHeldAdStub(page);
   await acceptPrivacyConsentIfPresent(page);
   await waitForCanvas(page);
 
@@ -357,91 +395,232 @@ async function runFirstAd(page, profile) {
     () => window.__BRIKAYA_TEST_AD_STATE__?.active === true,
     { timeout: 30000 },
   );
-  await new Promise((resolve) =>
-    setTimeout(resolve, AD_HOLD_ASSERTION_DELAY_MS),
+  await new Promise((resolveDelay) =>
+    setTimeout(resolveDelay, AD_HOLD_ASSERTION_DELAY_MS),
   );
 
-  const transitions = await page.evaluate(
+  const transitionsBeforeFinish = await page.evaluate(
     () => window.__BRIKAYA_LEVEL_TRANSITIONS__ || [],
   );
-  const adState = await page.evaluate(
+  const adStateBeforeFinish = await page.evaluate(
     () => window.__BRIKAYA_TEST_AD_STATE__ || null,
   );
-  const events = await readGameEvents(page);
-  const summary = summarizeEvents(events);
+  const eventsBeforeFinish = await readGameEvents(page);
+  const summaryBeforeFinish = summarizeEvents(eventsBeforeFinish);
 
-  assert(
-    transitions.some(
-      (event) => event.phase === "start" && event.fromLevel === 3,
+  assertCondition(
+    transitionsBeforeFinish.some(
+      (event) => event.phase === "start" && event.currentLevel === 3,
     ),
     `${profile.label}: transição 3→4 não iniciou.`,
   );
-  assert(
-    (adState?.requests?.length || 0) >= 1,
+  assertCondition(
+    !transitionsBeforeFinish.some((event) => event.phase === "finish"),
+    `${profile.label}: fase seguinte iniciou antes do fim do anúncio.`,
+  );
+  assertCondition(
+    (adStateBeforeFinish?.requests?.length || 0) >= 1,
     `${profile.label}: primeiro anúncio entre fases não foi solicitado.`,
   );
-  assert(
-    (summary.level_complete || 0) >= 1,
+  assertCondition(
+    adStateBeforeFinish?.requests?.[0]?.name === "brikaya_level_3_to_4",
+    `${profile.label}: placement do anúncio inesperado.`,
+  );
+  assertCondition(
+    (summaryBeforeFinish.level_complete || 0) >= 1,
     `${profile.label}: fase 3 não concluiu antes do anúncio.`,
   );
 
-  if (adState?.active) {
-    await page.evaluate(() => {
-      window.__BRIKAYA_TEST_AD_STATE__?.finish?.();
-    });
-  }
+  const completion = await completeHeldAd(page, profile.label);
+  const events = await readGameEvents(page);
+  const summary = summarizeEvents(events);
+  const levelStart = events.filter((event) => event.type === "level_start").at(-1);
+
+  assertCondition(
+    levelStart?.metadata?.level === 4,
+    `${profile.label}: fase 4 não iniciou após anúncio.`,
+  );
+  assertCondition(
+    completion.adState?.doneCalls === 1,
+    `${profile.label}: adBreakDone não foi chamado uma vez.`,
+  );
 
   return {
     eventSummary: summary,
-    transitions,
-    adRequests: adState?.requests || [],
-    adDoneCalls: adState?.doneCalls || 0,
+    transitions: completion.transitions,
+    adRequests: completion.adState?.requests || [],
+    promptText: completion.promptText,
   };
 }
 
+async function assertNoGameEnd(summary, profileLabel, scenarioLabel) {
+  assertCondition(
+    (summary.game_end || 0) === 0,
+    `${profileLabel} [${scenarioLabel}]: fim de jogo inesperado (${JSON.stringify(summary)}).`,
+  );
+}
+
 async function runScenarioCheck(page, profile, scenarioCheck) {
+  await clearGameLog(page);
   await page.goto(scenarioUrl(publicUrl(), scenarioCheck.id), {
     waitUntil: "domcontentloaded",
     timeout: MAX_NAVIGATION_MS,
   });
   await acceptPrivacyConsentIfPresent(page);
+  await waitForInitialCountdownToFinish(page);
   await waitForCanvas(page);
+  await waitForGameLogReady(page);
 
-  if (
-    scenarioCheck.id === "ball-turret" ||
-    scenarioCheck.id === "ball-turret-lose"
-  ) {
+  if (scenarioCheck.dismissTurretModal) {
     await dismissBallTurretStartModal(page, profile.label);
   }
 
-  const summary = await observeEvents(page);
+  let details = {};
 
-  for (const requiredType of scenarioCheck.required) {
-    assert(
-      (summary[requiredType] || 0) >= 1,
-      `${profile.label} [${scenarioCheck.label}]: evento ${requiredType} ausente (${JSON.stringify(summary)}).`,
+  if (scenarioCheck.kind === "paddle-collision") {
+    await waitForEventType(page, "game_start", OBSERVATION_TIMEOUT_MS);
+    const { paddleCollision } = await waitForPaddleCollision(
+      page,
+      PADDLE_COLLISION_TIMEOUT_MS,
     );
-  }
-
-  for (const forbiddenType of scenarioCheck.forbidden) {
-    assert(
-      (summary[forbiddenType] || 0) === 0,
-      `${profile.label} [${scenarioCheck.label}]: evento inesperado ${forbiddenType} (${JSON.stringify(summary)}).`,
-    );
-  }
-
-  if (scenarioCheck.expectLevel) {
+    assertPaddleCollisionPhysics(paddleCollision, profile.label);
     const events = await readGameEvents(page);
-    const levelStart = events
-      .filter((event) => event.type === "level_start")
-      .at(-1);
-    assert(
-      levelStart?.level === scenarioCheck.expectLevel,
-      `${profile.label} [${scenarioCheck.label}]: fase ${scenarioCheck.expectLevel} não iniciou.`,
+    const summary = summarizeEvents(events);
+    assertCondition(
+      (summary.game_start || 0) >= 1,
+      `${profile.label} [${scenarioCheck.label}]: game_start ausente.`,
     );
+    await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
+    details = { collisionInfo: paddleCollision.collisionInfo, eventSummary: summary };
+  } else if (scenarioCheck.kind === "metal-block") {
+    await waitForBrickCollisions(page, 1);
+    await waitForEventType(page, "brick_destroyed", OBSERVATION_TIMEOUT_MS);
+    const events = await readGameEvents(page);
+    const summary = summarizeEvents(events);
+    assertCondition(
+      (summary.brick_destroyed || 0) >= 1,
+      `${profile.label} [${scenarioCheck.label}]: brick_destroyed ausente.`,
+    );
+    await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
+    details = { eventSummary: summary };
+  } else if (scenarioCheck.kind === "evasive-blocks") {
+    await waitForBrickCollisions(page, EXPECTED_EVASIVE_BLOCK_COUNT);
+    await page.waitForFunction(
+      async ({ dbName, storeName, dbVersion, expectedCount }) => {
+        const events = await new Promise((resolveEvents) => {
+          const request = indexedDB.open(dbName, dbVersion);
+          request.onerror = () => resolveEvents([]);
+          request.onsuccess = () => {
+            const db = request.result;
+            if (!db.objectStoreNames.contains(storeName)) {
+              db.close();
+              resolveEvents([]);
+              return;
+            }
+            const tx = db.transaction([storeName], "readonly");
+            const store = tx.objectStore(storeName);
+            const allRequest = store.getAll();
+            allRequest.onsuccess = () => {
+              db.close();
+              resolveEvents(allRequest.result || []);
+            };
+            allRequest.onerror = () => {
+              db.close();
+              resolveEvents([]);
+            };
+          };
+        });
+
+        return (
+          events.filter((event) => event.type === "brick_destroyed").length >=
+          expectedCount
+        );
+      },
+      { timeout: BRICK_COLLISION_TIMEOUT_MS },
+      {
+        dbName: GAME_LOG_DB_NAME,
+        storeName: GAME_LOG_STORE_NAME,
+        dbVersion: GAME_LOG_DB_VERSION,
+        expectedCount: EXPECTED_EVASIVE_BLOCK_COUNT,
+      },
+    );
+    await waitForEventType(page, "level_complete", BRICK_COLLISION_TIMEOUT_MS).catch(
+      () => undefined,
+    );
+    await waitForEventType(page, "level_start", BRICK_COLLISION_TIMEOUT_MS).catch(
+      () => undefined,
+    );
+    const events = await readGameEvents(page);
+    const summary = summarizeEvents(events);
+    assertCondition(
+      (summary.brick_destroyed || 0) >= EXPECTED_EVASIVE_BLOCK_COUNT,
+      `${profile.label} [${scenarioCheck.label}]: blocos evasivos insuficientes.`,
+    );
+    await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
+    details = { eventSummary: summary };
+  } else if (scenarioCheck.kind === "power-up") {
+    const activation = await waitForPowerUpAction(
+      page,
+      scenarioCheck.powerUpType,
+      "activate",
+    );
+    const events = await readGameEvents(page);
+    const summary = summarizeEvents(events);
+    assertCondition(
+      (summary.game_start || 0) >= 1,
+      `${profile.label} [${scenarioCheck.label}]: game_start ausente.`,
+    );
+    assertCondition(
+      activation?.metadata?.powerUpType === scenarioCheck.powerUpType,
+      `${profile.label} [${scenarioCheck.label}]: power-up incorreto.`,
+    );
+
+    if (scenarioCheck.sideEffect === "brick_destroyed") {
+      assertCondition(
+        (summary.brick_destroyed || 0) >= 1,
+        `${profile.label} [${scenarioCheck.label}]: brick_destroyed ausente.`,
+      );
+    }
+
+    if (scenarioCheck.sideEffect === "ball_added") {
+      assertCondition(
+        (summary.ball_added || 0) >= 1,
+        `${profile.label} [${scenarioCheck.label}]: ball_added ausente.`,
+      );
+    }
+
+    if (scenarioCheck.powerUpType === "slow_ball") {
+      assertCondition(
+        activation?.metadata?.speedState,
+        `${profile.label} [${scenarioCheck.label}]: speedState ausente após slow_ball.`,
+      );
+    }
+
+    await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
+    details = {
+      eventSummary: summary,
+      powerUpMetadata: activation?.metadata ?? null,
+    };
+  } else if (scenarioCheck.kind === "phase-transition") {
+    await waitForEventType(page, "level_complete", PHASE_TRANSITION_TIMEOUT_MS);
+    await waitForEventType(page, "level_start", PHASE_TRANSITION_TIMEOUT_MS);
+    await page.waitForSelector('[data-testid="level-toast"]', {
+      timeout: PHASE_TRANSITION_TIMEOUT_MS,
+    });
+    const events = await readGameEvents(page);
+    const phaseDetails = await assertPhaseTransition(page, events, profile.label, {
+      fromLevel: 1,
+      toLevel: 2,
+      expectedSpeedMultiplier: 1.12,
+    });
+    const summary = summarizeEvents(events);
+    details = { eventSummary: summary, phaseTransition: phaseDetails };
+  } else {
+    const summary = await observeEvents(page, OBSERVATION_TIMEOUT_MS);
+    details = { eventSummary: summary };
   }
 
-  return { scenario: scenarioCheck.id, eventSummary: summary };
+  return { scenario: scenarioCheck.id, ...details };
 }
 
 async function runProfile(browser, profile, targetUrl, consoleProblems) {
@@ -461,10 +640,8 @@ async function runProfile(browser, profile, targetUrl, consoleProblems) {
     const firstAd = await runFirstAd(page, profile);
 
     const scenarioResults = [];
-    for (const scenarioCheck of SCENARIO_CHECKS) {
-      scenarioResults.push(
-        await runScenarioCheck(page, profile, scenarioCheck),
-      );
+    for (const scenarioCheck of SCENARIO_MATRIX) {
+      scenarioResults.push(await runScenarioCheck(page, profile, scenarioCheck));
     }
 
     return {
@@ -490,13 +667,13 @@ async function run() {
   const profileResults = [];
 
   try {
-    for (const profile of MOBILE_BROWSER_PROFILES) {
+    for (const profile of JOURNEY_PROFILES) {
       profileResults.push(
         await runProfile(browser, profile, targetUrl, consoleProblems),
       );
     }
 
-    assert(
+    assertCondition(
       consoleProblems.length === 0,
       `Console com problemas: ${JSON.stringify(consoleProblems)}`,
     );

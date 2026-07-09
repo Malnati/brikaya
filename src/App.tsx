@@ -115,6 +115,9 @@ const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
 const SINGLE_BRICK_PHASE_3_QA_SCENARIO = "single-brick-phase3-clear";
 const PADDLE_COLLISION_QA_SCENARIO = "paddle-collision";
 const LASER_FAN_QA_SCENARIO = "laser-fan";
+const MULTIBALL_QA_SCENARIO = "multiball-power-up";
+const WIDE_PADDLE_QA_SCENARIO = "wide-paddle-power-up";
+const SLOW_BALL_QA_SCENARIO = "slow-ball-power-up";
 const METAL_BLOCK_QA_SCENARIO = "metal-block";
 const EVASIVE_BLOCKS_QA_SCENARIO = "evasive-blocks";
 const BALL_TURRET_QA_SCENARIO = "ball-turret";
@@ -285,6 +288,9 @@ function GameApp() {
     if (scenario === PADDLE_COLLISION_QA_SCENARIO)
       return PADDLE_COLLISION_QA_SCENARIO;
     if (scenario === LASER_FAN_QA_SCENARIO) return LASER_FAN_QA_SCENARIO;
+    if (scenario === MULTIBALL_QA_SCENARIO) return MULTIBALL_QA_SCENARIO;
+    if (scenario === WIDE_PADDLE_QA_SCENARIO) return WIDE_PADDLE_QA_SCENARIO;
+    if (scenario === SLOW_BALL_QA_SCENARIO) return SLOW_BALL_QA_SCENARIO;
     if (scenario === METAL_BLOCK_QA_SCENARIO) return METAL_BLOCK_QA_SCENARIO;
     if (scenario === EVASIVE_BLOCKS_QA_SCENARIO)
       return EVASIVE_BLOCKS_QA_SCENARIO;
@@ -298,7 +304,8 @@ function GameApp() {
     qaScenario === "single-brick-phase-clear" ||
     qaScenario === SINGLE_BRICK_PHASE_3_QA_SCENARIO ||
     qaScenario === METAL_BLOCK_QA_SCENARIO ||
-    qaScenario === EVASIVE_BLOCKS_QA_SCENARIO
+    qaScenario === EVASIVE_BLOCKS_QA_SCENARIO ||
+    qaScenario === PADDLE_COLLISION_QA_SCENARIO
       ? GAME_MODE_CLASSIC
       : GAME_MODE_BALL_TURRET;
   const hasJoystickDiagnosticSamples =
