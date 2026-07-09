@@ -8,6 +8,10 @@ import {
   PRIVACY_CONSENT_STORAGE_KEY,
   acceptPrivacyConsentIfPresent,
 } from "./consentHelpers.js";
+import {
+  applyPortugueseQaLocale,
+  seedPortugueseLocaleStorage,
+} from "./publicQaEnv.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-consent-screen-qa.json";
@@ -189,12 +193,14 @@ async function run() {
 
   try {
     await page.setViewport(VIEWPORT);
+    await applyPortugueseQaLocale(page);
     await clearBrowserOriginState(page, targetUrl);
     await page.goto(targetUrl, {
       waitUntil: "networkidle0",
       timeout: MAX_NAVIGATION_MS,
     });
     await clearRuntimeState(page);
+    await seedPortugueseLocaleStorage(page);
     await page.goto(targetUrl, {
       waitUntil: "networkidle0",
       timeout: MAX_NAVIGATION_MS,

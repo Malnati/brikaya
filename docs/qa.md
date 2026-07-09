@@ -15,7 +15,7 @@ npm test
 
 ## Suíte e2e no CI
 
-O workflow `ci-reusable` executa `npm run test:cloudflare-e2e` contra o `dist/` servido em `http://127.0.0.1:7979/` antes de qualquer deploy (`deploy-preview` e `deploy-production` dependem de `needs: ci`).
+O workflow `ci-reusable` executa `npm run test:cloudflare-e2e` contra o `dist/` servido em `http://127.0.0.1:7979/` antes de qualquer deploy. No CI, o gate inicial usa `BRIKAYA_E2E_ONLY` com `cloudflare-theme-qa` e `cloudflare-offline-pwa-qa` (suíte completa via `make cloudflare-e2e-qa` contra preview publicado).
 
 Replicação local:
 
