@@ -17,14 +17,17 @@ const PADDLE_MAX_ARC = 0.88;
 const PADDLE_THICKNESS_RATIO = 1.65;
 const PADDLE_MOVEMENT_START_ANGLE = Math.PI * 0.08;
 const PADDLE_MOVEMENT_END_ANGLE = Math.PI * 0.92;
-const LOSS_ARC_START_ANGLE = Math.PI * 0.16;
-const LOSS_ARC_END_ANGLE = Math.PI * 0.84;
+const LOSS_ARC_CENTER_ANGLE = Math.PI * CENTER_RATIO;
+const LOSS_ARC_HALF_SPAN = Math.PI * 0.34 * CENTER_RATIO;
+const LOSS_ARC_START_ANGLE = LOSS_ARC_CENTER_ANGLE - LOSS_ARC_HALF_SPAN;
+const LOSS_ARC_END_ANGLE = LOSS_ARC_CENTER_ANGLE + LOSS_ARC_HALF_SPAN;
 const FULL_CIRCLE = Math.PI * 2;
 const FULL_CIRCLE_EPSILON = 0.000001;
 const MIN_RADIUS_FOR_ANGLE_EXPANSION = 1;
 export const BALL_TURRET_BOUNDARY_SEGMENT_COUNT = 18;
 export const BALL_TURRET_INITIAL_REBOUND_SEGMENT_COUNT = 9;
 export const BALL_TURRET_REBOUND_ZERO_LEVEL = 10;
+export const BOUNDARY_LOSS_SEGMENT_SPAN_RATIO = 0.5;
 const BALL_TURRET_BOUNDARY_START_ANGLE =
   Math.PI / 2 - FULL_CIRCLE / BALL_TURRET_BOUNDARY_SEGMENT_COUNT / 2;
 
@@ -94,6 +97,14 @@ export interface BallTurretBoundarySegment {
   endAngle: number;
   rebounds: boolean;
 }
+
+export interface BallTurretBoundaryDrawRange {
+  startAngle: number;
+  endAngle: number;
+  rebounds: boolean;
+}
+
+export type BallTurretBoundaryBehavior = "rebound" | "loss";
 
 export function calculateRadialPlayfieldGeometry(
   canvasWidth: number,
@@ -279,10 +290,129 @@ export function calculateBallTurretBoundarySegments(
   );
 }
 
+export function resolveBallTurretBoundaryBehavior(
+  angle: number,
+  level: number,
+): BallTurretBoundaryBehavior {
+  return isBallTurretBoundarySegmentRebounding(angle, level)
+    ? "rebound"
+    : "loss";
+}
+
 export function isBallTurretBoundarySegmentRebounding(
   angle: number,
   level: number,
 ): boolean {
+  const segment = getBallTurretBoundarySegmentForAngle(angle);
+  const reboundIndexes = calculateBallTurretReboundSegmentIndexes(level);
+
+  if (reboundIndexes.has(segment.index)) {
+    return true;
+  }
+
+  if (calculateBallTurretReboundSegmentCount(level) === 0) {
+    return false;
+  }
+
+  const lossRange = getBallTurretLossArcRange(segment, level);
+  return !isAngleBetween(angle, lossRange.startAngle, lossRange.endAngle);
+}
+
+export function getBallTurretLossArcRange(
+  segment: BallTurretBoundarySegment,
+  level: number,
+): { startAngle: number; endAngle: number } {
+  const segmentSpan = segment.endAngle - segment.startAngle;
+
+  if (
+    segment.rebounds ||
+    calculateBallTurretReboundSegmentCount(level) === 0
+  ) {
+    return {
+      startAngle: segment.startAngle,
+      endAngle: segment.endAngle,
+    };
+  }
+
+  const lossSpan = segmentSpan * BOUNDARY_LOSS_SEGMENT_SPAN_RATIO;
+  const inset = (segmentSpan - lossSpan) * CENTER_RATIO;
+
+  return {
+    startAngle: segment.startAngle + inset,
+    endAngle: segment.endAngle - inset,
+  };
+}
+
+export function getBallTurretBoundaryDrawRanges(
+  segment: BallTurretBoundarySegment,
+  level: number,
+): BallTurretBoundaryDrawRange[] {
+  if (segment.rebounds) {
+    return [
+      {
+        startAngle: segment.startAngle,
+        endAngle: segment.endAngle,
+        rebounds: true,
+      },
+    ];
+  }
+
+  if (calculateBallTurretReboundSegmentCount(level) === 0) {
+    return [
+      {
+        startAngle: segment.startAngle,
+        endAngle: segment.endAngle,
+        rebounds: false,
+      },
+    ];
+  }
+
+  const lossRange = getBallTurretLossArcRange(segment, level);
+
+  return [
+    {
+      startAngle: segment.startAngle,
+      endAngle: lossRange.startAngle,
+      rebounds: true,
+    },
+    {
+      startAngle: lossRange.startAngle,
+      endAngle: lossRange.endAngle,
+      rebounds: false,
+    },
+    {
+      startAngle: lossRange.endAngle,
+      endAngle: segment.endAngle,
+      rebounds: true,
+    },
+  ];
+}
+
+export function getBallTurretBoundaryArcRangeForAngle(
+  angle: number,
+  level: number,
+): { startAngle: number; endAngle: number } | null {
+  const segment = getBallTurretBoundarySegmentForAngle(angle);
+  const reboundIndexes = calculateBallTurretReboundSegmentIndexes(level);
+  const fullSegment: BallTurretBoundarySegment = {
+    ...segment,
+    rebounds: reboundIndexes.has(segment.index),
+  };
+  const drawRange = getBallTurretBoundaryDrawRanges(fullSegment, level).find(
+    (range) => isAngleBetween(angle, range.startAngle, range.endAngle),
+  );
+
+  if (!drawRange) return null;
+
+  return {
+    startAngle: drawRange.startAngle,
+    endAngle: drawRange.endAngle,
+  };
+}
+
+function getBallTurretBoundarySegmentForAngle(
+  angle: number,
+): BallTurretBoundarySegment {
   const normalizedOffset = normalizeAngle(
     angle - BALL_TURRET_BOUNDARY_START_ANGLE,
   );
@@ -291,8 +421,14 @@ export function isBallTurretBoundarySegmentRebounding(
     BALL_TURRET_BOUNDARY_SEGMENT_COUNT - 1,
     Math.floor(normalizedOffset / segmentSpan),
   );
+  const startAngle = BALL_TURRET_BOUNDARY_START_ANGLE + index * segmentSpan;
 
-  return calculateBallTurretReboundSegmentIndexes(level).has(index);
+  return {
+    index,
+    startAngle,
+    endAngle: startAngle + segmentSpan,
+    rebounds: false,
+  };
 }
 
 function calculateBallTurretReboundSegmentIndexes(level: number): Set<number> {

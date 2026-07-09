@@ -5,6 +5,7 @@ import {
   BALL_TURRET_BOUNDARY_SEGMENT_COUNT,
   BALL_TURRET_INITIAL_REBOUND_SEGMENT_COUNT,
   BALL_TURRET_REBOUND_ZERO_LEVEL,
+  BOUNDARY_LOSS_SEGMENT_SPAN_RATIO,
   calculateBallTurretBoundarySegments,
   calculateBallTurretPlayfieldGeometry,
   calculateBallTurretReboundSegmentCount,
@@ -13,8 +14,11 @@ import {
   calculateRadialBrickSegment,
   calculateRadialPaddleBounds,
   calculateRadialPlayfieldGeometry,
+  getBallTurretBoundaryDrawRanges,
+  getBallTurretLossArcRange,
   isBallTurretBoundarySegmentRebounding,
   isCircleIntersectingRadialSegment,
+  resolveBallTurretBoundaryBehavior,
 } from "./radialGeometry";
 
 const TEST_CANVAS_WIDTH = 480;
@@ -195,14 +199,61 @@ describe("radialGeometry", () => {
       (bottomReboundSegment.startAngle + bottomReboundSegment.endAngle) / 2;
     const nextLossAngle =
       (nextLossSegment.startAngle + nextLossSegment.endAngle) / 2;
+    const lossRange = getBallTurretLossArcRange(nextLossSegment, 1);
+    const lossEdgeAngle =
+      (nextLossSegment.startAngle + lossRange.startAngle) / 2;
 
     expect(isBallTurretBoundarySegmentRebounding(bottomReboundAngle, 1)).toBe(
       true,
     );
     expect(isBallTurretBoundarySegmentRebounding(nextLossAngle, 1)).toBe(false);
+    expect(isBallTurretBoundarySegmentRebounding(lossEdgeAngle, 1)).toBe(true);
+    expect(resolveBallTurretBoundaryBehavior(nextLossAngle, 1)).toBe("loss");
+    expect(resolveBallTurretBoundaryBehavior(lossEdgeAngle, 1)).toBe(
+      "rebound",
+    );
     expect(isBallTurretBoundarySegmentRebounding(bottomReboundAngle, 10)).toBe(
       false,
     );
+  });
+
+  it("reduz a abertura de perda para metade do segmento nas fases 1 a 9", () => {
+    const lossSegment = calculateBallTurretBoundarySegments(1)[1];
+    const segmentSpan = lossSegment.endAngle - lossSegment.startAngle;
+    const lossRange = getBallTurretLossArcRange(lossSegment, 1);
+    const drawRanges = getBallTurretBoundaryDrawRanges(lossSegment, 1);
+
+    expect(lossRange.endAngle - lossRange.startAngle).toBeCloseTo(
+      segmentSpan * BOUNDARY_LOSS_SEGMENT_SPAN_RATIO,
+    );
+    expect(drawRanges).toHaveLength(3);
+    expect(drawRanges.filter((range) => range.rebounds)).toHaveLength(2);
+    expect(drawRanges.filter((range) => !range.rebounds)).toHaveLength(1);
+  });
+
+  it("usa o arco de perda clássico com metade do span anterior", () => {
+    const geometry = calculateRadialPlayfieldGeometry(
+      TEST_CANVAS_WIDTH,
+      TEST_CANVAS_HEIGHT,
+      TEST_DIMENSIONS,
+    );
+
+    expect(geometry.lossArcStartAngle).toBeCloseTo(Math.PI * 0.33);
+    expect(geometry.lossArcEndAngle).toBeCloseTo(Math.PI * 0.67);
+    expect(geometry.lossArcEndAngle - geometry.lossArcStartAngle).toBeCloseTo(
+      Math.PI * 0.34,
+    );
+  });
+
+  it("mantém perda em todo o segmento na fase 10", () => {
+    const lossSegment = calculateBallTurretBoundarySegments(10)[1];
+    const lossRange = getBallTurretLossArcRange(lossSegment, 10);
+    const drawRanges = getBallTurretBoundaryDrawRanges(lossSegment, 10);
+
+    expect(lossRange.startAngle).toBeCloseTo(lossSegment.startAngle);
+    expect(lossRange.endAngle).toBeCloseTo(lossSegment.endAngle);
+    expect(drawRanges).toHaveLength(1);
+    expect(drawRanges[0].rebounds).toBe(false);
   });
 
   it("detecta colisão circular dentro de segmento radial", () => {
