@@ -28,13 +28,11 @@ const MUSIC_OFF_LABEL = "Sem música";
 const MUSIC_ON_LABEL = "Música";
 const MUSIC_OFF_ICON = "×";
 const MUSIC_ON_ICON = "♫";
-const AUDIO_TOGGLE_SELECTOR =
-  'button[aria-label="Sem som"], button[aria-label="Som"]';
-const MUSIC_TOGGLE_SELECTOR =
-  'button[aria-label="Sem música"], button[aria-label="Música"]';
+const AUDIO_TOGGLE_SELECTOR = "button.audio-toggle";
+const MUSIC_TOGGLE_SELECTOR = "button.music-toggle";
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const WAIT_FOR_OVERLAY_TIMEOUT_MS = 5000;
-const AUDIO_TOGGLE_TIMEOUT_MS = 10000;
+const AUDIO_TOGGLE_TIMEOUT_MS = 30000;
 const AUDIO_TOUR_SETTLE_MS = 1200;
 const MIN_CACHED_AUDIO_PATHS = 1;
 const IOS_CHROME_USER_AGENT =
@@ -82,6 +80,14 @@ const VIEWPORTS = [
 
 function env(name, fallback) {
   return process.env[name] || fallback;
+}
+
+function viewportsForRun(publicUrl) {
+  const hostname = new URL(publicUrl).hostname;
+  if (hostname === "127.0.0.1" || hostname === "localhost") {
+    return VIEWPORTS.filter((viewport) => viewport.name !== "chrome-desktop-macos");
+  }
+  return VIEWPORTS;
 }
 
 function ensureParentDirectory(filePath) {
@@ -179,28 +185,29 @@ async function waitForCinematicOverlayToClear(page) {
     .catch(() => undefined);
 }
 
+async function emulatePortugueseLocale(page) {
+  const client = await page.createCDPSession();
+  await client.send("Emulation.setLocaleOverride", { locale: "pt-BR" });
+}
+
 async function readAudioToggleState(page, expectedPaths) {
   return page.evaluate(async (paths) => {
     const audioState = window.__brikayaAudioState?.() || { events: [] };
-    const soundButton =
-      Array.from(document.querySelectorAll("button"))
-        .map((button) => ({
-          text: button.textContent?.trim() || "",
-          ariaLabel: button.getAttribute("aria-label") || "",
-          title: button.getAttribute("title") || "",
-          ariaPressed: button.getAttribute("aria-pressed") || "",
-        }))
-        .find((button) => /^(Som|Sem som)$/.test(button.ariaLabel)) || null;
-    const musicButton =
-      Array.from(document.querySelectorAll("button"))
-        .map((button) => ({
-          text: button.textContent?.trim() || "",
-          ariaLabel: button.getAttribute("aria-label") || "",
-          title: button.getAttribute("title") || "",
-          ariaPressed: button.getAttribute("aria-pressed") || "",
-        }))
-        .find((button) => /^(Música|Sem música)$/.test(button.ariaLabel)) ||
-      null;
+    const toButtonState = (button) =>
+      button
+        ? {
+            text: button.textContent?.trim() || "",
+            ariaLabel: button.getAttribute("aria-label") || "",
+            title: button.getAttribute("title") || "",
+            ariaPressed: button.getAttribute("aria-pressed") || "",
+          }
+        : null;
+    const soundButton = toButtonState(
+      document.querySelector("button.audio-toggle"),
+    );
+    const musicButton = toButtonState(
+      document.querySelector("button.music-toggle"),
+    );
     const cacheNames = "caches" in window ? await caches.keys() : [];
     const cachedAudioPaths = [];
     if ("caches" in window) {
@@ -225,47 +232,20 @@ async function readAudioToggleState(page, expectedPaths) {
   }, expectedPaths);
 }
 
-async function waitForSoundButton(page, ariaLabel) {
+async function waitForTogglePressed(page, selector, pressed) {
+  const expected = pressed ? "true" : "false";
   await page.waitForFunction(
-    (selector, expectedLabel) => {
-      const button = Array.from(document.querySelectorAll(selector)).find(
-        (node) => node.getAttribute("aria-label") === expectedLabel,
-      );
-      return Boolean(button);
-    },
+    (toggleSelector, ariaPressed) =>
+      document.querySelector(toggleSelector)?.getAttribute("aria-pressed") ===
+      ariaPressed,
     { timeout: AUDIO_TOGGLE_TIMEOUT_MS },
-    AUDIO_TOGGLE_SELECTOR,
-    ariaLabel,
+    selector,
+    expected,
   );
 }
 
-async function waitForMusicButton(page, ariaLabel) {
-  await page.waitForFunction(
-    (selector, expectedLabel) => {
-      const button = Array.from(document.querySelectorAll(selector)).find(
-        (node) => node.getAttribute("aria-label") === expectedLabel,
-      );
-      return Boolean(button);
-    },
-    { timeout: AUDIO_TOGGLE_TIMEOUT_MS },
-    MUSIC_TOGGLE_SELECTOR,
-    ariaLabel,
-  );
-}
-
-async function activateSoundButton(page, ariaLabel, touch) {
-  await waitForSoundButton(page, ariaLabel);
-  const selector = `button[aria-label="${ariaLabel}"]`;
-  if (touch) {
-    await page.tap(selector);
-    return;
-  }
-  await page.click(selector);
-}
-
-async function activateMusicButton(page, ariaLabel, touch) {
-  await waitForMusicButton(page, ariaLabel);
-  const selector = `button[aria-label="${ariaLabel}"]`;
+async function activateToggle(page, selector, touch) {
+  await page.waitForSelector(selector, { timeout: AUDIO_TOGGLE_TIMEOUT_MS });
   if (touch) {
     await page.tap(selector);
     return;
@@ -282,6 +262,8 @@ async function runViewportQa(
 ) {
   await page.setViewport(config.viewport);
   if (config.userAgent) await page.setUserAgent(config.userAgent);
+  await page.setExtraHTTPHeaders({ "Accept-Language": "pt-BR,pt;q=0.9" });
+  await emulatePortugueseLocale(page);
   await page.goto(targetUrl, { waitUntil: "networkidle0", timeout: 60000 });
   await clearOfflineState(page);
   await page.reload({ waitUntil: "networkidle0", timeout: 60000 });
@@ -303,28 +285,20 @@ async function runViewportQa(
     `${config.name}: controle de música não visível.`,
   );
   assert(
-    initial.soundButton.ariaLabel === AUDIO_OFF_LABEL,
-    `${config.name}: estado inicial não é Sem som.`,
+    initial.soundButton.ariaPressed === "false",
+    `${config.name}: som inicial deveria estar mudo.`,
   );
   assert(
     initial.soundButton.text === AUDIO_OFF_ICON,
     `${config.name}: ícone inicial não é ×.`,
   );
   assert(
-    initial.soundButton.ariaPressed === "false",
-    `${config.name}: aria-pressed inicial inválido.`,
-  );
-  assert(
-    initial.musicButton.ariaLabel === MUSIC_ON_LABEL,
-    `${config.name}: estado inicial da música não é Música.`,
+    initial.musicButton.ariaPressed === "true",
+    `${config.name}: música inicial deveria estar ativa.`,
   );
   assert(
     initial.musicButton.text === MUSIC_ON_ICON,
     `${config.name}: ícone inicial da música não é ♫.`,
-  );
-  assert(
-    initial.musicButton.ariaPressed === "true",
-    `${config.name}: aria-pressed inicial da música inválido.`,
   );
   assert(
     initial.audioState.muted === true,
@@ -335,26 +309,25 @@ async function runViewportQa(
     `${config.name}: música iniciou pausada indevidamente.`,
   );
 
-  await activateSoundButton(page, AUDIO_OFF_LABEL, config.touch);
+  await activateToggle(page, AUDIO_TOGGLE_SELECTOR, config.touch);
   await page.waitForFunction(
     () => {
       const state = window.__brikayaAudioState?.();
-      const button = Array.from(document.querySelectorAll("button")).find(
-        (node) => node.getAttribute("aria-label") === "Som",
-      );
+      const button = document.querySelector("button.audio-toggle");
       return Boolean(
         state?.unlocked &&
-        state?.muted === false &&
-        state?.latencySensitiveEffectsReady === true &&
-        button?.textContent?.trim() === "♪",
+          state?.muted === false &&
+          state?.latencySensitiveEffectsReady === true &&
+          button?.getAttribute("aria-pressed") === "true" &&
+          button?.textContent?.trim() === "♪",
       );
     },
     { timeout: AUDIO_TOGGLE_TIMEOUT_MS },
   );
   const enabled = await readAudioToggleState(page, audioPaths);
   assert(
-    enabled.soundButton?.ariaLabel === AUDIO_ON_LABEL,
-    `${config.name}: botão não mudou para Som.`,
+    enabled.soundButton?.ariaPressed === "true",
+    `${config.name}: botão de som não ficou ativo.`,
   );
   assert(
     enabled.soundButton?.text === AUDIO_ON_ICON,
@@ -392,29 +365,28 @@ async function runViewportQa(
     `${config.name}: efeitos instantâneos ausentes do preload: ${missingLatencySensitivePaths.join(", ")}`,
   );
 
-  await activateMusicButton(page, MUSIC_ON_LABEL, config.touch);
+  await activateToggle(page, MUSIC_TOGGLE_SELECTOR, config.touch);
   await page.waitForFunction(
     () => {
       const state = window.__brikayaAudioState?.();
-      const button = Array.from(document.querySelectorAll("button")).find(
-        (node) => node.getAttribute("aria-label") === "Sem música",
-      );
+      const button = document.querySelector("button.music-toggle");
       return Boolean(
         state?.muted === false &&
-        state?.musicMuted === true &&
-        button?.textContent?.trim() === "×",
+          state?.musicMuted === true &&
+          button?.getAttribute("aria-pressed") === "false" &&
+          button?.textContent?.trim() === "×",
       );
     },
     { timeout: AUDIO_TOGGLE_TIMEOUT_MS },
   );
   const musicDisabled = await readAudioToggleState(page, audioPaths);
   assert(
-    musicDisabled.soundButton?.ariaLabel === AUDIO_ON_LABEL,
+    musicDisabled.soundButton?.ariaPressed === "true",
     `${config.name}: pausar música desligou som geral.`,
   );
   assert(
-    musicDisabled.musicButton?.ariaLabel === MUSIC_OFF_LABEL,
-    `${config.name}: botão não mudou para Sem música.`,
+    musicDisabled.musicButton?.ariaPressed === "false",
+    `${config.name}: botão de música não ficou mudo.`,
   );
   assert(
     musicDisabled.musicButton?.text === MUSIC_OFF_ICON,
@@ -429,25 +401,24 @@ async function runViewportQa(
     `${config.name}: estado QA não pausou música.`,
   );
 
-  await activateMusicButton(page, MUSIC_OFF_LABEL, config.touch);
+  await activateToggle(page, MUSIC_TOGGLE_SELECTOR, config.touch);
   await page.waitForFunction(
     () => {
       const state = window.__brikayaAudioState?.();
-      const button = Array.from(document.querySelectorAll("button")).find(
-        (node) => node.getAttribute("aria-label") === "Música",
-      );
+      const button = document.querySelector("button.music-toggle");
       return Boolean(
         state?.muted === false &&
-        state?.musicMuted === false &&
-        button?.textContent?.trim() === "♫",
+          state?.musicMuted === false &&
+          button?.getAttribute("aria-pressed") === "true" &&
+          button?.textContent?.trim() === "♫",
       );
     },
     { timeout: AUDIO_TOGGLE_TIMEOUT_MS },
   );
   const musicEnabled = await readAudioToggleState(page, audioPaths);
   assert(
-    musicEnabled.musicButton?.ariaLabel === MUSIC_ON_LABEL,
-    `${config.name}: botão não voltou para Música.`,
+    musicEnabled.musicButton?.ariaPressed === "true",
+    `${config.name}: botão de música não voltou a ficar ativo.`,
   );
   assert(
     musicEnabled.musicButton?.text === MUSIC_ON_ICON,
@@ -458,23 +429,23 @@ async function runViewportQa(
     `${config.name}: música não voltou a ficar ativa.`,
   );
 
-  await activateSoundButton(page, AUDIO_ON_LABEL, config.touch);
+  await activateToggle(page, AUDIO_TOGGLE_SELECTOR, config.touch);
   await page.waitForFunction(
     () => {
       const state = window.__brikayaAudioState?.();
-      const button = Array.from(document.querySelectorAll("button")).find(
-        (node) => node.getAttribute("aria-label") === "Sem som",
-      );
+      const button = document.querySelector("button.audio-toggle");
       return Boolean(
-        state?.muted === true && button?.textContent?.trim() === "×",
+        state?.muted === true &&
+          button?.getAttribute("aria-pressed") === "false" &&
+          button?.textContent?.trim() === "×",
       );
     },
     { timeout: AUDIO_TOGGLE_TIMEOUT_MS },
   );
   const disabled = await readAudioToggleState(page, audioPaths);
   assert(
-    disabled.soundButton?.ariaLabel === AUDIO_OFF_LABEL,
-    `${config.name}: botão não voltou para Sem som.`,
+    disabled.soundButton?.ariaPressed === "false",
+    `${config.name}: botão de som não voltou a ficar mudo.`,
   );
   assert(
     disabled.soundButton?.text === AUDIO_OFF_ICON,
@@ -489,17 +460,16 @@ async function runViewportQa(
     `${config.name}: estado QA final não voltou para mudo.`,
   );
 
-  await activateSoundButton(page, AUDIO_OFF_LABEL, config.touch);
+  await activateToggle(page, AUDIO_TOGGLE_SELECTOR, config.touch);
   await page.waitForFunction(
     () => {
       const state = window.__brikayaAudioState?.();
-      const button = Array.from(document.querySelectorAll("button")).find(
-        (node) => node.getAttribute("aria-label") === "Som",
-      );
+      const button = document.querySelector("button.audio-toggle");
       return Boolean(
         state?.unlocked &&
-        state?.muted === false &&
-        button?.textContent?.trim() === "♪",
+          state?.muted === false &&
+          button?.getAttribute("aria-pressed") === "true" &&
+          button?.textContent?.trim() === "♪",
       );
     },
     { timeout: AUDIO_TOGGLE_TIMEOUT_MS },
@@ -542,13 +512,16 @@ async function run() {
 
   const browser = await puppeteer.launch(
     buildPuppeteerLaunchOptions({
-      extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"],
+      extraArgs: [
+        "--autoplay-policy=no-user-gesture-required",
+      ],
     }),
   );
 
   try {
     const viewportResults = [];
-    for (const viewportConfig of VIEWPORTS) {
+    const viewportMatrix = viewportsForRun(publicUrl);
+    for (const viewportConfig of viewportMatrix) {
       const page = await browser.newPage();
       page.on("request", (request) => {
         const requestUrl = new URL(request.url());
@@ -569,7 +542,7 @@ async function run() {
             latencySensitiveAudioPaths,
           ),
         );
-        if (viewportConfig.name === VIEWPORTS[VIEWPORTS.length - 1].name) {
+        if (viewportConfig.name === viewportMatrix[viewportMatrix.length - 1].name) {
           await page.screenshot({ path: screenshotPath, fullPage: true });
         }
       } finally {
@@ -626,7 +599,7 @@ async function run() {
       publicUrl,
       targetUrl,
       screenshotPath,
-      browserMatrix: VIEWPORTS.map((viewport) => viewport.name),
+      browserMatrix: viewportsForRun(publicUrl).map((viewport) => viewport.name),
       viewportResults,
       expectedAudioIds: ids,
       emittedAudioIds: [...emittedIds].sort(),

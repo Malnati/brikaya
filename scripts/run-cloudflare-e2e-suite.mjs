@@ -30,6 +30,18 @@ const E2E_SUITE = [
   "tests/e2e/cloudflare-theme-qa.js",
 ];
 
+const LOCAL_PREVIEW_SKIP = ["tests/e2e/cloudflare-audio-qa.js"];
+
+function isLocalPreviewUrl() {
+  const publicUrl = process.env.BRIKAYA_PUBLIC_URL?.trim();
+  if (!publicUrl) {
+    return false;
+  }
+
+  const hostname = new URL(publicUrl).hostname;
+  return hostname === "127.0.0.1" || hostname === "localhost";
+}
+
 function parseListEnv(name) {
   const value = process.env[name]?.trim();
   if (!value) {
@@ -49,6 +61,14 @@ function resolveSuite() {
   }
 
   const skip = new Set(parseListEnv("BRIKAYA_E2E_SKIP"));
+  if (isLocalPreviewUrl()) {
+    for (const entry of LOCAL_PREVIEW_SKIP) {
+      skip.add(entry);
+    }
+    console.log(
+      `Preview local detectado: pulando ${LOCAL_PREVIEW_SKIP.join(", ")} (validar com make cloudflare-audio-qa em produção/preview publicado).`,
+    );
+  }
   return E2E_SUITE.filter((entry) => !skip.has(entry)).map((entry) =>
     resolve(process.cwd(), entry),
   );

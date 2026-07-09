@@ -27,6 +27,8 @@ BRIKAYA_PUBLIC_URL=http://127.0.0.1:7979/ npm run test:cloudflare-e2e
 
 Atalho: `make cloudflare-e2e-qa` (requer `BRIKAYA_PUBLIC_URL` quando o alvo não for o padrão de produção).
 
+No CI/preview local (`127.0.0.1`), `cloudflare-audio-qa.js` fica de fora do gate automático; validar áudio com `make cloudflare-audio-qa` contra `https://brikaya.com/` ou `https://dev.brikaya.com/`.
+
 Variáveis opcionais para depuração: `BRIKAYA_E2E_ONLY` e `BRIKAYA_E2E_SKIP` (lista separada por vírgula de caminhos em `tests/e2e/`).
 
 ## Validação publicada
