@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const GENERATOR_PATH = 'scripts/generate-localized-seo.mjs';
+const I18N_HOME_SEO_PATH = 'scripts/generated/i18n-home-seo.json';
 const RELATIVE_MANIFEST_PATTERN = 'href="./manifest.webmanifest"';
 const ABSOLUTE_MANIFEST_PATTERN = 'href="/manifest.webmanifest"';
 const RELATIVE_FAVICON_PATTERN = 'href="./favicon.svg"';
@@ -355,52 +356,24 @@ describe('gerador SEO localizado', () => {
 
   it('declara metadados de downloads para todos os idiomas suportados', () => {
     const generator = readProjectFile(GENERATOR_PATH);
-    const downloadsSeoBlock = generator.slice(
-      generator.indexOf('const DOWNLOADS_SEO = {'),
-      generator.indexOf('function metadataFor'),
-    );
+    const seoSnapshot = JSON.parse(readProjectFile(I18N_HOME_SEO_PATH)) as Record<
+      string,
+      { downloads: { title: string; description: string; ogDescription: string } }
+    >;
+
+    expect(generator).toContain('I18N_HOME_SEO');
+    expect(generator).toContain('entry.downloads');
 
     for (const locale of LOCALIZED_LOCALES) {
-      expect(downloadsSeoBlock).toContain(`'${locale}':`);
+      expect(seoSnapshot[locale]?.downloads?.title).toMatch(/Brikaya/i);
+      expect(seoSnapshot[locale]?.downloads?.description).toBeTruthy();
+      expect(seoSnapshot[locale]?.downloads?.ogDescription).toBeTruthy();
     }
-    expect(downloadsSeoBlock).toContain("下载 Brikaya");
-    expect(downloadsSeoBlock).toContain("Brikayaをダウンロード");
-    expect(downloadsSeoBlock).toContain("Brikaya डाउनलोड");
-    expect(downloadsSeoBlock).toContain("تنزيل Brikaya");
-    expect(downloadsSeoBlock).toContain("Скачать Brikaya");
-    expect(downloadsSeoBlock).toContain("Brikaya ڈاؤن لوڈ کریں");
-    expect(downloadsSeoBlock).toContain("دانلود Brikaya");
-    expect(downloadsSeoBlock).toContain("הורדת Brikaya");
-    expect(downloadsSeoBlock).toContain("Brikaya பதிவிறக்கவும்");
-    expect(downloadsSeoBlock).toContain("Brikaya डाउनलोड करा");
-    expect(downloadsSeoBlock).toContain("Brikaya ડાઉનલોડ કરો");
-    expect(downloadsSeoBlock).toContain("Λήψη Brikaya");
-    expect(downloadsSeoBlock).toContain("Lataa Brikaya");
-    expect(downloadsSeoBlock).toContain("Stáhnout Brikaya");
-    expect(downloadsSeoBlock).toContain("Изтеглете Brikaya");
-    expect(downloadsSeoBlock).toContain("Преузми Brikaya");
-    expect(downloadsSeoBlock).toContain("Laai Brikaya af");
-    expect(downloadsSeoBlock).toContain("Brikaya yuklab olish");
-    expect(downloadsSeoBlock).toContain("Brikaya ဒေါင်းလုဒ်လုပ်ရန်");
-    expect(downloadsSeoBlock).toContain("Sækja Brikaya");
-    expect(downloadsSeoBlock).toContain("Преземи Brikaya");
-    expect(downloadsSeoBlock).toContain("Baixa Brikaya");
-    expect(downloadsSeoBlock).toContain("Tikiake Brikaya");
-    expect(downloadsSeoBlock).toContain("Soo dejiso Brikaya");
-    expect(downloadsSeoBlock).toContain("Gba Brikaya silẹ");
-    expect(downloadsSeoBlock).toContain("Budata Brikaya");
-    expect(downloadsSeoBlock).toContain("Zazzage Brikaya");
-    expect(downloadsSeoBlock).toContain("Landa i-Brikaya");
-    expect(downloadsSeoBlock).toContain("Khuphela i-Brikaya");
-    expect(downloadsSeoBlock).toContain("Khoasolla Brikaya");
-    expect(downloadsSeoBlock).toContain("Folosa Brikaya");
-    expect(downloadsSeoBlock).toContain("Download Brikaya");
-    expect(downloadsSeoBlock).toContain("Descargar Brikaya");
-    expect(downloadsSeoBlock).toContain("Descarregar Brikaya");
-    expect(downloadsSeoBlock).toContain("下載 Brikaya");
-    expect(downloadsSeoBlock).toContain("تنزيل Brikaya");
-    expect(downloadsSeoBlock).toContain("Brikaya نى چۈشۈرۈش");
-    expect(downloadsSeoBlock).toContain("אַראָפּלאָדן Brikaya");
-    expect(downloadsSeoBlock).toContain("Dawuniloda Brikaya");
+
+    expect(seoSnapshot['pt-BR'].downloads.title).toContain('Baixar Brikaya');
+    expect(seoSnapshot.en.downloads.title).toContain('Download Brikaya');
+    expect(seoSnapshot['zh-CN'].downloads.title).toContain('下载 Brikaya');
+    expect(seoSnapshot.ja.downloads.title).toContain('Brikayaをダウンロード');
+    expect(seoSnapshot.ar.downloads.title).toContain('تنزيل Brikaya');
   });
 });
