@@ -148,7 +148,7 @@
             <button class="test-button" onclick="testGameEnd()">Testar Fim do Jogo</button>
             <button class="test-button" onclick="testScoreUpdate()">Testar Atualização de Pontuação</button>
             <button class="test-button" onclick="testBallLost()">Testar Bola Perdida</button>
-            <button class="test-button" onclick="testBrickDestroyed()">Testar Bloco Destruído</button>
+            <button class="test-button" onclick="testComponentDestroyed()">Testar Bloco Destruído</button>
             <button class="test-button" onclick="testCollision()">Testar Colisão</button>
             <button class="test-button" onclick="testPaddleMove()">Testar Movimento da Raquete</button>
             <button class="test-button" onclick="testGameStateChange()">Testar Mudança de Estado</button>
@@ -228,7 +228,7 @@
                     <div class="stat-label">Duração Média</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value">${stats.totalBricksDestroyed}</div>
+                    <div class="stat-value">${stats.totalComponentsDestroyed}</div>
                     <div class="stat-label">Blocos Destruídos</div>
                 </div>
                 <div class="stat-item">
@@ -246,16 +246,16 @@
                 const gameState = {
                     score: 0,
                     ballsCount: 1,
-                    bricksRemaining: 15,
+                    componentsRemaining: 15,
                     gameWon: false,
                     gameOver: false,
                     level: 1,
                     canvasSize: { width: 480, height: 320 },
                     gameDimensions: {
-                        brickWidth: 75,
-                        brickHeight: 20,
-                        brickCols: 5,
-                        brickRows: 3,
+                        componentWidth: 75,
+                        componentHeight: 20,
+                        componentCols: 5,
+                        componentRows: 3,
                         paddleWidth: 75,
                         paddleHeight: 10,
                         ballRadius: 10
@@ -281,16 +281,16 @@
                 const gameState = {
                     score: 150,
                     ballsCount: 0,
-                    bricksRemaining: 0,
+                    componentsRemaining: 0,
                     gameWon: true,
                     gameOver: false,
                     level: 1,
                     canvasSize: { width: 480, height: 320 },
                     gameDimensions: {
-                        brickWidth: 75,
-                        brickHeight: 20,
-                        brickCols: 5,
-                        brickRows: 3,
+                        componentWidth: 75,
+                        componentHeight: 20,
+                        componentCols: 5,
+                        componentRows: 3,
                         paddleWidth: 75,
                         paddleHeight: 10,
                         ballRadius: 10
@@ -316,16 +316,16 @@
                 const gameState = {
                     score: 160,
                     ballsCount: 1,
-                    bricksRemaining: 14,
+                    componentsRemaining: 14,
                     gameWon: false,
                     gameOver: false,
                     level: 1,
                     canvasSize: { width: 480, height: 320 },
                     gameDimensions: {
-                        brickWidth: 75,
-                        brickHeight: 20,
-                        brickCols: 5,
-                        brickRows: 3,
+                        componentWidth: 75,
+                        componentHeight: 20,
+                        componentCols: 5,
+                        componentRows: 3,
                         paddleWidth: 75,
                         paddleHeight: 10,
                         ballRadius: 10
@@ -335,7 +335,7 @@
                 const ballPositions = [{ x: 250, y: 150, velocity: { dx: 2, dy: 2 }, radius: 10 }];
                 const paddlePosition = { x: 200, y: 310, width: 75, height: 10 };
                 
-                await gameLogger.logScoreUpdate(gameState, ballPositions, paddlePosition, 10, 'brick_destroyed');
+                await gameLogger.logScoreUpdate(gameState, ballPositions, paddlePosition, 10, 'component_destroyed');
                 logTest('✅ Atualização de pontuação registrada com sucesso', 'success');
                 
                 await refreshStats();
@@ -351,16 +351,16 @@
                 const gameState = {
                     score: 160,
                     ballsCount: 0,
-                    bricksRemaining: 14,
+                    componentsRemaining: 14,
                     gameWon: false,
                     gameOver: true,
                     level: 1,
                     canvasSize: { width: 480, height: 320 },
                     gameDimensions: {
-                        brickWidth: 75,
-                        brickHeight: 20,
-                        brickCols: 5,
-                        brickRows: 3,
+                        componentWidth: 75,
+                        componentHeight: 20,
+                        componentCols: 5,
+                        componentRows: 3,
                         paddleWidth: 75,
                         paddleHeight: 10,
                         ballRadius: 10
@@ -381,23 +381,23 @@
             }
         };
         
-        window.testBrickDestroyed = async function() {
+        window.testComponentDestroyed = async function() {
             try {
                 logTest('🧪 Testando bloco destruído...');
                 
                 const gameState = {
                     score: 160,
                     ballsCount: 1,
-                    bricksRemaining: 14,
+                    componentsRemaining: 14,
                     gameWon: false,
                     gameOver: false,
                     level: 1,
                     canvasSize: { width: 480, height: 320 },
                     gameDimensions: {
-                        brickWidth: 75,
-                        brickHeight: 20,
-                        brickCols: 5,
-                        brickRows: 3,
+                        componentWidth: 75,
+                        componentHeight: 20,
+                        componentCols: 5,
+                        componentRows: 3,
                         paddleWidth: 75,
                         paddleHeight: 10,
                         ballRadius: 10
@@ -406,19 +406,19 @@
                 
                 const ballPositions = [{ x: 250, y: 150, velocity: { dx: 2, dy: 2 }, radius: 10 }];
                 const paddlePosition = { x: 200, y: 310, width: 75, height: 10 };
-                const brickPosition = { x: 240, y: 50, width: 75, height: 20 };
-                const brickIndex = { col: 2, row: 0 };
-                const brickColorIndex = 1;
+                const componentPosition = { x: 240, y: 50, width: 75, height: 20 };
+                const componentIndex = { col: 2, row: 0 };
+                const componentColorIndex = 1;
                 const ballPosition = { x: 250, y: 150 };
                 const ballVelocity = { dx: 2, dy: 2 };
                 
-                await gameLogger.logBrickDestroyed(
+                await gameLogger.logComponentDestroyed(
                     gameState, 
                     ballPositions, 
                     paddlePosition, 
-                    brickPosition, 
-                    brickIndex, 
-                    brickColorIndex, 
+                    componentPosition, 
+                    componentIndex, 
+                    componentColorIndex, 
                     ballPosition, 
                     ballVelocity
                 );
@@ -437,16 +437,16 @@
                 const gameState = {
                     score: 160,
                     ballsCount: 1,
-                    bricksRemaining: 14,
+                    componentsRemaining: 14,
                     gameWon: false,
                     gameOver: false,
                     level: 1,
                     canvasSize: { width: 480, height: 320 },
                     gameDimensions: {
-                        brickWidth: 75,
-                        brickHeight: 20,
-                        brickCols: 5,
-                        brickRows: 3,
+                        componentWidth: 75,
+                        componentHeight: 20,
+                        componentCols: 5,
+                        componentRows: 3,
                         paddleWidth: 75,
                         paddleHeight: 10,
                         ballRadius: 10
@@ -484,16 +484,16 @@
                 const gameState = {
                     score: 160,
                     ballsCount: 1,
-                    bricksRemaining: 14,
+                    componentsRemaining: 14,
                     gameWon: false,
                     gameOver: false,
                     level: 1,
                     canvasSize: { width: 480, height: 320 },
                     gameDimensions: {
-                        brickWidth: 75,
-                        brickHeight: 20,
-                        brickCols: 5,
-                        brickRows: 3,
+                        componentWidth: 75,
+                        componentHeight: 20,
+                        componentCols: 5,
+                        componentRows: 3,
                         paddleWidth: 75,
                         paddleHeight: 10,
                         ballRadius: 10
@@ -520,16 +520,16 @@
                 const gameState = {
                     score: 160,
                     ballsCount: 1,
-                    bricksRemaining: 0,
+                    componentsRemaining: 0,
                     gameWon: true,
                     gameOver: false,
                     level: 1,
                     canvasSize: { width: 480, height: 320 },
                     gameDimensions: {
-                        brickWidth: 75,
-                        brickHeight: 20,
-                        brickCols: 5,
-                        brickRows: 3,
+                        componentWidth: 75,
+                        componentHeight: 20,
+                        componentCols: 5,
+                        componentRows: 3,
                         paddleWidth: 75,
                         paddleHeight: 10,
                         ballRadius: 10
@@ -555,16 +555,16 @@
                 const gameState = {
                     score: 0,
                     ballsCount: 1,
-                    bricksRemaining: 15,
+                    componentsRemaining: 15,
                     gameWon: false,
                     gameOver: false,
                     level: 1,
                     canvasSize: { width: 480, height: 320 },
                     gameDimensions: {
-                        brickWidth: 75,
-                        brickHeight: 20,
-                        brickCols: 5,
-                        brickRows: 3,
+                        componentWidth: 75,
+                        componentHeight: 20,
+                        componentCols: 5,
+                        componentRows: 3,
                         paddleWidth: 75,
                         paddleHeight: 10,
                         ballRadius: 10
@@ -680,7 +680,7 @@
                         gamesWon: 1,
                         gamesLost: 0,
                         averageGameDuration: 60000,
-                        totalBricksDestroyed: 10,
+                        totalComponentsDestroyed: 10,
                         totalCollisions: 5,
                         averageBallsPerGame: 1
                     },
@@ -692,16 +692,16 @@
                             gameState: {
                                 score: 0,
                                 ballsCount: 1,
-                                bricksRemaining: 15,
+                                componentsRemaining: 15,
                                 gameWon: false,
                                 gameOver: false,
                                 level: 1,
                                 canvasSize: { width: 480, height: 320 },
                                 gameDimensions: {
-                                    brickWidth: 75,
-                                    brickHeight: 20,
-                                    brickCols: 5,
-                                    brickRows: 3,
+                                    componentWidth: 75,
+                                    componentHeight: 20,
+                                    componentCols: 5,
+                                    componentRows: 3,
                                     paddleWidth: 75,
                                     paddleHeight: 10,
                                     ballRadius: 10

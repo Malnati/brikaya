@@ -134,7 +134,7 @@ Tornar **Torreta** o padrão permanente do Brikaya em todas as fases. A fantasia
   - abre `?qaScenario=ball-turret`;
   - valida que a Torreta está ativa sem seletor de modo;
   - valida controles internos de registro ocultos no menu;
-  - mantém o cenário `evasive-blocks` compatível com a geometria clássica para prova automatizada;
+  - mantém o cenário `evasive-components` compatível com a geometria clássica para prova automatizada;
   - exercita cama elástica por mouse, teclado e joystick;
   - valida que o joystick não aceita arrasto fora da área visual;
   - captura desktop, mobile e menu;

@@ -34,27 +34,27 @@ describe("visual asset resolver", () => {
     expect(
       resolveGameVisualAssetPath(
         "retro-default",
-        GAME_VISUAL_ASSET_ROLES.brickRed,
+        GAME_VISUAL_ASSET_ROLES.componentRed,
       ),
-    ).toBe("/assets/visual/bricks/spr-brick-basic-red-normal.svg");
+    ).toBe("/assets/visual/components/spr-component-basic-red-normal.svg");
     expect(
       resolveGameVisualAssetPath(
         "retro-default",
-        GAME_VISUAL_ASSET_ROLES.brickMetalIntact,
+        GAME_VISUAL_ASSET_ROLES.componentMetalIntact,
       ),
-    ).toBe("/assets/visual/bricks/spr-brick-metal-steel-normal.svg");
+    ).toBe("/assets/visual/components/spr-component-metal-steel-normal.svg");
     expect(
       resolveGameVisualAssetPath(
         "retro-default",
-        GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne,
+        GAME_VISUAL_ASSET_ROLES.componentMetalDentedOne,
       ),
-    ).toBe("/assets/visual/bricks/spr-brick-metal-steel-dented-one.svg");
+    ).toBe("/assets/visual/components/spr-component-metal-steel-dented-one.svg");
     expect(
       resolveGameVisualAssetPath(
         "retro-default",
-        GAME_VISUAL_ASSET_ROLES.brickMetalDentedTwo,
+        GAME_VISUAL_ASSET_ROLES.componentMetalDentedTwo,
       ),
-    ).toBe("/assets/visual/bricks/spr-brick-metal-steel-dented-two.svg");
+    ).toBe("/assets/visual/components/spr-component-metal-steel-dented-two.svg");
   });
 
   it("resolve variantes SVG alto contraste e sunset", () => {
@@ -73,17 +73,17 @@ describe("visual asset resolver", () => {
     expect(
       resolveGameVisualAssetPath(
         "high-contrast",
-        GAME_VISUAL_ASSET_ROLES.brickMetalIntact,
+        GAME_VISUAL_ASSET_ROLES.componentMetalIntact,
       ),
     ).toBe(
-      "/assets/visual/bricks/spr-brick-metal-steel-high-contrast-normal.svg",
+      "/assets/visual/components/spr-component-metal-steel-high-contrast-normal.svg",
     );
     expect(
       resolveGameVisualAssetPath(
         "sunset-cabinet",
-        GAME_VISUAL_ASSET_ROLES.brickMetalDentedTwo,
+        GAME_VISUAL_ASSET_ROLES.componentMetalDentedTwo,
       ),
-    ).toBe("/assets/visual/bricks/spr-brick-metal-steel-sunset-dented-two.svg");
+    ).toBe("/assets/visual/components/spr-component-metal-steel-sunset-dented-two.svg");
   });
 
   it("resolve cinco conjuntos realistas diferentes", () => {
@@ -103,9 +103,9 @@ describe("visual asset resolver", () => {
     expect(
       resolveGameVisualAssetPath(
         "real-bio-lab-glass",
-        GAME_VISUAL_ASSET_ROLES.brickBlue,
+        GAME_VISUAL_ASSET_ROLES.componentBlue,
       ),
-    ).toBe("/assets/visual/bricks/spr-brick-basic-blue-lab-real-normal.svg");
+    ).toBe("/assets/visual/components/spr-component-basic-blue-lab-real-normal.svg");
     expect(
       resolveGameVisualAssetPath(
         "real-temple-stone",
@@ -121,9 +121,9 @@ describe("visual asset resolver", () => {
     expect(
       resolveGameVisualAssetPath(
         "real-workshop-steel",
-        GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne,
+        GAME_VISUAL_ASSET_ROLES.componentMetalDentedOne,
       ),
-    ).toBe("/assets/visual/bricks/spr-brick-metal-steel-dented-one.svg");
+    ).toBe("/assets/visual/components/spr-component-metal-steel-dented-one.svg");
   });
 
   it("lista somente SVGs sem repetição por conjunto", () => {

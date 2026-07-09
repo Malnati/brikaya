@@ -2,12 +2,12 @@
 import type { DynamicGameDimensions } from "../constants/game";
 
 const CENTER_RATIO = 0.5;
-const BRICK_ARC_START_ANGLE = (-Math.PI * 5) / 6;
-const BRICK_ARC_END_ANGLE = -Math.PI / 6;
-const BALL_TURRET_BRICK_ARC_START_ANGLE = -Math.PI;
-const BALL_TURRET_BRICK_ARC_END_ANGLE = Math.PI;
-const BRICK_RING_START_RADIUS_RATIO = 0.28;
-const BRICK_RING_END_RADIUS_RATIO = 0.74;
+const COMPONENT_ARC_START_ANGLE = (-Math.PI * 5) / 6;
+const COMPONENT_ARC_END_ANGLE = -Math.PI / 6;
+const BALL_TURRET_COMPONENT_ARC_START_ANGLE = -Math.PI;
+const BALL_TURRET_COMPONENT_ARC_END_ANGLE = Math.PI;
+const COMPONENT_RING_START_RADIUS_RATIO = 0.28;
+const COMPONENT_RING_END_RADIUS_RATIO = 0.74;
 const BRICK_RADIAL_GAP_RATIO = 0.18;
 const BRICK_MAX_ANGLE_GAP = 0.03;
 const BRICK_ANGLE_GAP_RATIO = 0.14;
@@ -52,10 +52,10 @@ export interface RadialPlayfieldGeometry {
   centerX: number;
   centerY: number;
   radius: number;
-  brickArcStartAngle: number;
-  brickArcEndAngle: number;
-  brickRingStartRadius: number;
-  brickRingEndRadius: number;
+  componentArcStartAngle: number;
+  componentArcEndAngle: number;
+  componentRingStartRadius: number;
+  componentRingEndRadius: number;
   paddleRadius: number;
   paddleMovementStartAngle: number;
   paddleMovementEndAngle: number;
@@ -65,7 +65,7 @@ export interface RadialPlayfieldGeometry {
   trampolineIsFullRing: boolean;
 }
 
-export interface RadialBrickSegment {
+export interface RadialComponentSegment {
   centerX: number;
   centerY: number;
   centerAngle: number;
@@ -112,10 +112,10 @@ export function calculateRadialPlayfieldGeometry(
     centerX: canvasWidth * CENTER_RATIO,
     centerY: canvasHeight * CENTER_RATIO,
     radius,
-    brickArcStartAngle: BRICK_ARC_START_ANGLE,
-    brickArcEndAngle: BRICK_ARC_END_ANGLE,
-    brickRingStartRadius: radius * BRICK_RING_START_RADIUS_RATIO,
-    brickRingEndRadius: radius * BRICK_RING_END_RADIUS_RATIO,
+    componentArcStartAngle: COMPONENT_ARC_START_ANGLE,
+    componentArcEndAngle: COMPONENT_ARC_END_ANGLE,
+    componentRingStartRadius: radius * COMPONENT_RING_START_RADIUS_RATIO,
+    componentRingEndRadius: radius * COMPONENT_RING_END_RADIUS_RATIO,
     paddleRadius: radius * PADDLE_RADIUS_RATIO,
     paddleMovementStartAngle: PADDLE_MOVEMENT_START_ANGLE,
     paddleMovementEndAngle: PADDLE_MOVEMENT_END_ANGLE,
@@ -139,8 +139,8 @@ export function calculateBallTurretPlayfieldGeometry(
 
   return {
     ...geometry,
-    brickArcStartAngle: BALL_TURRET_BRICK_ARC_START_ANGLE,
-    brickArcEndAngle: BALL_TURRET_BRICK_ARC_END_ANGLE,
+    componentArcStartAngle: BALL_TURRET_COMPONENT_ARC_START_ANGLE,
+    componentArcEndAngle: BALL_TURRET_COMPONENT_ARC_END_ANGLE,
     paddleMovementStartAngle: -Math.PI,
     paddleMovementEndAngle: Math.PI,
     lossArcStartAngle: -Math.PI,
@@ -326,32 +326,32 @@ function calculateBallTurretReboundSegmentIndexes(level: number): Set<number> {
   );
 }
 
-export function calculateRadialBrickSegment(
+export function calculateRadialComponentSegment(
   geometry: RadialPlayfieldGeometry,
   dimensions: DynamicGameDimensions,
   col: number,
   row: number,
-  rows: number = dimensions.brickRows,
-): RadialBrickSegment {
-  const arcSpan = geometry.brickArcEndAngle - geometry.brickArcStartAngle;
-  const angleStep = arcSpan / dimensions.brickCols;
+  rows: number = dimensions.componentRows,
+): RadialComponentSegment {
+  const arcSpan = geometry.componentArcEndAngle - geometry.componentArcStartAngle;
+  const angleStep = arcSpan / dimensions.componentCols;
   const angleGap = Math.min(
     BRICK_MAX_ANGLE_GAP,
     Math.abs(angleStep) * BRICK_ANGLE_GAP_RATIO,
   );
-  const startAngle = geometry.brickArcStartAngle + col * angleStep + angleGap;
+  const startAngle = geometry.componentArcStartAngle + col * angleStep + angleGap;
   const endAngle =
-    geometry.brickArcStartAngle + (col + 1) * angleStep - angleGap;
+    geometry.componentArcStartAngle + (col + 1) * angleStep - angleGap;
   const ringSpan =
-    (geometry.brickRingEndRadius - geometry.brickRingStartRadius) / rows;
+    (geometry.componentRingEndRadius - geometry.componentRingStartRadius) / rows;
   const radialGap = Math.min(
-    dimensions.brickPadding,
+    dimensions.componentPadding,
     ringSpan * BRICK_RADIAL_GAP_RATIO,
   );
   const innerRadius =
-    geometry.brickRingStartRadius + row * ringSpan + radialGap;
+    geometry.componentRingStartRadius + row * ringSpan + radialGap;
   const outerRadius =
-    geometry.brickRingStartRadius + (row + 1) * ringSpan - radialGap;
+    geometry.componentRingStartRadius + (row + 1) * ringSpan - radialGap;
   const midAngle = (startAngle + endAngle) * CENTER_RATIO;
   const midRadius = (innerRadius + outerRadius) * CENTER_RATIO;
 
@@ -376,7 +376,7 @@ export function calculateRadialBrickSegment(
 
 export function isCircleIntersectingRadialSegment(
   circle: CircleBounds,
-  segment: RadialBrickSegment,
+  segment: RadialComponentSegment,
   geometry: RadialPlayfieldGeometry,
 ): boolean {
   const polar = toPolar(circle, geometry);

@@ -8,12 +8,12 @@ export const AUDIO_EVENT_IDS = [
   "sfx-paddle-hit-edge",
   "sfx-wall-hit",
   "sfx-ceiling-hit",
-  "sfx-brick-hit",
-  "sfx-brick-break-red",
-  "sfx-brick-break-blue",
-  "sfx-brick-break-green",
-  "sfx-brick-break-yellow",
-  "sfx-brick-break-purple",
+  "sfx-component-hit",
+  "sfx-component-break-red",
+  "sfx-component-break-blue",
+  "sfx-component-break-green",
+  "sfx-component-break-yellow",
+  "sfx-component-break-purple",
   "sfx-score-tick",
   "sfx-combo-small",
   "sfx-combo-large",
@@ -92,7 +92,7 @@ export const AUDIO_CATALOG = {
     "duckingMs": 0,
     "targetDuration": "Loop de 45 s a 90 s",
     "variations": "1 loop principal",
-    "uxNotes": "Deve manter energia constante e ficar claramente abaixo dos efeitos de tijolo, raquete e perda de bola.",
+    "uxNotes": "Deve manter energia constante e ficar claramente abaixo dos efeitos de componente, raquete e perda de bola.",
     "loop": true,
     "files": [
       "/assets/audio/bgm-gameplay-loop-main-01.mp3"
@@ -220,10 +220,10 @@ export const AUDIO_CATALOG = {
       "/assets/audio/sfx-ceiling-hit-04.mp3"
     ]
   },
-  "sfx-brick-hit": {
-    "id": "sfx-brick-hit",
+  "sfx-component-hit": {
+    "id": "sfx-component-hit",
     "type": "effect",
-    "trigger": "Bola toca um tijolo antes ou junto do efeito de destruição",
+    "trigger": "Bola toca um componente antes ou junto do efeito de destruição",
     "priorityLabel": "Alta",
     "priorityWeight": 3,
     "volume": 0.64,
@@ -235,17 +235,17 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Deve dar feedback imediato de impacto. Pode ser combinado com o som específico de cor.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx-brick-hit-01.mp3",
-      "/assets/audio/sfx-brick-hit-02.mp3",
-      "/assets/audio/sfx-brick-hit-03.mp3",
-      "/assets/audio/sfx-brick-hit-04.mp3",
-      "/assets/audio/sfx-brick-hit-05.mp3"
+      "/assets/audio/sfx-component-hit-01.mp3",
+      "/assets/audio/sfx-component-hit-02.mp3",
+      "/assets/audio/sfx-component-hit-03.mp3",
+      "/assets/audio/sfx-component-hit-04.mp3",
+      "/assets/audio/sfx-component-hit-05.mp3"
     ]
   },
-  "sfx-brick-break-red": {
-    "id": "sfx-brick-break-red",
+  "sfx-component-break-red": {
+    "id": "sfx-component-break-red",
     "type": "effect",
-    "trigger": "Tijolo vermelho é destruído",
+    "trigger": "Componente vermelho é destruído",
     "priorityLabel": "Alta",
     "priorityWeight": 3,
     "volume": 0,
@@ -257,15 +257,15 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Timbre quente. Não deve soar mais importante que conclusão de fase.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx-brick-break-red-01.mp3",
-      "/assets/audio/sfx-brick-break-red-02.mp3",
-      "/assets/audio/sfx-brick-break-red-03.mp3"
+      "/assets/audio/sfx-component-break-red-01.mp3",
+      "/assets/audio/sfx-component-break-red-02.mp3",
+      "/assets/audio/sfx-component-break-red-03.mp3"
     ]
   },
-  "sfx-brick-break-blue": {
-    "id": "sfx-brick-break-blue",
+  "sfx-component-break-blue": {
+    "id": "sfx-component-break-blue",
     "type": "effect",
-    "trigger": "Tijolo azul é destruído",
+    "trigger": "Componente azul é destruído",
     "priorityLabel": "Alta",
     "priorityWeight": 3,
     "volume": 0.68,
@@ -277,15 +277,15 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Timbre claro e frio, com mesma presença do vermelho.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx-brick-break-blue-01.mp3",
-      "/assets/audio/sfx-brick-break-blue-02.mp3",
-      "/assets/audio/sfx-brick-break-blue-03.mp3"
+      "/assets/audio/sfx-component-break-blue-01.mp3",
+      "/assets/audio/sfx-component-break-blue-02.mp3",
+      "/assets/audio/sfx-component-break-blue-03.mp3"
     ]
   },
-  "sfx-brick-break-green": {
-    "id": "sfx-brick-break-green",
+  "sfx-component-break-green": {
+    "id": "sfx-component-break-green",
     "type": "effect",
-    "trigger": "Tijolo verde é destruído",
+    "trigger": "Componente verde é destruído",
     "priorityLabel": "Alta",
     "priorityWeight": 3,
     "volume": 0.66,
@@ -297,15 +297,15 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Timbre macio para evitar excesso de brilho em sequências.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx-brick-break-green-01.mp3",
-      "/assets/audio/sfx-brick-break-green-02.mp3",
-      "/assets/audio/sfx-brick-break-green-03.mp3"
+      "/assets/audio/sfx-component-break-green-01.mp3",
+      "/assets/audio/sfx-component-break-green-02.mp3",
+      "/assets/audio/sfx-component-break-green-03.mp3"
     ]
   },
-  "sfx-brick-break-yellow": {
-    "id": "sfx-brick-break-yellow",
+  "sfx-component-break-yellow": {
+    "id": "sfx-component-break-yellow",
     "type": "effect",
-    "trigger": "Tijolo amarelo é destruído",
+    "trigger": "Componente amarelo é destruído",
     "priorityLabel": "Alta",
     "priorityWeight": 3,
     "volume": 0.72,
@@ -317,15 +317,15 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Timbre mais brilhante, mas sem estridência.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx-brick-break-yellow-01.mp3",
-      "/assets/audio/sfx-brick-break-yellow-02.mp3",
-      "/assets/audio/sfx-brick-break-yellow-03.mp3"
+      "/assets/audio/sfx-component-break-yellow-01.mp3",
+      "/assets/audio/sfx-component-break-yellow-02.mp3",
+      "/assets/audio/sfx-component-break-yellow-03.mp3"
     ]
   },
-  "sfx-brick-break-purple": {
-    "id": "sfx-brick-break-purple",
+  "sfx-component-break-purple": {
+    "id": "sfx-component-break-purple",
     "type": "effect",
-    "trigger": "Tijolo roxo é destruído",
+    "trigger": "Componente roxo é destruído",
     "priorityLabel": "Alta",
     "priorityWeight": 3,
     "volume": 0.68,
@@ -337,15 +337,15 @@ export const AUDIO_CATALOG = {
     "uxNotes": "Timbre um pouco mais grave ou espacial para diferenciar cor.",
     "loop": false,
     "files": [
-      "/assets/audio/sfx-brick-break-purple-01.mp3",
-      "/assets/audio/sfx-brick-break-purple-02.mp3",
-      "/assets/audio/sfx-brick-break-purple-03.mp3"
+      "/assets/audio/sfx-component-break-purple-01.mp3",
+      "/assets/audio/sfx-component-break-purple-02.mp3",
+      "/assets/audio/sfx-component-break-purple-03.mp3"
     ]
   },
   "sfx-score-tick": {
     "id": "sfx-score-tick",
     "type": "effect",
-    "trigger": "Pontuação aumenta após destruição de tijolo",
+    "trigger": "Pontuação aumenta após destruição de componente",
     "priorityLabel": "Média",
     "priorityWeight": 2,
     "volume": 0.38,
@@ -354,7 +354,7 @@ export const AUDIO_CATALOG = {
     "duckingMs": 0,
     "targetDuration": "40 ms a 80 ms",
     "variations": "3",
-    "uxNotes": "Deve ficar 8 dB a 10 dB abaixo do som de tijolo; não duplicar sensação de impacto.",
+    "uxNotes": "Deve ficar 8 dB a 10 dB abaixo do som de componente; não duplicar sensação de impacto.",
     "loop": false,
     "files": [
       "/assets/audio/sfx-score-tick-01.mp3",
@@ -365,7 +365,7 @@ export const AUDIO_CATALOG = {
   "sfx-combo-small": {
     "id": "sfx-combo-small",
     "type": "future",
-    "trigger": "Sequência curta de 3 ou mais tijolos destruídos em janela de combo futura",
+    "trigger": "Sequência curta de 3 ou mais componentes destruídos em janela de combo futura",
     "priorityLabel": "Média",
     "priorityWeight": 2,
     "volume": 0.65,
@@ -440,7 +440,7 @@ export const AUDIO_CATALOG = {
   "sfx-level-complete": {
     "id": "sfx-level-complete",
     "type": "effect",
-    "trigger": "Último tijolo ativo da fase é destruído e o jogo entra em transição",
+    "trigger": "Último componente ativo da fase é destruído e o jogo entra em transição",
     "priorityLabel": "Crítica",
     "priorityWeight": 4,
     "volume": 0.82,
@@ -657,7 +657,7 @@ export const AUDIO_CATALOG = {
     "duckingMs": 300,
     "targetDuration": "350 ms a 700 ms",
     "variations": "3",
-    "uxNotes": "Chime positivo acima de tijolo comum.",
+    "uxNotes": "Chime positivo acima de componente comum.",
     "loop": false,
     "files": [
       "/assets/audio/sfx-powerup-collect-01.mp3",
@@ -829,26 +829,26 @@ export const AUDIO_ASSET_PATHS = {
   bgmMenuLoopMain01: '/assets/audio/bgm-menu-loop-main-01.mp3',
   sfxBallLost01: '/assets/audio/sfx-ball-lost-01.mp3',
   sfxBallLost02: '/assets/audio/sfx-ball-lost-02.mp3',
-  sfxBrickBreakBlue01: '/assets/audio/sfx-brick-break-blue-01.mp3',
-  sfxBrickBreakBlue02: '/assets/audio/sfx-brick-break-blue-02.mp3',
-  sfxBrickBreakBlue03: '/assets/audio/sfx-brick-break-blue-03.mp3',
-  sfxBrickBreakGreen01: '/assets/audio/sfx-brick-break-green-01.mp3',
-  sfxBrickBreakGreen02: '/assets/audio/sfx-brick-break-green-02.mp3',
-  sfxBrickBreakGreen03: '/assets/audio/sfx-brick-break-green-03.mp3',
-  sfxBrickBreakPurple01: '/assets/audio/sfx-brick-break-purple-01.mp3',
-  sfxBrickBreakPurple02: '/assets/audio/sfx-brick-break-purple-02.mp3',
-  sfxBrickBreakPurple03: '/assets/audio/sfx-brick-break-purple-03.mp3',
-  sfxBrickBreakRed01: '/assets/audio/sfx-brick-break-red-01.mp3',
-  sfxBrickBreakRed02: '/assets/audio/sfx-brick-break-red-02.mp3',
-  sfxBrickBreakRed03: '/assets/audio/sfx-brick-break-red-03.mp3',
-  sfxBrickBreakYellow01: '/assets/audio/sfx-brick-break-yellow-01.mp3',
-  sfxBrickBreakYellow02: '/assets/audio/sfx-brick-break-yellow-02.mp3',
-  sfxBrickBreakYellow03: '/assets/audio/sfx-brick-break-yellow-03.mp3',
-  sfxBrickHit01: '/assets/audio/sfx-brick-hit-01.mp3',
-  sfxBrickHit02: '/assets/audio/sfx-brick-hit-02.mp3',
-  sfxBrickHit03: '/assets/audio/sfx-brick-hit-03.mp3',
-  sfxBrickHit04: '/assets/audio/sfx-brick-hit-04.mp3',
-  sfxBrickHit05: '/assets/audio/sfx-brick-hit-05.mp3',
+  sfxComponentBreakBlue01: '/assets/audio/sfx-component-break-blue-01.mp3',
+  sfxComponentBreakBlue02: '/assets/audio/sfx-component-break-blue-02.mp3',
+  sfxComponentBreakBlue03: '/assets/audio/sfx-component-break-blue-03.mp3',
+  sfxComponentBreakGreen01: '/assets/audio/sfx-component-break-green-01.mp3',
+  sfxComponentBreakGreen02: '/assets/audio/sfx-component-break-green-02.mp3',
+  sfxComponentBreakGreen03: '/assets/audio/sfx-component-break-green-03.mp3',
+  sfxComponentBreakPurple01: '/assets/audio/sfx-component-break-purple-01.mp3',
+  sfxComponentBreakPurple02: '/assets/audio/sfx-component-break-purple-02.mp3',
+  sfxComponentBreakPurple03: '/assets/audio/sfx-component-break-purple-03.mp3',
+  sfxComponentBreakRed01: '/assets/audio/sfx-component-break-red-01.mp3',
+  sfxComponentBreakRed02: '/assets/audio/sfx-component-break-red-02.mp3',
+  sfxComponentBreakRed03: '/assets/audio/sfx-component-break-red-03.mp3',
+  sfxComponentBreakYellow01: '/assets/audio/sfx-component-break-yellow-01.mp3',
+  sfxComponentBreakYellow02: '/assets/audio/sfx-component-break-yellow-02.mp3',
+  sfxComponentBreakYellow03: '/assets/audio/sfx-component-break-yellow-03.mp3',
+  sfxComponentHit01: '/assets/audio/sfx-component-hit-01.mp3',
+  sfxComponentHit02: '/assets/audio/sfx-component-hit-02.mp3',
+  sfxComponentHit03: '/assets/audio/sfx-component-hit-03.mp3',
+  sfxComponentHit04: '/assets/audio/sfx-component-hit-04.mp3',
+  sfxComponentHit05: '/assets/audio/sfx-component-hit-05.mp3',
   sfxButtonPress01: '/assets/audio/sfx-button-press-01.mp3',
   sfxButtonPress02: '/assets/audio/sfx-button-press-02.mp3',
   sfxButtonPress03: '/assets/audio/sfx-button-press-03.mp3',
@@ -947,12 +947,12 @@ export const GAME_AUDIO_IDS = {
   PADDLE_HIT_EDGE: 'sfx-paddle-hit-edge',
   WALL_HIT: 'sfx-wall-hit',
   CEILING_HIT: 'sfx-ceiling-hit',
-  BRICK_HIT: 'sfx-brick-hit',
-  BRICK_BREAK_RED: 'sfx-brick-break-red',
-  BRICK_BREAK_BLUE: 'sfx-brick-break-blue',
-  BRICK_BREAK_GREEN: 'sfx-brick-break-green',
-  BRICK_BREAK_YELLOW: 'sfx-brick-break-yellow',
-  BRICK_BREAK_PURPLE: 'sfx-brick-break-purple',
+  COMPONENT_HIT: 'sfx-component-hit',
+  COMPONENT_BREAK_RED: 'sfx-component-break-red',
+  COMPONENT_BREAK_BLUE: 'sfx-component-break-blue',
+  COMPONENT_BREAK_GREEN: 'sfx-component-break-green',
+  COMPONENT_BREAK_YELLOW: 'sfx-component-break-yellow',
+  COMPONENT_BREAK_PURPLE: 'sfx-component-break-purple',
   SCORE_TICK: 'sfx-score-tick',
   COMBO_SMALL: 'sfx-combo-small',
   COMBO_LARGE: 'sfx-combo-large',

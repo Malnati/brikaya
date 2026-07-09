@@ -77,19 +77,19 @@ export interface LevelTransitionPayload {
   pauseMs: number;
   nextMaxSpeed: number;
   nextMinSpeed: number;
-  nextReductionPerBrick: number;
-  nextInitialBrickCount: number;
+  nextReductionPerComponent: number;
+  nextInitialComponentCount: number;
 }
 
 export interface SpeedStateSnapshot {
   level: number;
-  initialBrickCount: number;
-  successfulBrickHits: number;
+  initialComponentCount: number;
+  successfulComponentHits: number;
   initialSpawnSpeed: number;
   maxSpeed: number;
   minSpeed: number;
   currentSpeed: number;
-  reductionPerBrick: number;
+  reductionPerComponent: number;
   previousLevelMaxSpeed: number;
   levelStartedAt: number;
   elapsedLevelMs: number;
@@ -110,11 +110,11 @@ export interface SpeedReductionSnapshot {
 
 export interface PhaseSpeedConfig {
   level: number;
-  initialBrickCount: number;
+  initialComponentCount: number;
   initialSpawnSpeed: number;
   maxSpeed: number;
   minSpeed: number;
-  reductionPerBrick: number;
+  reductionPerComponent: number;
   previousLevelMaxSpeed: number;
   levelStartedAt: number;
 }
@@ -199,7 +199,7 @@ export function buildMultiballAngleOffsets(cloneCount: number): number[] {
   });
 }
 
-export function calculateLevelBrickRows(
+export function calculateLevelComponentRows(
   baseRows: number,
   maxRows: number,
   level: number,
@@ -256,13 +256,13 @@ export function calculateLevelMinSpeed(
   );
 }
 
-export function calculateSpeedReductionPerBrick(
+export function calculateSpeedReductionPerComponent(
   maxSpeed: number,
-  initialBrickCount: number,
+  initialComponentCount: number,
   minSpeed: number,
 ): number {
-  const safeBrickCount = Math.max(1, initialBrickCount);
-  return roundSpeedValue(Math.max(0, maxSpeed - minSpeed) / safeBrickCount);
+  const safeComponentCount = Math.max(1, initialComponentCount);
+  return roundSpeedValue(Math.max(0, maxSpeed - minSpeed) / safeComponentCount);
 }
 
 export function calculateClampedSpeed(
@@ -275,13 +275,13 @@ export function calculateClampedSpeed(
 
 // Funções para calcular dimensões dinâmicas
 export interface DynamicGameDimensions {
-  brickWidth: number;
-  brickHeight: number;
-  brickPadding: number;
-  brickOffsetTop: number;
-  brickOffsetLeft: number;
-  brickCols: number;
-  brickRows: number;
+  componentWidth: number;
+  componentHeight: number;
+  componentPadding: number;
+  componentOffsetTop: number;
+  componentOffsetLeft: number;
+  componentCols: number;
+  componentRows: number;
   paddleWidth: number;
   paddleHeight: number;
   ballRadius: number;
@@ -297,40 +297,40 @@ export function calculateDynamicDimensions(
 
   // Calcular número de colunas baseado na largura disponível
   // Queremos pelo menos 3 colunas e no máximo 8
-  const minBrickWidth = 40; // Largura mínima para um bloco
-  const maxBrickWidth = 120; // Largura máxima para um bloco
+  const minComponentWidth = 40; // Largura mínima para um bloco
+  const maxComponentWidth = 120; // Largura máxima para um bloco
 
-  let brickCols = Math.floor(availableWidth / (minBrickWidth + 10));
-  brickCols = Math.max(3, Math.min(8, brickCols)); // Entre 3 e 8 colunas
+  let componentCols = Math.floor(availableWidth / (minComponentWidth + 10));
+  componentCols = Math.max(3, Math.min(8, componentCols)); // Entre 3 e 8 colunas
 
   // Calcular largura do bloco baseada no número de colunas
-  const brickWidth = Math.max(
-    minBrickWidth,
+  const componentWidth = Math.max(
+    minComponentWidth,
     Math.min(
-      maxBrickWidth,
-      (availableWidth - (brickCols - 1) * 10) / brickCols,
+      maxComponentWidth,
+      (availableWidth - (componentCols - 1) * 10) / componentCols,
     ),
   );
 
   // Calcular altura do bloco proporcional à largura
-  const brickHeight = brickWidth * 0.3; // Proporção 3:1
+  const componentHeight = componentWidth * 0.3; // Proporção 3:1
 
   // Calcular padding entre blocos
-  const brickPadding = Math.max(5, brickWidth * 0.1);
+  const componentPadding = Math.max(5, componentWidth * 0.1);
 
   // Calcular offset para centralizar os blocos
-  const totalBricksWidth =
-    brickCols * brickWidth + (brickCols - 1) * brickPadding;
-  const brickOffsetLeft = (canvasWidth - totalBricksWidth) / 2;
+  const totalComponentsWidth =
+    componentCols * componentWidth + (componentCols - 1) * componentPadding;
+  const componentOffsetLeft = (canvasWidth - totalComponentsWidth) / 2;
 
   // Calcular offset top baseado na altura disponível
-  const brickOffsetTop = Math.max(20, canvasHeight * 0.1);
+  const componentOffsetTop = Math.max(20, canvasHeight * 0.1);
 
   // Calcular número de linhas baseado na altura disponível
   const maxRows = Math.floor(
-    (availableHeight - brickOffsetTop) / (brickHeight + brickPadding),
+    (availableHeight - componentOffsetTop) / (componentHeight + componentPadding),
   );
-  const brickRows = Math.max(2, Math.min(5, maxRows)); // Entre 2 e 5 linhas
+  const componentRows = Math.max(2, Math.min(5, maxRows)); // Entre 2 e 5 linhas
 
   // Calcular dimensões do paddle proporcionalmente
   const paddleWidth = Math.max(
@@ -343,13 +343,13 @@ export function calculateDynamicDimensions(
   const ballRadius = Math.max(8, Math.min(15, canvasWidth * 0.02));
 
   return {
-    brickWidth,
-    brickHeight,
-    brickPadding,
-    brickOffsetTop,
-    brickOffsetLeft,
-    brickCols,
-    brickRows,
+    componentWidth,
+    componentHeight,
+    componentPadding,
+    componentOffsetTop,
+    componentOffsetLeft,
+    componentCols,
+    componentRows,
     paddleWidth,
     paddleHeight,
     ballRadius,

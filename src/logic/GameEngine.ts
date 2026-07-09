@@ -1,7 +1,7 @@
 // src/logic/GameEngine.ts
 import { Paddle } from "../objects/Paddle";
 import { Ball } from "../objects/Ball";
-import { Bricks, type DestroyedBrickSnapshot } from "../objects/Bricks";
+import { Components, type DestroyedComponentSnapshot } from "../objects/Components";
 import { PowerUp, type RadialPowerUpMotion } from "../objects/PowerUp";
 import {
   GAME_COLOR,
@@ -15,7 +15,7 @@ import {
   SpeedReductionSnapshot,
   SpeedStateSnapshot,
   calculateDynamicDimensions,
-  calculateLevelBrickRows,
+  calculateLevelComponentRows,
   calculateLevelInitialSpawnSpeed,
   calculateLevelMaxSpeed,
   calculateLevelMinSpeed,
@@ -23,12 +23,12 @@ import {
   calculateLevelSpeedMultiplier,
   calculateLaserFanTargetCount,
   calculateMultiballBallCount,
-  calculateSpeedReductionPerBrick,
+  calculateSpeedReductionPerComponent,
   calculateWidePaddleScale,
   buildMultiballAngleOffsets,
   DynamicGameDimensions,
 } from "../constants/game";
-import { POINTS_PER_BRICK } from "../constants/gameState";
+import { POINTS_PER_COMPONENT } from "../constants/gameState";
 import {
   GAME_MODE_BALL_TURRET,
   GAME_MODE_CLASSIC,
@@ -90,8 +90,8 @@ import {
 LOG("📦 GameEngine.ts carregado, gameLogger:", gameLogger);
 
 const ERROR_NO_2D_CONTEXT = "No 2D context";
-const SINGLE_BRICK_QA_SCENARIO = "single-brick-phase-clear";
-const SINGLE_BRICK_PHASE_3_QA_SCENARIO = "single-brick-phase3-clear";
+const SINGLE_COMPONENT_QA_SCENARIO = "single-component-phase-clear";
+const SINGLE_COMPONENT_PHASE_3_QA_SCENARIO = "single-component-phase3-clear";
 const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
 const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
 const PADDLE_COLLISION_QA_SCENARIO = "paddle-collision";
@@ -99,8 +99,8 @@ const LASER_FAN_QA_SCENARIO = "laser-fan";
 const MULTIBALL_QA_SCENARIO = "multiball-power-up";
 const WIDE_PADDLE_QA_SCENARIO = "wide-paddle-power-up";
 const SLOW_BALL_QA_SCENARIO = "slow-ball-power-up";
-const METAL_BLOCK_QA_SCENARIO = "metal-block";
-const EVASIVE_BLOCKS_QA_SCENARIO = "evasive-blocks";
+const METAL_BLOCK_QA_SCENARIO = "metal-component";
+const EVASIVE_BLOCKS_QA_SCENARIO = "evasive-components";
 const BALL_TURRET_QA_SCENARIO = "ball-turret";
 const BALL_TURRET_LOSE_QA_SCENARIO = "ball-turret-lose";
 const LATE_PHASE_STABILITY_LEVEL = 11;
@@ -116,16 +116,16 @@ const EVASIVE_BLOCKS_QA_RANDOM_VALUES = [
   0, 0, 0, 0, 0.99, 0.99, 0.99, 0.99,
 ] as const;
 const EVASIVE_BLOCKS_QA_RANDOM_FALLBACK = 0.99;
-const EVASIVE_BLOCKS_QA_BRICK_COLS = 1;
-const EVASIVE_BLOCKS_QA_BRICK_ROWS = 3;
-const EVASIVE_BLOCKS_QA_BRICK_WIDTH_RATIO = 0.18;
-const EVASIVE_BLOCKS_QA_BRICK_WIDTH_MIN = 48;
-const EVASIVE_BLOCKS_QA_BRICK_WIDTH_MAX = 88;
-const EVASIVE_BLOCKS_QA_BRICK_HEIGHT_RATIO = 0.05;
-const EVASIVE_BLOCKS_QA_BRICK_HEIGHT_MIN = 18;
-const EVASIVE_BLOCKS_QA_BRICK_HEIGHT_MAX = 28;
-const EVASIVE_BLOCKS_QA_BRICK_PADDING = 8;
-const EVASIVE_BLOCKS_QA_TARGET_ROW = EVASIVE_BLOCKS_QA_BRICK_ROWS - 1;
+const EVASIVE_BLOCKS_QA_COMPONENT_COLS = 1;
+const EVASIVE_BLOCKS_QA_COMPONENT_ROWS = 3;
+const EVASIVE_BLOCKS_QA_COMPONENT_WIDTH_RATIO = 0.18;
+const EVASIVE_BLOCKS_QA_COMPONENT_WIDTH_MIN = 48;
+const EVASIVE_BLOCKS_QA_COMPONENT_WIDTH_MAX = 88;
+const EVASIVE_BLOCKS_QA_COMPONENT_HEIGHT_RATIO = 0.05;
+const EVASIVE_BLOCKS_QA_COMPONENT_HEIGHT_MIN = 18;
+const EVASIVE_BLOCKS_QA_COMPONENT_HEIGHT_MAX = 28;
+const EVASIVE_BLOCKS_QA_COMPONENT_PADDING = 8;
+const EVASIVE_BLOCKS_QA_TARGET_ROW = EVASIVE_BLOCKS_QA_COMPONENT_ROWS - 1;
 const COMBO_WINDOW_MS = 1200;
 const COMBO_COOLDOWN_MS = 500;
 const COMBO_SMALL_THRESHOLD = 3;
@@ -139,7 +139,7 @@ const POWER_UP_ACTION_COLLECT: LoggedPowerUpAction = "collect";
 const POWER_UP_ACTION_ACTIVATE: LoggedPowerUpAction = "activate";
 const POWER_UP_ACTION_EXPIRE: LoggedPowerUpAction = "expire";
 const POWER_UP_ACTION_MISS: LoggedPowerUpAction = "miss";
-const BALL_TURRET_BRICK_COLUMN_MULTIPLIER = 2;
+const BALL_TURRET_COMPONENT_COLUMN_MULTIPLIER = 2;
 const BALL_TURRET_BOTTOM_SPAWN_ANGLE = Math.PI / 2;
 const BALL_TURRET_POWER_UP_FALLBACK_ANGLE = -Math.PI / 2;
 const MAX_FRAME_DELTA_MS = 80;
@@ -155,31 +155,31 @@ const LASER_FAN_GLOW_START_PROGRESS = 0.24;
 const LASER_FAN_EXPLOSION_START_PROGRESS = 0.72;
 const LASER_FAN_CRACK_MIN_LINES = 2;
 const LASER_FAN_CRACK_LINE_VARIANTS = 3;
-const BRICK_IMPACT_LIGHT_INTENSITY_RATIO = 0.3;
-const SOFTENED_BRICK_IMPACT_CRACK_ALPHA =
-  0.92 * BRICK_IMPACT_LIGHT_INTENSITY_RATIO;
-const SOFTENED_BRICK_IMPACT_SHADOW_ALPHA =
-  0.78 * BRICK_IMPACT_LIGHT_INTENSITY_RATIO;
-const SOFTENED_BRICK_IMPACT_GLOW_COLOR_ALPHA =
-  0.34 * BRICK_IMPACT_LIGHT_INTENSITY_RATIO;
-const SOFTENED_BRICK_IMPACT_GLOW_ALPHA =
-  0.76 * BRICK_IMPACT_LIGHT_INTENSITY_RATIO;
-const SOFTENED_BRICK_IMPACT_EXPLOSION_ALPHA =
-  0.88 * BRICK_IMPACT_LIGHT_INTENSITY_RATIO;
+const COMPONENT_IMPACT_LIGHT_INTENSITY_RATIO = 0.3;
+const SOFTENED_COMPONENT_IMPACT_CRACK_ALPHA =
+  0.92 * COMPONENT_IMPACT_LIGHT_INTENSITY_RATIO;
+const SOFTENED_COMPONENT_IMPACT_SHADOW_ALPHA =
+  0.78 * COMPONENT_IMPACT_LIGHT_INTENSITY_RATIO;
+const SOFTENED_COMPONENT_IMPACT_GLOW_COLOR_ALPHA =
+  0.34 * COMPONENT_IMPACT_LIGHT_INTENSITY_RATIO;
+const SOFTENED_COMPONENT_IMPACT_GLOW_ALPHA =
+  0.76 * COMPONENT_IMPACT_LIGHT_INTENSITY_RATIO;
+const SOFTENED_COMPONENT_IMPACT_EXPLOSION_ALPHA =
+  0.88 * COMPONENT_IMPACT_LIGHT_INTENSITY_RATIO;
 const LASER_FAN_CRACK_LINE_WIDTH = 1.55;
 const LASER_FAN_CRACK_LINE_WIDTH_PROGRESS_RATIO = 0.42;
 const LASER_FAN_CRACK_LINE_WIDTH_SEED_RATIO = 0.24;
-const LASER_FAN_CRACK_LINE_ALPHA = SOFTENED_BRICK_IMPACT_CRACK_ALPHA;
-const LASER_FAN_CRACK_LINE_COLOR = `rgba(255, 248, 199, ${SOFTENED_BRICK_IMPACT_CRACK_ALPHA})`;
-const LASER_FAN_CRACK_SHADOW_COLOR = `rgba(97, 232, 255, ${SOFTENED_BRICK_IMPACT_SHADOW_ALPHA})`;
-const LASER_FAN_GLOW_COLOR = `rgba(245, 247, 255, ${SOFTENED_BRICK_IMPACT_GLOW_COLOR_ALPHA})`;
-const LASER_FAN_GLOW_MAX_ALPHA = SOFTENED_BRICK_IMPACT_GLOW_ALPHA;
+const LASER_FAN_CRACK_LINE_ALPHA = SOFTENED_COMPONENT_IMPACT_CRACK_ALPHA;
+const LASER_FAN_CRACK_LINE_COLOR = `rgba(255, 248, 199, ${SOFTENED_COMPONENT_IMPACT_CRACK_ALPHA})`;
+const LASER_FAN_CRACK_SHADOW_COLOR = `rgba(97, 232, 255, ${SOFTENED_COMPONENT_IMPACT_SHADOW_ALPHA})`;
+const LASER_FAN_GLOW_COLOR = `rgba(245, 247, 255, ${SOFTENED_COMPONENT_IMPACT_GLOW_COLOR_ALPHA})`;
+const LASER_FAN_GLOW_MAX_ALPHA = SOFTENED_COMPONENT_IMPACT_GLOW_ALPHA;
 const LASER_FAN_GLOW_RADIUS_RATIO = 0.46;
 const LASER_FAN_EXPLOSION_PARTICLE_COUNT = 6;
 const LASER_FAN_EXPLOSION_RADIUS_RATIO = 0.56;
 const LASER_FAN_EXPLOSION_PARTICLE_RADIUS_RATIO = 0.06;
 const LASER_FAN_EXPLOSION_MIN_PARTICLE_RADIUS = 1.5;
-const LASER_FAN_EXPLOSION_ALPHA = SOFTENED_BRICK_IMPACT_EXPLOSION_ALPHA;
+const LASER_FAN_EXPLOSION_ALPHA = SOFTENED_COMPONENT_IMPACT_EXPLOSION_ALPHA;
 const LASER_FAN_SEED_COL_MULTIPLIER = 73_856_093;
 const LASER_FAN_SEED_ROW_MULTIPLIER = 19_349_663;
 const LASER_FAN_SEED_COLOR_MULTIPLIER = 83_492_791;
@@ -216,12 +216,12 @@ const ELECTRIC_IMPACT_CORE_COLOR = "rgba(238, 253, 255, 0.92)";
 const ELECTRIC_IMPACT_HALO_COLOR = "rgba(66, 224, 255, 0.34)";
 const ELECTRIC_IMPACT_SHADOW_COLOR = "rgba(77, 232, 255, 0.88)";
 const FULL_CIRCLE_RADIANS = Math.PI * 2;
-const BRICK_COLOR_AUDIO_IDS: AudioId[] = [
-  GAME_AUDIO_IDS.BRICK_BREAK_RED,
-  GAME_AUDIO_IDS.BRICK_BREAK_BLUE,
-  GAME_AUDIO_IDS.BRICK_BREAK_GREEN,
-  GAME_AUDIO_IDS.BRICK_BREAK_YELLOW,
-  GAME_AUDIO_IDS.BRICK_BREAK_PURPLE,
+const COMPONENT_COLOR_AUDIO_IDS: AudioId[] = [
+  GAME_AUDIO_IDS.COMPONENT_BREAK_RED,
+  GAME_AUDIO_IDS.COMPONENT_BREAK_BLUE,
+  GAME_AUDIO_IDS.COMPONENT_BREAK_GREEN,
+  GAME_AUDIO_IDS.COMPONENT_BREAK_YELLOW,
+  GAME_AUDIO_IDS.COMPONENT_BREAK_PURPLE,
 ];
 const CANVAS_FONT_FAMILY = "Arial";
 const LOADING_TEXT = "Carregando";
@@ -275,8 +275,8 @@ interface ElectricImpactEffect extends ElectricImpactEvent {
 }
 
 export type GameQaScenario =
-  | typeof SINGLE_BRICK_QA_SCENARIO
-  | typeof SINGLE_BRICK_PHASE_3_QA_SCENARIO
+  | typeof SINGLE_COMPONENT_QA_SCENARIO
+  | typeof SINGLE_COMPONENT_PHASE_3_QA_SCENARIO
   | typeof LATE_PHASE_STABILITY_QA_SCENARIO
   | typeof CINEMATIC_RIP_QA_SCENARIO
   | typeof PADDLE_COLLISION_QA_SCENARIO
@@ -295,7 +295,7 @@ export class GameEngine {
   private animationFrame = 0;
   private paddle: Paddle;
   private balls: Ball[] = [];
-  private bricks: Bricks;
+  private components: Components;
   private score = 0;
   private assetsLoaded = false;
   private gameWon = false;
@@ -322,15 +322,15 @@ export class GameEngine {
   private levelTransitionTimer: ReturnType<typeof setTimeout> | null = null;
   private level = 1;
   private levelStartedAt = Date.now();
-  private initialBrickCount = 0;
-  private successfulBrickHitsThisLevel = 0;
+  private initialComponentCount = 0;
+  private successfulComponentHitsThisLevel = 0;
   private latestSpeedReduction: SpeedReductionSnapshot | null = null;
   private phaseSpeedConfig: PhaseSpeedConfig | null = null;
   private qaScenarioConsumed = false;
   private comboCount = 0;
-  private lastBrickDestroyedAt = 0;
+  private lastComponentDestroyedAt = 0;
   private lastComboAudioAt = 0;
-  private destroyedBricksSincePowerUp = 0;
+  private destroyedComponentsSincePowerUp = 0;
   private activePowerUp: PowerUp | null = null;
   private nextPowerUpIndex = 0;
   private lastFrameTimestamp = 0;
@@ -376,8 +376,8 @@ export class GameEngine {
     }
   };
 
-  private maxBrickRows = 0;
-  private baseBrickRows = 0;
+  private maxComponentRows = 0;
+  private baseComponentRows = 0;
 
   constructor(
     private canvas: HTMLCanvasElement,
@@ -419,13 +419,13 @@ export class GameEngine {
       this.canvasSize.height,
     );
     this.radialGeometry = this.createRadialGeometry(this.dimensions);
-    this.baseBrickRows = this.dimensions.brickRows;
+    this.baseComponentRows = this.dimensions.componentRows;
 
     LOG(
-      `📐 Dimensões calculadas: ${this.dimensions.brickCols} colunas x ${this.dimensions.brickRows} linhas`,
+      `📐 Dimensões calculadas: ${this.dimensions.componentCols} colunas x ${this.dimensions.componentRows} linhas`,
     );
     LOG(
-      `📐 Tamanho dos blocos: ${this.dimensions.brickWidth}x${this.dimensions.brickHeight}`,
+      `📐 Tamanho dos blocos: ${this.dimensions.componentWidth}x${this.dimensions.componentHeight}`,
     );
 
     // Calcular escala para manter proporções
@@ -435,7 +435,7 @@ export class GameEngine {
     if (this.qaScenario === LATE_PHASE_STABILITY_QA_SCENARIO) {
       this.level = LATE_PHASE_STABILITY_LEVEL;
     }
-    if (this.qaScenario === SINGLE_BRICK_PHASE_3_QA_SCENARIO) {
+    if (this.qaScenario === SINGLE_COMPONENT_PHASE_3_QA_SCENARIO) {
       this.level = 3;
     }
 
@@ -455,10 +455,10 @@ export class GameEngine {
     this.prepareBallTurretLoseQaBall();
     this.prepareLatePhaseStabilityBall();
 
-    LOG(`🏗️  Criando Bricks...`);
-    this.configureBrickRows();
-    this.applyLevelBrickRows(this.level);
-    this.bricks = this.createBricks();
+    LOG(`🏗️  Criando Components...`);
+    this.configureComponentRows();
+    this.applyLevelComponentRows(this.level);
+    this.components = this.createComponents();
     this.preparePowerUpQaScenarios();
     this.startLevelSpeedTracking(this.level);
     this.armServeLock();
@@ -490,16 +490,16 @@ export class GameEngine {
     canvasHeight: number,
   ): DynamicGameDimensions {
     const dimensions = calculateDynamicDimensions(canvasWidth, canvasHeight);
-    if (this.isSingleBrickQaScenario() && !this.qaScenarioConsumed) {
+    if (this.isSingleComponentQaScenario() && !this.qaScenarioConsumed) {
       return {
         ...dimensions,
-        brickCols: 1,
-        brickRows: 1,
-        brickWidth: Math.min(96, Math.max(56, canvasWidth * 0.24)),
-        brickHeight: Math.min(28, Math.max(18, canvasHeight * 0.05)),
-        brickPadding: 8,
-        brickOffsetTop: Math.max(24, canvasHeight * 0.12),
-        brickOffsetLeft:
+        componentCols: 1,
+        componentRows: 1,
+        componentWidth: Math.min(96, Math.max(56, canvasWidth * 0.24)),
+        componentHeight: Math.min(28, Math.max(18, canvasHeight * 0.05)),
+        componentPadding: 8,
+        componentOffsetTop: Math.max(24, canvasHeight * 0.12),
+        componentOffsetLeft:
           (canvasWidth - Math.min(96, Math.max(56, canvasWidth * 0.24))) / 2,
       };
     }
@@ -507,53 +507,53 @@ export class GameEngine {
     if (this.qaScenario === PADDLE_COLLISION_QA_SCENARIO) {
       return {
         ...dimensions,
-        brickCols: 0,
-        brickRows: 0,
+        componentCols: 0,
+        componentRows: 0,
       };
     }
 
     if (this.isEvasiveBlocksQaScenario() && !this.qaScenarioConsumed) {
-      const brickWidth = Math.min(
-        EVASIVE_BLOCKS_QA_BRICK_WIDTH_MAX,
+      const componentWidth = Math.min(
+        EVASIVE_BLOCKS_QA_COMPONENT_WIDTH_MAX,
         Math.max(
-          EVASIVE_BLOCKS_QA_BRICK_WIDTH_MIN,
-          canvasWidth * EVASIVE_BLOCKS_QA_BRICK_WIDTH_RATIO,
+          EVASIVE_BLOCKS_QA_COMPONENT_WIDTH_MIN,
+          canvasWidth * EVASIVE_BLOCKS_QA_COMPONENT_WIDTH_RATIO,
         ),
       );
-      const brickHeight = Math.min(
-        EVASIVE_BLOCKS_QA_BRICK_HEIGHT_MAX,
+      const componentHeight = Math.min(
+        EVASIVE_BLOCKS_QA_COMPONENT_HEIGHT_MAX,
         Math.max(
-          EVASIVE_BLOCKS_QA_BRICK_HEIGHT_MIN,
-          canvasHeight * EVASIVE_BLOCKS_QA_BRICK_HEIGHT_RATIO,
+          EVASIVE_BLOCKS_QA_COMPONENT_HEIGHT_MIN,
+          canvasHeight * EVASIVE_BLOCKS_QA_COMPONENT_HEIGHT_RATIO,
         ),
       );
-      const totalBricksWidth =
-        EVASIVE_BLOCKS_QA_BRICK_COLS * brickWidth +
-        (EVASIVE_BLOCKS_QA_BRICK_COLS - 1) * EVASIVE_BLOCKS_QA_BRICK_PADDING;
+      const totalComponentsWidth =
+        EVASIVE_BLOCKS_QA_COMPONENT_COLS * componentWidth +
+        (EVASIVE_BLOCKS_QA_COMPONENT_COLS - 1) * EVASIVE_BLOCKS_QA_COMPONENT_PADDING;
 
       return {
         ...dimensions,
-        brickCols: EVASIVE_BLOCKS_QA_BRICK_COLS,
-        brickRows: EVASIVE_BLOCKS_QA_BRICK_ROWS,
-        brickWidth,
-        brickHeight,
-        brickPadding: EVASIVE_BLOCKS_QA_BRICK_PADDING,
-        brickOffsetTop: Math.max(24, canvasHeight * 0.12),
-        brickOffsetLeft: (canvasWidth - totalBricksWidth) / CENTER_DIVISOR,
+        componentCols: EVASIVE_BLOCKS_QA_COMPONENT_COLS,
+        componentRows: EVASIVE_BLOCKS_QA_COMPONENT_ROWS,
+        componentWidth,
+        componentHeight,
+        componentPadding: EVASIVE_BLOCKS_QA_COMPONENT_PADDING,
+        componentOffsetTop: Math.max(24, canvasHeight * 0.12),
+        componentOffsetLeft: (canvasWidth - totalComponentsWidth) / CENTER_DIVISOR,
       };
     }
 
     if (this.isBallTurretMode()) {
-      const brickCols =
-        dimensions.brickCols * BALL_TURRET_BRICK_COLUMN_MULTIPLIER;
-      const totalBricksWidth =
-        brickCols * dimensions.brickWidth +
-        (brickCols - 1) * dimensions.brickPadding;
+      const componentCols =
+        dimensions.componentCols * BALL_TURRET_COMPONENT_COLUMN_MULTIPLIER;
+      const totalComponentsWidth =
+        componentCols * dimensions.componentWidth +
+        (componentCols - 1) * dimensions.componentPadding;
 
       return {
         ...dimensions,
-        brickCols,
-        brickOffsetLeft: (canvasWidth - totalBricksWidth) / CENTER_DIVISOR,
+        componentCols,
+        componentOffsetLeft: (canvasWidth - totalComponentsWidth) / CENTER_DIVISOR,
       };
     }
 
@@ -565,18 +565,18 @@ export class GameEngine {
     canvasHeight: number,
   ): DynamicGameDimensions {
     const dimensions = this.createDimensions(canvasWidth, canvasHeight);
-    this.baseBrickRows = dimensions.brickRows;
-    const brickCols = this.dimensions.brickCols;
-    const brickRows = this.dimensions.brickRows;
-    const totalBricksWidth =
-      brickCols * dimensions.brickWidth +
-      (brickCols - 1) * dimensions.brickPadding;
+    this.baseComponentRows = dimensions.componentRows;
+    const componentCols = this.dimensions.componentCols;
+    const componentRows = this.dimensions.componentRows;
+    const totalComponentsWidth =
+      componentCols * dimensions.componentWidth +
+      (componentCols - 1) * dimensions.componentPadding;
 
     return {
       ...dimensions,
-      brickCols,
-      brickRows,
-      brickOffsetLeft: (canvasWidth - totalBricksWidth) / CENTER_DIVISOR,
+      componentCols,
+      componentRows,
+      componentOffsetLeft: (canvasWidth - totalComponentsWidth) / CENTER_DIVISOR,
     };
   }
 
@@ -600,7 +600,7 @@ export class GameEngine {
       this.canvasSize.height,
     );
     this.radialGeometry = this.createRadialGeometry(this.dimensions);
-    this.configureBrickRows();
+    this.configureComponentRows();
     this.scaleX = this.canvasSize.width / CANVAS_WIDTH;
     this.scaleY = this.canvasSize.height / CANVAS_HEIGHT;
     this.paddle.resize(
@@ -620,7 +620,7 @@ export class GameEngine {
     if (this.isServeLocked) {
       this.balls.forEach((ball) => this.positionBallForCurrentMode(ball));
     }
-    this.bricks.resize(this.dimensions, this.maxBrickRows, this.radialGeometry);
+    this.components.resize(this.dimensions, this.maxComponentRows, this.radialGeometry);
     this.activePowerUp?.setSize(this.getPowerUpSize());
   }
 
@@ -630,52 +630,52 @@ export class GameEngine {
     this.imageSetId = imageSetId;
   }
 
-  private configureBrickRows() {
-    this.maxBrickRows = this.calculateMaxBrickRows(this.dimensions);
+  private configureComponentRows() {
+    this.maxComponentRows = this.calculateMaxComponentRows(this.dimensions);
   }
 
-  private calculateMaxBrickRows(dimensions: DynamicGameDimensions): number {
+  private calculateMaxComponentRows(dimensions: DynamicGameDimensions): number {
     const availableHeight =
       this.canvasSize.height -
       dimensions.paddleHeight -
-      dimensions.brickOffsetTop;
+      dimensions.componentOffsetTop;
     const computedRows = Math.floor(
-      availableHeight / (dimensions.brickHeight + dimensions.brickPadding),
+      availableHeight / (dimensions.componentHeight + dimensions.componentPadding),
     );
 
-    return Math.max(dimensions.brickRows, computedRows);
+    return Math.max(dimensions.componentRows, computedRows);
   }
 
-  private applyLevelBrickRows(level: number) {
+  private applyLevelComponentRows(level: number) {
     this.dimensions = {
       ...this.dimensions,
-      brickRows: calculateLevelBrickRows(
-        this.baseBrickRows,
-        this.maxBrickRows,
+      componentRows: calculateLevelComponentRows(
+        this.baseComponentRows,
+        this.maxComponentRows,
         level,
       ),
     };
   }
 
-  private createBricks(): Bricks {
-    const brickQaRandom = this.createBrickQaRandom();
-    if (brickQaRandom) {
-      return new Bricks(
+  private createComponents(): Components {
+    const componentQaRandom = this.createComponentQaRandom();
+    if (componentQaRandom) {
+      return new Components(
         this.dimensions,
-        this.onBrickDestroyed.bind(this),
-        this.maxBrickRows,
+        this.onComponentDestroyed.bind(this),
+        this.maxComponentRows,
         undefined,
         this.resolveAssetPath,
-        brickQaRandom,
+        componentQaRandom,
         this.radialGeometry,
         this.handleElectricImpact,
       );
     }
 
-    return new Bricks(
+    return new Components(
       this.dimensions,
-      this.onBrickDestroyed.bind(this),
-      this.maxBrickRows,
+      this.onComponentDestroyed.bind(this),
+      this.maxComponentRows,
       undefined,
       this.resolveAssetPath,
       undefined,
@@ -700,10 +700,10 @@ export class GameEngine {
     return ball;
   }
 
-  private isSingleBrickQaScenario(): boolean {
+  private isSingleComponentQaScenario(): boolean {
     return (
-      this.qaScenario === SINGLE_BRICK_QA_SCENARIO ||
-      this.qaScenario === SINGLE_BRICK_PHASE_3_QA_SCENARIO ||
+      this.qaScenario === SINGLE_COMPONENT_QA_SCENARIO ||
+      this.qaScenario === SINGLE_COMPONENT_PHASE_3_QA_SCENARIO ||
       this.qaScenario === METAL_BLOCK_QA_SCENARIO
     );
   }
@@ -712,7 +712,7 @@ export class GameEngine {
     return this.qaScenario === EVASIVE_BLOCKS_QA_SCENARIO;
   }
 
-  private createBrickQaRandom(): (() => number) | null {
+  private createComponentQaRandom(): (() => number) | null {
     return (
       this.createMetalBlockQaRandom() ?? this.createEvasiveBlocksQaRandom()
     );
@@ -747,7 +747,7 @@ export class GameEngine {
 
   private prepareQaBall() {
     if (
-      !this.isSingleBrickQaScenario() ||
+      !this.isSingleComponentQaScenario() ||
       this.qaScenarioConsumed ||
       this.balls.length === 0
     )
@@ -755,10 +755,10 @@ export class GameEngine {
 
     const ball = this.balls[0];
     const targetX =
-      this.dimensions.brickOffsetLeft + this.dimensions.brickWidth / 2;
+      this.dimensions.componentOffsetLeft + this.dimensions.componentWidth / 2;
     const targetY =
-      this.dimensions.brickOffsetTop +
-      this.dimensions.brickHeight +
+      this.dimensions.componentOffsetTop +
+      this.dimensions.componentHeight +
       ball.position.radius -
       1;
     ball.setPosition(targetX, targetY);
@@ -775,12 +775,12 @@ export class GameEngine {
 
     const ball = this.balls[0];
     const targetX =
-      this.dimensions.brickOffsetLeft + this.dimensions.brickWidth / 2;
+      this.dimensions.componentOffsetLeft + this.dimensions.componentWidth / 2;
     const targetY =
-      this.dimensions.brickOffsetTop +
+      this.dimensions.componentOffsetTop +
       EVASIVE_BLOCKS_QA_TARGET_ROW *
-        (this.dimensions.brickHeight + this.dimensions.brickPadding) +
-      this.dimensions.brickHeight +
+        (this.dimensions.componentHeight + this.dimensions.componentPadding) +
+      this.dimensions.componentHeight +
       ball.position.radius -
       1;
     ball.setPosition(targetX, targetY);
@@ -986,23 +986,23 @@ export class GameEngine {
     this.assetsLoaded = true;
   }
 
-  private onBrickDestroyed(colorIndex: number) {
-    this.playBrickAudio(colorIndex);
+  private onComponentDestroyed(colorIndex: number) {
+    this.playComponentAudio(colorIndex);
     this.updateComboAudio();
     this.maybeSpawnPowerUp();
-    this.score += POINTS_PER_BRICK;
-    this.successfulBrickHitsThisLevel += 1;
+    this.score += POINTS_PER_COMPONENT;
+    this.successfulComponentHitsThisLevel += 1;
     this.onScoreUpdate(this.score);
     this.latestSpeedReduction = this.getLatestSpeedReductionFromBalls();
     if (this.latestSpeedReduction) {
       this.latestSpeedReduction = {
         ...this.latestSpeedReduction,
-        hitNumber: this.successfulBrickHitsThisLevel,
+        hitNumber: this.successfulComponentHitsThisLevel,
       };
     }
 
     LOG(
-      `🎯 onBrickDestroyed: Score = ${this.score}, Verificando se todos os blocos foram destruídos...`,
+      `🎯 onComponentDestroyed: Score = ${this.score}, Verificando se todos os blocos foram destruídos...`,
     );
 
     // Log do evento de pontuação
@@ -1015,14 +1015,14 @@ export class GameEngine {
         gameState,
         ballPositions,
         paddlePosition,
-        POINTS_PER_BRICK,
-        "brick_destroyed",
+        POINTS_PER_COMPONENT,
+        "component_destroyed",
         this.latestSpeedReduction,
       )
       .catch((error) => ERROR("❌ Erro ao registrar pontuação:", error));
 
     // Verificar se todos os blocos foram destruídos
-    if (this.bricks.isAllDestroyed() && !this.isLevelTransitioning) {
+    if (this.components.isAllDestroyed() && !this.isLevelTransitioning) {
       this.startLevelTransition(gameState, ballPositions, paddlePosition);
     }
   }
@@ -1039,8 +1039,8 @@ export class GameEngine {
     const currentLevel = this.level;
     const nextLevel = currentLevel + 1;
     const nextSpeedMultiplier = calculateLevelSpeedMultiplier(nextLevel);
-    const nextInitialBrickCount =
-      this.getExpectedInitialBrickCountForLevel(nextLevel);
+    const nextInitialComponentCount =
+      this.getExpectedInitialComponentCountForLevel(nextLevel);
     const nextMaxSpeed = calculateLevelMaxSpeed(
       this.canvasSize.width,
       nextLevel,
@@ -1049,9 +1049,9 @@ export class GameEngine {
       this.canvasSize.width,
       nextLevel,
     );
-    const nextReductionPerBrick = calculateSpeedReductionPerBrick(
+    const nextReductionPerComponent = calculateSpeedReductionPerComponent(
       nextMaxSpeed,
-      nextInitialBrickCount,
+      nextInitialComponentCount,
       nextMinSpeed,
     );
     const payload: LevelTransitionPayload = {
@@ -1061,8 +1061,8 @@ export class GameEngine {
       pauseMs: LEVEL_CLEAR_PAUSE_MS,
       nextMaxSpeed,
       nextMinSpeed,
-      nextReductionPerBrick,
-      nextInitialBrickCount,
+      nextReductionPerComponent,
+      nextInitialComponentCount,
     };
 
     void gameLogger
@@ -1077,8 +1077,8 @@ export class GameEngine {
         {
           nextMaxSpeed,
           nextMinSpeed,
-          nextReductionPerBrick,
-          nextInitialBrickCount,
+          nextReductionPerComponent,
+          nextInitialComponentCount,
         },
       )
       .catch((error) => ERROR("❌ Erro ao registrar fase concluída:", error));
@@ -1113,25 +1113,25 @@ export class GameEngine {
     nextSpeedMultiplier: number,
   ) {
     this.level = nextLevel;
-    if (this.isSingleBrickQaScenario() && !this.qaScenarioConsumed) {
+    if (this.isSingleComponentQaScenario() && !this.qaScenarioConsumed) {
       this.qaScenarioConsumed = true;
       this.dimensions = this.createDimensions(
         this.canvasSize.width,
         this.canvasSize.height,
       );
-      this.baseBrickRows = this.dimensions.brickRows;
-      this.configureBrickRows();
+      this.baseComponentRows = this.dimensions.componentRows;
+      this.configureComponentRows();
     }
-    this.applyLevelBrickRows(nextLevel);
+    this.applyLevelComponentRows(nextLevel);
     this.radialGeometry = this.createRadialGeometry(this.dimensions);
     this.paddle.reset();
     this.activePowerUp = null;
     this.resetLaserFanSpawnCounterForLevel();
-    this.destroyedBricksSincePowerUp = 0;
+    this.destroyedComponentsSincePowerUp = 0;
     this.balls = [this.createBall(nextSpeedMultiplier)];
     this.armServeLock();
     this.prepareQaBall();
-    this.bricks = this.createBricks();
+    this.components = this.createComponents();
     this.startLevelSpeedTracking(nextLevel);
     this.onLevelChange?.(this.level);
     this.isLevelTransitioning = false;
@@ -1153,11 +1153,11 @@ export class GameEngine {
       .catch((error) => ERROR("❌ Erro ao registrar início de fase:", error));
   }
 
-  private getRemainingBricksCount(): number {
+  private getRemainingComponentsCount(): number {
     let count = 0;
-    for (let c = 0; c < this.dimensions.brickCols; c++) {
-      for (let r = 0; r < this.bricks.getRows(); r++) {
-        if (this.bricks.isBrickActive(c, r)) {
+    for (let c = 0; c < this.dimensions.componentCols; c++) {
+      for (let r = 0; r < this.components.getRows(); r++) {
+        if (this.components.isComponentActive(c, r)) {
           count++;
         }
       }
@@ -1169,16 +1169,16 @@ export class GameEngine {
     return {
       score: this.score,
       ballsCount: this.balls.length,
-      bricksRemaining: this.getRemainingBricksCount(),
+      componentsRemaining: this.getRemainingComponentsCount(),
       gameWon: this.gameWon,
       gameOver: this.gameOver,
       level: this.level,
       canvasSize: this.canvasSize,
       gameDimensions: {
-        brickWidth: this.dimensions.brickWidth,
-        brickHeight: this.dimensions.brickHeight,
-        brickCols: this.dimensions.brickCols,
-        brickRows: this.dimensions.brickRows,
+        componentWidth: this.dimensions.componentWidth,
+        componentHeight: this.dimensions.componentHeight,
+        componentCols: this.dimensions.componentCols,
+        componentRows: this.dimensions.componentRows,
         paddleWidth: this.dimensions.paddleWidth,
         paddleHeight: this.dimensions.paddleHeight,
         ballRadius: this.dimensions.ballRadius,
@@ -1196,8 +1196,8 @@ export class GameEngine {
     }));
   }
 
-  private getInitialBrickCount(): number {
-    return Math.max(1, this.getRemainingBricksCount());
+  private getInitialComponentCount(): number {
+    return Math.max(1, this.getRemainingComponentsCount());
   }
 
   private getElapsedLevelMs(): number {
@@ -1206,23 +1206,23 @@ export class GameEngine {
 
   private buildPhaseSpeedConfig(
     level: number,
-    initialBrickCount: number,
+    initialComponentCount: number,
     levelStartedAt: number,
   ): PhaseSpeedConfig {
     const maxSpeed = calculateLevelMaxSpeed(this.canvasSize.width, level);
     const minSpeed = calculateLevelMinSpeed(this.canvasSize.width, level);
     return {
       level,
-      initialBrickCount,
+      initialComponentCount,
       initialSpawnSpeed: calculateLevelInitialSpawnSpeed(
         this.canvasSize.width,
         level,
       ),
       maxSpeed,
       minSpeed,
-      reductionPerBrick: calculateSpeedReductionPerBrick(
+      reductionPerComponent: calculateSpeedReductionPerComponent(
         maxSpeed,
-        initialBrickCount,
+        initialComponentCount,
         minSpeed,
       ),
       previousLevelMaxSpeed: calculateLevelPreviousMaxSpeed(
@@ -1235,12 +1235,12 @@ export class GameEngine {
 
   private startLevelSpeedTracking(level: number) {
     this.levelStartedAt = Date.now();
-    this.initialBrickCount = this.getInitialBrickCount();
-    this.successfulBrickHitsThisLevel = 0;
+    this.initialComponentCount = this.getInitialComponentCount();
+    this.successfulComponentHitsThisLevel = 0;
     this.latestSpeedReduction = null;
     this.phaseSpeedConfig = this.buildPhaseSpeedConfig(
       level,
-      this.initialBrickCount,
+      this.initialComponentCount,
       this.levelStartedAt,
     );
     this.balls.forEach((ball) =>
@@ -1265,7 +1265,7 @@ export class GameEngine {
       const snapshot = activeBall.getSpeedStateSnapshot();
       return {
         ...snapshot,
-        successfulBrickHits: this.successfulBrickHitsThisLevel,
+        successfulComponentHits: this.successfulComponentHitsThisLevel,
       };
     }
 
@@ -1275,8 +1275,8 @@ export class GameEngine {
         this.level,
         Math.max(
           1,
-          this.initialBrickCount ||
-            this.dimensions.brickCols * this.dimensions.brickRows,
+          this.initialComponentCount ||
+            this.dimensions.componentCols * this.dimensions.componentRows,
         ),
         this.levelStartedAt,
       );
@@ -1285,13 +1285,13 @@ export class GameEngine {
 
     return {
       level: fallbackConfig.level,
-      initialBrickCount: fallbackConfig.initialBrickCount,
-      successfulBrickHits: this.successfulBrickHitsThisLevel,
+      initialComponentCount: fallbackConfig.initialComponentCount,
+      successfulComponentHits: this.successfulComponentHitsThisLevel,
       initialSpawnSpeed: fallbackConfig.initialSpawnSpeed,
       maxSpeed: fallbackConfig.maxSpeed,
       minSpeed: fallbackConfig.minSpeed,
       currentSpeed,
-      reductionPerBrick: fallbackConfig.reductionPerBrick,
+      reductionPerComponent: fallbackConfig.reductionPerComponent,
       previousLevelMaxSpeed: fallbackConfig.previousLevelMaxSpeed,
       levelStartedAt: fallbackConfig.levelStartedAt,
       elapsedLevelMs: this.getElapsedLevelMs(),
@@ -1299,10 +1299,10 @@ export class GameEngine {
     };
   }
 
-  private playBrickAudio(colorIndex: number) {
+  private playComponentAudio(colorIndex: number) {
     const colorAudioId =
-      BRICK_COLOR_AUDIO_IDS[colorIndex] || GAME_AUDIO_IDS.BRICK_BREAK_RED;
-    this.audioSink.playAudio(GAME_AUDIO_IDS.BRICK_HIT);
+      COMPONENT_COLOR_AUDIO_IDS[colorIndex] || GAME_AUDIO_IDS.COMPONENT_BREAK_RED;
+    this.audioSink.playAudio(GAME_AUDIO_IDS.COMPONENT_HIT);
     this.audioSink.playAudio(colorAudioId);
     this.audioSink.playAudio(GAME_AUDIO_IDS.SCORE_TICK);
   }
@@ -1310,10 +1310,10 @@ export class GameEngine {
   private updateComboAudio() {
     const now = Date.now();
     this.comboCount =
-      now - this.lastBrickDestroyedAt <= COMBO_WINDOW_MS
+      now - this.lastComponentDestroyedAt <= COMBO_WINDOW_MS
         ? this.comboCount + 1
         : 1;
-    this.lastBrickDestroyedAt = now;
+    this.lastComponentDestroyedAt = now;
 
     if (now - this.lastComboAudioAt < COMBO_COOLDOWN_MS) return;
     if (this.comboCount >= COMBO_LARGE_THRESHOLD) {
@@ -1328,14 +1328,14 @@ export class GameEngine {
   }
 
   private maybeSpawnPowerUp() {
-    this.destroyedBricksSincePowerUp += 1;
+    this.destroyedComponentsSincePowerUp += 1;
     if (
       this.activePowerUp ||
-      this.destroyedBricksSincePowerUp < POWER_UP_SPAWN_INTERVAL
+      this.destroyedComponentsSincePowerUp < POWER_UP_SPAWN_INTERVAL
     )
       return;
 
-    this.destroyedBricksSincePowerUp = 0;
+    this.destroyedComponentsSincePowerUp = 0;
     const powerUpType = this.selectNextPowerUpType();
     if (!powerUpType) return;
     this.activePowerUp = this.createPowerUp(powerUpType);
@@ -1356,7 +1356,7 @@ export class GameEngine {
         ballPosition?.x ?? this.canvasSize.width / 2,
       ),
     );
-    const spawnY = this.dimensions.brickOffsetTop + POWER_UP_START_Y_OFFSET;
+    const spawnY = this.dimensions.componentOffsetTop + POWER_UP_START_Y_OFFSET;
     return new PowerUp(
       spawnX,
       spawnY,
@@ -1535,22 +1535,22 @@ export class GameEngine {
 
   private activateLaserFanPowerUp(activationAudioId: AudioId) {
     this.audioSink.playAudio(activationAudioId);
-    const selectedBricks = this.bricks.selectRandomActive(
+    const selectedComponents = this.components.selectRandomActive(
       calculateLaserFanTargetCount(this.level),
     );
-    this.showLaserFanEffect(selectedBricks);
-    this.resolveLaserFanPowerUp(selectedBricks);
+    this.showLaserFanEffect(selectedComponents);
+    this.resolveLaserFanPowerUp(selectedComponents);
   }
 
-  private resolveLaserFanPowerUp(targets: DestroyedBrickSnapshot[]) {
+  private resolveLaserFanPowerUp(targets: DestroyedComponentSnapshot[]) {
     if (targets.length === 0) return;
 
-    const destroyedBricks = this.bricks.destroySelectedActive(targets);
-    if (destroyedBricks.length === 0) return;
+    const destroyedComponents = this.components.destroySelectedActive(targets);
+    if (destroyedComponents.length === 0) return;
 
-    const scoreDelta = POINTS_PER_BRICK * destroyedBricks.length;
+    const scoreDelta = POINTS_PER_COMPONENT * destroyedComponents.length;
     this.score += scoreDelta;
-    this.successfulBrickHitsThisLevel += destroyedBricks.length;
+    this.successfulComponentHitsThisLevel += destroyedComponents.length;
     this.latestSpeedReduction = this.getLatestSpeedReductionFromBalls();
     this.onScoreUpdate(this.score);
 
@@ -1565,9 +1565,9 @@ export class GameEngine {
       radius: 0,
     };
 
-    destroyedBricks.forEach((brick) =>
-      this.logLaserFanBrickDestroyed(
-        brick,
+    destroyedComponents.forEach((component) =>
+      this.logLaserFanComponentDestroyed(
+        component,
         gameState,
         ballPositions,
         paddlePosition,
@@ -1587,13 +1587,13 @@ export class GameEngine {
       )
       .catch((error) => ERROR("❌ Erro ao registrar pontuação:", error));
 
-    if (this.bricks.isAllDestroyed() && !this.isLevelTransitioning) {
+    if (this.components.isAllDestroyed() && !this.isLevelTransitioning) {
       this.startLevelTransition(gameState, ballPositions, paddlePosition);
     }
   }
 
-  private logLaserFanBrickDestroyed(
-    brick: DestroyedBrickSnapshot,
+  private logLaserFanComponentDestroyed(
+    component: DestroyedComponentSnapshot,
     gameState: ReturnType<GameEngine["getCurrentGameState"]>,
     ballPositions: ReturnType<GameEngine["getBallPositions"]>,
     paddlePosition: { x: number; y: number; width: number; height: number },
@@ -1601,18 +1601,18 @@ export class GameEngine {
     ballVelocity: { dx: number; dy: number },
   ) {
     void gameLogger
-      .logBrickDestroyed(
+      .logComponentDestroyed(
         gameState,
         ballPositions,
         paddlePosition,
         {
-          x: brick.x,
-          y: brick.y,
-          width: brick.width,
-          height: brick.height,
+          x: component.x,
+          y: component.y,
+          width: component.width,
+          height: component.height,
         },
-        { col: brick.col, row: brick.row },
-        brick.colorIndex,
+        { col: component.col, row: component.row },
+        component.colorIndex,
         ballPosition,
         ballVelocity,
         ballVelocity,
@@ -1623,12 +1623,12 @@ export class GameEngine {
       );
   }
 
-  private showLaserFanEffect(destroyedBricks: DestroyedBrickSnapshot[] = []) {
+  private showLaserFanEffect(destroyedComponents: DestroyedComponentSnapshot[] = []) {
     const now = Date.now();
     this.laserFanEffectStartedAt = now;
     this.laserFanEffectUntil = now + LASER_FAN_EFFECT_VISIBLE_MS;
     this.laserFanEffectTargets =
-      this.buildLaserFanEffectTargets(destroyedBricks);
+      this.buildLaserFanEffectTargets(destroyedComponents);
     if (this.laserFanEffectTimer) clearTimeout(this.laserFanEffectTimer);
     this.laserFanEffectTimer = setTimeout(() => {
       this.resetLaserFanEffectState();
@@ -1677,29 +1677,29 @@ export class GameEngine {
   }
 
   private buildLaserFanEffectTargets(
-    destroyedBricks: DestroyedBrickSnapshot[],
+    destroyedComponents: DestroyedComponentSnapshot[],
   ): LaserFanEffectTarget[] {
-    return destroyedBricks.map((brick, index) => ({
-      col: brick.col,
-      row: brick.row,
-      colorIndex: brick.colorIndex,
-      x: brick.x + brick.width / CENTER_DIVISOR,
-      y: brick.y + brick.height / CENTER_DIVISOR,
-      width: brick.width,
-      height: brick.height,
+    return destroyedComponents.map((component, index) => ({
+      col: component.col,
+      row: component.row,
+      colorIndex: component.colorIndex,
+      x: component.x + component.width / CENTER_DIVISOR,
+      y: component.y + component.height / CENTER_DIVISOR,
+      width: component.width,
+      height: component.height,
       index,
-      seed: this.buildLaserFanTargetSeed(brick, index),
+      seed: this.buildLaserFanTargetSeed(component, index),
     }));
   }
 
   private buildLaserFanTargetSeed(
-    brick: DestroyedBrickSnapshot,
+    component: DestroyedComponentSnapshot,
     index: number,
   ) {
     return Math.abs(
-      brick.col * LASER_FAN_SEED_COL_MULTIPLIER +
-        brick.row * LASER_FAN_SEED_ROW_MULTIPLIER +
-        brick.colorIndex * LASER_FAN_SEED_COLOR_MULTIPLIER +
+      component.col * LASER_FAN_SEED_COL_MULTIPLIER +
+        component.row * LASER_FAN_SEED_ROW_MULTIPLIER +
+        component.colorIndex * LASER_FAN_SEED_COLOR_MULTIPLIER +
         index * LASER_FAN_SEED_INDEX_MULTIPLIER,
     );
   }
@@ -2235,9 +2235,9 @@ export class GameEngine {
     }
   }
 
-  private getExpectedInitialBrickCountForLevel(level: number): number {
+  private getExpectedInitialComponentCountForLevel(level: number): number {
     if (
-      this.isSingleBrickQaScenario() &&
+      this.isSingleComponentQaScenario() &&
       !this.qaScenarioConsumed &&
       level > this.level
     ) {
@@ -2245,19 +2245,19 @@ export class GameEngine {
         this.canvasSize.width,
         this.canvasSize.height,
       );
-      const previewMaxBrickRows = this.calculateMaxBrickRows(previewDimensions);
-      const previewBrickRows = calculateLevelBrickRows(
-        previewDimensions.brickRows,
-        previewMaxBrickRows,
+      const previewMaxComponentRows = this.calculateMaxComponentRows(previewDimensions);
+      const previewComponentRows = calculateLevelComponentRows(
+        previewDimensions.componentRows,
+        previewMaxComponentRows,
         level,
       );
 
-      return previewDimensions.brickCols * previewBrickRows;
+      return previewDimensions.componentCols * previewComponentRows;
     }
 
     return (
-      this.dimensions.brickCols *
-      calculateLevelBrickRows(this.baseBrickRows, this.maxBrickRows, level)
+      this.dimensions.componentCols *
+      calculateLevelComponentRows(this.baseComponentRows, this.maxComponentRows, level)
     );
   }
 
@@ -2583,7 +2583,7 @@ export class GameEngine {
       // Normal game rendering
       try {
         this.drawGameBackdrop();
-        this.bricks.draw(this.ctx);
+        this.components.draw(this.ctx);
         this.paddle.update(frameScale);
         this.updateDualSwitchTrampolines(frameScale);
         this.updatePowerUp(frameScale);
@@ -2598,7 +2598,7 @@ export class GameEngine {
 
             const inPlay = ball.update(
               this.paddle,
-              this.bricks,
+              this.components,
               this.canvasSize.height,
               this.getCurrentGameState(),
               this.audioSink,

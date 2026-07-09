@@ -16,8 +16,8 @@ export type GameEventType =
   | 'score_update'
   | 'ball_lost'
   | 'ball_added'
-  | 'brick_destroyed'
-  | 'brick_added'
+  | 'component_destroyed'
+  | 'component_added'
   | 'paddle_move'
   | 'collision'
   | 'power_up'
@@ -29,16 +29,16 @@ export type GameEventType =
 export interface LoggedGameState {
   score: number;
   ballsCount: number;
-  bricksRemaining: number;
+  componentsRemaining: number;
   gameWon: boolean;
   gameOver: boolean;
   level: number;
   canvasSize: { width: number; height: number };
   gameDimensions: {
-    brickWidth: number;
-    brickHeight: number;
-    brickCols: number;
-    brickRows: number;
+    componentWidth: number;
+    componentHeight: number;
+    componentCols: number;
+    componentRows: number;
     paddleWidth: number;
     paddleHeight: number;
     ballRadius: number;
@@ -68,11 +68,11 @@ export interface GameEvent {
   ballPositions: LoggedBallPosition[];
   paddlePosition: LoggedPaddlePosition;
   collisionInfo?: {
-    type: 'wall' | 'paddle' | 'brick' | 'ceiling';
+    type: 'wall' | 'paddle' | 'component' | 'ceiling';
     ballPosition: { x: number; y: number };
     targetPosition?: { x: number; y: number; width?: number; height?: number };
-    brickIndex?: { col: number; row: number };
-    brickColorIndex?: number;
+    componentIndex?: { col: number; row: number };
+    componentColorIndex?: number;
     wallType?: 'left' | 'right' | 'radial';
     hitPosition?: number; // Para colisão com paddle (0-1)
     collisionAngle?: number; // Ângulo da colisão
@@ -89,10 +89,69 @@ export type LoggedPowerUpAction =
   | 'expire'
   | 'miss';
 
+const LEGACY_EVENT_TYPE_ALIASES: Record<string, GameEventType> = {
+  brick_destroyed: 'component_destroyed',
+  brick_added: 'component_added',
+};
+
+function normalizeLegacyEvent(event: GameEvent): GameEvent {
+  const normalizedType = LEGACY_EVENT_TYPE_ALIASES[event.type] ?? event.type;
+  const legacyGameState = event.gameState as LoggedGameState & {
+    bricksRemaining?: number;
+    gameDimensions?: LoggedGameState['gameDimensions'] & {
+      brickWidth?: number;
+      brickHeight?: number;
+      brickCols?: number;
+      brickRows?: number;
+    };
+  };
+
+  const gameDimensions = legacyGameState.gameDimensions;
+  const normalizedGameState: LoggedGameState = {
+    ...legacyGameState,
+    componentsRemaining:
+      legacyGameState.componentsRemaining ?? legacyGameState.bricksRemaining ?? 0,
+    gameDimensions: gameDimensions
+      ? {
+          componentWidth: gameDimensions.componentWidth ?? gameDimensions.brickWidth ?? 0,
+          componentHeight: gameDimensions.componentHeight ?? gameDimensions.brickHeight ?? 0,
+          componentCols: gameDimensions.componentCols ?? gameDimensions.brickCols ?? 0,
+          componentRows: gameDimensions.componentRows ?? gameDimensions.brickRows ?? 0,
+          paddleWidth: gameDimensions.paddleWidth,
+          paddleHeight: gameDimensions.paddleHeight,
+          ballRadius: gameDimensions.ballRadius,
+        }
+      : legacyGameState.gameDimensions,
+  };
+
+  const collisionInfo = event.collisionInfo
+    ? {
+        ...event.collisionInfo,
+        type:
+          (event.collisionInfo.type as string) === 'brick'
+            ? 'component'
+            : event.collisionInfo.type,
+        componentIndex:
+          event.collisionInfo.componentIndex ??
+          (event.collisionInfo as { brickIndex?: { col: number; row: number } }).brickIndex,
+        componentColorIndex:
+          event.collisionInfo.componentColorIndex ??
+          (event.collisionInfo as { brickColorIndex?: number }).brickColorIndex,
+      }
+    : undefined;
+
+  return {
+    ...event,
+    type: normalizedType as GameEventType,
+    gameState: normalizedGameState,
+    collisionInfo,
+  };
+}
+
 const HIGH_VOLUME_EVENT_TYPES = new Set<GameEventType>([
   'paddle_move',
   'collision',
-  'brick_destroyed',
+  'component_destroyed',
 ]);
 
 const GAME_LOGGER_IDLE_TIMEOUT_MS = 2500;
@@ -105,7 +164,7 @@ export interface GameStatsSummary {
   gamesWon: number;
   gamesLost: number;
   averageGameDuration: number;
-  totalBricksDestroyed: number;
+  totalComponentsDestroyed: number;
   totalCollisions: number;
   averageBallsPerGame: number;
   latestSpeedState: SpeedStateSnapshot | null;
@@ -198,8 +257,8 @@ class GameLogger {
     return !HIGH_VOLUME_EVENT_TYPES.has(type) || isGameplayTelemetryEnabled();
   }
 
-  private getTotalBricks(gameState: LoggedGameState): number {
-    return gameState.gameDimensions.brickCols * gameState.gameDimensions.brickRows;
+  private getTotalComponents(gameState: LoggedGameState): number {
+    return gameState.gameDimensions.componentCols * gameState.gameDimensions.componentRows;
   }
 
   async logEvent(event: Omit<GameEvent, 'id' | 'timestamp'>): Promise<void> {
@@ -298,7 +357,7 @@ class GameLogger {
         gameId: this.currentGameId,
         gameDuration,
         finalScore: gameState.score,
-        totalBricksDestroyed: this.getTotalBricks(gameState) - gameState.bricksRemaining,
+        totalComponentsDestroyed: this.getTotalComponents(gameState) - gameState.componentsRemaining,
         speedState: gameState.speedState
       }
     });
@@ -324,7 +383,7 @@ class GameLogger {
         pointsAdded,
         reason,
         newTotalScore: gameState.score,
-        bricksRemaining: gameState.bricksRemaining,
+        componentsRemaining: gameState.componentsRemaining,
         speedReduction: speedReduction ?? undefined,
         speedState: gameState.speedState
       }
@@ -348,9 +407,9 @@ class GameLogger {
         lostBallVelocity,
         remainingBalls: gameState.ballsCount - 1,
         gameProgress: {
-          bricksDestroyed: this.getTotalBricks(gameState) - gameState.bricksRemaining,
-          totalBricks: this.getTotalBricks(gameState),
-          percentageComplete: ((this.getTotalBricks(gameState) - gameState.bricksRemaining) / this.getTotalBricks(gameState)) * 100
+          componentsDestroyed: this.getTotalComponents(gameState) - gameState.componentsRemaining,
+          totalComponents: this.getTotalComponents(gameState),
+          percentageComplete: ((this.getTotalComponents(gameState) - gameState.componentsRemaining) / this.getTotalComponents(gameState)) * 100
         },
         speedState: gameState.speedState
       }
@@ -376,61 +435,61 @@ class GameLogger {
     });
   }
 
-  async logBrickDestroyed(
+  async logComponentDestroyed(
     gameState: GameEvent['gameState'],
     ballPositions: GameEvent['ballPositions'],
     paddlePosition: GameEvent['paddlePosition'],
-    brickPosition: { x: number; y: number; width: number; height: number },
-    brickIndex: { col: number; row: number },
-    brickColorIndex: number,
+    componentPosition: { x: number; y: number; width: number; height: number },
+    componentIndex: { col: number; row: number },
+    componentColorIndex: number,
     ballPosition: { x: number; y: number },
     ballVelocityBefore: { dx: number; dy: number },
     ballVelocityAfter?: { dx: number; dy: number },
     speedReduction?: SpeedReductionSnapshot | null
   ): Promise<void> {
     await this.logEvent({
-      type: 'brick_destroyed',
+      type: 'component_destroyed',
       gameState,
       ballPositions,
       paddlePosition,
       collisionInfo: {
-        type: 'brick',
+        type: 'component',
         ballPosition,
-        targetPosition: brickPosition,
-        brickIndex,
-        brickColorIndex,
+        targetPosition: componentPosition,
+        componentIndex,
+        componentColorIndex,
         velocityBefore: ballVelocityBefore,
         velocityAfter: ballVelocityAfter ?? ballVelocityBefore
       },
       metadata: {
-        brickColorIndex,
-        brickPosition: brickIndex,
-        remainingBricks: gameState.bricksRemaining,
+        componentColorIndex,
+        componentPosition: componentIndex,
+        remainingComponents: gameState.componentsRemaining,
         speedReduction: speedReduction ?? undefined,
         speedState: gameState.speedState,
         gameProgress: {
-          bricksDestroyed: this.getTotalBricks(gameState) - gameState.bricksRemaining,
-          totalBricks: this.getTotalBricks(gameState),
-          percentageComplete: ((this.getTotalBricks(gameState) - gameState.bricksRemaining) / this.getTotalBricks(gameState)) * 100
+          componentsDestroyed: this.getTotalComponents(gameState) - gameState.componentsRemaining,
+          totalComponents: this.getTotalComponents(gameState),
+          percentageComplete: ((this.getTotalComponents(gameState) - gameState.componentsRemaining) / this.getTotalComponents(gameState)) * 100
         }
       }
     });
   }
 
-  async logBrickAdded(
+  async logComponentAdded(
     gameState: GameEvent['gameState'],
     ballPositions: GameEvent['ballPositions'],
     paddlePosition: GameEvent['paddlePosition'],
     rowAdded: number
   ): Promise<void> {
     await this.logEvent({
-      type: 'brick_added',
+      type: 'component_added',
       gameState,
       ballPositions,
       paddlePosition,
       metadata: {
         rowAdded,
-        newTotalBricks: gameState.bricksRemaining + gameState.gameDimensions.brickCols,
+        newTotalComponents: gameState.componentsRemaining + gameState.gameDimensions.componentCols,
         speedState: gameState.speedState
       }
     });
@@ -506,7 +565,7 @@ class GameLogger {
     pauseMs: number,
     levelTransitionPayload?: Pick<
       LevelTransitionPayload,
-      'nextMaxSpeed' | 'nextMinSpeed' | 'nextReductionPerBrick' | 'nextInitialBrickCount'
+      'nextMaxSpeed' | 'nextMinSpeed' | 'nextReductionPerComponent' | 'nextInitialComponentCount'
     >
   ): Promise<void> {
     await this.logEvent({
@@ -524,8 +583,8 @@ class GameLogger {
         speedState: gameState.speedState,
         nextMaxSpeed: levelTransitionPayload?.nextMaxSpeed,
         nextMinSpeed: levelTransitionPayload?.nextMinSpeed,
-        nextReductionPerBrick: levelTransitionPayload?.nextReductionPerBrick,
-        nextInitialBrickCount: levelTransitionPayload?.nextInitialBrickCount
+        nextReductionPerComponent: levelTransitionPayload?.nextReductionPerComponent,
+        nextInitialComponentCount: levelTransitionPayload?.nextInitialComponentCount
       }
     });
   }
@@ -555,7 +614,7 @@ class GameLogger {
     gameState: GameEvent['gameState'],
     ballPositions: GameEvent['ballPositions'],
     paddlePosition: GameEvent['paddlePosition'],
-    changeType: 'game_won' | 'game_over' | 'ball_count_change' | 'brick_count_change'
+    changeType: 'game_won' | 'game_over' | 'ball_count_change' | 'component_count_change'
   ): Promise<void> {
     await this.logEvent({
       type: 'game_state_change',
@@ -604,7 +663,9 @@ class GameLogger {
       const request = store.getAll();
 
       request.onsuccess = () => {
-        const events = request.result.sort((a, b) => a.timestamp - b.timestamp);
+        const events = request.result
+          .sort((a, b) => a.timestamp - b.timestamp)
+          .map((event) => normalizeLegacyEvent(event));
         LOG(`📊 Total de eventos recuperados: ${events.length}`);
         resolve(events);
       };
@@ -629,7 +690,9 @@ class GameLogger {
       const request = index.getAll(gameId);
 
       request.onsuccess = () => {
-        const events = request.result.sort((a, b) => a.timestamp - b.timestamp);
+        const events = request.result
+          .sort((a, b) => a.timestamp - b.timestamp)
+          .map((event) => normalizeLegacyEvent(event));
         LOG(`📊 Eventos do jogo ${gameId}: ${events.length}`);
         resolve(events);
       };
@@ -654,7 +717,9 @@ class GameLogger {
       const request = index.getAll(type);
 
       request.onsuccess = () => {
-        const events = request.result.sort((a, b) => a.timestamp - b.timestamp);
+        const events = request.result
+          .sort((a, b) => a.timestamp - b.timestamp)
+          .map((event) => normalizeLegacyEvent(event));
         LOG(`📊 Eventos do tipo ${type}: ${events.length}`);
         resolve(events);
       };
@@ -743,7 +808,7 @@ class GameLogger {
     let gamesWon = 0;
     let gamesLost = 0;
     let totalGameDuration = 0;
-    let totalBricksDestroyed = 0;
+    let totalComponentsDestroyed = 0;
     let totalReductionApplied = 0;
     let minSpeedReachedCount = 0;
     let totalLevelDurationMs = 0;
@@ -762,8 +827,8 @@ class GameLogger {
       if (event.metadata?.gameDuration) {
         totalGameDuration += Number(event.metadata.gameDuration);
       }
-      if (event.metadata?.totalBricksDestroyed) {
-        totalBricksDestroyed += Number(event.metadata.totalBricksDestroyed);
+      if (event.metadata?.totalComponentsDestroyed) {
+        totalComponentsDestroyed += Number(event.metadata.totalComponentsDestroyed);
       }
     });
 
@@ -824,7 +889,7 @@ class GameLogger {
       gamesWon,
       gamesLost,
       averageGameDuration: gameEndEvents.length > 0 ? totalGameDuration / gameEndEvents.length : 0,
-      totalBricksDestroyed,
+      totalComponentsDestroyed,
       totalCollisions: collisionEvents.length,
       averageBallsPerGame: peakBallsByGame.length > 0 ? totalPeakBalls / peakBallsByGame.length : 0,
       latestSpeedState,

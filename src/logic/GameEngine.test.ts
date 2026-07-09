@@ -12,17 +12,17 @@ import {
   LASER_FAN_EFFECT_VISIBLE_MS,
   calculateDynamicDimensions,
   calculateLevelInitialSpawnSpeed,
-  calculateLevelBrickRows,
+  calculateLevelComponentRows,
   calculateLevelMaxSpeed,
   calculateLevelMinSpeed,
   calculateLevelPreviousMaxSpeed,
   calculateLevelSpeedMultiplier,
-  calculateSpeedReductionPerBrick,
+  calculateSpeedReductionPerComponent,
   type PhaseSpeedConfig,
   type SpeedReductionSnapshot,
   type SpeedStateSnapshot,
 } from "../constants/game";
-import { POINTS_PER_BRICK } from "../constants/gameState";
+import { POINTS_PER_COMPONENT } from "../constants/gameState";
 import { GAME_AUDIO_IDS, type GameAudioSink } from "../constants/audio";
 import { GAME_MODE_BALL_TURRET } from "../constants/gameMode";
 import { calculatePowerUpSize } from "../constants/powerUps";
@@ -35,11 +35,11 @@ import {
 } from "./rendering/ballTurretRenderer";
 
 const mockBallInstances: any[] = [];
-const mockBricksInstances: any[] = [];
-let mockBricksAllDestroyed = false;
-let mockBricksRows = 5;
-let mockBrickActiveValue = true;
-let mockDestroyedLaserBricks: Array<{
+const mockComponentsInstances: any[] = [];
+let mockComponentsAllDestroyed = false;
+let mockComponentsRows = 5;
+let mockComponentActiveValue = true;
+let mockDestroyedLaserComponents: Array<{
   col: number;
   row: number;
   colorIndex: number;
@@ -54,13 +54,13 @@ function buildSpeedStateFromConfig(
 ): SpeedStateSnapshot {
   return {
     level: config.level,
-    initialBrickCount: config.initialBrickCount,
-    successfulBrickHits: 0,
+    initialComponentCount: config.initialComponentCount,
+    successfulComponentHits: 0,
     initialSpawnSpeed: config.initialSpawnSpeed,
     maxSpeed: config.maxSpeed,
     minSpeed: config.minSpeed,
     currentSpeed: config.initialSpawnSpeed,
-    reductionPerBrick: config.reductionPerBrick,
+    reductionPerComponent: config.reductionPerComponent,
     previousLevelMaxSpeed: config.previousLevelMaxSpeed,
     levelStartedAt: config.levelStartedAt,
     elapsedLevelMs: 0,
@@ -106,13 +106,13 @@ jest.mock("../objects/Ball", () => ({
   Ball: jest.fn().mockImplementation(() => {
     let speedState: SpeedStateSnapshot = {
       level: 1,
-      initialBrickCount: 1,
-      successfulBrickHits: 0,
+      initialComponentCount: 1,
+      successfulComponentHits: 0,
       initialSpawnSpeed: 2,
       maxSpeed: 2,
       minSpeed: 1,
       currentSpeed: 2,
-      reductionPerBrick: 2,
+      reductionPerComponent: 2,
       previousLevelMaxSpeed: 2,
       levelStartedAt: Date.now(),
       elapsedLevelMs: 0,
@@ -159,22 +159,22 @@ jest.mock("../objects/Ball", () => ({
   }),
 }));
 
-jest.mock("../objects/Bricks", () => ({
-  Bricks: jest.fn().mockImplementation(() => {
-    const mockBricks = {
-      isAllDestroyed: jest.fn(() => mockBricksAllDestroyed),
-      isBrickActive: jest.fn(() => mockBrickActiveValue),
-      getRows: jest.fn(() => mockBricksRows),
-      selectRandomActive: jest.fn(() => mockDestroyedLaserBricks),
-      destroySelectedActive: jest.fn(() => mockDestroyedLaserBricks),
-      destroyAllActive: jest.fn(() => mockDestroyedLaserBricks),
+jest.mock("../objects/Components", () => ({
+  Components: jest.fn().mockImplementation(() => {
+    const mockComponents = {
+      isAllDestroyed: jest.fn(() => mockComponentsAllDestroyed),
+      isComponentActive: jest.fn(() => mockComponentActiveValue),
+      getRows: jest.fn(() => mockComponentsRows),
+      selectRandomActive: jest.fn(() => mockDestroyedLaserComponents),
+      destroySelectedActive: jest.fn(() => mockDestroyedLaserComponents),
+      destroyAllActive: jest.fn(() => mockDestroyedLaserComponents),
       collide: jest.fn(),
       draw: jest.fn(),
       resize: jest.fn(),
     };
 
-    mockBricksInstances.push(mockBricks);
-    return mockBricks;
+    mockComponentsInstances.push(mockComponents);
+    return mockComponents;
   }),
 }));
 
@@ -198,7 +198,7 @@ jest.mock("../storage/gameLogger", () => ({
     logGameStateChange: jest.fn().mockResolvedValue(undefined),
     logRestartGame: jest.fn().mockResolvedValue(undefined),
     logBallAdded: jest.fn().mockResolvedValue(undefined),
-    logBrickDestroyed: jest.fn().mockResolvedValue(undefined),
+    logComponentDestroyed: jest.fn().mockResolvedValue(undefined),
     logCollision: jest.fn().mockResolvedValue(undefined),
     logPowerUp: jest.fn().mockResolvedValue(undefined),
   },
@@ -230,11 +230,11 @@ describe("GameEngine", () => {
 
   beforeEach(() => {
     mockBallInstances.length = 0;
-    mockBricksInstances.length = 0;
-    mockBricksAllDestroyed = false;
-    mockBricksRows = 5;
-    mockBrickActiveValue = true;
-    mockDestroyedLaserBricks = [];
+    mockComponentsInstances.length = 0;
+    mockComponentsAllDestroyed = false;
+    mockComponentsRows = 5;
+    mockComponentActiveValue = true;
+    mockDestroyedLaserComponents = [];
     jest.clearAllMocks();
 
     canvas = document.createElement("canvas");
@@ -280,15 +280,15 @@ describe("GameEngine", () => {
 
     expect(gameState.speedState).toMatchObject({
       level: 1,
-      successfulBrickHits: 0,
+      successfulComponentHits: 0,
       currentSpeed: calculateLevelInitialSpawnSpeed(canvas.width, 1),
       initialSpawnSpeed: calculateLevelInitialSpawnSpeed(canvas.width, 1),
       maxSpeed: calculateLevelMaxSpeed(canvas.width, 1),
       minSpeed: calculateLevelMinSpeed(canvas.width, 1),
       previousLevelMaxSpeed: calculateLevelPreviousMaxSpeed(canvas.width, 1),
     });
-    expect(gameState.speedState.initialBrickCount).toBe(
-      gameState.bricksRemaining,
+    expect(gameState.speedState.initialComponentCount).toBe(
+      gameState.componentsRemaining,
     );
     expect(gameState.speedState.elapsedLevelMs).toBeGreaterThanOrEqual(0);
   });
@@ -341,8 +341,8 @@ describe("GameEngine", () => {
     );
     const turretGeometry = (drawBallTurretBackdrop as jest.Mock).mock
       .calls[0][1].geometry;
-    expect(turretGeometry.brickArcStartAngle).toBeCloseTo(-Math.PI);
-    expect(turretGeometry.brickArcEndAngle).toBeCloseTo(Math.PI);
+    expect(turretGeometry.componentArcStartAngle).toBeCloseTo(-Math.PI);
+    expect(turretGeometry.componentArcEndAngle).toBeCloseTo(Math.PI);
     expect(drawBallTurretTrampoline).not.toHaveBeenCalled();
     expect(drawBallTurretTrampolines).toHaveBeenCalledWith(
       mockContext,
@@ -557,7 +557,7 @@ describe("GameEngine", () => {
     expect(onServeLockChange).toHaveBeenLastCalledWith(false);
     expect(ball.update).toHaveBeenCalledWith(
       (engine as any).paddle,
-      (engine as any).bricks,
+      (engine as any).components,
       canvas.height,
       expect.any(Object),
       expect.any(Object),
@@ -591,7 +591,7 @@ describe("GameEngine", () => {
     const geometry = (engine as any).radialGeometry;
     const ball = mockBallInstances[0];
 
-    expect(dimensions.brickCols).toBe(baseDimensions.brickCols * 2);
+    expect(dimensions.componentCols).toBe(baseDimensions.componentCols * 2);
     expect(ball.setPosition).toHaveBeenCalled();
     const [spawnX, spawnY] = ball.setPosition.mock.calls[0];
     expect(spawnX).toBeCloseTo(geometry.centerX, 5);
@@ -693,7 +693,7 @@ describe("GameEngine", () => {
     );
     const geometry = (engine as any).radialGeometry;
 
-    (engine as any).destroyedBricksSincePowerUp = 4;
+    (engine as any).destroyedComponentsSincePowerUp = 4;
     (engine as any).maybeSpawnPowerUp();
 
     const powerUp = (engine as any).activePowerUp;
@@ -905,7 +905,7 @@ describe("GameEngine", () => {
     expect((engine as any).paddle.update).toHaveBeenCalledWith(0);
     expect(mockBallInstances[0].update).toHaveBeenCalledWith(
       (engine as any).paddle,
-      (engine as any).bricks,
+      (engine as any).components,
       canvas.height,
       expect.any(Object),
       expect.any(Object),
@@ -960,14 +960,14 @@ describe("GameEngine", () => {
     requestAnimationFrameSpy.mockRestore();
   });
 
-  it("reduz currentSpeed no score_update após destruir tijolo", async () => {
+  it("reduz currentSpeed no score_update após destruir componente", async () => {
     const engine = new GameEngine(canvas, onScoreUpdate, onGameWon, onGameOver);
     const mockGameLogger = require("../storage/gameLogger").gameLogger;
     const ball = mockBallInstances[0];
     const initialState = (engine as any).getCurrentGameState().speedState;
     const reducedSpeed = Math.max(
       initialState.minSpeed,
-      initialState.currentSpeed - initialState.reductionPerBrick,
+      initialState.currentSpeed - initialState.reductionPerComponent,
     );
     const speedReduction: SpeedReductionSnapshot = {
       level: 1,
@@ -983,15 +983,15 @@ describe("GameEngine", () => {
 
     ball.__setSpeedState({
       currentSpeed: reducedSpeed,
-      successfulBrickHits: 1,
+      successfulComponentHits: 1,
       elapsedLevelMs: 250,
       minReached: speedReduction.minReached,
     });
     ball.__setLastSpeedReduction(speedReduction);
 
-    await (engine as any).onBrickDestroyed();
+    await (engine as any).onComponentDestroyed();
 
-    expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_BRICK);
+    expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_COMPONENT);
     expect(mockGameLogger.logScoreUpdate).toHaveBeenCalled();
     expect(
       mockGameLogger.logScoreUpdate.mock.calls[0][0].speedState.currentSpeed,
@@ -1004,7 +1004,7 @@ describe("GameEngine", () => {
   it("recalcula payload e reinicia speedState ao entrar na fase 2", async () => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date("2026-06-30T12:00:00Z"));
-    mockBricksAllDestroyed = true;
+    mockComponentsAllDestroyed = true;
 
     const engine = new GameEngine(
       canvas,
@@ -1017,7 +1017,7 @@ describe("GameEngine", () => {
     const mockGameLogger = require("../storage/gameLogger").gameLogger;
     const beforeState = (engine as any).getCurrentGameState().speedState;
 
-    await (engine as any).onBrickDestroyed();
+    await (engine as any).onComponentDestroyed();
 
     const payload = onLevelTransition.mock.calls[0][0];
     const expectedNextLevel = 2;
@@ -1029,16 +1029,16 @@ describe("GameEngine", () => {
       canvas.width,
       expectedNextLevel,
     );
-    const expectedNextBrickRows = calculateLevelBrickRows(
-      (engine as any).baseBrickRows,
-      (engine as any).maxBrickRows,
+    const expectedNextComponentRows = calculateLevelComponentRows(
+      (engine as any).baseComponentRows,
+      (engine as any).maxComponentRows,
       expectedNextLevel,
     );
-    const expectedNextInitialBrickCount =
-      (engine as any).dimensions.brickCols * expectedNextBrickRows;
-    const expectedNextReductionPerBrick = calculateSpeedReductionPerBrick(
+    const expectedNextInitialComponentCount =
+      (engine as any).dimensions.componentCols * expectedNextComponentRows;
+    const expectedNextReductionPerComponent = calculateSpeedReductionPerComponent(
       expectedNextMaxSpeed,
-      expectedNextInitialBrickCount,
+      expectedNextInitialComponentCount,
       expectedNextMinSpeed,
     );
 
@@ -1050,8 +1050,8 @@ describe("GameEngine", () => {
       pauseMs: LEVEL_CLEAR_PAUSE_MS,
       nextMaxSpeed: expectedNextMaxSpeed,
       nextMinSpeed: expectedNextMinSpeed,
-      nextReductionPerBrick: expectedNextReductionPerBrick,
-      nextInitialBrickCount: expectedNextInitialBrickCount,
+      nextReductionPerComponent: expectedNextReductionPerComponent,
+      nextInitialComponentCount: expectedNextInitialComponentCount,
     });
     expect((engine as any).getCurrentGameState().level).toBe(1);
 
@@ -1067,19 +1067,19 @@ describe("GameEngine", () => {
     expect(afterState.speedState.minSpeed).toBe(
       calculateLevelMinSpeed(canvas.width, expectedNextLevel),
     );
-    expect(afterState.speedState.reductionPerBrick).toBe(
-      calculateSpeedReductionPerBrick(
+    expect(afterState.speedState.reductionPerComponent).toBe(
+      calculateSpeedReductionPerComponent(
         afterState.speedState.maxSpeed,
-        afterState.speedState.initialBrickCount,
+        afterState.speedState.initialComponentCount,
         afterState.speedState.minSpeed,
       ),
     );
-    expect(afterState.speedState.initialBrickCount).toBe(
-      afterState.bricksRemaining,
+    expect(afterState.speedState.initialComponentCount).toBe(
+      afterState.componentsRemaining,
     );
-    expect(afterState.gameDimensions.brickRows).toBe(expectedNextBrickRows);
-    expect(afterState.gameDimensions.brickRows).toBeGreaterThan(
-      beforeState.initialBrickCount / (engine as any).dimensions.brickCols,
+    expect(afterState.gameDimensions.componentRows).toBe(expectedNextComponentRows);
+    expect(afterState.gameDimensions.componentRows).toBeGreaterThan(
+      beforeState.initialComponentCount / (engine as any).dimensions.componentCols,
     );
     expect(afterState.speedState.levelStartedAt).toBeGreaterThan(
       beforeState.levelStartedAt,
@@ -1100,16 +1100,16 @@ describe("GameEngine", () => {
     const gameState = (engine as any).getCurrentGameState();
 
     expect(gameState).toHaveProperty("speedState");
-    expect(gameState.speedState.initialBrickCount).toBe(
-      gameState.bricksRemaining,
+    expect(gameState.speedState.initialComponentCount).toBe(
+      gameState.componentsRemaining,
     );
-    expect(gameState.speedState.successfulBrickHits).toBe(0);
+    expect(gameState.speedState.successfulComponentHits).toBe(0);
     expect(gameState.speedState.elapsedLevelMs).toBeGreaterThanOrEqual(0);
   });
 
   it("inicia cenário de QA fase 3 pronto para transição 3 para 4", async () => {
     jest.useFakeTimers();
-    mockBricksAllDestroyed = true;
+    mockComponentsAllDestroyed = true;
 
     const engine = new (GameEngine as any)(
       canvas,
@@ -1118,10 +1118,10 @@ describe("GameEngine", () => {
       onGameOver,
       undefined,
       onLevelTransition,
-      "single-brick-phase3-clear",
+      "single-component-phase3-clear",
     );
 
-    await (engine as any).onBrickDestroyed();
+    await (engine as any).onComponentDestroyed();
 
     expect(onLevelTransition).toHaveBeenCalledTimes(1);
     expect(onLevelTransition.mock.calls[0][0]).toMatchObject({
@@ -1138,7 +1138,7 @@ describe("GameEngine", () => {
     const initialState = (engine as any).getCurrentGameState().speedState;
 
     ball.__setSpeedState({
-      successfulBrickHits: 1,
+      successfulComponentHits: 1,
       currentSpeed: initialState.maxSpeed - 1,
     });
     ball.__setLastSpeedReduction({
@@ -1152,10 +1152,10 @@ describe("GameEngine", () => {
       minReached: false,
       elapsedLevelMs: 200,
     });
-    await (engine as any).onBrickDestroyed(0);
+    await (engine as any).onComponentDestroyed(0);
 
     ball.__setSpeedState({
-      successfulBrickHits: 1,
+      successfulComponentHits: 1,
       currentSpeed: initialState.maxSpeed - 2,
     });
     ball.__setLastSpeedReduction({
@@ -1169,11 +1169,11 @@ describe("GameEngine", () => {
       minReached: false,
       elapsedLevelMs: 400,
     });
-    await (engine as any).onBrickDestroyed(1);
+    await (engine as any).onComponentDestroyed(1);
 
     expect(
       mockGameLogger.logScoreUpdate.mock.calls[1][0].speedState
-        .successfulBrickHits,
+        .successfulComponentHits,
     ).toBe(2);
     expect(mockGameLogger.logScoreUpdate.mock.calls[1][5]).toMatchObject({
       hitNumber: 2,
@@ -1254,7 +1254,7 @@ describe("GameEngine", () => {
 
   it("ativa laser escolhendo dez blocos e destruindo imediatamente", async () => {
     jest.useFakeTimers();
-    mockDestroyedLaserBricks = [
+    mockDestroyedLaserComponents = [
       { col: 0, row: 0, colorIndex: 0, x: 10, y: 20, width: 50, height: 20 },
       { col: 1, row: 0, colorIndex: 1, x: 70, y: 20, width: 50, height: 20 },
       { col: 2, row: 0, colorIndex: 2, x: 130, y: 20, width: 50, height: 20 },
@@ -1266,8 +1266,8 @@ describe("GameEngine", () => {
       { col: 8, row: 0, colorIndex: 3, x: 490, y: 20, width: 50, height: 20 },
       { col: 9, row: 0, colorIndex: 4, x: 550, y: 20, width: 50, height: 20 },
     ];
-    mockBricksAllDestroyed = false;
-    mockBrickActiveValue = true;
+    mockComponentsAllDestroyed = false;
+    mockComponentActiveValue = true;
     const playAudio = jest.fn();
     const audioSink: GameAudioSink = {
       playAudio,
@@ -1289,11 +1289,11 @@ describe("GameEngine", () => {
 
     await (engine as any).activatePowerUp("laser_fan");
 
-    expect(mockBricksInstances[0].selectRandomActive).toHaveBeenCalledWith(10);
-    expect(mockBricksInstances[0].destroySelectedActive).toHaveBeenCalledWith(
-      mockDestroyedLaserBricks,
+    expect(mockComponentsInstances[0].selectRandomActive).toHaveBeenCalledWith(10);
+    expect(mockComponentsInstances[0].destroySelectedActive).toHaveBeenCalledWith(
+      mockDestroyedLaserComponents,
     );
-    expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_BRICK * 10);
+    expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_COMPONENT * 10);
     expect(mockGameLogger.logScoreUpdate).toHaveBeenCalledTimes(1);
     expect(mockGameLogger.logLevelComplete).not.toHaveBeenCalled();
     expect(onLevelTransition).not.toHaveBeenCalled();
@@ -1313,7 +1313,7 @@ describe("GameEngine", () => {
     jest.advanceTimersByTime(LASER_FAN_EFFECT_VISIBLE_MS - 1);
     expect((engine as any).laserFanEffectUntil).toBeGreaterThan(Date.now());
     await jest.advanceTimersByTimeAsync(1);
-    expect(mockBricksInstances[0].destroySelectedActive).toHaveBeenCalledTimes(1);
+    expect(mockComponentsInstances[0].destroySelectedActive).toHaveBeenCalledTimes(1);
     expect(mockGameLogger.logLevelComplete).not.toHaveBeenCalled();
     expect(onLevelTransition).not.toHaveBeenCalled();
     expect((engine as any).laserFanEffectStartedAt).toBe(0);
@@ -1343,13 +1343,13 @@ describe("GameEngine", () => {
 
   it("completa fase quando os blocos aleatórios do laser esgotam o tabuleiro", async () => {
     jest.useFakeTimers();
-    mockDestroyedLaserBricks = [
+    mockDestroyedLaserComponents = [
       { col: 0, row: 0, colorIndex: 0, x: 10, y: 20, width: 50, height: 20 },
       { col: 1, row: 0, colorIndex: 1, x: 70, y: 20, width: 50, height: 20 },
       { col: 2, row: 0, colorIndex: 2, x: 130, y: 20, width: 50, height: 20 },
       { col: 3, row: 0, colorIndex: 3, x: 190, y: 20, width: 50, height: 20 },
     ];
-    mockBricksAllDestroyed = true;
+    mockComponentsAllDestroyed = true;
     const engine = new GameEngine(
       canvas,
       onScoreUpdate,
@@ -1362,11 +1362,11 @@ describe("GameEngine", () => {
 
     await (engine as any).activatePowerUp("laser_fan");
 
-    expect(mockBricksInstances[0].selectRandomActive).toHaveBeenCalledWith(10);
-    expect(mockBricksInstances[0].destroySelectedActive).toHaveBeenCalledWith(
-      mockDestroyedLaserBricks,
+    expect(mockComponentsInstances[0].selectRandomActive).toHaveBeenCalledWith(10);
+    expect(mockComponentsInstances[0].destroySelectedActive).toHaveBeenCalledWith(
+      mockDestroyedLaserComponents,
     );
-    expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_BRICK * 4);
+    expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_COMPONENT * 4);
     expect(mockGameLogger.logScoreUpdate).toHaveBeenCalledTimes(1);
     expect(mockGameLogger.logLevelComplete).toHaveBeenCalledTimes(1);
     expect(onLevelTransition).toHaveBeenCalledTimes(1);
@@ -1378,7 +1378,7 @@ describe("GameEngine", () => {
     (engine as any).level = 5;
     await (engine as any).activatePowerUp("laser_fan");
 
-    expect(mockBricksInstances[0].selectRandomActive).toHaveBeenCalledWith(6);
+    expect(mockComponentsInstances[0].selectRandomActive).toHaveBeenCalledWith(6);
   });
 
   it("usa mínimo de laser em leque nas fases tardias", async () => {
@@ -1387,7 +1387,7 @@ describe("GameEngine", () => {
     (engine as any).level = 10;
     await (engine as any).activatePowerUp("laser_fan");
 
-    expect(mockBricksInstances[0].selectRandomActive).toHaveBeenCalledWith(2);
+    expect(mockComponentsInstances[0].selectRandomActive).toHaveBeenCalledWith(2);
   });
 
   it("desenha rachaduras e brilho por bloco no lugar do leque antigo", () => {
@@ -1523,7 +1523,7 @@ describe("GameEngine", () => {
   });
 
   it("posiciona bola de QA de fase única na primeira linha", () => {
-    const { Bricks } = require("../objects/Bricks");
+    const { Components } = require("../objects/Components");
 
     new (GameEngine as any)(
       canvas,
@@ -1532,16 +1532,16 @@ describe("GameEngine", () => {
       onGameOver,
       undefined,
       undefined,
-      "single-brick-phase-clear",
+      "single-component-phase-clear",
     );
 
-    const dimensions = (Bricks as jest.Mock).mock.calls[0][0];
+    const dimensions = (Components as jest.Mock).mock.calls[0][0];
     const ball = mockBallInstances[0];
 
     expect(ball.setPosition).toHaveBeenCalledWith(
-      dimensions.brickOffsetLeft + dimensions.brickWidth / 2,
-      dimensions.brickOffsetTop +
-        dimensions.brickHeight +
+      dimensions.componentOffsetLeft + dimensions.componentWidth / 2,
+      dimensions.componentOffsetTop +
+        dimensions.componentHeight +
         ball.position.radius -
         1,
     );
@@ -1549,7 +1549,7 @@ describe("GameEngine", () => {
   });
 
   it("configura cenário de QA com três blocos desviantes", () => {
-    const { Bricks } = require("../objects/Bricks");
+    const { Components } = require("../objects/Components");
 
     new (GameEngine as any)(
       canvas,
@@ -1558,15 +1558,15 @@ describe("GameEngine", () => {
       onGameOver,
       undefined,
       undefined,
-      "evasive-blocks",
+      "evasive-components",
     );
 
-    const dimensions = (Bricks as jest.Mock).mock.calls[0][0];
-    const random = (Bricks as jest.Mock).mock.calls[0][5];
+    const dimensions = (Components as jest.Mock).mock.calls[0][0];
+    const random = (Components as jest.Mock).mock.calls[0][5];
 
     expect(dimensions).toMatchObject({
-      brickCols: 1,
-      brickRows: 3,
+      componentCols: 1,
+      componentRows: 3,
     });
     expect(typeof random).toBe("function");
     expect([
@@ -1578,17 +1578,17 @@ describe("GameEngine", () => {
       random(),
     ]).toEqual([0, 0, 0, 0, 0.99, 0.99]);
     expect(mockBallInstances[0].setPosition).toHaveBeenCalledWith(
-      dimensions.brickOffsetLeft + dimensions.brickWidth / 2,
-      dimensions.brickOffsetTop +
-        2 * (dimensions.brickHeight + dimensions.brickPadding) +
-        dimensions.brickHeight +
+      dimensions.componentOffsetLeft + dimensions.componentWidth / 2,
+      dimensions.componentOffsetTop +
+        2 * (dimensions.componentHeight + dimensions.componentPadding) +
+        dimensions.componentHeight +
         mockBallInstances[0].position.radius -
         1,
     );
   });
 
   it("mantém power-up de QA visível brevemente e coleta por limite radial", () => {
-    mockDestroyedLaserBricks = Array.from({ length: 5 }, (_, index) => ({
+    mockDestroyedLaserComponents = Array.from({ length: 5 }, (_, index) => ({
       col: index,
       row: 0,
       colorIndex: index,
@@ -1623,7 +1623,7 @@ describe("GameEngine", () => {
     }
 
     expect((engine as any).activePowerUp).toBeNull();
-    expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_BRICK * 5);
+    expect(onScoreUpdate).toHaveBeenCalledWith(POINTS_PER_COMPONENT * 5);
     expect(mockGameLogger.logPowerUp).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),

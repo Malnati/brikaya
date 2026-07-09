@@ -98,12 +98,12 @@ describe('PowerUp', () => {
 
   it('calcula tamanho proporcional ao bloco com limite seguro', () => {
     expect(
-      calculatePowerUpSize({ brickWidth: TEST_BRICK_WIDTH } as Parameters<
+      calculatePowerUpSize({ componentWidth: TEST_BRICK_WIDTH } as Parameters<
         typeof calculatePowerUpSize
       >[0]),
     ).toBeCloseTo(EXPECTED_MOBILE_POWER_UP_SIZE);
     expect(
-      calculatePowerUpSize({ brickWidth: TEST_DESKTOP_BRICK_WIDTH } as Parameters<
+      calculatePowerUpSize({ componentWidth: TEST_DESKTOP_BRICK_WIDTH } as Parameters<
         typeof calculatePowerUpSize
       >[0]),
     ).toBe(EXPECTED_DESKTOP_POWER_UP_SIZE);

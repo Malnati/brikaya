@@ -34,7 +34,7 @@ Brikaya é um jogo arcade offline-first em TypeScript/React, distribuído como P
 - Imagem visual runtime simples deve ser SVG local/offline para sprites, UI e VFX.
 - Proibido adicionar raster, data URI, CDN, fonte externa, imagem externa ou script embutido em SVG runtime simples.
 - Atlas PNG/WebP runtime só pode existir em `public/assets/visual/atlases/`, com SVG fonte preservado e exceção documentada em `docs/assets/visual-runtime/atlas-exceptions.json`.
-- AVIF nunca é formato padrão para sprites, UI, power-ups, tijolos, VFX ou atlases desenhados a 60 FPS.
+- AVIF nunca é formato padrão para sprites, UI, power-ups, componentes, VFX ou atlases desenhados a 60 FPS.
 - AVIF só é permitido para fundo/cena/cinemática em `public/assets/visual/cinematics/`, com justificativa e evidência em `docs/assets/visual-runtime/atlas-exceptions.json`.
 - Áudio runtime deve ter origem documentada e ficar local.
 - Antes de commit, rode `npm run test:semantic-file-names`, `npm run test:svg-assets` e `npm run test:visual-asset-policy`.

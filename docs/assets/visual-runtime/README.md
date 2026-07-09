@@ -22,7 +22,7 @@ SVG-first é adequado para Brikaya hoje: assets simples, loader via `HTMLImageEl
 2. **Runtime padrão:** SVG local/offline em `public/assets/visual/**`.
 3. **Exceção atlas:** PNG/WebP somente em `public/assets/visual/atlases/`, registrado em `atlas-exceptions.json`, com SVG fonte preservado e evidência de necessidade.
 4. **Exceção cinemática:** AVIF somente em `public/assets/visual/cinematics/`, para fundo/cena/cinemática não usada como sprite ou atlas de gameplay.
-5. **Nunca padrão de sprite:** AVIF não é formato padrão para sprites, power-ups, tijolos, UI ou VFX desenhados a 60 FPS.
+5. **Nunca padrão de sprite:** AVIF não é formato padrão para sprites, power-ups, componentes, UI ou VFX desenhados a 60 FPS.
 
 ## Quando converter SVG para atlas PNG/WebP
 
@@ -45,7 +45,7 @@ A exceção deve conter `id`, `kind`, `runtimePaths`, `sourceSvgPaths`, `reason`
 - Sprite pequeno convertido para AVIF.
 - PNG/WebP em `public/assets/visual/sprites/` sem exceção.
 - Atlas PNG/WebP sem SVG fonte preservado.
-- Referência a `/assets/visual/...avif` em código de sprites, power-ups, tijolos, UI ou VFX de gameplay.
+- Referência a `/assets/visual/...avif` em código de sprites, power-ups, componentes, UI ou VFX de gameplay.
 
 ## Pré-requisitos antes da primeira exceção atlas
 

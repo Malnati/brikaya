@@ -28,7 +28,7 @@ const SPEED_PRECISION_FACTOR = 1000;
 const MIN_SPEED_DIVISOR = 3;
 const REQUIRED_EVENT_TYPES = [
   "game_start",
-  "brick_destroyed",
+  "component_destroyed",
   "score_update",
   "level_complete",
   "level_start",
@@ -60,7 +60,7 @@ function roundSpeedValue(speed) {
 
 function withQaScenario(url) {
   const pageUrl = new URL(url);
-  pageUrl.searchParams.set("qaScenario", "single-brick-phase-clear");
+  pageUrl.searchParams.set("qaScenario", "single-component-phase-clear");
   return pageUrl.toString();
 }
 
@@ -280,10 +280,10 @@ async function run() {
     const finalLayout = await collectToastState(page);
     const levelCompleteSpeedState = levelComplete?.metadata?.speedState || null;
     const levelStartSpeedState = levelStart?.metadata?.speedState || null;
-    const expectedLevelStartReductionPerBrick = levelStartSpeedState
+    const expectedLevelStartReductionPerComponent = levelStartSpeedState
       ? roundSpeedValue(
           (levelStartSpeedState.maxSpeed - levelStartSpeedState.minSpeed) /
-            levelStartSpeedState.initialBrickCount,
+            levelStartSpeedState.initialComponentCount,
         )
       : null;
 
@@ -296,7 +296,7 @@ async function run() {
       levelStartMetadata: levelStart?.metadata || null,
       levelCompleteSpeedState,
       levelStartSpeedState,
-      expectedLevelStartReductionPerBrick,
+      expectedLevelStartReductionPerComponent,
       pauseDeltaMs,
       toastVisibleState,
       finalLayout,
@@ -367,23 +367,23 @@ async function run() {
       "level_start não registrou metadata.speedState.",
     );
     assert(
-      levelComplete?.metadata?.nextInitialBrickCount ===
-        levelStartSpeedState.initialBrickCount,
+      levelComplete?.metadata?.nextInitialComponentCount ===
+        levelStartSpeedState.initialComponentCount,
       "level_complete não antecipou a quantidade inicial de blocos da Fase 2.",
     );
     assert(
-      levelStart?.gameState?.bricksRemaining ===
-        levelStartSpeedState.initialBrickCount,
+      levelStart?.gameState?.componentsRemaining ===
+        levelStartSpeedState.initialComponentCount,
       "Fase 2 não iniciou com todos os blocos esperados.",
     );
     assert(
-      levelStart?.gameState?.gameDimensions?.brickRows >
-        levelComplete?.gameState?.gameDimensions?.brickRows,
-      "Fase 2 não aumentou as linhas de tijolos.",
+      levelStart?.gameState?.gameDimensions?.componentRows >
+        levelComplete?.gameState?.gameDimensions?.componentRows,
+      "Fase 2 não aumentou as linhas de componentes.",
     );
     assert(
-      levelStartSpeedState.initialBrickCount >
-        levelCompleteSpeedState.initialBrickCount,
+      levelStartSpeedState.initialComponentCount >
+        levelCompleteSpeedState.initialComponentCount,
       "Fase 2 não aumentou a quantidade inicial de blocos.",
     );
     assert(
@@ -410,22 +410,22 @@ async function run() {
       "minSpeed da Fase 2 não ficou acima do mínimo da Fase 1.",
     );
     assert(
-      levelComplete?.metadata?.nextReductionPerBrick > 0,
-      "nextReductionPerBrick ausente em level_complete.",
+      levelComplete?.metadata?.nextReductionPerComponent > 0,
+      "nextReductionPerComponent ausente em level_complete.",
     );
     assert(
       Math.abs(
-        levelComplete.metadata.nextReductionPerBrick -
-          expectedLevelStartReductionPerBrick,
+        levelComplete.metadata.nextReductionPerComponent -
+          expectedLevelStartReductionPerComponent,
       ) <= SPEED_TOLERANCE,
-      "nextReductionPerBrick não distribuiu a faixa maxSpeed-minSpeed pelos blocos da Fase 2.",
+      "nextReductionPerComponent não distribuiu a faixa maxSpeed-minSpeed pelos blocos da Fase 2.",
     );
     assert(
       Math.abs(
-        levelStartSpeedState.reductionPerBrick -
-          expectedLevelStartReductionPerBrick,
+        levelStartSpeedState.reductionPerComponent -
+          expectedLevelStartReductionPerComponent,
       ) <= SPEED_TOLERANCE,
-      "level_start não registrou reductionPerBrick gradual da Fase 2.",
+      "level_start não registrou reductionPerComponent gradual da Fase 2.",
     );
     assert(
       pauseDeltaMs >= MIN_LEVEL_PAUSE_MS,

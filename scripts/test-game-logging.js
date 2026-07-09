@@ -76,7 +76,7 @@ async function createTestEvents() {
       const testGameState = {
         score: 100,
         ballsCount: 1,
-        bricksRemaining: 5,
+        componentsRemaining: 5,
         gameWon: false,
         gameOver: false,
         level: 1
@@ -95,8 +95,8 @@ async function createTestEvents() {
       
       // Criar alguns eventos de teste
       await window.gameLogger.logGameStart(testGameState, testBallPositions, testPaddlePosition);
-      await window.gameLogger.logScoreUpdate(testGameState, testBallPositions, testPaddlePosition, 10, 'test_brick_destroyed');
-      await window.gameLogger.logBrickDestroyed(
+      await window.gameLogger.logScoreUpdate(testGameState, testBallPositions, testPaddlePosition, 10, 'test_component_destroyed');
+      await window.gameLogger.logComponentDestroyed(
         testGameState,
         testBallPositions,
         testPaddlePosition,

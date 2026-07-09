@@ -1,52 +1,52 @@
 // src/constants/visualAssets.test.ts
 import {
-  sprBrickMetalSteelDentedOne,
-  sprBrickMetalSteelDentedTwo,
-  sprBrickMetalSteelHighContrastDentedOne,
-  sprBrickMetalSteelHighContrastDentedTwo,
-  sprBrickMetalSteelSunsetDentedOne,
-  sprBrickMetalSteelSunsetDentedTwo,
+  sprComponentMetalSteelDentedOne,
+  sprComponentMetalSteelDentedTwo,
+  sprComponentMetalSteelHighContrastDentedOne,
+  sprComponentMetalSteelHighContrastDentedTwo,
+  sprComponentMetalSteelSunsetDentedOne,
+  sprComponentMetalSteelSunsetDentedTwo,
   VISUAL_ASSET_CATALOG,
   VISUAL_ASSET_PATHS,
 } from "./visualAssets";
 
 const METAL_DENT_BRICK_PATH_PATTERN =
-  /^\/assets\/visual\/bricks\/spr-brick-metal-steel.*\.svg$/;
+  /^\/assets\/visual\/components\/spr-component-metal-steel.*\.svg$/;
 const METAL_DENTED_ASSETS = [
   {
-    variableName: "sprBrickMetalSteelDentedOne",
-    path: sprBrickMetalSteelDentedOne,
-    semanticRole: "brick-metal-steel-dented-one",
+    variableName: "sprComponentMetalSteelDentedOne",
+    path: sprComponentMetalSteelDentedOne,
+    semanticRole: "component-metal-steel-dented-one",
     state: "damaged",
   },
   {
-    variableName: "sprBrickMetalSteelDentedTwo",
-    path: sprBrickMetalSteelDentedTwo,
-    semanticRole: "brick-metal-steel-dented-two",
+    variableName: "sprComponentMetalSteelDentedTwo",
+    path: sprComponentMetalSteelDentedTwo,
+    semanticRole: "component-metal-steel-dented-two",
     state: "critical",
   },
   {
-    variableName: "sprBrickMetalSteelHighContrastDentedOne",
-    path: sprBrickMetalSteelHighContrastDentedOne,
-    semanticRole: "brick-metal-steel-high-contrast-dented-one",
+    variableName: "sprComponentMetalSteelHighContrastDentedOne",
+    path: sprComponentMetalSteelHighContrastDentedOne,
+    semanticRole: "component-metal-steel-high-contrast-dented-one",
     state: "damaged",
   },
   {
-    variableName: "sprBrickMetalSteelHighContrastDentedTwo",
-    path: sprBrickMetalSteelHighContrastDentedTwo,
-    semanticRole: "brick-metal-steel-high-contrast-dented-two",
+    variableName: "sprComponentMetalSteelHighContrastDentedTwo",
+    path: sprComponentMetalSteelHighContrastDentedTwo,
+    semanticRole: "component-metal-steel-high-contrast-dented-two",
     state: "critical",
   },
   {
-    variableName: "sprBrickMetalSteelSunsetDentedOne",
-    path: sprBrickMetalSteelSunsetDentedOne,
-    semanticRole: "brick-metal-steel-sunset-dented-one",
+    variableName: "sprComponentMetalSteelSunsetDentedOne",
+    path: sprComponentMetalSteelSunsetDentedOne,
+    semanticRole: "component-metal-steel-sunset-dented-one",
     state: "damaged",
   },
   {
-    variableName: "sprBrickMetalSteelSunsetDentedTwo",
-    path: sprBrickMetalSteelSunsetDentedTwo,
-    semanticRole: "brick-metal-steel-sunset-dented-two",
+    variableName: "sprComponentMetalSteelSunsetDentedTwo",
+    path: sprComponentMetalSteelSunsetDentedTwo,
+    semanticRole: "component-metal-steel-sunset-dented-two",
     state: "critical",
   },
 ] as const;
@@ -65,7 +65,7 @@ describe("visual assets metálicos amassados", () => {
       expect(catalogEntry).toMatchObject({
         variableName: expectedAsset.variableName,
         path: expectedAsset.path,
-        group: "brick",
+        group: "component",
         semanticRole: expectedAsset.semanticRole,
         state: expectedAsset.state,
         width: 48,

@@ -32,7 +32,7 @@ const JOYSTICK_DIAGNOSTIC_CLEAR_PATTERN =
 const INTERNAL_COPY_PATTERN =
   /service worker|cache|runtime|localStorage|IndexedDB|Canvas|engine|build/i;
 const OLD_TURRET_AIM_COPY_PATTERN = /mire|aim|reticle|crosshair|metralhadora/i;
-const BRICK_IMAGE_PATTERN = /\/bricks\/|spr-brick/i;
+const COMPONENT_IMAGE_PATTERN = /\/components\/|spr-component/i;
 const ORIENTATION_BLOCKER_TEST_ID = "mobile-orientation-blocker";
 const ORIENTATION_BLOCKER_MESSAGE = "Você precisa de espaço para o joystick";
 const FULL_CIRCLE_TOLERANCE = 0.08;
@@ -484,7 +484,7 @@ async function readBallTurretState(page) {
       internalCopyPatternSource,
       gameModeHeadingPatternSource,
       oldTurretAimCopyPatternSource,
-      brickImagePatternSource,
+      componentImagePatternSource,
       fullCircleTolerance,
       joystickTestId,
       controlToggleTestId,
@@ -503,7 +503,7 @@ async function readBallTurretState(page) {
         oldTurretAimCopyPatternSource,
         "i",
       );
-      const brickImagePattern = new RegExp(brickImagePatternSource, "i");
+      const componentImagePattern = new RegExp(componentImagePatternSource, "i");
       const startModalTitlePattern = new RegExp(
         startModalTitlePatternSource,
         "i",
@@ -602,8 +602,8 @@ async function readBallTurretState(page) {
         ellipses: [],
         fillRects: [],
       };
-      const brickDraws = probe.drawImages
-        .filter((draw) => brickImagePattern.test(draw.src))
+      const componentDraws = probe.drawImages
+        .filter((draw) => componentImagePattern.test(draw.src))
         .map((draw) => ({
           x: Number.isFinite(draw.screenX)
             ? draw.screenX
@@ -612,7 +612,7 @@ async function readBallTurretState(page) {
             ? draw.screenY
             : draw.y + draw.height / 2,
         }));
-      const fallbackBrickDraws = probe.fillRects
+      const fallbackComponentDraws = probe.fillRects
         .filter(
           (draw) =>
             draw.width > 0 &&
@@ -628,7 +628,7 @@ async function readBallTurretState(page) {
             ? draw.screenY
             : draw.y + draw.height / 2,
         }));
-      const fallbackEllipseBrickDraws = (probe.ellipses || [])
+      const fallbackEllipseComponentDraws = (probe.ellipses || [])
         .filter(
           (draw) =>
             draw.radiusX > 0 &&
@@ -642,12 +642,12 @@ async function readBallTurretState(page) {
           x: Number.isFinite(draw.screenX) ? draw.screenX : draw.x,
           y: Number.isFinite(draw.screenY) ? draw.screenY : draw.y,
         }));
-      const brickCenters =
-        brickDraws.length > 0
-          ? brickDraws
-          : fallbackBrickDraws.length > 0
-            ? fallbackBrickDraws
-            : fallbackEllipseBrickDraws;
+      const componentCenters =
+        componentDraws.length > 0
+          ? componentDraws
+          : fallbackComponentDraws.length > 0
+            ? fallbackComponentDraws
+            : fallbackEllipseComponentDraws;
       const fullRingArcs = probe.arcs.filter(
         (arc) =>
           Math.abs(arc.x - centerX) < 2 &&
@@ -879,12 +879,12 @@ async function readBallTurretState(page) {
           document.body.textContent || "",
         ),
         probe: {
-          brickDrawCount: brickCenters.length,
-          brickQuadrants: {
-            left: brickCenters.some((point) => point.x < centerX),
-            right: brickCenters.some((point) => point.x > centerX),
-            top: brickCenters.some((point) => point.y < centerY),
-            bottom: brickCenters.some((point) => point.y > centerY),
+          componentDrawCount: componentCenters.length,
+          componentQuadrants: {
+            left: componentCenters.some((point) => point.x < centerX),
+            right: componentCenters.some((point) => point.x > centerX),
+            top: componentCenters.some((point) => point.y < centerY),
+            bottom: componentCenters.some((point) => point.y > centerY),
           },
           fullRingArcCount: fullRingArcs.length,
           activeTrampolineArcCount: activeTrampolineArcs.length,
@@ -905,7 +905,7 @@ async function readBallTurretState(page) {
       internalCopyPatternSource: INTERNAL_COPY_PATTERN.source,
       gameModeHeadingPatternSource: GAME_MODE_HEADING_PATTERN.source,
       oldTurretAimCopyPatternSource: OLD_TURRET_AIM_COPY_PATTERN.source,
-      brickImagePatternSource: BRICK_IMAGE_PATTERN.source,
+      componentImagePatternSource: COMPONENT_IMAGE_PATTERN.source,
       fullCircleTolerance: FULL_CIRCLE_TOLERANCE,
       joystickTestId: JOYSTICK_TEST_ID,
       controlToggleTestId: CONTROL_TOGGLE_TEST_ID,
@@ -2001,11 +2001,11 @@ async function runViewport(page, baseUrl, config) {
     `${config.name}: borda da Torreta não mostra 50% de segmentos rebatedores em cor distinta.`,
   );
   assert(
-    gameplayState.probe.brickDrawCount > 0 &&
-      gameplayState.probe.brickQuadrants.left &&
-      gameplayState.probe.brickQuadrants.right &&
-      gameplayState.probe.brickQuadrants.top &&
-      gameplayState.probe.brickQuadrants.bottom,
+    gameplayState.probe.componentDrawCount > 0 &&
+      gameplayState.probe.componentQuadrants.left &&
+      gameplayState.probe.componentQuadrants.right &&
+      gameplayState.probe.componentQuadrants.top &&
+      gameplayState.probe.componentQuadrants.bottom,
     `${config.name}: blocos da Torreta não cobrem quatro quadrantes.`,
   );
   assertJoystickPlacement(config, gameplayState);

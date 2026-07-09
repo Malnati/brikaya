@@ -36,7 +36,7 @@
 ## 2026-07-05 — v1.2.1 — Torreta com cama elástica
 
 - Substituída a mira por uma cama elástica curva móvel no modo Torreta.
-- Invertida a coleção de tijolos da Torreta para o arco inferior, oposto à posição clássica.
+- Invertida a coleção de componentes da Torreta para o arco inferior, oposto à posição clássica.
 - Atualizada a cópia do menu para a nova ação de rebater na cama elástica.
 - Adicionada release note `docs/releases/v1.2.1.md`.
 

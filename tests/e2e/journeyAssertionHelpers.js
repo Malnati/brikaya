@@ -9,11 +9,11 @@ import {
 } from "./gameLogHelpers.js";
 
 export const PADDLE_COLLISION_TYPE = "paddle";
-export const BRICK_COLLISION_TYPE = "brick";
+export const COMPONENT_COLLISION_TYPE = "component";
 export const LEVEL_TRANSITION_EVENT_NAME = "brikaya:level-transition";
 export const OBSERVATION_STEP_MS = 200;
 export const PADDLE_COLLISION_TIMEOUT_MS = 15000;
-export const BRICK_COLLISION_TIMEOUT_MS = 20000;
+export const COMPONENT_COLLISION_TIMEOUT_MS = 20000;
 export const POWER_UP_TIMEOUT_MS = 20000;
 export const PHASE_TRANSITION_TIMEOUT_MS = 30000;
 export const AD_HOLD_ASSERTION_DELAY_MS = 2200;
@@ -75,7 +75,7 @@ export function assertPaddleCollisionPhysics(paddleCollision, profileLabel) {
   );
 }
 
-export async function waitForBrickCollisions(page, expectedCount, timeoutMs = BRICK_COLLISION_TIMEOUT_MS) {
+export async function waitForComponentCollisions(page, expectedCount, timeoutMs = COMPONENT_COLLISION_TIMEOUT_MS) {
   await page.waitForFunction(
     async ({ dbName, storeName, dbVersion, count, collisionType }) => {
       const events = await new Promise((resolveEvents) => {
@@ -116,7 +116,7 @@ export async function waitForBrickCollisions(page, expectedCount, timeoutMs = BR
       storeName: GAME_LOG_STORE_NAME,
       dbVersion: GAME_LOG_DB_VERSION,
       count: expectedCount,
-      collisionType: BRICK_COLLISION_TYPE,
+      collisionType: COMPONENT_COLLISION_TYPE,
     },
   );
 
@@ -124,7 +124,7 @@ export async function waitForBrickCollisions(page, expectedCount, timeoutMs = BR
   return findEventsByType(
     events,
     "collision",
-    (event) => event.collisionInfo?.type === BRICK_COLLISION_TYPE,
+    (event) => event.collisionInfo?.type === COMPONENT_COLLISION_TYPE,
   );
 }
 
@@ -284,21 +284,21 @@ export async function assertPhaseTransition(page, events, profileLabel, options 
   );
   assertCondition(levelStartSpeedState, `${profileLabel}: speedState ausente em level_start.`);
   assertCondition(
-    levelComplete?.metadata?.nextInitialBrickCount ===
-      levelStartSpeedState.initialBrickCount,
+    levelComplete?.metadata?.nextInitialComponentCount ===
+      levelStartSpeedState.initialComponentCount,
     `${profileLabel}: level_complete não antecipou blocos da fase ${toLevel}.`,
   );
   assertCondition(
-    levelStart?.gameState?.bricksRemaining === levelStartSpeedState.initialBrickCount,
+    levelStart?.gameState?.componentsRemaining === levelStartSpeedState.initialComponentCount,
     `${profileLabel}: fase ${toLevel} não iniciou com todos os blocos esperados.`,
   );
   assertCondition(
-    levelStart?.gameState?.gameDimensions?.brickRows >
-      levelComplete?.gameState?.gameDimensions?.brickRows,
-    `${profileLabel}: fase ${toLevel} não aumentou linhas de tijolos.`,
+    levelStart?.gameState?.gameDimensions?.componentRows >
+      levelComplete?.gameState?.gameDimensions?.componentRows,
+    `${profileLabel}: fase ${toLevel} não aumentou linhas de componentes.`,
   );
   assertCondition(
-    levelStartSpeedState.initialBrickCount > levelCompleteSpeedState.initialBrickCount,
+    levelStartSpeedState.initialComponentCount > levelCompleteSpeedState.initialComponentCount,
     `${profileLabel}: fase ${toLevel} não aumentou quantidade inicial de blocos.`,
   );
 

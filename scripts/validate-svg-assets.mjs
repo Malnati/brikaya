@@ -47,7 +47,7 @@ const DISALLOWED_SVG_PATTERNS = [
 ];
 const DISALLOWED_RUNTIME_RASTER_REFERENCE_PATTERN =
   /(?:\/assets\/visual\/|public\/assets\/visual\/)(?!atlases\/|cinematics\/)[^'"`\s)]*\.(?:png|jpe?g|webp|gif|ico|avif)\b|(?:\/|public\/)favicon\.ico\b/i;
-const COMPONENT_BRICK_PATH_PATTERN = /public\/assets\/visual\/bricks\/spr-brick-/;
+const COMPONENT_SPRITE_PATH_PATTERN = /public\/assets\/visual\/components\/spr-component-/;
 const REQUIRED_COMPONENT_SHAPE_ATTRIBUTES = [
   'data-component-shape',
   'data-terminal-left',
@@ -174,7 +174,7 @@ function readComponentShapeAttributes(source) {
 
 function validateComponentSilhouetteAssets(svgFiles) {
   const componentSvgFiles = svgFiles.filter((svgFile) =>
-    COMPONENT_BRICK_PATH_PATTERN.test(svgFile.replaceAll('\\', '/')),
+    COMPONENT_SPRITE_PATH_PATTERN.test(svgFile.replaceAll('\\', '/')),
   );
   const failures = [];
 

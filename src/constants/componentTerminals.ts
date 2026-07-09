@@ -25,23 +25,23 @@ export const COMPONENT_TERMINAL_RATIOS: Record<ComponentShape, ComponentTerminal
   "shield-module": { left: 25 / VIEWBOX_WIDTH, right: 71 / VIEWBOX_WIDTH },
 };
 
-const BRICK_ROLE_TO_COMPONENT_SHAPE: Partial<
+const COMPONENT_ROLE_TO_SHAPE: Partial<
   Record<GameVisualAssetRole, ComponentShape>
 > = {
-  [GAME_VISUAL_ASSET_ROLES.brickRed]: "square-inductor",
-  [GAME_VISUAL_ASSET_ROLES.brickBlue]: "transistor",
-  [GAME_VISUAL_ASSET_ROLES.brickGreen]: "chip",
-  [GAME_VISUAL_ASSET_ROLES.brickYellow]: "led-diode",
-  [GAME_VISUAL_ASSET_ROLES.brickPurple]: "capacitor",
-  [GAME_VISUAL_ASSET_ROLES.brickMetalIntact]: "shield-module",
-  [GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne]: "shield-module",
-  [GAME_VISUAL_ASSET_ROLES.brickMetalDentedTwo]: "shield-module",
+  [GAME_VISUAL_ASSET_ROLES.componentRed]: "square-inductor",
+  [GAME_VISUAL_ASSET_ROLES.componentBlue]: "transistor",
+  [GAME_VISUAL_ASSET_ROLES.componentGreen]: "chip",
+  [GAME_VISUAL_ASSET_ROLES.componentYellow]: "led-diode",
+  [GAME_VISUAL_ASSET_ROLES.componentPurple]: "capacitor",
+  [GAME_VISUAL_ASSET_ROLES.componentMetalIntact]: "shield-module",
+  [GAME_VISUAL_ASSET_ROLES.componentMetalDentedOne]: "shield-module",
+  [GAME_VISUAL_ASSET_ROLES.componentMetalDentedTwo]: "shield-module",
 };
 
 export function getComponentTerminalRatios(
   assetRole: GameVisualAssetRole,
 ): ComponentTerminalRatios {
-  const shape = BRICK_ROLE_TO_COMPONENT_SHAPE[assetRole];
+  const shape = COMPONENT_ROLE_TO_SHAPE[assetRole];
   if (!shape) {
     return { left: 0, right: 1 };
   }

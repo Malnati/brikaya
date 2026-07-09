@@ -79,10 +79,10 @@ export function getPowerUpActivationAudioId(type: PowerUpType): AudioId {
 }
 
 export function calculatePowerUpSize(
-  dimensions: Pick<DynamicGameDimensions, 'brickWidth'>,
+  dimensions: Pick<DynamicGameDimensions, 'componentWidth'>,
 ): number {
   return Math.min(
     POWER_UP_MAX_SIZE,
-    Math.max(POWER_UP_MIN_SIZE, dimensions.brickWidth * POWER_UP_BRICK_WIDTH_RATIO),
+    Math.max(POWER_UP_MIN_SIZE, dimensions.componentWidth * POWER_UP_BRICK_WIDTH_RATIO),
   );
 }

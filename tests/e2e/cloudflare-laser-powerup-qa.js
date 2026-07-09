@@ -63,7 +63,7 @@ const EVENT_WINDOW_THROUGH_FIRST_LASER_SCORE =
 const REQUIRED_EVENT_TYPES = [
   "game_start",
   "power_up",
-  "brick_destroyed",
+  "component_destroyed",
   "score_update",
 ];
 const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
@@ -373,19 +373,19 @@ async function expectedPowerUpSize(page) {
       if (!canvas) return null;
       const canvasWidth = canvas.width;
       const availableWidth = canvasWidth - 60;
-      const minBrickWidth = 40;
-      const maxBrickWidth = 120;
-      let brickCols = Math.floor(availableWidth / (minBrickWidth + 10));
-      brickCols = Math.max(3, Math.min(8, brickCols));
-      const brickWidth = Math.max(
-        minBrickWidth,
+      const minComponentWidth = 40;
+      const maxComponentWidth = 120;
+      let componentCols = Math.floor(availableWidth / (minComponentWidth + 10));
+      componentCols = Math.max(3, Math.min(8, componentCols));
+      const componentWidth = Math.max(
+        minComponentWidth,
         Math.min(
-          maxBrickWidth,
-          (availableWidth - (brickCols - 1) * 10) / brickCols,
+          maxComponentWidth,
+          (availableWidth - (componentCols - 1) * 10) / componentCols,
         ),
       );
 
-      return Math.min(maxSize, Math.max(minSize, brickWidth * ratio));
+      return Math.min(maxSize, Math.max(minSize, componentWidth * ratio));
     },
     {
       minSize: POWER_UP_MIN_SIZE,
@@ -555,16 +555,16 @@ async function run() {
         event.metadata?.action === "activate",
     );
     const activatedPowerUpEvent = activatedPowerUpEvents[0] || null;
-    const brickDestroyedEvents = events.filter(
-      (event) => event.type === "brick_destroyed",
+    const componentDestroyedEvents = events.filter(
+      (event) => event.type === "component_destroyed",
     );
     const activatedPowerUpIndex = activatedPowerUpEvent
       ? events.indexOf(activatedPowerUpEvent)
       : -1;
-    const firstBrickDestroyedEvent =
+    const firstComponentDestroyedEvent =
       events
         .slice(Math.max(0, activatedPowerUpIndex + 1))
-        .find((event) => event.type === "brick_destroyed") || null;
+        .find((event) => event.type === "component_destroyed") || null;
     const levelCompleteEvents = events.filter(
       (event) => event.type === LEVEL_COMPLETE_EVENT_TYPE,
     );
@@ -572,9 +572,9 @@ async function run() {
       laserScoreEvent && activatedPowerUpEvent
         ? laserScoreEvent.timestamp - activatedPowerUpEvent.timestamp
         : null;
-    const firstBrickDelayMs =
-      firstBrickDestroyedEvent && activatedPowerUpEvent
-        ? firstBrickDestroyedEvent.timestamp - activatedPowerUpEvent.timestamp
+    const firstComponentDelayMs =
+      firstComponentDestroyedEvent && activatedPowerUpEvent
+        ? firstComponentDestroyedEvent.timestamp - activatedPowerUpEvent.timestamp
         : null;
     const report = {
       url: targetUrl,
@@ -589,10 +589,10 @@ async function run() {
       laserScoreTiming: {
         activateTimestamp: activatedPowerUpEvent?.timestamp || null,
         scoreTimestamp: laserScoreEvent?.timestamp || null,
-        firstBrickDestroyedTimestamp:
-          firstBrickDestroyedEvent?.timestamp || null,
+        firstComponentDestroyedTimestamp:
+          firstComponentDestroyedEvent?.timestamp || null,
         scoreDelayMs,
-        firstBrickDelayMs,
+        firstComponentDelayMs,
         immediateThresholdMs: LASER_IMMEDIATE_SCORE_MAX_MS,
       },
       laserScoreEvents: laserScoreEvents.length,
@@ -642,13 +642,13 @@ async function run() {
       "Laser aguardou a animação antes de pontuar.",
     );
     assert(
-      Number.isFinite(firstBrickDelayMs) &&
-        firstBrickDelayMs >= 0 &&
-        firstBrickDelayMs <= LASER_IMMEDIATE_SCORE_MAX_MS,
+      Number.isFinite(firstComponentDelayMs) &&
+        firstComponentDelayMs >= 0 &&
+        firstComponentDelayMs <= LASER_IMMEDIATE_SCORE_MAX_MS,
       "Laser aguardou a animação antes de destruir os blocos.",
     );
     assert(
-      (allByType.brick_destroyed || 0) >= EXPECTED_LASER_TARGET_COUNT,
+      (allByType.component_destroyed || 0) >= EXPECTED_LASER_TARGET_COUNT,
       "Laser não registrou os cinco blocos destruídos.",
     );
     assert(

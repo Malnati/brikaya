@@ -1,4 +1,4 @@
-// tests/e2e/cloudflare-metal-blocks-qa.js
+// tests/e2e/cloudflare-metal-components-qa.js
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
@@ -8,9 +8,9 @@ import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 import { assertAllowedQaHostname } from "./publicQaEnv.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
-const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-metal-blocks-qa.json";
+const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-metal-components-qa.json";
 const DEFAULT_SCREENSHOT_PATH =
-  "tmp/screenshots/cloudflare-metal-blocks-qa.png";
+  "tmp/screenshots/cloudflare-metal-components-qa.png";
 const CHROME_LOW_RESOURCE_ARGS = [
   "--disable-background-networking",
   "--disable-background-timer-throttling",
@@ -39,28 +39,28 @@ const GAME_LOG_DB_VERSION = 2;
 const MAX_WAIT_FOR_METAL_BLOCK_MS = 45000;
 const POST_DESTROY_SETTLE_MS = 500;
 const MIN_DISTINCT_TOUCH_INTERVAL_MS = 100;
-const EXPECTED_QA_SCENARIO = "metal-block";
+const EXPECTED_QA_SCENARIO = "metal-component";
 const EVENT_GAME_START = "game_start";
 const EVENT_COLLISION = "collision";
-const EVENT_BRICK_DESTROYED = "brick_destroyed";
+const EVENT_COMPONENT_DESTROYED = "component_destroyed";
 const EVENT_SCORE_UPDATE = "score_update";
 const EVENT_LEVEL_COMPLETE = "level_complete";
 const EVENT_LEVEL_START = "level_start";
 const EVENT_RESTART_GAME = "restart_game";
-const COLLISION_TARGET_BRICK = "brick";
+const COLLISION_TARGET_COMPONENT = "component";
 const REQUIRED_EVENT_TYPES = [
   EVENT_GAME_START,
   EVENT_COLLISION,
-  EVENT_BRICK_DESTROYED,
+  EVENT_COMPONENT_DESTROYED,
   EVENT_SCORE_UPDATE,
   EVENT_LEVEL_COMPLETE,
   EVENT_LEVEL_START,
 ];
 const REQUIRED_PRE_DESTROY_COLLISIONS = 2;
 const EXPECTED_DENTED_ONE_ASSET =
-  "/assets/visual/bricks/spr-brick-metal-steel-dented-one.svg";
+  "/assets/visual/components/spr-component-metal-steel-dented-one.svg";
 const EXPECTED_DENTED_TWO_ASSET =
-  "/assets/visual/bricks/spr-brick-metal-steel-dented-two.svg";
+  "/assets/visual/components/spr-component-metal-steel-dented-two.svg";
 const EXPECTED_VISUAL_DAMAGE_ASSETS = [
   EXPECTED_DENTED_ONE_ASSET,
   EXPECTED_DENTED_TWO_ASSET,
@@ -197,10 +197,10 @@ function summarizeEvents(events) {
   }, {});
 }
 
-function isBrickCollision(event) {
+function isComponentCollision(event) {
   return (
     event.type === EVENT_COLLISION &&
-    event.collisionInfo?.type === COLLISION_TARGET_BRICK
+    event.collisionInfo?.type === COLLISION_TARGET_COMPONENT
   );
 }
 
@@ -210,14 +210,14 @@ function summarizeEvent(event, index) {
     type: event.type,
     timestamp: event.timestamp,
     score: event.gameState?.score ?? null,
-    bricksRemaining: event.gameState?.bricksRemaining ?? null,
-    successfulBrickHits:
-      event.metadata?.speedState?.successfulBrickHits ??
-      event.gameState?.speedState?.successfulBrickHits ??
+    componentsRemaining: event.gameState?.componentsRemaining ?? null,
+    successfulComponentHits:
+      event.metadata?.speedState?.successfulComponentHits ??
+      event.gameState?.speedState?.successfulComponentHits ??
       null,
     pointsAdded: event.metadata?.pointsAdded ?? null,
     reason: event.metadata?.reason ?? null,
-    brickIndex: event.collisionInfo?.brickIndex ?? event.metadata?.brickIndex,
+    componentIndex: event.collisionInfo?.componentIndex ?? event.metadata?.componentIndex,
   };
 }
 
@@ -260,7 +260,7 @@ async function waitForEventType(page, eventType) {
   );
 }
 
-async function waitForBrickCollisionCount(page, expectedCount) {
+async function waitForComponentCollisionCount(page, expectedCount) {
   await page.waitForFunction(
     async ({ dbName, storeName, dbVersion, count, collisionType }) => {
       const events = await new Promise((resolve) => {
@@ -301,7 +301,7 @@ async function waitForBrickCollisionCount(page, expectedCount) {
       storeName: GAME_LOG_STORE_NAME,
       dbVersion: GAME_LOG_DB_VERSION,
       count: expectedCount,
-      collisionType: COLLISION_TARGET_BRICK,
+      collisionType: COLLISION_TARGET_COMPONENT,
     },
   );
 }
@@ -375,7 +375,7 @@ async function run() {
     await page.waitForSelector("canvas", { timeout: 30000 });
     await acceptPrivacyConsentIfPresent(page);
     await waitForEventType(page, EVENT_GAME_START);
-    await waitForBrickCollisionCount(page, REQUIRED_PRE_DESTROY_COLLISIONS);
+    await waitForComponentCollisionCount(page, REQUIRED_PRE_DESTROY_COLLISIONS);
     await waitForMetalDamageAssets(page);
     await page.screenshot({ path: outScreenshot, fullPage: true });
     const loadedMetalDamageAssets = await readLoadedMetalDamageAssets(page);
@@ -385,18 +385,18 @@ async function run() {
     const events = await readGameEvents(page);
     const byType = summarizeEvents(events);
     const eventTypes = events.map((event) => event.type);
-    const brickCollisionEntries = events
+    const componentCollisionEntries = events
       .map((event, index) => ({ event, index }))
-      .filter(({ event }) => isBrickCollision(event));
-    const brickDestroyedEntry = events
+      .filter(({ event }) => isComponentCollision(event));
+    const componentDestroyedEntry = events
       .map((event, index) => ({ event, index }))
-      .find(({ event }) => event.type === EVENT_BRICK_DESTROYED);
+      .find(({ event }) => event.type === EVENT_COMPONENT_DESTROYED);
     const scoreUpdateEntry = events
       .map((event, index) => ({ event, index }))
       .find(({ event }) => event.type === EVENT_SCORE_UPDATE);
-    const preDestroyCollisionEntries = brickDestroyedEntry
-      ? brickCollisionEntries.filter(
-          ({ index }) => index < brickDestroyedEntry.index,
+    const preDestroyCollisionEntries = componentDestroyedEntry
+      ? componentCollisionEntries.filter(
+          ({ index }) => index < componentDestroyedEntry.index,
         )
       : [];
 
@@ -405,14 +405,14 @@ async function run() {
       screenshotPath: outScreenshot,
       byType,
       eventTypes,
-      brickCollisions: brickCollisionEntries.map(({ event, index }) =>
+      componentCollisions: componentCollisionEntries.map(({ event, index }) =>
         summarizeEvent(event, index),
       ),
-      preDestroyBrickCollisions: preDestroyCollisionEntries.map(
+      preDestroyComponentCollisions: preDestroyCollisionEntries.map(
         ({ event, index }) => summarizeEvent(event, index),
       ),
-      firstBrickDestroyed: brickDestroyedEntry
-        ? summarizeEvent(brickDestroyedEntry.event, brickDestroyedEntry.index)
+      firstComponentDestroyed: componentDestroyedEntry
+        ? summarizeEvent(componentDestroyedEntry.event, componentDestroyedEntry.index)
         : null,
       firstScoreUpdate: scoreUpdateEntry
         ? summarizeEvent(scoreUpdateEntry.event, scoreUpdateEntry.index)
@@ -435,10 +435,10 @@ async function run() {
       "restart_game apareceu sem ação humana.",
     );
     assert(
-      brickCollisionEntries.length >= REQUIRED_PRE_DESTROY_COLLISIONS,
+      componentCollisionEntries.length >= REQUIRED_PRE_DESTROY_COLLISIONS,
       "Bloco metálico não registrou dois toques antes da destruição.",
     );
-    assert(brickDestroyedEntry, "Bloco metálico não foi destruído.");
+    assert(componentDestroyedEntry, "Bloco metálico não foi destruído.");
     assert(scoreUpdateEntry, "Pontuação não foi registrada após destruição.");
     assert(
       preDestroyCollisionEntries.length >= REQUIRED_PRE_DESTROY_COLLISIONS,
@@ -459,7 +459,7 @@ async function run() {
       "Toques parciais em bloco metálico foram registrados no mesmo contato físico.",
     );
     assert(
-      brickDestroyedEntry.event.timestamp -
+      componentDestroyedEntry.event.timestamp -
         secondPreDestroyCollision.timestamp >=
         MIN_DISTINCT_TOUCH_INTERVAL_MS,
       "Destruição do bloco metálico ocorreu sem novo contato físico.",
@@ -474,18 +474,18 @@ async function run() {
         "Toque parcial em bloco metálico alterou a pontuação.",
       );
       assert(
-        event.gameState?.bricksRemaining === EXPECTED_INITIAL_BRICKS_REMAINING,
+        event.gameState?.componentsRemaining === EXPECTED_INITIAL_BRICKS_REMAINING,
         "Toque parcial em bloco metálico reduziu blocos restantes.",
       );
       assert(
-        event.metadata?.speedState?.successfulBrickHits ===
+        event.metadata?.speedState?.successfulComponentHits ===
           EXPECTED_SUCCESSFUL_HITS_BEFORE_DESTROY,
         "Toque parcial em bloco metálico reduziu velocidade/progresso de acerto.",
       );
     }
     assert(
-      scoreUpdateEntry.index > brickDestroyedEntry.index,
-      "score_update veio antes de brick_destroyed.",
+      scoreUpdateEntry.index > componentDestroyedEntry.index,
+      "score_update veio antes de component_destroyed.",
     );
     assert(
       scoreUpdateEntry.event.metadata?.pointsAdded === EXPECTED_SCORE_POINTS,

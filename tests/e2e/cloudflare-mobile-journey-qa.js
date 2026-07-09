@@ -46,9 +46,9 @@ import {
   LEVEL_TRANSITION_EVENT_NAME,
   observeEvents,
   PADDLE_COLLISION_TIMEOUT_MS,
-  BRICK_COLLISION_TIMEOUT_MS,
+  COMPONENT_COLLISION_TIMEOUT_MS,
   PHASE_TRANSITION_TIMEOUT_MS,
-  waitForBrickCollisions,
+  waitForComponentCollisions,
   waitForPaddleCollision,
   waitForPowerUpAction,
 } from "./journeyAssertionHelpers.js";
@@ -72,21 +72,21 @@ const SCENARIO_MATRIX = [
     kind: "paddle-collision",
   },
   {
-    id: "metal-block",
-    label: "colisão com tijolo metálico",
-    kind: "metal-block",
+    id: "metal-component",
+    label: "colisão com componente metálico",
+    kind: "metal-component",
   },
   {
-    id: "evasive-blocks",
-    label: "colisão com tijolo evasivo",
-    kind: "evasive-blocks",
+    id: "evasive-components",
+    label: "colisão com componente evasivo",
+    kind: "evasive-components",
   },
   {
     id: "laser-fan",
     label: "power-up laser",
     kind: "power-up",
     powerUpType: "laser_fan",
-    sideEffect: "brick_destroyed",
+    sideEffect: "component_destroyed",
   },
   {
     id: "multiball-power-up",
@@ -108,7 +108,7 @@ const SCENARIO_MATRIX = [
     powerUpType: "slow_ball",
   },
   {
-    id: "single-brick-phase-clear",
+    id: "single-component-phase-clear",
     label: "transição de dificuldade fase 1→2",
     kind: "phase-transition",
   },
@@ -382,7 +382,7 @@ async function runTorretaLose(page, profile) {
 }
 
 async function runFirstAd(page, profile) {
-  await page.goto(scenarioUrl(publicUrl(), "single-brick-phase3-clear"), {
+  await page.goto(scenarioUrl(publicUrl(), "single-component-phase3-clear"), {
     waitUntil: "domcontentloaded",
     timeout: MAX_NAVIGATION_MS,
   });
@@ -492,19 +492,19 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
     );
     await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
     details = { collisionInfo: paddleCollision.collisionInfo, eventSummary: summary };
-  } else if (scenarioCheck.kind === "metal-block") {
-    await waitForBrickCollisions(page, 1);
-    await waitForEventType(page, "brick_destroyed", OBSERVATION_TIMEOUT_MS);
+  } else if (scenarioCheck.kind === "metal-component") {
+    await waitForComponentCollisions(page, 1);
+    await waitForEventType(page, "component_destroyed", OBSERVATION_TIMEOUT_MS);
     const events = await readGameEvents(page);
     const summary = summarizeEvents(events);
     assertCondition(
-      (summary.brick_destroyed || 0) >= 1,
-      `${profile.label} [${scenarioCheck.label}]: brick_destroyed ausente.`,
+      (summary.component_destroyed || 0) >= 1,
+      `${profile.label} [${scenarioCheck.label}]: component_destroyed ausente.`,
     );
     await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
     details = { eventSummary: summary };
-  } else if (scenarioCheck.kind === "evasive-blocks") {
-    await waitForBrickCollisions(page, EXPECTED_EVASIVE_BLOCK_COUNT);
+  } else if (scenarioCheck.kind === "evasive-components") {
+    await waitForComponentCollisions(page, EXPECTED_EVASIVE_BLOCK_COUNT);
     await page.waitForFunction(
       async ({ dbName, storeName, dbVersion, expectedCount }) => {
         const events = await new Promise((resolveEvents) => {
@@ -532,11 +532,11 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
         });
 
         return (
-          events.filter((event) => event.type === "brick_destroyed").length >=
+          events.filter((event) => event.type === "component_destroyed").length >=
           expectedCount
         );
       },
-      { timeout: BRICK_COLLISION_TIMEOUT_MS },
+      { timeout: COMPONENT_COLLISION_TIMEOUT_MS },
       {
         dbName: GAME_LOG_DB_NAME,
         storeName: GAME_LOG_STORE_NAME,
@@ -544,16 +544,16 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
         expectedCount: EXPECTED_EVASIVE_BLOCK_COUNT,
       },
     );
-    await waitForEventType(page, "level_complete", BRICK_COLLISION_TIMEOUT_MS).catch(
+    await waitForEventType(page, "level_complete", COMPONENT_COLLISION_TIMEOUT_MS).catch(
       () => undefined,
     );
-    await waitForEventType(page, "level_start", BRICK_COLLISION_TIMEOUT_MS).catch(
+    await waitForEventType(page, "level_start", COMPONENT_COLLISION_TIMEOUT_MS).catch(
       () => undefined,
     );
     const events = await readGameEvents(page);
     const summary = summarizeEvents(events);
     assertCondition(
-      (summary.brick_destroyed || 0) >= EXPECTED_EVASIVE_BLOCK_COUNT,
+      (summary.component_destroyed || 0) >= EXPECTED_EVASIVE_BLOCK_COUNT,
       `${profile.label} [${scenarioCheck.label}]: blocos evasivos insuficientes.`,
     );
     await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
@@ -575,10 +575,10 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
       `${profile.label} [${scenarioCheck.label}]: power-up incorreto.`,
     );
 
-    if (scenarioCheck.sideEffect === "brick_destroyed") {
+    if (scenarioCheck.sideEffect === "component_destroyed") {
       assertCondition(
-        (summary.brick_destroyed || 0) >= 1,
-        `${profile.label} [${scenarioCheck.label}]: brick_destroyed ausente.`,
+        (summary.component_destroyed || 0) >= 1,
+        `${profile.label} [${scenarioCheck.label}]: component_destroyed ausente.`,
       );
     }
 

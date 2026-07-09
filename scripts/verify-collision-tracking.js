@@ -120,7 +120,7 @@ async function verifyCollisionTracking() {
     console.log(JSON.stringify(collisionData, null, 2));
     
     // Verificar se todos os tipos de colisão foram registrados
-    const expectedTypes = ['wall', 'paddle', 'brick', 'ceiling', 'ball_lost'];
+    const expectedTypes = ['wall', 'paddle', 'component', 'ceiling', 'ball_lost'];
     const missingTypes = expectedTypes.filter(type => !collisionData.byType[type]);
     
     if (missingTypes.length > 0) {
