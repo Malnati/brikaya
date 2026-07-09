@@ -1,5 +1,72 @@
 import { ACCEPT_BUTTON_LABELS } from './consentSelectors.js';
 
+const CONSENT_SCREEN_SELECTOR = '[data-testid="consent-screen"], .consent-screen';
+
+export async function readConsentScrollMetrics(page) {
+  return page.evaluate((selector) => {
+    const consent = document.querySelector(selector);
+    if (!consent) {
+      return null;
+    }
+
+    const style = window.getComputedStyle(consent);
+    return {
+      scrollHeight: consent.scrollHeight,
+      clientHeight: consent.clientHeight,
+      scrollTop: consent.scrollTop,
+      overflowY: style.overflowY,
+      canScroll: consent.scrollHeight > consent.clientHeight + 1,
+    };
+  }, CONSENT_SCREEN_SELECTOR);
+}
+
+export async function assertConsentScreenScrollable(page, profileLabel) {
+  const metrics = await readConsentScrollMetrics(page);
+  if (!metrics) {
+    throw new Error(`${profileLabel}: tela de consentimento não encontrada.`);
+  }
+
+  const allowsScroll = ['auto', 'scroll', 'overlay'].includes(metrics.overflowY);
+  if (!allowsScroll) {
+    throw new Error(
+      `${profileLabel}: consentimento sem overflow rolável (${metrics.overflowY}).`,
+    );
+  }
+
+  if (!metrics.canScroll) {
+    return {
+      profileLabel,
+      scrolled: false,
+      required: false,
+      ...metrics,
+    };
+  }
+
+  const beforeScrollTop = metrics.scrollTop;
+  await page.evaluate((selector) => {
+    const consent = document.querySelector(selector);
+    if (consent) {
+      consent.scrollTop = consent.scrollHeight;
+    }
+  }, CONSENT_SCREEN_SELECTOR);
+
+  const afterMetrics = await readConsentScrollMetrics(page);
+  if (!afterMetrics || afterMetrics.scrollTop <= beforeScrollTop) {
+    throw new Error(
+      `${profileLabel}: consentimento não rolou (scrollTop ${beforeScrollTop} -> ${afterMetrics?.scrollTop ?? 'n/a'}).`,
+    );
+  }
+
+  return {
+    profileLabel,
+    scrolled: true,
+    required: true,
+    beforeScrollTop,
+    afterScrollTop: afterMetrics.scrollTop,
+    ...afterMetrics,
+  };
+}
+
 export async function simulateTouchScrollOnConsent(page, { deltaY = 220, steps = 4 } = {}) {
   const scrolled = await page.evaluate(
     async ({ deltaY: scrollDelta, steps: scrollSteps }) => {
