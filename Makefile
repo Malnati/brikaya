@@ -359,7 +359,7 @@ help:
 	@echo "  cloudflare-e2e-qa - Executar suíte completa e2e (gate do CI; usar BRIKAYA_PUBLIC_URL)"
 	@echo "  cloudflare-mobile-qa - Testar mobile default/logs contra Cloudflare publicado"
 	@echo "  cloudflare-consent-scroll-qa - Validar rolagem do modal de consentimento em iPhone 14 Safari/Chrome"
-	@echo "  cloudflare-mobile-journey-qa - Jornada E2E mobile completa (consentimento, torreta, derrota, anúncio, colisões)"
+	@echo "  cloudflare-mobile-journey-qa - Jornada E2E mobile completa (Safari/Chrome, consentimento, scroll, região, torreta, derrota, anúncio, colisões, power-ups, dificuldade)"
 	@echo "  cloudflare-consent-screen-qa - Validar tela de consentimento contra Cloudflare publicado"
 	@echo "  cloudflare-location-language-qa - Validar consentimento de região e idioma contra Cloudflare publicado"
 	@echo "  cloudflare-orientation-lock-qa - Validar bloqueio portrait em mobile/tablet contra Cloudflare publicado"

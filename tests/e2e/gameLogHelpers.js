@@ -2,6 +2,8 @@
 export const GAME_LOG_DB_NAME = "BrikayaGameLog";
 export const GAME_LOG_STORE_NAME = "gameEvents";
 export const GAME_LOG_DB_VERSION = 2;
+export const GAMEPLAY_TELEMETRY_QUERY_PARAM = "gameplayTelemetry";
+export const GAMEPLAY_TELEMETRY_QUERY_VALUE = "1";
 
 export async function readGameEvents(page) {
   return page.evaluate(
@@ -45,6 +47,24 @@ export function summarizeEvents(events) {
   return byType;
 }
 
+export function findEventsByType(events, type, predicate = () => true) {
+  return events.filter((event) => event.type === type && predicate(event));
+}
+
+export function getLastLevelStart(events) {
+  return findEventsByType(events, "level_start").at(-1) ?? null;
+}
+
+export function getLevelComplete(events, level) {
+  return (
+    findEventsByType(
+      events,
+      "level_complete",
+      (event) => event.metadata?.completedLevel === level,
+    ).at(-1) ?? null
+  );
+}
+
 export async function waitForEventType(page, eventType, timeoutMs = 15000) {
   await page.waitForFunction(
     async ({ dbName, storeName, dbVersion, expectedType }) => {
@@ -81,6 +101,43 @@ export async function waitForEventType(page, eventType, timeoutMs = 15000) {
       dbVersion: GAME_LOG_DB_VERSION,
       expectedType: eventType,
     },
+  );
+}
+
+export async function waitForGameLogReady(page, timeoutMs = 5000) {
+  await page.waitForFunction(
+    async ({ dbName, dbVersion, storeName }) => {
+      const hasStore = await new Promise((resolveReady) => {
+        const request = indexedDB.open(dbName, dbVersion);
+        request.onerror = () => resolveReady(false);
+        request.onsuccess = () => {
+          const db = request.result;
+          const ready = db.objectStoreNames.contains(storeName);
+          db.close();
+          resolveReady(ready);
+        };
+      });
+      return hasStore;
+    },
+    { timeout: timeoutMs },
+    {
+      dbName: GAME_LOG_DB_NAME,
+      dbVersion: GAME_LOG_DB_VERSION,
+      storeName: GAME_LOG_STORE_NAME,
+    },
+  );
+}
+
+export async function clearGameLog(page) {
+  await page.evaluate(
+    async ({ dbName }) =>
+      new Promise((resolveDelete) => {
+        const request = indexedDB.deleteDatabase(dbName);
+        request.onsuccess = resolveDelete;
+        request.onerror = resolveDelete;
+        request.onblocked = resolveDelete;
+      }),
+    { dbName: GAME_LOG_DB_NAME },
   );
 }
 
@@ -123,8 +180,19 @@ export async function clearRuntimeState(page) {
   });
 }
 
+export function withGameplayTelemetry(url) {
+  const nextUrl = new URL(url);
+  if (!nextUrl.searchParams.has(GAMEPLAY_TELEMETRY_QUERY_PARAM)) {
+    nextUrl.searchParams.set(
+      GAMEPLAY_TELEMETRY_QUERY_PARAM,
+      GAMEPLAY_TELEMETRY_QUERY_VALUE,
+    );
+  }
+  return nextUrl.toString();
+}
+
 export function scenarioUrl(baseUrl, scenario) {
-  const url = new URL(baseUrl);
+  const url = new URL(withGameplayTelemetry(baseUrl));
   url.searchParams.set("qaScenario", scenario);
   return url.toString();
 }

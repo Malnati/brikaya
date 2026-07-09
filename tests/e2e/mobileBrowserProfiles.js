@@ -59,3 +59,5 @@ export const CONSENT_SCROLL_PROFILES = [
     locale: "pt-BR,pt;q=0.9",
   },
 ];
+
+export const JOURNEY_PROFILES = CONSENT_SCROLL_PROFILES;

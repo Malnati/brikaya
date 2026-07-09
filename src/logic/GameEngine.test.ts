@@ -1522,27 +1522,6 @@ describe("GameEngine", () => {
     expect((engine as any).selectNextPowerUpType()).toBe("laser_fan");
   });
 
-  it("cria power-up de QA com tamanho proporcional ao bloco atual", () => {
-    const engine = new GameEngine(
-      canvas,
-      onScoreUpdate,
-      onGameWon,
-      onGameOver,
-      undefined,
-      onLevelTransition,
-      "laser-fan",
-      undefined,
-      undefined,
-      undefined,
-      GAME_MODE_BALL_TURRET,
-    );
-    const dimensions = (engine as any).dimensions;
-
-    expect((engine as any).activePowerUp.size).toBe(
-      calculatePowerUpSize(dimensions),
-    );
-  });
-
   it("posiciona bola de QA de fase única na primeira linha", () => {
     const { Bricks } = require("../objects/Bricks");
 
@@ -1660,4 +1639,80 @@ describe("GameEngine", () => {
       "activate",
     );
   });
+
+  it.each([
+    ["laser-fan", "laser_fan"],
+    ["multiball-power-up", "multiball"],
+    ["wide-paddle-power-up", "wide_paddle"],
+    ["slow-ball-power-up", "slow_ball"],
+  ] as const)(
+    "cria power-up de QA %s com tamanho proporcional ao bloco atual",
+    (scenario, powerUpType) => {
+      const engine = new GameEngine(
+        canvas,
+        onScoreUpdate,
+        onGameWon,
+        onGameOver,
+        undefined,
+        onLevelTransition,
+        scenario,
+        undefined,
+        undefined,
+        undefined,
+        GAME_MODE_BALL_TURRET,
+      );
+      const dimensions = (engine as any).dimensions;
+
+      expect((engine as any).activePowerUp.size).toBe(
+        calculatePowerUpSize(dimensions),
+      );
+      expect((engine as any).activePowerUp.getType()).toBe(powerUpType);
+    },
+  );
+
+  it.each([
+    ["multiball-power-up", "multiball", "logBallAdded"],
+    ["wide-paddle-power-up", "wide_paddle", "logPowerUp"],
+    ["slow-ball-power-up", "slow_ball", "logPowerUp"],
+  ] as const)(
+    "coleta e ativa cenário de QA %s por limite radial",
+    (scenario, powerUpType, loggerMethod) => {
+      const engine = new GameEngine(
+        canvas,
+        onScoreUpdate,
+        onGameWon,
+        onGameOver,
+        undefined,
+        onLevelTransition,
+        scenario,
+        undefined,
+        undefined,
+        undefined,
+        GAME_MODE_BALL_TURRET,
+      );
+      const mockGameLogger = require("../storage/gameLogger").gameLogger;
+
+      for (let frame = 0; frame < 12; frame += 1) {
+        (engine as any).updatePowerUp();
+      }
+
+      expect((engine as any).activePowerUp).toBeNull();
+      expect(mockGameLogger.logPowerUp).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.anything(),
+        powerUpType,
+        "collect",
+      );
+      expect(mockGameLogger.logPowerUp).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.anything(),
+        powerUpType,
+        "activate",
+      );
+      expect(mockGameLogger[loggerMethod]).toHaveBeenCalled();
+      expect(mockGameLogger.logGameEnd).not.toHaveBeenCalled();
+    },
+  );
 });

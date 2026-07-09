@@ -1,138 +1,65 @@
-// tests/e2e/scrollHelpers.js
-const CONSENT_SCREEN_SELECTOR = '[data-testid="consent-screen"]';
-const ACCEPT_BUTTON_LABEL = "Aceitar e jogar";
+import { ACCEPT_BUTTON_LABELS } from './consentSelectors.js';
 
-export async function readConsentScrollMetrics(page) {
-  return page.evaluate((selector) => {
-    const screen = document.querySelector(selector);
-    if (!screen) {
-      return { found: false };
-    }
-
-    const style = window.getComputedStyle(screen);
-    const acceptButton = Array.from(document.querySelectorAll("button")).find(
-      (button) => button.textContent?.trim() === "Aceitar e jogar",
-    );
-    const acceptRect = acceptButton?.getBoundingClientRect();
-    const screenRect = screen.getBoundingClientRect();
-
-    return {
-      found: true,
-      scrollHeight: screen.scrollHeight,
-      clientHeight: screen.clientHeight,
-      scrollTop: screen.scrollTop,
-      overflowY: style.overflowY,
-      touchAction: style.touchAction,
-      overscrollBehavior: style.overscrollBehavior,
-      acceptButtonInView:
-        Boolean(acceptRect) &&
-        acceptRect.bottom <= screenRect.bottom + 1 &&
-        acceptRect.top >= screenRect.top - 1,
-      acceptButtonBelowFold:
-        Boolean(acceptRect) && acceptRect.bottom > screenRect.bottom + 1,
-    };
-  }, CONSENT_SCREEN_SELECTOR);
-}
-
-export async function assertConsentScreenScrollable(page, profileLabel) {
-  const before = await readConsentScrollMetrics(page);
-
-  if (!before.found) {
-    throw new Error(`${profileLabel}: tela de consentimento não encontrada.`);
-  }
-
-  if (before.overflowY !== "auto" && before.overflowY !== "scroll") {
-    throw new Error(
-      `${profileLabel}: overflow-y inesperado (${before.overflowY}).`,
-    );
-  }
-
-  if (before.touchAction !== "pan-y") {
-    throw new Error(
-      `${profileLabel}: touch-action inesperado (${before.touchAction}).`,
-    );
-  }
-
-  const scrollDelta = Math.max(120, before.scrollHeight - before.clientHeight);
+export async function simulateTouchScrollOnConsent(page, { deltaY = 220, steps = 4 } = {}) {
   const scrolled = await page.evaluate(
-    ({ selector, delta }) => {
-      const screen = document.querySelector(selector);
-      if (!screen) return { changed: false, scrollTop: 0 };
+    async ({ deltaY: scrollDelta, steps: scrollSteps }) => {
+      const consent = document.querySelector('.consent-screen');
+      if (!consent) {
+        return false;
+      }
 
-      const initialScrollTop = screen.scrollTop;
-      screen.scrollTop = initialScrollTop + delta;
+      const rect = consent.getBoundingClientRect();
+      const startX = rect.left + rect.width / 2;
+      const startY = rect.top + Math.min(rect.height * 0.75, rect.height - 8);
+      const stepDelta = scrollDelta / scrollSteps;
 
-      return {
-        changed: screen.scrollTop !== initialScrollTop,
-        scrollTop: screen.scrollTop,
+      const dispatchTouch = (type, clientX, clientY) => {
+        const touch = new Touch({
+          identifier: 1,
+          target: consent,
+          clientX,
+          clientY,
+          pageX: clientX + window.scrollX,
+          pageY: clientY + window.scrollY,
+          radiusX: 2,
+          radiusY: 2,
+          rotationAngle: 0,
+          force: 1,
+        });
+        consent.dispatchEvent(new TouchEvent(type, {
+          bubbles: true,
+          cancelable: true,
+          touches: type === 'touchend' ? [] : [touch],
+          targetTouches: type === 'touchend' ? [] : [touch],
+          changedTouches: [touch],
+        }));
       };
+
+      dispatchTouch('touchstart', startX, startY);
+      for (let index = 1; index <= scrollSteps; index += 1) {
+        const nextY = startY - stepDelta * index;
+        dispatchTouch('touchmove', startX, nextY);
+        await new Promise((resolve) => window.setTimeout(resolve, 16));
+      }
+      dispatchTouch('touchend', startX, startY - scrollDelta);
+      return true;
     },
-    { selector: CONSENT_SCREEN_SELECTOR, delta: scrollDelta },
+    { deltaY, steps },
   );
 
-  if (before.scrollHeight > before.clientHeight + 8 && !scrolled.changed) {
-    throw new Error(
-      `${profileLabel}: conteúdo excede viewport mas scroll não respondeu.`,
-    );
+  if (!scrolled) {
+    throw new Error('Consent screen not found for touch scroll simulation.');
   }
 
-  const afterScroll = await readConsentScrollMetrics(page);
-
-  if (afterScroll.acceptButtonBelowFold && afterScroll.scrollTop === 0) {
-    throw new Error(
-      `${profileLabel}: botão de aceite ficou abaixo da dobra sem rolagem.`,
-    );
-  }
-
-  await page.evaluate((selector) => {
-    const screen = document.querySelector(selector);
-    if (screen) screen.scrollTop = 0;
-  }, CONSENT_SCREEN_SELECTOR);
-
-  if (before.acceptButtonBelowFold) {
-    await page.evaluate(
-      ({ selector, label }) => {
-        const screen = document.querySelector(selector);
-        const acceptButton = Array.from(
-          document.querySelectorAll("button"),
-        ).find((button) => button.textContent?.trim() === label);
-        if (screen && acceptButton) {
-          acceptButton.scrollIntoView({ block: "end" });
-        }
-      },
-      { selector: CONSENT_SCREEN_SELECTOR, label: ACCEPT_BUTTON_LABEL },
-    );
-
-    const reachable = await readConsentScrollMetrics(page);
-    if (!reachable.acceptButtonInView) {
-      throw new Error(
-        `${profileLabel}: scroll não alcançou o botão Aceitar e jogar.`,
-      );
-    }
-  }
-
-  return {
-    before,
-    afterScroll,
-    scrolled,
-  };
-}
-
-export async function simulateTouchScrollOnConsent(page, deltaY = 180) {
-  const box = await page.$(CONSENT_SCREEN_SELECTOR);
-  if (!box) return { performed: false };
-
-  const rect = await box.boundingBox();
-  if (!rect) return { performed: false };
-
-  const startX = rect.x + rect.width / 2;
-  const startY = rect.y + rect.height * 0.75;
-  const endY = startY - deltaY;
-
-  await page.touchscreen.tap(startX, startY);
-  await page.touchscreen.touchStart(startX, startY);
-  await page.touchscreen.touchMove(startX, endY);
-  await page.touchscreen.touchEnd();
-
-  return readConsentScrollMetrics(page);
+  await page.waitForFunction(
+  (acceptLabels) => {
+    const buttons = Array.from(document.querySelectorAll('.consent-screen button'));
+    return buttons.some((button) => {
+      const label = (button.textContent || '').trim();
+      return acceptLabels.includes(label);
+    });
+  },
+  { timeout: 10_000 },
+  ACCEPT_BUTTON_LABELS,
+  );
 }

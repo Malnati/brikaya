@@ -96,6 +96,9 @@ const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
 const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
 const PADDLE_COLLISION_QA_SCENARIO = "paddle-collision";
 const LASER_FAN_QA_SCENARIO = "laser-fan";
+const MULTIBALL_QA_SCENARIO = "multiball-power-up";
+const WIDE_PADDLE_QA_SCENARIO = "wide-paddle-power-up";
+const SLOW_BALL_QA_SCENARIO = "slow-ball-power-up";
 const METAL_BLOCK_QA_SCENARIO = "metal-block";
 const EVASIVE_BLOCKS_QA_SCENARIO = "evasive-blocks";
 const BALL_TURRET_QA_SCENARIO = "ball-turret";
@@ -105,6 +108,7 @@ const LATE_PHASE_STABILITY_Y_RATIO = 0.65;
 const CINEMATIC_RIP_X_RATIO = 0.12;
 const CINEMATIC_RIP_Y_OFFSET = 2;
 const PADDLE_COLLISION_QA_BALL_INSET = 1;
+const PADDLE_COLLISION_QA_INWARD_OFFSET = 10;
 const LASER_FAN_QA_POWER_UP_BOUNDARY_INSET = 12;
 const METAL_BLOCK_QA_RANDOM_VALUES = [0, 0.99] as const;
 const METAL_BLOCK_QA_RANDOM_FALLBACK = 0.99;
@@ -277,6 +281,9 @@ export type GameQaScenario =
   | typeof CINEMATIC_RIP_QA_SCENARIO
   | typeof PADDLE_COLLISION_QA_SCENARIO
   | typeof LASER_FAN_QA_SCENARIO
+  | typeof MULTIBALL_QA_SCENARIO
+  | typeof WIDE_PADDLE_QA_SCENARIO
+  | typeof SLOW_BALL_QA_SCENARIO
   | typeof METAL_BLOCK_QA_SCENARIO
   | typeof EVASIVE_BLOCKS_QA_SCENARIO
   | typeof BALL_TURRET_QA_SCENARIO
@@ -452,7 +459,7 @@ export class GameEngine {
     this.configureBrickRows();
     this.applyLevelBrickRows(this.level);
     this.bricks = this.createBricks();
-    this.prepareLaserFanQaPowerUp();
+    this.preparePowerUpQaScenarios();
     this.startLevelSpeedTracking(this.level);
     this.armServeLock();
 
@@ -494,6 +501,14 @@ export class GameEngine {
         brickOffsetTop: Math.max(24, canvasHeight * 0.12),
         brickOffsetLeft:
           (canvasWidth - Math.min(96, Math.max(56, canvasWidth * 0.24))) / 2,
+      };
+    }
+
+    if (this.qaScenario === PADDLE_COLLISION_QA_SCENARIO) {
+      return {
+        ...dimensions,
+        brickCols: 0,
+        brickRows: 0,
       };
     }
 
@@ -816,19 +831,32 @@ export class GameEngine {
 
     const ball = this.balls[0];
     const paddlePosition = this.paddle.position;
+
+    if (!this.isBallTurretMode()) {
+      const targetX = paddlePosition.x + paddlePosition.width / 2;
+      const targetY =
+        paddlePosition.y - ball.position.radius - PADDLE_COLLISION_QA_BALL_INSET;
+      ball.setPosition(targetX, targetY);
+      ball.setDirection(Math.PI / CENTER_DIVISOR);
+      return;
+    }
+
     const radialPaddle = paddlePosition.radial;
-    const targetRadius =
+    const targetRadius = Math.max(
+      ball.position.radius + 4,
       radialPaddle.radius -
-      radialPaddle.thickness / CENTER_DIVISOR -
-      ball.position.radius -
-      PADDLE_COLLISION_QA_BALL_INSET;
+        radialPaddle.thickness / CENTER_DIVISOR -
+        ball.position.radius -
+        PADDLE_COLLISION_QA_BALL_INSET -
+        PADDLE_COLLISION_QA_INWARD_OFFSET,
+    );
     const targetAngle = radialPaddle.centerAngle;
 
     ball.setPosition(
       radialPaddle.centerX + Math.cos(targetAngle) * targetRadius,
       radialPaddle.centerY + Math.sin(targetAngle) * targetRadius,
     );
-    ball.setDirection(Math.PI);
+    ball.setDirection(targetAngle);
   }
 
   private prepareBallTurretLoseQaBall() {
@@ -851,9 +879,30 @@ export class GameEngine {
     ball.setDirection(lossAngle);
   }
 
-  private prepareLaserFanQaPowerUp() {
-    if (this.qaScenario !== LASER_FAN_QA_SCENARIO || this.qaScenarioConsumed)
+  private preparePowerUpQaScenarios() {
+    if (this.qaScenario === LASER_FAN_QA_SCENARIO) {
+      this.spawnRadialQaPowerUp("laser_fan");
+      this.laserFanSpawnsThisLevel = 1;
       return;
+    }
+
+    if (this.qaScenario === MULTIBALL_QA_SCENARIO) {
+      this.spawnRadialQaPowerUp("multiball");
+      return;
+    }
+
+    if (this.qaScenario === WIDE_PADDLE_QA_SCENARIO) {
+      this.spawnRadialQaPowerUp("wide_paddle");
+      return;
+    }
+
+    if (this.qaScenario === SLOW_BALL_QA_SCENARIO) {
+      this.spawnRadialQaPowerUp("slow_ball");
+    }
+  }
+
+  private spawnRadialQaPowerUp(powerUpType: PowerUpType) {
+    if (this.qaScenarioConsumed) return;
 
     const powerUpSize = this.getPowerUpSize();
     const directionX = Math.cos(BALL_TURRET_BOTTOM_SPAWN_ANGLE);
@@ -868,7 +917,7 @@ export class GameEngine {
     this.activePowerUp = new PowerUp(
       this.radialGeometry.centerX + directionX * startRadius,
       this.radialGeometry.centerY + directionY * startRadius,
-      "laser_fan",
+      powerUpType,
       powerUpSize,
       this.resolveAssetPath,
       {
@@ -880,7 +929,6 @@ export class GameEngine {
         boundaryRadius: this.radialGeometry.radius,
       },
     );
-    this.laserFanSpawnsThisLevel = 1;
   }
 
   private positionBallForCurrentMode(ball: Ball) {
