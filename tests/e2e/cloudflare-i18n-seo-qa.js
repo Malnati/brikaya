@@ -2,143 +2,122 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, resolve } from "node:path";
+import seoSnapshot from "../../scripts/generated/i18n-home-seo.json" with { type: "json" };
 import puppeteer from "puppeteer";
 
-import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
-import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
-import { canonicalOrigin } from "./publicQaEnv.js";
+import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH =
   "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-public-validation.json";
 const DEFAULT_SCREENSHOT_PATH =
   "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-localized-menu.png";
+const CHROME_EXECUTABLE_PATH =
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const USER_DATA_DIR_PREFIX = "brikaya-i18n-seo-qa-";
 const BROWSER_CLOSE_TIMEOUT_MS = 5000;
 const PAGE_TIMEOUT_MS = 20000;
 const OPTIONAL_CONSENT_TIMEOUT_MS = 5000;
 const HTTP_OK = 200;
 const ROOT_LOCALE = "pt-BR";
-const TESTED_LOCALES = [
-  {
-    locale: "pt-BR",
-    path: "/",
-    title: "Brikaya — arcade de circuitos eletrônicos",
-  },
-  { locale: "en", path: "/en/", title: "Brikaya — block breaker arcade" },
-  {
-    locale: "es-419",
-    path: "/es-419/",
-    title: "Brikaya — arcade de romper bloques",
-  },
-  { locale: "zh-CN", path: "/zh-CN/", title: "Brikaya — 打砖块街机" },
-  { locale: "ar", path: "/ar/", title: "Brikaya — أركيد كسر الكتل" },
-  {
-    locale: "ru",
-    path: "/ru/",
-    title: "Brikaya — аркада с разбиванием блоков",
-  },
-  { locale: "nl", path: "/nl/", title: "Brikaya — blokbreker-arcade" },
-  { locale: "zh-TW", path: "/zh-TW/", title: "Brikaya — 打磚塊街機" },
-  { locale: "bn", path: "/bn/", title: "Brikaya — ব্লক ব্রেকার আর্কেড" },
-  { locale: "ur", path: "/ur/", title: "Brikaya — بلاک بریکر آرکیڈ" },
-  { locale: "fa", path: "/fa/", title: "Brikaya — آرکید شکستن بلوک" },
-  { locale: "he", path: "/he/", title: "Brikaya — ארקייד שבירת בלוקים" },
-  { locale: "mr", path: "/mr/", title: "Brikaya — ब्लॉक ब्रेकर आर्केड" },
-  { locale: "gu", path: "/gu/", title: "Brikaya — બ્લોક બ્રેકર આર્કેડ" },
-  { locale: "kn", path: "/kn/", title: "Brikaya — ಬ್ಲಾಕ್ ಬ್ರೇಕರ್ ಆರ್ಕೇಡ್" },
-  { locale: "ml", path: "/ml/", title: "Brikaya — ബ്ലോക്ക് ബ്രേക്കർ ആർക്കേഡ്" },
-  { locale: "pa", path: "/pa/", title: "Brikaya — ਬਲਾਕ ਬ੍ਰੇਕਰ ਆਰਕੇਡ" },
-  { locale: "el", path: "/el/", title: "Brikaya — arcade σπασίματος μπλοκ" },
-  { locale: "sv", path: "/sv/", title: "Brikaya — blockbrytararkad" },
-  { locale: "da", path: "/da/", title: "Brikaya — blokbryder-arkade" },
-  { locale: "no", path: "/no/", title: "Brikaya — blokkbrekker-arkade" },
-  { locale: "fi", path: "/fi/", title: "Brikaya — palikanmurtaja-arcade" },
-  { locale: "cs", path: "/cs/", title: "Brikaya — arkáda bourání bloků" },
-  {
-    locale: "bg",
-    path: "/bg/",
-    title: "Brikaya — аркада за разбиване на блокове",
-  },
-  { locale: "sr", path: "/sr/", title: "Brikaya — аркада разбијања блокова" },
-  { locale: "af", path: "/af/", title: "Brikaya — blokbreker-arkade" },
-  { locale: "uz", path: "/uz/", title: "Brikaya — blok sindirish arkadasi" },
-  { locale: "my", path: "/my/", title: "Brikaya — ဘလောက်ဖျက် arcade" },
-  { locale: "is", path: "/is/", title: "Brikaya — kubbabrjótsleikur" },
-  { locale: "mk", path: "/mk/", title: "Brikaya — аркада за кршење блокови" },
-  { locale: "ca", path: "/ca/", title: "Brikaya — arcade de trencar blocs" },
-  { locale: "mi", path: "/mi/", title: "Brikaya — kēmu wāwāhi poraka" },
-  { locale: "so", path: "/so/", title: "Brikaya — arcade jabinta baloogyada" },
-  { locale: "yo", path: "/yo/", title: "Brikaya — ere fifọ bulọọki" },
-  { locale: "ha", path: "/ha/", title: "Brikaya — wasan fasa tubali" },
-  {
-    locale: "zu",
-    path: "/zu/",
-    title: "Brikaya — i-arcade yokuphula amabhulokhi",
-  },
-  { locale: "rw", path: "/rw/", title: "Brikaya — umukino wo kumena ibice" },
-  { locale: "ti", path: "/ti/", title: "Brikaya — ጸወታ ምስባር ብሎክ" },
-  {
-    locale: "qu",
-    path: "/qu/",
-    title: "Brikaya — bloquekunata pakichiy pukllay",
-  },
-  { locale: "gn", path: "/gn/", title: "Brikaya — arcade ojokóva bloque" },
-  { locale: "jv", path: "/jv/", title: "Brikaya — arkade mecah blok" },
-  { locale: "haw", path: "/haw/", title: "Brikaya — pāʻani wāwahi pōhaku" },
-  { locale: "scn", path: "/scn/", title: "Brikaya — arcade spacca blocchi" },
-  { locale: "ps", path: "/ps/", title: "Brikaya — د بلاک ماتولو ارکېډ" },
-  { locale: "dv", path: "/dv/", title: "Brikaya — ބްލޮކް ފައްތާލާ އާކޭޑް" },
-  { locale: "or", path: "/or/", title: "Brikaya — ବ୍ଲକ୍ ଭାଙ୍ଗିବା ଆର୍କେଡ୍" },
-  { locale: "sat", path: "/sat/", title: "Brikaya — ᱵᱞᱚᱠ ᱨᱟᱯᱩᱫ ᱟᱨᱠᱮᱰ" },
-  { locale: "awa", path: "/awa/", title: "Brikaya — ब्लॉक तोड़े वाला आर्केड" },
-  { locale: "ace", path: "/ace/", title: "Brikaya — arked peuhancô blok" },
-  { locale: "bal", path: "/bal/", title: "Brikaya — بلاک شکستن آرکید" },
-  { locale: "chr", path: "/chr/", title: "Brikaya — ᎠᏍᏆᏂᎪᏗ ᏗᎪᏍᏓᏱ ᎠᏁᏍᎩ" },
-  { locale: "tt", path: "/tt/", title: "Brikaya — блок вату аркадасы" },
-  { locale: "ban", path: "/ban/", title: "Brikaya — arkade ngancurin blok" },
-  { locale: "fy", path: "/fy/", title: "Brikaya — blokbrekker-arkade" },
-  { locale: "se", path: "/se/", title: "Brikaya — blohkaid rihkkon-speallu" },
-  { locale: "iu", path: "/iu/", title: "Brikaya — ᐅᔭᕋᓛᓂᒃ ᓯᖁᒥᑦᓯᓂᖅ" },
-  { locale: "nv", path: "/nv/", title: "Brikaya — tsé bee dah naaznilí" },
-  { locale: "tpi", path: "/tpi/", title: "Brikaya — gem bilong brukim blok" },
-  { locale: "aa", path: "/aa/", title: "Brikaya — kubba le blokki baxxaqsa" },
-  { locale: "ce", path: "/ce/", title: "Brikaya — блокаш дохадан аркада" },
-  { locale: "tyv", path: "/tyv/", title: "Brikaya — блоктарны үжелээр аркада" },
-  { locale: "kaa", path: "/kaa/", title: "Brikaya — bloklardı buzıw arkadası" },
-  { locale: "sma", path: "/sma/", title: "Brikaya — blokkh jïhkieh speel" },
-  { locale: "la", path: "/la/", title: "Brikaya — arcadia frangendi lateres" },
-  { locale: "eo", path: "/eo/", title: "Brikaya — blokrompa arkado" },
-  { locale: "nds", path: "/nds/", title: "Brikaya — Blockbreker-Arkade" },
-  { locale: "hsb", path: "/hsb/", title: "Brikaya — arkada łamanja blokow" },
-  {
-    locale: "en-AU",
-    path: "/en-AU/",
-    title: "Brikaya — block breaker arcade for Australia",
-  },
-  {
-    locale: "es-MX",
-    path: "/es-MX/",
-    title: "Brikaya — arcade de romper bloques para México",
-  },
-  {
-    locale: "pt-AO",
-    path: "/pt-AO/",
-    title: "Brikaya — arcade de partir blocos para Angola",
-  },
-  { locale: "zh-HK", path: "/zh-HK/", title: "Brikaya — 香港打磚塊街機" },
-  {
-    locale: "ar-SA",
-    path: "/ar-SA/",
-    title: "Brikaya — أركيد كسر الكتل للسعودية",
-  },
-  {
-    locale: "ug-CN",
-    path: "/ug-CN/",
-    title: "Brikaya — جۇڭگو ئۈچۈن بۆلەك چېقىش ئاركىدى",
-  },
-  { locale: "wa", path: "/wa/", title: "Brikaya — djeu di cassaedje di blocs" },
-];
+function seoHomeTitle(locale) {
+  return seoSnapshot[locale]?.home?.title ?? seoSnapshot.en.home.title;
+}
+
+function seoDownloadsTitle(locale) {
+  return seoSnapshot[locale]?.downloads?.title ?? seoSnapshot.en.downloads.title;
+}
+
+function homePathForLocale(locale) {
+  return locale === ROOT_LOCALE ? "/" : `/${locale}/`;
+}
+
+function downloadsPathForLocale(locale) {
+  return locale === ROOT_LOCALE ? "/downloads/" : `/${locale}/downloads/`;
+}
+
+const TESTED_LOCALE_IDS = [
+    "pt-BR",
+    "en",
+    "es-419",
+    "zh-CN",
+    "ar",
+    "ru",
+    "nl",
+    "zh-TW",
+    "bn",
+    "ur",
+    "fa",
+    "he",
+    "mr",
+    "gu",
+    "kn",
+    "ml",
+    "pa",
+    "el",
+    "sv",
+    "da",
+    "no",
+    "fi",
+    "cs",
+    "bg",
+    "sr",
+    "af",
+    "uz",
+    "my",
+    "is",
+    "mk",
+    "ca",
+    "mi",
+    "so",
+    "yo",
+    "ha",
+    "zu",
+    "rw",
+    "ti",
+    "qu",
+    "gn",
+    "jv",
+    "haw",
+    "scn",
+    "ps",
+    "dv",
+    "or",
+    "sat",
+    "awa",
+    "ace",
+    "bal",
+    "chr",
+    "tt",
+    "ban",
+    "fy",
+    "se",
+    "iu",
+    "nv",
+    "tpi",
+    "aa",
+    "ce",
+    "tyv",
+    "kaa",
+    "sma",
+    "la",
+    "eo",
+    "nds",
+    "hsb",
+    "en-AU",
+    "es-MX",
+    "pt-AO",
+    "zh-HK",
+    "ar-SA",
+    "ug-CN",
+    "wa"
+  ];
+
+const TESTED_LOCALES = TESTED_LOCALE_IDS.map((locale) => ({
+  locale,
+  path: homePathForLocale(locale),
+  title: seoHomeTitle(locale),
+}));
 const ALL_HREFLANG_LOCALES = [
   "pt-BR",
   "en",
@@ -425,458 +404,104 @@ const ALL_HREFLANG_LOCALES = [
   "yi-001",
   "mus",
 ];
-const TESTED_DOWNLOADS_LOCALES = [
-  {
-    locale: "pt-BR",
-    path: "/downloads/",
-    title: "Baixar Brikaya — jogo grátis no navegador",
-  },
-  {
-    locale: "en",
-    path: "/en/downloads/",
-    title: "Download Brikaya — free browser game",
-  },
-  {
-    locale: "es-419",
-    path: "/es-419/downloads/",
-    title: "Descargar Brikaya — juego gratis en el navegador",
-  },
-  {
-    locale: "en-IN",
-    path: "/en-IN/downloads/",
-    title: "Download Brikaya — free browser game",
-  },
-  {
-    locale: "hi-IN",
-    path: "/hi-IN/downloads/",
-    title: "Brikaya डाउनलोड करें — मुफ़्त ब्राउज़र गेम",
-  },
-  {
-    locale: "de",
-    path: "/de/downloads/",
-    title: "Brikaya herunterladen — kostenloses Browser-Spiel",
-  },
-  {
-    locale: "fr",
-    path: "/fr/downloads/",
-    title: "Télécharger Brikaya — jeu gratuit dans le navigateur",
-  },
-  {
-    locale: "it",
-    path: "/it/downloads/",
-    title: "Scarica Brikaya — gioco gratis nel browser",
-  },
-  {
-    locale: "ja",
-    path: "/ja/downloads/",
-    title: "Brikayaをダウンロード — 無料ブラウザゲーム",
-  },
-  {
-    locale: "ko",
-    path: "/ko/downloads/",
-    title: "Brikaya 다운로드 — 무료 브라우저 게임",
-  },
-  {
-    locale: "id",
-    path: "/id/downloads/",
-    title: "Unduh Brikaya — game browser gratis",
-  },
-  {
-    locale: "vi",
-    path: "/vi/downloads/",
-    title: "Tải Brikaya — trò chơi trình duyệt miễn phí",
-  },
-  {
-    locale: "fil",
-    path: "/fil/downloads/",
-    title: "I-download ang Brikaya — libreng laro sa browser",
-  },
-  {
-    locale: "th",
-    path: "/th/downloads/",
-    title: "ดาวน์โหลด Brikaya — เกมเบราว์เซอร์ฟรี",
-  },
-  {
-    locale: "zh-CN",
-    path: "/zh-CN/downloads/",
-    title: "下载 Brikaya — 免费浏览器游戏",
-  },
-  {
-    locale: "ar",
-    path: "/ar/downloads/",
-    title: "تنزيل Brikaya — لعبة متصفح مجانية",
-  },
-  {
-    locale: "ru",
-    path: "/ru/downloads/",
-    title: "Скачать Brikaya — бесплатная браузерная игра",
-  },
-  {
-    locale: "tr",
-    path: "/tr/downloads/",
-    title: "Brikaya'yı indir — ücretsiz tarayıcı oyunu",
-  },
-  {
-    locale: "nl",
-    path: "/nl/downloads/",
-    title: "Brikaya downloaden — gratis browserspel",
-  },
-  {
-    locale: "pl",
-    path: "/pl/downloads/",
-    title: "Pobierz Brikaya — darmowa gra przeglądarkowa",
-  },
-  {
-    locale: "uk",
-    path: "/uk/downloads/",
-    title: "Завантажити Brikaya — безкоштовна браузерна гра",
-  },
-  {
-    locale: "ms",
-    path: "/ms/downloads/",
-    title: "Muat turun Brikaya — permainan pelayar percuma",
-  },
-  {
-    locale: "zh-TW",
-    path: "/zh-TW/downloads/",
-    title: "下載 Brikaya — 免費瀏覽器遊戲",
-  },
-  {
-    locale: "pt-PT",
-    path: "/pt-PT/downloads/",
-    title: "Descarregar Brikaya — jogo grátis no navegador",
-  },
-  {
-    locale: "es-ES",
-    path: "/es-ES/downloads/",
-    title: "Descargar Brikaya — juego gratis en el navegador",
-  },
-  {
-    locale: "en-GB",
-    path: "/en-GB/downloads/",
-    title: "Download Brikaya — free browser game",
-  },
-  {
-    locale: "fr-CA",
-    path: "/fr-CA/downloads/",
-    title: "Télécharger Brikaya — jeu gratuit dans le navigateur",
-  },
-  {
-    locale: "bn",
-    path: "/bn/downloads/",
-    title: "Brikaya ডাউনলোড করুন — বিনামূল্যের ব্রাউজার গেম",
-  },
-  {
-    locale: "ur",
-    path: "/ur/downloads/",
-    title: "Brikaya ڈاؤن لوڈ کریں — مفت براؤزر گیم",
-  },
-  {
-    locale: "fa",
-    path: "/fa/downloads/",
-    title: "دانلود Brikaya — بازی رایگان مرورگر",
-  },
-  {
-    locale: "he",
-    path: "/he/downloads/",
-    title: "הורדת Brikaya — משחק דפדפן חינם",
-  },
-  {
-    locale: "ta",
-    path: "/ta/downloads/",
-    title: "Brikaya பதிவிறக்கவும் — இலவச உலாவி விளையாட்டு",
-  },
-  {
-    locale: "te",
-    path: "/te/downloads/",
-    title: "Brikaya డౌన్‌లోడ్ చేయండి — ఉచిత బ్రౌజర్ గేమ్",
-  },
-  {
-    locale: "mr",
-    path: "/mr/downloads/",
-    title: "Brikaya डाउनलोड करा — मोफत ब्राउझर गेम",
-  },
-  {
-    locale: "gu",
-    path: "/gu/downloads/",
-    title: "Brikaya ડાઉનલોડ કરો — મફત બ્રાઉઝર ગેમ",
-  },
-  {
-    locale: "kn",
-    path: "/kn/downloads/",
-    title: "Brikaya ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ — ಉಚಿತ ಬ್ರೌಸರ್ ಆಟ",
-  },
-  {
-    locale: "ml",
-    path: "/ml/downloads/",
-    title: "Brikaya ഡൗൺലോഡ് ചെയ്യുക — സൗജന്യ ബ്രൗസർ ഗെയിം",
-  },
-  {
-    locale: "pa",
-    path: "/pa/downloads/",
-    title: "Brikaya ਡਾਊਨਲੋਡ ਕਰੋ — ਮੁਫ਼ਤ ਬ੍ਰਾਊਜ਼ਰ ਗੇਮ",
-  },
-  {
-    locale: "el",
-    path: "/el/downloads/",
-    title: "Λήψη Brikaya — δωρεάν παιχνίδι browser",
-  },
-  {
-    locale: "sv",
-    path: "/sv/downloads/",
-    title: "Ladda ner Brikaya — gratis webbläsarspel",
-  },
-  {
-    locale: "da",
-    path: "/da/downloads/",
-    title: "Download Brikaya — gratis browserspil",
-  },
-  {
-    locale: "no",
-    path: "/no/downloads/",
-    title: "Last ned Brikaya — gratis nettleserspill",
-  },
-  {
-    locale: "fi",
-    path: "/fi/downloads/",
-    title: "Lataa Brikaya — ilmainen selainpeli",
-  },
-  {
-    locale: "cs",
-    path: "/cs/downloads/",
-    title: "Stáhnout Brikaya — bezplatná hra v prohlížeči",
-  },
-  {
-    locale: "bg",
-    path: "/bg/downloads/",
-    title: "Изтеглете Brikaya — безплатна игра в браузъра",
-  },
-  {
-    locale: "sr",
-    path: "/sr/downloads/",
-    title: "Преузми Brikaya — бесплатна игра у прегледачу",
-  },
-  {
-    locale: "af",
-    path: "/af/downloads/",
-    title: "Laai Brikaya af — gratis blaaier-speletjie",
-  },
-  {
-    locale: "uz",
-    path: "/uz/downloads/",
-    title: "Brikaya yuklab olish — bepul brauzer o‘yini",
-  },
-  {
-    locale: "my",
-    path: "/my/downloads/",
-    title: "Brikaya ဒေါင်းလုဒ်လုပ်ရန် — အခမဲ့ ဘရောက်ဇာဂိမ်း",
-  },
-  {
-    locale: "is",
-    path: "/is/downloads/",
-    title: "Sækja Brikaya — ókeypis vafraleikur",
-  },
-  {
-    locale: "mk",
-    path: "/mk/downloads/",
-    title: "Преземи Brikaya — бесплатна игра во прелистувач",
-  },
-  {
-    locale: "ca",
-    path: "/ca/downloads/",
-    title: "Baixa Brikaya — joc gratuït de navegador",
-  },
-  {
-    locale: "mi",
-    path: "/mi/downloads/",
-    title: "Tikiake Brikaya — kēmu pūtirotiro kore utu",
-  },
-  {
-    locale: "so",
-    path: "/so/downloads/",
-    title: "Soo dejiso Brikaya — ciyaar biraawsar bilaash ah",
-  },
-  {
-    locale: "yo",
-    path: "/yo/downloads/",
-    title: "Gba Brikaya silẹ — ere aṣàwákiri ọfẹ",
-  },
-  {
-    locale: "ha",
-    path: "/ha/downloads/",
-    title: "Zazzage Brikaya — wasan burauza kyauta",
-  },
-  {
-    locale: "zu",
-    path: "/zu/downloads/",
-    title: "Landa i-Brikaya — umdlalo wesiphequluli wamahhala",
-  },
-  {
-    locale: "rw",
-    path: "/rw/downloads/",
-    title: "Kuramo Brikaya — umukino wa mushakisha w'ubuntu",
-  },
-  {
-    locale: "ti",
-    path: "/ti/downloads/",
-    title: "Brikaya ኣውርድ — ናጻ ናይ browser ጸወታ",
-  },
-  {
-    locale: "qu",
-    path: "/qu/downloads/",
-    title: "Brikaya uraykachiy — mana qullqiyuq maskana pukllay",
-  },
-  {
-    locale: "gn",
-    path: "/gn/downloads/",
-    title: "Emboguejy Brikaya — ñanduti kundahára ñembosarái reigua",
-  },
-  {
-    locale: "jv",
-    path: "/jv/downloads/",
-    title: "Undhuh Brikaya — game browser gratis",
-  },
-  {
-    locale: "haw",
-    path: "/haw/downloads/",
-    title: "Hoʻoiho iā Brikaya — pāʻani polokalamu kele pūnaewele manuahi",
-  },
-  {
-    locale: "scn",
-    path: "/scn/downloads/",
-    title: "Scàrrica Brikaya — jocu di browser gratis",
-  },
-  {
-    locale: "ps",
-    path: "/ps/downloads/",
-    title: "Brikaya ډاونلوډ کړئ — وړیا براوزر لوبه",
-  },
-  {
-    locale: "dv",
-    path: "/dv/downloads/",
-    title: "Brikaya ޑައުންލޯޑް ކުރޭ — ހިލޭ ބްރައުޒަރ ގޭމް",
-  },
-  {
-    locale: "or",
-    path: "/or/downloads/",
-    title: "Brikaya ଡାଉନଲୋଡ୍ କରନ୍ତୁ — ମାଗଣା ବ୍ରାଉଜର ଖେଳ",
-  },
-  {
-    locale: "sat",
-    path: "/sat/downloads/",
-    title: "Brikaya ᱰᱟᱣᱱᱞᱳᱰ ᱢᱮ — ᱯᱷᱨᱤ ᱵᱽᱨᱟᱣᱡᱟᱨ ᱠᱷᱮᱞ",
-  },
-  {
-    locale: "awa",
-    path: "/awa/downloads/",
-    title: "Brikaya डाउनलोड करा — मुफ्त ब्राउजर खेल",
-  },
-  {
-    locale: "ace",
-    path: "/ace/downloads/",
-    title: "Unduh Brikaya — game browser gratis",
-  },
-  {
-    locale: "bal",
-    path: "/bal/downloads/",
-    title: "Brikaya ڈاؤن لوڈ کن — مفت براوزر گیم",
-  },
-  {
-    locale: "chr",
-    path: "/chr/downloads/",
-    title: "Brikaya ᏫᎩᎶᏒᎢ — ᎾᎿᎢ ᎠᎾᏗᏍᎩ ᎠᏁᏍᎩ",
-  },
-  {
-    locale: "tt",
-    path: "/tt/downloads/",
-    title: "Brikaya йөкләү — бушлай браузер уены",
-  },
-  {
-    locale: "ban",
-    path: "/ban/downloads/",
-    title: "Unduh Brikaya — game browser gratis",
-  },
-  {
-    locale: "fy",
-    path: "/fy/downloads/",
-    title: "Download Brikaya — fergees browserspul",
-  },
-  {
-    locale: "se",
-    path: "/se/downloads/",
-    title: "Viečča Brikaya — nuvttá neahttalohkan-speallu",
-  },
-  {
-    locale: "iu",
-    path: "/iu/downloads/",
-    title: "Brikaya ᐱᔭᐅᔪᖅ — ᐊᑭᖃᙱᑦᑐᖅ ᕿᓂᕈᑎᒥ ᐱᙳᐊᕈᑎ",
-  },
-  {
-    locale: "nv",
-    path: "/nv/downloads/",
-    title: "Brikaya yíníłta’ — browser naaltsoos bee baa hane’ doo béeso da",
-  },
-  {
-    locale: "tpi",
-    path: "/tpi/downloads/",
-    title: "Daunlodim Brikaya — fri browser gem",
-  },
-  {
-    locale: "aa",
-    path: "/aa/downloads/",
-    title: "Brikaya oobbi — mayso mali browser ciyaara",
-  },
-  {
-    locale: "ce",
-    path: "/ce/downloads/",
-    title: "Brikaya чуяха — ахча доцуш браузер ловзар",
-  },
-  {
-    locale: "tyv",
-    path: "/tyv/downloads/",
-    title: "Brikaya чүктеп ал — акшыг эвес браузер оюн",
-  },
-  {
-    locale: "kaa",
-    path: "/kaa/downloads/",
-    title: "Brikaya júkle — tegin brauzer oyını",
-  },
-  {
-    locale: "sma",
-    path: "/sma/downloads/",
-    title: "Brikaya veedtjh — nuvhtie browser-speele",
-  },
-  {
-    locale: "en-AU",
-    path: "/en-AU/downloads/",
-    title: "Download Brikaya — free browser game",
-  },
-  {
-    locale: "es-MX",
-    path: "/es-MX/downloads/",
-    title: "Descargar Brikaya — juego gratis en el navegador",
-  },
-  {
-    locale: "pt-AO",
-    path: "/pt-AO/downloads/",
-    title: "Descarregar Brikaya — jogo grátis no navegador",
-  },
-  {
-    locale: "zh-HK",
-    path: "/zh-HK/downloads/",
-    title: "下載 Brikaya — 免費瀏覽器遊戲",
-  },
-  {
-    locale: "ar-SA",
-    path: "/ar-SA/downloads/",
-    title: "تنزيل Brikaya — لعبة متصفح مجانية",
-  },
-  {
-    locale: "ug-CN",
-    path: "/ug-CN/downloads/",
-    title: "Brikaya نى چۈشۈرۈش — ھەقسىز توركۆرگۈ ئويۇنى",
-  },
-];
+const TESTED_DOWNLOADS_LOCALE_IDS = [
+    "pt-BR",
+    "en",
+    "es-419",
+    "en-IN",
+    "hi-IN",
+    "de",
+    "fr",
+    "it",
+    "ja",
+    "ko",
+    "id",
+    "vi",
+    "fil",
+    "th",
+    "zh-CN",
+    "ar",
+    "ru",
+    "tr",
+    "nl",
+    "pl",
+    "uk",
+    "ms",
+    "zh-TW",
+    "pt-PT",
+    "es-ES",
+    "en-GB",
+    "fr-CA",
+    "bn",
+    "ur",
+    "fa",
+    "he",
+    "ta",
+    "te",
+    "mr",
+    "gu",
+    "kn",
+    "ml",
+    "pa",
+    "el",
+    "sv",
+    "da",
+    "no",
+    "fi",
+    "cs",
+    "bg",
+    "sr",
+    "af",
+    "uz",
+    "my",
+    "is",
+    "mk",
+    "ca",
+    "mi",
+    "so",
+    "yo",
+    "ha",
+    "zu",
+    "rw",
+    "ti",
+    "qu",
+    "gn",
+    "jv",
+    "haw",
+    "scn",
+    "ps",
+    "dv",
+    "or",
+    "sat",
+    "awa",
+    "ace",
+    "bal",
+    "chr",
+    "tt",
+    "ban",
+    "fy",
+    "se",
+    "iu",
+    "nv",
+    "tpi",
+    "aa",
+    "ce",
+    "tyv",
+    "kaa",
+    "sma",
+    "en-AU",
+    "es-MX",
+    "pt-AO",
+    "zh-HK",
+    "ar-SA",
+    "ug-CN"
+  ];
+
+const TESTED_DOWNLOADS_LOCALES = TESTED_DOWNLOADS_LOCALE_IDS.map((locale) => ({
+  locale,
+  path: downloadsPathForLocale(locale),
+  title: seoDownloadsTitle(locale),
+}));
 const LANGUAGE_SELECT_SELECTOR = "#game-language-select";
 const MENU_BUTTON_SELECTOR = ".dashboard-menu-button";
 const CONSENT_BUTTON_SELECTOR = ".consent-screen__button";
@@ -887,29 +512,8 @@ const PRE_GAME_ACCEPT_BUTTON_LABEL = "Aceitar e jogar";
 const MENU_OPEN_ATTEMPTS = 3;
 const MENU_OPEN_RETRY_TIMEOUT_MS = 5000;
 const CHINESE_MENU_TEXT = "隐私";
-const ROOT_CANONICAL = canonicalOrigin();
-const RTL_LOCALES = new Set([
-  "ar",
-  "ur",
-  "fa",
-  "he",
-  "ps",
-  "sd",
-  "ks",
-  "dv",
-  "ckb",
-  "ug",
-  "yi",
-  "bal",
-  "ar-SA",
-  "ar-EG",
-  "fa-AF",
-  "ps-AF",
-  "sd-IN",
-  "ks-IN",
-  "ug-CN",
-  "yi-001",
-]);
+const ROOT_CANONICAL = "https://brikaya.com/";
+const RTL_LOCALES = new Set(["ar", "ur", "fa", "he", "ps", "sd", "ks", "dv", "ckb", "ug", "yi", "bal", "ar-SA", "ar-EG", "fa-AF", "ps-AF", "sd-IN", "ks-IN", "ug-CN", "yi-001"]);
 const BROWSER_AUTO_LANGUAGE = "es-MX";
 const BROWSER_AUTO_LANGUAGES = ["es-MX", "en-US"];
 const BROWSER_AUTO_EXPECTED_LOCALE = "es-MX";
@@ -1022,9 +626,7 @@ function assert(condition, message) {
 }
 
 function canonicalFor(baseUrl, locale, path) {
-  return locale === ROOT_LOCALE && path === "/"
-    ? ROOT_CANONICAL
-    : new URL(path, baseUrl).href;
+  return locale === ROOT_LOCALE && path === "/" ? ROOT_CANONICAL : new URL(path, baseUrl).href;
 }
 
 function legalPathFor(locale, routePath) {
@@ -1119,14 +721,8 @@ async function validateLegalHtml(baseUrl, item) {
     );
   }
   assert(body.includes('hreflang="x-default"'), `${url} sem x-default legal`);
-  assert(
-    !body.includes('hreflang="en-AU"'),
-    `${url} contém variante en-AU legal`,
-  );
-  assert(
-    !body.includes('hreflang="fr-CA"'),
-    `${url} contém variante fr-CA legal`,
-  );
+  assert(!body.includes('hreflang="en-AU"'), `${url} contém variante en-AU legal`);
+  assert(!body.includes('hreflang="fr-CA"'), `${url} contém variante fr-CA legal`);
 
   return { url, status, canonical, locale: item.locale };
 }
@@ -1167,15 +763,11 @@ async function validateSitemapAndRobots(baseUrl) {
     );
   }
   assert(
-    !sitemap.body.includes(
-      `<loc>${new URL("/en-AU/privacy/", baseUrl).href}</loc>`,
-    ),
+    !sitemap.body.includes(`<loc>${new URL("/en-AU/privacy/", baseUrl).href}</loc>`),
     "sitemap contém variante legal en-AU",
   );
   assert(
-    !sitemap.body.includes(
-      `<loc>${new URL("/fr-CA/privacy/", baseUrl).href}</loc>`,
-    ),
+    !sitemap.body.includes(`<loc>${new URL("/fr-CA/privacy/", baseUrl).href}</loc>`),
     "sitemap contém variante legal fr-CA",
   );
   assert(robots.body.includes(`Sitemap: ${sitemapUrl}`), "robots sem sitemap");
@@ -1260,9 +852,12 @@ async function openMenuAndWaitForLanguageSelector(page) {
 
 async function validateRuntimeLanguageSwitch(baseUrl, outputScreenshotPath) {
   const userDataDir = mkdtempSync(`${tmpdir()}/${USER_DATA_DIR_PREFIX}`);
-  const browser = await puppeteer.launch(
-    buildPuppeteerLaunchOptions({ userDataDir }),
-  );
+  const browser = await puppeteer.launch({
+    headless: "new",
+    executablePath: CHROME_EXECUTABLE_PATH,
+    userDataDir,
+    args: buildChromeLaunchArgs(["--no-sandbox", "--disable-setuid-sandbox"]),
+  });
 
   try {
     const page = await browser.newPage();
@@ -1345,9 +940,12 @@ async function validateRuntimeLanguageSwitch(baseUrl, outputScreenshotPath) {
 
 async function validateRuntimeBrowserLocale(baseUrl) {
   const userDataDir = mkdtempSync(`${tmpdir()}/${USER_DATA_DIR_PREFIX}`);
-  const browser = await puppeteer.launch(
-    buildPuppeteerLaunchOptions({ userDataDir }),
-  );
+  const browser = await puppeteer.launch({
+    headless: "new",
+    executablePath: CHROME_EXECUTABLE_PATH,
+    userDataDir,
+    args: buildChromeLaunchArgs(["--no-sandbox", "--disable-setuid-sandbox"]),
+  });
 
   try {
     const page = await browser.newPage();
@@ -1418,9 +1016,12 @@ async function validateRuntimeBrowserLocale(baseUrl) {
 
 async function validateRuntimeTimeZoneLocale(baseUrl) {
   const userDataDir = mkdtempSync(`${tmpdir()}/${USER_DATA_DIR_PREFIX}`);
-  const browser = await puppeteer.launch(
-    buildPuppeteerLaunchOptions({ userDataDir }),
-  );
+  const browser = await puppeteer.launch({
+    headless: "new",
+    executablePath: CHROME_EXECUTABLE_PATH,
+    userDataDir,
+    args: buildChromeLaunchArgs(["--no-sandbox", "--disable-setuid-sandbox"]),
+  });
 
   try {
     const page = await browser.newPage();
@@ -1506,9 +1107,7 @@ async function run() {
     checkedAt: new Date().toISOString(),
     baseUrl,
     localesChecked: TESTED_LOCALES.map((item) => item.locale),
-    downloadsLocalesChecked: TESTED_DOWNLOADS_LOCALES.map(
-      (item) => item.locale,
-    ),
+    downloadsLocalesChecked: TESTED_DOWNLOADS_LOCALES.map((item) => item.locale),
     legalLocalesChecked: TESTED_LEGAL_PAGES.map((item) => item.locale),
     hreflangLocales: ALL_HREFLANG_LOCALES,
     htmlResults,

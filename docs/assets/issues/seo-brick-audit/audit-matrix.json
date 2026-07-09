@@ -1,0 +1,99 @@
+{
+  "generatedAt": "2026-07-09T14:06:39.334Z",
+  "locales": {
+    "pt-BR": {
+      "messagesSnapshot": {
+        "title": "Brikaya — arcade de circuitos eletrônicos",
+        "description": "Jogue Brikaya, um arcade gratuito de circuitos eletrônicos no navegador, com progresso salvo no seu aparelho e partida disponível mesmo sem conexão depois do primeiro acesso.",
+        "ogDescription": "Remova componentes, avance fases e jogue no navegador com progresso salvo no seu aparelho."
+      },
+      "dist": {
+        "title": "Brikaya — arcade de circuitos eletrônicos",
+        "description": "Jogue Brikaya, um arcade gratuito de circuitos eletrônicos no navegador, com progresso salvo no seu aparelho e partida disponível mesmo sem conexão depois do primeiro acesso.",
+        "brickMatches": []
+      }
+    },
+    "en": {
+      "messagesSnapshot": {
+        "title": "Brikaya — circuit component arcade",
+        "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
+        "ogDescription": "Clear circuit components, advance levels, and play in your browser with progress saved on your device."
+      },
+      "dist": {
+        "title": "Brikaya — circuit component arcade",
+        "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
+        "brickMatches": []
+      }
+    },
+    "de": {
+      "messagesSnapshot": {
+        "title": "Brikaya — circuit component arcade",
+        "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
+        "ogDescription": "Zerstöre Blöcke, steige Level auf und spiele im Browser mit lokal gespeichertem Fortschritt."
+      },
+      "dist": {
+        "title": "Brikaya — circuit component arcade",
+        "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
+        "brickMatches": []
+      }
+    },
+    "fr": {
+      "messagesSnapshot": {
+        "title": "Brikaya — arcade de composants électroniques",
+        "description": "Jouez à Brikaya, un arcade gratuit de composants électroniques dans le navigateur, avec progression enregistrée sur votre appareil et jeu hors connexion après la première visite.",
+        "ogDescription": "Clear circuit components, advance levels, and play in your browser with progress saved on your device."
+      },
+      "dist": {
+        "title": "Brikaya — arcade de composants électroniques",
+        "description": "Jouez à Brikaya, un arcade gratuit de composants électroniques dans le navigateur, avec progression enregistrée sur votre appareil et jeu hors connexion après la première visite.",
+        "brickMatches": []
+      }
+    },
+    "nl": {
+      "messagesSnapshot": {
+        "title": "Brikaya — circuit component arcade",
+        "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
+        "ogDescription": "Clear circuit components, advance levels, and play in your browser with progress saved on your device."
+      },
+      "dist": {
+        "title": "Brikaya — circuit component arcade",
+        "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
+        "brickMatches": []
+      }
+    },
+    "es-419": {
+      "messagesSnapshot": {
+        "title": "Brikaya — arcade de componentes electrónicos",
+        "description": "Juega Brikaya, un arcade gratuito de componentes electrónicos en el navegador, con progreso guardado en tu dispositivo y juego sin conexión después del primer acceso.",
+        "ogDescription": "Elimina componentes, avanza niveles y juega en el navegador con progreso guardado en tu dispositivo."
+      },
+      "dist": {
+        "title": "Brikaya — arcade de componentes electrónicos",
+        "description": "Juega Brikaya, un arcade gratuito de componentes electrónicos en el navegador, con progreso guardado en tu dispositivo y juego sin conexión después del primer acceso.",
+        "brickMatches": []
+      }
+    }
+  },
+  "sources": {
+    "messages": {
+      "label": "src/i18n/messages.ts",
+      "matches": []
+    },
+    "generateLocalizedSeo": {
+      "label": "scripts/generate-localized-seo.mjs",
+      "matches": []
+    },
+    "indexHtml": {
+      "label": "index.html",
+      "matches": []
+    },
+    "aboutLegal": {
+      "label": "scripts/legal-page-content.mjs",
+      "matches": []
+    },
+    "legalTranslations": {
+      "label": "scripts/legal-page-translations.json",
+      "matches": []
+    }
+  }
+}

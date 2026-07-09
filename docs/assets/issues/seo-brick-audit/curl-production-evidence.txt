@@ -1,0 +1,35 @@
+# Evidência curl pré-deploy (produção ainda pode refletir estado anterior até merge/deploy)
+
+## https://brikaya.com/
+            "description": "Jogo arcade gratuito de quebrar blocos no navegador, com progresso salvo no aparelho e jogo offline após o primeiro acesso.",
+    <meta name="description" content="Jogue Brikaya, um arcade gratuito de quebrar blocos no navegador, com progresso salvo no seu aparelho e partida disponível mesmo sem conexão depois do primeiro acesso." />
+    <meta property="og:title" content="Brikaya — arcade de circuitos eletrônicos" />
+    <meta name="twitter:title" content="Brikaya — arcade de circuitos eletrônicos" />
+    <title>Brikaya — arcade de circuitos eletrônicos</title>
+
+## https://brikaya.com/en/
+            "description": "Jogo arcade gratuito de quebrar blocos no navegador, com progresso salvo no aparelho e jogo offline após o primeiro acesso.",
+    <meta name="description" content="Play Brikaya, a free block breaker arcade in your browser, with progress saved on your device and offline play after the first visit." />
+    <meta property="og:title" content="Brikaya — block breaker arcade" />
+    <meta name="twitter:title" content="Brikaya — block breaker arcade" />
+    <title>Brikaya — block breaker arcade</title>
+
+## https://brikaya.com/about/
+        <p>Brikaya is a browser game inspired by classic brick-breaking play. It runs as a web app and can work offline after the first load.</p>
+
+## https://brikaya.com/de/
+            "description": "Jogo arcade gratuito de quebrar blocos no navegador, com progresso salvo no aparelho e jogo offline após o primeiro acesso.",
+
+## https://brikaya.com/fr/
+            "description": "Jogo arcade gratuito de quebrar blocos no navegador, com progresso salvo no aparelho e jogo offline após o primeiro acesso.",
+    <meta name="description" content="Jouez à Brikaya, un arcade casse-briques gratuit dans le navigateur, avec progression enregistrée sur votre appareil et jeu hors connexion après la première visite." />
+    <meta property="og:title" content="Brikaya — arcade casse-briques" />
+    <meta name="twitter:title" content="Brikaya — arcade casse-briques" />
+    <title>Brikaya — arcade casse-briques</title>
+
+## https://brikaya.com/nl/
+            "description": "Jogo arcade gratuito de quebrar blocos no navegador, com progresso salvo no aparelho e jogo offline após o primeiro acesso.",
+    <meta name="description" content="Speel Brikaya, een gratis blokbreker-arcade in de browser, met voortgang op je apparaat en offline spelen na het eerste bezoek." />
+    <meta property="og:title" content="Brikaya — blokbreker-arcade" />
+    <meta name="twitter:title" content="Brikaya — blokbreker-arcade" />
+    <title>Brikaya — blokbreker-arcade</title>

@@ -1577,7 +1577,7 @@ const ID_MESSAGES: TranslationCatalog = {
   "seo.description":
     "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
   "seo.ogDescription":
-    "Pecahkan blok, naik level, dan main di browser dengan progres tersimpan di perangkat.",
+    "Hapus komponen sirkuit, naik level, dan main di browser dengan progres tersimpan di perangkat.",
 };
 
 const VI_MESSAGES: TranslationCatalog = {
@@ -1662,11 +1662,11 @@ const VI_MESSAGES: TranslationCatalog = {
   "status.finalScore": "Điểm cuối: {{score}}",
   "cinematic.levelPrefix": "Màn",
   "cinematic.speedPrefix": "Tốc độ",
-  "seo.title": "Brikaya — arcade phá khối",
+  "seo.title": "Brikaya — arcade linh kiện mạch",
   "seo.description":
-    "Chơi Brikaya, trò arcade phá khối miễn phí trên trình duyệt, lưu tiến trình trên thiết bị và chơi ngoại tuyến sau lần truy cập đầu tiên.",
+    "Chơi Brikaya, trò arcade linh kiện mạch miễn phí trên trình duyệt, lưu tiến trình trên thiết bị và chơi ngoại tuyến sau lần truy cập đầu tiên.",
   "seo.ogDescription":
-    "Phá khối, vượt màn và chơi trong trình duyệt với tiến trình lưu trên thiết bị.",
+    "Gỡ linh kiện mạch, vượt màn và chơi trong trình duyệt với tiến trình lưu trên thiết bị.",
 };
 
 const FIL_MESSAGES: TranslationCatalog = {
@@ -1840,11 +1840,11 @@ const TH_MESSAGES: TranslationCatalog = {
   "status.finalScore": "คะแนนสุดท้าย: {{score}}",
   "cinematic.levelPrefix": "ด่าน",
   "cinematic.speedPrefix": "ความเร็ว",
-  "seo.title": "Brikaya — อาร์เคดทำลายบล็อก",
+  "seo.title": "Brikaya — อาร์เคดชิ้นส่วนวงจร",
   "seo.description":
-    "เล่น Brikaya เกมอาร์เคดทำลายบล็อกฟรีบนเบราว์เซอร์ บันทึกความคืบหน้าในอุปกรณ์และเล่นออฟไลน์ได้หลังเข้าใช้งานครั้งแรก",
+    "เล่น Brikaya เกมอาร์เคดชิ้นส่วนวงจรฟรีบนเบราว์เซอร์ บันทึกความคืบหน้าในอุปกรณ์และเล่นออฟไลน์ได้หลังเข้าใช้งานครั้งแรก",
   "seo.ogDescription":
-    "ทำลายบล็อก ผ่านด่าน และเล่นในเบราว์เซอร์พร้อมบันทึกความคืบหน้าไว้ในอุปกรณ์",
+    "เคลียร์ชิ้นส่วนวงจร ผ่านด่าน และเล่นในเบราว์เซอร์พร้อมบันทึกความคืบหน้าไว้ในอุปกรณ์",
 };
 
 const ZH_CN_MESSAGES: TranslationCatalog = {
