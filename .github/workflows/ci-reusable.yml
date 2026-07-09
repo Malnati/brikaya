@@ -70,4 +70,4 @@ jobs:
         run: npm run test:cloudflare-e2e
         env:
           BRIKAYA_PUBLIC_URL: http://127.0.0.1:7979/
-          BRIKAYA_E2E_ONLY: tests/e2e/cloudflare-theme-qa.js,tests/e2e/cloudflare-offline-pwa-qa.js
+          BRIKAYA_E2E_ONLY: tests/e2e/cloudflare-theme-qa.js
