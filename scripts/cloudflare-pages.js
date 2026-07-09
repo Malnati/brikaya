@@ -1118,18 +1118,7 @@ async function ensurePreviewDomain(envValues) {
 async function ensurePreviewDns(envValues) {
   validatePreviewEnvironment(envValues);
   const previewEnvValues = buildPreviewEnvValues(envValues);
-
-  try {
-    return await ensureDnsRecord(previewEnvValues);
-  } catch (error) {
-    if (!isCloudflareAuthenticationError(error)) {
-      throw error;
-    }
-
-    console.log(
-      `WARN preview DNS API sem permissão; mantendo domínio Pages ${previewEnvValues[CUSTOM_DOMAIN_KEY]}.`,
-    );
-  }
+  return ensureDnsRecord(previewEnvValues);
 }
 
 async function verifyPreviewIndex(envValues) {
