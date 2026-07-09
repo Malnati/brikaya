@@ -8,11 +8,11 @@ O domínio de desenvolvimento publicado é `https://dev.brikaya.com/`.
 
 | Evento | Workflow | Deploy |
 |--------|----------|--------|
-| `pull_request` | `ci` | não |
+| `pull_request` | `ci` (build + jest + e2e local) | não |
 | `push` em branch ≠ `main` | `deploy-preview` (`ci` + preview) | `https://dev.brikaya.com/` |
 | `push` em `main` | `deploy-production` (`ci` + produção) | `https://brikaya.com/` |
 
-O preview em `dev.brikaya.com` reflete o último **push** de branch não-main que passou no CI. PRs rodam apenas validação (`ci`) sem deploy.
+O preview em `dev.brikaya.com` reflete o último **push** de branch não-main que passou no CI (incluindo a suíte e2e em `ci-reusable`). PRs rodam apenas validação (`ci`) sem deploy.
 
 ## Comandos locais
 

@@ -30,7 +30,7 @@ KILL_PROCESSES=@echo "🔪 Encerrando processos anteriores..." && \
 # Target padrão: mostrar help quando make é executado sem argumentos
 .DEFAULT_GOAL := help
 
-.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes codex-env-check codex-env-bootstrap codex-env-materialize codex-env-register cloudflare-env-check cloudflare-build cloudflare-domain cloudflare-deploy cloudflare-deploy-preview cloudflare-preview-check cloudflare-purge-cache cloudflare-public-check cloudflare-mobile-qa cloudflare-orientation-lock-qa cloudflare-ball-turret-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-interlevel-google-ads-qa cloudflare-powerups-qa cloudflare-laser-powerup-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa cloudflare-offline-pwa-qa cloudflare-i18n-seo-qa cloudflare-reset-preferences-qa cloudflare-evasive-blocks-qa yandex-indexnow-dry-run yandex-indexnow-submit seznam-indexnow-dry-run seznam-indexnow-submit docker-build docker-up docker-down docker-logs docker-shell
+.PHONY: build dev preview clean help build-pwa prepare-capacitor ios android build-all kill-processes codex-env-check codex-env-bootstrap codex-env-materialize codex-env-register cloudflare-env-check cloudflare-build cloudflare-domain cloudflare-deploy cloudflare-deploy-preview cloudflare-preview-check cloudflare-purge-cache cloudflare-public-check cloudflare-e2e-qa cloudflare-mobile-qa cloudflare-orientation-lock-qa cloudflare-ball-turret-qa cloudflare-no-score-reset cloudflare-phase-transition-qa cloudflare-level-progression-qa cloudflare-interlevel-google-ads-qa cloudflare-powerups-qa cloudflare-laser-powerup-qa cloudflare-high-scores-qa cloudflare-cinematic-effects-qa cloudflare-phase10-stability-qa cloudflare-dashboard-layout-qa cloudflare-theme-qa cloudflare-svg-assets-qa cloudflare-runtime-update-qa cloudflare-audio-qa cloudflare-offline-pwa-qa cloudflare-i18n-seo-qa cloudflare-reset-preferences-qa cloudflare-evasive-blocks-qa yandex-indexnow-dry-run yandex-indexnow-submit seznam-indexnow-dry-run seznam-indexnow-submit docker-build docker-up docker-down docker-logs docker-shell
 
 # Função para matar processos anteriores
 kill-processes:
@@ -119,6 +119,10 @@ cloudflare-purge-cache: cloudflare-env-check
 cloudflare-public-check:
 	@node scripts/cloudflare-pages.js verify-public-index
 	@npm run test:trace-guard:public
+
+# Executar suíte completa e2e contra BRIKAYA_PUBLIC_URL (padrão: preview local)
+cloudflare-e2e-qa:
+	@npm run test:cloudflare-e2e
 
 # Validar layout, logs e estatísticas contra o app publicado no Cloudflare Pages
 cloudflare-mobile-qa:
@@ -352,6 +356,7 @@ help:
 	@echo "  cloudflare-preview-check - Validar índice publicado em dev.brikaya.com"
 	@echo "  cloudflare-purge-cache - Limpar cache público de brikaya.com sem alterar origem"
 	@echo "  cloudflare-public-check - Validar que brikaya.com serve o build local"
+	@echo "  cloudflare-e2e-qa - Executar suíte completa e2e (gate do CI; usar BRIKAYA_PUBLIC_URL)"
 	@echo "  cloudflare-mobile-qa - Testar mobile default/logs contra Cloudflare publicado"
 	@echo "  cloudflare-consent-scroll-qa - Validar rolagem do modal de consentimento em iPhone 14 Safari/Chrome"
 	@echo "  cloudflare-mobile-journey-qa - Jornada E2E mobile completa (consentimento, torreta, derrota, anúncio, colisões)"

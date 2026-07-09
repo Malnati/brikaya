@@ -2,8 +2,8 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
+import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
 
-import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
 import {
   PRIVACY_CONSENT_STORAGE_KEY,
   acceptPrivacyConsentIfPresent,
@@ -13,8 +13,6 @@ const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-consent-screen-qa.json";
 const DEFAULT_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-consent-screen-qa.png";
-const CHROME_EXECUTABLE_PATH =
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const VIEWPORT = {
   width: 393,
   height: 852,
@@ -172,11 +170,7 @@ async function collectConsentState(page) {
 
 async function run() {
   const targetUrl = publicUrl();
-  const browser = await puppeteer.launch({
-    headless: "new",
-    executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs(["--no-sandbox", "--disable-setuid-sandbox"]),
-  });
+  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"] }));
   const page = await browser.newPage();
   const requests = [];
   const failedRequests = [];

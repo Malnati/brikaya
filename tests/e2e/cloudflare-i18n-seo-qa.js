@@ -4,15 +4,15 @@ import { tmpdir } from "node:os";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
-import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
+import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
+import { canonicalOrigin } from "./publicQaEnv.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH =
   "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-public-validation.json";
 const DEFAULT_SCREENSHOT_PATH =
   "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-localized-menu.png";
-const CHROME_EXECUTABLE_PATH =
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const USER_DATA_DIR_PREFIX = "brikaya-i18n-seo-qa-";
 const BROWSER_CLOSE_TIMEOUT_MS = 5000;
 const PAGE_TIMEOUT_MS = 20000;
@@ -759,7 +759,7 @@ const PRE_GAME_ACCEPT_BUTTON_LABEL = "Aceitar e jogar";
 const MENU_OPEN_ATTEMPTS = 3;
 const MENU_OPEN_RETRY_TIMEOUT_MS = 5000;
 const CHINESE_MENU_TEXT = "隐私";
-const ROOT_CANONICAL = "https://brikaya.com/";
+const ROOT_CANONICAL = canonicalOrigin();
 const RTL_LOCALES = new Set(["ar", "ur", "fa", "he", "ps", "sd", "ks", "dv", "ckb", "ug", "yi", "bal", "ar-SA", "ar-EG", "fa-AF", "ps-AF", "sd-IN", "ks-IN", "ug-CN", "yi-001"]);
 const BROWSER_AUTO_LANGUAGE = "es-MX";
 const BROWSER_AUTO_LANGUAGES = ["es-MX", "en-US"];
@@ -1099,12 +1099,9 @@ async function openMenuAndWaitForLanguageSelector(page) {
 
 async function validateRuntimeLanguageSwitch(baseUrl, outputScreenshotPath) {
   const userDataDir = mkdtempSync(`${tmpdir()}/${USER_DATA_DIR_PREFIX}`);
-  const browser = await puppeteer.launch({
-    headless: "new",
-    executablePath: CHROME_EXECUTABLE_PATH,
-    userDataDir,
-    args: buildChromeLaunchArgs(["--no-sandbox", "--disable-setuid-sandbox"]),
-  });
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({ userDataDir }),
+  );
 
   try {
     const page = await browser.newPage();
@@ -1187,12 +1184,9 @@ async function validateRuntimeLanguageSwitch(baseUrl, outputScreenshotPath) {
 
 async function validateRuntimeBrowserLocale(baseUrl) {
   const userDataDir = mkdtempSync(`${tmpdir()}/${USER_DATA_DIR_PREFIX}`);
-  const browser = await puppeteer.launch({
-    headless: "new",
-    executablePath: CHROME_EXECUTABLE_PATH,
-    userDataDir,
-    args: buildChromeLaunchArgs(["--no-sandbox", "--disable-setuid-sandbox"]),
-  });
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({ userDataDir }),
+  );
 
   try {
     const page = await browser.newPage();
@@ -1263,12 +1257,9 @@ async function validateRuntimeBrowserLocale(baseUrl) {
 
 async function validateRuntimeTimeZoneLocale(baseUrl) {
   const userDataDir = mkdtempSync(`${tmpdir()}/${USER_DATA_DIR_PREFIX}`);
-  const browser = await puppeteer.launch({
-    headless: "new",
-    executablePath: CHROME_EXECUTABLE_PATH,
-    userDataDir,
-    args: buildChromeLaunchArgs(["--no-sandbox", "--disable-setuid-sandbox"]),
-  });
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({ userDataDir }),
+  );
 
   try {
     const page = await browser.newPage();

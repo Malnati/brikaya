@@ -3,8 +3,9 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import puppeteer from 'puppeteer';
 
-import { buildChromeLaunchArgs } from './chromeLaunchArgs.js';
+import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
 import { seedPrivacyConsent } from './consentHelpers.js';
+import { assertAllowedQaHostname } from './publicQaEnv.js';
 
 const DEFAULT_PUBLIC_URL = 'https://brikaya.com/';
 const DEFAULT_REPORT_PATH =
@@ -17,7 +18,6 @@ const DEFAULT_LEVEL_UP_SCREENSHOT_PATH =
   'docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-level-up.png';
 const DEFAULT_RIP_SCREENSHOT_PATH =
   'docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-rip.png';
-const CHROME_EXECUTABLE_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const RESPONSIVE_VIEWPORT_MATRIX_PATH = new URL(
   './responsiveViewportMatrix.json',
   import.meta.url,
@@ -68,7 +68,6 @@ const REQUIRED_CINEMATIC_MEDIA_PATHS = [
 const ASSET_MANIFEST_PATH = '/asset-cache-manifest.json';
 const ASSET_HASH_SEARCH_PARAM = 'bbAssetHash';
 const MEDIA_EXTENSION_PATTERN = /\.(gif|jpe?g|mp3|mp4|ogg|png|webm|webp|wav)(\?|$)/i;
-const CANONICAL_HOST = 'brikaya.com';
 const MAX_STAGE_OFFSET_PX = 3;
 const MAX_MEDIA_CENTER_OFFSET_PX = 4;
 const MAX_MEDIA_OVERFLOW_PX = 2;
@@ -630,7 +629,7 @@ async function waitForCachedCinematicPaths(page) {
 async function run() {
   const publicUrl = env('BRIKAYA_PUBLIC_URL', DEFAULT_PUBLIC_URL);
   const parsed = new URL(publicUrl);
-  assert(parsed.hostname === CANONICAL_HOST, `URL precisa ser brikaya.com: ${publicUrl}`);
+  assertAllowedQaHostname(publicUrl);
 
   const reportPath = env('BRIKAYA_CINEMATIC_QA_REPORT', DEFAULT_REPORT_PATH);
   const countdownScreenshotPath = env(
@@ -665,11 +664,7 @@ async function run() {
   const externalAudioRequests = [];
   const externalMediaRequests = [];
   const consoleProblems = [];
-  const browser = await puppeteer.launch({
-    headless: 'new',
-    executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs(['--no-first-run', '--no-default-browser-check']),
-  });
+  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: ['--no-first-run', '--no-default-browser-check'] }));
 
   try {
     const attachDiagnostics = (targetPage) => {

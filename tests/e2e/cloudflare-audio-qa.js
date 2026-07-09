@@ -3,13 +3,13 @@ import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import puppeteer from 'puppeteer';
 
-import { buildChromeLaunchArgs } from './chromeLaunchArgs.js';
+import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
 import { acceptPrivacyConsentIfPresent } from './consentHelpers.js';
+import { assertAllowedQaHostname } from './publicQaEnv.js';
 
 const DEFAULT_PUBLIC_URL = 'https://brikaya.com/';
 const DEFAULT_REPORT_PATH = 'tmp/reports/cloudflare-audio-qa.json';
 const DEFAULT_SCREENSHOT_PATH = 'docs/assets/issues/audio-cc0-integration/evidence/evi-audio-cc0-integration-cloudflare-audio-control.png';
-const CHROME_EXECUTABLE_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const BROWSER_CLOSE_TIMEOUT_MS = 5000;
 const AUDIO_EVENT_IDS_PATTERN = /export const AUDIO_EVENT_IDS = (\[[\s\S]*?\]) as const;/;
 const AUDIO_CATALOG_START = 'export const AUDIO_CATALOG = ';
@@ -346,7 +346,7 @@ async function run() {
   const publicUrl = env('BRIKAYA_PUBLIC_URL', DEFAULT_PUBLIC_URL);
   const targetUrl = scenarioUrl(publicUrl);
   const parsed = new URL(publicUrl);
-  assert(parsed.hostname === 'brikaya.com', `URL precisa ser brikaya.com: ${publicUrl}`);
+  assertAllowedQaHostname(publicUrl);
 
   const reportPath = env('BRIKAYA_AUDIO_QA_REPORT', DEFAULT_REPORT_PATH);
   const screenshotPath = env('BRIKAYA_AUDIO_QA_SCREENSHOT', DEFAULT_SCREENSHOT_PATH);
@@ -360,11 +360,7 @@ async function run() {
   const externalAudioRequests = [];
   const sameOriginAudioRequests = [];
 
-  const browser = await puppeteer.launch({
-    headless: 'new',
-    executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs(['--no-sandbox', '--disable-setuid-sandbox']),
-  });
+  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: ['--no-sandbox', '--disable-setuid-sandbox'] }));
 
   try {
     const viewportResults = [];

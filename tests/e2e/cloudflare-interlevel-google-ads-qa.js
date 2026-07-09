@@ -2,16 +2,15 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
+import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
 
-import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
+import { assertAllowedQaHostname } from "./publicQaEnv.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-interlevel-google-ads.json";
 const DEFAULT_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-interlevel-google-ads.png";
-const CHROME_EXECUTABLE_PATH =
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const VIEWPORT = {
   width: 393,
   height: 852,
@@ -520,14 +519,10 @@ async function run() {
   ensureParentDirectory(screenshotPath());
 
   const parsed = new URL(targetUrl);
-  assert(parsed.hostname === "brikaya.com", `URL precisa ser brikaya.com: ${targetUrl}`);
+  assertAllowedQaHostname(targetUrl);
 
   const consoleProblems = [];
-  const browser = await puppeteer.launch({
-    headless: "new",
-    executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs(["--no-first-run", "--no-default-browser-check"]),
-  });
+  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: ["--no-first-run", "--no-default-browser-check"] }));
 
   try {
     const report = {

@@ -2,7 +2,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
-import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
@@ -18,8 +18,6 @@ const DEFAULT_MENU_SCREENSHOT_PATH =
   "docs/assets/issues/ball-turret-mode/evidence/evi-ball-turret-menu.png";
 const DEFAULT_DIAGNOSTIC_SCREENSHOT_PATH =
   "docs/assets/issues/joystick-diagnostic-log/evidence/evi-joystick-diagnostic-mobile.png";
-const CHROME_EXECUTABLE_PATH =
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const QA_SCENARIO = "ball-turret";
 const MENU_BUTTON_PATTERN = /menu/i;
 const CLOSE_MENU_PATTERN = /fechar menu|close menu/i;
@@ -2216,11 +2214,7 @@ async function runViewport(page, baseUrl, config) {
 
 async function run() {
   const baseUrl = publicUrl();
-  const browser = await puppeteer.launch({
-    executablePath: CHROME_EXECUTABLE_PATH,
-    headless: "new",
-    args: buildChromeLaunchArgs([]),
-  });
+  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions());
   const results = [];
 
   try {

@@ -3,14 +3,13 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import puppeteer from 'puppeteer';
 
-import { buildChromeLaunchArgs } from './chromeLaunchArgs.js';
+import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
 import { classifyExternalRequests } from './allowed-external-requests.js';
 import { acceptPrivacyConsentIfPresent } from './consentHelpers.js';
 
 const DEFAULT_PUBLIC_URL = 'https://brikaya.com/';
 const DEFAULT_REPORT_PATH = 'tmp/reports/cloudflare-svg-assets-qa.json';
 const DEFAULT_SCREENSHOT_PATH = 'tmp/screenshots/cloudflare-svg-assets-qa.png';
-const CHROME_EXECUTABLE_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const VIEWPORT = { width: 393, height: 852, deviceScaleFactor: 3, isMobile: true, hasTouch: true };
 const VISUAL_ASSET_SOURCE_PATH = 'src/constants/visualAssets.ts';
 const RUNTIME_SVG_PATTERN = /['"`]((?:\/assets\/visual\/)[^'"`]+\.svg)['"`]/g;
@@ -163,11 +162,7 @@ async function readCacheState(page) {
 }
 
 async function run() {
-  const browser = await puppeteer.launch({
-    headless: 'new',
-    executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs(['--no-sandbox', '--disable-setuid-sandbox']),
-  });
+  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: ['--no-sandbox', '--disable-setuid-sandbox'] }));
   const page = await browser.newPage();
   const requests = [];
   const failedRequests = [];

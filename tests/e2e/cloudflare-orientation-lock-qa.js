@@ -2,8 +2,8 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
+import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
 
-import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
@@ -13,8 +13,6 @@ const RESPONSIVE_VIEWPORT_MATRIX_PATH = new URL(
   "./responsiveViewportMatrix.json",
   import.meta.url,
 );
-const CHROME_EXECUTABLE_PATH =
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const CHROME_LOW_RESOURCE_ARGS = [
   "--disable-background-networking",
   "--disable-background-timer-throttling",
@@ -108,15 +106,11 @@ function withQuery(targetUrl, params = {}) {
 }
 
 function launchQaBrowser() {
-  return puppeteer.launch({
-    headless: "new",
-    executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs([
+  return puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: [
       "--no-first-run",
       "--no-default-browser-check",
       ...CHROME_LOW_RESOURCE_ARGS,
-    ]),
-  });
+    ] }));
 }
 
 async function closeBrowser(browser) {

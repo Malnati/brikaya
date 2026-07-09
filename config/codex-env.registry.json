@@ -435,6 +435,26 @@
       ]
     },
     {
+      "name": "BRIKAYA_E2E_ONLY",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm run test:cloudflare-e2e",
+        "make cloudflare-e2e-qa"
+      ]
+    },
+    {
+      "name": "BRIKAYA_E2E_SKIP",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm run test:cloudflare-e2e",
+        "make cloudflare-e2e-qa"
+      ]
+    },
+    {
       "name": "BRIKAYA_RUNTIME_UPDATE_MODE",
       "classification": "public-config",
       "required": false,

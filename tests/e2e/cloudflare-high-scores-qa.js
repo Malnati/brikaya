@@ -2,15 +2,13 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
+import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
 
-import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-high-scores-qa.json";
 const DEFAULT_SCREENSHOT_PATH = "tmp/screenshots/cloudflare-high-scores-qa.png";
-const CHROME_EXECUTABLE_PATH =
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const QA_SCENARIO_PARAM_NAME = "qaScenario";
 const STABLE_QA_SCENARIO = "late-phase-stability";
 const IPHONE_15_VIEWPORT = {
@@ -226,11 +224,7 @@ async function run() {
   const screenshotFilePath = getScreenshotPath();
   const requests = [];
   const consoleProblems = [];
-  const browser = await puppeteer.launch({
-    headless: "new",
-    executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs(["--no-sandbox", "--disable-setuid-sandbox"]),
-  });
+  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"] }));
 
   try {
     const page = await browser.newPage();

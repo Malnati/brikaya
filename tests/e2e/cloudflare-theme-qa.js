@@ -3,7 +3,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import puppeteer from "puppeteer";
 
-import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
@@ -12,8 +12,6 @@ const DEFAULT_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-theme-fixed-default.png";
 const DEFAULT_MENU_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-theme-fixed-default-menu.png";
-const CHROME_EXECUTABLE_PATH =
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const THEME_STORAGE_KEY = "brikaya-theme";
 const THEME_MODE_STORAGE_KEY = "brikaya-theme-mode";
 const IMAGE_SET_STORAGE_KEY = "brikaya-image-set";
@@ -156,11 +154,7 @@ async function main() {
   ensureParentDirectory(screenshotPath);
   ensureParentDirectory(menuScreenshotPath);
 
-  const browser = await puppeteer.launch({
-    executablePath: CHROME_EXECUTABLE_PATH,
-    headless: "new",
-    args: buildChromeLaunchArgs(),
-  });
+  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions());
 
   try {
     const page = await browser.newPage();

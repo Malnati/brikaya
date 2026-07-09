@@ -2,16 +2,15 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
+import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
 
-import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
+import { assertAllowedQaHostname } from "./publicQaEnv.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-metal-blocks-qa.json";
 const DEFAULT_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-metal-blocks-qa.png";
-const CHROME_EXECUTABLE_PATH =
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const CHROME_LOW_RESOURCE_ARGS = [
   "--disable-background-networking",
   "--disable-background-timer-throttling",
@@ -41,7 +40,6 @@ const MAX_WAIT_FOR_METAL_BLOCK_MS = 45000;
 const POST_DESTROY_SETTLE_MS = 500;
 const MIN_DISTINCT_TOUCH_INTERVAL_MS = 100;
 const EXPECTED_QA_SCENARIO = "metal-block";
-const EXPECTED_PUBLIC_HOSTNAME = "brikaya.com";
 const EVENT_GAME_START = "game_start";
 const EVENT_COLLISION = "collision";
 const EVENT_BRICK_DESTROYED = "brick_destroyed";
@@ -347,21 +345,14 @@ async function run() {
   ensureParentDirectory(outScreenshot);
 
   const parsed = new URL(targetUrl);
-  assert(
-    parsed.hostname === EXPECTED_PUBLIC_HOSTNAME,
-    `URL precisa ser ${EXPECTED_PUBLIC_HOSTNAME}: ${targetUrl}`,
-  );
+  assertAllowedQaHostname(targetUrl);
 
   const consoleProblems = [];
-  const browser = await puppeteer.launch({
-    headless: "new",
-    executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs([
+  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ extraArgs: [
       "--no-first-run",
       "--no-default-browser-check",
       ...CHROME_LOW_RESOURCE_ARGS,
-    ]),
-  });
+    ] }));
 
   try {
     const page = await browser.newPage();

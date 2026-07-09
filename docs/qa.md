@@ -10,7 +10,24 @@ npm run test:semantic-file-names
 npm run test:svg-assets
 npm run test:visual-asset-policy
 npm run build
+npm test
 ```
+
+## Suíte e2e no CI
+
+O workflow `ci-reusable` executa `npm run test:cloudflare-e2e` contra o `dist/` servido em `http://127.0.0.1:7979/` antes de qualquer deploy (`deploy-preview` e `deploy-production` dependem de `needs: ci`).
+
+Replicação local:
+
+```bash
+npm run build
+npm run preview -- --host 127.0.0.1 --port 7979 &
+BRIKAYA_PUBLIC_URL=http://127.0.0.1:7979/ npm run test:cloudflare-e2e
+```
+
+Atalho: `make cloudflare-e2e-qa` (requer `BRIKAYA_PUBLIC_URL` quando o alvo não for o padrão de produção).
+
+Variáveis opcionais para depuração: `BRIKAYA_E2E_ONLY` e `BRIKAYA_E2E_SKIP` (lista separada por vírgula de caminhos em `tests/e2e/`).
 
 ## Validação publicada
 

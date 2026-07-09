@@ -2,9 +2,10 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
+import { buildPuppeteerLaunchOptions } from './browserLauncher.js';
 
-import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
+import { assertAllowedQaHostname } from "./publicQaEnv.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_MODE = "verify";
@@ -12,8 +13,6 @@ const DEFAULT_PROFILE_DIR = "tmp/browser-profiles/cloudflare-runtime-update";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-runtime-update-qa.json";
 const DEFAULT_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-runtime-update-qa.png";
-const CHROME_EXECUTABLE_PATH =
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const MODE_ENV_KEY = "BRIKAYA_RUNTIME_UPDATE_MODE";
 const PROFILE_ENV_KEY = "BRIKAYA_RUNTIME_UPDATE_PROFILE";
 const REPORT_ENV_KEY = "BRIKAYA_RUNTIME_UPDATE_REPORT";
@@ -53,7 +52,6 @@ const LAZY_ASSET_PROBE_PATHS = [
 ];
 const ASSET_CACHE_STATUS_HEADER = "x-brikaya-asset-cache";
 const ASSET_CACHE_MISS_STATUS = "miss";
-const CANONICAL_HOSTNAME = "brikaya.com";
 const UPDATE_PROGRESS_TEXT = "Atualizando jogo";
 const UPDATE_INSTALLED_PATTERN = /Versão v\d+ instalada/;
 const DEFAULT_UPDATE_UI_STATE = Object.freeze({
@@ -92,11 +90,7 @@ function publicUrl() {
 }
 
 function assertCanonicalUrl(targetUrl) {
-  const parsedUrl = new URL(targetUrl);
-  assert(
-    parsedUrl.hostname === CANONICAL_HOSTNAME,
-    `QA runtime update deve usar somente https://${CANONICAL_HOSTNAME}/.`,
-  );
+  assertAllowedQaHostname(targetUrl);
 }
 
 function mode() {
@@ -443,12 +437,7 @@ async function run() {
 
   const targetUrl = publicUrl();
   assertCanonicalUrl(targetUrl);
-  const browser = await puppeteer.launch({
-    headless: "new",
-    executablePath: CHROME_EXECUTABLE_PATH,
-    userDataDir: profileDir(),
-    args: buildChromeLaunchArgs(["--no-sandbox", "--disable-setuid-sandbox"]),
-  });
+  const browser = await puppeteer.launch(buildPuppeteerLaunchOptions({ userDataDir: profileDir(), extraArgs: ["--no-sandbox", "--disable-setuid-sandbox"] }));
   const page = await browser.newPage();
   const consoleProblems = [];
   const navigationEvents = [];

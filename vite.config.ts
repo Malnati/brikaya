@@ -17,6 +17,10 @@ export default defineConfig({
     port: 7979,
     strictPort: true,
   },
+  preview: {
+    port: 7979,
+    strictPort: true,
+  },
   build: {
     outDir: 'dist',
     rollupOptions: {

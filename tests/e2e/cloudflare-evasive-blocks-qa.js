@@ -3,15 +3,14 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 
-import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
+import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
+import { isAllowedQaHostname } from "./publicQaEnv.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-evasive-blocks-qa.json";
 const DEFAULT_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-evasive-blocks-qa.png";
-const CHROME_EXECUTABLE_PATH =
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const CHROME_LOW_RESOURCE_ARGS = [
   "--disable-background-networking",
   "--disable-background-timer-throttling",
@@ -37,8 +36,6 @@ const GAME_LOG_DB_NAME = "BrikayaGameLog";
 const GAME_LOG_STORE_NAME = "gameEvents";
 const GAME_LOG_DB_VERSION = 2;
 const EXPECTED_QA_SCENARIO = "evasive-blocks";
-const EXPECTED_HOSTNAME = "brikaya.com";
-const PAGES_PREVIEW_HOST_SUFFIX = ".pages.dev";
 const EVENT_GAME_START = "game_start";
 const EVENT_COLLISION = "collision";
 const EVENT_BRICK_DESTROYED = "brick_destroyed";
@@ -91,10 +88,7 @@ function withQaScenario(url) {
 }
 
 function isAllowedPublishedHost(hostname) {
-  return (
-    hostname === EXPECTED_HOSTNAME ||
-    hostname.endsWith(PAGES_PREVIEW_HOST_SUFFIX)
-  );
+  return isAllowedQaHostname(hostname);
 }
 
 async function clearOriginState(page, origin) {
@@ -295,11 +289,9 @@ async function waitForEvasiveScenarioCompletion(page) {
 }
 
 async function main() {
-  const browser = await puppeteer.launch({
-    headless: "new",
-    executablePath: CHROME_EXECUTABLE_PATH,
-    args: buildChromeLaunchArgs(CHROME_LOW_RESOURCE_ARGS),
-  });
+  const browser = await puppeteer.launch(
+    buildPuppeteerLaunchOptions({ extraArgs: CHROME_LOW_RESOURCE_ARGS }),
+  );
   const page = await browser.newPage();
   const pageUrl = withQaScenario(publicUrl());
   const origin = new URL(pageUrl).origin;
