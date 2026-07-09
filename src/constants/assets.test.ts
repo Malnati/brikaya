@@ -1,35 +1,35 @@
 // src/constants/assets.test.ts
-import { ASSET_PATHS, BRICK_COLORS, RUNTIME_IMAGE_ASSET_PATHS } from "./assets";
+import { ASSET_PATHS, COMPONENT_COLORS, RUNTIME_IMAGE_ASSET_PATHS } from "./assets";
 import {
   sprBallPlayerDefault,
-  sprBrickBasicBlueNormal,
-  sprBrickBasicGreenNormal,
-  sprBrickBasicPurpleNormal,
-  sprBrickMetalSteelNormal,
-  sprBrickBasicRedNormal,
-  sprBrickBasicYellowNormal,
+  sprComponentBasicBlueNormal,
+  sprComponentBasicGreenNormal,
+  sprComponentBasicPurpleNormal,
+  sprComponentMetalSteelNormal,
+  sprComponentBasicRedNormal,
+  sprComponentBasicYellowNormal,
   sprPaddlePlayerDefault,
 } from "./visualAssets";
 
 const EXPECTED_RUNTIME_ASSETS = [
   sprBallPlayerDefault,
   sprPaddlePlayerDefault,
-  sprBrickBasicRedNormal,
-  sprBrickBasicBlueNormal,
-  sprBrickBasicGreenNormal,
-  sprBrickBasicYellowNormal,
-  sprBrickBasicPurpleNormal,
-  sprBrickMetalSteelNormal,
+  sprComponentBasicRedNormal,
+  sprComponentBasicBlueNormal,
+  sprComponentBasicGreenNormal,
+  sprComponentBasicYellowNormal,
+  sprComponentBasicPurpleNormal,
+  sprComponentMetalSteelNormal,
 ] as const;
 
 const VISUAL_ASSET_PREFIX = "/assets/visual/";
 const SVG_EXTENSION = ".svg";
 
 describe("runtime game assets", () => {
-  it("usa somente SVGs locais nomeados semanticamente para bola, raquete e tijolos", () => {
+  it("usa somente SVGs locais nomeados semanticamente para bola, raquete e componentes", () => {
     expect(Object.values(ASSET_PATHS)).toEqual(EXPECTED_RUNTIME_ASSETS);
     expect(RUNTIME_IMAGE_ASSET_PATHS).toEqual(EXPECTED_RUNTIME_ASSETS);
-    expect(BRICK_COLORS).toEqual(EXPECTED_RUNTIME_ASSETS.slice(2, 7));
+    expect(COMPONENT_COLORS).toEqual(EXPECTED_RUNTIME_ASSETS.slice(2, 7));
 
     for (const assetPath of RUNTIME_IMAGE_ASSET_PATHS) {
       expect(assetPath).toMatch(new RegExp(`^${VISUAL_ASSET_PREFIX}`));

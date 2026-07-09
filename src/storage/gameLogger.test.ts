@@ -4,13 +4,13 @@ import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals
 
 const BASE_SPEED_STATE = {
   level: 1,
-  initialBrickCount: 40,
-  successfulBrickHits: 0,
+  initialComponentCount: 40,
+  successfulComponentHits: 0,
   initialSpawnSpeed: 12,
   maxSpeed: 12,
   minSpeed: 3,
   currentSpeed: 12,
-  reductionPerBrick: 0.3,
+  reductionPerComponent: 0.3,
   previousLevelMaxSpeed: 12,
   levelStartedAt: 1_782_870_000_000,
   elapsedLevelMs: 0,
@@ -21,16 +21,16 @@ function buildGameState(overrides: Record<string, any> = {}) {
   return {
     score: 0,
     ballsCount: 1,
-    bricksRemaining: 40,
+    componentsRemaining: 40,
     gameWon: false,
     gameOver: false,
     level: 1,
     canvasSize: { width: 800, height: 600 },
     gameDimensions: {
-      brickWidth: 60,
-      brickHeight: 20,
-      brickCols: 8,
-      brickRows: 5,
+      componentWidth: 60,
+      componentHeight: 20,
+      componentCols: 8,
+      componentRows: 5,
       paddleWidth: 80,
       paddleHeight: 10,
       ballRadius: 5,
@@ -177,7 +177,7 @@ describe('GameLogger', () => {
     it('deve registrar início de jogo', async () => {
       // Garantir que o DB está mockado
       (gameLogger as any).db = mockIndexedDB.mockDB;
-      const gameState = buildGameState({ bricksRemaining: 50 });
+      const gameState = buildGameState({ componentsRemaining: 50 });
       const ballPositions = buildBallPositions();
       const paddlePosition = buildPaddlePosition();
 
@@ -196,9 +196,9 @@ describe('GameLogger', () => {
       (gameLogger as any).db = mockIndexedDB.mockDB;
       const gameState = buildGameState({
         score: 100,
-        bricksRemaining: 45,
+        componentsRemaining: 45,
         speedState: {
-          successfulBrickHits: 1,
+          successfulComponentHits: 1,
           currentSpeed: 11.7,
           elapsedLevelMs: 320,
         },
@@ -222,7 +222,7 @@ describe('GameLogger', () => {
         ballPositions,
         paddlePosition,
         10,
-        'brick_destroyed',
+        'component_destroyed',
         speedReduction
       );
 
@@ -251,7 +251,7 @@ describe('GameLogger', () => {
         type: 'paddle',
         ballPosition: { x: 400, y: 300 },
       });
-      await gameLogger.logBrickDestroyed(
+      await gameLogger.logComponentDestroyed(
         gameState,
         ballPositions,
         paddlePosition,
@@ -273,25 +273,25 @@ describe('GameLogger', () => {
 
       const gameState = buildGameState({
         score: 150,
-        bricksRemaining: 0,
+        componentsRemaining: 0,
         canvasSize: { width: 393, height: 852 },
         gameDimensions: {
-          brickWidth: 60,
-          brickHeight: 20,
-          brickCols: 1,
-          brickRows: 1,
+          componentWidth: 60,
+          componentHeight: 20,
+          componentCols: 1,
+          componentRows: 1,
           paddleWidth: 80,
           paddleHeight: 10,
           ballRadius: 5,
         },
         speedState: {
           level: 1,
-          initialBrickCount: 1,
-          successfulBrickHits: 1,
+          initialComponentCount: 1,
+          successfulComponentHits: 1,
           maxSpeed: 1.232,
           minSpeed: 0.616,
           currentSpeed: 0.616,
-          reductionPerBrick: 1.232,
+          reductionPerComponent: 1.232,
           previousLevelMaxSpeed: 1.232,
           elapsedLevelMs: 1800,
           minReached: true,
@@ -305,8 +305,8 @@ describe('GameLogger', () => {
       await gameLogger.logLevelComplete(gameState, ballPositions, paddlePosition, 1, 2, 1.12, 1800, {
         nextMaxSpeed: 1.38,
         nextMinSpeed: 0.616,
-        nextReductionPerBrick: 0.1725,
-        nextInitialBrickCount: 8,
+        nextReductionPerComponent: 0.1725,
+        nextInitialComponentCount: 8,
       });
       await gameLogger.logLevelStart(
         buildGameState({
@@ -315,12 +315,12 @@ describe('GameLogger', () => {
           speedState: {
             ...gameState.speedState,
             level: 2,
-            initialBrickCount: 8,
-            successfulBrickHits: 0,
+            initialComponentCount: 8,
+            successfulComponentHits: 0,
             maxSpeed: 1.38,
             minSpeed: 0.616,
             currentSpeed: 1.38,
-            reductionPerBrick: 0.1725,
+            reductionPerComponent: 0.1725,
             previousLevelMaxSpeed: 1.232,
             elapsedLevelMs: 0,
             minReached: false,
@@ -342,8 +342,8 @@ describe('GameLogger', () => {
         speedState: gameState.speedState,
         nextMaxSpeed: 1.38,
         nextMinSpeed: 0.616,
-        nextReductionPerBrick: 0.1725,
-        nextInitialBrickCount: 8,
+        nextReductionPerComponent: 0.1725,
+        nextInitialComponentCount: 8,
       });
       expect(events[1].metadata).toMatchObject({
         level: 2,
@@ -367,7 +367,7 @@ describe('GameLogger', () => {
       (gameLogger as any).db = mockIndexedDB.mockDB;
       const gameState = buildGameState({
         score: 100,
-        bricksRemaining: 45,
+        componentsRemaining: 45,
       });
       const ballPositions = buildBallPositions();
       const paddlePosition = buildPaddlePosition();
@@ -432,7 +432,7 @@ describe('GameLogger', () => {
           metadata: {
             reason: 'lose',
             gameDuration: 4000,
-            totalBricksDestroyed: 6,
+            totalComponentsDestroyed: 6,
           },
         },
         {
@@ -442,7 +442,7 @@ describe('GameLogger', () => {
           gameState: buildGameState({
             score: 10,
             speedState: {
-              successfulBrickHits: 1,
+              successfulComponentHits: 1,
               currentSpeed: 11.7,
             },
           }),
@@ -469,7 +469,7 @@ describe('GameLogger', () => {
           gameState: buildGameState({
             score: 20,
             speedState: {
-              successfulBrickHits: 2,
+              successfulComponentHits: 2,
               currentSpeed: 3,
               minReached: true,
             },

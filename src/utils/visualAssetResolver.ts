@@ -15,14 +15,14 @@ import { VISUAL_ASSET_PATHS } from "../constants/visualAssets";
 export const GAME_VISUAL_ASSET_ROLES = {
   ball: "ball",
   paddle: "paddle",
-  brickRed: "brickRed",
-  brickBlue: "brickBlue",
-  brickGreen: "brickGreen",
-  brickYellow: "brickYellow",
-  brickPurple: "brickPurple",
-  brickMetalIntact: "brickMetalIntact",
-  brickMetalDentedOne: "brickMetalDentedOne",
-  brickMetalDentedTwo: "brickMetalDentedTwo",
+  componentRed: "componentRed",
+  componentBlue: "componentBlue",
+  componentGreen: "componentGreen",
+  componentYellow: "componentYellow",
+  componentPurple: "componentPurple",
+  componentMetalIntact: "componentMetalIntact",
+  componentMetalDentedOne: "componentMetalDentedOne",
+  componentMetalDentedTwo: "componentMetalDentedTwo",
   powerupMultiball: "powerupMultiball",
   powerupWidePaddle: "powerupWidePaddle",
   powerupSlowBall: "powerupSlowBall",
@@ -47,16 +47,16 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
   [IMAGE_SET_RETRO_DEFAULT]: {
     [GAME_VISUAL_ASSET_ROLES.ball]: "sprBallPlayerDefault",
     [GAME_VISUAL_ASSET_ROLES.paddle]: "sprPaddlePlayerDefault",
-    [GAME_VISUAL_ASSET_ROLES.brickRed]: "sprBrickBasicRedNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickBlue]: "sprBrickBasicBlueNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickGreen]: "sprBrickBasicGreenNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickYellow]: "sprBrickBasicYellowNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickPurple]: "sprBrickBasicPurpleNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalIntact]: "sprBrickMetalSteelNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne]:
-      "sprBrickMetalSteelDentedOne",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalDentedTwo]:
-      "sprBrickMetalSteelDentedTwo",
+    [GAME_VISUAL_ASSET_ROLES.componentRed]: "sprComponentBasicRedNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentBlue]: "sprComponentBasicBlueNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentGreen]: "sprComponentBasicGreenNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentYellow]: "sprComponentBasicYellowNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentPurple]: "sprComponentBasicPurpleNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalIntact]: "sprComponentMetalSteelNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalDentedOne]:
+      "sprComponentMetalSteelDentedOne",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalDentedTwo]:
+      "sprComponentMetalSteelDentedTwo",
     [GAME_VISUAL_ASSET_ROLES.powerupMultiball]: "sprPowerupMultiballOrb",
     [GAME_VISUAL_ASSET_ROLES.powerupWidePaddle]: "sprPowerupWidePaddle",
     [GAME_VISUAL_ASSET_ROLES.powerupSlowBall]: "sprPowerupSlowBall",
@@ -73,20 +73,20 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
   [IMAGE_SET_HIGH_CONTRAST]: {
     [GAME_VISUAL_ASSET_ROLES.ball]: "sprBallPlayerHighContrastDefault",
     [GAME_VISUAL_ASSET_ROLES.paddle]: "sprPaddlePlayerHighContrastDefault",
-    [GAME_VISUAL_ASSET_ROLES.brickRed]: "sprBrickBasicRedHighContrastNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickBlue]: "sprBrickBasicBlueHighContrastNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickGreen]:
-      "sprBrickBasicGreenHighContrastNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickYellow]:
-      "sprBrickBasicYellowHighContrastNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickPurple]:
-      "sprBrickBasicPurpleHighContrastNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalIntact]:
-      "sprBrickMetalSteelHighContrastNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne]:
-      "sprBrickMetalSteelHighContrastDentedOne",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalDentedTwo]:
-      "sprBrickMetalSteelHighContrastDentedTwo",
+    [GAME_VISUAL_ASSET_ROLES.componentRed]: "sprComponentBasicRedHighContrastNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentBlue]: "sprComponentBasicBlueHighContrastNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentGreen]:
+      "sprComponentBasicGreenHighContrastNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentYellow]:
+      "sprComponentBasicYellowHighContrastNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentPurple]:
+      "sprComponentBasicPurpleHighContrastNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalIntact]:
+      "sprComponentMetalSteelHighContrastNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalDentedOne]:
+      "sprComponentMetalSteelHighContrastDentedOne",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalDentedTwo]:
+      "sprComponentMetalSteelHighContrastDentedTwo",
     [GAME_VISUAL_ASSET_ROLES.powerupMultiball]:
       "sprPowerupMultiballOrbHighContrast",
     [GAME_VISUAL_ASSET_ROLES.powerupWidePaddle]:
@@ -109,17 +109,17 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
   [IMAGE_SET_SUNSET_CABINET]: {
     [GAME_VISUAL_ASSET_ROLES.ball]: "sprBallPlayerSunsetDefault",
     [GAME_VISUAL_ASSET_ROLES.paddle]: "sprPaddlePlayerSunsetDefault",
-    [GAME_VISUAL_ASSET_ROLES.brickRed]: "sprBrickBasicRedSunsetNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickBlue]: "sprBrickBasicBlueSunsetNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickGreen]: "sprBrickBasicGreenSunsetNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickYellow]: "sprBrickBasicYellowSunsetNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickPurple]: "sprBrickBasicPurpleSunsetNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalIntact]:
-      "sprBrickMetalSteelSunsetNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne]:
-      "sprBrickMetalSteelSunsetDentedOne",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalDentedTwo]:
-      "sprBrickMetalSteelSunsetDentedTwo",
+    [GAME_VISUAL_ASSET_ROLES.componentRed]: "sprComponentBasicRedSunsetNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentBlue]: "sprComponentBasicBlueSunsetNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentGreen]: "sprComponentBasicGreenSunsetNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentYellow]: "sprComponentBasicYellowSunsetNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentPurple]: "sprComponentBasicPurpleSunsetNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalIntact]:
+      "sprComponentMetalSteelSunsetNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalDentedOne]:
+      "sprComponentMetalSteelSunsetDentedOne",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalDentedTwo]:
+      "sprComponentMetalSteelSunsetDentedTwo",
     [GAME_VISUAL_ASSET_ROLES.powerupMultiball]: "sprPowerupMultiballOrbSunset",
     [GAME_VISUAL_ASSET_ROLES.powerupWidePaddle]: "sprPowerupWidePaddleSunset",
     [GAME_VISUAL_ASSET_ROLES.powerupSlowBall]: "sprPowerupSlowBallSunset",
@@ -138,16 +138,16 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
   [IMAGE_SET_REAL_METRO_TUNNEL]: {
     [GAME_VISUAL_ASSET_ROLES.ball]: "sprBallPlayerMetroRealDefault",
     [GAME_VISUAL_ASSET_ROLES.paddle]: "sprPaddlePlayerMetroRealDefault",
-    [GAME_VISUAL_ASSET_ROLES.brickRed]: "sprBrickBasicRedMetroRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickBlue]: "sprBrickBasicBlueMetroRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickGreen]: "sprBrickBasicGreenMetroRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickYellow]: "sprBrickBasicYellowMetroRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickPurple]: "sprBrickBasicPurpleMetroRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalIntact]: "sprBrickMetalSteelNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne]:
-      "sprBrickMetalSteelDentedOne",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalDentedTwo]:
-      "sprBrickMetalSteelDentedTwo",
+    [GAME_VISUAL_ASSET_ROLES.componentRed]: "sprComponentBasicRedMetroRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentBlue]: "sprComponentBasicBlueMetroRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentGreen]: "sprComponentBasicGreenMetroRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentYellow]: "sprComponentBasicYellowMetroRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentPurple]: "sprComponentBasicPurpleMetroRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalIntact]: "sprComponentMetalSteelNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalDentedOne]:
+      "sprComponentMetalSteelDentedOne",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalDentedTwo]:
+      "sprComponentMetalSteelDentedTwo",
     [GAME_VISUAL_ASSET_ROLES.powerupMultiball]:
       "sprPowerupMultiballOrbMetroReal",
     [GAME_VISUAL_ASSET_ROLES.powerupWidePaddle]:
@@ -169,18 +169,18 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
   [IMAGE_SET_REAL_WORKSHOP_STEEL]: {
     [GAME_VISUAL_ASSET_ROLES.ball]: "sprBallPlayerGarageRealDefault",
     [GAME_VISUAL_ASSET_ROLES.paddle]: "sprPaddlePlayerGarageRealDefault",
-    [GAME_VISUAL_ASSET_ROLES.brickRed]: "sprBrickBasicRedGarageRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickBlue]: "sprBrickBasicBlueGarageRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickGreen]: "sprBrickBasicGreenGarageRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickYellow]:
-      "sprBrickBasicYellowGarageRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickPurple]:
-      "sprBrickBasicPurpleGarageRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalIntact]: "sprBrickMetalSteelNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne]:
-      "sprBrickMetalSteelDentedOne",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalDentedTwo]:
-      "sprBrickMetalSteelDentedTwo",
+    [GAME_VISUAL_ASSET_ROLES.componentRed]: "sprComponentBasicRedGarageRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentBlue]: "sprComponentBasicBlueGarageRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentGreen]: "sprComponentBasicGreenGarageRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentYellow]:
+      "sprComponentBasicYellowGarageRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentPurple]:
+      "sprComponentBasicPurpleGarageRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalIntact]: "sprComponentMetalSteelNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalDentedOne]:
+      "sprComponentMetalSteelDentedOne",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalDentedTwo]:
+      "sprComponentMetalSteelDentedTwo",
     [GAME_VISUAL_ASSET_ROLES.powerupMultiball]:
       "sprPowerupMultiballOrbGarageReal",
     [GAME_VISUAL_ASSET_ROLES.powerupWidePaddle]:
@@ -202,17 +202,17 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
   [IMAGE_SET_REAL_BIO_LAB_GLASS]: {
     [GAME_VISUAL_ASSET_ROLES.ball]: "sprBallPlayerLabRealDefault",
     [GAME_VISUAL_ASSET_ROLES.paddle]: "sprPaddlePlayerLabRealDefault",
-    [GAME_VISUAL_ASSET_ROLES.brickRed]: "sprBrickBasicRedLabRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickBlue]: "sprBrickBasicBlueLabRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickGreen]: "sprBrickBasicGreenLabRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickYellow]: "sprBrickBasicYellowLabRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickPurple]: "sprBrickBasicPurpleLabRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalIntact]:
-      "sprBrickMetalSteelHighContrastNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne]:
-      "sprBrickMetalSteelHighContrastDentedOne",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalDentedTwo]:
-      "sprBrickMetalSteelHighContrastDentedTwo",
+    [GAME_VISUAL_ASSET_ROLES.componentRed]: "sprComponentBasicRedLabRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentBlue]: "sprComponentBasicBlueLabRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentGreen]: "sprComponentBasicGreenLabRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentYellow]: "sprComponentBasicYellowLabRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentPurple]: "sprComponentBasicPurpleLabRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalIntact]:
+      "sprComponentMetalSteelHighContrastNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalDentedOne]:
+      "sprComponentMetalSteelHighContrastDentedOne",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalDentedTwo]:
+      "sprComponentMetalSteelHighContrastDentedTwo",
     [GAME_VISUAL_ASSET_ROLES.powerupMultiball]: "sprPowerupMultiballOrbLabReal",
     [GAME_VISUAL_ASSET_ROLES.powerupWidePaddle]: "sprPowerupWidePaddleLabReal",
     [GAME_VISUAL_ASSET_ROLES.powerupSlowBall]: "sprPowerupSlowBallLabReal",
@@ -232,19 +232,19 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
   [IMAGE_SET_REAL_TEMPLE_STONE]: {
     [GAME_VISUAL_ASSET_ROLES.ball]: "sprBallPlayerTempleRealDefault",
     [GAME_VISUAL_ASSET_ROLES.paddle]: "sprPaddlePlayerTempleRealDefault",
-    [GAME_VISUAL_ASSET_ROLES.brickRed]: "sprBrickBasicRedTempleRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickBlue]: "sprBrickBasicBlueTempleRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickGreen]: "sprBrickBasicGreenTempleRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickYellow]:
-      "sprBrickBasicYellowTempleRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickPurple]:
-      "sprBrickBasicPurpleTempleRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalIntact]:
-      "sprBrickMetalSteelSunsetNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne]:
-      "sprBrickMetalSteelSunsetDentedOne",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalDentedTwo]:
-      "sprBrickMetalSteelSunsetDentedTwo",
+    [GAME_VISUAL_ASSET_ROLES.componentRed]: "sprComponentBasicRedTempleRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentBlue]: "sprComponentBasicBlueTempleRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentGreen]: "sprComponentBasicGreenTempleRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentYellow]:
+      "sprComponentBasicYellowTempleRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentPurple]:
+      "sprComponentBasicPurpleTempleRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalIntact]:
+      "sprComponentMetalSteelSunsetNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalDentedOne]:
+      "sprComponentMetalSteelSunsetDentedOne",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalDentedTwo]:
+      "sprComponentMetalSteelSunsetDentedTwo",
     [GAME_VISUAL_ASSET_ROLES.powerupMultiball]:
       "sprPowerupMultiballOrbTempleReal",
     [GAME_VISUAL_ASSET_ROLES.powerupWidePaddle]:
@@ -266,19 +266,19 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
   [IMAGE_SET_REAL_ORBITAL_DECK]: {
     [GAME_VISUAL_ASSET_ROLES.ball]: "sprBallPlayerOrbitalRealDefault",
     [GAME_VISUAL_ASSET_ROLES.paddle]: "sprPaddlePlayerOrbitalRealDefault",
-    [GAME_VISUAL_ASSET_ROLES.brickRed]: "sprBrickBasicRedOrbitalRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickBlue]: "sprBrickBasicBlueOrbitalRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickGreen]: "sprBrickBasicGreenOrbitalRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickYellow]:
-      "sprBrickBasicYellowOrbitalRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickPurple]:
-      "sprBrickBasicPurpleOrbitalRealNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalIntact]:
-      "sprBrickMetalSteelHighContrastNormal",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalDentedOne]:
-      "sprBrickMetalSteelHighContrastDentedOne",
-    [GAME_VISUAL_ASSET_ROLES.brickMetalDentedTwo]:
-      "sprBrickMetalSteelHighContrastDentedTwo",
+    [GAME_VISUAL_ASSET_ROLES.componentRed]: "sprComponentBasicRedOrbitalRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentBlue]: "sprComponentBasicBlueOrbitalRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentGreen]: "sprComponentBasicGreenOrbitalRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentYellow]:
+      "sprComponentBasicYellowOrbitalRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentPurple]:
+      "sprComponentBasicPurpleOrbitalRealNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalIntact]:
+      "sprComponentMetalSteelHighContrastNormal",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalDentedOne]:
+      "sprComponentMetalSteelHighContrastDentedOne",
+    [GAME_VISUAL_ASSET_ROLES.componentMetalDentedTwo]:
+      "sprComponentMetalSteelHighContrastDentedTwo",
     [GAME_VISUAL_ASSET_ROLES.powerupMultiball]:
       "sprPowerupMultiballOrbOrbitalReal",
     [GAME_VISUAL_ASSET_ROLES.powerupWidePaddle]:

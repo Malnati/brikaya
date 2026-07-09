@@ -1,6 +1,6 @@
 // src/utils/colorValidator.ts
 
-import { BRICK_COLORS } from '../constants/assets';
+import { COMPONENT_COLORS } from '../constants/assets';
 import { AssetLoader } from './assetLoader';
 import { LOG, ERROR } from './logger';
 
@@ -15,9 +15,9 @@ export interface ColorValidationResult {
 export class ColorValidator {
 
   /**
-   * Validates whether the brick images are loading correctly
+   * Validates whether the component images are loading correctly
    */
-  static async validateBrickColors(): Promise<ColorValidationResult> {
+  static async validateComponentColors(): Promise<ColorValidationResult> {
     const result: ColorValidationResult = {
       isValid: true,
       errors: [],
@@ -26,14 +26,14 @@ export class ColorValidator {
       failedImages: []
     };
 
-    LOG('🔍 Iniciando validação de cores dos bricks...');
+    LOG('🔍 Iniciando validação de cores dos components...');
 
     try {
       // Tentar carregar todas as imagens
       await AssetLoader.preloadAllAssets();
       
       // Verificar se cada imagem foi carregada
-      for (const colorPath of BRICK_COLORS) {
+      for (const colorPath of COMPONENT_COLORS) {
         const image = AssetLoader.getImage(colorPath);
         
         if (image) {
@@ -49,7 +49,7 @@ export class ColorValidator {
 
       // Verificar se pelo menos uma imagem foi carregada
       if (result.loadedImages.length === 0) {
-        result.errors.push('Nenhuma imagem de brick foi carregada com sucesso');
+        result.errors.push('Nenhuma imagem de component foi carregada com sucesso');
         result.isValid = false;
       }
 
@@ -60,7 +60,7 @@ export class ColorValidator {
 
       // Verificar se o fallback está funcionando (cor azul)
       if (result.failedImages.length > 0) {
-        result.warnings.push('O jogo está usando fallback azul para bricks com falha de carregamento');
+        result.warnings.push('O jogo está usando fallback azul para components com falha de carregamento');
       }
 
     } catch (error) {
@@ -101,7 +101,7 @@ export class ColorValidator {
   }
 
   /**
-   * Verifica se o jogo está renderizando bricks coloridos
+   * Verifica se o jogo está renderizando components coloridos
    */
   static async validateGameRendering(canvas: HTMLCanvasElement): Promise<ColorValidationResult> {
     const result: ColorValidationResult = {
@@ -122,7 +122,7 @@ export class ColorValidator {
       result.warnings.push('Detectados pixels azuis (fallback) - possível problema com carregamento de imagens');
     }
 
-    // Verificar se há pixels coloridos (bricks normais)
+    // Verificar se há pixels coloridos (componentes normais)
     const hasColoredPixels = 
       this.checkCanvasForColor(canvas, '#ff0000', 100) || // Vermelho
       this.checkCanvasForColor(canvas, '#0000ff', 100) || // Azul
@@ -131,12 +131,12 @@ export class ColorValidator {
       this.checkCanvasForColor(canvas, '#800080', 100);   // Roxo
 
     if (!hasColoredPixels && !hasBluePixels) {
-      result.errors.push('Nenhum brick colorido detectado na tela');
+      result.errors.push('Nenhum component colorido detectado na tela');
       result.isValid = false;
     }
 
     if (hasColoredPixels) {
-      result.loadedImages.push('Bricks coloridos detectados na tela');
+      result.loadedImages.push('Componentes coloridos detectados na tela');
     }
 
     return result;

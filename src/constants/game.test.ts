@@ -12,12 +12,12 @@ import {
   calculateDynamicDimensions,
   calculateInitialBallSpeed,
   calculateLevelInitialSpawnSpeed,
-  calculateLevelBrickRows,
+  calculateLevelComponentRows,
   calculateLevelMaxSpeed,
   calculateLevelMinSpeed,
   calculateLevelPreviousMaxSpeed,
   calculateLevelSpeedMultiplier,
-  calculateSpeedReductionPerBrick,
+  calculateSpeedReductionPerComponent,
   calculateMultiballBallCount,
   calculateLaserFanTargetCount,
   calculateWidePaddleScale,
@@ -122,7 +122,7 @@ describe('game speed helpers', () => {
     const maxSpeed = calculateLevelMaxSpeed(CANVAS_WIDTH, PHASE_ONE);
     const minSpeed = calculateLevelMinSpeed(CANVAS_WIDTH, PHASE_ONE);
 
-    expect(calculateSpeedReductionPerBrick(maxSpeed, INITIAL_BRICK_COUNT, minSpeed)).toBeCloseTo(
+    expect(calculateSpeedReductionPerComponent(maxSpeed, INITIAL_BRICK_COUNT, minSpeed)).toBeCloseTo(
       roundSpeedValue((maxSpeed - minSpeed) / INITIAL_BRICK_COUNT),
       5
     );
@@ -132,7 +132,7 @@ describe('game speed helpers', () => {
     const maxSpeed = calculateLevelMaxSpeed(CANVAS_WIDTH, PHASE_ONE);
     const minSpeed = calculateLevelMinSpeed(CANVAS_WIDTH, PHASE_ONE);
 
-    expect(calculateSpeedReductionPerBrick(maxSpeed, 0, minSpeed)).toBeCloseTo(
+    expect(calculateSpeedReductionPerComponent(maxSpeed, 0, minSpeed)).toBeCloseTo(
       maxSpeed - minSpeed,
       5
     );
@@ -147,10 +147,10 @@ describe('game speed helpers', () => {
     expect(calculateClampedSpeed(2.0, minSpeed, maxSpeed)).toBe(maxSpeed);
   });
 
-  it('aumenta linhas de tijolos por fase sem ultrapassar o limite do tabuleiro', () => {
-    expect(calculateLevelBrickRows(BASE_BRICK_ROWS, MAX_BRICK_ROWS, PHASE_ONE)).toBe(BASE_BRICK_ROWS);
-    expect(calculateLevelBrickRows(BASE_BRICK_ROWS, MAX_BRICK_ROWS, PHASE_TWO)).toBe(BASE_BRICK_ROWS + 1);
-    expect(calculateLevelBrickRows(BASE_BRICK_ROWS, MAX_BRICK_ROWS, PHASE_FIVE)).toBe(MAX_BRICK_ROWS);
+  it('aumenta linhas de componentes por fase sem ultrapassar o limite do tabuleiro', () => {
+    expect(calculateLevelComponentRows(BASE_BRICK_ROWS, MAX_BRICK_ROWS, PHASE_ONE)).toBe(BASE_BRICK_ROWS);
+    expect(calculateLevelComponentRows(BASE_BRICK_ROWS, MAX_BRICK_ROWS, PHASE_TWO)).toBe(BASE_BRICK_ROWS + 1);
+    expect(calculateLevelComponentRows(BASE_BRICK_ROWS, MAX_BRICK_ROWS, PHASE_FIVE)).toBe(MAX_BRICK_ROWS);
   });
 
   it('reduz a raquete em quinze por cento mantendo altura proporcional', () => {

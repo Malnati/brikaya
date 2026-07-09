@@ -23,7 +23,7 @@ SVG-first authoring
   → atlas PNG/WebP com exceção documentada
 ```
 
-**AVIF nunca** como padrão de sprites/UI/tijolos/VFX a 60 FPS. AVIF só para fundo/cena/cinemática em `public/assets/visual/cinematics/`.
+**AVIF nunca** como padrão de sprites/UI/componentes/VFX a 60 FPS. AVIF só para fundo/cena/cinemática em `public/assets/visual/cinematics/`.
 
 ## Checklist obrigatório no plano
 

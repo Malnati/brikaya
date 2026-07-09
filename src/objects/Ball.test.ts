@@ -10,7 +10,7 @@ import {
   calculateLevelMinSpeed,
   calculateLevelPreviousMaxSpeed,
   calculateLevelSpeedMultiplier,
-  calculateSpeedReductionPerBrick,
+  calculateSpeedReductionPerComponent,
   DynamicGameDimensions,
   MAX_LEVEL_SPEED_MULTIPLIER,
   PhaseSpeedConfig
@@ -51,13 +51,13 @@ jest.mock('../utils/logger', () => ({
 }));
 
 const DIMENSIONS: DynamicGameDimensions = {
-  brickWidth: 60,
-  brickHeight: 20,
-  brickPadding: 8,
-  brickOffsetTop: 24,
-  brickOffsetLeft: 16,
-  brickCols: 5,
-  brickRows: 3,
+  componentWidth: 60,
+  componentHeight: 20,
+  componentPadding: 8,
+  componentOffsetTop: 24,
+  componentOffsetLeft: 16,
+  componentCols: 5,
+  componentRows: 3,
   paddleWidth: 80,
   paddleHeight: 12,
   ballRadius: 9,
@@ -68,7 +68,7 @@ const CANVAS_HEIGHT = 852;
 const PHASE_ONE = 1;
 const PHASE_TWO = 2;
 const LATE_PHASE = 11;
-const INITIAL_BRICK_COUNT = DIMENSIONS.brickCols * DIMENSIONS.brickRows;
+const INITIAL_BRICK_COUNT = DIMENSIONS.componentCols * DIMENSIONS.componentRows;
 const CENTER_DIVISOR = 2;
 const RADIAL_PADDLE_TEST_INSET = 1;
 const CARTESIAN_TO_BALL_DIRECTION_OFFSET = Math.PI / 2;
@@ -118,11 +118,11 @@ function buildPhaseSpeedConfig(level: number): PhaseSpeedConfig {
   const minSpeed = calculateLevelMinSpeed(CANVAS_WIDTH, level);
   return {
     level,
-    initialBrickCount: INITIAL_BRICK_COUNT,
+    initialComponentCount: INITIAL_BRICK_COUNT,
     initialSpawnSpeed: calculateLevelInitialSpawnSpeed(CANVAS_WIDTH, level),
     maxSpeed,
     minSpeed,
-    reductionPerBrick: calculateSpeedReductionPerBrick(maxSpeed, INITIAL_BRICK_COUNT, minSpeed),
+    reductionPerComponent: calculateSpeedReductionPerComponent(maxSpeed, INITIAL_BRICK_COUNT, minSpeed),
     previousLevelMaxSpeed: calculateLevelPreviousMaxSpeed(CANVAS_WIDTH, level),
     levelStartedAt: Date.now() - 1000,
   };
@@ -132,7 +132,7 @@ function createGameState(ball: Ball, level: number = PHASE_ONE) {
   return {
     score: 0,
     ballsCount: 1,
-    bricksRemaining: INITIAL_BRICK_COUNT,
+    componentsRemaining: INITIAL_BRICK_COUNT,
     gameWon: false,
     gameOver: false,
     level,
@@ -316,8 +316,8 @@ describe('Ball', () => {
       maxSpeed: config.maxSpeed,
       minSpeed: config.minSpeed,
       currentSpeed: config.maxSpeed,
-      initialBrickCount: INITIAL_BRICK_COUNT,
-      successfulBrickHits: 0,
+      initialComponentCount: INITIAL_BRICK_COUNT,
+      successfulComponentHits: 0,
     });
   });
 
@@ -336,21 +336,21 @@ describe('Ball', () => {
     const config = buildPhaseSpeedConfig(PHASE_ONE);
 
     ball.applyPhaseSpeedConfig(config);
-    ball.registerBrickHit();
+    ball.registerComponentHit();
 
     expect(ball.getCurrentSpeedMagnitude()).toBeCloseTo(
-      config.initialSpawnSpeed - config.reductionPerBrick,
+      config.initialSpawnSpeed - config.reductionPerComponent,
       5
     );
     expect(ball.getLastSpeedReduction()?.level).toBe(PHASE_ONE);
     expect(ball.getLastSpeedReduction()?.hitNumber).toBe(1);
     expect(ball.getLastSpeedReduction()?.speedBefore).toBeCloseTo(config.initialSpawnSpeed, 5);
     expect(ball.getLastSpeedReduction()?.speedAfter).toBeCloseTo(
-      config.initialSpawnSpeed - config.reductionPerBrick,
+      config.initialSpawnSpeed - config.reductionPerComponent,
       5
     );
     expect(ball.getLastSpeedReduction()?.reductionApplied).toBeCloseTo(
-      config.reductionPerBrick,
+      config.reductionPerComponent,
       5
     );
     expect(ball.getCurrentSpeedMagnitude()).toBeGreaterThan(config.minSpeed);
@@ -363,13 +363,13 @@ describe('Ball', () => {
     ball.applyPhaseSpeedConfig(config);
 
     for (let hit = 0; hit < INITIAL_BRICK_COUNT - 1; hit += 1) {
-      ball.registerBrickHit();
+      ball.registerComponentHit();
     }
 
     expect(ball.getCurrentSpeedMagnitude()).toBeGreaterThan(config.minSpeed);
     expect(ball.getLastSpeedReduction()?.minReached).toBe(false);
 
-    ball.registerBrickHit();
+    ball.registerComponentHit();
 
     expect(ball.getCurrentSpeedMagnitude()).toBe(config.minSpeed);
     expect(ball.getLastSpeedReduction()?.minReached).toBe(true);
@@ -382,7 +382,7 @@ describe('Ball', () => {
     ball.applyPhaseSpeedConfig(config);
 
     for (let hit = 0; hit < INITIAL_BRICK_COUNT * 4; hit += 1) {
-      ball.registerBrickHit();
+      ball.registerComponentHit();
     }
 
     expect(ball.getCurrentSpeedMagnitude()).toBe(config.minSpeed);
@@ -409,7 +409,7 @@ describe('Ball', () => {
     const config = buildPhaseSpeedConfig(PHASE_ONE);
 
     ball.applyPhaseSpeedConfig(config);
-    ball.registerBrickHit();
+    ball.registerComponentHit();
     const speedBeforeBounce = ball.getCurrentSpeedMagnitude();
 
     ball.bounceY();
@@ -423,7 +423,7 @@ describe('Ball', () => {
     const oneFrame60Hz = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
     const twoFrames120Hz = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
     const config = buildPhaseSpeedConfig(PHASE_ONE);
-    const bricks = { collide: jest.fn(() => false) };
+    const components = { collide: jest.fn(() => false) };
     const paddle = {
       position: {
         x: 0,
@@ -438,7 +438,7 @@ describe('Ball', () => {
 
     oneFrame60Hz.update(
       paddle,
-      bricks,
+      components,
       CANVAS_HEIGHT,
       createGameState(oneFrame60Hz),
       undefined,
@@ -446,7 +446,7 @@ describe('Ball', () => {
     );
     twoFrames120Hz.update(
       paddle,
-      bricks,
+      components,
       CANVAS_HEIGHT,
       createGameState(twoFrames120Hz),
       undefined,
@@ -454,7 +454,7 @@ describe('Ball', () => {
     );
     twoFrames120Hz.update(
       paddle,
-      bricks,
+      components,
       CANVAS_HEIGHT,
       createGameState(twoFrames120Hz),
       undefined,
@@ -467,7 +467,7 @@ describe('Ball', () => {
   it('não move a bola quando frameScale é zero', () => {
     const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
     const config = buildPhaseSpeedConfig(PHASE_ONE);
-    const bricks = { collide: jest.fn(() => false) };
+    const components = { collide: jest.fn(() => false) };
     const paddle = {
       position: {
         x: 0,
@@ -482,7 +482,7 @@ describe('Ball', () => {
 
     ball.update(
       paddle,
-      bricks,
+      components,
       CANVAS_HEIGHT,
       createGameState(ball),
       undefined,
@@ -495,7 +495,7 @@ describe('Ball', () => {
   it('mantém a bolinha dentro do canvas ao bater na parede em alta velocidade', async () => {
     const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
     const config = buildPhaseSpeedConfig(LATE_PHASE);
-    const bricks = { collide: jest.fn().mockResolvedValue(false) };
+    const components = { collide: jest.fn().mockResolvedValue(false) };
     const paddle = {
       position: {
         x: 0,
@@ -511,12 +511,12 @@ describe('Ball', () => {
 
     await ball.update(
       paddle,
-      bricks,
+      components,
       CANVAS_HEIGHT,
       {
         score: 0,
         ballsCount: 1,
-        bricksRemaining: INITIAL_BRICK_COUNT,
+        componentsRemaining: INITIAL_BRICK_COUNT,
         gameWon: false,
         gameOver: false,
         level: LATE_PHASE,
@@ -542,7 +542,7 @@ describe('Ball', () => {
       undefined,
       onElectricImpact,
     );
-    const bricks = { collide: jest.fn(() => false) };
+    const components = { collide: jest.fn(() => false) };
     const paddle = {
       position: {
         x: 0,
@@ -558,7 +558,7 @@ describe('Ball', () => {
 
     await ball.update(
       paddle,
-      bricks,
+      components,
       CANVAS_HEIGHT,
       createGameState(ball),
     );
@@ -584,7 +584,7 @@ describe('Ball', () => {
       undefined,
       onElectricImpact,
     );
-    const bricks = { collide: jest.fn(() => false) };
+    const components = { collide: jest.fn(() => false) };
     const paddle = {
       position: {
         x: 0,
@@ -600,7 +600,7 @@ describe('Ball', () => {
 
     await ball.update(
       paddle,
-      bricks,
+      components,
       CANVAS_HEIGHT,
       createGameState(ball),
     );
@@ -621,7 +621,7 @@ describe('Ball', () => {
       position: calculateRadialPaddleBounds(geometry, DIMENSIONS, Math.PI / 2, 1),
     };
     const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
-    const bricks = { collide: jest.fn().mockResolvedValue(false) };
+    const components = { collide: jest.fn().mockResolvedValue(false) };
 
     ball.applyPhaseSpeedConfig(buildPhaseSpeedConfig(PHASE_ONE));
     ball.setPosition(
@@ -632,7 +632,7 @@ describe('Ball', () => {
 
     const inPlay = await ball.update(
       paddle,
-      bricks,
+      components,
       CANVAS_HEIGHT,
       createGameState(ball),
     );
@@ -645,7 +645,7 @@ describe('Ball', () => {
     const geometry = calculateRadialPlayfieldGeometry(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
     const paddlePosition = calculateRadialPaddleBounds(geometry, DIMENSIONS, Math.PI / 2, 1);
     const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
-    const bricks = { collide: jest.fn().mockResolvedValue(false) };
+    const components = { collide: jest.fn().mockResolvedValue(false) };
     const targetRadius =
       paddlePosition.radial.radius -
       paddlePosition.radial.thickness / CENTER_DIVISOR -
@@ -661,7 +661,7 @@ describe('Ball', () => {
 
     const inPlay = await ball.update(
       { position: paddlePosition },
-      bricks,
+      components,
       CANVAS_HEIGHT,
       createGameState(ball),
     );
@@ -674,7 +674,7 @@ describe('Ball', () => {
     const geometry = calculateRadialPlayfieldGeometry(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
     const sidePaddle = calculateRadialPaddleBounds(geometry, DIMENSIONS, Math.PI * 0.22, 1);
     const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
-    const bricks = { collide: jest.fn().mockResolvedValue(false) };
+    const components = { collide: jest.fn().mockResolvedValue(false) };
 
     ball.applyPhaseSpeedConfig(buildPhaseSpeedConfig(PHASE_ONE));
     ball.setPosition(
@@ -685,7 +685,7 @@ describe('Ball', () => {
 
     const inPlay = await ball.update(
       { position: sidePaddle },
-      bricks,
+      components,
       CANVAS_HEIGHT,
       createGameState(ball),
     );
@@ -699,7 +699,7 @@ describe('Ball', () => {
       position: calculateRadialPaddleBounds(geometry, DIMENSIONS, Math.PI / 2, 1),
     };
     const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
-    const bricks = { collide: jest.fn().mockResolvedValue(false) };
+    const components = { collide: jest.fn().mockResolvedValue(false) };
 
     ball.applyPhaseSpeedConfig(buildPhaseSpeedConfig(PHASE_ONE));
     ball.setPosition(
@@ -710,7 +710,7 @@ describe('Ball', () => {
 
     const inPlay = await ball.update(
       paddle,
-      bricks,
+      components,
       CANVAS_HEIGHT,
       createGameState(ball),
     );
@@ -732,7 +732,7 @@ describe('Ball', () => {
       geometry,
       onElectricImpact,
     );
-    const bricks = { collide: jest.fn().mockResolvedValue(false) };
+    const components = { collide: jest.fn().mockResolvedValue(false) };
     const bottomReboundSegment = calculateBallTurretBoundarySegments(PHASE_ONE)[0];
     const bottomReboundAngle =
       (bottomReboundSegment.startAngle + bottomReboundSegment.endAngle) / 2;
@@ -742,7 +742,7 @@ describe('Ball', () => {
 
     const inPlay = await ball.update(
       { position: topPaddle },
-      bricks,
+      components,
       CANVAS_HEIGHT,
       createGameState(ball),
     );
@@ -772,7 +772,7 @@ describe('Ball', () => {
     const geometry = calculateBallTurretPlayfieldGeometry(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
     const topPaddle = calculateRadialPaddleBounds(geometry, DIMENSIONS, -Math.PI / 2, 1);
     const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS, 1, undefined, geometry);
-    const bricks = { collide: jest.fn().mockResolvedValue(false) };
+    const components = { collide: jest.fn().mockResolvedValue(false) };
     const inactiveSegment = calculateBallTurretBoundarySegments(PHASE_ONE)[1];
     const inactiveAngle =
       (inactiveSegment.startAngle + inactiveSegment.endAngle) / 2;
@@ -782,7 +782,7 @@ describe('Ball', () => {
 
     const inPlay = await ball.update(
       { position: topPaddle },
-      bricks,
+      components,
       CANVAS_HEIGHT,
       createGameState(ball),
     );
@@ -794,7 +794,7 @@ describe('Ball', () => {
     const geometry = calculateBallTurretPlayfieldGeometry(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS);
     const topPaddle = calculateRadialPaddleBounds(geometry, DIMENSIONS, -Math.PI / 2, 1);
     const ball = new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS, 1, undefined, geometry);
-    const bricks = { collide: jest.fn().mockResolvedValue(false) };
+    const components = { collide: jest.fn().mockResolvedValue(false) };
     const bottomSegment = calculateBallTurretBoundarySegments(PHASE_ONE)[0];
     const bottomAngle = (bottomSegment.startAngle + bottomSegment.endAngle) / 2;
 
@@ -803,7 +803,7 @@ describe('Ball', () => {
 
     const inPlay = await ball.update(
       { position: topPaddle },
-      bricks,
+      components,
       CANVAS_HEIGHT,
       createGameState(ball, 10),
     );

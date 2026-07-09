@@ -112,14 +112,14 @@ const UPDATE_PROGRESS_COMPLETE = 100;
 const UPDATE_PROGRESS_COMPLETE_STAGE = "reloading";
 const LATE_PHASE_STABILITY_QA_SCENARIO = "late-phase-stability";
 const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
-const SINGLE_BRICK_PHASE_3_QA_SCENARIO = "single-brick-phase3-clear";
+const SINGLE_COMPONENT_PHASE_3_QA_SCENARIO = "single-component-phase3-clear";
 const PADDLE_COLLISION_QA_SCENARIO = "paddle-collision";
 const LASER_FAN_QA_SCENARIO = "laser-fan";
 const MULTIBALL_QA_SCENARIO = "multiball-power-up";
 const WIDE_PADDLE_QA_SCENARIO = "wide-paddle-power-up";
 const SLOW_BALL_QA_SCENARIO = "slow-ball-power-up";
-const METAL_BLOCK_QA_SCENARIO = "metal-block";
-const EVASIVE_BLOCKS_QA_SCENARIO = "evasive-blocks";
+const METAL_BLOCK_QA_SCENARIO = "metal-component";
+const EVASIVE_BLOCKS_QA_SCENARIO = "evasive-components";
 const BALL_TURRET_QA_SCENARIO = "ball-turret";
 const BALL_TURRET_LOSE_QA_SCENARIO = "ball-turret-lose";
 const LEVEL_TRANSITION_EVENT_NAME = "brikaya:level-transition";
@@ -277,10 +277,10 @@ function GameApp() {
   const qaScenario = useMemo<GameQaScenario | null>(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const scenario = searchParams.get("qaScenario");
-    if (scenario === "single-brick-phase-clear")
-      return "single-brick-phase-clear";
-    if (scenario === SINGLE_BRICK_PHASE_3_QA_SCENARIO)
-      return SINGLE_BRICK_PHASE_3_QA_SCENARIO;
+    if (scenario === "single-component-phase-clear")
+      return "single-component-phase-clear";
+    if (scenario === SINGLE_COMPONENT_PHASE_3_QA_SCENARIO)
+      return SINGLE_COMPONENT_PHASE_3_QA_SCENARIO;
     if (scenario === LATE_PHASE_STABILITY_QA_SCENARIO)
       return LATE_PHASE_STABILITY_QA_SCENARIO;
     if (scenario === CINEMATIC_RIP_QA_SCENARIO)
@@ -301,8 +301,8 @@ function GameApp() {
     return null;
   }, []);
   const activeGameMode =
-    qaScenario === "single-brick-phase-clear" ||
-    qaScenario === SINGLE_BRICK_PHASE_3_QA_SCENARIO ||
+    qaScenario === "single-component-phase-clear" ||
+    qaScenario === SINGLE_COMPONENT_PHASE_3_QA_SCENARIO ||
     qaScenario === METAL_BLOCK_QA_SCENARIO ||
     qaScenario === EVASIVE_BLOCKS_QA_SCENARIO ||
     qaScenario === PADDLE_COLLISION_QA_SCENARIO

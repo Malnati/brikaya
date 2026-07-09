@@ -4,22 +4,22 @@ export const sprBallPlayerDefault =
   "/assets/visual/sprites/spr-ball-player-default.svg";
 export const sprPaddlePlayerDefault =
   "/assets/visual/sprites/spr-paddle-player-default.svg";
-export const sprBrickBasicRedNormal =
-  "/assets/visual/bricks/spr-brick-basic-red-normal.svg";
-export const sprBrickBasicBlueNormal =
-  "/assets/visual/bricks/spr-brick-basic-blue-normal.svg";
-export const sprBrickBasicGreenNormal =
-  "/assets/visual/bricks/spr-brick-basic-green-normal.svg";
-export const sprBrickBasicYellowNormal =
-  "/assets/visual/bricks/spr-brick-basic-yellow-normal.svg";
-export const sprBrickBasicPurpleNormal =
-  "/assets/visual/bricks/spr-brick-basic-purple-normal.svg";
-export const sprBrickMetalSteelNormal =
-  "/assets/visual/bricks/spr-brick-metal-steel-normal.svg";
-export const sprBrickMetalSteelDentedOne =
-  "/assets/visual/bricks/spr-brick-metal-steel-dented-one.svg";
-export const sprBrickMetalSteelDentedTwo =
-  "/assets/visual/bricks/spr-brick-metal-steel-dented-two.svg";
+export const sprComponentBasicRedNormal =
+  "/assets/visual/components/spr-component-basic-red-normal.svg";
+export const sprComponentBasicBlueNormal =
+  "/assets/visual/components/spr-component-basic-blue-normal.svg";
+export const sprComponentBasicGreenNormal =
+  "/assets/visual/components/spr-component-basic-green-normal.svg";
+export const sprComponentBasicYellowNormal =
+  "/assets/visual/components/spr-component-basic-yellow-normal.svg";
+export const sprComponentBasicPurpleNormal =
+  "/assets/visual/components/spr-component-basic-purple-normal.svg";
+export const sprComponentMetalSteelNormal =
+  "/assets/visual/components/spr-component-metal-steel-normal.svg";
+export const sprComponentMetalSteelDentedOne =
+  "/assets/visual/components/spr-component-metal-steel-dented-one.svg";
+export const sprComponentMetalSteelDentedTwo =
+  "/assets/visual/components/spr-component-metal-steel-dented-two.svg";
 export const vfxCountdownCircleOverlay =
   "/assets/visual/vfx/vfx-countdown-circle-overlay.svg";
 export const vfxCountdownSparkOverlay =
@@ -59,22 +59,22 @@ export const sprBallPlayerHighContrastDefault =
   "/assets/visual/sprites/spr-ball-player-high-contrast-default.svg";
 export const sprPaddlePlayerHighContrastDefault =
   "/assets/visual/sprites/spr-paddle-player-high-contrast-default.svg";
-export const sprBrickBasicRedHighContrastNormal =
-  "/assets/visual/bricks/spr-brick-basic-red-high-contrast-normal.svg";
-export const sprBrickBasicBlueHighContrastNormal =
-  "/assets/visual/bricks/spr-brick-basic-blue-high-contrast-normal.svg";
-export const sprBrickBasicGreenHighContrastNormal =
-  "/assets/visual/bricks/spr-brick-basic-green-high-contrast-normal.svg";
-export const sprBrickBasicYellowHighContrastNormal =
-  "/assets/visual/bricks/spr-brick-basic-yellow-high-contrast-normal.svg";
-export const sprBrickBasicPurpleHighContrastNormal =
-  "/assets/visual/bricks/spr-brick-basic-purple-high-contrast-normal.svg";
-export const sprBrickMetalSteelHighContrastNormal =
-  "/assets/visual/bricks/spr-brick-metal-steel-high-contrast-normal.svg";
-export const sprBrickMetalSteelHighContrastDentedOne =
-  "/assets/visual/bricks/spr-brick-metal-steel-high-contrast-dented-one.svg";
-export const sprBrickMetalSteelHighContrastDentedTwo =
-  "/assets/visual/bricks/spr-brick-metal-steel-high-contrast-dented-two.svg";
+export const sprComponentBasicRedHighContrastNormal =
+  "/assets/visual/components/spr-component-basic-red-high-contrast-normal.svg";
+export const sprComponentBasicBlueHighContrastNormal =
+  "/assets/visual/components/spr-component-basic-blue-high-contrast-normal.svg";
+export const sprComponentBasicGreenHighContrastNormal =
+  "/assets/visual/components/spr-component-basic-green-high-contrast-normal.svg";
+export const sprComponentBasicYellowHighContrastNormal =
+  "/assets/visual/components/spr-component-basic-yellow-high-contrast-normal.svg";
+export const sprComponentBasicPurpleHighContrastNormal =
+  "/assets/visual/components/spr-component-basic-purple-high-contrast-normal.svg";
+export const sprComponentMetalSteelHighContrastNormal =
+  "/assets/visual/components/spr-component-metal-steel-high-contrast-normal.svg";
+export const sprComponentMetalSteelHighContrastDentedOne =
+  "/assets/visual/components/spr-component-metal-steel-high-contrast-dented-one.svg";
+export const sprComponentMetalSteelHighContrastDentedTwo =
+  "/assets/visual/components/spr-component-metal-steel-high-contrast-dented-two.svg";
 export const vfxCountdownCircleHighContrastOverlay =
   "/assets/visual/vfx/vfx-countdown-circle-high-contrast-overlay.svg";
 export const vfxCountdownSparkHighContrastOverlay =
@@ -97,22 +97,22 @@ export const sprBallPlayerSunsetDefault =
   "/assets/visual/sprites/spr-ball-player-sunset-default.svg";
 export const sprPaddlePlayerSunsetDefault =
   "/assets/visual/sprites/spr-paddle-player-sunset-default.svg";
-export const sprBrickBasicRedSunsetNormal =
-  "/assets/visual/bricks/spr-brick-basic-red-sunset-normal.svg";
-export const sprBrickBasicBlueSunsetNormal =
-  "/assets/visual/bricks/spr-brick-basic-blue-sunset-normal.svg";
-export const sprBrickBasicGreenSunsetNormal =
-  "/assets/visual/bricks/spr-brick-basic-green-sunset-normal.svg";
-export const sprBrickBasicYellowSunsetNormal =
-  "/assets/visual/bricks/spr-brick-basic-yellow-sunset-normal.svg";
-export const sprBrickBasicPurpleSunsetNormal =
-  "/assets/visual/bricks/spr-brick-basic-purple-sunset-normal.svg";
-export const sprBrickMetalSteelSunsetNormal =
-  "/assets/visual/bricks/spr-brick-metal-steel-sunset-normal.svg";
-export const sprBrickMetalSteelSunsetDentedOne =
-  "/assets/visual/bricks/spr-brick-metal-steel-sunset-dented-one.svg";
-export const sprBrickMetalSteelSunsetDentedTwo =
-  "/assets/visual/bricks/spr-brick-metal-steel-sunset-dented-two.svg";
+export const sprComponentBasicRedSunsetNormal =
+  "/assets/visual/components/spr-component-basic-red-sunset-normal.svg";
+export const sprComponentBasicBlueSunsetNormal =
+  "/assets/visual/components/spr-component-basic-blue-sunset-normal.svg";
+export const sprComponentBasicGreenSunsetNormal =
+  "/assets/visual/components/spr-component-basic-green-sunset-normal.svg";
+export const sprComponentBasicYellowSunsetNormal =
+  "/assets/visual/components/spr-component-basic-yellow-sunset-normal.svg";
+export const sprComponentBasicPurpleSunsetNormal =
+  "/assets/visual/components/spr-component-basic-purple-sunset-normal.svg";
+export const sprComponentMetalSteelSunsetNormal =
+  "/assets/visual/components/spr-component-metal-steel-sunset-normal.svg";
+export const sprComponentMetalSteelSunsetDentedOne =
+  "/assets/visual/components/spr-component-metal-steel-sunset-dented-one.svg";
+export const sprComponentMetalSteelSunsetDentedTwo =
+  "/assets/visual/components/spr-component-metal-steel-sunset-dented-two.svg";
 export const vfxCountdownCircleSunsetOverlay =
   "/assets/visual/vfx/vfx-countdown-circle-sunset-overlay.svg";
 export const vfxCountdownSparkSunsetOverlay =
@@ -135,16 +135,16 @@ export const sprBallPlayerMetroRealDefault =
   "/assets/visual/sprites/spr-ball-player-metro-real-default.svg";
 export const sprPaddlePlayerMetroRealDefault =
   "/assets/visual/sprites/spr-paddle-player-metro-real-default.svg";
-export const sprBrickBasicRedMetroRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-red-metro-real-normal.svg";
-export const sprBrickBasicBlueMetroRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-blue-metro-real-normal.svg";
-export const sprBrickBasicGreenMetroRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-green-metro-real-normal.svg";
-export const sprBrickBasicYellowMetroRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-yellow-metro-real-normal.svg";
-export const sprBrickBasicPurpleMetroRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-purple-metro-real-normal.svg";
+export const sprComponentBasicRedMetroRealNormal =
+  "/assets/visual/components/spr-component-basic-red-metro-real-normal.svg";
+export const sprComponentBasicBlueMetroRealNormal =
+  "/assets/visual/components/spr-component-basic-blue-metro-real-normal.svg";
+export const sprComponentBasicGreenMetroRealNormal =
+  "/assets/visual/components/spr-component-basic-green-metro-real-normal.svg";
+export const sprComponentBasicYellowMetroRealNormal =
+  "/assets/visual/components/spr-component-basic-yellow-metro-real-normal.svg";
+export const sprComponentBasicPurpleMetroRealNormal =
+  "/assets/visual/components/spr-component-basic-purple-metro-real-normal.svg";
 export const vfxCountdownCircleMetroRealOverlay =
   "/assets/visual/vfx/vfx-countdown-circle-metro-real-overlay.svg";
 export const vfxCountdownSparkMetroRealOverlay =
@@ -167,16 +167,16 @@ export const sprBallPlayerGarageRealDefault =
   "/assets/visual/sprites/spr-ball-player-garage-real-default.svg";
 export const sprPaddlePlayerGarageRealDefault =
   "/assets/visual/sprites/spr-paddle-player-garage-real-default.svg";
-export const sprBrickBasicRedGarageRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-red-garage-real-normal.svg";
-export const sprBrickBasicBlueGarageRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-blue-garage-real-normal.svg";
-export const sprBrickBasicGreenGarageRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-green-garage-real-normal.svg";
-export const sprBrickBasicYellowGarageRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-yellow-garage-real-normal.svg";
-export const sprBrickBasicPurpleGarageRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-purple-garage-real-normal.svg";
+export const sprComponentBasicRedGarageRealNormal =
+  "/assets/visual/components/spr-component-basic-red-garage-real-normal.svg";
+export const sprComponentBasicBlueGarageRealNormal =
+  "/assets/visual/components/spr-component-basic-blue-garage-real-normal.svg";
+export const sprComponentBasicGreenGarageRealNormal =
+  "/assets/visual/components/spr-component-basic-green-garage-real-normal.svg";
+export const sprComponentBasicYellowGarageRealNormal =
+  "/assets/visual/components/spr-component-basic-yellow-garage-real-normal.svg";
+export const sprComponentBasicPurpleGarageRealNormal =
+  "/assets/visual/components/spr-component-basic-purple-garage-real-normal.svg";
 export const vfxCountdownCircleGarageRealOverlay =
   "/assets/visual/vfx/vfx-countdown-circle-garage-real-overlay.svg";
 export const vfxCountdownSparkGarageRealOverlay =
@@ -199,16 +199,16 @@ export const sprBallPlayerLabRealDefault =
   "/assets/visual/sprites/spr-ball-player-lab-real-default.svg";
 export const sprPaddlePlayerLabRealDefault =
   "/assets/visual/sprites/spr-paddle-player-lab-real-default.svg";
-export const sprBrickBasicRedLabRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-red-lab-real-normal.svg";
-export const sprBrickBasicBlueLabRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-blue-lab-real-normal.svg";
-export const sprBrickBasicGreenLabRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-green-lab-real-normal.svg";
-export const sprBrickBasicYellowLabRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-yellow-lab-real-normal.svg";
-export const sprBrickBasicPurpleLabRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-purple-lab-real-normal.svg";
+export const sprComponentBasicRedLabRealNormal =
+  "/assets/visual/components/spr-component-basic-red-lab-real-normal.svg";
+export const sprComponentBasicBlueLabRealNormal =
+  "/assets/visual/components/spr-component-basic-blue-lab-real-normal.svg";
+export const sprComponentBasicGreenLabRealNormal =
+  "/assets/visual/components/spr-component-basic-green-lab-real-normal.svg";
+export const sprComponentBasicYellowLabRealNormal =
+  "/assets/visual/components/spr-component-basic-yellow-lab-real-normal.svg";
+export const sprComponentBasicPurpleLabRealNormal =
+  "/assets/visual/components/spr-component-basic-purple-lab-real-normal.svg";
 export const vfxCountdownCircleLabRealOverlay =
   "/assets/visual/vfx/vfx-countdown-circle-lab-real-overlay.svg";
 export const vfxCountdownSparkLabRealOverlay =
@@ -231,16 +231,16 @@ export const sprBallPlayerTempleRealDefault =
   "/assets/visual/sprites/spr-ball-player-temple-real-default.svg";
 export const sprPaddlePlayerTempleRealDefault =
   "/assets/visual/sprites/spr-paddle-player-temple-real-default.svg";
-export const sprBrickBasicRedTempleRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-red-temple-real-normal.svg";
-export const sprBrickBasicBlueTempleRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-blue-temple-real-normal.svg";
-export const sprBrickBasicGreenTempleRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-green-temple-real-normal.svg";
-export const sprBrickBasicYellowTempleRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-yellow-temple-real-normal.svg";
-export const sprBrickBasicPurpleTempleRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-purple-temple-real-normal.svg";
+export const sprComponentBasicRedTempleRealNormal =
+  "/assets/visual/components/spr-component-basic-red-temple-real-normal.svg";
+export const sprComponentBasicBlueTempleRealNormal =
+  "/assets/visual/components/spr-component-basic-blue-temple-real-normal.svg";
+export const sprComponentBasicGreenTempleRealNormal =
+  "/assets/visual/components/spr-component-basic-green-temple-real-normal.svg";
+export const sprComponentBasicYellowTempleRealNormal =
+  "/assets/visual/components/spr-component-basic-yellow-temple-real-normal.svg";
+export const sprComponentBasicPurpleTempleRealNormal =
+  "/assets/visual/components/spr-component-basic-purple-temple-real-normal.svg";
 export const vfxCountdownCircleTempleRealOverlay =
   "/assets/visual/vfx/vfx-countdown-circle-temple-real-overlay.svg";
 export const vfxCountdownSparkTempleRealOverlay =
@@ -263,16 +263,16 @@ export const sprBallPlayerOrbitalRealDefault =
   "/assets/visual/sprites/spr-ball-player-orbital-real-default.svg";
 export const sprPaddlePlayerOrbitalRealDefault =
   "/assets/visual/sprites/spr-paddle-player-orbital-real-default.svg";
-export const sprBrickBasicRedOrbitalRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-red-orbital-real-normal.svg";
-export const sprBrickBasicBlueOrbitalRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-blue-orbital-real-normal.svg";
-export const sprBrickBasicGreenOrbitalRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-green-orbital-real-normal.svg";
-export const sprBrickBasicYellowOrbitalRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-yellow-orbital-real-normal.svg";
-export const sprBrickBasicPurpleOrbitalRealNormal =
-  "/assets/visual/bricks/spr-brick-basic-purple-orbital-real-normal.svg";
+export const sprComponentBasicRedOrbitalRealNormal =
+  "/assets/visual/components/spr-component-basic-red-orbital-real-normal.svg";
+export const sprComponentBasicBlueOrbitalRealNormal =
+  "/assets/visual/components/spr-component-basic-blue-orbital-real-normal.svg";
+export const sprComponentBasicGreenOrbitalRealNormal =
+  "/assets/visual/components/spr-component-basic-green-orbital-real-normal.svg";
+export const sprComponentBasicYellowOrbitalRealNormal =
+  "/assets/visual/components/spr-component-basic-yellow-orbital-real-normal.svg";
+export const sprComponentBasicPurpleOrbitalRealNormal =
+  "/assets/visual/components/spr-component-basic-purple-orbital-real-normal.svg";
 export const vfxCountdownCircleOrbitalRealOverlay =
   "/assets/visual/vfx/vfx-countdown-circle-orbital-real-overlay.svg";
 export const vfxCountdownSparkOrbitalRealOverlay =
@@ -292,7 +292,7 @@ export const sprPowerupSlowBallOrbitalReal =
 export const sprPowerupLaserFanOrbitalReal =
   "/assets/visual/powerups/spr-powerup-laser-fan-orbital-real.svg";
 
-export type VisualAssetGroup = "sprite" | "brick" | "powerup" | "vfx" | "ui";
+export type VisualAssetGroup = "sprite" | "component" | "powerup" | "vfx" | "ui";
 
 export interface VisualAssetCatalogEntry {
   id: string;
@@ -309,14 +309,14 @@ export interface VisualAssetCatalogEntry {
 export const VISUAL_ASSET_PATHS = {
   sprBallPlayerDefault,
   sprPaddlePlayerDefault,
-  sprBrickBasicRedNormal,
-  sprBrickBasicBlueNormal,
-  sprBrickBasicGreenNormal,
-  sprBrickBasicYellowNormal,
-  sprBrickBasicPurpleNormal,
-  sprBrickMetalSteelNormal,
-  sprBrickMetalSteelDentedOne,
-  sprBrickMetalSteelDentedTwo,
+  sprComponentBasicRedNormal,
+  sprComponentBasicBlueNormal,
+  sprComponentBasicGreenNormal,
+  sprComponentBasicYellowNormal,
+  sprComponentBasicPurpleNormal,
+  sprComponentMetalSteelNormal,
+  sprComponentMetalSteelDentedOne,
+  sprComponentMetalSteelDentedTwo,
   vfxCountdownCircleOverlay,
   vfxCountdownSparkOverlay,
   vfxLevelUpStarOverlay,
@@ -337,14 +337,14 @@ export const VISUAL_ASSET_PATHS = {
   uiDownloadsFreePrivacy,
   sprBallPlayerHighContrastDefault,
   sprPaddlePlayerHighContrastDefault,
-  sprBrickBasicRedHighContrastNormal,
-  sprBrickBasicBlueHighContrastNormal,
-  sprBrickBasicGreenHighContrastNormal,
-  sprBrickBasicYellowHighContrastNormal,
-  sprBrickBasicPurpleHighContrastNormal,
-  sprBrickMetalSteelHighContrastNormal,
-  sprBrickMetalSteelHighContrastDentedOne,
-  sprBrickMetalSteelHighContrastDentedTwo,
+  sprComponentBasicRedHighContrastNormal,
+  sprComponentBasicBlueHighContrastNormal,
+  sprComponentBasicGreenHighContrastNormal,
+  sprComponentBasicYellowHighContrastNormal,
+  sprComponentBasicPurpleHighContrastNormal,
+  sprComponentMetalSteelHighContrastNormal,
+  sprComponentMetalSteelHighContrastDentedOne,
+  sprComponentMetalSteelHighContrastDentedTwo,
   vfxCountdownCircleHighContrastOverlay,
   vfxCountdownSparkHighContrastOverlay,
   vfxLevelUpStarHighContrastOverlay,
@@ -356,14 +356,14 @@ export const VISUAL_ASSET_PATHS = {
   sprPowerupLaserFanHighContrast,
   sprBallPlayerSunsetDefault,
   sprPaddlePlayerSunsetDefault,
-  sprBrickBasicRedSunsetNormal,
-  sprBrickBasicBlueSunsetNormal,
-  sprBrickBasicGreenSunsetNormal,
-  sprBrickBasicYellowSunsetNormal,
-  sprBrickBasicPurpleSunsetNormal,
-  sprBrickMetalSteelSunsetNormal,
-  sprBrickMetalSteelSunsetDentedOne,
-  sprBrickMetalSteelSunsetDentedTwo,
+  sprComponentBasicRedSunsetNormal,
+  sprComponentBasicBlueSunsetNormal,
+  sprComponentBasicGreenSunsetNormal,
+  sprComponentBasicYellowSunsetNormal,
+  sprComponentBasicPurpleSunsetNormal,
+  sprComponentMetalSteelSunsetNormal,
+  sprComponentMetalSteelSunsetDentedOne,
+  sprComponentMetalSteelSunsetDentedTwo,
   vfxCountdownCircleSunsetOverlay,
   vfxCountdownSparkSunsetOverlay,
   vfxLevelUpStarSunsetOverlay,
@@ -375,11 +375,11 @@ export const VISUAL_ASSET_PATHS = {
   sprPowerupLaserFanSunset,
   sprBallPlayerMetroRealDefault,
   sprPaddlePlayerMetroRealDefault,
-  sprBrickBasicRedMetroRealNormal,
-  sprBrickBasicBlueMetroRealNormal,
-  sprBrickBasicGreenMetroRealNormal,
-  sprBrickBasicYellowMetroRealNormal,
-  sprBrickBasicPurpleMetroRealNormal,
+  sprComponentBasicRedMetroRealNormal,
+  sprComponentBasicBlueMetroRealNormal,
+  sprComponentBasicGreenMetroRealNormal,
+  sprComponentBasicYellowMetroRealNormal,
+  sprComponentBasicPurpleMetroRealNormal,
   vfxCountdownCircleMetroRealOverlay,
   vfxCountdownSparkMetroRealOverlay,
   vfxLevelUpStarMetroRealOverlay,
@@ -391,11 +391,11 @@ export const VISUAL_ASSET_PATHS = {
   sprPowerupLaserFanMetroReal,
   sprBallPlayerGarageRealDefault,
   sprPaddlePlayerGarageRealDefault,
-  sprBrickBasicRedGarageRealNormal,
-  sprBrickBasicBlueGarageRealNormal,
-  sprBrickBasicGreenGarageRealNormal,
-  sprBrickBasicYellowGarageRealNormal,
-  sprBrickBasicPurpleGarageRealNormal,
+  sprComponentBasicRedGarageRealNormal,
+  sprComponentBasicBlueGarageRealNormal,
+  sprComponentBasicGreenGarageRealNormal,
+  sprComponentBasicYellowGarageRealNormal,
+  sprComponentBasicPurpleGarageRealNormal,
   vfxCountdownCircleGarageRealOverlay,
   vfxCountdownSparkGarageRealOverlay,
   vfxLevelUpStarGarageRealOverlay,
@@ -407,11 +407,11 @@ export const VISUAL_ASSET_PATHS = {
   sprPowerupLaserFanGarageReal,
   sprBallPlayerLabRealDefault,
   sprPaddlePlayerLabRealDefault,
-  sprBrickBasicRedLabRealNormal,
-  sprBrickBasicBlueLabRealNormal,
-  sprBrickBasicGreenLabRealNormal,
-  sprBrickBasicYellowLabRealNormal,
-  sprBrickBasicPurpleLabRealNormal,
+  sprComponentBasicRedLabRealNormal,
+  sprComponentBasicBlueLabRealNormal,
+  sprComponentBasicGreenLabRealNormal,
+  sprComponentBasicYellowLabRealNormal,
+  sprComponentBasicPurpleLabRealNormal,
   vfxCountdownCircleLabRealOverlay,
   vfxCountdownSparkLabRealOverlay,
   vfxLevelUpStarLabRealOverlay,
@@ -423,11 +423,11 @@ export const VISUAL_ASSET_PATHS = {
   sprPowerupLaserFanLabReal,
   sprBallPlayerTempleRealDefault,
   sprPaddlePlayerTempleRealDefault,
-  sprBrickBasicRedTempleRealNormal,
-  sprBrickBasicBlueTempleRealNormal,
-  sprBrickBasicGreenTempleRealNormal,
-  sprBrickBasicYellowTempleRealNormal,
-  sprBrickBasicPurpleTempleRealNormal,
+  sprComponentBasicRedTempleRealNormal,
+  sprComponentBasicBlueTempleRealNormal,
+  sprComponentBasicGreenTempleRealNormal,
+  sprComponentBasicYellowTempleRealNormal,
+  sprComponentBasicPurpleTempleRealNormal,
   vfxCountdownCircleTempleRealOverlay,
   vfxCountdownSparkTempleRealOverlay,
   vfxLevelUpStarTempleRealOverlay,
@@ -439,11 +439,11 @@ export const VISUAL_ASSET_PATHS = {
   sprPowerupLaserFanTempleReal,
   sprBallPlayerOrbitalRealDefault,
   sprPaddlePlayerOrbitalRealDefault,
-  sprBrickBasicRedOrbitalRealNormal,
-  sprBrickBasicBlueOrbitalRealNormal,
-  sprBrickBasicGreenOrbitalRealNormal,
-  sprBrickBasicYellowOrbitalRealNormal,
-  sprBrickBasicPurpleOrbitalRealNormal,
+  sprComponentBasicRedOrbitalRealNormal,
+  sprComponentBasicBlueOrbitalRealNormal,
+  sprComponentBasicGreenOrbitalRealNormal,
+  sprComponentBasicYellowOrbitalRealNormal,
+  sprComponentBasicPurpleOrbitalRealNormal,
   vfxCountdownCircleOrbitalRealOverlay,
   vfxCountdownSparkOrbitalRealOverlay,
   vfxLevelUpStarOrbitalRealOverlay,
@@ -479,88 +479,88 @@ export const VISUAL_ASSET_CATALOG = [
     usage: "Raquete padrão",
   },
   {
-    id: "spr-brick-basic-red-normal",
-    variableName: "sprBrickBasicRedNormal",
-    path: sprBrickBasicRedNormal,
-    group: "brick",
-    semanticRole: "brick-red",
+    id: "spr-component-basic-red-normal",
+    variableName: "sprComponentBasicRedNormal",
+    path: sprComponentBasicRedNormal,
+    group: "component",
+    semanticRole: "component-red",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Indutor quadrado",
   },
   {
-    id: "spr-brick-basic-blue-normal",
-    variableName: "sprBrickBasicBlueNormal",
-    path: sprBrickBasicBlueNormal,
-    group: "brick",
-    semanticRole: "brick-blue",
+    id: "spr-component-basic-blue-normal",
+    variableName: "sprComponentBasicBlueNormal",
+    path: sprComponentBasicBlueNormal,
+    group: "component",
+    semanticRole: "component-blue",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Transistor",
   },
   {
-    id: "spr-brick-basic-green-normal",
-    variableName: "sprBrickBasicGreenNormal",
-    path: sprBrickBasicGreenNormal,
-    group: "brick",
-    semanticRole: "brick-green",
+    id: "spr-component-basic-green-normal",
+    variableName: "sprComponentBasicGreenNormal",
+    path: sprComponentBasicGreenNormal,
+    group: "component",
+    semanticRole: "component-green",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Chip integrado",
   },
   {
-    id: "spr-brick-basic-yellow-normal",
-    variableName: "sprBrickBasicYellowNormal",
-    path: sprBrickBasicYellowNormal,
-    group: "brick",
-    semanticRole: "brick-yellow",
+    id: "spr-component-basic-yellow-normal",
+    variableName: "sprComponentBasicYellowNormal",
+    path: sprComponentBasicYellowNormal,
+    group: "component",
+    semanticRole: "component-yellow",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Diodo LED",
   },
   {
-    id: "spr-brick-basic-purple-normal",
-    variableName: "sprBrickBasicPurpleNormal",
-    path: sprBrickBasicPurpleNormal,
-    group: "brick",
-    semanticRole: "brick-purple",
+    id: "spr-component-basic-purple-normal",
+    variableName: "sprComponentBasicPurpleNormal",
+    path: sprComponentBasicPurpleNormal,
+    group: "component",
+    semanticRole: "component-purple",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Capacitor",
   },
   {
-    id: "spr-brick-metal-steel-normal",
-    variableName: "sprBrickMetalSteelNormal",
-    path: sprBrickMetalSteelNormal,
-    group: "brick",
-    semanticRole: "brick-metal-steel",
+    id: "spr-component-metal-steel-normal",
+    variableName: "sprComponentMetalSteelNormal",
+    path: sprComponentMetalSteelNormal,
+    group: "component",
+    semanticRole: "component-metal-steel",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Módulo blindado resistente",
   },
   {
-    id: "spr-brick-metal-steel-dented-one",
-    variableName: "sprBrickMetalSteelDentedOne",
-    path: sprBrickMetalSteelDentedOne,
-    group: "brick",
-    semanticRole: "brick-metal-steel-dented-one",
+    id: "spr-component-metal-steel-dented-one",
+    variableName: "sprComponentMetalSteelDentedOne",
+    path: sprComponentMetalSteelDentedOne,
+    group: "component",
+    semanticRole: "component-metal-steel-dented-one",
     state: "damaged",
     width: 48,
     height: 20,
     usage: "Módulo blindado danificado",
   },
   {
-    id: "spr-brick-metal-steel-dented-two",
-    variableName: "sprBrickMetalSteelDentedTwo",
-    path: sprBrickMetalSteelDentedTwo,
-    group: "brick",
-    semanticRole: "brick-metal-steel-dented-two",
+    id: "spr-component-metal-steel-dented-two",
+    variableName: "sprComponentMetalSteelDentedTwo",
+    path: sprComponentMetalSteelDentedTwo,
+    group: "component",
+    semanticRole: "component-metal-steel-dented-two",
     state: "critical",
     width: 48,
     height: 20,
@@ -787,88 +787,88 @@ export const VISUAL_ASSET_CATALOG = [
     usage: "Raquete alto contraste",
   },
   {
-    id: "spr-brick-basic-red-high-contrast-normal",
-    variableName: "sprBrickBasicRedHighContrastNormal",
-    path: sprBrickBasicRedHighContrastNormal,
-    group: "brick",
-    semanticRole: "brick-red-high-contrast",
+    id: "spr-component-basic-red-high-contrast-normal",
+    variableName: "sprComponentBasicRedHighContrastNormal",
+    path: sprComponentBasicRedHighContrastNormal,
+    group: "component",
+    semanticRole: "component-red-high-contrast",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Indutor quadrado alto contraste",
   },
   {
-    id: "spr-brick-basic-blue-high-contrast-normal",
-    variableName: "sprBrickBasicBlueHighContrastNormal",
-    path: sprBrickBasicBlueHighContrastNormal,
-    group: "brick",
-    semanticRole: "brick-blue-high-contrast",
+    id: "spr-component-basic-blue-high-contrast-normal",
+    variableName: "sprComponentBasicBlueHighContrastNormal",
+    path: sprComponentBasicBlueHighContrastNormal,
+    group: "component",
+    semanticRole: "component-blue-high-contrast",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Transistor alto contraste",
   },
   {
-    id: "spr-brick-basic-green-high-contrast-normal",
-    variableName: "sprBrickBasicGreenHighContrastNormal",
-    path: sprBrickBasicGreenHighContrastNormal,
-    group: "brick",
-    semanticRole: "brick-green-high-contrast",
+    id: "spr-component-basic-green-high-contrast-normal",
+    variableName: "sprComponentBasicGreenHighContrastNormal",
+    path: sprComponentBasicGreenHighContrastNormal,
+    group: "component",
+    semanticRole: "component-green-high-contrast",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Chip integrado alto contraste",
   },
   {
-    id: "spr-brick-basic-yellow-high-contrast-normal",
-    variableName: "sprBrickBasicYellowHighContrastNormal",
-    path: sprBrickBasicYellowHighContrastNormal,
-    group: "brick",
-    semanticRole: "brick-yellow-high-contrast",
+    id: "spr-component-basic-yellow-high-contrast-normal",
+    variableName: "sprComponentBasicYellowHighContrastNormal",
+    path: sprComponentBasicYellowHighContrastNormal,
+    group: "component",
+    semanticRole: "component-yellow-high-contrast",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Diodo LED alto contraste",
   },
   {
-    id: "spr-brick-basic-purple-high-contrast-normal",
-    variableName: "sprBrickBasicPurpleHighContrastNormal",
-    path: sprBrickBasicPurpleHighContrastNormal,
-    group: "brick",
-    semanticRole: "brick-purple-high-contrast",
+    id: "spr-component-basic-purple-high-contrast-normal",
+    variableName: "sprComponentBasicPurpleHighContrastNormal",
+    path: sprComponentBasicPurpleHighContrastNormal,
+    group: "component",
+    semanticRole: "component-purple-high-contrast",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Capacitor alto contraste",
   },
   {
-    id: "spr-brick-metal-steel-high-contrast-normal",
-    variableName: "sprBrickMetalSteelHighContrastNormal",
-    path: sprBrickMetalSteelHighContrastNormal,
-    group: "brick",
-    semanticRole: "brick-metal-steel-high-contrast",
+    id: "spr-component-metal-steel-high-contrast-normal",
+    variableName: "sprComponentMetalSteelHighContrastNormal",
+    path: sprComponentMetalSteelHighContrastNormal,
+    group: "component",
+    semanticRole: "component-metal-steel-high-contrast",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Módulo blindado alto contraste resistente",
   },
   {
-    id: "spr-brick-metal-steel-high-contrast-dented-one",
-    variableName: "sprBrickMetalSteelHighContrastDentedOne",
-    path: sprBrickMetalSteelHighContrastDentedOne,
-    group: "brick",
-    semanticRole: "brick-metal-steel-high-contrast-dented-one",
+    id: "spr-component-metal-steel-high-contrast-dented-one",
+    variableName: "sprComponentMetalSteelHighContrastDentedOne",
+    path: sprComponentMetalSteelHighContrastDentedOne,
+    group: "component",
+    semanticRole: "component-metal-steel-high-contrast-dented-one",
     state: "damaged",
     width: 48,
     height: 20,
     usage: "Módulo blindado alto contraste danificado",
   },
   {
-    id: "spr-brick-metal-steel-high-contrast-dented-two",
-    variableName: "sprBrickMetalSteelHighContrastDentedTwo",
-    path: sprBrickMetalSteelHighContrastDentedTwo,
-    group: "brick",
-    semanticRole: "brick-metal-steel-high-contrast-dented-two",
+    id: "spr-component-metal-steel-high-contrast-dented-two",
+    variableName: "sprComponentMetalSteelHighContrastDentedTwo",
+    path: sprComponentMetalSteelHighContrastDentedTwo,
+    group: "component",
+    semanticRole: "component-metal-steel-high-contrast-dented-two",
     state: "critical",
     width: 48,
     height: 20,
@@ -996,88 +996,88 @@ export const VISUAL_ASSET_CATALOG = [
     usage: "Raquete sunset",
   },
   {
-    id: "spr-brick-basic-red-sunset-normal",
-    variableName: "sprBrickBasicRedSunsetNormal",
-    path: sprBrickBasicRedSunsetNormal,
-    group: "brick",
-    semanticRole: "brick-red-sunset",
+    id: "spr-component-basic-red-sunset-normal",
+    variableName: "sprComponentBasicRedSunsetNormal",
+    path: sprComponentBasicRedSunsetNormal,
+    group: "component",
+    semanticRole: "component-red-sunset",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Indutor quadrado sunset",
   },
   {
-    id: "spr-brick-basic-blue-sunset-normal",
-    variableName: "sprBrickBasicBlueSunsetNormal",
-    path: sprBrickBasicBlueSunsetNormal,
-    group: "brick",
-    semanticRole: "brick-blue-sunset",
+    id: "spr-component-basic-blue-sunset-normal",
+    variableName: "sprComponentBasicBlueSunsetNormal",
+    path: sprComponentBasicBlueSunsetNormal,
+    group: "component",
+    semanticRole: "component-blue-sunset",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Transistor sunset",
   },
   {
-    id: "spr-brick-basic-green-sunset-normal",
-    variableName: "sprBrickBasicGreenSunsetNormal",
-    path: sprBrickBasicGreenSunsetNormal,
-    group: "brick",
-    semanticRole: "brick-green-sunset",
+    id: "spr-component-basic-green-sunset-normal",
+    variableName: "sprComponentBasicGreenSunsetNormal",
+    path: sprComponentBasicGreenSunsetNormal,
+    group: "component",
+    semanticRole: "component-green-sunset",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Chip integrado sunset",
   },
   {
-    id: "spr-brick-basic-yellow-sunset-normal",
-    variableName: "sprBrickBasicYellowSunsetNormal",
-    path: sprBrickBasicYellowSunsetNormal,
-    group: "brick",
-    semanticRole: "brick-yellow-sunset",
+    id: "spr-component-basic-yellow-sunset-normal",
+    variableName: "sprComponentBasicYellowSunsetNormal",
+    path: sprComponentBasicYellowSunsetNormal,
+    group: "component",
+    semanticRole: "component-yellow-sunset",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Diodo LED sunset",
   },
   {
-    id: "spr-brick-basic-purple-sunset-normal",
-    variableName: "sprBrickBasicPurpleSunsetNormal",
-    path: sprBrickBasicPurpleSunsetNormal,
-    group: "brick",
-    semanticRole: "brick-purple-sunset",
+    id: "spr-component-basic-purple-sunset-normal",
+    variableName: "sprComponentBasicPurpleSunsetNormal",
+    path: sprComponentBasicPurpleSunsetNormal,
+    group: "component",
+    semanticRole: "component-purple-sunset",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Capacitor sunset",
   },
   {
-    id: "spr-brick-metal-steel-sunset-normal",
-    variableName: "sprBrickMetalSteelSunsetNormal",
-    path: sprBrickMetalSteelSunsetNormal,
-    group: "brick",
-    semanticRole: "brick-metal-steel-sunset",
+    id: "spr-component-metal-steel-sunset-normal",
+    variableName: "sprComponentMetalSteelSunsetNormal",
+    path: sprComponentMetalSteelSunsetNormal,
+    group: "component",
+    semanticRole: "component-metal-steel-sunset",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Módulo blindado sunset resistente",
   },
   {
-    id: "spr-brick-metal-steel-sunset-dented-one",
-    variableName: "sprBrickMetalSteelSunsetDentedOne",
-    path: sprBrickMetalSteelSunsetDentedOne,
-    group: "brick",
-    semanticRole: "brick-metal-steel-sunset-dented-one",
+    id: "spr-component-metal-steel-sunset-dented-one",
+    variableName: "sprComponentMetalSteelSunsetDentedOne",
+    path: sprComponentMetalSteelSunsetDentedOne,
+    group: "component",
+    semanticRole: "component-metal-steel-sunset-dented-one",
     state: "damaged",
     width: 48,
     height: 20,
     usage: "Módulo blindado sunset danificado",
   },
   {
-    id: "spr-brick-metal-steel-sunset-dented-two",
-    variableName: "sprBrickMetalSteelSunsetDentedTwo",
-    path: sprBrickMetalSteelSunsetDentedTwo,
-    group: "brick",
-    semanticRole: "brick-metal-steel-sunset-dented-two",
+    id: "spr-component-metal-steel-sunset-dented-two",
+    variableName: "sprComponentMetalSteelSunsetDentedTwo",
+    path: sprComponentMetalSteelSunsetDentedTwo,
+    group: "component",
+    semanticRole: "component-metal-steel-sunset-dented-two",
     state: "critical",
     width: 48,
     height: 20,
@@ -1205,55 +1205,55 @@ export const VISUAL_ASSET_CATALOG = [
     usage: "Raquete metrô realista",
   },
   {
-    id: "spr-brick-basic-red-metro-real-normal",
-    variableName: "sprBrickBasicRedMetroRealNormal",
-    path: sprBrickBasicRedMetroRealNormal,
-    group: "brick",
-    semanticRole: "brick-red-metro-real",
+    id: "spr-component-basic-red-metro-real-normal",
+    variableName: "sprComponentBasicRedMetroRealNormal",
+    path: sprComponentBasicRedMetroRealNormal,
+    group: "component",
+    semanticRole: "component-red-metro-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Indutor quadrado metrô realista",
   },
   {
-    id: "spr-brick-basic-blue-metro-real-normal",
-    variableName: "sprBrickBasicBlueMetroRealNormal",
-    path: sprBrickBasicBlueMetroRealNormal,
-    group: "brick",
-    semanticRole: "brick-blue-metro-real",
+    id: "spr-component-basic-blue-metro-real-normal",
+    variableName: "sprComponentBasicBlueMetroRealNormal",
+    path: sprComponentBasicBlueMetroRealNormal,
+    group: "component",
+    semanticRole: "component-blue-metro-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Transistor metrô realista",
   },
   {
-    id: "spr-brick-basic-green-metro-real-normal",
-    variableName: "sprBrickBasicGreenMetroRealNormal",
-    path: sprBrickBasicGreenMetroRealNormal,
-    group: "brick",
-    semanticRole: "brick-green-metro-real",
+    id: "spr-component-basic-green-metro-real-normal",
+    variableName: "sprComponentBasicGreenMetroRealNormal",
+    path: sprComponentBasicGreenMetroRealNormal,
+    group: "component",
+    semanticRole: "component-green-metro-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Chip integrado metrô realista",
   },
   {
-    id: "spr-brick-basic-yellow-metro-real-normal",
-    variableName: "sprBrickBasicYellowMetroRealNormal",
-    path: sprBrickBasicYellowMetroRealNormal,
-    group: "brick",
-    semanticRole: "brick-yellow-metro-real",
+    id: "spr-component-basic-yellow-metro-real-normal",
+    variableName: "sprComponentBasicYellowMetroRealNormal",
+    path: sprComponentBasicYellowMetroRealNormal,
+    group: "component",
+    semanticRole: "component-yellow-metro-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Diodo LED metrô realista",
   },
   {
-    id: "spr-brick-basic-purple-metro-real-normal",
-    variableName: "sprBrickBasicPurpleMetroRealNormal",
-    path: sprBrickBasicPurpleMetroRealNormal,
-    group: "brick",
-    semanticRole: "brick-purple-metro-real",
+    id: "spr-component-basic-purple-metro-real-normal",
+    variableName: "sprComponentBasicPurpleMetroRealNormal",
+    path: sprComponentBasicPurpleMetroRealNormal,
+    group: "component",
+    semanticRole: "component-purple-metro-real",
     state: "normal",
     width: 48,
     height: 20,
@@ -1381,55 +1381,55 @@ export const VISUAL_ASSET_CATALOG = [
     usage: "Raquete oficina realista",
   },
   {
-    id: "spr-brick-basic-red-garage-real-normal",
-    variableName: "sprBrickBasicRedGarageRealNormal",
-    path: sprBrickBasicRedGarageRealNormal,
-    group: "brick",
-    semanticRole: "brick-red-garage-real",
+    id: "spr-component-basic-red-garage-real-normal",
+    variableName: "sprComponentBasicRedGarageRealNormal",
+    path: sprComponentBasicRedGarageRealNormal,
+    group: "component",
+    semanticRole: "component-red-garage-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Indutor quadrado oficina realista",
   },
   {
-    id: "spr-brick-basic-blue-garage-real-normal",
-    variableName: "sprBrickBasicBlueGarageRealNormal",
-    path: sprBrickBasicBlueGarageRealNormal,
-    group: "brick",
-    semanticRole: "brick-blue-garage-real",
+    id: "spr-component-basic-blue-garage-real-normal",
+    variableName: "sprComponentBasicBlueGarageRealNormal",
+    path: sprComponentBasicBlueGarageRealNormal,
+    group: "component",
+    semanticRole: "component-blue-garage-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Transistor oficina realista",
   },
   {
-    id: "spr-brick-basic-green-garage-real-normal",
-    variableName: "sprBrickBasicGreenGarageRealNormal",
-    path: sprBrickBasicGreenGarageRealNormal,
-    group: "brick",
-    semanticRole: "brick-green-garage-real",
+    id: "spr-component-basic-green-garage-real-normal",
+    variableName: "sprComponentBasicGreenGarageRealNormal",
+    path: sprComponentBasicGreenGarageRealNormal,
+    group: "component",
+    semanticRole: "component-green-garage-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Chip integrado oficina realista",
   },
   {
-    id: "spr-brick-basic-yellow-garage-real-normal",
-    variableName: "sprBrickBasicYellowGarageRealNormal",
-    path: sprBrickBasicYellowGarageRealNormal,
-    group: "brick",
-    semanticRole: "brick-yellow-garage-real",
+    id: "spr-component-basic-yellow-garage-real-normal",
+    variableName: "sprComponentBasicYellowGarageRealNormal",
+    path: sprComponentBasicYellowGarageRealNormal,
+    group: "component",
+    semanticRole: "component-yellow-garage-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Diodo LED oficina realista",
   },
   {
-    id: "spr-brick-basic-purple-garage-real-normal",
-    variableName: "sprBrickBasicPurpleGarageRealNormal",
-    path: sprBrickBasicPurpleGarageRealNormal,
-    group: "brick",
-    semanticRole: "brick-purple-garage-real",
+    id: "spr-component-basic-purple-garage-real-normal",
+    variableName: "sprComponentBasicPurpleGarageRealNormal",
+    path: sprComponentBasicPurpleGarageRealNormal,
+    group: "component",
+    semanticRole: "component-purple-garage-real",
     state: "normal",
     width: 48,
     height: 20,
@@ -1557,55 +1557,55 @@ export const VISUAL_ASSET_CATALOG = [
     usage: "Raquete laboratório realista",
   },
   {
-    id: "spr-brick-basic-red-lab-real-normal",
-    variableName: "sprBrickBasicRedLabRealNormal",
-    path: sprBrickBasicRedLabRealNormal,
-    group: "brick",
-    semanticRole: "brick-red-lab-real",
+    id: "spr-component-basic-red-lab-real-normal",
+    variableName: "sprComponentBasicRedLabRealNormal",
+    path: sprComponentBasicRedLabRealNormal,
+    group: "component",
+    semanticRole: "component-red-lab-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Indutor quadrado laboratório realista",
   },
   {
-    id: "spr-brick-basic-blue-lab-real-normal",
-    variableName: "sprBrickBasicBlueLabRealNormal",
-    path: sprBrickBasicBlueLabRealNormal,
-    group: "brick",
-    semanticRole: "brick-blue-lab-real",
+    id: "spr-component-basic-blue-lab-real-normal",
+    variableName: "sprComponentBasicBlueLabRealNormal",
+    path: sprComponentBasicBlueLabRealNormal,
+    group: "component",
+    semanticRole: "component-blue-lab-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Transistor laboratório realista",
   },
   {
-    id: "spr-brick-basic-green-lab-real-normal",
-    variableName: "sprBrickBasicGreenLabRealNormal",
-    path: sprBrickBasicGreenLabRealNormal,
-    group: "brick",
-    semanticRole: "brick-green-lab-real",
+    id: "spr-component-basic-green-lab-real-normal",
+    variableName: "sprComponentBasicGreenLabRealNormal",
+    path: sprComponentBasicGreenLabRealNormal,
+    group: "component",
+    semanticRole: "component-green-lab-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Chip integrado laboratório realista",
   },
   {
-    id: "spr-brick-basic-yellow-lab-real-normal",
-    variableName: "sprBrickBasicYellowLabRealNormal",
-    path: sprBrickBasicYellowLabRealNormal,
-    group: "brick",
-    semanticRole: "brick-yellow-lab-real",
+    id: "spr-component-basic-yellow-lab-real-normal",
+    variableName: "sprComponentBasicYellowLabRealNormal",
+    path: sprComponentBasicYellowLabRealNormal,
+    group: "component",
+    semanticRole: "component-yellow-lab-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Diodo LED laboratório realista",
   },
   {
-    id: "spr-brick-basic-purple-lab-real-normal",
-    variableName: "sprBrickBasicPurpleLabRealNormal",
-    path: sprBrickBasicPurpleLabRealNormal,
-    group: "brick",
-    semanticRole: "brick-purple-lab-real",
+    id: "spr-component-basic-purple-lab-real-normal",
+    variableName: "sprComponentBasicPurpleLabRealNormal",
+    path: sprComponentBasicPurpleLabRealNormal,
+    group: "component",
+    semanticRole: "component-purple-lab-real",
     state: "normal",
     width: 48,
     height: 20,
@@ -1733,55 +1733,55 @@ export const VISUAL_ASSET_CATALOG = [
     usage: "Raquete templo realista",
   },
   {
-    id: "spr-brick-basic-red-temple-real-normal",
-    variableName: "sprBrickBasicRedTempleRealNormal",
-    path: sprBrickBasicRedTempleRealNormal,
-    group: "brick",
-    semanticRole: "brick-red-temple-real",
+    id: "spr-component-basic-red-temple-real-normal",
+    variableName: "sprComponentBasicRedTempleRealNormal",
+    path: sprComponentBasicRedTempleRealNormal,
+    group: "component",
+    semanticRole: "component-red-temple-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Indutor quadrado templo realista",
   },
   {
-    id: "spr-brick-basic-blue-temple-real-normal",
-    variableName: "sprBrickBasicBlueTempleRealNormal",
-    path: sprBrickBasicBlueTempleRealNormal,
-    group: "brick",
-    semanticRole: "brick-blue-temple-real",
+    id: "spr-component-basic-blue-temple-real-normal",
+    variableName: "sprComponentBasicBlueTempleRealNormal",
+    path: sprComponentBasicBlueTempleRealNormal,
+    group: "component",
+    semanticRole: "component-blue-temple-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Transistor templo realista",
   },
   {
-    id: "spr-brick-basic-green-temple-real-normal",
-    variableName: "sprBrickBasicGreenTempleRealNormal",
-    path: sprBrickBasicGreenTempleRealNormal,
-    group: "brick",
-    semanticRole: "brick-green-temple-real",
+    id: "spr-component-basic-green-temple-real-normal",
+    variableName: "sprComponentBasicGreenTempleRealNormal",
+    path: sprComponentBasicGreenTempleRealNormal,
+    group: "component",
+    semanticRole: "component-green-temple-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Chip integrado templo realista",
   },
   {
-    id: "spr-brick-basic-yellow-temple-real-normal",
-    variableName: "sprBrickBasicYellowTempleRealNormal",
-    path: sprBrickBasicYellowTempleRealNormal,
-    group: "brick",
-    semanticRole: "brick-yellow-temple-real",
+    id: "spr-component-basic-yellow-temple-real-normal",
+    variableName: "sprComponentBasicYellowTempleRealNormal",
+    path: sprComponentBasicYellowTempleRealNormal,
+    group: "component",
+    semanticRole: "component-yellow-temple-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Diodo LED templo realista",
   },
   {
-    id: "spr-brick-basic-purple-temple-real-normal",
-    variableName: "sprBrickBasicPurpleTempleRealNormal",
-    path: sprBrickBasicPurpleTempleRealNormal,
-    group: "brick",
-    semanticRole: "brick-purple-temple-real",
+    id: "spr-component-basic-purple-temple-real-normal",
+    variableName: "sprComponentBasicPurpleTempleRealNormal",
+    path: sprComponentBasicPurpleTempleRealNormal,
+    group: "component",
+    semanticRole: "component-purple-temple-real",
     state: "normal",
     width: 48,
     height: 20,
@@ -1909,55 +1909,55 @@ export const VISUAL_ASSET_CATALOG = [
     usage: "Raquete estação orbital realista",
   },
   {
-    id: "spr-brick-basic-red-orbital-real-normal",
-    variableName: "sprBrickBasicRedOrbitalRealNormal",
-    path: sprBrickBasicRedOrbitalRealNormal,
-    group: "brick",
-    semanticRole: "brick-red-orbital-real",
+    id: "spr-component-basic-red-orbital-real-normal",
+    variableName: "sprComponentBasicRedOrbitalRealNormal",
+    path: sprComponentBasicRedOrbitalRealNormal,
+    group: "component",
+    semanticRole: "component-red-orbital-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Indutor quadrado estação orbital realista",
   },
   {
-    id: "spr-brick-basic-blue-orbital-real-normal",
-    variableName: "sprBrickBasicBlueOrbitalRealNormal",
-    path: sprBrickBasicBlueOrbitalRealNormal,
-    group: "brick",
-    semanticRole: "brick-blue-orbital-real",
+    id: "spr-component-basic-blue-orbital-real-normal",
+    variableName: "sprComponentBasicBlueOrbitalRealNormal",
+    path: sprComponentBasicBlueOrbitalRealNormal,
+    group: "component",
+    semanticRole: "component-blue-orbital-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Transistor estação orbital realista",
   },
   {
-    id: "spr-brick-basic-green-orbital-real-normal",
-    variableName: "sprBrickBasicGreenOrbitalRealNormal",
-    path: sprBrickBasicGreenOrbitalRealNormal,
-    group: "brick",
-    semanticRole: "brick-green-orbital-real",
+    id: "spr-component-basic-green-orbital-real-normal",
+    variableName: "sprComponentBasicGreenOrbitalRealNormal",
+    path: sprComponentBasicGreenOrbitalRealNormal,
+    group: "component",
+    semanticRole: "component-green-orbital-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Chip integrado estação orbital realista",
   },
   {
-    id: "spr-brick-basic-yellow-orbital-real-normal",
-    variableName: "sprBrickBasicYellowOrbitalRealNormal",
-    path: sprBrickBasicYellowOrbitalRealNormal,
-    group: "brick",
-    semanticRole: "brick-yellow-orbital-real",
+    id: "spr-component-basic-yellow-orbital-real-normal",
+    variableName: "sprComponentBasicYellowOrbitalRealNormal",
+    path: sprComponentBasicYellowOrbitalRealNormal,
+    group: "component",
+    semanticRole: "component-yellow-orbital-real",
     state: "normal",
     width: 48,
     height: 20,
     usage: "Diodo LED estação orbital realista",
   },
   {
-    id: "spr-brick-basic-purple-orbital-real-normal",
-    variableName: "sprBrickBasicPurpleOrbitalRealNormal",
-    path: sprBrickBasicPurpleOrbitalRealNormal,
-    group: "brick",
-    semanticRole: "brick-purple-orbital-real",
+    id: "spr-component-basic-purple-orbital-real-normal",
+    variableName: "sprComponentBasicPurpleOrbitalRealNormal",
+    path: sprComponentBasicPurpleOrbitalRealNormal,
+    group: "component",
+    semanticRole: "component-purple-orbital-real",
     state: "normal",
     width: 48,
     height: 20,

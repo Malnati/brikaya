@@ -12,7 +12,7 @@ import {
   calculateBallTurretReboundSegmentCount,
   calculatePaddleAngleFromCanvasPoint,
   calculatePaddleAngleFromCanvasX,
-  calculateRadialBrickSegment,
+  calculateRadialComponentSegment,
   calculateRadialPaddleBounds,
   calculateRadialPlayfieldGeometry,
   isBallTurretBoundarySegmentRebounding,
@@ -22,30 +22,30 @@ import {
 const TEST_CANVAS_WIDTH = 480;
 const TEST_CANVAS_HEIGHT = 480;
 const TEST_DIMENSIONS: DynamicGameDimensions = {
-  brickWidth: 60,
-  brickHeight: 20,
-  brickPadding: 8,
-  brickOffsetTop: 24,
-  brickOffsetLeft: 16,
-  brickCols: 5,
-  brickRows: 3,
+  componentWidth: 60,
+  componentHeight: 20,
+  componentPadding: 8,
+  componentOffsetTop: 24,
+  componentOffsetLeft: 16,
+  componentCols: 5,
+  componentRows: 3,
   paddleWidth: 80,
   paddleHeight: 12,
   ballRadius: 9,
 };
 const FULL_CIRCLE_TURRET_DIMENSIONS: DynamicGameDimensions = {
   ...TEST_DIMENSIONS,
-  brickCols: TEST_DIMENSIONS.brickCols * 2,
+  componentCols: TEST_DIMENSIONS.componentCols * 2,
 };
 
 describe("radialGeometry", () => {
-  it("calcula arena circular centralizada e tijolo no arco superior", () => {
+  it("calcula arena circular centralizada e componente no arco superior", () => {
     const geometry = calculateRadialPlayfieldGeometry(
       TEST_CANVAS_WIDTH,
       TEST_CANVAS_HEIGHT,
       TEST_DIMENSIONS,
     );
-    const segment = calculateRadialBrickSegment(
+    const segment = calculateRadialComponentSegment(
       geometry,
       TEST_DIMENSIONS,
       2,
@@ -65,7 +65,7 @@ describe("radialGeometry", () => {
       TEST_CANVAS_HEIGHT,
       TEST_DIMENSIONS,
     );
-    const segment = calculateRadialBrickSegment(
+    const segment = calculateRadialComponentSegment(
       geometry,
       TEST_DIMENSIONS,
       2,
@@ -92,7 +92,7 @@ describe("radialGeometry", () => {
     expect(geometry.centerY + geometry.radius).toBe(TEST_CANVAS_HEIGHT);
   });
 
-  it("calcula tijolos da torreta em toda a circunferência", () => {
+  it("calcula componentes da torreta em toda a circunferência", () => {
     const classicGeometry = calculateRadialPlayfieldGeometry(
       TEST_CANVAS_WIDTH,
       TEST_CANVAS_HEIGHT,
@@ -103,16 +103,16 @@ describe("radialGeometry", () => {
       TEST_CANVAS_HEIGHT,
       FULL_CIRCLE_TURRET_DIMENSIONS,
     );
-    const classicSegment = calculateRadialBrickSegment(
+    const classicSegment = calculateRadialComponentSegment(
       classicGeometry,
       TEST_DIMENSIONS,
       2,
       0,
     );
     const turretSegments = Array.from(
-      { length: FULL_CIRCLE_TURRET_DIMENSIONS.brickCols },
+      { length: FULL_CIRCLE_TURRET_DIMENSIONS.componentCols },
       (_, col) =>
-        calculateRadialBrickSegment(
+        calculateRadialComponentSegment(
           turretGeometry,
           FULL_CIRCLE_TURRET_DIMENSIONS,
           col,
@@ -121,8 +121,8 @@ describe("radialGeometry", () => {
     );
 
     expect(classicSegment.centerY).toBeLessThan(classicGeometry.centerY);
-    expect(turretGeometry.brickArcStartAngle).toBeCloseTo(-Math.PI);
-    expect(turretGeometry.brickArcEndAngle).toBeCloseTo(Math.PI);
+    expect(turretGeometry.componentArcStartAngle).toBeCloseTo(-Math.PI);
+    expect(turretGeometry.componentArcEndAngle).toBeCloseTo(Math.PI);
     expect(
       turretSegments.some((segment) => segment.centerX < turretGeometry.centerX),
     ).toBe(true);
@@ -256,7 +256,7 @@ describe("radialGeometry", () => {
       TEST_CANVAS_HEIGHT,
       TEST_DIMENSIONS,
     );
-    const segment = calculateRadialBrickSegment(
+    const segment = calculateRadialComponentSegment(
       geometry,
       TEST_DIMENSIONS,
       1,

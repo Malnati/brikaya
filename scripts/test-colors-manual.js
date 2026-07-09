@@ -156,16 +156,16 @@ class ManualColorTester {
       
       // Determinar se o teste passou
       if (colorValidation.hasColoredPixels && !colorValidation.hasBluePixels) {
-        console.log('✅ TESTE PASSOU: Bricks coloridos detectados, sem fallback azul');
+        console.log('✅ TESTE PASSOU: Components coloridos detectados, sem fallback azul');
         this.results.passed++;
       } else if (colorValidation.hasBluePixels) {
         console.log('❌ TESTE FALHOU: Detectado fallback azul - problema com carregamento de imagens');
         this.results.failed++;
         this.results.errors.push('Fallback azul detectado - imagens não carregaram corretamente');
       } else if (!colorValidation.hasColoredPixels) {
-        console.log('❌ TESTE FALHOU: Nenhum brick colorido detectado');
+        console.log('❌ TESTE FALHOU: Nenhum component colorido detectado');
         this.results.failed++;
-        this.results.errors.push('Nenhum brick colorido detectado na tela');
+        this.results.errors.push('Nenhum component colorido detectado na tela');
       }
       
       // Capturar screenshot para debug

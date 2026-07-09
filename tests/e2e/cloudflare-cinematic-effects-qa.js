@@ -51,7 +51,7 @@ const LEVEL_UP_SELECTOR = '[data-cinematic-type="levelUp"]';
 const RIP_SELECTOR = '[data-cinematic-type="rip"]';
 const CINEMATIC_STAGE_SELECTOR = '[data-testid="game-cinematic-stage"]';
 const CANVAS_SELECTOR = "canvas";
-const SINGLE_BRICK_QA_SCENARIO = "single-brick-phase-clear";
+const SINGLE_COMPONENT_QA_SCENARIO = "single-component-phase-clear";
 const CINEMATIC_RIP_QA_SCENARIO = "cinematic-rip";
 const REQUIRED_LEVEL_AUDIO_IDS = ["sfx-score-tick", "sfx-level-toast-in"];
 const REQUIRED_RIP_AUDIO_IDS = ["sfx-game-over"];
@@ -187,7 +187,7 @@ function ripScenarioUrl(baseUrl, viewportName) {
 }
 
 function countdownScenarioUrl(baseUrl, config) {
-  return scenarioUrl(baseUrl, SINGLE_BRICK_QA_SCENARIO, config.searchParams);
+  return scenarioUrl(baseUrl, SINGLE_COMPONENT_QA_SCENARIO, config.searchParams);
 }
 
 async function clearOfflineState(page) {
@@ -1297,7 +1297,7 @@ async function run() {
     );
 
     const report = {
-      levelTargetUrl: scenarioUrl(publicUrl, SINGLE_BRICK_QA_SCENARIO),
+      levelTargetUrl: scenarioUrl(publicUrl, SINGLE_COMPONENT_QA_SCENARIO),
       ripTargetUrl: scenarioUrl(publicUrl, CINEMATIC_RIP_QA_SCENARIO),
       countdownDurationMs,
       ripDurationMs,

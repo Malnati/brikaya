@@ -9,7 +9,7 @@ const PUBLIC_URL = "https://brikaya.com/";
 test("classifies approved ad requests separately from unexpected external requests", () => {
   const result = classifyExternalRequests(
     [
-      "https://brikaya.com/assets/visual/bricks/spr-brick-basic-red-normal.svg",
+      "https://brikaya.com/assets/visual/components/spr-component-basic-red-normal.svg",
       "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-safe",
       "https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-safe",
       "https://ep1.adtrafficquality.google/getconfig/sodar?sv=200",

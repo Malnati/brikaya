@@ -67,8 +67,8 @@ const TEST_LEVEL_TRANSITION_PAYLOAD: LevelTransitionPayload = {
   pauseMs: 1800,
   nextMaxSpeed: 6.72,
   nextMinSpeed: 1.68,
-  nextReductionPerBrick: 0.336,
-  nextInitialBrickCount: 15,
+  nextReductionPerComponent: 0.336,
+  nextInitialComponentCount: 15,
 };
 const TEST_AD_LEVEL_TRANSITION_PAYLOAD: LevelTransitionPayload = {
   ...TEST_LEVEL_TRANSITION_PAYLOAD,
@@ -741,31 +741,31 @@ describe("App theme selector", () => {
 
   it("encaminha cenário de QA de blocos desviantes com compatibilidade clássica", async () => {
     mockSystemTheme(true);
-    window.history.replaceState(null, "", "/?qaScenario=evasive-blocks");
+    window.history.replaceState(null, "", "/?qaScenario=evasive-components");
 
     await renderApp();
 
-    expect(mockLastGameProps?.qaScenario).toBe("evasive-blocks");
+    expect(mockLastGameProps?.qaScenario).toBe("evasive-components");
     expect(mockLastGameProps?.gameMode).toBe("classic");
   });
 
   it("mantém cenário de fase única em modo clássico para QA determinístico", async () => {
     mockSystemTheme(true);
-    window.history.replaceState(null, "", "/?qaScenario=single-brick-phase-clear");
+    window.history.replaceState(null, "", "/?qaScenario=single-component-phase-clear");
 
     await renderApp();
 
-    expect(mockLastGameProps?.qaScenario).toBe("single-brick-phase-clear");
+    expect(mockLastGameProps?.qaScenario).toBe("single-component-phase-clear");
     expect(mockLastGameProps?.gameMode).toBe("classic");
   });
 
   it("encaminha cenário de QA da fase 3 em modo clássico", async () => {
     mockSystemTheme(true);
-    window.history.replaceState(null, "", "/?qaScenario=single-brick-phase3-clear");
+    window.history.replaceState(null, "", "/?qaScenario=single-component-phase3-clear");
 
     await renderApp();
 
-    expect(mockLastGameProps?.qaScenario).toBe("single-brick-phase3-clear");
+    expect(mockLastGameProps?.qaScenario).toBe("single-component-phase3-clear");
     expect(mockLastGameProps?.gameMode).toBe("classic");
   });
 

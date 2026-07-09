@@ -21,7 +21,7 @@ Todo plano visual deve declarar:
 
 ## Regras de formato
 
-- Sprites, UI, power-ups, tijolos e VFX simples: **SVG local/offline**
+- Sprites, UI, power-ups, componentes e VFX simples: **SVG local/offline**
 - Atlas PNG/WebP: somente em `public/assets/visual/atlases/` com exceção em `docs/assets/visual-runtime/atlas-exceptions.json`
 - AVIF: **proibido** para sprites/atlas a 60 FPS; permitido só em `public/assets/visual/cinematics/` para fundo/cena
 - Proibido raster, data URI, CDN ou script embutido em SVG runtime simples

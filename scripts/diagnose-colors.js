@@ -69,11 +69,11 @@ class ColorDiagnostic {
         
         // Lista de imagens para verificar
         const imagesToCheck = [
-          '/assets/visual/bricks/spr-brick-basic-red-normal.svg',
-          '/assets/visual/bricks/spr-brick-basic-blue-normal.svg',
-          '/assets/visual/bricks/spr-brick-basic-green-normal.svg',
-          '/assets/visual/bricks/spr-brick-basic-yellow-normal.svg',
-          '/assets/visual/bricks/spr-brick-basic-purple-normal.svg'
+          '/assets/visual/components/spr-component-basic-red-normal.svg',
+          '/assets/visual/components/spr-component-basic-blue-normal.svg',
+          '/assets/visual/components/spr-component-basic-green-normal.svg',
+          '/assets/visual/components/spr-component-basic-yellow-normal.svg',
+          '/assets/visual/components/spr-component-basic-purple-normal.svg'
         ];
         
         // Verificar carregamento de cada imagem

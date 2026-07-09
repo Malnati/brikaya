@@ -1,4 +1,4 @@
-// tests/e2e/cloudflare-evasive-blocks-qa.js
+// tests/e2e/cloudflare-evasive-components-qa.js
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
@@ -8,9 +8,9 @@ import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 import { isAllowedQaHostname } from "./publicQaEnv.js";
 
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
-const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-evasive-blocks-qa.json";
+const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-evasive-components-qa.json";
 const DEFAULT_SCREENSHOT_PATH =
-  "tmp/screenshots/cloudflare-evasive-blocks-qa.png";
+  "tmp/screenshots/cloudflare-evasive-components-qa.png";
 const CHROME_LOW_RESOURCE_ARGS = [
   "--disable-background-networking",
   "--disable-background-timer-throttling",
@@ -35,15 +35,15 @@ const VIEWPORT = {
 const GAME_LOG_DB_NAME = "BrikayaGameLog";
 const GAME_LOG_STORE_NAME = "gameEvents";
 const GAME_LOG_DB_VERSION = 2;
-const EXPECTED_QA_SCENARIO = "evasive-blocks";
+const EXPECTED_QA_SCENARIO = "evasive-components";
 const EVENT_GAME_START = "game_start";
 const EVENT_COLLISION = "collision";
-const EVENT_BRICK_DESTROYED = "brick_destroyed";
+const EVENT_COMPONENT_DESTROYED = "component_destroyed";
 const EVENT_SCORE_UPDATE = "score_update";
 const EVENT_LEVEL_COMPLETE = "level_complete";
 const EVENT_LEVEL_START = "level_start";
 const EVENT_RESTART_GAME = "restart_game";
-const COLLISION_TARGET_BRICK = "brick";
+const COLLISION_TARGET_COMPONENT = "component";
 const EXPECTED_EVASIVE_BLOCK_COUNT = 3;
 const EXPECTED_GAME_START_COUNT = 1;
 const EXPECTED_SCORE_POINTS = 10;
@@ -164,32 +164,32 @@ async function readGameEvents(page) {
   );
 }
 
-function isBrickCollision(event) {
+function isComponentCollision(event) {
   return (
     event.type === EVENT_COLLISION &&
     (!event.collisionInfo ||
-      event.collisionInfo?.type === COLLISION_TARGET_BRICK)
+      event.collisionInfo?.type === COLLISION_TARGET_COMPONENT)
   );
 }
 
-function getBrickIndex(event) {
+function getComponentIndex(event) {
   return (
-    event.collisionInfo?.brickIndex ??
-    event.metadata?.brickIndex ??
-    event.metadata?.brickPosition ??
+    event.collisionInfo?.componentIndex ??
+    event.metadata?.componentIndex ??
+    event.metadata?.componentPosition ??
     null
   );
 }
 
-function getBrickKey(event) {
-  const brickIndex = getBrickIndex(event);
-  if (!brickIndex) return null;
-  return `${brickIndex.col}:${brickIndex.row}`;
+function getComponentKey(event) {
+  const componentIndex = getComponentIndex(event);
+  if (!componentIndex) return null;
+  return `${componentIndex.col}:${componentIndex.row}`;
 }
 
-function uniqueBrickKeys(events) {
+function uniqueComponentKeys(events) {
   return Array.from(
-    new Set(events.map(getBrickKey).filter((key) => key !== null)),
+    new Set(events.map(getComponentKey).filter((key) => key !== null)),
   );
 }
 
@@ -205,35 +205,35 @@ function compactEvent(event, index) {
     index,
     type: event.type,
     score: event.gameState?.score ?? null,
-    bricksRemaining: event.gameState?.bricksRemaining ?? null,
+    componentsRemaining: event.gameState?.componentsRemaining ?? null,
     collisionType: event.collisionInfo?.type ?? null,
     pointsAdded: event.metadata?.pointsAdded ?? null,
-    brickIndex: getBrickIndex(event),
+    componentIndex: getComponentIndex(event),
   };
 }
 
 function analyzeEvasiveEvents(events) {
-  const brickCollisionEntries = events
+  const componentCollisionEntries = events
     .map((event, index) => ({ event, index }))
-    .filter(({ event }) => isBrickCollision(event));
-  const brickDestroyedEntries = events
+    .filter(({ event }) => isComponentCollision(event));
+  const componentDestroyedEntries = events
     .map((event, index) => ({ event, index }))
-    .filter(({ event }) => event.type === EVENT_BRICK_DESTROYED);
+    .filter(({ event }) => event.type === EVENT_COMPONENT_DESTROYED);
   const scoreUpdateEntries = events
     .map((event, index) => ({ event, index }))
     .filter(({ event }) => event.type === EVENT_SCORE_UPDATE);
 
   return {
     byType: summarizeEvents(events),
-    firstCollisionIndex: events.findIndex(isBrickCollision),
-    brickCollisionEntries,
-    brickDestroyedEntries,
+    firstCollisionIndex: events.findIndex(isComponentCollision),
+    componentCollisionEntries,
+    componentDestroyedEntries,
     scoreUpdateEntries,
-    uniqueCollisionKeys: uniqueBrickKeys(
-      brickCollisionEntries.map(({ event }) => event),
+    uniqueCollisionKeys: uniqueComponentKeys(
+      componentCollisionEntries.map(({ event }) => event),
     ),
-    uniqueDestroyedKeys: uniqueBrickKeys(
-      brickDestroyedEntries.map(({ event }) => event),
+    uniqueDestroyedKeys: uniqueComponentKeys(
+      componentDestroyedEntries.map(({ event }) => event),
     ),
     hasLevelComplete: events.some(
       (event) => event.type === EVENT_LEVEL_COMPLETE,
@@ -242,17 +242,17 @@ function analyzeEvasiveEvents(events) {
   };
 }
 
-async function waitForBrickCollision(page) {
+async function waitForComponentCollision(page) {
   const start = Date.now();
   let latestEvents = [];
   while (Date.now() - start < MAX_WAIT_FOR_COLLISION_MS) {
     latestEvents = await readGameEvents(page);
-    if (latestEvents.some(isBrickCollision)) return latestEvents;
+    if (latestEvents.some(isComponentCollision)) return latestEvents;
     await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
   }
 
   throw new Error(
-    `No brick collision detected after ${MAX_WAIT_FOR_COLLISION_MS}ms; events=${JSON.stringify(
+    `No component collision detected after ${MAX_WAIT_FOR_COLLISION_MS}ms; events=${JSON.stringify(
       summarizeEvents(latestEvents),
     )}`,
   );
@@ -319,7 +319,7 @@ async function main() {
       timeout: MAX_WAIT_FOR_COLLISION_MS,
     });
 
-    const firstCollisionEvents = await waitForBrickCollision(page);
+    const firstCollisionEvents = await waitForComponentCollision(page);
     const firstCollisionAnalysis = analyzeEvasiveEvents(firstCollisionEvents);
 
     ensureParentDirectory(screenshotPath());
@@ -335,10 +335,10 @@ async function main() {
       firstCollisionEventSummary: firstCollisionAnalysis.byType,
       uniqueCollisionKeys: analysis.uniqueCollisionKeys,
       uniqueDestroyedKeys: analysis.uniqueDestroyedKeys,
-      brickCollisions: analysis.brickCollisionEntries.map(({ event, index }) =>
+      componentCollisions: analysis.componentCollisionEntries.map(({ event, index }) =>
         compactEvent(event, index),
       ),
-      brickDestroyed: analysis.brickDestroyedEntries.map(({ event, index }) =>
+      componentDestroyed: analysis.componentDestroyedEntries.map(({ event, index }) =>
         compactEvent(event, index),
       ),
       scoreUpdates: analysis.scoreUpdateEntries.map(({ event, index }) =>
@@ -359,7 +359,7 @@ async function main() {
       (analysis.byType[EVENT_RESTART_GAME] || 0) === 0,
       "restart_game apareceu sem ação humana.",
     );
-    assert(analysis.firstCollisionIndex >= 0, "Expected brick collision event");
+    assert(analysis.firstCollisionIndex >= 0, "Expected component collision event");
     assert(
       analysis.uniqueCollisionKeys.length === EXPECTED_EVASIVE_BLOCK_COUNT,
       `Expected ${EXPECTED_EVASIVE_BLOCK_COUNT} first evasive collisions; got ${analysis.uniqueCollisionKeys.length}`,
@@ -390,7 +390,7 @@ async function main() {
       "level_start não apareceu após destruir os três blocos desviantes.",
     );
     assert(consoleProblems.length === 0, "Console problems detected");
-    console.log(`cloudflare-evasive-blocks-qa ok: ${reportPath()}`);
+    console.log(`cloudflare-evasive-components-qa ok: ${reportPath()}`);
   } finally {
     await closeBrowser(browser);
   }

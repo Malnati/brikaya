@@ -81,8 +81,8 @@ export class Ball {
   private minSpeed = 0;
   private initialSpawnSpeed = 0;
   private currentSpeed = 0;
-  private reductionPerBrick = 0;
-  private initialBrickCount = 0;
+  private reductionPerComponent = 0;
+  private initialComponentCount = 0;
   private previousLevelMaxSpeed = 0;
   private levelStartedAt = Date.now();
   private lastSpeedReduction: SpeedReductionSnapshot | null = null;
@@ -165,11 +165,11 @@ export class Ball {
 
   applyPhaseSpeedConfig(config: PhaseSpeedConfig): void {
     this.level = config.level;
-    this.initialBrickCount = config.initialBrickCount;
+    this.initialComponentCount = config.initialComponentCount;
     this.initialSpawnSpeed = config.initialSpawnSpeed;
     this.maxSpeed = config.maxSpeed;
     this.minSpeed = config.minSpeed;
-    this.reductionPerBrick = config.reductionPerBrick;
+    this.reductionPerComponent = config.reductionPerComponent;
     this.previousLevelMaxSpeed = config.previousLevelMaxSpeed;
     this.levelStartedAt = config.levelStartedAt;
     this.blockHitsThisRun = 0;
@@ -180,7 +180,7 @@ export class Ball {
 
   update(
     paddle: { position: PaddlePosition },
-    bricks: { 
+    components: { 
       collide: (
         ball: Ball, 
         gameState?: LoggedGameState
@@ -194,7 +194,7 @@ export class Ball {
   ): boolean {
     const safeFrameScale = Math.max(0, Number.isFinite(frameScale) ? frameScale : 1);
     const motionSteps = this.getMotionStepCount(safeFrameScale);
-    let brickCollisionHandled = false;
+    let componentCollisionHandled = false;
     const fallbackPaddlePosition = paddle.position;
     const activePaddles =
       activePaddlePositions && activePaddlePositions.length > 0
@@ -205,8 +205,8 @@ export class Ball {
       this.x += (this.dx * safeFrameScale) / motionSteps;
       this.y += (this.dy * safeFrameScale) / motionSteps;
 
-      if (!brickCollisionHandled) {
-        brickCollisionHandled = bricks.collide(this, gameState);
+      if (!componentCollisionHandled) {
+        componentCollisionHandled = components.collide(this, gameState);
       }
 
       const inPlay = this.resolvePaddleCollisionOrLoss(
@@ -1035,7 +1035,7 @@ export class Ball {
     this.dy = -this.dy;
   }
 
-  bounceFromRadialBrick(targetX: number, targetY: number) {
+  bounceFromRadialComponent(targetX: number, targetY: number) {
     const normalX = this.x - targetX;
     const normalY = this.y - targetY;
     const normalLength = Math.max(
@@ -1051,16 +1051,16 @@ export class Ball {
     this.currentSpeed = roundSpeedValue(Math.sqrt(this.dx * this.dx + this.dy * this.dy));
   }
 
-  registerBrickHit() {
+  registerComponentHit() {
     this.blockHitsThisRun += 1;
-    this.reduceSpeedAfterBrickHit();
+    this.reduceSpeedAfterComponentHit();
   }
 
-  getBrickHitsThisRun() {
+  getComponentHitsThisRun() {
     return this.blockHitsThisRun;
   }
 
-  resetBrickHits() {
+  resetComponentHits() {
     this.blockHitsThisRun = 0;
   }
 
@@ -1072,13 +1072,13 @@ export class Ball {
     const currentSpeed = this.getCurrentSpeedMagnitude();
     return {
       level: this.level,
-      initialBrickCount: this.initialBrickCount,
-      successfulBrickHits: this.blockHitsThisRun,
+      initialComponentCount: this.initialComponentCount,
+      successfulComponentHits: this.blockHitsThisRun,
       initialSpawnSpeed: this.initialSpawnSpeed,
       maxSpeed: this.maxSpeed,
       minSpeed: this.minSpeed,
       currentSpeed,
-      reductionPerBrick: this.reductionPerBrick,
+      reductionPerComponent: this.reductionPerComponent,
       previousLevelMaxSpeed: this.previousLevelMaxSpeed,
       levelStartedAt: this.levelStartedAt,
       elapsedLevelMs: Math.max(0, Date.now() - this.levelStartedAt),
@@ -1118,8 +1118,8 @@ export class Ball {
     clone.minSpeed = this.minSpeed;
     clone.initialSpawnSpeed = this.initialSpawnSpeed;
     clone.currentSpeed = this.currentSpeed;
-    clone.reductionPerBrick = this.reductionPerBrick;
-    clone.initialBrickCount = this.initialBrickCount;
+    clone.reductionPerComponent = this.reductionPerComponent;
+    clone.initialComponentCount = this.initialComponentCount;
     clone.previousLevelMaxSpeed = this.previousLevelMaxSpeed;
     clone.levelStartedAt = this.levelStartedAt;
     clone.setVelocityFromAngleAndSpeed(this.getCurrentAngle() + angleOffset, this.getCurrentSpeedMagnitude(), false);
@@ -1157,9 +1157,9 @@ export class Ball {
     return Math.atan2(this.dx, -this.dy);
   }
 
-  private reduceSpeedAfterBrickHit() {
+  private reduceSpeedAfterComponentHit() {
     const speedBefore = this.getCurrentSpeedMagnitude();
-    const nextSpeed = roundSpeedValue(Math.max(this.minSpeed, speedBefore - this.reductionPerBrick));
+    const nextSpeed = roundSpeedValue(Math.max(this.minSpeed, speedBefore - this.reductionPerComponent));
     const reductionApplied = roundSpeedValue(speedBefore - nextSpeed);
 
     this.setVelocityFromAngleAndSpeed(this.getCurrentAngle(), nextSpeed, false);

@@ -26,8 +26,8 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
     'score_update': t("logs.event.score_update"),
     'ball_lost': t("logs.event.ball_lost"),
     'ball_added': t("logs.event.ball_added"),
-    'brick_destroyed': t("logs.event.brick_destroyed"),
-    'brick_added': t("logs.event.brick_added"),
+    'component_destroyed': t("logs.event.component_destroyed"),
+    'component_added': t("logs.event.component_added"),
     'paddle_move': t("logs.event.paddle_move"),
     'collision': t("logs.event.collision"),
     'power_up': t("logs.event.power_up"),
@@ -43,8 +43,8 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
     'score_update': 'var(--bb-color-primary-strong)',
     'ball_lost': 'var(--bb-color-secondary)',
     'ball_added': 'var(--bb-color-tertiary)',
-    'brick_destroyed': 'var(--bb-color-secondary)',
-    'brick_added': 'var(--bb-color-outline)',
+    'component_destroyed': 'var(--bb-color-secondary)',
+    'component_added': 'var(--bb-color-outline)',
     'paddle_move': 'var(--bb-color-outline)',
     'collision': 'var(--bb-color-secondary)',
     'power_up': 'var(--bb-color-primary)',
@@ -200,8 +200,8 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
               <span className="stat-value">{Math.round(stats.averageGameDuration / 1000)}s</span>
             </div>
             <div className="stat-item">
-              <span className="stat-label">{t("logs.totalBricks")}</span>
-              <span className="stat-value">{stats.totalBricksDestroyed}</span>
+              <span className="stat-label">{t("logs.totalComponents")}</span>
+              <span className="stat-value">{stats.totalComponentsDestroyed}</span>
             </div>
             <div className="stat-item">
               <span className="stat-label">{t("logs.totalCollisions")}</span>
@@ -271,8 +271,8 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
                   <div className="event-balls">
                     Bolas: {event.gameState.ballsCount}
                   </div>
-                  <div className="event-bricks">
-                    Componentes: {event.gameState.bricksRemaining}
+                  <div className="event-components">
+                    Componentes: {event.gameState.componentsRemaining}
                   </div>
                 </div>
 
@@ -283,15 +283,15 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
                       <div className="detail-grid">
                         <div>Pontuação: {event.gameState.score}</div>
                         <div>Bolas: {event.gameState.ballsCount}</div>
-                        <div>Componentes restantes: {event.gameState.bricksRemaining}</div>
+                        <div>Componentes restantes: {event.gameState.componentsRemaining}</div>
                         <div>Nível: {event.gameState.level}</div>
                         <div>Vitória: {event.gameState.gameWon ? 'Sim' : 'Não'}</div>
                         <div>Game Over: {event.gameState.gameOver ? 'Sim' : 'Não'}</div>
                         <div>{t("logs.speed.current")}: {formatSpeed(event.gameState.speedState.currentSpeed)}</div>
                         <div>{t("logs.speed.max")}: {formatSpeed(event.gameState.speedState.maxSpeed)}</div>
                         <div>{t("logs.speed.min")}: {formatSpeed(event.gameState.speedState.minSpeed)}</div>
-                        <div>{t("logs.speed.reduction")}: {formatSpeed(event.gameState.speedState.reductionPerBrick)}</div>
-                        <div>{t("logs.speed.hits")}: {event.gameState.speedState.successfulBrickHits}</div>
+                        <div>{t("logs.speed.reduction")}: {formatSpeed(event.gameState.speedState.reductionPerComponent)}</div>
+                        <div>{t("logs.speed.hits")}: {event.gameState.speedState.successfulComponentHits}</div>
                         <div>{t("logs.speed.time")}: {formatElapsedLevelMs(event.gameState.speedState.elapsedLevelMs)}</div>
                       </div>
                     </div>
@@ -300,8 +300,8 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
                       <h4>📐 Dimensões</h4>
                       <div className="detail-grid">
                         <div>Canvas: {event.gameState.canvasSize.width}x{event.gameState.canvasSize.height}</div>
-                        <div>Componentes: {event.gameState.gameDimensions.brickCols}x{event.gameState.gameDimensions.brickRows}</div>
-                        <div>Tamanho componente: {event.gameState.gameDimensions.brickWidth}x{event.gameState.gameDimensions.brickHeight}</div>
+                        <div>Componentes: {event.gameState.gameDimensions.componentCols}x{event.gameState.gameDimensions.componentRows}</div>
+                        <div>Tamanho componente: {event.gameState.gameDimensions.componentWidth}x{event.gameState.gameDimensions.componentHeight}</div>
                         <div>Raquete: {event.gameState.gameDimensions.paddleWidth}x{event.gameState.gameDimensions.paddleHeight}</div>
                         <div>Raio Bola: {event.gameState.gameDimensions.ballRadius}</div>
                       </div>
@@ -338,11 +338,11 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
                           {event.collisionInfo.hitPosition !== undefined && (
                             <div>Posição do Hit: {(event.collisionInfo.hitPosition * 100).toFixed(1)}%</div>
                           )}
-                          {event.collisionInfo.brickIndex && (
-                            <div>Componente: [{event.collisionInfo.brickIndex.col}, {event.collisionInfo.brickIndex.row}]</div>
+                          {event.collisionInfo.componentIndex && (
+                            <div>Componente: [{event.collisionInfo.componentIndex.col}, {event.collisionInfo.componentIndex.row}]</div>
                           )}
-                          {event.collisionInfo.brickColorIndex !== undefined && (
-                            <div>Circuito do componente: {event.collisionInfo.brickColorIndex}</div>
+                          {event.collisionInfo.componentColorIndex !== undefined && (
+                            <div>Circuito do componente: {event.collisionInfo.componentColorIndex}</div>
                           )}
                           {event.collisionInfo.velocityBefore && (
                             <div>Velocidade Antes: {formatVelocity(event.collisionInfo.velocityBefore)}</div>
@@ -516,7 +516,7 @@ const GameLogViewer: React.FC<GameLogViewerProps> = ({ isVisible = true, onClose
           font-weight: bold;
         }
 
-        .event-time, .event-score, .event-balls, .event-bricks {
+        .event-time, .event-score, .event-balls, .event-components {
           font-size: 0.9em;
           color: var(--bb-color-muted);
         }

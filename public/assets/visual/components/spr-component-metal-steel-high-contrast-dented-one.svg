@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Shielded module" data-component-shape="shield-module" data-terminal-left="25 24" data-terminal-right="71 24">
+  <defs>
+    <linearGradient id="spr-component-metal-steel-high-contrast-dented-one-body" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.48" stop-color="#f2f2f2"/>
+      <stop offset="1" stop-color="#050505"/>
+    </linearGradient>
+    <radialGradient id="spr-component-metal-steel-high-contrast-dented-one-glow" cx="50%" cy="50%" r="60%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#f2f2f2" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <path d="M25 17H30M25 24H30M25 31H30M66 17H71M66 24H71M66 31H71" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+  <path d="M34 8H62L69 15V33L62 40H34L27 33V15Z" fill="url(#spr-component-metal-steel-high-contrast-dented-one-body)" stroke="#ffffff" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M37 16H59M34 24H62M37 32H55" fill="none" stroke="#050505" stroke-width="2" stroke-linecap="round" opacity="0.52"/>
+  <path d="M42 13L47 20L44 25L51 34" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  
+</svg>

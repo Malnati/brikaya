@@ -7,18 +7,18 @@ import { isGameplayTelemetryEnabled } from './runtimeDiagnostics';
 export interface CollisionEvent {
   id: string;
   timestamp: number;
-  type: 'wall' | 'paddle' | 'brick' | 'ceiling' | 'ball_lost';
+  type: 'wall' | 'paddle' | 'component' | 'ceiling' | 'ball_lost';
   ballPosition: { x: number; y: number };
   ballVelocity: { dx: number; dy: number };
   targetInfo?: {
     type: string;
     position?: { x: number; y: number; width?: number; height?: number };
-    brickIndex?: { col: number; row: number };
+    componentIndex?: { col: number; row: number };
   };
   gameState: {
     score: number;
     ballsCount: number;
-    bricksRemaining: number;
+    componentsRemaining: number;
     speedState: SpeedStateSnapshot;
   };
   metadata?: Record<string, unknown>;
@@ -29,7 +29,7 @@ export interface CollisionStatsSummary {
   byType: Record<string, number>;
   recentActivity: { lastMinute: number; last5Minutes: number; lastHour: number };
   latestSpeedState: SpeedStateSnapshot | null;
-  brickSpeedSamples: Array<{
+  componentSpeedSamples: Array<{
     timestamp: number;
     currentSpeed: number;
     minSpeed: number;
@@ -229,7 +229,7 @@ class CollisionTracker {
     let last5Minutes = 0;
     let lastHour = 0;
     let minSpeedReachedCount = 0;
-    const brickSpeedSamples: CollisionStatsSummary['brickSpeedSamples'] = [];
+    const componentSpeedSamples: CollisionStatsSummary['componentSpeedSamples'] = [];
 
     allCollisions.forEach(collision => {
       // Contagem por tipo
@@ -245,8 +245,8 @@ class CollisionTracker {
         minSpeedReachedCount++;
       }
 
-      if (collision.type === 'brick') {
-        brickSpeedSamples.push({
+      if (collision.type === 'component') {
+        componentSpeedSamples.push({
           timestamp: collision.timestamp,
           currentSpeed: collision.gameState.speedState.currentSpeed,
           minSpeed: collision.gameState.speedState.minSpeed,
@@ -264,7 +264,7 @@ class CollisionTracker {
       byType,
       recentActivity: { lastMinute, last5Minutes, lastHour },
       latestSpeedState,
-      brickSpeedSamples,
+      componentSpeedSamples,
       minSpeedReachedCount
     };
   }
@@ -310,27 +310,27 @@ class CollisionTracker {
     });
   }
 
-  async logBrickCollision(
+  async logComponentCollision(
     ballPosition: { x: number; y: number },
     ballVelocity: { dx: number; dy: number },
     gameState: CollisionEvent['gameState'],
-    brickPosition: { x: number; y: number; width: number; height: number },
-    brickIndex: { col: number; row: number },
-    brickColorIndex: number,
+    componentPosition: { x: number; y: number; width: number; height: number },
+    componentIndex: { col: number; row: number },
+    componentColorIndex: number,
     speedReduction?: SpeedReductionSnapshot | null
   ): Promise<void> {
     await this.logCollision({
-      type: 'brick',
+      type: 'component',
       ballPosition,
       ballVelocity,
       gameState,
       targetInfo: {
-        type: 'brick',
-        position: brickPosition,
-        brickIndex
+        type: 'component',
+        position: componentPosition,
+        componentIndex
       },
       metadata: {
-        brickColorIndex,
+        componentColorIndex,
         speedReduction: speedReduction ?? undefined
       }
     });

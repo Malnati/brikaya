@@ -8,13 +8,13 @@ jest.mock("../utils/assetLoader", () => ({
 }));
 
 const DIMENSIONS: DynamicGameDimensions = {
-  brickWidth: 50,
-  brickHeight: 20,
-  brickPadding: 8,
-  brickOffsetTop: 30,
-  brickOffsetLeft: 16,
-  brickRows: 2,
-  brickCols: 3,
+  componentWidth: 50,
+  componentHeight: 20,
+  componentPadding: 8,
+  componentOffsetTop: 30,
+  componentOffsetLeft: 16,
+  componentRows: 2,
+  componentCols: 3,
   paddleWidth: 75,
   paddleHeight: 10,
   ballRadius: 8,

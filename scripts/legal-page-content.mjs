@@ -57,7 +57,7 @@ export const LEGAL_TEXT = {
   'about.h1': 'About Brikaya',
   'about.lead': 'Brikaya is a free arcade game made for quick play, offline access, and simple privacy choices.',
   'about.s1.heading': 'What the game is',
-  'about.s1.body1': 'Brikaya is a browser game inspired by classic brick-breaking play. It runs as a web app and can work offline after the first load.',
+  'about.s1.body1': 'Brikaya is a free circuit component arcade game in your browser. It runs as a web app and can work offline after the first load.',
   'about.s1.body2': 'The game does not require a player account. Scores, preferences, and progress stay on the device unless a future version clearly says otherwise.',
   'about.s2.heading': 'Free access',
   'about.s2.body1': 'Brikaya is offered for free. Optional ads may appear only when they are available and allowed, and they must not block gameplay progress.',

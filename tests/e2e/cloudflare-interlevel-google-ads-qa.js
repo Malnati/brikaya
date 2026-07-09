@@ -61,7 +61,7 @@ function isIgnorableConsoleProblem(text) {
 
 function withQaScenario(url) {
   const pageUrl = new URL(url);
-  pageUrl.searchParams.set("qaScenario", "single-brick-phase3-clear");
+  pageUrl.searchParams.set("qaScenario", "single-component-phase3-clear");
   return pageUrl.toString();
 }
 

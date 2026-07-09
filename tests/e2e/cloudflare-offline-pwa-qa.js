@@ -31,7 +31,7 @@ const OFFLINE_FETCH_PATHS = [
   "/manifest.webmanifest",
   "/assets/visual/sprites/spr-ball-player-default.svg",
   "/assets/visual/sprites/spr-paddle-player-default.svg",
-  "/assets/visual/bricks/spr-brick-basic-red-normal.svg",
+  "/assets/visual/components/spr-component-basic-red-normal.svg",
   "/assets/visual/ui/ui-pwa-app-icon.svg",
   "/assets/audio/sfx-offline-ready-01.mp3",
 ];

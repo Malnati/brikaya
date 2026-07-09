@@ -47,7 +47,7 @@ const VIEWPORT = {
 };
 const LAZY_ASSET_PROBE_PATHS = [
   "/assets/visual/sprites/spr-ball-player-default.svg",
-  "/assets/visual/bricks/spr-brick-basic-red-normal.svg",
+  "/assets/visual/components/spr-component-basic-red-normal.svg",
   "/assets/audio/sfx-offline-ready-01.mp3",
 ];
 const ASSET_CACHE_STATUS_HEADER = "x-brikaya-asset-cache";

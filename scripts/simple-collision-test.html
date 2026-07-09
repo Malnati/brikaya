@@ -255,7 +255,7 @@
         }
 
         async function simulateWallCollision() {
-            const gameState = { score: 100, ballsCount: 1, bricksRemaining: 50 };
+            const gameState = { score: 100, ballsCount: 1, componentsRemaining: 50 };
             await collisionTracker.logCollision({
                 type: 'wall',
                 ballPosition: { x: 50, y: 150 },
@@ -268,7 +268,7 @@
         }
 
         async function simulatePaddleCollision() {
-            const gameState = { score: 100, ballsCount: 1, bricksRemaining: 50 };
+            const gameState = { score: 100, ballsCount: 1, componentsRemaining: 50 };
             await collisionTracker.logCollision({
                 type: 'paddle',
                 ballPosition: { x: 240, y: 280 },
@@ -284,24 +284,24 @@
         }
 
         async function simulateBrickCollision() {
-            const gameState = { score: 100, ballsCount: 1, bricksRemaining: 50 };
+            const gameState = { score: 100, ballsCount: 1, componentsRemaining: 50 };
             await collisionTracker.logCollision({
-                type: 'brick',
+                type: 'component',
                 ballPosition: { x: 120, y: 80 },
                 ballVelocity: { dx: 3, dy: -4 },
                 gameState,
                 targetInfo: {
-                    type: 'brick',
+                    type: 'component',
                     position: { x: 100, y: 60, width: 40, height: 20 },
-                    brickIndex: { col: 2, row: 1 }
+                    componentIndex: { col: 2, row: 1 }
                 },
-                metadata: { brickColorIndex: 0 }
+                metadata: { componentColorIndex: 0 }
             });
             refreshStats();
         }
 
         async function simulateCeilingCollision() {
-            const gameState = { score: 100, ballsCount: 1, bricksRemaining: 50 };
+            const gameState = { score: 100, ballsCount: 1, componentsRemaining: 50 };
             await collisionTracker.logCollision({
                 type: 'ceiling',
                 ballPosition: { x: 200, y: 20 },
@@ -313,7 +313,7 @@
         }
 
         async function simulateBallLost() {
-            const gameState = { score: 100, ballsCount: 1, bricksRemaining: 50 };
+            const gameState = { score: 100, ballsCount: 1, componentsRemaining: 50 };
             await collisionTracker.logCollision({
                 type: 'ball_lost',
                 ballPosition: { x: 150, y: 320 },
@@ -351,7 +351,7 @@
                         <div class="stat-label">Raquetes</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-value">${byType.brick || 0}</div>
+                        <div class="stat-value">${byType.component || 0}</div>
                         <div class="stat-label">Blocos</div>
                     </div>
                     <div class="stat-item">
