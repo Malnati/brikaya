@@ -3,7 +3,6 @@ import {
   ELECTRIC_LIGHTNING_CORE_COLOR,
   ELECTRIC_LIGHTNING_HALO_COLOR,
   ELECTRIC_LIGHTNING_SHADOW_COLOR,
-  buildZigzagPoint,
   calculateLightningFadeAlpha,
   clampProgress,
   drawLightningPulse,
@@ -180,11 +179,6 @@ export class AmbientElectricBackground {
   ): void {
     if (this.bolts.length === 0) return;
 
-    const circle: CircleGeometry = {
-      centerX: geometry.centerX,
-      centerY: geometry.centerY,
-      radius: geometry.radius,
-    };
     const scale = 1;
 
     ctx.save();
