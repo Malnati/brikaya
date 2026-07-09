@@ -124,6 +124,18 @@ cloudflare-public-check:
 cloudflare-mobile-qa:
 	@npm run test:cloudflare-mobile
 
+cloudflare-consent-scroll-qa:
+	@npm run test:cloudflare-consent-scroll
+
+cloudflare-mobile-journey-qa:
+	@npm run test:cloudflare-mobile-journey
+
+cloudflare-consent-screen-qa:
+	@npm run test:cloudflare-consent-screen
+
+cloudflare-location-language-qa:
+	@npm run test:cloudflare-location-language
+
 cloudflare-orientation-lock-qa:
 	@npm run test:cloudflare-orientation-lock
 
@@ -341,6 +353,10 @@ help:
 	@echo "  cloudflare-purge-cache - Limpar cache público de brikaya.com sem alterar origem"
 	@echo "  cloudflare-public-check - Validar que brikaya.com serve o build local"
 	@echo "  cloudflare-mobile-qa - Testar mobile default/logs contra Cloudflare publicado"
+	@echo "  cloudflare-consent-scroll-qa - Validar rolagem do modal de consentimento em iPhone 14 Safari/Chrome"
+	@echo "  cloudflare-mobile-journey-qa - Jornada E2E mobile completa (consentimento, torreta, derrota, anúncio, colisões)"
+	@echo "  cloudflare-consent-screen-qa - Validar tela de consentimento contra Cloudflare publicado"
+	@echo "  cloudflare-location-language-qa - Validar consentimento de região e idioma contra Cloudflare publicado"
 	@echo "  cloudflare-orientation-lock-qa - Validar bloqueio portrait em mobile/tablet contra Cloudflare publicado"
 	@echo "  cloudflare-ball-turret-qa - Validar modo Torreta contra Cloudflare publicado"
 	@echo "  cloudflare-no-score-reset - Validar continuidade após tijolo no Cloudflare publicado"

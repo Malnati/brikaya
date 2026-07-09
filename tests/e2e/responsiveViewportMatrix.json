@@ -31,6 +31,34 @@
       "smokeOverlays": false
     },
     {
+      "name": "iphone-14-default",
+      "label": "iPhone 14 default portrait",
+      "models": ["iPhone 14"],
+      "category": "mobile",
+      "orientation": "portrait",
+      "width": 390,
+      "height": 844,
+      "deviceScaleFactor": 3,
+      "isMobile": true,
+      "hasTouch": true,
+      "priority": "gameplay",
+      "smokeOverlays": false
+    },
+    {
+      "name": "iphone-14-default-landscape",
+      "label": "iPhone 14 default landscape",
+      "models": ["iPhone 14"],
+      "category": "mobile",
+      "orientation": "landscape",
+      "width": 844,
+      "height": 390,
+      "deviceScaleFactor": 3,
+      "isMobile": true,
+      "hasTouch": true,
+      "priority": "gameplay",
+      "smokeOverlays": false
+    },
+    {
       "name": "iphone-16e-default",
       "label": "iPhone 16e default portrait",
       "models": ["iPhone 16e"],

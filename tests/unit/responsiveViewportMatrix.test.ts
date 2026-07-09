@@ -6,6 +6,8 @@ const MATRIX_PATH = "tests/e2e/responsiveViewportMatrix.json";
 const REQUIRED_VIEWPORTS = [
   ["iphone-15-16-default", 393, 852, 3, true, true],
   ["iphone-15-16-default-landscape", 852, 393, 3, true, true],
+  ["iphone-14-default", 390, 844, 3, true, true],
+  ["iphone-14-default-landscape", 844, 390, 3, true, true],
   ["iphone-16e-default", 390, 844, 3, true, true],
   ["iphone-16e-default-landscape", 844, 390, 3, true, true],
   ["iphone-17-default", 402, 874, 3, true, true],

@@ -52,6 +52,7 @@ import {
   type GameVisualAssetRole,
 } from "../utils/visualAssetResolver";
 import {
+  calculateBallTurretBoundarySegments,
   calculateBallTurretPlayfieldGeometry,
   calculateRadialPaddleBounds,
   calculateRadialPlayfieldGeometry,
@@ -94,6 +95,7 @@ const LASER_FAN_QA_SCENARIO = "laser-fan";
 const METAL_BLOCK_QA_SCENARIO = "metal-block";
 const EVASIVE_BLOCKS_QA_SCENARIO = "evasive-blocks";
 const BALL_TURRET_QA_SCENARIO = "ball-turret";
+const BALL_TURRET_LOSE_QA_SCENARIO = "ball-turret-lose";
 const LATE_PHASE_STABILITY_LEVEL = 11;
 const LATE_PHASE_STABILITY_Y_RATIO = 0.65;
 const CINEMATIC_RIP_X_RATIO = 0.12;
@@ -277,6 +279,7 @@ export type GameQaScenario =
   | typeof METAL_BLOCK_QA_SCENARIO
   | typeof EVASIVE_BLOCKS_QA_SCENARIO
   | typeof BALL_TURRET_QA_SCENARIO
+  | typeof BALL_TURRET_LOSE_QA_SCENARIO
   | typeof AUDIO_QA_SCENARIO;
 
 export class GameEngine {
@@ -441,6 +444,7 @@ export class GameEngine {
     this.prepareEvasiveBlocksQaBall();
     this.prepareCinematicRipBall();
     this.preparePaddleCollisionQaBall();
+    this.prepareBallTurretLoseQaBall();
     this.prepareLatePhaseStabilityBall();
 
     LOG(`🏗️  Criando Bricks...`);
@@ -824,6 +828,26 @@ export class GameEngine {
       radialPaddle.centerY + Math.sin(targetAngle) * targetRadius,
     );
     ball.setDirection(Math.PI);
+  }
+
+  private prepareBallTurretLoseQaBall() {
+    if (
+      this.qaScenario !== BALL_TURRET_LOSE_QA_SCENARIO ||
+      this.balls.length === 0
+    )
+      return;
+
+    const ball = this.balls[0];
+    const segments = calculateBallTurretBoundarySegments(this.level);
+    const lossSegment = segments.find((segment) => !segment.rebounds);
+
+    if (!lossSegment) return;
+
+    const lossAngle =
+      (lossSegment.startAngle + lossSegment.endAngle) / CENTER_DIVISOR;
+
+    ball.setPosition(this.radialGeometry.centerX, this.radialGeometry.centerY);
+    ball.setDirection(lossAngle);
   }
 
   private prepareLaserFanQaPowerUp() {

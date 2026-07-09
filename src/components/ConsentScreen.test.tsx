@@ -8,6 +8,14 @@ const FORBIDDEN_TECHNICAL_COPY =
   /service worker|cache|runtime|dataset|localStorage|IndexedDB|PWA|CMP|AdSense|H5|adsbygoogle/i;
 
 describe("ConsentScreen", () => {
+  it("expõe contêiner rolável para telas mobile compactas", () => {
+    render(<ConsentScreen onAccept={jest.fn()} />);
+
+    const scrollContainer = screen.getByTestId("consent-screen");
+    expect(scrollContainer).toHaveClass("consent-screen");
+    expect(scrollContainer.querySelector(".consent-screen__scroller")).toBeTruthy();
+  });
+
   it("mostra consentimento com texto de usuário e CTA de jogo", async () => {
     const onAccept = jest.fn();
     const user = userEvent.setup();
