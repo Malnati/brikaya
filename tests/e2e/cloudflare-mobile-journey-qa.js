@@ -40,6 +40,7 @@ import {
   assertCondition,
   assertPaddleCollisionPhysics,
   assertPhaseTransition,
+  collectLevelToastState,
   completeHeldAd,
   installHeldAdStub,
   installLevelTransitionRecorder,
@@ -603,15 +604,17 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
     };
   } else if (scenarioCheck.kind === "phase-transition") {
     await waitForEventType(page, "level_complete", PHASE_TRANSITION_TIMEOUT_MS);
-    await waitForEventType(page, "level_start", PHASE_TRANSITION_TIMEOUT_MS);
     await page.waitForSelector('[data-testid="level-toast"]', {
       timeout: PHASE_TRANSITION_TIMEOUT_MS,
     });
+    const toastState = await collectLevelToastState(page);
+    await waitForEventType(page, "level_start", PHASE_TRANSITION_TIMEOUT_MS);
     const events = await readGameEvents(page);
     const phaseDetails = await assertPhaseTransition(page, events, profile.label, {
       fromLevel: 1,
       toLevel: 2,
       expectedSpeedMultiplier: 1.12,
+      initialToastState: toastState,
     });
     const summary = summarizeEvents(events);
     details = { eventSummary: summary, phaseTransition: phaseDetails };

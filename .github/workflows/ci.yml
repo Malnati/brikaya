@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: brikaya-qa-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   ci:

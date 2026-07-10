@@ -1118,13 +1118,43 @@ async function ensurePreviewDomain(envValues) {
 async function ensurePreviewDns(envValues) {
   validatePreviewEnvironment(envValues);
   const previewEnvValues = buildPreviewEnvValues(envValues);
-  return ensureDnsRecord(previewEnvValues);
+
+  try {
+    return await ensureDnsRecord(previewEnvValues);
+  } catch (error) {
+    if (!isCloudflareAuthenticationError(error)) {
+      throw error;
+    }
+
+    console.log(
+      `WARN preview DNS API sem permissão; mantendo domínio Pages ${previewEnvValues[CUSTOM_DOMAIN_KEY]}.`,
+    );
+  }
 }
 
 async function verifyPreviewIndex(envValues) {
   validatePreviewEnvironment(envValues);
   const previewEnvValues = buildPreviewEnvValues(envValues);
-  return verifyPublicIndex(previewEnvValues);
+
+  try {
+    return await verifyPublicIndex(previewEnvValues);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (!message.includes('fetch failed')) {
+      throw error;
+    }
+
+    const fallbackEnvValues = {
+      ...previewEnvValues,
+      [CUSTOM_DOMAIN_KEY]: buildPagesDevHost(previewEnvValues),
+    };
+
+    console.log(
+      `WARN preview index via ${previewEnvValues[CUSTOM_DOMAIN_KEY]} indisponível; ` +
+        `verificando ${buildPagesDevUrl(previewEnvValues)}`,
+    );
+    return verifyPublicIndex(fallbackEnvValues);
+  }
 }
 
 async function run() {

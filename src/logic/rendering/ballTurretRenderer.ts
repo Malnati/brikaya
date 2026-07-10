@@ -1,5 +1,8 @@
 // src/logic/rendering/ballTurretRenderer.ts
-import { calculateBallTurretBoundarySegments } from "../../utils/radialGeometry";
+import {
+  calculateBallTurretBoundarySegments,
+  getBallTurretBoundaryDrawRanges,
+} from "../../utils/radialGeometry";
 import type {
   RadialPaddleBounds,
   RadialPlayfieldGeometry,
@@ -170,22 +173,24 @@ function drawBoundarySegments(
   ctx.lineWidth = lineWidth;
 
   calculateBallTurretBoundarySegments(level).forEach((segment) => {
-    ctx.strokeStyle = segment.rebounds
-      ? BOUNDARY_REBOUND_STROKE
-      : BOUNDARY_LOSS_STROKE;
-    ctx.shadowColor = segment.rebounds
-      ? BOUNDARY_REBOUND_SHADOW
-      : BOUNDARY_LOSS_SHADOW;
-    ctx.shadowBlur = shadowBlur ?? Math.max(3, lineWidth * 1.4);
-    ctx.beginPath();
-    ctx.arc(
-      geometry.centerX,
-      geometry.centerY,
-      radius,
-      segment.startAngle + BOUNDARY_SEGMENT_GAP_RADIANS,
-      segment.endAngle - BOUNDARY_SEGMENT_GAP_RADIANS,
-    );
-    ctx.stroke();
+    getBallTurretBoundaryDrawRanges(segment, level).forEach((range) => {
+      ctx.strokeStyle = range.rebounds
+        ? BOUNDARY_REBOUND_STROKE
+        : BOUNDARY_LOSS_STROKE;
+      ctx.shadowColor = range.rebounds
+        ? BOUNDARY_REBOUND_SHADOW
+        : BOUNDARY_LOSS_SHADOW;
+      ctx.shadowBlur = shadowBlur ?? Math.max(3, lineWidth * 1.4);
+      ctx.beginPath();
+      ctx.arc(
+        geometry.centerX,
+        geometry.centerY,
+        radius,
+        range.startAngle + BOUNDARY_SEGMENT_GAP_RADIANS,
+        range.endAngle - BOUNDARY_SEGMENT_GAP_RADIANS,
+      );
+      ctx.stroke();
+    });
   });
 
   ctx.restore();

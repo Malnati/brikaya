@@ -70,8 +70,9 @@ const DUAL_SWITCH_EDGE_HOLD_MS = 220;
 const DUAL_SWITCH_SETTLE_MS = 160;
 const DUAL_SWITCH_MOVEMENT_MIN_SIN_DELTA = 0.08;
 const DUAL_SWITCH_STABLE_MAX_SIN_DELTA = 0.05;
-const BOUNDARY_SEGMENT_COUNT = 4;
-const BOUNDARY_PHASE_ONE_REBOUND_SEGMENTS = 2;
+const BOUNDARY_DRAW_ARC_COUNT = 8;
+const BOUNDARY_PHASE_ONE_REBOUND_ARCS = 6;
+const BOUNDARY_PHASE_ONE_LOSS_ARCS = 2;
 const BOUNDARY_REBOUND_COLOR_FRAGMENT = "73, 255, 199";
 const BOUNDARY_LOSS_COLOR_FRAGMENT = "255, 96, 120";
 const VIEWPORTS = [
@@ -1993,12 +1994,12 @@ async function runViewport(page, baseUrl, config) {
     `${config.name}: cama elástica/anel 360° não foi desenhado.`,
   );
   assert(
-    gameplayState.probe.boundarySegmentCount === BOUNDARY_SEGMENT_COUNT &&
+    gameplayState.probe.boundarySegmentCount === BOUNDARY_DRAW_ARC_COUNT &&
       gameplayState.probe.reboundBoundarySegmentCount ===
-        BOUNDARY_PHASE_ONE_REBOUND_SEGMENTS &&
+        BOUNDARY_PHASE_ONE_REBOUND_ARCS &&
       gameplayState.probe.lossBoundarySegmentCount ===
-        BOUNDARY_SEGMENT_COUNT - BOUNDARY_PHASE_ONE_REBOUND_SEGMENTS,
-    `${config.name}: borda da Torreta não mostra 50% de segmentos rebatedores em cor distinta.`,
+        BOUNDARY_PHASE_ONE_LOSS_ARCS,
+    `${config.name}: borda da Torreta não mostra aberturas de perda estreitas com rebote nas bordas.`,
   );
   assert(
     gameplayState.probe.componentDrawCount > 0 &&

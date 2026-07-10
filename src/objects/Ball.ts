@@ -21,8 +21,8 @@ import { ERROR, LOG } from '../utils/logger';
 import { gameLogger, type LoggedGameState } from '../storage/gameLogger';
 import { GAME_AUDIO_IDS, type GameAudioSink } from '../constants/audio';
 import {
-  calculateBallTurretBoundarySegments,
   calculateRadialPlayfieldGeometry,
+  getBallTurretBoundaryArcRangeForAngle,
   isBallTurretBoundarySegmentRebounding,
   isAngleBetween,
   isRadialPaddleBounds,
@@ -633,14 +633,15 @@ export class Ball {
     wallAngle: number,
   ): [ElectricImpactPoint, ElectricImpactPoint] {
     if (this.geometry.trampolineIsFullRing) {
-      const hitSegment = calculateBallTurretBoundarySegments(this.level).find(
-        (segment) => isAngleBetween(wallAngle, segment.startAngle, segment.endAngle),
+      const hitRange = getBallTurretBoundaryArcRangeForAngle(
+        wallAngle,
+        this.level,
       );
 
-      if (hitSegment) {
+      if (hitRange) {
         return [
-          this.pointOnRadialWall(hitSegment.startAngle),
-          this.pointOnRadialWall(hitSegment.endAngle),
+          this.pointOnRadialWall(hitRange.startAngle),
+          this.pointOnRadialWall(hitRange.endAngle),
         ];
       }
     }
