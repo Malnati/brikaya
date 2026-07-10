@@ -207,25 +207,32 @@ export async function collectLevelToastState(page) {
 }
 
 export async function assertPhaseTransition(page, events, profileLabel, options = {}) {
-  const { fromLevel = 1, toLevel = 2, expectedSpeedMultiplier = 1.12 } = options;
+  const {
+    fromLevel = 1,
+    toLevel = 2,
+    expectedSpeedMultiplier = 1.12,
+    initialToastState = null,
+  } = options;
 
-  await page.waitForSelector('[data-testid="level-toast"]', {
-    timeout: PHASE_TRANSITION_TIMEOUT_MS,
-  });
-  await page.waitForFunction(
-    (expectedLevel) => {
-      const text =
-        document.querySelector('[data-testid="level-toast"]')?.textContent ?? "";
-      return (
-        text.includes(`Fase ${expectedLevel}`) ||
-        text.includes(`Level ${expectedLevel}`)
-      );
-    },
-    { timeout: PHASE_TRANSITION_TIMEOUT_MS },
-    toLevel,
-  );
-
-  const toastState = await collectLevelToastState(page);
+  let toastState = initialToastState;
+  if (!toastState) {
+    await page.waitForSelector('[data-testid="level-toast"]', {
+      timeout: PHASE_TRANSITION_TIMEOUT_MS,
+    });
+    await page.waitForFunction(
+      (expectedLevel) => {
+        const text =
+          document.querySelector('[data-testid="level-toast"]')?.textContent ?? "";
+        return (
+          text.includes(`Fase ${expectedLevel}`) ||
+          text.includes(`Level ${expectedLevel}`)
+        );
+      },
+      { timeout: PHASE_TRANSITION_TIMEOUT_MS },
+      toLevel,
+    );
+    toastState = await collectLevelToastState(page);
+  }
   assertCondition(
     toastState.text.includes(`Fase ${toLevel}`) ||
       toastState.text.includes(`Level ${toLevel}`),
