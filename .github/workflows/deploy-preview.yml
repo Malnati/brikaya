@@ -7,8 +7,8 @@ on:
       - main
 
 concurrency:
-  group: deploy-preview-${{ github.ref }}
-  cancel-in-progress: true
+  group: brikaya-qa-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   ci:
