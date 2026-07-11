@@ -68,6 +68,9 @@ jobs:
       - name: Verify preview index
         run: node scripts/cloudflare-pages.js verify-preview-index
 
+      - name: Verify preview stale bundle 404 and MIME
+        run: node scripts/cloudflare-pages.js verify-preview-stale-bundle-404
+
       - name: Resolve preview public URL for E2E
         id: preview_public_url
         run: |

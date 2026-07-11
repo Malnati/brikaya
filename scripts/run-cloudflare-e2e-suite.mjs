@@ -5,6 +5,7 @@ import { resolve } from "node:path";
 const E2E_SUITE = [
   "tests/e2e/cloudflare-audio-qa.js",
   "tests/e2e/cloudflare-ball-turret-qa.js",
+  "tests/e2e/cloudflare-bundle-mime-qa.js",
   "tests/e2e/cloudflare-cinematic-effects-qa.js",
   "tests/e2e/cloudflare-consent-screen-qa.js",
   "tests/e2e/cloudflare-consent-scroll-qa.js",

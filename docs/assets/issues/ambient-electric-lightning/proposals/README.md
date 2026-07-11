@@ -16,11 +16,11 @@ Preview autocontido para aprovação visual antes de merge no jogo.
 
 ## Variantes
 
-| ID | Pasta | Perfil |
-|---|---|---|
-| `pulse` | `variant-a-pulse/` | Sutil |
-| `arcade` | `variant-b-arcade/` | Equilibrado (padrão) |
-| `storm` | `variant-c-storm/` | Intenso |
+| ID | Pasta | Perfil | Status |
+|---|---|---|---|
+| `pulse` | `variant-a-pulse/` | Sutil | QA (`?lightning=pulse`) |
+| `arcade` | `variant-b-arcade/` | Equilibrado | **Aprovado — padrão de produção** (11/07/2026) |
+| `storm` | `variant-c-storm/` | Intenso | QA (`?lightning=storm`) |
 
 ## Recaptura de frames
 

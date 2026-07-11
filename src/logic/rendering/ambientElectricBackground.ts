@@ -175,7 +175,7 @@ export class AmbientElectricBackground {
 
   draw(
     ctx: CanvasRenderingContext2D,
-    viewport: ViewportGeometry,
+    _viewport: ViewportGeometry,
     now: number,
   ): void {
     if (this.bolts.length === 0) return;
