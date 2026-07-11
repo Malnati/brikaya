@@ -243,6 +243,7 @@ describe("GameEngine", () => {
 
     mockContext = {
       clearRect: jest.fn(),
+      fillRect: jest.fn(),
       fillText: jest.fn(),
       drawImage: jest.fn(),
       beginPath: jest.fn(),
@@ -254,10 +255,18 @@ describe("GameEngine", () => {
       stroke: jest.fn(),
       save: jest.fn(),
       restore: jest.fn(),
+      createLinearGradient: jest.fn(() => ({
+        addColorStop: jest.fn(),
+      })),
       fillStyle: "",
       strokeStyle: "",
       lineWidth: 1,
       globalAlpha: 1,
+      globalCompositeOperation: "source-over",
+      shadowBlur: 0,
+      shadowColor: "",
+      lineCap: "butt",
+      lineJoin: "miter",
       font: "",
       textAlign: "left",
     } as unknown as CanvasRenderingContext2D;
