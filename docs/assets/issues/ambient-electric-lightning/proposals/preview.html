@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Brikaya — Raios naturais em tela cheia</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #080816;
+        --panel: #101024;
+        --text: #eef6ff;
+        --accent: #42e0ff;
+        --muted: #8aa0b8;
+        --active: #7df9ff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background:
+          radial-gradient(
+            circle at 10% 0%,
+            rgba(66, 224, 255, 0.18),
+            transparent 28%
+          ),
+          var(--bg);
+        color: var(--text);
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      main {
+        width: min(920px, 100%);
+        display: grid;
+        gap: 16px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 1.35rem;
+        font-weight: 600;
+      }
+
+      p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid rgba(125, 249, 255, 0.18);
+        border-radius: 12px;
+        padding: 16px;
+        display: grid;
+        gap: 12px;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .controls label,
+      .controls button,
+      .controls select {
+        font: inherit;
+      }
+
+      .controls button,
+      .controls select {
+        background: rgba(8, 16, 32, 0.92);
+        color: var(--text);
+        border: 1px solid rgba(125, 249, 255, 0.28);
+        border-radius: 8px;
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+
+      .controls button[aria-pressed="true"],
+      .controls button.active {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px rgba(66, 224, 255, 0.4);
+      }
+
+      .canvas-wrap {
+        display: grid;
+        place-items: center;
+        background: #050510;
+        border-radius: 12px;
+        padding: 12px;
+      }
+
+      canvas {
+        width: min(800px, 100%);
+        height: auto;
+        border-radius: 8px;
+        background: transparent;
+      }
+
+      .status {
+        font-size: 0.92rem;
+        color: var(--muted);
+      }
+
+      .status strong {
+        color: var(--active);
+      }
+    </style>
+    <meta
+      name="description"
+      content="Proposta visual — relâmpagos naturais em tela cheia, solo para o céu"
+    />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Raios elétricos — tela cheia e aparência natural</h1>
+        <p>
+          Observe os relâmpagos em <strong>movimento na tela inteira</strong>:
+          ramificados, irregulares, partindo do solo em direção ao céu. O globo do
+          playfield é apenas referência visual por cima — os raios não ficam
+          presos ao círculo.
+        </p>
+      </header>
+
+      <section class="panel">
+        <div class="controls" role="toolbar" aria-label="Controles da proposta">
+          <label>
+            Variante
+            <select id="variant-select">
+              <option value="pulse">Pulse (sutil)</option>
+              <option value="arcade" selected>Arcade (equilibrado)</option>
+              <option value="storm">Storm (tempestade)</option>
+            </select>
+          </label>
+
+          <button type="button" id="mode-classic" class="active" aria-pressed="true">
+            Clássico
+          </button>
+          <button type="button" id="mode-turret" aria-pressed="false">Torreta</button>
+          <button type="button" id="compare-btn">Comparar variantes</button>
+          <button type="button" id="pause-btn">Pausar</button>
+          <button type="button" id="reset-btn">Reiniciar seed</button>
+          <button type="button" id="force-btn">Forçar raio</button>
+        </div>
+
+        <div class="canvas-wrap">
+          <canvas
+            id="preview-canvas"
+            width="800"
+            height="600"
+            aria-label="Preview dos relâmpagos em tela cheia"
+          ></canvas>
+        </div>
+
+        <p class="status" id="status-line">
+          <strong>Animação ativa</strong> · Variante Arcade · modo Clássico · raios
+          ativos: 0
+        </p>
+      </section>
+    </main>
+    <script>
+      const FULL_CIRCLE = Math.PI * 2;
+      const PROGRESS_MAX = 1;
+      const SEED_SEQUENCE_MULTIPLIER = 2_654_435_761;
+      const SEED_MODULO = 9_973;
+      const SEED_NORMALIZER = 9_973;
+      const COMPARE_CYCLE_MS = 6_000;
+
+      const ELECTRIC_LIGHTNING_CORE_COLOR = "rgba(238, 253, 255, 0.92)";
+      const ELECTRIC_LIGHTNING_HALO_COLOR = "rgba(66, 224, 255, 0.34)";
+      const ELECTRIC_LIGHTNING_SHADOW_COLOR = "rgba(77, 232, 255, 0.88)";
+
+      const AMBIENT_ELECTRIC_PRESETS = {
+        pulse: {
+          id: "pulse",
+          label: "Pulse",
+          minIntervalMs: 2_400,
+          maxIntervalMs: 4_800,
+          minDurationMs: 420,
+          maxDurationMs: 760,
+          maxActiveBolts: 2,
+          fractalDepth: 5,
+          branchCount: 2,
+          tertiaryBranches: false,
+          haloLineWidth: 4.2,
+          coreLineWidth: 1.4,
+          fadeStartProgress: 0.72,
+        },
+        arcade: {
+          id: "arcade",
+          label: "Arcade",
+          minIntervalMs: 1_100,
+          maxIntervalMs: 2_600,
+          minDurationMs: 360,
+          maxDurationMs: 680,
+          maxActiveBolts: 4,
+          fractalDepth: 6,
+          branchCount: 3,
+          tertiaryBranches: false,
+          haloLineWidth: 5.2,
+          coreLineWidth: 1.7,
+          fadeStartProgress: 0.68,
+        },
+        storm: {
+          id: "storm",
+          label: "Storm",
+          minIntervalMs: 420,
+          maxIntervalMs: 1_200,
+          minDurationMs: 280,
+          maxDurationMs: 560,
+          maxActiveBolts: 7,
+          fractalDepth: 7,
+          branchCount: 5,
+          tertiaryBranches: true,
+          haloLineWidth: 6.4,
+          coreLineWidth: 2.1,
+          fadeStartProgress: 0.62,
+        },
+      };
+
+      const VARIANT_ORDER = ["pulse", "arcade", "storm"];
+
+      function clampProgress(value) {
+        return Math.max(0, Math.min(PROGRESS_MAX, value));
+      }
+
+      function easeCubicOut(progress) {
+        const clamped = clampProgress(progress);
+        return 1 - Math.pow(1 - clamped, 3);
+      }
+
+      function lightningUnitValue(seed, salt) {
+        return (
+          ((seed + salt * SEED_SEQUENCE_MULTIPLIER) % SEED_MODULO) /
+          SEED_NORMALIZER
+        );
+      }
+
+      function calculateLightningFadeAlpha(progress, fadeStartProgress = 0.68) {
+        if (progress <= fadeStartProgress) return 1;
+        const fadeProgress =
+          (progress - fadeStartProgress) / (PROGRESS_MAX - fadeStartProgress);
+        return clampProgress(1 - fadeProgress);
+      }
+
+      function randomBetween(seed, min, max, salt) {
+        return min + lightningUnitValue(seed, salt) * (max - min);
+      }
+
+      function perpendicularOffset(ax, ay, bx, by, magnitude) {
+        const dx = bx - ax;
+        const dy = by - ay;
+        const length = Math.max(1, Math.hypot(dx, dy));
+        return { x: (-dy / length) * magnitude, y: (dx / length) * magnitude };
+      }
+
+      function buildFractalPath(start, end, depth, displacement, seed, salt) {
+        if (depth <= 0) return [start, end];
+
+        const mid = { x: (start.x + end.x) * 0.5, y: (start.y + end.y) * 0.5 };
+        const jitter = (lightningUnitValue(seed, salt) - 0.5) * 2 * displacement;
+        const normal = perpendicularOffset(start.x, start.y, end.x, end.y, jitter);
+        const displaced = { x: mid.x + normal.x, y: mid.y + normal.y };
+
+        const left = buildFractalPath(
+          start,
+          displaced,
+          depth - 1,
+          displacement * 0.58,
+          seed,
+          salt + 11,
+        );
+        const right = buildFractalPath(
+          displaced,
+          end,
+          depth - 1,
+          displacement * 0.58,
+          seed,
+          salt + 23,
+        );
+        return [...left, ...right.slice(1)];
+      }
+
+      function computePathLength(points) {
+        let total = 0;
+        for (let index = 1; index < points.length; index += 1) {
+          const prev = points[index - 1];
+          const current = points[index];
+          total += Math.hypot(current.x - prev.x, current.y - prev.y);
+        }
+        return total;
+      }
+
+      function buildBranchPath(start, direction, length, depth, displacement, seed, salt) {
+        const end = {
+          x: start.x + Math.cos(direction) * length,
+          y: start.y + Math.sin(direction) * length,
+        };
+        return buildFractalPath(start, end, depth, displacement, seed, salt);
+      }
+
+      function buildNaturalBoltGeometry(viewport, seed, options) {
+        const origin = {
+          x: viewport.width * (0.04 + lightningUnitValue(seed, 3) * 0.92),
+          y: viewport.height * (0.78 + lightningUnitValue(seed, 5) * 0.18),
+        };
+        const tip = {
+          x: origin.x + viewport.width * (lightningUnitValue(seed, 7) - 0.5) * 0.42,
+          y: viewport.height * (0.04 + lightningUnitValue(seed, 9) * 0.28),
+        };
+
+        const span = Math.hypot(tip.x - origin.x, tip.y - origin.y);
+        const displacement = Math.max(18, span * 0.14);
+        const trunk = buildFractalPath(
+          origin,
+          tip,
+          options.fractalDepth,
+          displacement,
+          seed,
+          17,
+        );
+
+        const branches = [];
+        for (let branchIndex = 0; branchIndex < options.branchCount; branchIndex += 1) {
+          const branchSalt = 101 + branchIndex * 37;
+          const nodeIndex = Math.floor(
+            (0.28 + lightningUnitValue(seed, branchSalt) * 0.45) *
+              (trunk.length - 1),
+          );
+          const node = trunk[Math.min(nodeIndex, trunk.length - 1)];
+          const mainAngle = Math.atan2(tip.y - origin.y, tip.x - origin.x);
+          const branchAngle =
+            mainAngle +
+            (branchIndex % 2 === 0 ? -1 : 1) *
+              (0.45 + lightningUnitValue(seed, branchSalt + 1) * 0.85);
+          const branchLength =
+            span * (0.12 + lightningUnitValue(seed, branchSalt + 2) * 0.22);
+          const branchDepth = Math.max(1, options.fractalDepth - 2);
+          const branchPoints = buildBranchPath(
+            node,
+            branchAngle,
+            branchLength,
+            branchDepth,
+            displacement * 0.45,
+            seed,
+            branchSalt + 3,
+          );
+          branches.push({
+            points: branchPoints,
+            lineWidthScale:
+              0.55 + lightningUnitValue(seed, branchSalt + 4) * 0.25,
+            alphaScale: 0.5 + lightningUnitValue(seed, branchSalt + 5) * 0.35,
+          });
+
+          if (options.tertiaryBranches && branchPoints.length > 2) {
+            const tertiarySalt = branchSalt + 50;
+            const tertiaryNode =
+              branchPoints[Math.floor(branchPoints.length * 0.55)] ?? node;
+            const tertiaryAngle =
+              branchAngle +
+              (branchIndex % 2 === 0 ? 1 : -1) *
+                (0.35 + lightningUnitValue(seed, tertiarySalt) * 0.5);
+            branches.push({
+              points: buildBranchPath(
+                tertiaryNode,
+                tertiaryAngle,
+                branchLength * 0.42,
+                1,
+                displacement * 0.22,
+                seed,
+                tertiarySalt + 1,
+              ),
+              lineWidthScale: 0.35,
+              alphaScale: 0.38,
+            });
+          }
+        }
+
+        return {
+          trunk,
+          branches,
+          origin,
+          tip,
+          totalLength: computePathLength(trunk),
+          seed,
+        };
+      }
+
+      function drawPartialPath(ctx, points, revealLength) {
+        if (points.length < 2 || revealLength <= 0) return;
+
+        let remaining = revealLength;
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+
+        for (let index = 1; index < points.length; index += 1) {
+          const prev = points[index - 1];
+          const current = points[index];
+          const segmentLength = Math.hypot(current.x - prev.x, current.y - prev.y);
+          if (remaining >= segmentLength) {
+            ctx.lineTo(current.x, current.y);
+            remaining -= segmentLength;
+            continue;
+          }
+
+          const ratio = remaining / Math.max(segmentLength, 1);
+          ctx.lineTo(
+            prev.x + (current.x - prev.x) * ratio,
+            prev.y + (current.y - prev.y) * ratio,
+          );
+          break;
+        }
+
+        ctx.stroke();
+      }
+
+      function drawLightningPulse(ctx, point, radius, alpha) {
+        if (radius <= 0 || alpha <= 0) return;
+
+        ctx.shadowColor = ELECTRIC_LIGHTNING_SHADOW_COLOR;
+        ctx.shadowBlur = radius * 1.8;
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = ELECTRIC_LIGHTNING_HALO_COLOR;
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, radius, 0, FULL_CIRCLE);
+        ctx.fill();
+
+        ctx.globalAlpha = alpha * 0.72;
+        ctx.fillStyle = ELECTRIC_LIGHTNING_CORE_COLOR;
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, radius * 0.36, 0, FULL_CIRCLE);
+        ctx.fill();
+      }
+
+      function drawNaturalBolt(ctx, geometry, revealProgress, fadeAlpha, scale, options) {
+        const revealLength = geometry.totalLength * clampProgress(revealProgress);
+        const haloWidth = options.haloLineWidth * scale;
+        const coreWidth = options.coreLineWidth * scale;
+
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+        const drawStrokeLayer = (
+          strokeStyle,
+          lineWidth,
+          shadowBlur,
+          alpha,
+          points,
+          length,
+        ) => {
+          ctx.shadowColor = ELECTRIC_LIGHTNING_SHADOW_COLOR;
+          ctx.shadowBlur = shadowBlur;
+          ctx.globalAlpha = alpha;
+          ctx.strokeStyle = strokeStyle;
+          ctx.lineWidth = lineWidth;
+          drawPartialPath(ctx, points, length);
+        };
+
+        drawStrokeLayer(
+          ELECTRIC_LIGHTNING_HALO_COLOR,
+          haloWidth,
+          haloWidth * 1.7,
+          fadeAlpha,
+          geometry.trunk,
+          revealLength,
+        );
+        drawStrokeLayer(
+          ELECTRIC_LIGHTNING_CORE_COLOR,
+          coreWidth,
+          coreWidth * 2.2,
+          fadeAlpha * 0.95,
+          geometry.trunk,
+          revealLength,
+        );
+
+        const branchReveal = clampProgress(revealProgress * 1.08);
+        for (const branch of geometry.branches) {
+          const branchLength = computePathLength(branch.points) * branchReveal;
+          drawStrokeLayer(
+            ELECTRIC_LIGHTNING_HALO_COLOR,
+            haloWidth * branch.lineWidthScale,
+            haloWidth,
+            fadeAlpha * branch.alphaScale * 0.85,
+            branch.points,
+            branchLength,
+          );
+          drawStrokeLayer(
+            ELECTRIC_LIGHTNING_CORE_COLOR,
+            coreWidth * branch.lineWidthScale,
+            coreWidth * 1.4,
+            fadeAlpha * branch.alphaScale * 0.8,
+            branch.points,
+            branchLength,
+          );
+        }
+
+        drawLightningPulse(ctx, geometry.origin, 8.5 * scale, fadeAlpha * 0.75);
+
+        if (revealProgress >= 0.86) {
+          const tipProgress = clampProgress((revealProgress - 0.86) / 0.14);
+          drawLightningPulse(
+            ctx,
+            geometry.tip,
+            5.2 * scale * tipProgress,
+            fadeAlpha * tipProgress,
+          );
+        }
+      }
+
+      function drawFullScreenElectricBackdrop(ctx, viewport) {
+        const gradient = ctx.createLinearGradient(0, 0, 0, viewport.height);
+        gradient.addColorStop(0, "#04070f");
+        gradient.addColorStop(0.45, "#070d18");
+        gradient.addColorStop(1, "#0a1220");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, viewport.width, viewport.height);
+      }
+
+      class AmbientElectricProposal {
+        constructor(variant = "arcade") {
+          this.variant = variant;
+          this.bolts = [];
+          this.nextSpawnAt = 0;
+          this.sequence = 0;
+          this.paused = false;
+          this.manualSeed = 0;
+        }
+
+        setVariant(variant) {
+          this.variant = variant;
+          this.bolts = [];
+          this.nextSpawnAt = 0;
+        }
+
+        reset(now = Date.now()) {
+          this.bolts = [];
+          this.sequence = this.manualSeed;
+          this.nextSpawnAt = now;
+        }
+
+        setManualSeed(seed) {
+          this.manualSeed = seed;
+          this.sequence = seed;
+        }
+
+        setPaused(paused) {
+          this.paused = paused;
+        }
+
+        forceBolt(viewport, now = Date.now()) {
+          this.spawnBolt(viewport, now, true);
+        }
+
+        tick(viewport, now) {
+          if (this.paused) return;
+
+          const preset = AMBIENT_ELECTRIC_PRESETS[this.variant];
+          this.bolts = this.bolts.filter(
+            (bolt) => now - bolt.startedAt < bolt.durationMs,
+          );
+
+          if (this.nextSpawnAt === 0) {
+            this.nextSpawnAt = now + preset.minIntervalMs * 0.35;
+          }
+
+          while (
+            this.bolts.length < preset.maxActiveBolts &&
+            now >= this.nextSpawnAt
+          ) {
+            this.spawnBolt(viewport, now, false);
+            this.sequence += 3;
+            this.nextSpawnAt =
+              now +
+              randomBetween(
+                this.sequence,
+                preset.minIntervalMs,
+                preset.maxIntervalMs,
+                59,
+              );
+          }
+        }
+
+        draw(ctx, viewport, now) {
+          if (this.bolts.length === 0) return;
+
+          const preset = AMBIENT_ELECTRIC_PRESETS[this.variant];
+          const previousComposite = ctx.globalCompositeOperation;
+          ctx.save();
+          ctx.globalCompositeOperation = "lighter";
+
+          for (const bolt of this.bolts) {
+            const progress = clampProgress((now - bolt.startedAt) / bolt.durationMs);
+            const revealProgress = easeCubicOut(progress);
+            const fadeAlpha =
+              calculateLightningFadeAlpha(progress, preset.fadeStartProgress) *
+              bolt.intensity;
+
+            drawNaturalBolt(
+              ctx,
+              bolt.geometry,
+              revealProgress,
+              fadeAlpha,
+              bolt.scale,
+              {
+                haloLineWidth: preset.haloLineWidth,
+                coreLineWidth: preset.coreLineWidth,
+              },
+            );
+          }
+
+          ctx.restore();
+          ctx.globalCompositeOperation = previousComposite;
+        }
+
+        spawnBolt(viewport, now, immediate = false) {
+          const preset = AMBIENT_ELECTRIC_PRESETS[this.variant];
+          if (this.bolts.length >= preset.maxActiveBolts) return;
+
+          this.sequence += 1;
+          const seed = this.sequence * 1_009 + (immediate ? 17 : 0);
+          const geometry = buildNaturalBoltGeometry(viewport, seed, {
+            fractalDepth: preset.fractalDepth,
+            branchCount: preset.branchCount,
+            tertiaryBranches: preset.tertiaryBranches,
+          });
+
+          this.bolts.push({
+            geometry,
+            startedAt: now,
+            durationMs: randomBetween(
+              seed,
+              preset.minDurationMs,
+              preset.maxDurationMs,
+              41,
+            ),
+            intensity: 0.55 + lightningUnitValue(seed, 43) * 0.45,
+            scale: 0.82 + lightningUnitValue(seed, 47) * 0.36,
+          });
+        }
+      }
+
+      function drawClassicPlayfieldOverlay(ctx, geometry) {
+        ctx.save();
+        ctx.fillStyle = "rgba(7, 14, 28, 0.72)";
+        ctx.strokeStyle = "rgba(125, 249, 255, 0.72)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(geometry.centerX, geometry.centerY, geometry.radius, 0, FULL_CIRCLE);
+        ctx.fill();
+        ctx.stroke();
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.18)";
+        ctx.beginPath();
+        ctx.arc(
+          geometry.centerX,
+          geometry.centerY,
+          geometry.radius * 0.74,
+          0,
+          FULL_CIRCLE,
+        );
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function drawTurretPlayfieldOverlay(ctx, geometry) {
+        const gradient = ctx.createRadialGradient(
+          geometry.centerX,
+          geometry.centerY,
+          geometry.radius * 0.08,
+          geometry.centerX,
+          geometry.centerY,
+          geometry.radius,
+        );
+        gradient.addColorStop(0, "rgba(22, 54, 88, 0.82)");
+        gradient.addColorStop(1, "rgba(2, 8, 20, 0.88)");
+
+        ctx.save();
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(geometry.centerX, geometry.centerY, geometry.radius, 0, FULL_CIRCLE);
+        ctx.fill();
+
+        ctx.strokeStyle = "rgba(125, 249, 255, 0.16)";
+        ctx.lineWidth = Math.max(1, geometry.radius * 0.006);
+        for (let ring = 1; ring <= 3; ring += 1) {
+          ctx.beginPath();
+          ctx.arc(
+            geometry.centerX,
+            geometry.centerY,
+            geometry.radius * (0.24 + ring * 0.16),
+            0,
+            FULL_CIRCLE,
+          );
+          ctx.stroke();
+        }
+
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.14)";
+        ctx.lineWidth = Math.max(1, geometry.radius * 0.005);
+        ctx.beginPath();
+        if (typeof ctx.ellipse === "function") {
+          ctx.ellipse(
+            geometry.centerX,
+            geometry.centerY + geometry.radius * 0.1,
+            geometry.radius * 0.72,
+            geometry.radius * 0.18,
+            0,
+            Math.PI,
+            FULL_CIRCLE,
+          );
+        } else {
+          ctx.arc(
+            geometry.centerX,
+            geometry.centerY + geometry.radius * 0.1,
+            geometry.radius * 0.72,
+            Math.PI,
+            FULL_CIRCLE,
+          );
+        }
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function createProposalGeometry(canvasWidth, canvasHeight) {
+        const radius = Math.min(canvasWidth, canvasHeight) * 0.42;
+        return {
+          centerX: canvasWidth / 2,
+          centerY: canvasHeight / 2,
+          radius,
+        };
+      }
+    </script>
+    <script>
+      const canvas = document.getElementById("preview-canvas");
+      const ctx = canvas.getContext("2d");
+      const variantSelect = document.getElementById("variant-select");
+      const modeClassicBtn = document.getElementById("mode-classic");
+      const modeTurretBtn = document.getElementById("mode-turret");
+      const compareBtn = document.getElementById("compare-btn");
+      const pauseBtn = document.getElementById("pause-btn");
+      const resetBtn = document.getElementById("reset-btn");
+      const forceBtn = document.getElementById("force-btn");
+      const statusLine = document.getElementById("status-line");
+
+      const viewport = { width: canvas.width, height: canvas.height };
+      const geometry = createProposalGeometry(canvas.width, canvas.height);
+      const ambient = new AmbientElectricProposal("arcade");
+      let backdropMode = "classic";
+      let animationFrame = 0;
+      let seedCounter = 0;
+      let compareActive = false;
+      let compareStartedAt = 0;
+      let compareVariantIndex = 0;
+
+      function setBackdropMode(mode) {
+        backdropMode = mode;
+        const isClassic = mode === "classic";
+        modeClassicBtn.classList.toggle("active", isClassic);
+        modeTurretBtn.classList.toggle("active", !isClassic);
+        modeClassicBtn.setAttribute("aria-pressed", String(isClassic));
+        modeTurretBtn.setAttribute("aria-pressed", String(!isClassic));
+      }
+
+      function drawPlayfieldOverlay() {
+        if (backdropMode === "classic") {
+          drawClassicPlayfieldOverlay(ctx, geometry);
+        } else {
+          drawTurretPlayfieldOverlay(ctx, geometry);
+        }
+      }
+
+      function drawFrame() {
+        ctx.clearRect(0, 0, viewport.width, viewport.height);
+        drawFullScreenElectricBackdrop(ctx, viewport);
+        ambient.draw(ctx, viewport, performance.now());
+        drawPlayfieldOverlay();
+      }
+
+      function updateCompareVariant(now) {
+        if (!compareActive) return;
+
+        const elapsed = now - compareStartedAt;
+        const cycleIndex = Math.floor(elapsed / COMPARE_CYCLE_MS) % VARIANT_ORDER.length;
+        if (cycleIndex !== compareVariantIndex) {
+          compareVariantIndex = cycleIndex;
+          const nextVariant = VARIANT_ORDER[compareVariantIndex];
+          variantSelect.value = nextVariant;
+          ambient.setVariant(nextVariant);
+          ambient.reset(now);
+        }
+      }
+
+      function updateStatus(now) {
+        const preset = AMBIENT_ELECTRIC_PRESETS[ambient.variant];
+        const animationLabel = ambient.paused
+          ? "Animação pausada"
+          : compareActive
+            ? `Comparando variantes (${preset.label})`
+            : "Animação ativa";
+        statusLine.innerHTML = `<strong>${animationLabel}</strong> · Variante ${preset.label} · modo ${
+          backdropMode === "classic" ? "Clássico" : "Torreta"
+        } · raios ativos: ${ambient.bolts.length}`;
+        void now;
+      }
+
+      function render(now) {
+        updateCompareVariant(now);
+        ambient.tick(viewport, now);
+        drawFrame();
+        updateStatus(now);
+        animationFrame = requestAnimationFrame(render);
+      }
+
+      variantSelect.addEventListener("change", () => {
+        compareActive = false;
+        compareBtn.classList.remove("active");
+        compareBtn.setAttribute("aria-pressed", "false");
+        ambient.setVariant(variantSelect.value);
+        ambient.reset(performance.now());
+      });
+
+      modeClassicBtn.addEventListener("click", () => setBackdropMode("classic"));
+      modeTurretBtn.addEventListener("click", () => setBackdropMode("turret"));
+
+      compareBtn.addEventListener("click", () => {
+        compareActive = !compareActive;
+        compareBtn.classList.toggle("active", compareActive);
+        compareBtn.setAttribute("aria-pressed", String(compareActive));
+        compareBtn.textContent = compareActive
+          ? "Parar comparação"
+          : "Comparar variantes";
+        if (compareActive) {
+          compareStartedAt = performance.now();
+          compareVariantIndex = 0;
+          variantSelect.value = VARIANT_ORDER[0];
+          ambient.setVariant(VARIANT_ORDER[0]);
+          ambient.reset(compareStartedAt);
+        }
+      });
+
+      pauseBtn.addEventListener("click", () => {
+        ambient.setPaused(!ambient.paused);
+        pauseBtn.textContent = ambient.paused ? "Retomar" : "Pausar";
+      });
+
+      resetBtn.addEventListener("click", () => {
+        seedCounter += 1;
+        ambient.setManualSeed(seedCounter * 97);
+        ambient.reset(performance.now());
+      });
+
+      forceBtn.addEventListener("click", () => {
+        ambient.forceBolt(viewport, performance.now());
+      });
+
+      const initialParams = new URLSearchParams(window.location.search);
+      const initialVariant = initialParams.get("variant");
+      if (initialVariant && AMBIENT_ELECTRIC_PRESETS[initialVariant]) {
+        variantSelect.value = initialVariant;
+        ambient.setVariant(initialVariant);
+      }
+      const initialMode = initialParams.get("mode");
+      if (initialMode === "turret") {
+        setBackdropMode("turret");
+      }
+
+      ambient.reset(performance.now());
+      animationFrame = requestAnimationFrame(render);
+
+      window.__proposalCapture = {
+        renderFrame({ variant, mode, timestamp, seed = 0, forceBolts = 3 }) {
+          compareActive = false;
+          variantSelect.value = variant;
+          ambient.setVariant(variant);
+          ambient.setManualSeed(seed);
+          ambient.setPaused(true);
+          setBackdropMode(mode === "turret" ? "turret" : "classic");
+
+          ambient.reset(timestamp);
+          for (let index = 0; index < forceBolts; index += 1) {
+            ambient.forceBolt(viewport, timestamp + index * 40);
+          }
+          ambient.tick(viewport, timestamp);
+
+          ctx.clearRect(0, 0, viewport.width, viewport.height);
+          drawFullScreenElectricBackdrop(ctx, viewport);
+          ambient.draw(ctx, viewport, timestamp);
+          drawPlayfieldOverlay();
+          updateStatus(timestamp);
+        },
+      };
+    </script>
+  </body>
+</html>
