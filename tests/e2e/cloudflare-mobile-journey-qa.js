@@ -133,12 +133,25 @@ const MANIFEST_FETCH_FAILURE_PATTERN =
   /Manifest fetch from .*manifest\.webmanifest failed/i;
 const RESOURCE_404_PATTERN =
   /Failed to load resource: the server responded with a status of 404/i;
+const VITE_BUNDLE_PATH_PATTERN = /\/assets\/index-[^/\s?]+\.(?:js|css)/i;
+const BUNDLE_MIME_FAILURE_PATTERN =
+  /Failed to load module script|not a supported stylesheet MIME type/i;
 
 function isIgnorableConsoleProblem(text) {
+  if (BUNDLE_MIME_FAILURE_PATTERN.test(text)) {
+    return false;
+  }
+
+  if (RESOURCE_404_PATTERN.test(text)) {
+    if (VITE_BUNDLE_PATH_PATTERN.test(text)) {
+      return false;
+    }
+    return true;
+  }
+
   return (
     GOOGLE_REPORT_ONLY_FRAME_ANCESTORS_PATTERN.test(text) ||
-    MANIFEST_FETCH_FAILURE_PATTERN.test(text) ||
-    RESOURCE_404_PATTERN.test(text)
+    MANIFEST_FETCH_FAILURE_PATTERN.test(text)
   );
 }
 

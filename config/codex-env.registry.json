@@ -255,6 +255,16 @@
       ]
     },
     {
+      "name": "BRIKAYA_BUNDLE_MIME_QA_REPORT",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya QA/Codex runtime override",
+      "commands": [
+        "npm test",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
       "name": "BRIKAYA_BUILD_ID",
       "classification": "public-generated",
       "required": false,

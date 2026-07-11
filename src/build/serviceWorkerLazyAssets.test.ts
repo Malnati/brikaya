@@ -57,4 +57,22 @@ describe('service worker lazy asset cache', () => {
     expect(source).toContain('client.postMessage');
     expect(source).not.toContain('client.navigate');
   });
+
+  it('usa network-first para bundles Vite e bloqueia cache de text/html', () => {
+    const source = readServiceWorker();
+    const viteBundleHandlerMatch = source.match(
+      /async function handleViteBundleRequest\(request\) \{([\s\S]*?)\n\}/,
+    );
+
+    expect(source).toContain('VITE_BUNDLE_PATH_PATTERN');
+    expect(source).toContain('isViteBundleRequest');
+    expect(source).toContain('handleViteBundleRequest');
+    expect(source).toContain('shouldCacheShellResponse');
+    expect(source).toContain('HTML_CONTENT_TYPE');
+    expect(viteBundleHandlerMatch).toBeTruthy();
+    expect(viteBundleHandlerMatch?.[1]).toContain('await fetch(request)');
+    expect(viteBundleHandlerMatch?.[1]).not.toMatch(
+      /^[\s\S]*caches\.match\(request\)[\s\S]*await fetch\(request\)/,
+    );
+  });
 });
