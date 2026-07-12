@@ -1,5 +1,6 @@
 // tests/unit/cloudflarePagesStaleBundle.test.ts
 import { execFileSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -27,6 +28,10 @@ function runCloudflarePagesExpression<T>(
 }
 
 describe('cloudflare-pages stale bundle verification', () => {
+  it('mantém public/404.html para desativar SPA fallback do Cloudflare Pages', () => {
+    expect(existsSync(resolve(process.cwd(), 'public/404.html'))).toBe(true);
+  });
+
   it('define not_found_handling=404 para produção e preview', () => {
     expect(
       runCloudflarePagesExpression(

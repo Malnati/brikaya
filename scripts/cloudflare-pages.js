@@ -40,6 +40,7 @@ const ZONE_NAME_KEY = 'BRIKAYA_CLOUDFLARE_ZONE_NAME';
 const ACCOUNT_ID_KEY = 'CLOUDFLARE_ACCOUNT_ID';
 const API_TOKEN_KEY = 'CLOUDFLARE_API_TOKEN';
 const INDEX_HTML_FILE_NAME = 'index.html';
+const NOT_FOUND_HTML_FILE_NAME = '404.html';
 const DEFAULT_PAGES_PROJECT_NAME = 'brikaya-live';
 const DEFAULT_PAGES_BRANCH = 'main';
 const DEFAULT_OUTPUT_DIR = 'dist';
@@ -938,13 +939,27 @@ async function purgePublicCache(envValues) {
     console.log(`Cache público limpo para ${envValues[CUSTOM_DOMAIN_KEY]}.`);
   } catch (error) {
     if (isCloudflareAuthenticationError(error)) {
-      throw new Error(
-        'Cache purge API sem permissão; configure CLOUDFLARE_API_TOKEN com Zone.Cache Purge.'
+      console.log(
+        'WARN Cache purge API sem permissão; configure CLOUDFLARE_API_TOKEN com Zone.Cache Purge. ' +
+          'Verificação MIME/404 já concluída; limpeza de cache fica pendente.'
       );
+      return;
     }
 
     throw error;
   }
+}
+
+function ensurePublic404Page() {
+  const notFoundPath = resolve(process.cwd(), 'public', NOT_FOUND_HTML_FILE_NAME);
+
+  if (!existsSync(notFoundPath)) {
+    throw new Error(
+      'public/404.html ausente; necessário para desativar SPA fallback do Cloudflare Pages.'
+    );
+  }
+
+  console.log('OK public/404.html presente.');
 }
 
 async function ensureDnsRecord(envValues) {
@@ -1248,6 +1263,18 @@ async function ensurePagesNotFoundHandling(envValues) {
     return;
   }
 
+  const deploymentConfigs = project?.deployment_configs || {};
+  const hasHandlingField =
+    'not_found_handling' in (deploymentConfigs[DEPLOYMENT_CONFIG_PRODUCTION] || {}) ||
+    'not_found_handling' in (deploymentConfigs[DEPLOYMENT_CONFIG_PREVIEW] || {});
+
+  if (!hasHandlingField) {
+    console.log(
+      `WARN Pages API não expõe not_found_handling para ${projectName}; usando public/404.html como fallback canônico.`
+    );
+    return;
+  }
+
   await requestCloudflareApi(
     buildPagesProjectPath(envValues),
     {
@@ -1263,6 +1290,7 @@ async function ensurePagesNotFoundHandling(envValues) {
 
 async function ensureProject(envValues) {
   validateEnvironment(envValues);
+  ensurePublic404Page();
   const projectName = envValues[PROJECT_NAME_KEY];
   const projects = await listPagesProjects(envValues);
   const projectExists = projects.some(project => getPagesProjectName(project) === projectName);
@@ -1281,6 +1309,7 @@ async function ensureProject(envValues) {
 
 async function ensurePreviewProject(envValues) {
   validatePreviewEnvironment(envValues);
+  ensurePublic404Page();
   const previewEnvValues = buildPreviewEnvValues(envValues);
   const projectName = previewEnvValues[PROJECT_NAME_KEY];
   const projects = await listPagesProjects(previewEnvValues);
