@@ -61,7 +61,12 @@
     "brikaya:sync-gh-secrets": "node scripts/sync-github-actions-secrets.mjs",
     "brikaya:gh-admin-setup": "node scripts/brikaya-gh-admin-setup.mjs",
     "brikaya:ship": "node scripts/brikaya-ship.mjs",
-    "brikaya:merge-pr": "node scripts/brikaya-merge-pr.mjs"
+    "brikaya:merge-pr": "node scripts/brikaya-merge-pr.mjs",
+    "verify:build-version": "node scripts/verify-build-version.mjs",
+    "verify:version-docs": "node scripts/verify-version-docs.mjs",
+    "test:version-docs:unit": "node scripts/parse-version-doc.test.mjs && node scripts/publish-version-release.test.mjs",
+    "brikaya:scaffold-version-docs": "node scripts/scaffold-version-docs.mjs",
+    "brikaya:publish-version-release": "node scripts/publish-version-release.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.4.1",
