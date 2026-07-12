@@ -6,7 +6,6 @@ import { drawElectricEdgesPreset } from "./electricComponentEdgeRenderer";
 import type {
   DetailPathDef,
   ElectricEdgesPreset,
-  InteriorFillDef,
 } from "./electricComponentPresetTypes";
 
 const COMPONENT_VIEWBOX_WIDTH = 96;
