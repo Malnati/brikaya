@@ -8,7 +8,7 @@ import { acceptPrivacyConsentIfPresent } from "../tests/e2e/consentHelpers.js";
 const PUBLIC_URL = process.env.BRIKAYA_PUBLIC_URL || "http://127.0.0.1:7979/";
 const OUTPUT_PATH =
   process.env.BRIKAYA_MENU_VERSION_SCREENSHOT ||
-  "docs/assets/issues/menu-version-vn-fix/evidence/evi-menu-version-v147.png";
+  "docs/assets/issues/menu-version-vn-fix/evidence/evi-menu-version-v146.png";
 
 async function run() {
   mkdirSync("docs/assets/issues/menu-version-vn-fix/evidence", {
