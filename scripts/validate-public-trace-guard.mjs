@@ -23,6 +23,8 @@ const FAILURE_LIMIT = 80;
 const FAILURE_COUNT_OFFSET = 1;
 const HTTP_STATUS_OK = 200;
 const FETCH_TIMEOUT_MS = 20000;
+const PUBLIC_FETCH_MAX_POLLS = 24;
+const PUBLIC_FETCH_POLL_DELAY_MS = 5000;
 const INITIAL_PUBLIC_PATHS = [
   '/',
   '/index.html',
@@ -150,25 +152,47 @@ function buildPublicScanUrl(baseUrl, pathname) {
   return publicScanUrl;
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function fetchPublicText(baseUrl, pathname) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  let lastError = null;
 
-  try {
-    const publicScanUrl = buildPublicScanUrl(baseUrl, pathname);
-    const response = await fetch(publicScanUrl, {
-      cache: 'no-store',
-      signal: controller.signal
-    });
+  for (let attempt = 1; attempt <= PUBLIC_FETCH_MAX_POLLS; attempt += 1) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
-    if (response.status !== HTTP_STATUS_OK) {
-      throw new Error(`public fetch failed ${publicScanUrl.toString()} status=${response.status}`);
+    try {
+      const publicScanUrl = buildPublicScanUrl(baseUrl, pathname);
+      const response = await fetch(publicScanUrl, {
+        cache: 'no-store',
+        signal: controller.signal
+      });
+
+      if (response.status === HTTP_STATUS_OK) {
+        return response.text();
+      }
+
+      lastError = new Error(
+        `public fetch failed ${publicScanUrl.toString()} status=${response.status}`
+      );
+
+      if (response.status !== 404 || attempt === PUBLIC_FETCH_MAX_POLLS) {
+        throw lastError;
+      }
+
+      console.log(
+        `WARN public fetch tentativa=${attempt}/${PUBLIC_FETCH_MAX_POLLS}: ` +
+          `${pathname} status=${response.status}`
+      );
+      await sleep(PUBLIC_FETCH_POLL_DELAY_MS);
+    } finally {
+      clearTimeout(timeout);
     }
-
-    return response.text();
-  } finally {
-    clearTimeout(timeout);
   }
+
+  throw lastError;
 }
 
 async function scanPublicUrl(publicUrl) {
