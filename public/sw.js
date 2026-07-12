@@ -23,6 +23,10 @@ const GET_VERSION_MESSAGE = "GET_VERSION";
 const VERSION_MESSAGE = "VERSION";
 const RELOAD_CLIENT_MESSAGE = "RELOAD_CLIENT";
 const RUNTIME_ASSET_PREFIXES = ["/assets/visual/", "/assets/audio/"];
+const VITE_BUNDLE_PATH_PATTERN = /^\/assets\/index-[^/]+\.(js|css)$/;
+const SCRIPT_DESTINATION = "script";
+const STYLE_DESTINATION = "style";
+const HTML_CONTENT_TYPE = "text/html";
 const ASSET_HASH_SEARCH_PARAM = "bbAssetHash";
 const ASSET_CACHE_STATUS_HEADER = "X-Brikaya-Asset-Cache";
 const ASSET_CACHE_HIT_STATUS = "hit";
@@ -57,6 +61,35 @@ function isRuntimeAssetRequest(request) {
   return RUNTIME_ASSET_PREFIXES.some((prefix) =>
     requestUrl.pathname.startsWith(prefix),
   );
+}
+
+function isViteBundleRequest(request) {
+  if (!isSameOriginRequest(request)) return false;
+  return VITE_BUNDLE_PATH_PATTERN.test(new URL(request.url).pathname);
+}
+
+function isHtmlContentType(response) {
+  const contentType = response.headers.get("content-type") || "";
+  return contentType.includes(HTML_CONTENT_TYPE);
+}
+
+function shouldCacheShellResponse(request, response) {
+  if (!isSameOriginRequest(request) || !response.ok) {
+    return false;
+  }
+
+  if (isHtmlContentType(response)) {
+    const destination = request.destination;
+    if (
+      destination === SCRIPT_DESTINATION ||
+      destination === STYLE_DESTINATION ||
+      isViteBundleRequest(request)
+    ) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 function assetPathFromRequest(request) {
@@ -262,6 +295,28 @@ async function handleRuntimeAssetRequest(request) {
   return fetchAndCacheAsset(versionedRequest, expectedHash);
 }
 
+async function handleViteBundleRequest(request) {
+  try {
+    const networkResponse = await fetch(request);
+
+    if (shouldCacheShellResponse(request, networkResponse)) {
+      const responseClone = networkResponse.clone();
+      caches
+        .open(CACHE_NAME)
+        .then((cache) => cache.put(request, responseClone));
+    }
+
+    return networkResponse;
+  } catch {
+    const cachedResponse = await caches.match(request);
+    if (cachedResponse && !isHtmlContentType(cachedResponse)) {
+      return cachedResponse;
+    }
+
+    return undefined;
+  }
+}
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
@@ -319,6 +374,11 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  if (isViteBundleRequest(event.request)) {
+    event.respondWith(handleViteBundleRequest(event.request));
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
@@ -327,10 +387,7 @@ self.addEventListener("fetch", (event) => {
 
       return fetch(event.request)
         .then((networkResponse) => {
-          const shouldCacheResponse =
-            isSameOriginRequest(event.request) && networkResponse.ok;
-
-          if (shouldCacheResponse) {
+          if (shouldCacheShellResponse(event.request, networkResponse)) {
             const responseClone = networkResponse.clone();
             caches
               .open(CACHE_NAME)

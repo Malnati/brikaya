@@ -68,8 +68,18 @@ const REDIRECT_OPERATION_POLL_DELAY_MS = 1000;
 const HTTP_GET = 'GET';
 const HTTP_POST = 'POST';
 const HTTP_PUT = 'PUT';
+const HTTP_PATCH = 'PATCH';
 const HTTP_DELETE = 'DELETE';
 const HTTP_STATUS_OK = 200;
+const HTTP_STATUS_NOT_FOUND = 404;
+const NOT_FOUND_HANDLING_404 = '404';
+const DEPLOYMENT_CONFIG_PRODUCTION = 'production';
+const DEPLOYMENT_CONFIG_PREVIEW = 'preview';
+const STALE_BUNDLE_PROBE_PATH = '/assets/index-__stale_probe__.js';
+const STALE_BUNDLE_CHECK_PARAM = 'qaStaleBundleCheck';
+const HTML_CONTENT_TYPE = 'text/html';
+const JAVASCRIPT_CONTENT_TYPE = 'javascript';
+const CSS_CONTENT_TYPE = 'css';
 const FETCH_CACHE_NO_STORE = 'no-store';
 const REDIRECT_LIST_KIND = 'redirect';
 const RULESET_KIND_ROOT = 'root';
@@ -139,6 +149,8 @@ const COMMANDS = new Set([
   'purge-public-cache',
   'verify-public-index',
   'verify-preview-index',
+  'verify-stale-bundle-404',
+  'verify-preview-stale-bundle-404',
   'deploy',
   'deploy-preview'
 ]);
@@ -298,6 +310,31 @@ function buildPagesDomainsPath(envValues) {
 
 function buildPagesProjectsPath(envValues) {
   return `/accounts/${envValues[ACCOUNT_ID_KEY]}/pages/projects`;
+}
+
+function buildPagesProjectPath(envValues) {
+  return `/accounts/${envValues[ACCOUNT_ID_KEY]}/pages/projects/${envValues[PROJECT_NAME_KEY]}`;
+}
+
+function buildNotFoundHandlingDeploymentConfigs() {
+  return {
+    [DEPLOYMENT_CONFIG_PRODUCTION]: {
+      not_found_handling: NOT_FOUND_HANDLING_404
+    },
+    [DEPLOYMENT_CONFIG_PREVIEW]: {
+      not_found_handling: NOT_FOUND_HANDLING_404
+    }
+  };
+}
+
+function hasRequiredNotFoundHandling(project) {
+  const deploymentConfigs = project?.deployment_configs || {};
+
+  return (
+    deploymentConfigs[DEPLOYMENT_CONFIG_PRODUCTION]?.not_found_handling ===
+      NOT_FOUND_HANDLING_404 &&
+    deploymentConfigs[DEPLOYMENT_CONFIG_PREVIEW]?.not_found_handling === NOT_FOUND_HANDLING_404
+  );
 }
 
 function buildZonesPath(envValues, zoneName = resolveZoneName(envValues)) {
@@ -616,6 +653,147 @@ async function verifyPublicIndex(envValues) {
   throw new Error(buildPublicIndexMismatchMessage(expectedIndex, lastPublicIndex));
 }
 
+function buildStaleBundleProbeUrl(envValues) {
+  const probeUrl = new URL(STALE_BUNDLE_PROBE_PATH, buildCustomDomainUrl(envValues));
+  probeUrl.searchParams.set(STALE_BUNDLE_CHECK_PARAM, String(Date.now()));
+
+  return probeUrl;
+}
+
+async function fetchStaleBundleProbe(envValues) {
+  const { signal, clear } = createFetchTimeoutSignal();
+
+  try {
+    const response = await fetch(buildStaleBundleProbeUrl(envValues), {
+      method: HTTP_GET,
+      cache: FETCH_CACHE_NO_STORE,
+      signal
+    });
+
+    return {
+      status: response.status,
+      contentType: response.headers.get(CONTENT_TYPE_HEADER) || EMPTY_STRING
+    };
+  } finally {
+    clear();
+  }
+}
+
+function isStaleBundleProbeValid(probe) {
+  return probe.status === HTTP_STATUS_NOT_FOUND;
+}
+
+function buildStaleBundleProbeMismatchMessage(probe) {
+  return (
+    `Stale bundle probe ainda não retorna 404: status=${probe?.status}; ` +
+    `content-type=${probe?.contentType}`
+  );
+}
+
+async function verifyStaleBundle404(envValues) {
+  validateEnvironment(envValues);
+  let lastProbe = null;
+
+  for (let attempt = 1; attempt <= PUBLIC_INDEX_MAX_POLLS; attempt += 1) {
+    lastProbe = await fetchStaleBundleProbe(envValues);
+
+    if (isStaleBundleProbeValid(lastProbe)) {
+      console.log(`OK stale bundle probe retorna 404: ${buildCustomDomainUrl(envValues)}`);
+      return;
+    }
+
+    console.log(
+      `WARN stale bundle probe tentativa=${attempt}/${PUBLIC_INDEX_MAX_POLLS}: ` +
+        buildStaleBundleProbeMismatchMessage(lastProbe)
+    );
+    await sleep(PUBLIC_INDEX_POLL_DELAY_MS);
+  }
+
+  throw new Error(buildStaleBundleProbeMismatchMessage(lastProbe));
+}
+
+function extractBundlePathsFromIndexHtml(indexHtml) {
+  const script = extractRequiredMatch(indexHtml, PUBLIC_INDEX_SCRIPT_PATTERN, 'script publicado');
+  const style = extractRequiredMatch(indexHtml, PUBLIC_INDEX_STYLE_PATTERN, 'estilo publicado');
+
+  return { script, style };
+}
+
+function isExpectedBundleContentType(contentType, bundleKind) {
+  const normalizedContentType = contentType.toLowerCase();
+
+  if (normalizedContentType.includes(HTML_CONTENT_TYPE)) {
+    return false;
+  }
+
+  if (bundleKind === JAVASCRIPT_CONTENT_TYPE) {
+    return normalizedContentType.includes(JAVASCRIPT_CONTENT_TYPE);
+  }
+
+  if (bundleKind === CSS_CONTENT_TYPE) {
+    return normalizedContentType.includes(CSS_CONTENT_TYPE);
+  }
+
+  return false;
+}
+
+async function fetchPublishedBundleProbe(envValues, bundlePath, bundleKind) {
+  const bundleUrl = new URL(bundlePath, buildCustomDomainUrl(envValues));
+  bundleUrl.searchParams.set(STALE_BUNDLE_CHECK_PARAM, String(Date.now()));
+  const { signal, clear } = createFetchTimeoutSignal();
+
+  try {
+    const response = await fetch(bundleUrl, {
+      method: HTTP_GET,
+      cache: FETCH_CACHE_NO_STORE,
+      signal
+    });
+    const contentType = response.headers.get(CONTENT_TYPE_HEADER) || EMPTY_STRING;
+
+    return {
+      path: bundlePath,
+      kind: bundleKind,
+      status: response.status,
+      contentType,
+      valid:
+        response.status === HTTP_STATUS_OK &&
+        isExpectedBundleContentType(contentType, bundleKind)
+    };
+  } finally {
+    clear();
+  }
+}
+
+async function verifyPublishedBundleMimeTypes(envValues) {
+  validateEnvironment(envValues);
+  const publicIndex = await fetchPublicIndex(envValues);
+
+  if (publicIndex.status !== HTTP_STATUS_OK) {
+    throw new Error(`Index publicado indisponível para verificação MIME: status=${publicIndex.status}`);
+  }
+
+  const indexHtml = await fetch(buildPublicIndexCheckUrl(envValues), {
+    cache: FETCH_CACHE_NO_STORE
+  }).then(response => response.text());
+  const bundlePaths = extractBundlePathsFromIndexHtml(indexHtml);
+  const probes = await Promise.all([
+    fetchPublishedBundleProbe(envValues, bundlePaths.script, JAVASCRIPT_CONTENT_TYPE),
+    fetchPublishedBundleProbe(envValues, bundlePaths.style, CSS_CONTENT_TYPE)
+  ]);
+  const invalidProbe = probes.find(probe => !probe.valid);
+
+  if (invalidProbe) {
+    throw new Error(
+      `Bundle publicado com MIME inválido: path=${invalidProbe.path}; ` +
+        `status=${invalidProbe.status}; content-type=${invalidProbe.contentType}`
+    );
+  }
+
+  console.log(
+    `OK bundles publicados com MIME válido: ${bundlePaths.script}, ${bundlePaths.style}`
+  );
+}
+
 async function listZones(envValues) {
   return listZonesForName(envValues, resolveZoneName(envValues));
 }
@@ -760,8 +938,9 @@ async function purgePublicCache(envValues) {
     console.log(`Cache público limpo para ${envValues[CUSTOM_DOMAIN_KEY]}.`);
   } catch (error) {
     if (isCloudflareAuthenticationError(error)) {
-      console.log('WARN Cache purge API sem permissão; cache público não foi limpo via API.');
-      return;
+      throw new Error(
+        'Cache purge API sem permissão; configure CLOUDFLARE_API_TOKEN com Zone.Cache Purge.'
+      );
     }
 
     throw error;
@@ -1036,21 +1215,68 @@ async function listPagesProjects(envValues) {
   return payload.result || API_RESULT_FALLBACK;
 }
 
+async function getPagesProject(envValues) {
+  const payload = await requestCloudflareApi(
+    buildPagesProjectPath(envValues),
+    {
+      method: HTTP_GET
+    },
+    envValues
+  );
+
+  return payload.result;
+}
+
+async function ensurePagesNotFoundHandling(envValues) {
+  validateEnvironment(envValues);
+  const projectName = envValues[PROJECT_NAME_KEY];
+  let project;
+
+  try {
+    project = await getPagesProject(envValues);
+  } catch (error) {
+    if (isCloudflareAuthenticationError(error)) {
+      console.log(`WARN Pages API sem permissão; not_found_handling não verificado para ${projectName}.`);
+      return;
+    }
+
+    throw error;
+  }
+
+  if (hasRequiredNotFoundHandling(project)) {
+    console.log(`OK not_found_handling=404 já configurado: ${projectName}`);
+    return;
+  }
+
+  await requestCloudflareApi(
+    buildPagesProjectPath(envValues),
+    {
+      method: HTTP_PATCH,
+      body: JSON.stringify({
+        deployment_configs: buildNotFoundHandlingDeploymentConfigs()
+      })
+    },
+    envValues
+  );
+  console.log(`not_found_handling=404 configurado para ${projectName}.`);
+}
+
 async function ensureProject(envValues) {
   validateEnvironment(envValues);
   const projectName = envValues[PROJECT_NAME_KEY];
   const projects = await listPagesProjects(envValues);
   const projectExists = projects.some(project => getPagesProjectName(project) === projectName);
 
-  if (projectExists) {
+  if (!projectExists) {
+    runWrangler(
+      [...PROJECT_CREATE_COMMAND, projectName, PRODUCTION_BRANCH_OPTION, envValues[BRANCH_KEY]],
+      envValues
+    );
+  } else {
     console.log(`Projeto Pages já existe: ${projectName}`);
-    return;
   }
 
-  runWrangler(
-    [...PROJECT_CREATE_COMMAND, projectName, PRODUCTION_BRANCH_OPTION, envValues[BRANCH_KEY]],
-    envValues
-  );
+  await ensurePagesNotFoundHandling(envValues);
 }
 
 async function ensurePreviewProject(envValues) {
@@ -1060,20 +1286,21 @@ async function ensurePreviewProject(envValues) {
   const projects = await listPagesProjects(previewEnvValues);
   const projectExists = projects.some(project => getPagesProjectName(project) === projectName);
 
-  if (projectExists) {
+  if (!projectExists) {
+    runWrangler(
+      [
+        ...PROJECT_CREATE_COMMAND,
+        projectName,
+        PRODUCTION_BRANCH_OPTION,
+        previewEnvValues[BRANCH_KEY]
+      ],
+      previewEnvValues
+    );
+  } else {
     console.log(`Projeto Pages preview já existe: ${projectName}`);
-    return;
   }
 
-  runWrangler(
-    [
-      ...PROJECT_CREATE_COMMAND,
-      projectName,
-      PRODUCTION_BRANCH_OPTION,
-      previewEnvValues[BRANCH_KEY]
-    ],
-    previewEnvValues
-  );
+  await ensurePagesNotFoundHandling(previewEnvValues);
 }
 
 function deploy(envValues) {
@@ -1154,6 +1381,33 @@ async function verifyPreviewIndex(envValues) {
         `verificando ${buildPagesDevUrl(previewEnvValues)}`,
     );
     return verifyPublicIndex(fallbackEnvValues);
+  }
+}
+
+async function verifyPreviewStaleBundle404(envValues) {
+  validatePreviewEnvironment(envValues);
+  const previewEnvValues = buildPreviewEnvValues(envValues);
+
+  try {
+    await verifyStaleBundle404(previewEnvValues);
+    await verifyPublishedBundleMimeTypes(previewEnvValues);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (!message.includes('fetch failed')) {
+      throw error;
+    }
+
+    const fallbackEnvValues = {
+      ...previewEnvValues,
+      [CUSTOM_DOMAIN_KEY]: buildPagesDevHost(previewEnvValues),
+    };
+
+    console.log(
+      `WARN preview stale bundle via ${previewEnvValues[CUSTOM_DOMAIN_KEY]} indisponível; ` +
+        `verificando ${buildPagesDevUrl(previewEnvValues)}`,
+    );
+    await verifyStaleBundle404(fallbackEnvValues);
+    await verifyPublishedBundleMimeTypes(fallbackEnvValues);
   }
 }
 
@@ -1252,6 +1506,17 @@ async function run() {
     return;
   }
 
+  if (command === 'verify-stale-bundle-404') {
+    await verifyStaleBundle404(envValues);
+    await verifyPublishedBundleMimeTypes(envValues);
+    return;
+  }
+
+  if (command === 'verify-preview-stale-bundle-404') {
+    await verifyPreviewStaleBundle404(envValues);
+    return;
+  }
+
   if (command === 'deploy-preview') {
     deployPreview(envValues);
     return;
@@ -1270,7 +1535,14 @@ export const __testables = {
   readLocalPublicIndexExpectation,
   buildPublicIndexCheckUrl,
   isPublicIndexCurrent,
-  buildPublicIndexMismatchMessage
+  buildPublicIndexMismatchMessage,
+  buildNotFoundHandlingDeploymentConfigs,
+  hasRequiredNotFoundHandling,
+  buildStaleBundleProbeUrl,
+  isStaleBundleProbeValid,
+  buildStaleBundleProbeMismatchMessage,
+  isExpectedBundleContentType,
+  extractBundlePathsFromIndexHtml
 };
 
 if (isDirectInvocation()) {
