@@ -19,9 +19,11 @@ Manifesto machine-readable: [`palette-manifest.json`](./palette-manifest.json)
 | Vermelho | Indutor quadrado | `spr-component-basic-red-normal.svg` |
 | Azul | Transistor | `spr-component-basic-blue-normal.svg` |
 | Verde | Chip | `spr-component-basic-green-normal.svg` |
-| Amarelo | Diodo LED | `spr-component-basic-yellow-normal.svg` |
-| Roxo | Capacitor | `spr-component-basic-purple-normal.svg` |
-| Metal | Módulo blindado | `spr-component-metal-steel-{normal\|dented-one\|dented-two}.svg` |
+| Amarelo | Nó de energia vermelho (forma LED) | `spr-component-basic-yellow-normal.svg` |
+| Roxo | Capacitor com arestas de energia roxa em loop | `spr-component-basic-purple-normal.svg` |
+| Metal | Módulo blindado | `spr-component-metal-steel-normal.svg` |
+| Metal dentado (1) | Arestas de energia amarela (forma blindada) | `spr-component-metal-steel-dented-one.svg` |
+| Metal dentado (2) | Nó de energia verde (forma blindada) | `spr-component-metal-steel-dented-two.svg` |
 
 Variantes por image set: `high-contrast`, `sunset`, `{metro\|garage\|lab\|temple\|orbital}-real`.
 
@@ -75,5 +77,7 @@ Rascunhos de autoría: [`authoring/codex-*.svg`](./authoring/)
 - Raios ambiente: `src/logic/rendering/ambientElectricBackground.ts`
 - Renderer compartilhado: `src/logic/rendering/electricLightningRenderer.ts`
 - Impactos elétricos (DRY): `src/logic/rendering/electricImpactRenderer.ts`
+- Componentes animados (`*-normal` autorizados): `src/logic/rendering/electricComponentEnergyRenderer.ts`, `electricComponentEdgeRenderer.ts`, `electricEnergyBallRenderer.ts`
+- Integração de blocos: `src/objects/Components.ts` (`drawComponent` → preset procedural ou SVG estático)
 - Integração: `GameEngine.drawGameBackdrop()` + `?lightning=pulse|arcade|storm`
 - Catálogo: `src/constants/visualAssets.ts` + `GAME_VISUAL_ASSET_ROLES`

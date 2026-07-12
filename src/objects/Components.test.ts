@@ -8,6 +8,7 @@ import {
   calculateRadialPlayfieldGeometry,
 } from "../utils/radialGeometry";
 import { getComponentTerminalRatios } from "../constants/componentTerminals";
+import * as electricComponentEnergyRenderer from "../logic/rendering/electricComponentEnergyRenderer";
 
 jest.mock("../storage/gameLogger", () => ({
   gameLogger: {
@@ -725,5 +726,32 @@ describe("Components laser fan helpers", () => {
     components.draw(ctx);
 
     expect(ctx.fillRect).toHaveBeenCalled();
+  });
+
+  it("usa renderer procedural em vez de drawImage para preset yellow-normal", () => {
+    const drawPreviewSpy = jest
+      .spyOn(electricComponentEnergyRenderer, "drawComponentEnergyPreview")
+      .mockImplementation(() => undefined);
+    const presetSpy = jest
+      .spyOn(electricComponentEnergyRenderer, "getComponentEnergyPresetId")
+      .mockReturnValue("spr-component-basic-yellow-normal");
+
+    const components = new Components(
+      ONE_BRICK_DIMENSIONS,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      createRandom(BASIC_BRICK_RANDOM_VALUES),
+    );
+    const ctx = createAnimatedCanvasContext();
+
+    components.draw(ctx);
+
+    expect(drawPreviewSpy).toHaveBeenCalled();
+    expect(ctx.drawImage).not.toHaveBeenCalled();
+
+    drawPreviewSpy.mockRestore();
+    presetSpy.mockRestore();
   });
 });

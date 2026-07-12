@@ -296,9 +296,10 @@
         "id": "spr-component-basic-yellow-normal",
         "path": "/assets/visual/components/spr-component-basic-yellow-normal.svg",
         "group": "component",
-        "runtime": "svg",
+        "runtime": "canvas-procedural",
         "status": "catalogado",
-        "electricShape": "led-diode"
+        "electricShape": "led-diode",
+        "semanticRole": "electric-energy-node-red-led"
       },
       {
         "id": "spr-component-basic-yellow-orbital-real-normal",
@@ -336,9 +337,10 @@
         "id": "spr-component-metal-steel-dented-two",
         "path": "/assets/visual/components/spr-component-metal-steel-dented-two.svg",
         "group": "component",
-        "runtime": "svg",
+        "runtime": "canvas-procedural",
         "status": "catalogado",
-        "electricShape": "shield-module"
+        "electricShape": "shield-module",
+        "semanticRole": "electric-energy-node-green-shield"
       },
       {
         "id": "spr-component-metal-steel-high-contrast-dented-one",

@@ -22,6 +22,12 @@ import {
 } from "../utils/radialGeometry";
 import type { ElectricImpactHandler } from "../utils/electricImpact";
 import { getComponentTerminalRatios } from "../constants/componentTerminals";
+import { shouldUseReducedCanvasEffects } from "../utils/performanceMode";
+import {
+  drawComponentEnergyPreview,
+  ElectricComponentEnergyPreview,
+  getComponentEnergyPresetId,
+} from "../logic/rendering/electricComponentEnergyRenderer";
 
 const COMPONENT_ACTIVE = 1;
 const COMPONENT_DESTROYED = 0;
@@ -100,6 +106,7 @@ export class Components {
   private dimensions: DynamicGameDimensions;
   private rows: number;
   private maxRows: number;
+  private readonly proceduralEnergyPreviews = new Map<string, ElectricComponentEnergyPreview>();
 
   constructor(
     dimensions: DynamicGameDimensions,
@@ -110,6 +117,7 @@ export class Components {
     private random: () => number = Math.random,
     private geometry?: RadialPlayfieldGeometry,
     private onElectricImpact?: ElectricImpactHandler,
+    private canvasWidth = 0,
   ) {
     this.dimensions = dimensions;
     this.rows = dimensions.componentRows;
@@ -215,6 +223,7 @@ export class Components {
     dimensions: DynamicGameDimensions,
     maxRows?: number,
     geometry?: RadialPlayfieldGeometry,
+    canvasWidth?: number,
   ) {
     this.dimensions = {
       ...dimensions,
@@ -223,6 +232,9 @@ export class Components {
     };
     this.maxRows = Math.max(this.rows, maxRows ?? this.maxRows);
     this.geometry = geometry ?? this.geometry;
+    if (canvasWidth !== undefined) {
+      this.canvasWidth = canvasWidth;
+    }
   }
 
   collide(
@@ -574,12 +586,78 @@ export class Components {
     row: number,
   ) {
     const componentAssetRole = this.getComponentAssetRole(component);
-    const componentImage = AssetLoader.getOrLoadImage(
-      this.resolveAssetPath(componentAssetRole),
-    );
+    const assetPath = this.resolveAssetPath(componentAssetRole);
+    const energyPresetId = getComponentEnergyPresetId(assetPath);
     const segment = this.getRadialComponentSegment(col, row);
 
+    if (energyPresetId) {
+      this.drawProceduralComponentEnergy(
+        ctx,
+        energyPresetId,
+        componentX,
+        componentY,
+        segment,
+      );
+      return;
+    }
+
+    const componentImage = AssetLoader.getOrLoadImage(assetPath);
     this.drawComponentImage(ctx, component, componentImage, componentX, componentY, segment);
+  }
+
+  private getProceduralEnergyPreview(presetId: string): ElectricComponentEnergyPreview {
+    let preview = this.proceduralEnergyPreviews.get(presetId);
+    if (!preview) {
+      preview = new ElectricComponentEnergyPreview(presetId);
+      this.proceduralEnergyPreviews.set(presetId, preview);
+    }
+    return preview;
+  }
+
+  private drawProceduralComponentEnergy(
+    ctx: CanvasRenderingContext2D,
+    presetId: string,
+    componentX: number,
+    componentY: number,
+    segment?: RadialComponentSegment,
+  ) {
+    const reducedEffects = shouldUseReducedCanvasEffects(this.canvasWidth);
+    const preview = this.getProceduralEnergyPreview(presetId);
+    const now = Date.now();
+
+    if (segment) {
+      const metrics = this.getRadialComponentMetrics(segment);
+      ctx.save();
+      ctx.translate(segment.centerX, segment.centerY);
+      ctx.rotate(metrics.rotation);
+      drawComponentEnergyPreview(
+        ctx,
+        preview,
+        now,
+        {
+          x: -metrics.width / 2,
+          y: -metrics.height / 2,
+          width: metrics.width,
+          height: metrics.height,
+        },
+        reducedEffects,
+      );
+      ctx.restore();
+      return;
+    }
+
+    drawComponentEnergyPreview(
+      ctx,
+      preview,
+      now,
+      {
+        x: componentX,
+        y: componentY,
+        width: this.dimensions.componentWidth,
+        height: this.dimensions.componentHeight,
+      },
+      reducedEffects,
+    );
   }
 
   private drawComponentImage(

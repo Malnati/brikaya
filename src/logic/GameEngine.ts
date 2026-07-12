@@ -599,7 +599,12 @@ export class GameEngine {
     if (this.isServeLocked) {
       this.balls.forEach((ball) => this.positionBallForCurrentMode(ball));
     }
-    this.components.resize(this.dimensions, this.maxComponentRows, this.radialGeometry);
+    this.components.resize(
+      this.dimensions,
+      this.maxComponentRows,
+      this.radialGeometry,
+      this.canvasSize.width,
+    );
     this.activePowerUp?.setSize(this.getPowerUpSize());
   }
 
@@ -648,6 +653,7 @@ export class GameEngine {
         componentQaRandom,
         this.radialGeometry,
         this.handleElectricImpact,
+        this.canvasSize.width,
       );
     }
 
@@ -660,6 +666,7 @@ export class GameEngine {
       undefined,
       this.radialGeometry,
       this.handleElectricImpact,
+      this.canvasSize.width,
     );
   }
 
