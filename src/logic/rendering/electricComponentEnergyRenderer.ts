@@ -2,7 +2,10 @@ import {
   ElectricEnergyBallRenderer,
   type EnergyBallColorTheme,
 } from "./electricEnergyBallRenderer";
-import { drawElectricEdgesPreset } from "./electricComponentEdgeRenderer";
+import {
+  drawElectricEdgesPreset,
+  type ElectricEdgesPreset,
+} from "./electricComponentEdgeRenderer";
 
 const COMPONENT_VIEWBOX_WIDTH = 96;
 const COMPONENT_VIEWBOX_HEIGHT = 48;
@@ -56,13 +59,7 @@ interface PolylineDetailPath {
   points: [number, number][];
 }
 
-type DetailPathDef = LineDetailPath | PolylineDetailPath;
-
-interface InteriorFillDef {
-  type: "polygon";
-  points: [number, number][];
-  fill: string;
-}
+type EnergyDetailPathDef = LineDetailPath | PolylineDetailPath;
 
 interface EnergyBallPreset {
   renderMode?: undefined;
@@ -78,19 +75,7 @@ interface EnergyBallPreset {
   fillPaths?: (ClipPathDef & { fill?: string })[];
   outlinePaths: ClipPathDef[];
   terminalStubs: { x1: number; y1: number; x2: number; y2: number }[];
-  detailPaths: DetailPathDef[];
-}
-
-interface ElectricEdgesPreset {
-  renderMode: "electric-edges";
-  electricTheme: "yellow" | "purple";
-  shape: string;
-  terminalWidth: number;
-  interiorFill?: InteriorFillDef;
-  interiorFills?: InteriorFillDef[];
-  perimeterPaths: { type: "polygon"; points: [number, number][] }[];
-  terminalStubs: { x1: number; y1: number; x2: number; y2: number }[];
-  detailPaths: DetailPathDef[];
+  detailPaths: EnergyDetailPathDef[];
 }
 
 interface ShieldEnergyBallPreset {
@@ -104,7 +89,7 @@ interface ShieldEnergyBallPreset {
   terminalWidth: number;
   clipPaths: ClipPathDef[];
   terminalStubs: { x1: number; y1: number; x2: number; y2: number }[];
-  detailPaths: DetailPathDef[];
+  detailPaths: EnergyDetailPathDef[];
 }
 
 type ComponentEnergyPreset = EnergyBallPreset | ElectricEdgesPreset | ShieldEnergyBallPreset;
@@ -237,7 +222,7 @@ function traceClipPath(ctx: CanvasRenderingContext2D, pathDef: ClipPathDef): voi
 
 function drawDetailPath(
   ctx: CanvasRenderingContext2D,
-  pathDef: DetailPathDef,
+  pathDef: EnergyDetailPathDef,
   defaultColor: string,
   defaultWidth: number,
   defaultOpacity = 0.52,

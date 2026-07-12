@@ -12,10 +12,56 @@ export const PURPLE_ELECTRIC_EDGE_STYLE = {
   shadowColor: "rgba(156, 64, 255, 0.88)",
 };
 
-const EDGE_THEMES = {
+export type ElectricEdgeTheme = "yellow" | "purple";
+
+const EDGE_THEMES: Record<ElectricEdgeTheme, typeof YELLOW_ELECTRIC_EDGE_STYLE> = {
   yellow: YELLOW_ELECTRIC_EDGE_STYLE,
   purple: PURPLE_ELECTRIC_EDGE_STYLE,
 };
+
+export interface ElectricEdgeSegment {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  width?: number;
+}
+
+export interface ElectricEdgeInteriorFill {
+  type: "polygon";
+  points: [number, number][];
+  fill: string;
+}
+
+export interface LineDetailPath {
+  type: "line";
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  color?: string;
+  opacity?: number;
+  width?: number;
+}
+
+export interface PolylineDetailPath {
+  type: "polyline";
+  points: [number, number][];
+}
+
+export type DetailPathDef = LineDetailPath | PolylineDetailPath;
+
+export interface ElectricEdgesPreset {
+  renderMode: "electric-edges";
+  electricTheme: ElectricEdgeTheme;
+  shape: string;
+  terminalWidth: number;
+  interiorFill?: ElectricEdgeInteriorFill;
+  interiorFills?: ElectricEdgeInteriorFill[];
+  perimeterPaths: { type: "polygon"; points: [number, number][] }[];
+  terminalStubs: ElectricEdgeSegment[];
+  detailPaths: DetailPathDef[];
+}
 
 const EDGE_CYCLE_MS = 2400;
 const EDGE_PERIMETER_CYCLE_MS = 3200;
@@ -25,7 +71,7 @@ const EDGE_SCALE = 1;
 const EDGE_HALO_LINE_WIDTH = 4.2;
 const EDGE_CORE_LINE_WIDTH = 2;
 
-function resolveStyle(themeName: "yellow" | "purple") {
+function resolveStyle(themeName: ElectricEdgeTheme) {
   return EDGE_THEMES[themeName] ?? YELLOW_ELECTRIC_EDGE_STYLE;
 }
 
@@ -92,13 +138,13 @@ function drawDualStrokeElectric(
 
 function drawAnimatedElectricSegment(
   ctx: CanvasRenderingContext2D,
-  segment,
-  now,
-  seed,
-  styleOrTheme: "yellow" | "purple" = "yellow",
+  segment: ElectricEdgeSegment,
+  now: number,
+  seed: number,
+  styleOrTheme: ElectricEdgeTheme = "yellow",
   options: { travelProgress?: number; reducedEffects?: boolean } = {},
 ) {
-  const style = typeof styleOrTheme === "string" ? resolveStyle(styleOrTheme) : styleOrTheme;
+  const style = resolveStyle(styleOrTheme);
   const origin = { x: segment.x1, y: segment.y1 };
   const endpoint = { x: segment.x2, y: segment.y2 };
   const travelProgress =
@@ -107,7 +153,14 @@ function drawAnimatedElectricSegment(
   drawDualStrokeElectric(ctx, origin, endpoint, travelProgress, seed, seed, style, widthScale, options.reducedEffects ?? false);
 }
 
-export function drawAnimatedElectricPolyline(ctx: CanvasRenderingContext2D, points: number[][], now: number, seed: number, styleOrTheme: "yellow" | "purple", reducedEffects: boolean) {
+export function drawAnimatedElectricPolyline(
+  ctx: CanvasRenderingContext2D,
+  points: [number, number][],
+  now: number,
+  seed: number,
+  styleOrTheme: ElectricEdgeTheme,
+  reducedEffects: boolean,
+) {
   if (!points || points.length < 2) return;
   for (let index = 0; index < points.length - 1; index += 1) {
     const [x1, y1] = points[index];
@@ -123,7 +176,13 @@ export function drawAnimatedElectricPolyline(ctx: CanvasRenderingContext2D, poin
   }
 }
 
-export function drawAnimatedElectricPolygon(ctx, points, now, seed, styleOrTheme = "yellow") {
+export function drawAnimatedElectricPolygon(
+  ctx: CanvasRenderingContext2D,
+  points: [number, number][],
+  now: number,
+  seed: number,
+  styleOrTheme: ElectricEdgeTheme = "yellow",
+) {
   if (!points || points.length < 2) return;
   for (let index = 0; index < points.length; index += 1) {
     const [x1, y1] = points[index];
@@ -138,9 +197,16 @@ export function drawAnimatedElectricPolygon(ctx, points, now, seed, styleOrTheme
   }
 }
 
-export function drawFlowingElectricPolygon(ctx: CanvasRenderingContext2D, points: number[][], now: number, seed: number, styleOrTheme: "yellow" | "purple", reducedEffects: boolean) {
-  if (!points || points.length < 2) return;
-  const style = typeof styleOrTheme === "string" ? resolveStyle(styleOrTheme) : styleOrTheme;
+export function drawFlowingElectricPolygon(
+  ctx: CanvasRenderingContext2D,
+  points: [number, number][],
+  now: number,
+  seed: number,
+  styleOrTheme: ElectricEdgeTheme,
+  reducedEffects: boolean,
+) {
+  if (points.length < 2) return;
+  const style = resolveStyle(styleOrTheme);
   for (let index = 0; index < points.length; index += 1) {
     const [x1, y1] = points[index];
     const [x2, y2] = points[(index + 1) % points.length];
@@ -161,8 +227,13 @@ export function drawFlowingElectricPolygon(ctx: CanvasRenderingContext2D, points
   }
 }
 
-export function drawElectricEdgesPreset(ctx: CanvasRenderingContext2D, preset: Record<string, unknown>, now: number, reducedEffects = false) {
-  const theme = preset.electricTheme ?? "yellow";
+export function drawElectricEdgesPreset(
+  ctx: CanvasRenderingContext2D,
+  preset: ElectricEdgesPreset,
+  now: number,
+  reducedEffects = false,
+) {
+  const theme = preset.electricTheme;
   const baseSeed = 42;
 
   const interiorFills =
