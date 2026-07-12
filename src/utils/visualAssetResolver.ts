@@ -32,6 +32,10 @@ export const GAME_VISUAL_ASSET_ROLES = {
   levelUpStarOverlay: "levelUpStarOverlay",
   levelUpTwirlOverlay: "levelUpTwirlOverlay",
   gameOverRipSmoke: "gameOverRipSmoke",
+  electricImpactComponentBurst: "electricImpactComponentBurst",
+  electricImpactWallBurst: "electricImpactWallBurst",
+  electricImpactCeilingBurst: "electricImpactCeilingBurst",
+  electricImpactRadialWallBurst: "electricImpactRadialWallBurst",
   appBrowserFavicon: "appBrowserFavicon",
   pwaAppIcon: "pwaAppIcon",
 } as const;
@@ -67,6 +71,14 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
     [GAME_VISUAL_ASSET_ROLES.levelUpStarOverlay]: "vfxLevelUpStarOverlay",
     [GAME_VISUAL_ASSET_ROLES.levelUpTwirlOverlay]: "vfxLevelUpTwirlOverlay",
     [GAME_VISUAL_ASSET_ROLES.gameOverRipSmoke]: "vfxGameOverRipSmoke",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactComponentBurst]:
+      "vfxElectricImpactComponentBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactWallBurst]:
+      "vfxElectricImpactWallBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactCeilingBurst]:
+      "vfxElectricImpactCeilingBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactRadialWallBurst]:
+      "vfxElectricImpactRadialWallBurst",
     [GAME_VISUAL_ASSET_ROLES.appBrowserFavicon]: "uiAppBrowserFavicon",
     [GAME_VISUAL_ASSET_ROLES.pwaAppIcon]: "uiPwaAppIcon",
   },
@@ -103,6 +115,14 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
       "vfxLevelUpTwirlHighContrastOverlay",
     [GAME_VISUAL_ASSET_ROLES.gameOverRipSmoke]:
       "vfxGameOverRipHighContrastSmoke",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactComponentBurst]:
+      "vfxElectricImpactComponentBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactWallBurst]:
+      "vfxElectricImpactWallBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactCeilingBurst]:
+      "vfxElectricImpactCeilingBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactRadialWallBurst]:
+      "vfxElectricImpactRadialWallBurst",
     [GAME_VISUAL_ASSET_ROLES.appBrowserFavicon]: "uiAppBrowserFavicon",
     [GAME_VISUAL_ASSET_ROLES.pwaAppIcon]: "uiPwaAppIcon",
   },
@@ -132,6 +152,14 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
     [GAME_VISUAL_ASSET_ROLES.levelUpTwirlOverlay]:
       "vfxLevelUpTwirlSunsetOverlay",
     [GAME_VISUAL_ASSET_ROLES.gameOverRipSmoke]: "vfxGameOverRipSunsetSmoke",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactComponentBurst]:
+      "vfxElectricImpactComponentBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactWallBurst]:
+      "vfxElectricImpactWallBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactCeilingBurst]:
+      "vfxElectricImpactCeilingBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactRadialWallBurst]:
+      "vfxElectricImpactRadialWallBurst",
     [GAME_VISUAL_ASSET_ROLES.appBrowserFavicon]: "uiAppBrowserFavicon",
     [GAME_VISUAL_ASSET_ROLES.pwaAppIcon]: "uiPwaAppIcon",
   },
@@ -163,6 +191,14 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
     [GAME_VISUAL_ASSET_ROLES.levelUpTwirlOverlay]:
       "vfxLevelUpTwirlMetroRealOverlay",
     [GAME_VISUAL_ASSET_ROLES.gameOverRipSmoke]: "vfxGameOverRipMetroRealSmoke",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactComponentBurst]:
+      "vfxElectricImpactComponentBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactWallBurst]:
+      "vfxElectricImpactWallBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactCeilingBurst]:
+      "vfxElectricImpactCeilingBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactRadialWallBurst]:
+      "vfxElectricImpactRadialWallBurst",
     [GAME_VISUAL_ASSET_ROLES.appBrowserFavicon]: "uiAppBrowserFavicon",
     [GAME_VISUAL_ASSET_ROLES.pwaAppIcon]: "uiPwaAppIcon",
   },
@@ -196,6 +232,14 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
     [GAME_VISUAL_ASSET_ROLES.levelUpTwirlOverlay]:
       "vfxLevelUpTwirlGarageRealOverlay",
     [GAME_VISUAL_ASSET_ROLES.gameOverRipSmoke]: "vfxGameOverRipGarageRealSmoke",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactComponentBurst]:
+      "vfxElectricImpactComponentBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactWallBurst]:
+      "vfxElectricImpactWallBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactCeilingBurst]:
+      "vfxElectricImpactCeilingBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactRadialWallBurst]:
+      "vfxElectricImpactRadialWallBurst",
     [GAME_VISUAL_ASSET_ROLES.appBrowserFavicon]: "uiAppBrowserFavicon",
     [GAME_VISUAL_ASSET_ROLES.pwaAppIcon]: "uiPwaAppIcon",
   },
@@ -226,6 +270,14 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
     [GAME_VISUAL_ASSET_ROLES.levelUpTwirlOverlay]:
       "vfxLevelUpTwirlLabRealOverlay",
     [GAME_VISUAL_ASSET_ROLES.gameOverRipSmoke]: "vfxGameOverRipLabRealSmoke",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactComponentBurst]:
+      "vfxElectricImpactComponentBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactWallBurst]:
+      "vfxElectricImpactWallBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactCeilingBurst]:
+      "vfxElectricImpactCeilingBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactRadialWallBurst]:
+      "vfxElectricImpactRadialWallBurst",
     [GAME_VISUAL_ASSET_ROLES.appBrowserFavicon]: "uiAppBrowserFavicon",
     [GAME_VISUAL_ASSET_ROLES.pwaAppIcon]: "uiPwaAppIcon",
   },
@@ -260,6 +312,14 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
     [GAME_VISUAL_ASSET_ROLES.levelUpTwirlOverlay]:
       "vfxLevelUpTwirlTempleRealOverlay",
     [GAME_VISUAL_ASSET_ROLES.gameOverRipSmoke]: "vfxGameOverRipTempleRealSmoke",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactComponentBurst]:
+      "vfxElectricImpactComponentBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactWallBurst]:
+      "vfxElectricImpactWallBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactCeilingBurst]:
+      "vfxElectricImpactCeilingBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactRadialWallBurst]:
+      "vfxElectricImpactRadialWallBurst",
     [GAME_VISUAL_ASSET_ROLES.appBrowserFavicon]: "uiAppBrowserFavicon",
     [GAME_VISUAL_ASSET_ROLES.pwaAppIcon]: "uiPwaAppIcon",
   },
@@ -295,6 +355,14 @@ export const GAME_VISUAL_ASSET_KEYS_BY_IMAGE_SET = {
       "vfxLevelUpTwirlOrbitalRealOverlay",
     [GAME_VISUAL_ASSET_ROLES.gameOverRipSmoke]:
       "vfxGameOverRipOrbitalRealSmoke",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactComponentBurst]:
+      "vfxElectricImpactComponentBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactWallBurst]:
+      "vfxElectricImpactWallBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactCeilingBurst]:
+      "vfxElectricImpactCeilingBurst",
+    [GAME_VISUAL_ASSET_ROLES.electricImpactRadialWallBurst]:
+      "vfxElectricImpactRadialWallBurst",
     [GAME_VISUAL_ASSET_ROLES.appBrowserFavicon]: "uiAppBrowserFavicon",
     [GAME_VISUAL_ASSET_ROLES.pwaAppIcon]: "uiPwaAppIcon",
   },
