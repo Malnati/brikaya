@@ -70,14 +70,14 @@ jobs:
       - name: Ensure pages.dev redirect to canonical domain
         run: node scripts/cloudflare-pages.js ensure-pages-dev-redirect
 
-      - name: Purge public cache
-        run: node scripts/cloudflare-pages.js purge-public-cache
-
       - name: Verify public index
         run: node scripts/cloudflare-pages.js verify-public-index
 
       - name: Verify stale bundle 404 and MIME
         run: node scripts/cloudflare-pages.js verify-stale-bundle-404
+
+      - name: Purge public cache
+        run: node scripts/cloudflare-pages.js purge-public-cache
 
       - name: Trace guard public check
         run: npm run test:trace-guard:public
