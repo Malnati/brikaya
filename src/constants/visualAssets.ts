@@ -30,6 +30,14 @@ export const vfxLevelUpTwirlOverlay =
   "/assets/visual/vfx/vfx-level-up-twirl-overlay.svg";
 export const vfxGameOverRipSmoke =
   "/assets/visual/vfx/vfx-game-over-rip-smoke.svg";
+export const vfxElectricImpactComponentBurst =
+  "/assets/visual/vfx/vfx-electric-impact-component-burst.svg";
+export const vfxElectricImpactWallBurst =
+  "/assets/visual/vfx/vfx-electric-impact-wall-burst.svg";
+export const vfxElectricImpactCeilingBurst =
+  "/assets/visual/vfx/vfx-electric-impact-ceiling-burst.svg";
+export const vfxElectricImpactRadialWallBurst =
+  "/assets/visual/vfx/vfx-electric-impact-radial-wall-burst.svg";
 export const sprPowerupMultiballOrb =
   "/assets/visual/powerups/spr-powerup-multiball-orb.svg";
 export const sprPowerupWidePaddle =
@@ -322,6 +330,10 @@ export const VISUAL_ASSET_PATHS = {
   vfxLevelUpStarOverlay,
   vfxLevelUpTwirlOverlay,
   vfxGameOverRipSmoke,
+  vfxElectricImpactComponentBurst,
+  vfxElectricImpactWallBurst,
+  vfxElectricImpactCeilingBurst,
+  vfxElectricImpactRadialWallBurst,
   sprPowerupMultiballOrb,
   sprPowerupWidePaddle,
   sprPowerupSlowBall,
@@ -620,6 +632,50 @@ export const VISUAL_ASSET_CATALOG = [
     width: 180,
     height: 180,
     usage: "Fumaça de fim de jogo",
+  },
+  {
+    id: "vfx-electric-impact-component-burst",
+    variableName: "vfxElectricImpactComponentBurst",
+    path: vfxElectricImpactComponentBurst,
+    group: "vfx",
+    semanticRole: "electric-impact-component",
+    state: "burst",
+    width: 96,
+    height: 96,
+    usage: "Fonte autoral do impacto elétrico em bloco",
+  },
+  {
+    id: "vfx-electric-impact-wall-burst",
+    variableName: "vfxElectricImpactWallBurst",
+    path: vfxElectricImpactWallBurst,
+    group: "vfx",
+    semanticRole: "electric-impact-wall",
+    state: "burst",
+    width: 96,
+    height: 96,
+    usage: "Fonte autoral do impacto elétrico na parede lateral",
+  },
+  {
+    id: "vfx-electric-impact-ceiling-burst",
+    variableName: "vfxElectricImpactCeilingBurst",
+    path: vfxElectricImpactCeilingBurst,
+    group: "vfx",
+    semanticRole: "electric-impact-ceiling",
+    state: "burst",
+    width: 96,
+    height: 96,
+    usage: "Fonte autoral do impacto elétrico no teto",
+  },
+  {
+    id: "vfx-electric-impact-radial-wall-burst",
+    variableName: "vfxElectricImpactRadialWallBurst",
+    path: vfxElectricImpactRadialWallBurst,
+    group: "vfx",
+    semanticRole: "electric-impact-radial-wall",
+    state: "burst",
+    width: 96,
+    height: 96,
+    usage: "Fonte autoral do impacto elétrico na parede radial",
   },
   {
     id: "spr-powerup-multiball-orb",

@@ -1,0 +1,582 @@
+{
+  "version": 1,
+  "generatedAt": "2026-07-09T23:03:40.826Z",
+  "policy": "svg-first-authoring-canvas-procedural-runtime",
+  "families": {
+    "circuitComponents": [
+      {
+        "id": "spr-component-basic-blue-garage-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-blue-garage-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "transistor"
+      },
+      {
+        "id": "spr-component-basic-blue-high-contrast-normal",
+        "path": "/assets/visual/components/spr-component-basic-blue-high-contrast-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "transistor"
+      },
+      {
+        "id": "spr-component-basic-blue-lab-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-blue-lab-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "transistor"
+      },
+      {
+        "id": "spr-component-basic-blue-metro-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-blue-metro-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "transistor"
+      },
+      {
+        "id": "spr-component-basic-blue-normal",
+        "path": "/assets/visual/components/spr-component-basic-blue-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "transistor"
+      },
+      {
+        "id": "spr-component-basic-blue-orbital-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-blue-orbital-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "transistor"
+      },
+      {
+        "id": "spr-component-basic-blue-sunset-normal",
+        "path": "/assets/visual/components/spr-component-basic-blue-sunset-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "transistor"
+      },
+      {
+        "id": "spr-component-basic-blue-temple-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-blue-temple-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "transistor"
+      },
+      {
+        "id": "spr-component-basic-green-garage-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-green-garage-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "chip"
+      },
+      {
+        "id": "spr-component-basic-green-high-contrast-normal",
+        "path": "/assets/visual/components/spr-component-basic-green-high-contrast-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "chip"
+      },
+      {
+        "id": "spr-component-basic-green-lab-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-green-lab-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "chip"
+      },
+      {
+        "id": "spr-component-basic-green-metro-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-green-metro-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "chip"
+      },
+      {
+        "id": "spr-component-basic-green-normal",
+        "path": "/assets/visual/components/spr-component-basic-green-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "chip"
+      },
+      {
+        "id": "spr-component-basic-green-orbital-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-green-orbital-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "chip"
+      },
+      {
+        "id": "spr-component-basic-green-sunset-normal",
+        "path": "/assets/visual/components/spr-component-basic-green-sunset-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "chip"
+      },
+      {
+        "id": "spr-component-basic-green-temple-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-green-temple-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "chip"
+      },
+      {
+        "id": "spr-component-basic-purple-garage-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-purple-garage-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "capacitor"
+      },
+      {
+        "id": "spr-component-basic-purple-high-contrast-normal",
+        "path": "/assets/visual/components/spr-component-basic-purple-high-contrast-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "capacitor"
+      },
+      {
+        "id": "spr-component-basic-purple-lab-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-purple-lab-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "capacitor"
+      },
+      {
+        "id": "spr-component-basic-purple-metro-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-purple-metro-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "capacitor"
+      },
+      {
+        "id": "spr-component-basic-purple-normal",
+        "path": "/assets/visual/components/spr-component-basic-purple-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "capacitor"
+      },
+      {
+        "id": "spr-component-basic-purple-orbital-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-purple-orbital-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "capacitor"
+      },
+      {
+        "id": "spr-component-basic-purple-sunset-normal",
+        "path": "/assets/visual/components/spr-component-basic-purple-sunset-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "capacitor"
+      },
+      {
+        "id": "spr-component-basic-purple-temple-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-purple-temple-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "capacitor"
+      },
+      {
+        "id": "spr-component-basic-red-garage-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-red-garage-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "square-inductor"
+      },
+      {
+        "id": "spr-component-basic-red-high-contrast-normal",
+        "path": "/assets/visual/components/spr-component-basic-red-high-contrast-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "square-inductor"
+      },
+      {
+        "id": "spr-component-basic-red-lab-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-red-lab-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "square-inductor"
+      },
+      {
+        "id": "spr-component-basic-red-metro-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-red-metro-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "square-inductor"
+      },
+      {
+        "id": "spr-component-basic-red-normal",
+        "path": "/assets/visual/components/spr-component-basic-red-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "square-inductor"
+      },
+      {
+        "id": "spr-component-basic-red-orbital-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-red-orbital-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "square-inductor"
+      },
+      {
+        "id": "spr-component-basic-red-sunset-normal",
+        "path": "/assets/visual/components/spr-component-basic-red-sunset-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "square-inductor"
+      },
+      {
+        "id": "spr-component-basic-red-temple-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-red-temple-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "square-inductor"
+      },
+      {
+        "id": "spr-component-basic-yellow-garage-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-yellow-garage-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "led-diode"
+      },
+      {
+        "id": "spr-component-basic-yellow-high-contrast-normal",
+        "path": "/assets/visual/components/spr-component-basic-yellow-high-contrast-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "led-diode"
+      },
+      {
+        "id": "spr-component-basic-yellow-lab-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-yellow-lab-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "led-diode"
+      },
+      {
+        "id": "spr-component-basic-yellow-metro-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-yellow-metro-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "led-diode"
+      },
+      {
+        "id": "spr-component-basic-yellow-normal",
+        "path": "/assets/visual/components/spr-component-basic-yellow-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "led-diode"
+      },
+      {
+        "id": "spr-component-basic-yellow-orbital-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-yellow-orbital-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "led-diode"
+      },
+      {
+        "id": "spr-component-basic-yellow-sunset-normal",
+        "path": "/assets/visual/components/spr-component-basic-yellow-sunset-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "led-diode"
+      },
+      {
+        "id": "spr-component-basic-yellow-temple-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-yellow-temple-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "led-diode"
+      },
+      {
+        "id": "spr-component-metal-steel-dented-one",
+        "path": "/assets/visual/components/spr-component-metal-steel-dented-one.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "shield-module"
+      },
+      {
+        "id": "spr-component-metal-steel-dented-two",
+        "path": "/assets/visual/components/spr-component-metal-steel-dented-two.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "shield-module"
+      },
+      {
+        "id": "spr-component-metal-steel-high-contrast-dented-one",
+        "path": "/assets/visual/components/spr-component-metal-steel-high-contrast-dented-one.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "shield-module"
+      },
+      {
+        "id": "spr-component-metal-steel-high-contrast-dented-two",
+        "path": "/assets/visual/components/spr-component-metal-steel-high-contrast-dented-two.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "shield-module"
+      },
+      {
+        "id": "spr-component-metal-steel-high-contrast-normal",
+        "path": "/assets/visual/components/spr-component-metal-steel-high-contrast-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "shield-module"
+      },
+      {
+        "id": "spr-component-metal-steel-normal",
+        "path": "/assets/visual/components/spr-component-metal-steel-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "shield-module"
+      },
+      {
+        "id": "spr-component-metal-steel-sunset-dented-one",
+        "path": "/assets/visual/components/spr-component-metal-steel-sunset-dented-one.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "shield-module"
+      },
+      {
+        "id": "spr-component-metal-steel-sunset-dented-two",
+        "path": "/assets/visual/components/spr-component-metal-steel-sunset-dented-two.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "shield-module"
+      },
+      {
+        "id": "spr-component-metal-steel-sunset-normal",
+        "path": "/assets/visual/components/spr-component-metal-steel-sunset-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "shield-module"
+      }
+    ],
+    "sprites": [
+      {
+        "id": "spr-ball-player-default",
+        "path": "/assets/visual/sprites/spr-ball-player-default.svg",
+        "group": "sprite",
+        "runtime": "canvas-procedural",
+        "status": "catalogado",
+        "semanticRole": "electric-energy-ball",
+        "logicalLayers": [
+          "outer-halo",
+          "core",
+          "orbit-arcs",
+          "cyan-shell",
+          "fallback-fill"
+        ]
+      }
+    ],
+    "vfxExisting": [
+      {
+        "id": "vfx-countdown-spark-garage-real-overlay",
+        "path": "/assets/visual/vfx/vfx-countdown-spark-garage-real-overlay.svg",
+        "group": "vfx",
+        "runtime": "svg-css",
+        "status": "catalogado",
+        "semanticRole": "countdown-spark",
+        "state": "overlay"
+      },
+      {
+        "id": "vfx-countdown-spark-high-contrast-overlay",
+        "path": "/assets/visual/vfx/vfx-countdown-spark-high-contrast-overlay.svg",
+        "group": "vfx",
+        "runtime": "svg-css",
+        "status": "catalogado",
+        "semanticRole": "countdown-spark",
+        "state": "overlay"
+      },
+      {
+        "id": "vfx-countdown-spark-lab-real-overlay",
+        "path": "/assets/visual/vfx/vfx-countdown-spark-lab-real-overlay.svg",
+        "group": "vfx",
+        "runtime": "svg-css",
+        "status": "catalogado",
+        "semanticRole": "countdown-spark",
+        "state": "overlay"
+      },
+      {
+        "id": "vfx-countdown-spark-metro-real-overlay",
+        "path": "/assets/visual/vfx/vfx-countdown-spark-metro-real-overlay.svg",
+        "group": "vfx",
+        "runtime": "svg-css",
+        "status": "catalogado",
+        "semanticRole": "countdown-spark",
+        "state": "overlay"
+      },
+      {
+        "id": "vfx-countdown-spark-orbital-real-overlay",
+        "path": "/assets/visual/vfx/vfx-countdown-spark-orbital-real-overlay.svg",
+        "group": "vfx",
+        "runtime": "svg-css",
+        "status": "catalogado",
+        "semanticRole": "countdown-spark",
+        "state": "overlay"
+      },
+      {
+        "id": "vfx-countdown-spark-overlay",
+        "path": "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
+        "group": "vfx",
+        "runtime": "svg-css",
+        "status": "catalogado",
+        "semanticRole": "countdown-spark",
+        "state": "overlay"
+      },
+      {
+        "id": "vfx-countdown-spark-sunset-overlay",
+        "path": "/assets/visual/vfx/vfx-countdown-spark-sunset-overlay.svg",
+        "group": "vfx",
+        "runtime": "svg-css",
+        "status": "catalogado",
+        "semanticRole": "countdown-spark",
+        "state": "overlay"
+      },
+      {
+        "id": "vfx-countdown-spark-temple-real-overlay",
+        "path": "/assets/visual/vfx/vfx-countdown-spark-temple-real-overlay.svg",
+        "group": "vfx",
+        "runtime": "svg-css",
+        "status": "catalogado",
+        "semanticRole": "countdown-spark",
+        "state": "overlay"
+      }
+    ],
+    "vfxNew": [
+      {
+        "id": "vfx-ambient-electric-lightning-pulse-backdrop",
+        "path": "/assets/visual/vfx/vfx-ambient-electric-lightning-pulse-backdrop.svg",
+        "runtime": "canvas-procedural",
+        "status": "novo",
+        "semanticRole": "ambient-electric-lightning-pulse",
+        "state": "backdrop"
+      },
+      {
+        "id": "vfx-ambient-electric-lightning-arcade-backdrop",
+        "path": "/assets/visual/vfx/vfx-ambient-electric-lightning-arcade-backdrop.svg",
+        "runtime": "canvas-procedural",
+        "status": "novo",
+        "semanticRole": "ambient-electric-lightning-arcade",
+        "state": "backdrop"
+      },
+      {
+        "id": "vfx-ambient-electric-lightning-storm-backdrop",
+        "path": "/assets/visual/vfx/vfx-ambient-electric-lightning-storm-backdrop.svg",
+        "runtime": "canvas-procedural",
+        "status": "novo",
+        "semanticRole": "ambient-electric-lightning-storm",
+        "state": "backdrop"
+      },
+      {
+        "id": "vfx-electric-impact-component-burst",
+        "path": "/assets/visual/vfx/vfx-electric-impact-component-burst.svg",
+        "runtime": "canvas-procedural",
+        "status": "novo",
+        "semanticRole": "electric-impact-component",
+        "state": "burst"
+      },
+      {
+        "id": "vfx-electric-impact-wall-burst",
+        "path": "/assets/visual/vfx/vfx-electric-impact-wall-burst.svg",
+        "runtime": "canvas-procedural",
+        "status": "novo",
+        "semanticRole": "electric-impact-wall",
+        "state": "burst"
+      },
+      {
+        "id": "vfx-electric-impact-ceiling-burst",
+        "path": "/assets/visual/vfx/vfx-electric-impact-ceiling-burst.svg",
+        "runtime": "canvas-procedural",
+        "status": "novo",
+        "semanticRole": "electric-impact-ceiling",
+        "state": "burst"
+      },
+      {
+        "id": "vfx-electric-impact-radial-wall-burst",
+        "path": "/assets/visual/vfx/vfx-electric-impact-radial-wall-burst.svg",
+        "runtime": "canvas-procedural",
+        "status": "novo",
+        "semanticRole": "electric-impact-radial-wall",
+        "state": "burst"
+      }
+    ],
+    "colorTokens": [
+      {
+        "id": "clr-electric-lightning-core",
+        "value": "#eefdff",
+        "usage": "Núcleo de raio e impacto"
+      },
+      {
+        "id": "clr-electric-lightning-halo",
+        "value": "rgba(66,224,255,0.34)",
+        "usage": "Halo de raio e impacto"
+      },
+      {
+        "id": "clr-electric-lightning-shadow",
+        "value": "rgba(77,232,255,0.88)",
+        "usage": "Brilho de raio e impacto"
+      },
+      {
+        "id": "clr-electric-energy-ball-fallback",
+        "value": "#7df9ff",
+        "usage": "Fallback da bola de energia"
+      }
+    ]
+  },
+  "acceptance": {
+    "circuitBasicFamily": false,
+    "circuitMetalFamily": false,
+    "electricEnergyBall": false,
+    "countdownSparkVariants": false,
+    "ambientLightningVariants": false,
+    "electricImpactBursts": false,
+    "defaultAmbientVariant": "arcade",
+    "unifiedColorPalette": false
+  }
+}

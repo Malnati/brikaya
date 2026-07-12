@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-07-09T23:08:00.000Z",
+  "paletteManifest": "docs/assets/issues/electric-components-palette/proposals/palette-manifest.json",
+  "captureManifest": "docs/assets/issues/electric-components-palette/proposals/capture-manifest.json",
+  "componentCount": 49,
+  "newVfxCount": 7,
+  "defaultAmbientVariant": "arcade",
+  "runtimeModules": [
+    "src/logic/rendering/electricLightningRenderer.ts",
+    "src/logic/rendering/ambientElectricBackground.ts",
+    "src/logic/rendering/electricImpactRenderer.ts"
+  ],
+  "validation": {
+    "semanticFileNames": "ok",
+    "typescript": "ok",
+    "jestAmbientBackground": "pass",
+    "jestAssetNaming": "pass"
+  },
+  "acceptance": {
+    "circuitBasicFamily": true,
+    "circuitMetalFamily": true,
+    "electricEnergyBall": true,
+    "countdownSparkVariants": true,
+    "ambientLightningVariants": true,
+    "electricImpactBursts": true,
+    "unifiedColorPalette": true
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-07-09T23:07:44.331Z",
+  "captures": [
+    {
+      "id": "palette-preview-circuits",
+      "file": "captures/palette-preview-circuits.png",
+      "tab": "circuits",
+      "variant": null
+    },
+    {
+      "id": "palette-preview-vfx",
+      "file": "captures/palette-preview-vfx.png",
+      "tab": "vfx",
+      "variant": null
+    },
+    {
+      "id": "palette-preview-ambient-arcade",
+      "file": "captures/palette-preview-ambient-arcade.png",
+      "tab": "ambient",
+      "variant": "arcade"
+    },
+    {
+      "id": "palette-preview-tokens",
+      "file": "captures/palette-preview-tokens.png",
+      "tab": "tokens",
+      "variant": null
+    }
+  ]
+}

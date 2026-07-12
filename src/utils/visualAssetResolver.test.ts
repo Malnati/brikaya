@@ -8,7 +8,7 @@ import {
 } from "./visualAssetResolver";
 
 const SVG_PATTERN = /^\/assets\/visual\/.+\.svg$/;
-const RUNTIME_VISUAL_ROLE_COUNT = 21;
+const RUNTIME_VISUAL_ROLE_COUNT = 25;
 const EXPECTED_IMAGE_SET_IDS = [
   "retro-default",
   "high-contrast",
