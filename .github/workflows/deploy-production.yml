@@ -22,12 +22,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
-      contents: read
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -56,6 +57,9 @@ jobs:
       - name: Build static output
         run: npm run build
 
+      - name: Verify build version label
+        run: npm run verify:build-version
+
       - name: Ensure production Pages project
         run: node scripts/cloudflare-pages.js ensure-project
 
@@ -81,3 +85,11 @@ jobs:
 
       - name: Trace guard public check
         run: npm run test:trace-guard:public
+
+      - name: Verify version docs
+        run: npm run verify:version-docs
+
+      - name: Publish Git tag and GitHub release
+        run: npm run brikaya:publish-version-release
+        env:
+          GITHUB_SHA: ${{ github.sha }}

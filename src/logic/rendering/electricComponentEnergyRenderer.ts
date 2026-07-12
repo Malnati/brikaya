@@ -3,6 +3,10 @@ import {
   type EnergyBallColorTheme,
 } from "./electricEnergyBallRenderer";
 import { drawElectricEdgesPreset } from "./electricComponentEdgeRenderer";
+import type {
+  DetailPathDef,
+  ElectricEdgesPreset,
+} from "./electricComponentPresetTypes";
 
 const COMPONENT_VIEWBOX_WIDTH = 96;
 const COMPONENT_VIEWBOX_HEIGHT = 48;
@@ -40,30 +44,6 @@ type ClipPathDef =
   | { type: "polygon"; points: [number, number][] }
   | { type: "rect"; x: number; y: number; w: number; h: number };
 
-interface LineDetailPath {
-  type: "line";
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-  color?: string;
-  opacity?: number;
-  width?: number;
-}
-
-interface PolylineDetailPath {
-  type: "polyline";
-  points: [number, number][];
-}
-
-type DetailPathDef = LineDetailPath | PolylineDetailPath;
-
-interface InteriorFillDef {
-  type: "polygon";
-  points: [number, number][];
-  fill: string;
-}
-
 interface EnergyBallPreset {
   renderMode?: undefined;
   colorTheme: EnergyBallColorTheme;
@@ -77,18 +57,6 @@ interface EnergyBallPreset {
   clipPaths: ClipPathDef[];
   fillPaths?: (ClipPathDef & { fill?: string })[];
   outlinePaths: ClipPathDef[];
-  terminalStubs: { x1: number; y1: number; x2: number; y2: number }[];
-  detailPaths: DetailPathDef[];
-}
-
-interface ElectricEdgesPreset {
-  renderMode: "electric-edges";
-  electricTheme: "yellow" | "purple";
-  shape: string;
-  terminalWidth: number;
-  interiorFill?: InteriorFillDef;
-  interiorFills?: InteriorFillDef[];
-  perimeterPaths: { type: "polygon"; points: [number, number][] }[];
   terminalStubs: { x1: number; y1: number; x2: number; y2: number }[];
   detailPaths: DetailPathDef[];
 }

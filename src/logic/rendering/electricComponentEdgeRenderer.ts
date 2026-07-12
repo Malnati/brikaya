@@ -1,4 +1,12 @@
 import { lightningUnitValue, strokeLightningPath } from "./electricLightningRenderer";
+import type {
+  DetailPathDef,
+  ElectricEdgesPreset,
+  ElectricSegment,
+  InteriorFillDef,
+} from "./electricComponentPresetTypes";
+
+export type { ElectricEdgesPreset } from "./electricComponentPresetTypes";
 
 export const YELLOW_ELECTRIC_EDGE_STYLE = {
   coreColor: "rgba(255, 248, 216, 0.92)",
@@ -92,13 +100,13 @@ function drawDualStrokeElectric(
 
 function drawAnimatedElectricSegment(
   ctx: CanvasRenderingContext2D,
-  segment,
-  now,
-  seed,
+  segment: ElectricSegment,
+  now: number,
+  seed: number,
   styleOrTheme: "yellow" | "purple" = "yellow",
   options: { travelProgress?: number; reducedEffects?: boolean } = {},
 ) {
-  const style = typeof styleOrTheme === "string" ? resolveStyle(styleOrTheme) : styleOrTheme;
+  const style = resolveStyle(styleOrTheme);
   const origin = { x: segment.x1, y: segment.y1 };
   const endpoint = { x: segment.x2, y: segment.y2 };
   const travelProgress =
@@ -123,7 +131,13 @@ export function drawAnimatedElectricPolyline(ctx: CanvasRenderingContext2D, poin
   }
 }
 
-export function drawAnimatedElectricPolygon(ctx, points, now, seed, styleOrTheme = "yellow") {
+export function drawAnimatedElectricPolygon(
+  ctx: CanvasRenderingContext2D,
+  points: number[][],
+  now: number,
+  seed: number,
+  styleOrTheme: "yellow" | "purple" = "yellow",
+) {
   if (!points || points.length < 2) return;
   for (let index = 0; index < points.length; index += 1) {
     const [x1, y1] = points[index];
@@ -161,11 +175,16 @@ export function drawFlowingElectricPolygon(ctx: CanvasRenderingContext2D, points
   }
 }
 
-export function drawElectricEdgesPreset(ctx: CanvasRenderingContext2D, preset: Record<string, unknown>, now: number, reducedEffects = false) {
+export function drawElectricEdgesPreset(
+  ctx: CanvasRenderingContext2D,
+  preset: ElectricEdgesPreset,
+  now: number,
+  reducedEffects = false,
+) {
   const theme = preset.electricTheme ?? "yellow";
   const baseSeed = 42;
 
-  const interiorFills =
+  const interiorFills: InteriorFillDef[] =
     preset.interiorFills ?? (preset.interiorFill ? [preset.interiorFill] : []);
   for (const fillDef of interiorFills) {
     ctx.save();
@@ -206,8 +225,8 @@ export function drawElectricEdgesPreset(ctx: CanvasRenderingContext2D, preset: R
     );
   }
 
-  for (let detailIndex = 0; detailIndex < (preset.detailPaths ?? []).length; detailIndex += 1) {
-    const pathDef = preset.detailPaths[detailIndex];
+  for (let detailIndex = 0; detailIndex < preset.detailPaths.length; detailIndex += 1) {
+    const pathDef: DetailPathDef = preset.detailPaths[detailIndex];
     if (pathDef.type === "line") {
       drawAnimatedElectricSegment(ctx, pathDef, now, baseSeed + 700 + detailIndex * 31, theme, { reducedEffects });
     } else if (pathDef.type === "polyline") {

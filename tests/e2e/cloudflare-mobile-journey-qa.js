@@ -481,9 +481,9 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
     timeout: MAX_NAVIGATION_MS,
   });
   await acceptPrivacyConsentIfPresent(page);
-  await waitForInitialCountdownToFinish(page);
   await waitForCanvas(page);
   await waitForGameLogReady(page);
+  await waitForInitialCountdownToFinish(page);
 
   if (scenarioCheck.dismissTurretModal) {
     await dismissBallTurretStartModal(page, profile.label);
@@ -573,6 +573,7 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
     await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
     details = { eventSummary: summary };
   } else if (scenarioCheck.kind === "power-up") {
+    await waitForEventType(page, "game_start", OBSERVATION_TIMEOUT_MS);
     const activation = await waitForPowerUpAction(
       page,
       scenarioCheck.powerUpType,

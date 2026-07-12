@@ -767,31 +767,39 @@ async function fetchPublishedBundleProbe(envValues, bundlePath, bundleKind) {
 
 async function verifyPublishedBundleMimeTypes(envValues) {
   validateEnvironment(envValues);
-  const publicIndex = await fetchPublicIndex(envValues);
+  const expectedIndex = readLocalPublicIndexExpectation(envValues);
+  const bundlePaths = {
+    script: expectedIndex.script,
+    style: expectedIndex.style,
+  };
+  let lastInvalidProbe = null;
 
-  if (publicIndex.status !== HTTP_STATUS_OK) {
-    throw new Error(`Index publicado indisponível para verificação MIME: status=${publicIndex.status}`);
-  }
+  for (let attempt = 1; attempt <= PUBLIC_INDEX_MAX_POLLS; attempt += 1) {
+    const probes = await Promise.all([
+      fetchPublishedBundleProbe(envValues, bundlePaths.script, JAVASCRIPT_CONTENT_TYPE),
+      fetchPublishedBundleProbe(envValues, bundlePaths.style, CSS_CONTENT_TYPE),
+    ]);
+    const invalidProbe = probes.find(probe => !probe.valid);
 
-  const indexHtml = await fetch(buildPublicIndexCheckUrl(envValues), {
-    cache: FETCH_CACHE_NO_STORE
-  }).then(response => response.text());
-  const bundlePaths = extractBundlePathsFromIndexHtml(indexHtml);
-  const probes = await Promise.all([
-    fetchPublishedBundleProbe(envValues, bundlePaths.script, JAVASCRIPT_CONTENT_TYPE),
-    fetchPublishedBundleProbe(envValues, bundlePaths.style, CSS_CONTENT_TYPE)
-  ]);
-  const invalidProbe = probes.find(probe => !probe.valid);
+    if (!invalidProbe) {
+      console.log(
+        `OK bundles publicados com MIME válido: ${bundlePaths.script}, ${bundlePaths.style}`,
+      );
+      return;
+    }
 
-  if (invalidProbe) {
-    throw new Error(
-      `Bundle publicado com MIME inválido: path=${invalidProbe.path}; ` +
-        `status=${invalidProbe.status}; content-type=${invalidProbe.contentType}`
+    lastInvalidProbe = invalidProbe;
+    console.log(
+      `WARN bundle MIME tentativa=${attempt}/${PUBLIC_INDEX_MAX_POLLS}: ` +
+        `path=${invalidProbe.path}; status=${invalidProbe.status}; ` +
+        `content-type=${invalidProbe.contentType}`,
     );
+    await sleep(PUBLIC_INDEX_POLL_DELAY_MS);
   }
 
-  console.log(
-    `OK bundles publicados com MIME válido: ${bundlePaths.script}, ${bundlePaths.style}`
+  throw new Error(
+    `Bundle publicado com MIME inválido: path=${lastInvalidProbe.path}; ` +
+      `status=${lastInvalidProbe.status}; content-type=${lastInvalidProbe.contentType}`,
   );
 }
 

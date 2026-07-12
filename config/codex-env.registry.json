@@ -275,6 +275,34 @@
       ]
     },
     {
+      "name": "BRIKAYA_BUILD_VERSION",
+      "classification": "public-config",
+      "required": false,
+      "source": "Brikaya build version label override (vN)",
+      "commands": [
+        "npm run verify:version-docs",
+        "npm run brikaya:publish-version-release"
+      ]
+    },
+    {
+      "name": "BRIKAYA_PUBLISH_DRY_RUN",
+      "classification": "public-config",
+      "required": false,
+      "source": "Dry-run switch for tag/release publish",
+      "commands": [
+        "npm run brikaya:publish-version-release"
+      ]
+    },
+    {
+      "name": "BRIKAYA_SCAFFOLD_FORCE",
+      "classification": "public-config",
+      "required": false,
+      "source": "Overwrite existing version docs when scaffolding",
+      "commands": [
+        "npm run brikaya:scaffold-version-docs"
+      ]
+    },
+    {
       "name": "BRIKAYA_CHROME_HOST_RESOLVER_RULES",
       "classification": "public-config",
       "required": false,
