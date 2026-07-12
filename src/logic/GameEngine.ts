@@ -73,6 +73,12 @@ import {
   drawBallTurretTrampolines,
   type BallTurretTrampolineRenderItem,
 } from "./rendering/ballTurretRenderer";
+import {
+  AmbientElectricBackground,
+  drawFullScreenElectricBackdrop,
+  readLightningVariantSearchParam,
+  resolveAmbientElectricVariant,
+} from "./rendering/ambientElectricBackground";
 import { shouldUseReducedCanvasEffects } from "../utils/performanceMode";
 import type {
   ElectricImpactEvent,
@@ -342,6 +348,7 @@ export class GameEngine {
   private laserFanEffectTimer: ReturnType<typeof setTimeout> | null = null;
   private electricImpactEffects: ElectricImpactEffect[] = [];
   private electricImpactSequence = 0;
+  private readonly ambientElectricBackground: AmbientElectricBackground;
   private readonly handleKeyDown = (event: KeyboardEvent) => {
     this.releaseServeLock();
     this.paddle.onKeyDown(event);
@@ -398,6 +405,9 @@ export class GameEngine {
   ) {
     LOG(`🚀 GameEngine constructor iniciado`);
     this.turretControlMode = initialTurretControlMode;
+    this.ambientElectricBackground = new AmbientElectricBackground(
+      resolveAmbientElectricVariant(readLightningVariantSearchParam()),
+    );
 
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error(ERROR_NO_2D_CONTEXT);
@@ -2582,6 +2592,7 @@ export class GameEngine {
     } else {
       // Normal game rendering
       try {
+        this.tickAmbientElectricBackground();
         this.drawGameBackdrop();
         this.components.draw(this.ctx);
         this.paddle.update(frameScale);
@@ -2700,6 +2711,9 @@ export class GameEngine {
   }
 
   private drawGameBackdrop() {
+    drawFullScreenElectricBackdrop(this.ctx, this.canvasSize);
+    this.drawAmbientElectricBackground();
+
     if (this.isBallTurretMode()) {
       drawBallTurretBackdrop(this.ctx, {
         canvasSize: this.canvasSize,
@@ -2712,6 +2726,22 @@ export class GameEngine {
     }
 
     this.drawRadialPlayfield();
+  }
+
+  private tickAmbientElectricBackground(): void {
+    this.ambientElectricBackground.tick(
+      this.canvasSize,
+      Date.now(),
+      this.usesReducedCanvasEffects(),
+    );
+  }
+
+  private drawAmbientElectricBackground(): void {
+    this.ambientElectricBackground.draw(
+      this.ctx,
+      this.canvasSize,
+      Date.now(),
+    );
   }
 
   private drawPlayerControl() {
