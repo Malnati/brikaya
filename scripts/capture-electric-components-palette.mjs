@@ -8,12 +8,9 @@ import puppeteer from "puppeteer";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "..");
-const proposalsDir = path.join(
-  repoRoot,
-  "docs/assets/issues/electric-components-palette/proposals",
-);
-const capturesDir = path.join(proposalsDir, "captures");
-const previewPath = path.join(proposalsDir, "preview.html");
+const paletteDir = path.join(repoRoot, "docs/paletas/componentes");
+const capturesDir = path.join(paletteDir, "captures");
+const previewPath = path.join(paletteDir, "preview.html");
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -102,7 +99,7 @@ async function main() {
     }
 
     fs.writeFileSync(
-      path.join(proposalsDir, "capture-manifest.json"),
+      path.join(paletteDir, "capture-manifest.json"),
       `${JSON.stringify(manifest, null, 2)}\n`,
     );
   } finally {

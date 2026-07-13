@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 48" role="img" aria-label="Yellow electric shield module" data-component-shape="shield-module" data-terminal-left="25 24" data-terminal-right="71 24">
+  <path d="M25 17H30M25 24H30M25 31H30M66 17H71M66 24H71M66 31H71" fill="none" stroke="#ffd54f" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+  <path d="M34 8H62L69 15V33L62 40H34L27 33V15Z" fill="rgba(5,40,54,0.55)" stroke="#ffd54f" stroke-width="2.2" stroke-linejoin="round"/>
+  <path d="M37 16H59M34 24H62M37 32H55" fill="none" stroke="#fff8d8" stroke-width="2" stroke-linecap="round" opacity="0.72"/>
+  <path d="M42 13L47 20L44 25L51 34" fill="none" stroke="#ffc107" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+</svg>
