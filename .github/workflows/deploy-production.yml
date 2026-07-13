@@ -89,6 +89,11 @@ jobs:
       - name: Verify version docs
         run: npm run verify:version-docs
 
+      - name: Configure git identity for release
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+
       - name: Publish Git tag and GitHub release
         run: npm run brikaya:publish-version-release
         env:
