@@ -30,6 +30,8 @@ import {
   scenarioUrl,
   summarizeEvents,
   summarizeEventsThroughPowerUpActivation,
+  summarizeEventsUntilEventCount,
+  summarizeEventsUntilFirstEvent,
   waitForEventType,
   withGameplayTelemetry,
 } from "./gameLogHelpers.js";
@@ -559,13 +561,17 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
     await waitForComponentCollisions(page, 1);
     await waitForEventType(page, "component_destroyed", OBSERVATION_TIMEOUT_MS);
     const events = await readGameEvents(page);
-    const summary = summarizeEvents(events);
+    const fullSummary = summarizeEvents(events);
+    const summaryAtDestroy = summarizeEventsUntilFirstEvent(
+      events,
+      "component_destroyed",
+    );
     assertCondition(
-      (summary.component_destroyed || 0) >= 1,
+      (fullSummary.component_destroyed || 0) >= 1,
       `${profile.label} [${scenarioCheck.label}]: component_destroyed ausente.`,
     );
-    await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
-    details = { eventSummary: summary };
+    await assertNoGameEnd(summaryAtDestroy, profile.label, scenarioCheck.label);
+    details = { eventSummary: fullSummary };
   } else if (scenarioCheck.kind === "evasive-components") {
     await waitForComponentCollisions(page, EXPECTED_EVASIVE_BLOCK_COUNT);
     await page.waitForFunction(
@@ -614,13 +620,18 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
       () => undefined,
     );
     const events = await readGameEvents(page);
-    const summary = summarizeEvents(events);
+    const fullSummary = summarizeEvents(events);
+    const summaryAtDestroy = summarizeEventsUntilEventCount(
+      events,
+      "component_destroyed",
+      EXPECTED_EVASIVE_BLOCK_COUNT,
+    );
     assertCondition(
-      (summary.component_destroyed || 0) >= EXPECTED_EVASIVE_BLOCK_COUNT,
+      (fullSummary.component_destroyed || 0) >= EXPECTED_EVASIVE_BLOCK_COUNT,
       `${profile.label} [${scenarioCheck.label}]: blocos evasivos insuficientes.`,
     );
-    await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
-    details = { eventSummary: summary };
+    await assertNoGameEnd(summaryAtDestroy, profile.label, scenarioCheck.label);
+    details = { eventSummary: fullSummary };
   } else if (scenarioCheck.kind === "power-up") {
     const activation = await waitForPowerUpAction(
       page,

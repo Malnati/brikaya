@@ -62,6 +62,40 @@ export function summarizeEventsThroughPowerUpActivation(events, powerUpType) {
   return summarizeEvents(events.slice(0, activationIndex + 1));
 }
 
+export function summarizeEventsUntilFirstEvent(
+  events,
+  eventType,
+  predicate = () => true,
+) {
+  const eventIndex = events.findIndex(
+    (event) => event.type === eventType && predicate(event),
+  );
+
+  if (eventIndex === -1) {
+    return summarizeEvents(events);
+  }
+
+  return summarizeEvents(events.slice(0, eventIndex + 1));
+}
+
+export function summarizeEventsUntilEventCount(events, eventType, expectedCount) {
+  let seen = 0;
+  let lastIndex = -1;
+
+  for (let index = 0; index < events.length; index += 1) {
+    if (events[index].type !== eventType) continue;
+    seen += 1;
+    lastIndex = index;
+    if (seen >= expectedCount) break;
+  }
+
+  if (lastIndex === -1) {
+    return summarizeEvents(events);
+  }
+
+  return summarizeEvents(events.slice(0, lastIndex + 1));
+}
+
 export function findEventsByType(events, type, predicate = () => true) {
   return events.filter((event) => event.type === type && predicate(event));
 }
