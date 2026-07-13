@@ -973,7 +973,17 @@ function GameApp() {
           : "app-shell"
       }
     >
-      <section className="game-dashboard" aria-label={t("app.dashboardAria")}>
+      <section
+        className={[
+          "game-dashboard",
+          activeGameMode === GAME_MODE_BALL_TURRET
+            ? "game-dashboard--ball-turret"
+            : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        aria-label={t("app.dashboardAria")}
+      >
         <header className="dashboard-header">
           <div className="dashboard-title-group">
             <p className="dashboard-eyebrow">{t("app.eyebrow")}</p>
