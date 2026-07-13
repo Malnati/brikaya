@@ -29,6 +29,7 @@ import {
   readGameEvents,
   scenarioUrl,
   summarizeEvents,
+  summarizeEventsThroughPowerUpActivation,
   waitForEventType,
   withGameplayTelemetry,
 } from "./gameLogHelpers.js";
@@ -92,8 +93,6 @@ const SCENARIO_MATRIX = [
     kind: "power-up",
     powerUpType: "multiball",
     sideEffect: "ball_added",
-    // Multiball em torreta adiciona várias bolas; perdas em massa podem encerrar a partida após a ativação.
-    allowsGameEnd: true,
   },
   {
     id: "wide-paddle-power-up",
@@ -577,7 +576,10 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
       "activate",
     );
     const events = await readGameEvents(page);
-    const summary = summarizeEvents(events);
+    const summary = summarizeEventsThroughPowerUpActivation(
+      events,
+      scenarioCheck.powerUpType,
+    );
     assertCondition(
       (summary.game_start || 0) >= 1,
       `${profile.label} [${scenarioCheck.label}]: game_start ausente.`,
@@ -608,9 +610,7 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
       );
     }
 
-    if (!scenarioCheck.allowsGameEnd) {
-      await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
-    }
+    await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
     details = {
       eventSummary: summary,
       powerUpMetadata: activation?.metadata ?? null,

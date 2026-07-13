@@ -47,6 +47,21 @@ export function summarizeEvents(events) {
   return byType;
 }
 
+export function summarizeEventsThroughPowerUpActivation(events, powerUpType) {
+  const activationIndex = events.findIndex(
+    (event) =>
+      event.type === "power_up" &&
+      event.metadata?.powerUpType === powerUpType &&
+      event.metadata?.action === "activate",
+  );
+
+  if (activationIndex === -1) {
+    return summarizeEvents(events);
+  }
+
+  return summarizeEvents(events.slice(0, activationIndex + 1));
+}
+
 export function findEventsByType(events, type, predicate = () => true) {
   return events.filter((event) => event.type === type && predicate(event));
 }
