@@ -980,6 +980,9 @@ const HI_IN_MESSAGES: TranslationCatalog = {
   "consent.body.ads":
     "विज्ञापन केवल स्तरों के बीच उपलब्ध होने पर दिखाई दे सकते हैं। वे सक्रिय खेल को कभी बाधित नहीं करते, और आप मेनू में यह चुनाव फिर देख सकते हैं।",
   "consent.accept": "स्वीकार करें और खेलें",
+  "onboarding.demoTitle": "कैसे खेलें देखें",
+  "onboarding.demoDescription":
+    "स्विच से इलास्टिक बेड हिलाएँ और गेंद को वापस खेल में उछालें।",
   "status.updateTitle": "गेम अपडेट हो रहा है",
   "status.updateProgress": "अपडेट प्रगति",
   "status.versionInstalled": "संस्करण {{version}} स्थापित",
@@ -1082,6 +1085,9 @@ const DE_MESSAGES: TranslationCatalog = {
   "consent.body.ads":
     "Anzeigen können nur zwischen Leveln erscheinen, wenn sie verfügbar sind. Sie unterbrechen nie das aktive Spiel, und du kannst diese Auswahl im Menü prüfen.",
   "consent.accept": "Akzeptieren und spielen",
+  "onboarding.demoTitle": "So funktioniert es",
+  "onboarding.demoDescription":
+    "Bewege ein elastisches Bett mit einem Schalter und pralle den Ball zurück ins Spiel.",
   "status.updateTitle": "Spiel wird aktualisiert",
   "status.updateProgress": "Aktualisierungsfortschritt",
   "status.versionInstalled": "Version {{version}} installiert",
@@ -1183,6 +1189,9 @@ const FR_MESSAGES: TranslationCatalog = {
   "consent.body.ads":
     "Des annonces peuvent apparaître seulement entre les niveaux lorsqu'elles sont disponibles. Elles n'interrompent jamais la partie en cours, et vous pouvez revoir ce choix dans le menu.",
   "consent.accept": "Accepter et jouer",
+  "onboarding.demoTitle": "Voyez comment jouer",
+  "onboarding.demoDescription":
+    "Bougez un lit élastique avec un interrupteur et renvoyez la balle en jeu.",
   "status.updateTitle": "Mise à jour du jeu",
   "status.updateProgress": "Progression de la mise à jour",
   "status.versionInstalled": "Version {{version}} installée",
@@ -1284,6 +1293,9 @@ const IT_MESSAGES: TranslationCatalog = {
   "consent.body.ads":
     "Gli annunci possono apparire solo tra un livello e l'altro quando disponibili. Non interrompono mai la partita in corso, e puoi rivedere questa scelta nel menu.",
   "consent.accept": "Accetta e gioca",
+  "onboarding.demoTitle": "Guarda come si gioca",
+  "onboarding.demoDescription":
+    "Muovi un lettino elastico con un interruttore e rimbalza la palla in gioco.",
   "status.updateTitle": "Aggiornamento del gioco",
   "status.updateProgress": "Avanzamento aggiornamento",
   "status.versionInstalled": "Versione {{version}} installata",
@@ -1378,6 +1390,9 @@ const JA_MESSAGES: TranslationCatalog = {
   "consent.body.ads":
     "広告は利用可能な場合にレベルの合間だけ表示されることがあります。プレイ中の操作を妨げることはなく、この選択はメニューで確認できます。",
   "consent.accept": "同意して遊ぶ",
+  "onboarding.demoTitle": "あそびかたを見てみよう",
+  "onboarding.demoDescription":
+    "スイッチで弾性ベッドを動かして、ボールをフィールドに跳ね返します。",
   "status.updateTitle": "ゲームを更新中",
   "status.updateProgress": "更新の進行状況",
   "status.versionInstalled": "バージョン {{version}} をインストールしました",
@@ -1479,6 +1494,9 @@ const KO_MESSAGES: TranslationCatalog = {
   "consent.body.ads":
     "광고는 제공될 때 레벨 사이에만 표시될 수 있습니다. 진행 중인 플레이를 방해하지 않으며, 이 선택은 메뉴에서 다시 확인할 수 있습니다.",
   "consent.accept": "동의하고 플레이",
+  "onboarding.demoTitle": "이렇게 플레이해요",
+  "onboarding.demoDescription":
+    "스위치로 탄성 침대를 움직여 공을 경기장 안으로 튕기세요.",
   "status.updateTitle": "게임 업데이트 중",
   "status.updateProgress": "업데이트 진행률",
   "status.versionInstalled": "버전 {{version}} 설치됨",
@@ -1573,6 +1591,9 @@ const ID_MESSAGES: TranslationCatalog = {
   "consent.body.ads":
     "Iklan dapat muncul hanya di antara level saat tersedia. Iklan tidak pernah mengganggu permainan aktif, dan Anda dapat meninjau pilihan ini di menu.",
   "consent.accept": "Setuju dan main",
+  "onboarding.demoTitle": "Lihat cara bermain",
+  "onboarding.demoDescription":
+    "Gerakkan ranjang elastis dengan sakelar dan pantulkan bola kembali ke arena.",
   "status.updateTitle": "Memperbarui game",
   "status.updateProgress": "Progres pembaruan",
   "status.versionInstalled": "Versi {{version}} terpasang",
@@ -1662,6 +1683,9 @@ const VI_MESSAGES: TranslationCatalog = {
   "consent.body.ads":
     "Quảng cáo chỉ có thể xuất hiện giữa các màn khi có sẵn. Chúng không bao giờ làm gián đoạn lượt chơi đang diễn ra, và bạn có thể xem lại lựa chọn này trong menu.",
   "consent.accept": "Đồng ý và chơi",
+  "onboarding.demoTitle": "Xem cách chơi",
+  "onboarding.demoDescription":
+    "Di chuyển giường đàn hồi bằng công tắc và bật bóng trở lại sân chơi.",
   "status.updateTitle": "Đang cập nhật trò chơi",
   "status.updateProgress": "Tiến độ cập nhật",
   "status.versionInstalled": "Đã cài phiên bản {{version}}",
@@ -1751,6 +1775,9 @@ const FIL_MESSAGES: TranslationCatalog = {
   "consent.body.ads":
     "Maaaring lumabas ang ads sa pagitan lang ng mga level kapag available. Hindi nito kailanman naaantala ang aktibong laro, at maaari mong suriin ang pagpiling ito sa menu.",
   "consent.accept": "Tanggapin at maglaro",
+  "onboarding.demoTitle": "Tingnan kung paano maglaro",
+  "onboarding.demoDescription":
+    "Galawin ang nababanat na kama gamit ang switch at ibalik ang bola sa laro.",
   "status.updateTitle": "Ina-update ang laro",
   "status.updateProgress": "Progreso ng update",
   "status.versionInstalled": "Naka-install ang bersyon {{version}}",
@@ -1840,6 +1867,9 @@ const TH_MESSAGES: TranslationCatalog = {
   "consent.body.ads":
     "โฆษณาอาจแสดงเฉพาะระหว่างด่านเมื่อพร้อมใช้งานเท่านั้น และจะไม่ขัดจังหวะการเล่นอยู่ คุณตรวจสอบตัวเลือกนี้ได้ในเมนู",
   "consent.accept": "ยอมรับและเล่น",
+  "onboarding.demoTitle": "ดูวิธีเล่น",
+  "onboarding.demoDescription":
+    "ขยับที่นอนยืดหยุ่นด้วยสวิตช์แล้วเด้งลูกบอลกลับเข้าสนาม",
   "status.updateTitle": "กำลังอัปเดตเกม",
   "status.updateProgress": "ความคืบหน้าอัปเดต",
   "status.versionInstalled": "ติดตั้งเวอร์ชัน {{version}} แล้ว",
@@ -1929,6 +1959,9 @@ const ZH_CN_MESSAGES: TranslationCatalog = {
   "consent.body.ads":
     "广告仅会在有可用内容时出现在关卡之间，不会打断正在进行的游戏。你可以在菜单中查看此选择。",
   "consent.accept": "同意并开始",
+  "onboarding.demoTitle": "看看怎么玩",
+  "onboarding.demoDescription":
+    "用开关移动弹性床，把球弹回场地。",
   "status.updateTitle": "正在更新游戏",
   "status.updateProgress": "更新进度",
   "status.versionInstalled": "版本 {{version}} 已安装",
@@ -3414,6 +3447,8 @@ const EXPANDED_LOCALE_FIELD_MAP = {
   "consent.locationLabel": "locationLabel",
   "consent.locationHint": "locationHint",
   "consent.accept": "accept",
+  "onboarding.demoTitle": "demoTitle",
+  "onboarding.demoDescription": "demoDescription",
   "status.updateTitle": "updateTitle",
   "status.updateProgress": "updateProgress",
   "status.versionInstalled": "versionInstalled",
