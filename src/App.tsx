@@ -12,6 +12,7 @@ import { AudioToggle } from "./components/AudioToggle";
 import { MusicToggle } from "./components/MusicToggle";
 import { ConsentScreen } from "./components/ConsentScreen";
 import { LanguageDetectionOverlay } from "./components/LanguageDetectionOverlay";
+import { OnboardingGameplayDemoOverlay } from "./components/OnboardingGameplayDemoOverlay";
 import { MobileOrientationBlocker } from "./components/MobileOrientationBlocker";
 import { DownloadsPage } from "./components/DownloadsPage";
 import { PostAdResumePrompt } from "./components/PostAdResumePrompt";
@@ -89,6 +90,7 @@ import {
   createJoystickDiagnosticDownloadName,
   type JoystickDiagnosticSample,
 } from "./utils/joystickDiagnostics";
+import { prefersReducedMotion } from "./utils/performanceMode";
 import {
   configureGoogleAdSound,
   requestInterlevelGoogleAd,
@@ -178,6 +180,30 @@ function hasValidBoardRect(boardRect: GameBoardRect | null): boolean {
   );
 }
 
+function readQaScenarioFromLocation(): GameQaScenario | null {
+  const scenario = new URLSearchParams(window.location.search).get("qaScenario");
+  if (scenario === "single-component-phase-clear")
+    return "single-component-phase-clear";
+  if (scenario === SINGLE_COMPONENT_PHASE_3_QA_SCENARIO)
+    return SINGLE_COMPONENT_PHASE_3_QA_SCENARIO;
+  if (scenario === LATE_PHASE_STABILITY_QA_SCENARIO)
+    return LATE_PHASE_STABILITY_QA_SCENARIO;
+  if (scenario === CINEMATIC_RIP_QA_SCENARIO) return CINEMATIC_RIP_QA_SCENARIO;
+  if (scenario === PADDLE_COLLISION_QA_SCENARIO)
+    return PADDLE_COLLISION_QA_SCENARIO;
+  if (scenario === LASER_FAN_QA_SCENARIO) return LASER_FAN_QA_SCENARIO;
+  if (scenario === MULTIBALL_QA_SCENARIO) return MULTIBALL_QA_SCENARIO;
+  if (scenario === WIDE_PADDLE_QA_SCENARIO) return WIDE_PADDLE_QA_SCENARIO;
+  if (scenario === SLOW_BALL_QA_SCENARIO) return SLOW_BALL_QA_SCENARIO;
+  if (scenario === METAL_BLOCK_QA_SCENARIO) return METAL_BLOCK_QA_SCENARIO;
+  if (scenario === EVASIVE_BLOCKS_QA_SCENARIO) return EVASIVE_BLOCKS_QA_SCENARIO;
+  if (scenario === BALL_TURRET_QA_SCENARIO) return BALL_TURRET_QA_SCENARIO;
+  if (scenario === BALL_TURRET_LOSE_QA_SCENARIO)
+    return BALL_TURRET_LOSE_QA_SCENARIO;
+  if (scenario === AUDIO_QA_SCENARIO) return AUDIO_QA_SCENARIO;
+  return null;
+}
+
 interface UpdateProgressState {
   progress: number;
 }
@@ -213,10 +239,11 @@ function GameApp() {
     acceptLanguageLocationConsent,
     revokeLanguageLocationConsent,
   } = useLanguageLocationConsent();
+  const qaScenario = useMemo(() => readQaScenarioFromLocation(), []);
   const shouldStartWithLanguageDetection =
-    hasPrivacyConsent && hasLanguageLocationConsent;
+    hasPrivacyConsent && hasLanguageLocationConsent && !qaScenario;
   const shouldStartWithInitialCountdown =
-    hasPrivacyConsent && !shouldStartWithLanguageDetection;
+    hasPrivacyConsent && !shouldStartWithLanguageDetection && !qaScenario;
   const [cinematicOverlay, setCinematicOverlay] =
     useState<GameCinematicOverlayState>(null);
   const [isInterlevelAdActive, setIsInterlevelAdActive] = useState(false);
@@ -232,6 +259,7 @@ function GameApp() {
   const [isLanguageDetectionVisible, setIsLanguageDetectionVisible] = useState(
     shouldStartWithLanguageDetection,
   );
+  const [isOnboardingDemoVisible, setIsOnboardingDemoVisible] = useState(false);
   const [isCinematicRipScenarioConsumed, setIsCinematicRipScenarioConsumed] =
     useState(false);
   const [isOfflineReadyVisible, setIsOfflineReadyVisible] = useState(false);
@@ -261,6 +289,8 @@ function GameApp() {
   > | null>(null);
   const languageDetectionStartedRef = useRef(false);
   const languageDetectionRunIdRef = useRef(0);
+  const pendingLanguageLocationRef = useRef(false);
+  const onboardingDemoRunIdRef = useRef(0);
   const updateProgressSoundPlayedRef = useRef(false);
   const updateInstalledSoundPlayedRef = useRef(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -274,32 +304,6 @@ function GameApp() {
     useState<string | null>(null);
   const [joystickDiagnosticDownloadName, setJoystickDiagnosticDownloadName] =
     useState("");
-  const qaScenario = useMemo<GameQaScenario | null>(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const scenario = searchParams.get("qaScenario");
-    if (scenario === "single-component-phase-clear")
-      return "single-component-phase-clear";
-    if (scenario === SINGLE_COMPONENT_PHASE_3_QA_SCENARIO)
-      return SINGLE_COMPONENT_PHASE_3_QA_SCENARIO;
-    if (scenario === LATE_PHASE_STABILITY_QA_SCENARIO)
-      return LATE_PHASE_STABILITY_QA_SCENARIO;
-    if (scenario === CINEMATIC_RIP_QA_SCENARIO)
-      return CINEMATIC_RIP_QA_SCENARIO;
-    if (scenario === PADDLE_COLLISION_QA_SCENARIO)
-      return PADDLE_COLLISION_QA_SCENARIO;
-    if (scenario === LASER_FAN_QA_SCENARIO) return LASER_FAN_QA_SCENARIO;
-    if (scenario === MULTIBALL_QA_SCENARIO) return MULTIBALL_QA_SCENARIO;
-    if (scenario === WIDE_PADDLE_QA_SCENARIO) return WIDE_PADDLE_QA_SCENARIO;
-    if (scenario === SLOW_BALL_QA_SCENARIO) return SLOW_BALL_QA_SCENARIO;
-    if (scenario === METAL_BLOCK_QA_SCENARIO) return METAL_BLOCK_QA_SCENARIO;
-    if (scenario === EVASIVE_BLOCKS_QA_SCENARIO)
-      return EVASIVE_BLOCKS_QA_SCENARIO;
-    if (scenario === BALL_TURRET_QA_SCENARIO) return BALL_TURRET_QA_SCENARIO;
-    if (scenario === BALL_TURRET_LOSE_QA_SCENARIO)
-      return BALL_TURRET_LOSE_QA_SCENARIO;
-    if (scenario === AUDIO_QA_SCENARIO) return AUDIO_QA_SCENARIO;
-    return null;
-  }, []);
   const activeGameMode =
     qaScenario === "single-component-phase-clear" ||
     qaScenario === SINGLE_COMPONENT_PHASE_3_QA_SCENARIO ||
@@ -753,12 +757,35 @@ function GameApp() {
     [setLocaleFromLocation, startInitialCountdown],
   );
 
+  const runOnboardingGameplayDemo = useCallback(
+    (allowLanguageLocation: boolean) => {
+      pendingLanguageLocationRef.current = allowLanguageLocation;
+      onboardingDemoRunIdRef.current += 1;
+
+      if (prefersReducedMotion()) {
+        void runLanguageDetection(allowLanguageLocation);
+        return;
+      }
+
+      setIsOnboardingDemoVisible(true);
+    },
+    [runLanguageDetection],
+  );
+
+  const handleOnboardingDemoComplete = useCallback(() => {
+    setIsOnboardingDemoVisible((isVisible) => {
+      if (!isVisible) return false;
+      void runLanguageDetection(pendingLanguageLocationRef.current);
+      return false;
+    });
+  }, [runLanguageDetection]);
+
   useEffect(() => {
-    if (!shouldStartWithLanguageDetection) return;
+    if (!shouldStartWithLanguageDetection || qaScenario) return;
     if (languageDetectionStartedRef.current) return;
 
     void runLanguageDetection(true);
-  }, [runLanguageDetection, shouldStartWithLanguageDetection]);
+  }, [qaScenario, runLanguageDetection, shouldStartWithLanguageDetection]);
 
   const handleAcceptPrivacyConsent = useCallback(
     (allowLanguageLocation: boolean) => {
@@ -769,14 +796,14 @@ function GameApp() {
       } else {
         revokeLanguageLocationConsent();
       }
-      void runLanguageDetection(allowLanguageLocation);
+      runOnboardingGameplayDemo(allowLanguageLocation);
     },
     [
       acceptLanguageLocationConsent,
       acceptPrivacyConsent,
       audioSink,
       revokeLanguageLocationConsent,
-      runLanguageDetection,
+      runOnboardingGameplayDemo,
     ],
   );
 
@@ -785,11 +812,13 @@ function GameApp() {
     revokePrivacyConsent();
     revokeLanguageLocationConsent();
     languageDetectionRunIdRef.current += 1;
+    onboardingDemoRunIdRef.current += 1;
     if (languageDetectionTimerRef.current)
       clearTimeout(languageDetectionTimerRef.current);
     setCinematicOverlay(null);
     setIsInitialCountdownActive(false);
     setIsLanguageDetectionVisible(false);
+    setIsOnboardingDemoVisible(false);
     setIsMenuOpen(false);
   }, [audioSink, revokeLanguageLocationConsent, revokePrivacyConsent]);
 
@@ -1307,6 +1336,7 @@ function GameApp() {
                 audioSink={audioSink}
                 startBlocked={
                   !hasPrivacyConsent ||
+                  isOnboardingDemoVisible ||
                   isLanguageDetectionVisible ||
                   isInitialCountdownActive
                 }
@@ -1318,6 +1348,7 @@ function GameApp() {
                   isInterlevelAdActive ||
                   postAdResumePrompt !== null ||
                   !hasPrivacyConsent ||
+                  isOnboardingDemoVisible ||
                   isLanguageDetectionVisible
                 }
                 onBoardRectChange={handleBoardRectChange}
@@ -1392,6 +1423,9 @@ function GameApp() {
         boardRect={cinematicOverlayBoardRect}
       />
       {mobileOrientationLock.isBlocked && <MobileOrientationBlocker />}
+      {isOnboardingDemoVisible && (
+        <OnboardingGameplayDemoOverlay onComplete={handleOnboardingDemoComplete} />
+      )}
       {isLanguageDetectionVisible && <LanguageDetectionOverlay />}
       {postAdResumePrompt && (
         <PostAdResumePrompt

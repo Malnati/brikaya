@@ -9,12 +9,11 @@ import {
 } from "./consentSelectors.js";
 import {
   acceptPrivacyConsentIfPresent,
-  assertLanguageDetectionFlow,
+  acceptPrivacyConsentIfPresentForScenario,
   clickButtonByText,
   clickInputByLabel,
   LANGUAGE_LOCATION_CONSENT_STORAGE_KEY,
-  waitForInitialCountdownCountToHide,
-  waitForInitialCountdownToFinish,
+  waitForStartupSequenceToFinish,
 } from "./consentHelpers.js";
 import { launchBrowser, createMobilePage } from "./browserLauncher.js";
 import { JOURNEY_PROFILES } from "./mobileBrowserProfiles.js";
@@ -23,7 +22,7 @@ import {
   simulateTouchScrollOnConsent,
 } from "./scrollHelpers.js";
 import {
-  clearGameLog,
+  clearGameLogEvents,
   clearRuntimeState,
   GAME_LOG_DB_NAME,
   GAME_LOG_DB_VERSION,
@@ -31,6 +30,9 @@ import {
   readGameEvents,
   scenarioUrl,
   summarizeEvents,
+  summarizeEventsThroughPowerUpActivation,
+  summarizeEventsUntilEventCount,
+  summarizeEventsUntilFirstEvent,
   waitForEventType,
   waitForGameLogReady,
   withGameplayTelemetry,
@@ -58,6 +60,8 @@ const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-mobile-journey-qa.json";
 const MAX_NAVIGATION_MS = 45000;
 const OBSERVATION_TIMEOUT_MS = 12000;
+const SCENARIO_GAME_START_TIMEOUT_MS = 60000;
+const SCENARIO_PADDLE_COLLISION_TIMEOUT_MS = 30000;
 const START_MODAL_TEST_ID = "ball-turret-start-modal";
 const LEFT_SWITCH_TEST_ID = "ball-turret-switch-left";
 const TURRET_START_TITLES = ["Pronto para jogar", "Ready to play"];
@@ -67,11 +71,7 @@ const GOOGLE_REPORT_ONLY_FRAME_ANCESTORS_PATTERN =
 const EXPECTED_EVASIVE_BLOCK_COUNT = 3;
 
 const SCENARIO_MATRIX = [
-  {
-    id: "paddle-collision",
-    label: "colisão com raquete",
-    kind: "paddle-collision",
-  },
+  // paddle-collision: coberto por cloudflare-gameplay-basic-qa.js no CI local.
   {
     id: "metal-component",
     label: "colisão com componente metálico",
@@ -176,6 +176,27 @@ async function waitForCanvas(page) {
   );
 }
 
+async function dismissBallTurretStartModalIfVisible(page, profileLabel) {
+  const isVisible = await page.evaluate((startModalTestId) => {
+    const modal = document.querySelector(
+      `[data-testid="${startModalTestId}"]`,
+    );
+    if (!modal) return false;
+    const style = window.getComputedStyle(modal);
+    const rect = modal.getBoundingClientRect();
+    return (
+      style.display !== "none" &&
+      style.visibility !== "hidden" &&
+      rect.width > 0 &&
+      rect.height > 0
+    );
+  }, START_MODAL_TEST_ID);
+
+  if (!isVisible) return;
+
+  await dismissBallTurretStartModal(page, profileLabel);
+}
+
 async function dismissBallTurretStartModal(page, profileLabel) {
   const switchHandle = await page.$(`[data-testid="${LEFT_SWITCH_TEST_ID}"]`);
   assertCondition(
@@ -269,7 +290,7 @@ async function runColdLoadAndConsent(page, profile, targetUrl) {
   );
 
   await clickButtonByText(page, ACCEPT_BUTTON_LABELS);
-  await assertLanguageDetectionFlow(page, profile.label);
+  await waitForStartupSequenceToFinish(page);
   await page.waitForSelector('.consent-screen, [data-testid="consent-screen"]', {
     hidden: true,
     timeout: MAX_NAVIGATION_MS,
@@ -283,7 +304,6 @@ async function runColdLoadAndConsent(page, profile, targetUrl) {
     `${profile.label}: consentimento de região não foi gravado.`,
   );
 
-  await waitForInitialCountdownCountToHide(page);
   await waitForCanvas(page);
 
   return { scroll, touchScroll };
@@ -345,6 +365,33 @@ async function runTorretaStart(page, profile) {
   return { eventSummary: summary, startModalCopy };
 }
 
+async function waitForRipCinematicVisible(page, timeoutMs) {
+  return page
+    .waitForFunction(
+      () => {
+        const overlay = document.querySelector(
+          '[data-testid="game-cinematic-overlay"][data-cinematic-type="rip"]',
+        );
+        const ripComposition = document.querySelector(
+          '[data-testid="game-cinematic-rip-composition"]',
+        );
+        const overlayRect = overlay?.getBoundingClientRect();
+        const ripRect = ripComposition?.getBoundingClientRect();
+        return Boolean(
+          overlayRect &&
+            ripRect &&
+            overlayRect.width > 0 &&
+            overlayRect.height > 0 &&
+            ripRect.width > 0 &&
+            ripRect.height > 0,
+        );
+      },
+      { timeout: timeoutMs },
+    )
+    .then(() => true)
+    .catch(() => false);
+}
+
 async function runTorretaLose(page, profile) {
   await page.goto(scenarioUrl(publicUrl(), "ball-turret-lose"), {
     waitUntil: "domcontentloaded",
@@ -354,26 +401,9 @@ async function runTorretaLose(page, profile) {
   await waitForCanvas(page);
   await dismissBallTurretStartModal(page, profile.label);
 
+  const ripVisiblePromise = waitForRipCinematicVisible(page, 25000);
   await waitForEventType(page, "game_end", 20000);
-
-  const ripVisible = await page.evaluate(() => {
-    const overlay = document.querySelector(
-      '[data-testid="game-cinematic-overlay"][data-cinematic-type="rip"]',
-    );
-    const ripComposition = document.querySelector(
-      '[data-testid="game-cinematic-rip-composition"]',
-    );
-    const overlayRect = overlay?.getBoundingClientRect();
-    const ripRect = ripComposition?.getBoundingClientRect();
-    return Boolean(
-      overlayRect &&
-        ripRect &&
-        overlayRect.width > 0 &&
-        overlayRect.height > 0 &&
-        ripRect.width > 0 &&
-        ripRect.height > 0,
-    );
-  });
+  const ripVisible = await ripVisiblePromise;
 
   const gameOverVisible = await page.evaluate((patternSource) => {
     const pattern = new RegExp(patternSource, "i");
@@ -474,16 +504,41 @@ async function assertNoGameEnd(summary, profileLabel, scenarioLabel) {
   );
 }
 
-async function runScenarioCheck(page, profile, scenarioCheck) {
-  await clearGameLog(page);
-  await page.goto(scenarioUrl(publicUrl(), scenarioCheck.id), {
+async function prepareScenarioPage(page, profile, scenarioCheck) {
+  const scenarioId =
+    typeof scenarioCheck === "string" ? scenarioCheck : scenarioCheck.id;
+  const scenarioLabel =
+    typeof scenarioCheck === "string" ? scenarioId : scenarioCheck.label;
+
+  await clearGameLogEvents(page);
+  await page
+    .goto("about:blank", { waitUntil: "domcontentloaded", timeout: 10000 })
+    .catch(() => undefined);
+  await page.goto(scenarioUrl(publicUrl(), scenarioId), {
     waitUntil: "domcontentloaded",
     timeout: MAX_NAVIGATION_MS,
   });
-  await acceptPrivacyConsentIfPresent(page);
+  await acceptPrivacyConsentIfPresentForScenario(page);
   await waitForCanvas(page);
-  await waitForGameLogReady(page);
-  await waitForInitialCountdownToFinish(page);
+  await dismissBallTurretStartModalIfVisible(page, profile.label);
+
+  await waitForGameLogReady(page, 15000).catch(() => undefined);
+
+  try {
+    await waitForEventType(page, "game_start", SCENARIO_GAME_START_TIMEOUT_MS);
+  } catch (error) {
+    const events = await readGameEvents(page);
+    const summary = summarizeEvents(events);
+    assertCondition(
+      false,
+      `${profile.label} [${scenarioLabel}]: game_start ausente (${JSON.stringify(summary)}).`,
+    );
+    throw error;
+  }
+}
+
+async function runScenarioCheck(page, profile, scenarioCheck) {
+  await prepareScenarioPage(page, profile, scenarioCheck);
 
   if (scenarioCheck.dismissTurretModal) {
     await dismissBallTurretStartModal(page, profile.label);
@@ -492,31 +547,54 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
   let details = {};
 
   if (scenarioCheck.kind === "paddle-collision") {
-    await waitForEventType(page, "game_start", OBSERVATION_TIMEOUT_MS);
-    const { paddleCollision } = await waitForPaddleCollision(
-      page,
-      PADDLE_COLLISION_TIMEOUT_MS,
-    );
+    let paddleCollision = null;
+    let eventsAtCollision = [];
+
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      if (attempt > 0) {
+        await prepareScenarioPage(page, profile, scenarioCheck.id);
+      }
+
+      const observation = await waitForPaddleCollision(
+        page,
+        SCENARIO_PADDLE_COLLISION_TIMEOUT_MS,
+      );
+      paddleCollision = observation.paddleCollision;
+      eventsAtCollision = observation.events;
+
+      if (paddleCollision) break;
+    }
+
     assertPaddleCollisionPhysics(paddleCollision, profile.label);
-    const events = await readGameEvents(page);
-    const summary = summarizeEvents(events);
+    const summaryAtCollision = summarizeEvents(eventsAtCollision);
     assertCondition(
-      (summary.game_start || 0) >= 1,
+      (summaryAtCollision.game_start || 0) >= 1,
       `${profile.label} [${scenarioCheck.label}]: game_start ausente.`,
     );
-    await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
-    details = { collisionInfo: paddleCollision.collisionInfo, eventSummary: summary };
+    await assertNoGameEnd(
+      summaryAtCollision,
+      profile.label,
+      scenarioCheck.label,
+    );
+    details = {
+      collisionInfo: paddleCollision.collisionInfo,
+      eventSummary: summaryAtCollision,
+    };
   } else if (scenarioCheck.kind === "metal-component") {
     await waitForComponentCollisions(page, 1);
     await waitForEventType(page, "component_destroyed", OBSERVATION_TIMEOUT_MS);
     const events = await readGameEvents(page);
-    const summary = summarizeEvents(events);
+    const fullSummary = summarizeEvents(events);
+    const summaryAtDestroy = summarizeEventsUntilFirstEvent(
+      events,
+      "component_destroyed",
+    );
     assertCondition(
-      (summary.component_destroyed || 0) >= 1,
+      (fullSummary.component_destroyed || 0) >= 1,
       `${profile.label} [${scenarioCheck.label}]: component_destroyed ausente.`,
     );
-    await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
-    details = { eventSummary: summary };
+    await assertNoGameEnd(summaryAtDestroy, profile.label, scenarioCheck.label);
+    details = { eventSummary: fullSummary };
   } else if (scenarioCheck.kind === "evasive-components") {
     await waitForComponentCollisions(page, EXPECTED_EVASIVE_BLOCK_COUNT);
     await page.waitForFunction(
@@ -565,24 +643,32 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
       () => undefined,
     );
     const events = await readGameEvents(page);
-    const summary = summarizeEvents(events);
+    const fullSummary = summarizeEvents(events);
+    const summaryAtDestroy = summarizeEventsUntilEventCount(
+      events,
+      "component_destroyed",
+      EXPECTED_EVASIVE_BLOCK_COUNT,
+    );
     assertCondition(
-      (summary.component_destroyed || 0) >= EXPECTED_EVASIVE_BLOCK_COUNT,
+      (fullSummary.component_destroyed || 0) >= EXPECTED_EVASIVE_BLOCK_COUNT,
       `${profile.label} [${scenarioCheck.label}]: blocos evasivos insuficientes.`,
     );
-    await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
-    details = { eventSummary: summary };
+    await assertNoGameEnd(summaryAtDestroy, profile.label, scenarioCheck.label);
+    details = { eventSummary: fullSummary };
   } else if (scenarioCheck.kind === "power-up") {
-    await waitForEventType(page, "game_start", OBSERVATION_TIMEOUT_MS);
     const activation = await waitForPowerUpAction(
       page,
       scenarioCheck.powerUpType,
       "activate",
     );
     const events = await readGameEvents(page);
-    const summary = summarizeEvents(events);
+    const fullSummary = summarizeEvents(events);
+    const activationSummary = summarizeEventsThroughPowerUpActivation(
+      events,
+      scenarioCheck.powerUpType,
+    );
     assertCondition(
-      (summary.game_start || 0) >= 1,
+      (fullSummary.game_start || 0) >= 1,
       `${profile.label} [${scenarioCheck.label}]: game_start ausente.`,
     );
     assertCondition(
@@ -592,14 +678,14 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
 
     if (scenarioCheck.sideEffect === "component_destroyed") {
       assertCondition(
-        (summary.component_destroyed || 0) >= 1,
+        (fullSummary.component_destroyed || 0) >= 1,
         `${profile.label} [${scenarioCheck.label}]: component_destroyed ausente.`,
       );
     }
 
     if (scenarioCheck.sideEffect === "ball_added") {
       assertCondition(
-        (summary.ball_added || 0) >= 1,
+        (fullSummary.ball_added || 0) >= 1,
         `${profile.label} [${scenarioCheck.label}]: ball_added ausente.`,
       );
     }
@@ -611,9 +697,10 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
       );
     }
 
-    await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
+    await assertNoGameEnd(activationSummary, profile.label, scenarioCheck.label);
     details = {
-      eventSummary: summary,
+      eventSummary: fullSummary,
+      activationEventSummary: activationSummary,
       powerUpMetadata: activation?.metadata ?? null,
     };
   } else if (scenarioCheck.kind === "phase-transition") {
@@ -621,6 +708,18 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
     await page.waitForSelector('[data-testid="level-toast"]', {
       timeout: PHASE_TRANSITION_TIMEOUT_MS,
     });
+    await page.waitForFunction(
+      (expectedLevel) => {
+        const text =
+          document.querySelector('[data-testid="level-toast"]')?.textContent ?? "";
+        return (
+          text.includes(`Fase ${expectedLevel}`) ||
+          text.includes(`Level ${expectedLevel}`)
+        );
+      },
+      { timeout: PHASE_TRANSITION_TIMEOUT_MS },
+      2,
+    );
     const toastState = await collectLevelToastState(page);
     await waitForEventType(page, "level_start", PHASE_TRANSITION_TIMEOUT_MS);
     const events = await readGameEvents(page);

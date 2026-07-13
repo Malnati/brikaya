@@ -147,6 +147,32 @@ jest.mock("./utils/localAppReset", () => ({
   resetLocalAppState: jest.fn().mockResolvedValue(undefined),
 }));
 
+jest.mock("./utils/performanceMode", () => ({
+  ...jest.requireActual("./utils/performanceMode"),
+  prefersReducedMotion: jest.fn(() => false),
+}));
+
+jest.mock("./components/OnboardingGameplayDemoOverlay", () => {
+  const React = require("react");
+
+  return {
+    OnboardingGameplayDemoOverlay: ({
+      onComplete,
+    }: {
+      onComplete: () => void;
+    }) => {
+      React.useEffect(() => {
+        const timerId = window.setTimeout(onComplete, 0);
+        return () => window.clearTimeout(timerId);
+      }, [onComplete]);
+
+      return React.createElement("div", {
+        "data-testid": "onboarding-gameplay-demo-overlay",
+      });
+    },
+  };
+});
+
 function mockLocalStorageValues(values: Record<string, string | null>) {
   (window.localStorage.getItem as jest.Mock).mockImplementation(
     (key: string) => values[key] ?? null,
@@ -422,6 +448,21 @@ describe("App theme selector", () => {
     );
     expect(
       screen.queryByRole("dialog", { name: "Antes de jogar" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByTestId("onboarding-gameplay-demo-overlay"),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByTestId("language-detection-overlay"),
+    ).not.toBeInTheDocument();
+
+    await act(async () => {
+      jest.advanceTimersByTime(0);
+      await Promise.resolve();
+    });
+
+    expect(
+      screen.queryByTestId("onboarding-gameplay-demo-overlay"),
     ).not.toBeInTheDocument();
     expect(screen.getByTestId("language-detection-overlay")).toHaveTextContent(
       "Preparando idioma",

@@ -34,6 +34,14 @@ import {
   GAME_MODE_CLASSIC,
   type GameMode,
 } from "../constants/gameMode";
+import {
+  DUAL_TRAMPOLINE_LEFT_START_ANGLE,
+  DUAL_TRAMPOLINE_MAX_SPEED_SCALE,
+  DUAL_TRAMPOLINE_MIN_SPEED_SCALE,
+  DUAL_TRAMPOLINE_RIGHT_START_ANGLE,
+  DUAL_TRAMPOLINE_SPEED_PER_FRAME,
+  DUAL_TRAMPOLINE_WIDTH_SCALE,
+} from "../constants/turretTrampoline";
 import { gameLogger, type LoggedPowerUpAction } from "../storage/gameLogger";
 import {
   AUDIO_QA_SCENARIO,
@@ -213,12 +221,6 @@ const GAME_OVER_TEXT = "FIM DE JOGO!";
 const SCORE_TEXT_PREFIX = "Pontuação";
 const RESTART_HINT_TEXT = "Use ↻ para jogar novamente";
 const CENTER_DIVISOR = 2;
-const DUAL_TRAMPOLINE_LEFT_START_ANGLE = Math.PI;
-const DUAL_TRAMPOLINE_RIGHT_START_ANGLE = 0;
-const DUAL_TRAMPOLINE_WIDTH_SCALE = 0.82;
-const DUAL_TRAMPOLINE_SPEED_PER_FRAME = 0.045;
-const DUAL_TRAMPOLINE_MIN_SPEED_SCALE = 0.25;
-const DUAL_TRAMPOLINE_MAX_SPEED_SCALE = 1.33;
 const RADIAL_PLAYFIELD_FILL = "rgba(7, 14, 28, 0.92)";
 const RADIAL_PLAYFIELD_STROKE = "rgba(125, 249, 255, 0.72)";
 const RADIAL_PLAYFIELD_INNER_STROKE = "rgba(255, 255, 255, 0.18)";

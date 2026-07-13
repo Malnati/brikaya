@@ -398,6 +398,9 @@ export const EN_MESSAGES = {
   "consent.locationLabel": "Use region to suggest language",
   "consent.locationHint": "If you skip this, the browser language is used.",
   "consent.accept": "Accept and play",
+  "onboarding.demoTitle": "See how it works",
+  "onboarding.demoDescription":
+    "Move an elastic bed with a switch and bounce the ball back into play.",
   "status.updateTitle": "Updating game",
   "status.updateProgress": "Update progress",
   "status.versionInstalled": "Version {{version}} installed",
@@ -641,6 +644,9 @@ const PT_BR_MESSAGES: TranslationCatalog = {
   "consent.locationHint":
     "Se você pular esta opção, o idioma do navegador será usado.",
   "consent.accept": "Aceitar e jogar",
+  "onboarding.demoTitle": "Veja como jogar",
+  "onboarding.demoDescription":
+    "Mova uma cama elástica com o interruptor e rebata a bolinha de volta ao jogo.",
   "status.updateTitle": "Atualizando jogo",
   "status.updateProgress": "Progresso da atualização",
   "status.versionInstalled": "Versão {{version}} instalada",
@@ -846,6 +852,9 @@ const ES_419_MESSAGES: TranslationCatalog = {
   "consent.locationHint":
     "Si omites esta opción, se usará el idioma del navegador.",
   "consent.accept": "Aceptar y jugar",
+  "onboarding.demoTitle": "Mira cómo se juega",
+  "onboarding.demoDescription":
+    "Mueve una cama elástica con el interruptor y devuelve la bolita al juego.",
   "status.updateTitle": "Actualizando juego",
   "status.updateProgress": "Progreso de actualización",
   "status.versionInstalled": "Versión {{version}} instalada",

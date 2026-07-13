@@ -3,6 +3,7 @@ import {
   ACCEPT_BUTTON_LABELS,
   LANGUAGE_DETECTION_OVERLAY_SELECTOR,
   LOCATION_CHECKBOX_LABELS,
+  ONBOARDING_DEMO_OVERLAY_SELECTOR,
 } from "./consentSelectors.js";
 
 export const PRIVACY_CONSENT_STORAGE_KEY = "brikaya-privacy-consent";
@@ -16,8 +17,60 @@ const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const COUNTDOWN_COUNT_SELECTOR =
   '[data-testid="game-cinematic-countdown-count"]';
 const CONSENT_READY_TIMEOUT_MS = 1500;
-const INITIAL_COUNTDOWN_TIMEOUT_MS = 7000;
-const LANGUAGE_DETECTION_TIMEOUT_MS = 2500;
+const INITIAL_COUNTDOWN_TIMEOUT_MS = 12000;
+const LANGUAGE_DETECTION_TIMEOUT_MS = 8000;
+const ONBOARDING_DEMO_TIMEOUT_MS = 5500;
+const OVERLAY_APPEAR_TIMEOUT_MS = 3000;
+const GAMEPLAY_UNBLOCKED_TIMEOUT_MS = 35000;
+
+export async function waitForStartupSequenceToFinish(page) {
+  await waitForOverlayToHideIfPresent(
+    page,
+    ONBOARDING_DEMO_OVERLAY_SELECTOR,
+    ONBOARDING_DEMO_TIMEOUT_MS,
+  );
+  await waitForOverlayToHideIfPresent(
+    page,
+    LANGUAGE_DETECTION_OVERLAY_SELECTOR,
+    LANGUAGE_DETECTION_TIMEOUT_MS,
+  );
+  await waitForOverlayToHideIfPresent(
+    page,
+    CINEMATIC_OVERLAY_SELECTOR,
+    INITIAL_COUNTDOWN_TIMEOUT_MS,
+  );
+  await waitForInitialCountdownCountToHide(page);
+  await waitForGameplayUnblocked(page);
+}
+
+export async function waitForGameplayUnblocked(
+  page,
+  timeoutMs = GAMEPLAY_UNBLOCKED_TIMEOUT_MS,
+) {
+  await page.waitForFunction(
+    (selectors) => {
+      return selectors.every((selector) => {
+        const element = document.querySelector(selector);
+        if (!element) return true;
+
+        const style = window.getComputedStyle(element);
+        const rect = element.getBoundingClientRect();
+        return (
+          style.display === "none" ||
+          style.visibility === "hidden" ||
+          rect.width === 0 ||
+          rect.height === 0
+        );
+      });
+    },
+    { timeout: timeoutMs },
+    [
+      ONBOARDING_DEMO_OVERLAY_SELECTOR,
+      LANGUAGE_DETECTION_OVERLAY_SELECTOR,
+      CINEMATIC_OVERLAY_SELECTOR,
+    ],
+  );
+}
 
 export async function acceptPrivacyConsentIfPresent(page) {
   let didAccept = await clickPrivacyConsentButton(page);
@@ -36,7 +89,35 @@ export async function acceptPrivacyConsentIfPresent(page) {
     didAccept = await clickPrivacyConsentButton(page);
   }
 
-  if (didAccept) await waitForInitialCountdownToFinish(page);
+  await waitForStartupSequenceToFinish(page);
+
+  return didAccept;
+}
+
+export async function acceptPrivacyConsentIfPresentForScenario(page) {
+  let didAccept = await clickPrivacyConsentButton(page);
+
+  if (!didAccept) {
+    await page
+      .waitForFunction(
+        (acceptLabels) =>
+          Array.from(document.querySelectorAll("button")).some((button) =>
+            acceptLabels.includes(button.textContent?.trim() ?? ""),
+          ),
+        { timeout: CONSENT_READY_TIMEOUT_MS },
+        ACCEPT_BUTTON_LABELS,
+      )
+      .catch(() => undefined);
+    didAccept = await clickPrivacyConsentButton(page);
+  }
+
+  const hasQaScenario = await page.evaluate(
+    () => new URLSearchParams(window.location.search).has("qaScenario"),
+  );
+
+  if (!hasQaScenario) {
+    await waitForStartupSequenceToFinish(page);
+  }
 
   return didAccept;
 }
@@ -75,19 +156,38 @@ export async function seedPrivacyConsent(page) {
 }
 
 export async function waitForInitialCountdownToFinish(page) {
-  await waitForOverlayToHideIfPresent(
-    page,
-    LANGUAGE_DETECTION_OVERLAY_SELECTOR,
-  );
-  await waitForOverlayToHideIfPresent(page, CINEMATIC_OVERLAY_SELECTOR);
+  await waitForStartupSequenceToFinish(page);
 }
 
-async function waitForOverlayToHideIfPresent(page, selector) {
-  const overlay = await page.$(selector);
+async function waitForOverlayToHideIfPresent(page, selector, timeoutMs) {
+  const appeared = await page
+    .waitForSelector(selector, {
+      visible: true,
+      timeout: OVERLAY_APPEAR_TIMEOUT_MS,
+    })
+    .then(() => true)
+    .catch(() => false);
 
-  if (!overlay) return;
+  if (!appeared) return;
 
   await page.waitForSelector(selector, {
+    hidden: true,
+    timeout: timeoutMs ?? INITIAL_COUNTDOWN_TIMEOUT_MS,
+  });
+}
+
+async function waitForCountdownCountToHideIfPresent(page) {
+  const appeared = await page
+    .waitForSelector(COUNTDOWN_COUNT_SELECTOR, {
+      visible: true,
+      timeout: OVERLAY_APPEAR_TIMEOUT_MS,
+    })
+    .then(() => true)
+    .catch(() => false);
+
+  if (!appeared) return;
+
+  await page.waitForSelector(COUNTDOWN_COUNT_SELECTOR, {
     hidden: true,
     timeout: INITIAL_COUNTDOWN_TIMEOUT_MS,
   });
@@ -155,11 +255,5 @@ export async function assertLanguageDetectionFlow(page, profileLabel) {
 }
 
 export async function waitForInitialCountdownCountToHide(page) {
-  const countdown = await page.$(COUNTDOWN_COUNT_SELECTOR);
-  if (!countdown) return;
-
-  await page.waitForSelector(COUNTDOWN_COUNT_SELECTOR, {
-    hidden: true,
-    timeout: INITIAL_COUNTDOWN_TIMEOUT_MS,
-  });
+  await waitForCountdownCountToHideIfPresent(page);
 }

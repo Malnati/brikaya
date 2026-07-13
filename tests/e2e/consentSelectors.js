@@ -5,6 +5,9 @@ export const CONSENT_SCREEN_SELECTOR =
 export const LANGUAGE_DETECTION_OVERLAY_SELECTOR =
   '[data-testid="language-detection-overlay"], .language-detection-overlay';
 
+export const ONBOARDING_DEMO_OVERLAY_SELECTOR =
+  '[data-testid="onboarding-gameplay-demo-overlay"], .onboarding-gameplay-demo-overlay';
+
 export const ACCEPT_BUTTON_LABELS = ["Aceitar e jogar", "Accept and play"];
 
 export const LOCATION_CHECKBOX_LABELS = [

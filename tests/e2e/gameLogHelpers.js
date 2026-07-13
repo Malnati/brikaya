@@ -47,6 +47,55 @@ export function summarizeEvents(events) {
   return byType;
 }
 
+export function summarizeEventsThroughPowerUpActivation(events, powerUpType) {
+  const activationIndex = events.findIndex(
+    (event) =>
+      event.type === "power_up" &&
+      event.metadata?.powerUpType === powerUpType &&
+      event.metadata?.action === "activate",
+  );
+
+  if (activationIndex === -1) {
+    return summarizeEvents(events);
+  }
+
+  return summarizeEvents(events.slice(0, activationIndex + 1));
+}
+
+export function summarizeEventsUntilFirstEvent(
+  events,
+  eventType,
+  predicate = () => true,
+) {
+  const eventIndex = events.findIndex(
+    (event) => event.type === eventType && predicate(event),
+  );
+
+  if (eventIndex === -1) {
+    return summarizeEvents(events);
+  }
+
+  return summarizeEvents(events.slice(0, eventIndex + 1));
+}
+
+export function summarizeEventsUntilEventCount(events, eventType, expectedCount) {
+  let seen = 0;
+  let lastIndex = -1;
+
+  for (let index = 0; index < events.length; index += 1) {
+    if (events[index].type !== eventType) continue;
+    seen += 1;
+    lastIndex = index;
+    if (seen >= expectedCount) break;
+  }
+
+  if (lastIndex === -1) {
+    return summarizeEvents(events);
+  }
+
+  return summarizeEvents(events.slice(0, lastIndex + 1));
+}
+
 export function findEventsByType(events, type, predicate = () => true) {
   return events.filter((event) => event.type === type && predicate(event));
 }
@@ -138,6 +187,48 @@ export async function clearGameLog(page) {
         request.onblocked = resolveDelete;
       }),
     { dbName: GAME_LOG_DB_NAME },
+  );
+}
+
+export async function clearGameLogEvents(page) {
+  // Limpa eventos sem deleteDatabase: apagar o DB com conexões abertas do
+  // GameLogger anterior pode ficar onblocked e corromper cenários seguintes.
+  await page.evaluate(
+    async ({ dbName, storeName, dbVersion }) =>
+      new Promise((resolveClear) => {
+        const request = indexedDB.open(dbName, dbVersion);
+        request.onerror = () => resolveClear();
+        request.onupgradeneeded = () => {
+          const db = request.result;
+          if (!db.objectStoreNames.contains(storeName)) {
+            db.createObjectStore(storeName, { keyPath: "id" });
+          }
+        };
+        request.onsuccess = () => {
+          const db = request.result;
+          if (!db.objectStoreNames.contains(storeName)) {
+            db.close();
+            resolveClear();
+            return;
+          }
+
+          const tx = db.transaction([storeName], "readwrite");
+          const clearRequest = tx.objectStore(storeName).clear();
+          clearRequest.onsuccess = () => {
+            db.close();
+            resolveClear();
+          };
+          clearRequest.onerror = () => {
+            db.close();
+            resolveClear();
+          };
+        };
+      }),
+    {
+      dbName: GAME_LOG_DB_NAME,
+      storeName: GAME_LOG_STORE_NAME,
+      dbVersion: GAME_LOG_DB_VERSION,
+    },
   );
 }
 
