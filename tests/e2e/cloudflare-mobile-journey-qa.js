@@ -510,13 +510,13 @@ async function prepareScenarioPage(page, profile, scenarioCheck) {
   const scenarioLabel =
     typeof scenarioCheck === "string" ? scenarioId : scenarioCheck.label;
 
+  await clearGameLogEvents(page);
   await page.goto(scenarioUrl(publicUrl(), scenarioId), {
     waitUntil: "domcontentloaded",
     timeout: MAX_NAVIGATION_MS,
   });
   await acceptPrivacyConsentIfPresentForScenario(page);
   await waitForCanvas(page);
-  await clearGameLogEvents(page);
   await dismissBallTurretStartModalIfVisible(page, profile.label);
 
   await waitForGameLogReady(page, 15000).catch(() => undefined);
