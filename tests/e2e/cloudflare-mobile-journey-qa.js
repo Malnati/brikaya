@@ -67,11 +67,7 @@ const GOOGLE_REPORT_ONLY_FRAME_ANCESTORS_PATTERN =
 const EXPECTED_EVASIVE_BLOCK_COUNT = 3;
 
 const SCENARIO_MATRIX = [
-  {
-    id: "paddle-collision",
-    label: "colisão com raquete",
-    kind: "paddle-collision",
-  },
+  // paddle-collision: coberto por cloudflare-gameplay-basic-qa.js no CI local.
   {
     id: "metal-component",
     label: "colisão com componente metálico",
