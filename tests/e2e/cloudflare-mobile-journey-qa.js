@@ -56,6 +56,7 @@ const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-mobile-journey-qa.json";
 const MAX_NAVIGATION_MS = 45000;
 const OBSERVATION_TIMEOUT_MS = 12000;
+const SCENARIO_GAME_START_TIMEOUT_MS = 45000;
 const START_MODAL_TEST_ID = "ball-turret-start-modal";
 const LEFT_SWITCH_TEST_ID = "ball-turret-switch-left";
 const TURRET_START_TITLES = ["Pronto para jogar", "Ready to play"];
@@ -172,6 +173,27 @@ async function waitForCanvas(page) {
     },
     { timeout: 10000 },
   );
+}
+
+async function dismissBallTurretStartModalIfVisible(page, profileLabel) {
+  const isVisible = await page.evaluate((startModalTestId) => {
+    const modal = document.querySelector(
+      `[data-testid="${startModalTestId}"]`,
+    );
+    if (!modal) return false;
+    const style = window.getComputedStyle(modal);
+    const rect = modal.getBoundingClientRect();
+    return (
+      style.display !== "none" &&
+      style.visibility !== "hidden" &&
+      rect.width > 0 &&
+      rect.height > 0
+    );
+  }, START_MODAL_TEST_ID);
+
+  if (!isVisible) return;
+
+  await dismissBallTurretStartModal(page, profileLabel);
 }
 
 async function dismissBallTurretStartModal(page, profileLabel) {
@@ -489,7 +511,8 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
   });
   await acceptPrivacyConsentIfPresent(page);
   await waitForCanvas(page);
-  await waitForEventType(page, "game_start", 30000);
+  await dismissBallTurretStartModalIfVisible(page, profile.label);
+  await waitForEventType(page, "game_start", SCENARIO_GAME_START_TIMEOUT_MS);
 
   if (scenarioCheck.dismissTurretModal) {
     await dismissBallTurretStartModal(page, profile.label);

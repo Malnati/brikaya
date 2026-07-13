@@ -17,10 +17,11 @@ const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const COUNTDOWN_COUNT_SELECTOR =
   '[data-testid="game-cinematic-countdown-count"]';
 const CONSENT_READY_TIMEOUT_MS = 1500;
-const INITIAL_COUNTDOWN_TIMEOUT_MS = 10000;
-const LANGUAGE_DETECTION_TIMEOUT_MS = 6000;
+const INITIAL_COUNTDOWN_TIMEOUT_MS = 12000;
+const LANGUAGE_DETECTION_TIMEOUT_MS = 8000;
 const ONBOARDING_DEMO_TIMEOUT_MS = 5500;
-const OVERLAY_APPEAR_TIMEOUT_MS = 2500;
+const OVERLAY_APPEAR_TIMEOUT_MS = 3000;
+const GAMEPLAY_UNBLOCKED_TIMEOUT_MS = 35000;
 
 export async function waitForStartupSequenceToFinish(page) {
   await waitForOverlayToHideIfPresent(
@@ -39,6 +40,36 @@ export async function waitForStartupSequenceToFinish(page) {
     INITIAL_COUNTDOWN_TIMEOUT_MS,
   );
   await waitForInitialCountdownCountToHide(page);
+  await waitForGameplayUnblocked(page);
+}
+
+export async function waitForGameplayUnblocked(
+  page,
+  timeoutMs = GAMEPLAY_UNBLOCKED_TIMEOUT_MS,
+) {
+  await page.waitForFunction(
+    (selectors) => {
+      return selectors.every((selector) => {
+        const element = document.querySelector(selector);
+        if (!element) return true;
+
+        const style = window.getComputedStyle(element);
+        const rect = element.getBoundingClientRect();
+        return (
+          style.display === "none" ||
+          style.visibility === "hidden" ||
+          rect.width === 0 ||
+          rect.height === 0
+        );
+      });
+    },
+    { timeout: timeoutMs },
+    [
+      ONBOARDING_DEMO_OVERLAY_SELECTOR,
+      LANGUAGE_DETECTION_OVERLAY_SELECTOR,
+      CINEMATIC_OVERLAY_SELECTOR,
+    ],
+  );
 }
 
 export async function acceptPrivacyConsentIfPresent(page) {
