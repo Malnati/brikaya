@@ -18,8 +18,27 @@ const COUNTDOWN_COUNT_SELECTOR =
   '[data-testid="game-cinematic-countdown-count"]';
 const CONSENT_READY_TIMEOUT_MS = 1500;
 const INITIAL_COUNTDOWN_TIMEOUT_MS = 7000;
-const LANGUAGE_DETECTION_TIMEOUT_MS = 2500;
+const LANGUAGE_DETECTION_TIMEOUT_MS = 3000;
 const ONBOARDING_DEMO_TIMEOUT_MS = 4500;
+
+export async function waitForStartupSequenceToFinish(page) {
+  await waitForOverlayToHideIfPresent(
+    page,
+    ONBOARDING_DEMO_OVERLAY_SELECTOR,
+    ONBOARDING_DEMO_TIMEOUT_MS,
+  );
+  await waitForOverlayToHideIfPresent(
+    page,
+    LANGUAGE_DETECTION_OVERLAY_SELECTOR,
+    LANGUAGE_DETECTION_TIMEOUT_MS,
+  );
+  await waitForOverlayToHideIfPresent(
+    page,
+    CINEMATIC_OVERLAY_SELECTOR,
+    INITIAL_COUNTDOWN_TIMEOUT_MS,
+  );
+  await waitForInitialCountdownCountToHide(page);
+}
 
 export async function acceptPrivacyConsentIfPresent(page) {
   let didAccept = await clickPrivacyConsentButton(page);
@@ -38,7 +57,7 @@ export async function acceptPrivacyConsentIfPresent(page) {
     didAccept = await clickPrivacyConsentButton(page);
   }
 
-  if (didAccept) await waitForInitialCountdownToFinish(page);
+  await waitForStartupSequenceToFinish(page);
 
   return didAccept;
 }
@@ -77,17 +96,7 @@ export async function seedPrivacyConsent(page) {
 }
 
 export async function waitForInitialCountdownToFinish(page) {
-  await waitForOverlayToHideIfPresent(
-    page,
-    ONBOARDING_DEMO_OVERLAY_SELECTOR,
-    ONBOARDING_DEMO_TIMEOUT_MS,
-  );
-  await waitForOverlayToHideIfPresent(
-    page,
-    LANGUAGE_DETECTION_OVERLAY_SELECTOR,
-    LANGUAGE_DETECTION_TIMEOUT_MS,
-  );
-  await waitForOverlayToHideIfPresent(page, CINEMATIC_OVERLAY_SELECTOR);
+  await waitForStartupSequenceToFinish(page);
 }
 
 async function waitForOverlayToHideIfPresent(page, selector, timeoutMs) {

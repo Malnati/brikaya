@@ -9,12 +9,10 @@ import {
 } from "./consentSelectors.js";
 import {
   acceptPrivacyConsentIfPresent,
-  assertLanguageDetectionFlow,
   clickButtonByText,
   clickInputByLabel,
   LANGUAGE_LOCATION_CONSENT_STORAGE_KEY,
-  waitForInitialCountdownCountToHide,
-  waitForInitialCountdownToFinish,
+  waitForStartupSequenceToFinish,
 } from "./consentHelpers.js";
 import { launchBrowser, createMobilePage } from "./browserLauncher.js";
 import { JOURNEY_PROFILES } from "./mobileBrowserProfiles.js";
@@ -269,7 +267,7 @@ async function runColdLoadAndConsent(page, profile, targetUrl) {
   );
 
   await clickButtonByText(page, ACCEPT_BUTTON_LABELS);
-  await assertLanguageDetectionFlow(page, profile.label);
+  await waitForStartupSequenceToFinish(page);
   await page.waitForSelector('.consent-screen, [data-testid="consent-screen"]', {
     hidden: true,
     timeout: MAX_NAVIGATION_MS,
@@ -283,7 +281,6 @@ async function runColdLoadAndConsent(page, profile, targetUrl) {
     `${profile.label}: consentimento de região não foi gravado.`,
   );
 
-  await waitForInitialCountdownCountToHide(page);
   await waitForCanvas(page);
 
   return { scroll, touchScroll };
