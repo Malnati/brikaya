@@ -91,3 +91,7 @@ npm run test:svg-assets
 npm run test:visual-asset-policy
 npm run build
 ```
+
+Antes do merge em `main`, garantir documentação de versão para o commit alvo (`vN` = `git rev-list --count HEAD` após o merge): `npm run brikaya:scaffold-version-docs`, preencher `.tags/vN.md` e `.releases/vN.md`, e `npm run verify:version-docs`. O `npm run brikaya:ship` já executa scaffold + verificação antes do commit.
+
+Ao referenciar variáveis `BRIKAYA_*` / `CLOUDFLARE_*` em artefatos versionados (workflows, scripts, `.env.example`), registrar também em `config/codex-env.registry.json`.
