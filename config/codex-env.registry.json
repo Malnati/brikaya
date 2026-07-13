@@ -303,6 +303,17 @@
       ]
     },
     {
+      "name": "BRIKAYA_CHROME_EXECUTABLE",
+      "classification": "public-config",
+      "required": false,
+      "source": "Chrome/Chromium executable path for Puppeteer e2e in CI and QA",
+      "commands": [
+        "npm run test:cloudflare-e2e",
+        "make cloudflare-e2e-qa",
+        "make cloudflare-*-qa"
+      ]
+    },
+    {
       "name": "BRIKAYA_CHROME_HOST_RESOLVER_RULES",
       "classification": "public-config",
       "required": false,
