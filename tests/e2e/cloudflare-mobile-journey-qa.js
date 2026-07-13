@@ -511,6 +511,9 @@ async function prepareScenarioPage(page, profile, scenarioCheck) {
     typeof scenarioCheck === "string" ? scenarioId : scenarioCheck.label;
 
   await clearGameLogEvents(page);
+  await page
+    .goto("about:blank", { waitUntil: "domcontentloaded", timeout: 10000 })
+    .catch(() => undefined);
   await page.goto(scenarioUrl(publicUrl(), scenarioId), {
     waitUntil: "domcontentloaded",
     timeout: MAX_NAVIGATION_MS,

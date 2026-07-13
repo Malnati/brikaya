@@ -188,6 +188,20 @@ describe('GameLogger', () => {
       expect(mockIndexedDB.mockStore.add).toHaveBeenCalled();
       expect(mockIndexedDB.mockStore.add.mock.calls[0][0].gameState.speedState).toMatchObject(gameState.speedState);
     }, 10000);
+
+    it('inicializa o IndexedDB sob demanda antes de registrar game_start', async () => {
+      (gameLogger as any).db = null;
+      (gameLogger as any).initialization = null;
+      const gameState = buildGameState({ componentsRemaining: 50 });
+      const ballPositions = buildBallPositions();
+      const paddlePosition = buildPaddlePosition();
+
+      await gameLogger.logGameStart(gameState, ballPositions, paddlePosition);
+
+      expect(global.indexedDB.open).toHaveBeenCalled();
+      expect(gameLogger.getCurrentGameId()).toBeTruthy();
+      expect(mockIndexedDB.mockStore.add).toHaveBeenCalled();
+    }, 10000);
   });
 
   describe('logScoreUpdate', () => {

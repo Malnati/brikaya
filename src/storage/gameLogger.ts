@@ -176,6 +176,7 @@ export interface GameStatsSummary {
 
 class GameLogger {
   private db: IDBDatabase | null = null;
+  private initialization: Promise<void> | null = null;
   private readonly DB_NAME = 'BrikayaGameLog';
   private readonly STORE_NAME = 'gameEvents';
   private readonly DB_VERSION = 2; // Incrementado para nova versão
@@ -186,7 +187,25 @@ class GameLogger {
     LOG('🏗️ GameLogger constructor chamado');
   }
 
+  private ensureInitialized(): Promise<void> {
+    if (this.db) {
+      return Promise.resolve();
+    }
+
+    if (!this.initialization) {
+      this.initialization = this.initialize().finally(() => {
+        this.initialization = null;
+      });
+    }
+
+    return this.initialization;
+  }
+
   async initialize(): Promise<void> {
+    if (this.db) {
+      return;
+    }
+
     LOG('🏗️ GameLogger.initialize() chamado - INÍCIO');
     LOG('🏗️ this:', this);
     LOG('🏗️ DB_NAME:', this.DB_NAME);
@@ -270,6 +289,13 @@ class GameLogger {
     LOG('📝 event.type:', event.type);
     LOG('📝 this.db:', this.db);
     LOG('📝 this:', this);
+
+    try {
+      await this.ensureInitialized();
+    } catch (error) {
+      ERROR('❌ Falha ao inicializar GameLogger antes do evento:', error);
+      return;
+    }
 
     if (!this.db) {
       WARN('⚠️ IndexedDB não inicializado, pulando registro de evento');
