@@ -17,9 +17,9 @@ const CINEMATIC_OVERLAY_SELECTOR = '[data-testid="game-cinematic-overlay"]';
 const COUNTDOWN_COUNT_SELECTOR =
   '[data-testid="game-cinematic-countdown-count"]';
 const CONSENT_READY_TIMEOUT_MS = 1500;
-const INITIAL_COUNTDOWN_TIMEOUT_MS = 7000;
+const INITIAL_COUNTDOWN_TIMEOUT_MS = 10000;
 const LANGUAGE_DETECTION_TIMEOUT_MS = 3000;
-const ONBOARDING_DEMO_TIMEOUT_MS = 4500;
+const ONBOARDING_DEMO_TIMEOUT_MS = 5500;
 
 export async function waitForStartupSequenceToFinish(page) {
   await waitForOverlayToHideIfPresent(

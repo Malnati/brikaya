@@ -30,7 +30,6 @@ import {
   scenarioUrl,
   summarizeEvents,
   waitForEventType,
-  waitForGameLogReady,
   withGameplayTelemetry,
 } from "./gameLogHelpers.js";
 import {
@@ -479,7 +478,7 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
   });
   await acceptPrivacyConsentIfPresent(page);
   await waitForCanvas(page);
-  await waitForGameLogReady(page, 12000);
+  await waitForEventType(page, "game_start", 30000);
 
   if (scenarioCheck.dismissTurretModal) {
     await dismissBallTurretStartModal(page, profile.label);
