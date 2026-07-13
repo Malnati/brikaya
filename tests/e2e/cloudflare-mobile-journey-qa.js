@@ -22,7 +22,7 @@ import {
   simulateTouchScrollOnConsent,
 } from "./scrollHelpers.js";
 import {
-  clearGameLog,
+  clearGameLogEvents,
   clearRuntimeState,
   GAME_LOG_DB_NAME,
   GAME_LOG_DB_VERSION,
@@ -34,6 +34,7 @@ import {
   summarizeEventsUntilEventCount,
   summarizeEventsUntilFirstEvent,
   waitForEventType,
+  waitForGameLogReady,
   withGameplayTelemetry,
 } from "./gameLogHelpers.js";
 import {
@@ -503,20 +504,38 @@ async function assertNoGameEnd(summary, profileLabel, scenarioLabel) {
   );
 }
 
-async function prepareScenarioPage(page, profile, scenarioId) {
-  await clearGameLog(page);
+async function prepareScenarioPage(page, profile, scenarioCheck) {
+  const scenarioId =
+    typeof scenarioCheck === "string" ? scenarioCheck : scenarioCheck.id;
+  const scenarioLabel =
+    typeof scenarioCheck === "string" ? scenarioId : scenarioCheck.label;
+
   await page.goto(scenarioUrl(publicUrl(), scenarioId), {
     waitUntil: "domcontentloaded",
     timeout: MAX_NAVIGATION_MS,
   });
   await acceptPrivacyConsentIfPresentForScenario(page);
   await waitForCanvas(page);
+  await clearGameLogEvents(page);
   await dismissBallTurretStartModalIfVisible(page, profile.label);
-  await waitForEventType(page, "game_start", SCENARIO_GAME_START_TIMEOUT_MS);
+
+  await waitForGameLogReady(page, 15000).catch(() => undefined);
+
+  try {
+    await waitForEventType(page, "game_start", SCENARIO_GAME_START_TIMEOUT_MS);
+  } catch (error) {
+    const events = await readGameEvents(page);
+    const summary = summarizeEvents(events);
+    assertCondition(
+      false,
+      `${profile.label} [${scenarioLabel}]: game_start ausente (${JSON.stringify(summary)}).`,
+    );
+    throw error;
+  }
 }
 
 async function runScenarioCheck(page, profile, scenarioCheck) {
-  await prepareScenarioPage(page, profile, scenarioCheck.id);
+  await prepareScenarioPage(page, profile, scenarioCheck);
 
   if (scenarioCheck.dismissTurretModal) {
     await dismissBallTurretStartModal(page, profile.label);

@@ -190,6 +190,48 @@ export async function clearGameLog(page) {
   );
 }
 
+export async function clearGameLogEvents(page) {
+  // Limpa eventos sem deleteDatabase: apagar o DB com conexões abertas do
+  // GameLogger anterior pode ficar onblocked e corromper cenários seguintes.
+  await page.evaluate(
+    async ({ dbName, storeName, dbVersion }) =>
+      new Promise((resolveClear) => {
+        const request = indexedDB.open(dbName, dbVersion);
+        request.onerror = () => resolveClear();
+        request.onupgradeneeded = () => {
+          const db = request.result;
+          if (!db.objectStoreNames.contains(storeName)) {
+            db.createObjectStore(storeName, { keyPath: "id" });
+          }
+        };
+        request.onsuccess = () => {
+          const db = request.result;
+          if (!db.objectStoreNames.contains(storeName)) {
+            db.close();
+            resolveClear();
+            return;
+          }
+
+          const tx = db.transaction([storeName], "readwrite");
+          const clearRequest = tx.objectStore(storeName).clear();
+          clearRequest.onsuccess = () => {
+            db.close();
+            resolveClear();
+          };
+          clearRequest.onerror = () => {
+            db.close();
+            resolveClear();
+          };
+        };
+      }),
+    {
+      dbName: GAME_LOG_DB_NAME,
+      storeName: GAME_LOG_STORE_NAME,
+      dbVersion: GAME_LOG_DB_VERSION,
+    },
+  );
+}
+
 export async function clearRuntimeState(page) {
   await page.evaluate(async () => {
     if ("serviceWorker" in navigator) {
