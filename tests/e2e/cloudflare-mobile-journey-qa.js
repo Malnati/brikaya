@@ -92,6 +92,8 @@ const SCENARIO_MATRIX = [
     kind: "power-up",
     powerUpType: "multiball",
     sideEffect: "ball_added",
+    // Multiball em torreta adiciona várias bolas; perdas em massa podem encerrar a partida após a ativação.
+    allowsGameEnd: true,
   },
   {
     id: "wide-paddle-power-up",
@@ -606,7 +608,9 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
       );
     }
 
-    await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
+    if (!scenarioCheck.allowsGameEnd) {
+      await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
+    }
     details = {
       eventSummary: summary,
       powerUpMetadata: activation?.metadata ?? null,
