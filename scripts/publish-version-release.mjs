@@ -16,6 +16,9 @@ const CODEX_GIT_ADMIN = "/Users/mal/.codex/bin/codex-git-admin";
 const DEFAULT_REPO = "Malnati/brikaya";
 const GIT_COMMAND = "git";
 const GH_COMMAND = "gh";
+const DEFAULT_GIT_USER_NAME = "github-actions[bot]";
+const DEFAULT_GIT_USER_EMAIL =
+  "41898282+github-actions[bot]@users.noreply.github.com";
 
 function runCommand(runner, command, args, options = {}) {
   const result = runner.spawn(command, args, {
@@ -81,6 +84,27 @@ function resolveGitCommand() {
   }
 
   return GIT_COMMAND;
+}
+
+export function ensureGitIdentity(runner, gitCommand) {
+  const name = runOptionalCommand(runner, gitCommand, ["config", "--get", "user.name"]);
+  const email = runOptionalCommand(runner, gitCommand, [
+    "config",
+    "--get",
+    "user.email",
+  ]);
+
+  if (!name.ok || !name.stdout.trim()) {
+    runCommand(runner, gitCommand, ["config", "user.name", DEFAULT_GIT_USER_NAME]);
+  }
+
+  if (!email.ok || !email.stdout.trim()) {
+    runCommand(runner, gitCommand, [
+      "config",
+      "user.email",
+      DEFAULT_GIT_USER_EMAIL,
+    ]);
+  }
 }
 
 function resolveBuildVersion(env = process.env) {
@@ -295,6 +319,7 @@ export function publishVersionRelease(options = {}) {
   const tagDoc = parseTagDoc(versionLabel, tagDocPath);
   const releaseDoc = parseReleaseDoc(versionLabel, releaseDocPath);
 
+  ensureGitIdentity(runner, gitCommand);
   ensureAnnotatedTag(
     runner,
     gitCommand,

@@ -64,7 +64,7 @@
     "brikaya:merge-pr": "node scripts/brikaya-merge-pr.mjs",
     "verify:build-version": "node scripts/verify-build-version.mjs",
     "verify:version-docs": "node scripts/verify-version-docs.mjs",
-    "test:version-docs:unit": "node scripts/parse-version-doc.test.mjs && node scripts/publish-version-release.test.mjs",
+    "test:version-docs:unit": "node scripts/parse-version-doc.test.mjs && node scripts/publish-version-release.test.mjs && node scripts/brikaya-ship.test.mjs",
     "brikaya:scaffold-version-docs": "node scripts/scaffold-version-docs.mjs",
     "brikaya:publish-version-release": "node scripts/publish-version-release.mjs"
   },

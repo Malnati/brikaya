@@ -22,4 +22,5 @@ Mensagem curta da anotação da tag.
 1. Estime `N` do commit que será deployado (`git rev-list --count HEAD` no SHA alvo).
 2. Crie `.tags/vN.md` e o par correspondente em [`.releases/`](../.releases/).
 3. Helper: `npm run brikaya:scaffold-version-docs`
-4. O workflow de produção consome este arquivo ao publicar a tag.
+4. O `npm run brikaya:ship` já executa scaffold + `verify:version-docs` antes do commit; preencha o conteúdo dos docs antes do merge.
+5. O workflow de produção consome este arquivo ao publicar a tag.
