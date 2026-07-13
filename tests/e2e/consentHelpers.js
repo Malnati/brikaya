@@ -94,6 +94,34 @@ export async function acceptPrivacyConsentIfPresent(page) {
   return didAccept;
 }
 
+export async function acceptPrivacyConsentIfPresentForScenario(page) {
+  let didAccept = await clickPrivacyConsentButton(page);
+
+  if (!didAccept) {
+    await page
+      .waitForFunction(
+        (acceptLabels) =>
+          Array.from(document.querySelectorAll("button")).some((button) =>
+            acceptLabels.includes(button.textContent?.trim() ?? ""),
+          ),
+        { timeout: CONSENT_READY_TIMEOUT_MS },
+        ACCEPT_BUTTON_LABELS,
+      )
+      .catch(() => undefined);
+    didAccept = await clickPrivacyConsentButton(page);
+  }
+
+  const hasQaScenario = await page.evaluate(
+    () => new URLSearchParams(window.location.search).has("qaScenario"),
+  );
+
+  if (!hasQaScenario) {
+    await waitForStartupSequenceToFinish(page);
+  }
+
+  return didAccept;
+}
+
 async function clickPrivacyConsentButton(page) {
   return page.evaluate((acceptLabels) => {
     const acceptButton = Array.from(document.querySelectorAll("button")).find(
