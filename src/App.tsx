@@ -12,6 +12,7 @@ import { AudioToggle } from "./components/AudioToggle";
 import { MusicToggle } from "./components/MusicToggle";
 import { ConsentScreen } from "./components/ConsentScreen";
 import { LanguageDetectionOverlay } from "./components/LanguageDetectionOverlay";
+import { OnboardingGameplayDemoOverlay } from "./components/OnboardingGameplayDemoOverlay";
 import { MobileOrientationBlocker } from "./components/MobileOrientationBlocker";
 import { DownloadsPage } from "./components/DownloadsPage";
 import { PostAdResumePrompt } from "./components/PostAdResumePrompt";
@@ -89,6 +90,7 @@ import {
   createJoystickDiagnosticDownloadName,
   type JoystickDiagnosticSample,
 } from "./utils/joystickDiagnostics";
+import { prefersReducedMotion } from "./utils/performanceMode";
 import {
   configureGoogleAdSound,
   requestInterlevelGoogleAd,
@@ -232,6 +234,7 @@ function GameApp() {
   const [isLanguageDetectionVisible, setIsLanguageDetectionVisible] = useState(
     shouldStartWithLanguageDetection,
   );
+  const [isOnboardingDemoVisible, setIsOnboardingDemoVisible] = useState(false);
   const [isCinematicRipScenarioConsumed, setIsCinematicRipScenarioConsumed] =
     useState(false);
   const [isOfflineReadyVisible, setIsOfflineReadyVisible] = useState(false);
@@ -261,6 +264,8 @@ function GameApp() {
   > | null>(null);
   const languageDetectionStartedRef = useRef(false);
   const languageDetectionRunIdRef = useRef(0);
+  const pendingLanguageLocationRef = useRef(false);
+  const onboardingDemoRunIdRef = useRef(0);
   const updateProgressSoundPlayedRef = useRef(false);
   const updateInstalledSoundPlayedRef = useRef(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -753,6 +758,29 @@ function GameApp() {
     [setLocaleFromLocation, startInitialCountdown],
   );
 
+  const runOnboardingGameplayDemo = useCallback(
+    (allowLanguageLocation: boolean) => {
+      pendingLanguageLocationRef.current = allowLanguageLocation;
+      onboardingDemoRunIdRef.current += 1;
+
+      if (prefersReducedMotion()) {
+        void runLanguageDetection(allowLanguageLocation);
+        return;
+      }
+
+      setIsOnboardingDemoVisible(true);
+    },
+    [runLanguageDetection],
+  );
+
+  const handleOnboardingDemoComplete = useCallback(() => {
+    setIsOnboardingDemoVisible((isVisible) => {
+      if (!isVisible) return false;
+      void runLanguageDetection(pendingLanguageLocationRef.current);
+      return false;
+    });
+  }, [runLanguageDetection]);
+
   useEffect(() => {
     if (!shouldStartWithLanguageDetection) return;
     if (languageDetectionStartedRef.current) return;
@@ -769,14 +797,14 @@ function GameApp() {
       } else {
         revokeLanguageLocationConsent();
       }
-      void runLanguageDetection(allowLanguageLocation);
+      runOnboardingGameplayDemo(allowLanguageLocation);
     },
     [
       acceptLanguageLocationConsent,
       acceptPrivacyConsent,
       audioSink,
       revokeLanguageLocationConsent,
-      runLanguageDetection,
+      runOnboardingGameplayDemo,
     ],
   );
 
@@ -785,11 +813,13 @@ function GameApp() {
     revokePrivacyConsent();
     revokeLanguageLocationConsent();
     languageDetectionRunIdRef.current += 1;
+    onboardingDemoRunIdRef.current += 1;
     if (languageDetectionTimerRef.current)
       clearTimeout(languageDetectionTimerRef.current);
     setCinematicOverlay(null);
     setIsInitialCountdownActive(false);
     setIsLanguageDetectionVisible(false);
+    setIsOnboardingDemoVisible(false);
     setIsMenuOpen(false);
   }, [audioSink, revokeLanguageLocationConsent, revokePrivacyConsent]);
 
@@ -1307,6 +1337,7 @@ function GameApp() {
                 audioSink={audioSink}
                 startBlocked={
                   !hasPrivacyConsent ||
+                  isOnboardingDemoVisible ||
                   isLanguageDetectionVisible ||
                   isInitialCountdownActive
                 }
@@ -1318,6 +1349,7 @@ function GameApp() {
                   isInterlevelAdActive ||
                   postAdResumePrompt !== null ||
                   !hasPrivacyConsent ||
+                  isOnboardingDemoVisible ||
                   isLanguageDetectionVisible
                 }
                 onBoardRectChange={handleBoardRectChange}
@@ -1392,6 +1424,9 @@ function GameApp() {
         boardRect={cinematicOverlayBoardRect}
       />
       {mobileOrientationLock.isBlocked && <MobileOrientationBlocker />}
+      {isOnboardingDemoVisible && (
+        <OnboardingGameplayDemoOverlay onComplete={handleOnboardingDemoComplete} />
+      )}
       {isLanguageDetectionVisible && <LanguageDetectionOverlay />}
       {postAdResumePrompt && (
         <PostAdResumePrompt

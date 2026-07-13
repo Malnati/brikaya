@@ -1668,6 +1668,81 @@ canvas {
   animation: language-progress-fill 2000ms linear both;
 }
 
+.onboarding-gameplay-demo-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 44;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-width: 100vw;
+  min-height: 100dvh;
+  padding: var(--space-4);
+  overflow: hidden;
+  color: var(--color-text);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--bb-color-background) 94%, transparent),
+      color-mix(in srgb, var(--bb-color-surface) 92%, transparent)
+    ),
+    var(--bb-color-background);
+  isolation: isolate;
+}
+
+.onboarding-gameplay-demo-overlay__stage {
+  display: grid;
+  gap: var(--space-3);
+  width: min(100%, 760px);
+  text-align: center;
+}
+
+.onboarding-gameplay-demo-overlay__eyebrow {
+  margin: 0;
+  color: var(--bb-color-primary-strong);
+  font-family: var(--bb-font-display);
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.onboarding-gameplay-demo-overlay__title,
+.onboarding-gameplay-demo-overlay__description {
+  margin: 0;
+}
+
+.onboarding-gameplay-demo-overlay__playfield {
+  display: grid;
+  place-items: center;
+  width: 100%;
+}
+
+.onboarding-gameplay-demo-overlay__playfield .game-turret-dual-switches {
+  width: min(100%, 680px);
+  justify-content: center;
+  gap: clamp(var(--space-2), 2vw, var(--space-4));
+}
+
+.onboarding-gameplay-demo-overlay__canvas {
+  display: block;
+  width: min(100%, 480px);
+  aspect-ratio: 3 / 2;
+  border: 1px solid color-mix(in srgb, var(--bb-color-primary) 34%, transparent);
+  border-radius: var(--radius-lg);
+  background: rgba(1, 8, 18, 0.92);
+  box-shadow: var(--shadow-panel);
+}
+
+.onboarding-gameplay-demo-overlay__playfield .game-turret-switch {
+  height: clamp(148px, 28vh, 200px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-gameplay-demo-overlay__canvas {
+    transition: none;
+  }
+}
+
 .consent-screen__brand {
   color: var(--bb-color-primary-strong);
   font-family: var(--bb-font-display);

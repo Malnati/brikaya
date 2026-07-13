@@ -3,6 +3,7 @@ import {
   ACCEPT_BUTTON_LABELS,
   LANGUAGE_DETECTION_OVERLAY_SELECTOR,
   LOCATION_CHECKBOX_LABELS,
+  ONBOARDING_DEMO_OVERLAY_SELECTOR,
 } from "./consentSelectors.js";
 
 export const PRIVACY_CONSENT_STORAGE_KEY = "brikaya-privacy-consent";
@@ -18,6 +19,7 @@ const COUNTDOWN_COUNT_SELECTOR =
 const CONSENT_READY_TIMEOUT_MS = 1500;
 const INITIAL_COUNTDOWN_TIMEOUT_MS = 7000;
 const LANGUAGE_DETECTION_TIMEOUT_MS = 2500;
+const ONBOARDING_DEMO_TIMEOUT_MS = 4500;
 
 export async function acceptPrivacyConsentIfPresent(page) {
   let didAccept = await clickPrivacyConsentButton(page);
@@ -77,19 +79,25 @@ export async function seedPrivacyConsent(page) {
 export async function waitForInitialCountdownToFinish(page) {
   await waitForOverlayToHideIfPresent(
     page,
+    ONBOARDING_DEMO_OVERLAY_SELECTOR,
+    ONBOARDING_DEMO_TIMEOUT_MS,
+  );
+  await waitForOverlayToHideIfPresent(
+    page,
     LANGUAGE_DETECTION_OVERLAY_SELECTOR,
+    LANGUAGE_DETECTION_TIMEOUT_MS,
   );
   await waitForOverlayToHideIfPresent(page, CINEMATIC_OVERLAY_SELECTOR);
 }
 
-async function waitForOverlayToHideIfPresent(page, selector) {
+async function waitForOverlayToHideIfPresent(page, selector, timeoutMs) {
   const overlay = await page.$(selector);
 
   if (!overlay) return;
 
   await page.waitForSelector(selector, {
     hidden: true,
-    timeout: INITIAL_COUNTDOWN_TIMEOUT_MS,
+    timeout: timeoutMs ?? INITIAL_COUNTDOWN_TIMEOUT_MS,
   });
 }
 

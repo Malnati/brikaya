@@ -30,6 +30,10 @@ function isFullEffectsForced(): boolean {
   return readSearchParam(FULL_EFFECTS_QUERY_PARAM) === "1";
 }
 
+export function prefersReducedMotion(): boolean {
+  return matchesMedia(REDUCED_MOTION_QUERY);
+}
+
 export function shouldUseReducedCanvasEffects(canvasWidth?: number): boolean {
   if (isFullEffectsForced()) return false;
 
