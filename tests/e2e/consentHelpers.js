@@ -18,8 +18,9 @@ const COUNTDOWN_COUNT_SELECTOR =
   '[data-testid="game-cinematic-countdown-count"]';
 const CONSENT_READY_TIMEOUT_MS = 1500;
 const INITIAL_COUNTDOWN_TIMEOUT_MS = 10000;
-const LANGUAGE_DETECTION_TIMEOUT_MS = 3000;
+const LANGUAGE_DETECTION_TIMEOUT_MS = 6000;
 const ONBOARDING_DEMO_TIMEOUT_MS = 5500;
+const OVERLAY_APPEAR_TIMEOUT_MS = 2500;
 
 export async function waitForStartupSequenceToFinish(page) {
   await waitForOverlayToHideIfPresent(
@@ -100,13 +101,36 @@ export async function waitForInitialCountdownToFinish(page) {
 }
 
 async function waitForOverlayToHideIfPresent(page, selector, timeoutMs) {
-  const overlay = await page.$(selector);
+  const appeared = await page
+    .waitForSelector(selector, {
+      visible: true,
+      timeout: OVERLAY_APPEAR_TIMEOUT_MS,
+    })
+    .then(() => true)
+    .catch(() => false);
 
-  if (!overlay) return;
+  if (!appeared) return;
 
   await page.waitForSelector(selector, {
     hidden: true,
     timeout: timeoutMs ?? INITIAL_COUNTDOWN_TIMEOUT_MS,
+  });
+}
+
+async function waitForCountdownCountToHideIfPresent(page) {
+  const appeared = await page
+    .waitForSelector(COUNTDOWN_COUNT_SELECTOR, {
+      visible: true,
+      timeout: OVERLAY_APPEAR_TIMEOUT_MS,
+    })
+    .then(() => true)
+    .catch(() => false);
+
+  if (!appeared) return;
+
+  await page.waitForSelector(COUNTDOWN_COUNT_SELECTOR, {
+    hidden: true,
+    timeout: INITIAL_COUNTDOWN_TIMEOUT_MS,
   });
 }
 
@@ -172,11 +196,5 @@ export async function assertLanguageDetectionFlow(page, profileLabel) {
 }
 
 export async function waitForInitialCountdownCountToHide(page) {
-  const countdown = await page.$(COUNTDOWN_COUNT_SELECTOR);
-  if (!countdown) return;
-
-  await page.waitForSelector(COUNTDOWN_COUNT_SELECTOR, {
-    hidden: true,
-    timeout: INITIAL_COUNTDOWN_TIMEOUT_MS,
-  });
+  await waitForCountdownCountToHideIfPresent(page);
 }
