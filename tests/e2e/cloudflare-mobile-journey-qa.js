@@ -521,19 +521,23 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
   let details = {};
 
   if (scenarioCheck.kind === "paddle-collision") {
-    const { paddleCollision } = await waitForPaddleCollision(
-      page,
-      PADDLE_COLLISION_TIMEOUT_MS,
-    );
+    const { paddleCollision, events: eventsAtCollision } =
+      await waitForPaddleCollision(page, PADDLE_COLLISION_TIMEOUT_MS);
     assertPaddleCollisionPhysics(paddleCollision, profile.label);
-    const events = await readGameEvents(page);
-    const summary = summarizeEvents(events);
+    const summaryAtCollision = summarizeEvents(eventsAtCollision);
     assertCondition(
-      (summary.game_start || 0) >= 1,
+      (summaryAtCollision.game_start || 0) >= 1,
       `${profile.label} [${scenarioCheck.label}]: game_start ausente.`,
     );
-    await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
-    details = { collisionInfo: paddleCollision.collisionInfo, eventSummary: summary };
+    await assertNoGameEnd(
+      summaryAtCollision,
+      profile.label,
+      scenarioCheck.label,
+    );
+    details = {
+      collisionInfo: paddleCollision.collisionInfo,
+      eventSummary: summaryAtCollision,
+    };
   } else if (scenarioCheck.kind === "metal-component") {
     await waitForComponentCollisions(page, 1);
     await waitForEventType(page, "component_destroyed", OBSERVATION_TIMEOUT_MS);
