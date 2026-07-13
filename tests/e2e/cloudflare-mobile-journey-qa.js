@@ -42,7 +42,6 @@ import {
   assertCondition,
   assertPaddleCollisionPhysics,
   assertPhaseTransition,
-  collectLevelToastState,
   completeHeldAd,
   installHeldAdStub,
   installLevelTransitionRecorder,
