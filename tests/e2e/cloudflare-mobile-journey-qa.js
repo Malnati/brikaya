@@ -505,7 +505,7 @@ async function assertNoGameEnd(summary, profileLabel, scenarioLabel) {
 async function prepareScenarioPage(page, profile, scenarioId) {
   await clearGameLog(page);
   await page.goto(scenarioUrl(publicUrl(), scenarioId), {
-    waitUntil: "networkidle0",
+    waitUntil: "domcontentloaded",
     timeout: MAX_NAVIGATION_MS,
   });
   await acceptPrivacyConsentIfPresent(page);
