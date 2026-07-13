@@ -1,0 +1,2189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Paleta de componentes elétricos — Brikaya</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
+    body { margin: 0; background: #080816; color: #f8f7ff; }
+    .iframe-warning {
+      background: #f5c542;
+      color: #1a1200;
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      border-bottom: 1px solid #c9a020;
+    }
+    header { padding: 16px 20px; border-bottom: 1px solid #244c7a; }
+    nav { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 20px; }
+    nav button { background: #12122a; color: #00e5ff; border: 1px solid #244c7a; border-radius: 8px; padding: 8px 12px; cursor: pointer; }
+    nav button.active { background: #00e5ff; color: #080816; }
+    main { padding: 16px 20px 40px; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+    .card { background: #12122a; border: 1px solid #244c7a; border-radius: 8px; padding: 8px; text-align: center; }
+    .card img, .card canvas { width: 100%; height: auto; display: block; border-radius: 4px; background: #080816; }
+    .card code { display: block; margin-top: 8px; font-size: 10px; word-break: break-all; color: #9cb7d8; }
+    .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+    .swatch { background: #12122a; color: #f8f7ff; border-radius: 8px; padding: 12px; border: 1px solid #244c7a; }
+    .swatch-chip {
+      height: 56px;
+      border-radius: 6px;
+      border: 1px solid #244c7a;
+      margin-bottom: 10px;
+      background-color: #1a1a2e;
+      overflow: hidden;
+    }
+    .swatch-chip-fill { width: 100%; height: 100%; border-radius: 5px; }
+    .swatch-meta small { color: #9cb7d8; }
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .controls select, .controls button { background: #12122a; color: #f8f7ff; border: 1px solid #244c7a; border-radius: 8px; padding: 8px 12px; }
+    #ambientCanvas, #animationsAmbientCanvas {
+      width: min(100%, 420px);
+      aspect-ratio: 1;
+      border: 1px solid #244c7a;
+      border-radius: 12px;
+      background: #080816;
+      display: block;
+    }
+    #impactCanvas {
+      width: min(100%, 280px);
+      aspect-ratio: 1.4;
+      border: 1px solid #244c7a;
+      border-radius: 12px;
+      background: #080816;
+      display: block;
+    }
+    .anim-section { margin-bottom: 28px; }
+    .anim-section h3 { margin: 0 0 12px; color: #9cb7d8; font-size: 1rem; font-weight: 600; }
+    .anim-spark-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+      background: #080816;
+      border-radius: 4px;
+      margin-bottom: 4px;
+    }
+    .anim-spark { width: 72px; height: 72px; opacity: 0.72; }
+    @keyframes cinematic-media-pulse-loop {
+      0% { opacity: 0.55; transform: scale(0.82); }
+      42% { opacity: 0.82; transform: scale(1.08); }
+      100% { opacity: 0.72; transform: scale(1); }
+    }
+    .anim-spark { animation: cinematic-media-pulse-loop 1200ms ease-in-out infinite; }
+    #energyBallCanvas { width: 120px; height: 120px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+  <div id="iframeWarning" class="iframe-warning" hidden>
+    Abra com duplo clique no Chrome (fora do IDE) ou use Abrir-Preview.command para evitar restrições de segurança do file://.
+  </div>
+  <header>
+    <h1>Paleta de componentes elétricos</h1>
+    <p>Inventário visual para aceite — circuitos, VFX, animações e tokens cromáticos.</p>
+  </header>
+  <nav>
+    <button type="button" class="tab active" data-tab="circuits">Circuitos</button>
+    <button type="button" class="tab" data-tab="vfx">VFX elétricos</button>
+    <button type="button" class="tab" data-tab="animations">Animações</button>
+    <button type="button" class="tab" data-tab="ambient">Raios ambiente</button>
+    <button type="button" class="tab" data-tab="tokens">Tokens</button>
+  </nav>
+  <main>
+    <section id="circuits" class="panel active">
+      <h2>Blocos de circuito (retro-default)</h2>
+      <div class="grid" id="circuitGrid"></div>
+    </section>
+    <section id="vfx" class="panel">
+      <h2>VFX e sprites elétricos</h2>
+      <div class="grid" id="vfxGrid"></div>
+    </section>
+    <section id="animations" class="panel">
+      <h2>Animações em movimento</h2>
+      <div class="anim-section">
+        <h3>Faíscas countdown (8 variantes)</h3>
+        <div class="grid" id="sparkAnimGrid"></div>
+      </div>
+      <div class="anim-section">
+        <h3>Bola de energia</h3>
+        <article class="card" style="max-width:160px">
+          <canvas id="energyBallCanvas" width="120" height="120"></canvas>
+          <code>spr-ball-player-default</code>
+        </article>
+      </div>
+      <div class="anim-section">
+        <h3>Impactos elétricos</h3>
+        <div class="controls">
+          <select id="impactKindSelect">
+            <option value="component">Componente</option>
+            <option value="wall">Parede lateral</option>
+            <option value="ceiling">Teto</option>
+            <option value="radial-wall">Parede radial</option>
+          </select>
+        </div>
+        <canvas id="impactCanvas" width="280" height="200"></canvas>
+      </div>
+      <div class="anim-section">
+        <h3>Raios ambiente</h3>
+        <div class="controls">
+          <select id="animationsVariantSelect">
+            <option value="pulse">Pulse</option>
+            <option value="arcade" selected>Arcade</option>
+            <option value="storm">Storm</option>
+          </select>
+          <button type="button" id="animationsForceBolt">Forçar raio</button>
+          <button type="button" id="animationsResetAmbient">Reiniciar</button>
+        </div>
+        <canvas id="animationsAmbientCanvas" width="420" height="420"></canvas>
+      </div>
+    </section>
+    <section id="ambient" class="panel">
+      <h2>Raios de fundo ambiente</h2>
+      <div class="controls">
+        <select id="variantSelect">
+          <option value="pulse">Pulse</option>
+          <option value="arcade" selected>Arcade</option>
+          <option value="storm">Storm</option>
+        </select>
+        <button type="button" id="forceBolt">Forçar raio</button>
+        <button type="button" id="resetAmbient">Reiniciar</button>
+      </div>
+      <canvas id="ambientCanvas" width="420" height="420"></canvas>
+    </section>
+    <section id="tokens" class="panel">
+      <h2>Paleta cromática elétrica</h2>
+      <div class="swatches" id="tokenGrid"></div>
+    </section>
+  </main>
+  <script id="palette-manifest-data" type="application/json">
+{
+  "version": 1,
+  "generatedAt": "2026-07-09T23:03:40.826Z",
+  "policy": "svg-first-authoring-canvas-procedural-runtime",
+  "families": {
+    "circuitComponents": [
+      {
+        "id": "spr-component-basic-blue-garage-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-blue-garage-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "transistor"
+      },
+      {
+        "id": "spr-component-basic-blue-high-contrast-normal",
+        "path": "/assets/visual/components/spr-component-basic-blue-high-contrast-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "transistor"
+      },
+      {
+        "id": "spr-component-basic-blue-lab-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-blue-lab-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "transistor"
+      },
+      {
+        "id": "spr-component-basic-blue-metro-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-blue-metro-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "transistor"
+      },
+      {
+        "id": "spr-component-basic-blue-normal",
+        "path": "/assets/visual/components/spr-component-basic-blue-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "transistor"
+      },
+      {
+        "id": "spr-component-basic-blue-orbital-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-blue-orbital-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "transistor"
+      },
+      {
+        "id": "spr-component-basic-blue-sunset-normal",
+        "path": "/assets/visual/components/spr-component-basic-blue-sunset-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "transistor"
+      },
+      {
+        "id": "spr-component-basic-blue-temple-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-blue-temple-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "transistor"
+      },
+      {
+        "id": "spr-component-basic-green-garage-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-green-garage-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "chip"
+      },
+      {
+        "id": "spr-component-basic-green-high-contrast-normal",
+        "path": "/assets/visual/components/spr-component-basic-green-high-contrast-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "chip"
+      },
+      {
+        "id": "spr-component-basic-green-lab-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-green-lab-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "chip"
+      },
+      {
+        "id": "spr-component-basic-green-metro-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-green-metro-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "chip"
+      },
+      {
+        "id": "spr-component-basic-green-normal",
+        "path": "/assets/visual/components/spr-component-basic-green-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "chip"
+      },
+      {
+        "id": "spr-component-basic-green-orbital-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-green-orbital-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "chip"
+      },
+      {
+        "id": "spr-component-basic-green-sunset-normal",
+        "path": "/assets/visual/components/spr-component-basic-green-sunset-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "chip"
+      },
+      {
+        "id": "spr-component-basic-green-temple-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-green-temple-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "chip"
+      },
+      {
+        "id": "spr-component-basic-purple-garage-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-purple-garage-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "capacitor"
+      },
+      {
+        "id": "spr-component-basic-purple-high-contrast-normal",
+        "path": "/assets/visual/components/spr-component-basic-purple-high-contrast-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "capacitor"
+      },
+      {
+        "id": "spr-component-basic-purple-lab-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-purple-lab-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "capacitor"
+      },
+      {
+        "id": "spr-component-basic-purple-metro-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-purple-metro-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "capacitor"
+      },
+      {
+        "id": "spr-component-basic-purple-normal",
+        "path": "/assets/visual/components/spr-component-basic-purple-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "capacitor"
+      },
+      {
+        "id": "spr-component-basic-purple-orbital-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-purple-orbital-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "capacitor"
+      },
+      {
+        "id": "spr-component-basic-purple-sunset-normal",
+        "path": "/assets/visual/components/spr-component-basic-purple-sunset-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "capacitor"
+      },
+      {
+        "id": "spr-component-basic-purple-temple-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-purple-temple-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "capacitor"
+      },
+      {
+        "id": "spr-component-basic-red-garage-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-red-garage-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "square-inductor"
+      },
+      {
+        "id": "spr-component-basic-red-high-contrast-normal",
+        "path": "/assets/visual/components/spr-component-basic-red-high-contrast-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "square-inductor"
+      },
+      {
+        "id": "spr-component-basic-red-lab-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-red-lab-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "square-inductor"
+      },
+      {
+        "id": "spr-component-basic-red-metro-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-red-metro-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "square-inductor"
+      },
+      {
+        "id": "spr-component-basic-red-normal",
+        "path": "/assets/visual/components/spr-component-basic-red-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "square-inductor"
+      },
+      {
+        "id": "spr-component-basic-red-orbital-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-red-orbital-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "square-inductor"
+      },
+      {
+        "id": "spr-component-basic-red-sunset-normal",
+        "path": "/assets/visual/components/spr-component-basic-red-sunset-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "square-inductor"
+      },
+      {
+        "id": "spr-component-basic-red-temple-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-red-temple-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "square-inductor"
+      },
+      {
+        "id": "spr-component-basic-yellow-garage-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-yellow-garage-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "led-diode"
+      },
+      {
+        "id": "spr-component-basic-yellow-high-contrast-normal",
+        "path": "/assets/visual/components/spr-component-basic-yellow-high-contrast-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "led-diode"
+      },
+      {
+        "id": "spr-component-basic-yellow-lab-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-yellow-lab-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "led-diode"
+      },
+      {
+        "id": "spr-component-basic-yellow-metro-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-yellow-metro-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "led-diode"
+      },
+      {
+        "id": "spr-component-basic-yellow-normal",
+        "path": "/assets/visual/components/spr-component-basic-yellow-normal.svg",
+        "group": "component",
+        "runtime": "canvas-procedural",
+        "status": "catalogado",
+        "electricShape": "led-diode",
+        "semanticRole": "electric-energy-node-red-led"
+      },
+      {
+        "id": "spr-component-basic-yellow-orbital-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-yellow-orbital-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "led-diode"
+      },
+      {
+        "id": "spr-component-basic-yellow-sunset-normal",
+        "path": "/assets/visual/components/spr-component-basic-yellow-sunset-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "led-diode"
+      },
+      {
+        "id": "spr-component-basic-yellow-temple-real-normal",
+        "path": "/assets/visual/components/spr-component-basic-yellow-temple-real-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "led-diode"
+      },
+      {
+        "id": "spr-component-metal-steel-dented-one",
+        "path": "/assets/visual/components/spr-component-metal-steel-dented-one.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "shield-module"
+      },
+      {
+        "id": "spr-component-metal-steel-dented-two",
+        "path": "/assets/visual/components/spr-component-metal-steel-dented-two.svg",
+        "group": "component",
+        "runtime": "canvas-procedural",
+        "status": "catalogado",
+        "electricShape": "shield-module",
+        "semanticRole": "electric-energy-node-green-shield"
+      },
+      {
+        "id": "spr-component-metal-steel-high-contrast-dented-one",
+        "path": "/assets/visual/components/spr-component-metal-steel-high-contrast-dented-one.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "shield-module"
+      },
+      {
+        "id": "spr-component-metal-steel-high-contrast-dented-two",
+        "path": "/assets/visual/components/spr-component-metal-steel-high-contrast-dented-two.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "shield-module"
+      },
+      {
+        "id": "spr-component-metal-steel-high-contrast-normal",
+        "path": "/assets/visual/components/spr-component-metal-steel-high-contrast-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "shield-module"
+      },
+      {
+        "id": "spr-component-metal-steel-normal",
+        "path": "/assets/visual/components/spr-component-metal-steel-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "shield-module"
+      },
+      {
+        "id": "spr-component-metal-steel-sunset-dented-one",
+        "path": "/assets/visual/components/spr-component-metal-steel-sunset-dented-one.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "shield-module"
+      },
+      {
+        "id": "spr-component-metal-steel-sunset-dented-two",
+        "path": "/assets/visual/components/spr-component-metal-steel-sunset-dented-two.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "shield-module"
+      },
+      {
+        "id": "spr-component-metal-steel-sunset-normal",
+        "path": "/assets/visual/components/spr-component-metal-steel-sunset-normal.svg",
+        "group": "component",
+        "runtime": "svg",
+        "status": "catalogado",
+        "electricShape": "shield-module"
+      }
+    ],
+    "sprites": [
+      {
+        "id": "spr-ball-player-default",
+        "path": "/assets/visual/sprites/spr-ball-player-default.svg",
+        "group": "sprite",
+        "runtime": "canvas-procedural",
+        "status": "catalogado",
+        "semanticRole": "electric-energy-ball",
+        "logicalLayers": [
+          "outer-halo",
+          "core",
+          "orbit-arcs",
+          "cyan-shell",
+          "fallback-fill"
+        ]
+      }
+    ],
+    "vfxExisting": [
+      {
+        "id": "vfx-countdown-spark-garage-real-overlay",
+        "path": "/assets/visual/vfx/vfx-countdown-spark-garage-real-overlay.svg",
+        "group": "vfx",
+        "runtime": "svg-css",
+        "status": "catalogado",
+        "semanticRole": "countdown-spark",
+        "state": "overlay"
+      },
+      {
+        "id": "vfx-countdown-spark-high-contrast-overlay",
+        "path": "/assets/visual/vfx/vfx-countdown-spark-high-contrast-overlay.svg",
+        "group": "vfx",
+        "runtime": "svg-css",
+        "status": "catalogado",
+        "semanticRole": "countdown-spark",
+        "state": "overlay"
+      },
+      {
+        "id": "vfx-countdown-spark-lab-real-overlay",
+        "path": "/assets/visual/vfx/vfx-countdown-spark-lab-real-overlay.svg",
+        "group": "vfx",
+        "runtime": "svg-css",
+        "status": "catalogado",
+        "semanticRole": "countdown-spark",
+        "state": "overlay"
+      },
+      {
+        "id": "vfx-countdown-spark-metro-real-overlay",
+        "path": "/assets/visual/vfx/vfx-countdown-spark-metro-real-overlay.svg",
+        "group": "vfx",
+        "runtime": "svg-css",
+        "status": "catalogado",
+        "semanticRole": "countdown-spark",
+        "state": "overlay"
+      },
+      {
+        "id": "vfx-countdown-spark-orbital-real-overlay",
+        "path": "/assets/visual/vfx/vfx-countdown-spark-orbital-real-overlay.svg",
+        "group": "vfx",
+        "runtime": "svg-css",
+        "status": "catalogado",
+        "semanticRole": "countdown-spark",
+        "state": "overlay"
+      },
+      {
+        "id": "vfx-countdown-spark-overlay",
+        "path": "/assets/visual/vfx/vfx-countdown-spark-overlay.svg",
+        "group": "vfx",
+        "runtime": "svg-css",
+        "status": "catalogado",
+        "semanticRole": "countdown-spark",
+        "state": "overlay"
+      },
+      {
+        "id": "vfx-countdown-spark-sunset-overlay",
+        "path": "/assets/visual/vfx/vfx-countdown-spark-sunset-overlay.svg",
+        "group": "vfx",
+        "runtime": "svg-css",
+        "status": "catalogado",
+        "semanticRole": "countdown-spark",
+        "state": "overlay"
+      },
+      {
+        "id": "vfx-countdown-spark-temple-real-overlay",
+        "path": "/assets/visual/vfx/vfx-countdown-spark-temple-real-overlay.svg",
+        "group": "vfx",
+        "runtime": "svg-css",
+        "status": "catalogado",
+        "semanticRole": "countdown-spark",
+        "state": "overlay"
+      }
+    ],
+    "vfxNew": [
+      {
+        "id": "vfx-ambient-electric-lightning-pulse-backdrop",
+        "path": "/assets/visual/vfx/vfx-ambient-electric-lightning-pulse-backdrop.svg",
+        "runtime": "canvas-procedural",
+        "status": "novo",
+        "semanticRole": "ambient-electric-lightning-pulse",
+        "state": "backdrop"
+      },
+      {
+        "id": "vfx-ambient-electric-lightning-arcade-backdrop",
+        "path": "/assets/visual/vfx/vfx-ambient-electric-lightning-arcade-backdrop.svg",
+        "runtime": "canvas-procedural",
+        "status": "novo",
+        "semanticRole": "ambient-electric-lightning-arcade",
+        "state": "backdrop"
+      },
+      {
+        "id": "vfx-ambient-electric-lightning-storm-backdrop",
+        "path": "/assets/visual/vfx/vfx-ambient-electric-lightning-storm-backdrop.svg",
+        "runtime": "canvas-procedural",
+        "status": "novo",
+        "semanticRole": "ambient-electric-lightning-storm",
+        "state": "backdrop"
+      },
+      {
+        "id": "vfx-electric-impact-component-burst",
+        "path": "/assets/visual/vfx/vfx-electric-impact-component-burst.svg",
+        "runtime": "canvas-procedural",
+        "status": "novo",
+        "semanticRole": "electric-impact-component",
+        "state": "burst"
+      },
+      {
+        "id": "vfx-electric-impact-wall-burst",
+        "path": "/assets/visual/vfx/vfx-electric-impact-wall-burst.svg",
+        "runtime": "canvas-procedural",
+        "status": "novo",
+        "semanticRole": "electric-impact-wall",
+        "state": "burst"
+      },
+      {
+        "id": "vfx-electric-impact-ceiling-burst",
+        "path": "/assets/visual/vfx/vfx-electric-impact-ceiling-burst.svg",
+        "runtime": "canvas-procedural",
+        "status": "novo",
+        "semanticRole": "electric-impact-ceiling",
+        "state": "burst"
+      },
+      {
+        "id": "vfx-electric-impact-radial-wall-burst",
+        "path": "/assets/visual/vfx/vfx-electric-impact-radial-wall-burst.svg",
+        "runtime": "canvas-procedural",
+        "status": "novo",
+        "semanticRole": "electric-impact-radial-wall",
+        "state": "burst"
+      }
+    ],
+    "colorTokens": [
+      {
+        "id": "clr-electric-lightning-core",
+        "value": "#eefdff",
+        "usage": "Núcleo de raio e impacto"
+      },
+      {
+        "id": "clr-electric-lightning-halo",
+        "value": "rgba(66,224,255,0.34)",
+        "usage": "Halo de raio e impacto"
+      },
+      {
+        "id": "clr-electric-lightning-shadow",
+        "value": "rgba(77,232,255,0.88)",
+        "usage": "Brilho de raio e impacto"
+      },
+      {
+        "id": "clr-electric-energy-ball-fallback",
+        "value": "#7df9ff",
+        "usage": "Fallback da bola de energia"
+      }
+    ]
+  },
+  "acceptance": {
+    "circuitBasicFamily": false,
+    "circuitMetalFamily": false,
+    "electricEnergyBall": false,
+    "countdownSparkVariants": false,
+    "ambientLightningVariants": false,
+    "electricImpactBursts": false,
+    "defaultAmbientVariant": "arcade",
+    "unifiedColorPalette": false
+  }
+}
+
+  </script>
+  <script>
+const ELECTRIC_LIGHTNING_CORE_COLOR = "rgba(238, 253, 255, 0.92)";
+const ELECTRIC_LIGHTNING_HALO_COLOR = "rgba(66, 224, 255, 0.34)";
+const ELECTRIC_LIGHTNING_SHADOW_COLOR = "rgba(77, 232, 255, 0.88)";
+
+const FULL_CIRCLE = Math.PI * 2;
+const PROGRESS_MIN = 0;
+const PROGRESS_MAX = 1;
+const SEED_SEQUENCE_MULTIPLIER = 2_654_435_761;
+const SEED_MODULO = 9_973;
+const SEED_NORMALIZER = 9_973;
+
+function clampProgress(value) {
+  return Math.max(PROGRESS_MIN, Math.min(PROGRESS_MAX, value));
+}
+
+function easeCubicOut(progress) {
+  const clamped = clampProgress(progress);
+  return 1 - Math.pow(1 - clamped, 3);
+}
+
+function lightningUnitValue(seed, salt) {
+  return (
+    ((seed + salt * SEED_SEQUENCE_MULTIPLIER) % SEED_MODULO) / SEED_NORMALIZER
+  );
+}
+
+function calculateLightningFadeAlpha(progress, fadeStartProgress = 0.68) {
+  if (progress <= fadeStartProgress) return 1;
+  const fadeProgress =
+    (progress - fadeStartProgress) / (PROGRESS_MAX - fadeStartProgress);
+  return clampProgress(1 - fadeProgress);
+}
+
+function buildZigzagPoint(
+  origin,
+  endpoint,
+  progress,
+  step,
+  seed,
+  salt,
+  zigzagAmplitude,
+  scale,
+) {
+  const dx = endpoint.x - origin.x;
+  const dy = endpoint.y - origin.y;
+  const length = Math.max(1, Math.hypot(dx, dy));
+  const normalX = -dy / length;
+  const normalY = dx / length;
+  const jitter =
+    step === 0 || progress >= PROGRESS_MAX
+      ? 0
+      : (lightningUnitValue(seed, salt) - 0.5) *
+        zigzagAmplitude *
+        scale *
+        Math.sin(Math.PI * progress);
+
+  return {
+    x: origin.x + dx * progress + normalX * jitter,
+    y: origin.y + dy * progress + normalY * jitter,
+  };
+}
+
+function randomPointInCircle(geometry, seed, salt) {
+  const angle = lightningUnitValue(seed, salt) * FULL_CIRCLE;
+  const distance =
+    Math.sqrt(lightningUnitValue(seed, salt + 1)) * geometry.radius * 0.92;
+  return {
+    x: geometry.centerX + Math.cos(angle) * distance,
+    y: geometry.centerY + Math.sin(angle) * distance,
+  };
+}
+
+function randomEndpointAcrossCircle(geometry, origin, seed, salt) {
+  const angle = lightningUnitValue(seed, salt) * FULL_CIRCLE;
+  const edgeDistance =
+    geometry.radius * (0.72 + lightningUnitValue(seed, salt + 1) * 0.24);
+  return {
+    x: geometry.centerX + Math.cos(angle) * edgeDistance,
+    y: geometry.centerY + Math.sin(angle) * edgeDistance,
+  };
+}
+
+function strokeLightningPath(
+  ctx,
+  origin,
+  endpoint,
+  travelProgress,
+  segments,
+  seed,
+  endpointIndex,
+  zigzagAmplitude,
+  scale,
+) {
+  ctx.beginPath();
+  for (let step = 0; step <= segments; step += 1) {
+    const pathProgress = (step / segments) * travelProgress;
+    const point = buildZigzagPoint(
+      origin,
+      endpoint,
+      pathProgress,
+      step,
+      seed,
+      endpointIndex * 17 + step,
+      zigzagAmplitude,
+      scale,
+    );
+    if (step === 0) ctx.moveTo(point.x, point.y);
+    else ctx.lineTo(point.x, point.y);
+  }
+  ctx.stroke();
+}
+
+function drawLightningPulse(ctx, point, radius, alpha, style) {
+  if (radius <= 0 || alpha <= 0) return;
+  ctx.shadowColor = style.shadowColor;
+  ctx.shadowBlur = radius * 1.8;
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = style.haloColor;
+  ctx.beginPath();
+  ctx.arc(point.x, point.y, radius, PROGRESS_MIN, FULL_CIRCLE);
+  ctx.fill();
+  ctx.globalAlpha = alpha * 0.72;
+  ctx.fillStyle = style.coreColor;
+  ctx.beginPath();
+  ctx.arc(point.x, point.y, radius * 0.36, PROGRESS_MIN, FULL_CIRCLE);
+  ctx.fill();
+}
+
+function drawLightningSideBranches(
+  ctx,
+  origin,
+  endpoint,
+  travelProgress,
+  fadeAlpha,
+  seed,
+  endpointIndex,
+  branchCount,
+  scale,
+  options = {},
+) {
+  const {
+    sideBranchStartProgress = 0.22,
+    sideBranchLengthRatio = 0.16,
+    sideBranchAngle = Math.PI / 3.2,
+    coreLineWidth = 1.85,
+    haloLineWidth = 4.8,
+  } = options;
+  if (branchCount === 0 || travelProgress < sideBranchStartProgress) return;
+
+  const dx = endpoint.x - origin.x;
+  const dy = endpoint.y - origin.y;
+  const baseAngle = Math.atan2(dy, dx);
+  const distance = Math.hypot(dx, dy);
+  ctx.strokeStyle = ELECTRIC_LIGHTNING_CORE_COLOR;
+  ctx.lineWidth = Math.max(1, coreLineWidth * scale * 0.62);
+  ctx.shadowBlur = haloLineWidth * scale;
+  ctx.globalAlpha = fadeAlpha * 0.56;
+
+  for (let branchIndex = 0; branchIndex < branchCount; branchIndex += 1) {
+    const salt = endpointIndex * 101 + branchIndex * 29;
+    const startProgress =
+      (0.28 + lightningUnitValue(seed, salt) * 0.46) * travelProgress;
+    const branchLength =
+      distance *
+      sideBranchLengthRatio *
+      (0.62 + lightningUnitValue(seed, salt + 1) * 0.54);
+    const branchDirection =
+      baseAngle +
+      (branchIndex % 2 === 0 ? -1 : 1) *
+        sideBranchAngle *
+        (0.72 + lightningUnitValue(seed, salt + 2) * 0.5);
+    const branchStart = {
+      x: origin.x + dx * startProgress,
+      y: origin.y + dy * startProgress,
+    };
+    ctx.beginPath();
+    ctx.moveTo(branchStart.x, branchStart.y);
+    ctx.lineTo(
+      branchStart.x + Math.cos(branchDirection) * branchLength,
+      branchStart.y + Math.sin(branchDirection) * branchLength,
+    );
+    ctx.stroke();
+  }
+}
+
+
+const AMBIENT_ELECTRIC_PRESETS = {
+  pulse: {
+    id: "pulse",
+    minActiveBolts: 1,
+    maxActiveBolts: 2,
+    minSpawnIntervalMs: 2500,
+    maxSpawnIntervalMs: 4000,
+    minAlpha: 0.12,
+    maxAlpha: 0.3,
+    minDurationMs: 320,
+    maxDurationMs: 520,
+    minBranchCount: 0,
+    maxBranchCount: 1,
+    zigzagAmplitude: 4.2,
+    travelCompleteProgress: 0.84,
+  },
+  arcade: {
+    id: "arcade",
+    minActiveBolts: 2,
+    maxActiveBolts: 4,
+    minSpawnIntervalMs: 1200,
+    maxSpawnIntervalMs: 2500,
+    minAlpha: 0.22,
+    maxAlpha: 0.5,
+    minDurationMs: 360,
+    maxDurationMs: 580,
+    minBranchCount: 0,
+    maxBranchCount: 2,
+    zigzagAmplitude: 5.2,
+    travelCompleteProgress: 0.82,
+  },
+  storm: {
+    id: "storm",
+    minActiveBolts: 4,
+    maxActiveBolts: 6,
+    minSpawnIntervalMs: 600,
+    maxSpawnIntervalMs: 1500,
+    minAlpha: 0.35,
+    maxAlpha: 0.72,
+    minDurationMs: 280,
+    maxDurationMs: 680,
+    minBranchCount: 1,
+    maxBranchCount: 2,
+    zigzagAmplitude: 6.4,
+    travelCompleteProgress: 0.8,
+  },
+};
+
+const LIGHTNING_STYLE = {
+  coreColor: ELECTRIC_LIGHTNING_CORE_COLOR,
+  haloColor: ELECTRIC_LIGHTNING_HALO_COLOR,
+  shadowColor: ELECTRIC_LIGHTNING_SHADOW_COLOR,
+};
+
+class AmbientElectricBackground {
+  constructor(variant = "arcade") {
+    this.bolts = [];
+    this.nextSpawnAt = 0;
+    this.sequence = 0;
+    this.variant = variant;
+  }
+
+  setVariant(variant) {
+    this.variant = variant;
+    this.bolts = [];
+    this.nextSpawnAt = 0;
+  }
+
+  tick(now, geometry, reducedEffects) {
+    const preset = AMBIENT_ELECTRIC_PRESETS[this.variant];
+    this.bolts = this.bolts.filter((bolt) => now - bolt.startedAt <= bolt.durationMs);
+    const maxActive = reducedEffects ? 1 : preset.maxActiveBolts;
+    while (this.bolts.length < maxActive && now >= this.nextSpawnAt) {
+      this.spawnBolt(now, geometry, preset, reducedEffects);
+      this.nextSpawnAt =
+        now +
+        (reducedEffects
+          ? 4000
+          : this.randomBetween(
+              preset.minSpawnIntervalMs,
+              preset.maxSpawnIntervalMs,
+              this.sequence,
+              11,
+            ));
+    }
+  }
+
+  draw(ctx, geometry, reducedEffects) {
+    if (this.bolts.length === 0) return;
+    const now = Date.now();
+    ctx.save();
+    try {
+      ctx.beginPath();
+      ctx.arc(geometry.centerX, geometry.centerY, geometry.radius, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.globalCompositeOperation = "lighter";
+      for (const bolt of this.bolts) {
+        const progress = clampProgress((now - bolt.startedAt) / bolt.durationMs);
+        this.drawBolt(ctx, bolt, progress, reducedEffects, 1);
+      }
+    } finally {
+      ctx.restore();
+    }
+  }
+
+  forceBolt(geometry, reducedEffects) {
+    this.spawnBolt(
+      Date.now(),
+      geometry,
+      AMBIENT_ELECTRIC_PRESETS[this.variant],
+      reducedEffects,
+    );
+  }
+
+  reset() {
+    this.bolts = [];
+    this.nextSpawnAt = 0;
+    this.sequence = 0;
+  }
+
+  spawnBolt(now, circle, preset, reducedEffects) {
+    const seed = this.sequence;
+    this.sequence += 1;
+    const origin = randomPointInCircle(circle, seed, 3);
+    const endpoint = randomEndpointAcrossCircle(circle, origin, seed, 7);
+    this.bolts.push({
+      origin,
+      endpoint,
+      seed,
+      startedAt: now,
+      durationMs: this.randomBetween(
+        preset.minDurationMs,
+        preset.maxDurationMs,
+        seed,
+        17,
+      ),
+      intensity: this.randomBetween(preset.minAlpha, preset.maxAlpha, seed, 19),
+      branchCount: reducedEffects
+        ? 0
+        : Math.round(
+            this.randomBetween(
+              preset.minBranchCount,
+              preset.maxBranchCount,
+              seed,
+              13,
+            ),
+          ),
+      segments: reducedEffects ? 3 : 7,
+    });
+  }
+
+  drawBolt(ctx, bolt, progress, reducedEffects, scale) {
+    const preset = AMBIENT_ELECTRIC_PRESETS[this.variant];
+    const travelProgress = easeCubicOut(
+      clampProgress(progress / preset.travelCompleteProgress),
+    );
+    const fadeAlpha = calculateLightningFadeAlpha(progress) * bolt.intensity;
+    drawLightningPulse(ctx, bolt.origin, 7.5 * scale, fadeAlpha * 0.72, LIGHTNING_STYLE);
+    ctx.shadowColor = ELECTRIC_LIGHTNING_SHADOW_COLOR;
+    ctx.shadowBlur = reducedEffects ? 4.8 : 8.16;
+    ctx.globalAlpha = fadeAlpha;
+    ctx.strokeStyle = ELECTRIC_LIGHTNING_HALO_COLOR;
+    ctx.lineWidth = 4.8 * scale;
+    strokeLightningPath(
+      ctx,
+      bolt.origin,
+      bolt.endpoint,
+      travelProgress,
+      bolt.segments,
+      bolt.seed,
+      0,
+      preset.zigzagAmplitude,
+      scale,
+    );
+    ctx.shadowBlur = reducedEffects ? 1.85 : 4.07;
+    ctx.globalAlpha = fadeAlpha * 0.95;
+    ctx.strokeStyle = ELECTRIC_LIGHTNING_CORE_COLOR;
+    ctx.lineWidth = 1.85 * scale;
+    strokeLightningPath(
+      ctx,
+      bolt.origin,
+      bolt.endpoint,
+      travelProgress,
+      bolt.segments,
+      bolt.seed,
+      0,
+      preset.zigzagAmplitude,
+      scale,
+    );
+    drawLightningSideBranches(
+      ctx,
+      bolt.origin,
+      bolt.endpoint,
+      travelProgress,
+      fadeAlpha,
+      bolt.seed,
+      0,
+      bolt.branchCount,
+      scale,
+    );
+  }
+
+  randomBetween(min, max, seed, salt) {
+    return min + lightningUnitValue(seed, salt) * (max - min);
+  }
+}
+
+
+const TWO_PI = Math.PI * 2;
+const FULL_ARC_COUNT = 5;
+const ARC_SEGMENTS = 5;
+const PULSE_RATE = 7.1;
+const ORBIT_PHASE = 2.399963229728653;
+const VISUAL_PULSE_RATIO = 0.08;
+const HALO_RADIUS_RATIO = 1.7;
+const CORE_HIGHLIGHT_RATIO = 0.08;
+const ARC_MIN_RADIUS_RATIO = 0.18;
+const ARC_RADIUS_RANGE_RATIO = 0.68;
+const ARC_ZIGZAG_RATIO = 0.1;
+const ARC_SPAN_BASE = 1.15;
+const ARC_SPAN_VARIANCE = 0.52;
+const ARC_ALPHA_BASE = 0.62;
+const ARC_ALPHA_VARIANCE = 0.22;
+const NODE_RADIUS_RATIO = 0.085;
+const MIN_LINE_WIDTH = 1;
+
+const ENERGY_BALL_THEMES = {
+  cyan: {
+    haloMid: [125, 249, 255],
+    haloOuter: [0, 178, 255],
+    coreLight: "#dffcff",
+    coreMid: "#46e8ff",
+    coreDark: "#087cc6",
+    coreDeep: "#02132f",
+    shadow: "#7df9ff",
+    arcAlt: [126, 249, 255],
+    shell: "rgba(185, 244, 255, 0.9)",
+    shellShadow: "#b9f4ff",
+  },
+  red: {
+    haloMid: [255, 120, 140],
+    haloOuter: [200, 40, 70],
+    coreLight: "#ffe8ec",
+    coreMid: "#ff5d73",
+    coreDark: "#c41e3a",
+    coreDeep: "#2a0610",
+    shadow: "#ff8a9a",
+    arcAlt: [255, 130, 150],
+    shell: "rgba(255, 180, 190, 0.9)",
+    shellShadow: "#ffb4be",
+  },
+  green: {
+    haloMid: [100, 245, 170],
+    haloOuter: [30, 180, 100],
+    coreLight: "#e8fff2",
+    coreMid: "#45f08f",
+    coreDark: "#1a9e55",
+    coreDeep: "#031a10",
+    shadow: "#64f5d6",
+    arcAlt: [110, 255, 180],
+    shell: "rgba(160, 255, 200, 0.9)",
+    shellShadow: "#8ef5c8",
+  },
+};
+
+class ElectricEnergyBallPreview {
+  constructor(centerX = 60, centerY = 60, radius = 18, colorTheme = "cyan") {
+    this.centerX = centerX;
+    this.centerY = centerY;
+    this.radius = radius;
+    this.colorTheme = ENERGY_BALL_THEMES[colorTheme] ? colorTheme : "cyan";
+  }
+
+  get theme() {
+    return ENERGY_BALL_THEMES[this.colorTheme];
+  }
+
+  draw(ctx, now = Date.now()) {
+    const rawTime = now / 1000;
+    const pulse = Math.sin(rawTime * PULSE_RATE) * VISUAL_PULSE_RATIO;
+    const visualRadius = this.radius * (1 + pulse);
+
+    ctx.save();
+    try {
+      ctx.translate(this.centerX, this.centerY);
+      this.drawOuterHalo(ctx, visualRadius, rawTime);
+      this.drawCore(ctx, visualRadius);
+      this.drawArcs(ctx, visualRadius, rawTime);
+      this.drawShell(ctx, visualRadius);
+    } finally {
+      ctx.restore();
+    }
+  }
+
+  drawOuterHalo(ctx, visualRadius, rawTime) {
+    const theme = this.theme;
+    const haloRadius = visualRadius * HALO_RADIUS_RATIO;
+    const haloPulse = Math.sin(rawTime * 4.3) * 0.08;
+    const haloGradient = ctx.createRadialGradient(0, 0, visualRadius * CORE_HIGHLIGHT_RATIO, 0, 0, haloRadius);
+    haloGradient.addColorStop(0, "rgba(255, 255, 255, 0.92)");
+    haloGradient.addColorStop(
+      0.28,
+      `rgba(${theme.haloMid[0]}, ${theme.haloMid[1]}, ${theme.haloMid[2]}, ${0.52 + haloPulse})`,
+    );
+    haloGradient.addColorStop(
+      0.64,
+      `rgba(${theme.haloOuter[0]}, ${theme.haloOuter[1]}, ${theme.haloOuter[2]}, ${0.2 + haloPulse * 0.5})`,
+    );
+    haloGradient.addColorStop(1, "rgba(0, 30, 80, 0)");
+    ctx.globalCompositeOperation = "lighter";
+    ctx.fillStyle = haloGradient;
+    ctx.beginPath();
+    ctx.arc(0, 0, haloRadius, 0, TWO_PI);
+    ctx.fill();
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  drawCore(ctx, visualRadius) {
+    const theme = this.theme;
+    const coreGradient = ctx.createRadialGradient(
+      -visualRadius * 0.32,
+      -visualRadius * 0.35,
+      visualRadius * CORE_HIGHLIGHT_RATIO,
+      0,
+      0,
+      visualRadius,
+    );
+    coreGradient.addColorStop(0, "#ffffff");
+    coreGradient.addColorStop(0.22, theme.coreLight);
+    coreGradient.addColorStop(0.48, theme.coreMid);
+    coreGradient.addColorStop(0.78, theme.coreDark);
+    coreGradient.addColorStop(1, theme.coreDeep);
+    ctx.shadowColor = theme.shadow;
+    ctx.shadowBlur = Math.max(2, visualRadius * 0.65);
+    ctx.fillStyle = coreGradient;
+    ctx.beginPath();
+    ctx.arc(0, 0, visualRadius, 0, TWO_PI);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+
+  drawArcs(ctx, visualRadius, rawTime) {
+    const theme = this.theme;
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.shadowColor = theme.coreLight;
+    ctx.shadowBlur = Math.max(2, visualRadius * 0.35);
+    for (let index = 0; index < FULL_ARC_COUNT; index += 1) {
+      this.drawArc(ctx, visualRadius, rawTime, index);
+    }
+    ctx.restore();
+  }
+
+  drawArc(ctx, visualRadius, rawTime, index) {
+    const theme = this.theme;
+    const motion = rawTime * (1.45 + index * 0.31);
+    const startAngle = (index * ORBIT_PHASE + motion) % TWO_PI;
+    const arcSpan = ARC_SPAN_BASE + Math.sin(rawTime * 1.7 + index) * ARC_SPAN_VARIANCE;
+    const strokeAlpha = ARC_ALPHA_BASE + Math.sin(rawTime * 3.2 + index) * ARC_ALPHA_VARIANCE;
+    ctx.strokeStyle =
+      index % 2 === 0
+        ? `rgba(255, 255, 255, ${strokeAlpha})`
+        : `rgba(${theme.arcAlt[0]}, ${theme.arcAlt[1]}, ${theme.arcAlt[2]}, ${strokeAlpha})`;
+    ctx.lineWidth = Math.max(MIN_LINE_WIDTH, visualRadius * (index % 2 === 0 ? 0.13 : 0.09));
+    ctx.beginPath();
+    for (let step = 0; step <= ARC_SEGMENTS; step += 1) {
+      const progress = step / ARC_SEGMENTS;
+      const angle = startAngle + arcSpan * progress;
+      const radialWave = Math.sin(rawTime * (2.1 + index * 0.37) + step * 1.9 + index * ORBIT_PHASE);
+      const radiusRatio = ARC_MIN_RADIUS_RATIO + ARC_RADIUS_RANGE_RATIO * (0.5 + radialWave * 0.5);
+      const zigzag = (step % 2 === 0 ? -1 : 1) * visualRadius * ARC_ZIGZAG_RATIO;
+      const radialDistance = Math.min(
+        visualRadius * 0.86,
+        Math.max(visualRadius * 0.16, visualRadius * radiusRatio + zigzag),
+      );
+      const pointX = Math.cos(angle) * radialDistance;
+      const pointY = Math.sin(angle) * radialDistance;
+      if (step === 0) ctx.moveTo(pointX, pointY);
+      else ctx.lineTo(pointX, pointY);
+    }
+    ctx.stroke();
+    const nodeRadius = Math.max(0.8, visualRadius * NODE_RADIUS_RATIO * (index % 2 === 0 ? 1 : 0.72));
+    const distance = visualRadius * (0.26 + (index % 3) * 0.16);
+    const endAngle = startAngle + arcSpan;
+    ctx.fillStyle =
+      index % 2 === 0
+        ? "rgba(255, 255, 255, 0.95)"
+        : `rgba(${theme.arcAlt[0]}, ${theme.arcAlt[1]}, ${theme.arcAlt[2]}, 0.88)`;
+    ctx.beginPath();
+    ctx.arc(Math.cos(endAngle) * distance, Math.sin(endAngle) * distance, nodeRadius, 0, TWO_PI);
+    ctx.fill();
+  }
+
+  drawShell(ctx, visualRadius) {
+    const theme = this.theme;
+    ctx.strokeStyle = theme.shell;
+    ctx.lineWidth = Math.max(MIN_LINE_WIDTH, visualRadius * 0.12);
+    ctx.shadowColor = theme.shellShadow;
+    ctx.shadowBlur = Math.max(1.5, visualRadius * 0.28);
+    ctx.beginPath();
+    ctx.arc(0, 0, visualRadius * 0.94, 0, TWO_PI);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+  }
+}
+
+
+const TRAVEL_COMPLETE_PROGRESS = 0.82;
+const DURATION_MS = 420;
+const SPAWN_INTERVAL_MS = 1200;
+const BRANCH_SEGMENTS = 7;
+const ZIGZAG_AMPLITUDE = 5.2;
+const HALO_LINE_WIDTH = 4.8;
+const CORE_LINE_WIDTH = 1.85;
+const ORIGIN_PULSE_RADIUS = 7.5;
+const ENDPOINT_PULSE_RADIUS = 4.8;
+const ENDPOINT_START_PROGRESS = 0.86;
+const SIDE_BRANCH_COUNT = 2;
+
+const IMPACT_LIGHTNING_STYLE = {
+  coreColor: ELECTRIC_LIGHTNING_CORE_COLOR,
+  haloColor: ELECTRIC_LIGHTNING_HALO_COLOR,
+  shadowColor: ELECTRIC_LIGHTNING_SHADOW_COLOR,
+};
+
+const IMPACT_DEMOS = {
+  component: {
+    origin: { x: 140, y: 100 },
+    endpoints: [
+      { x: 90, y: 55 },
+      { x: 190, y: 145 },
+    ],
+  },
+  wall: {
+    origin: { x: 140, y: 100 },
+    endpoints: [
+      { x: 40, y: 100 },
+      { x: 240, y: 100 },
+    ],
+  },
+  ceiling: {
+    origin: { x: 140, y: 130 },
+    endpoints: [
+      { x: 95, y: 35 },
+      { x: 185, y: 35 },
+    ],
+  },
+  "radial-wall": {
+    origin: { x: 140, y: 100 },
+    endpoints: [
+      { x: 140, y: 30 },
+      { x: 240, y: 100 },
+      { x: 140, y: 170 },
+      { x: 40, y: 100 },
+    ],
+  },
+};
+
+class ElectricImpactPreview {
+  constructor(kind = "component") {
+    this.kind = kind;
+    this.activeEffect = null;
+    this.lastSpawnAt = 0;
+    this.seed = 0;
+  }
+
+  setKind(kind) {
+    this.kind = kind;
+    this.activeEffect = null;
+    this.lastSpawnAt = 0;
+  }
+
+  tick(now) {
+    if (
+      !this.activeEffect ||
+      now - this.activeEffect.startedAt >= this.activeEffect.durationMs
+    ) {
+      if (!this.activeEffect || now - this.lastSpawnAt >= SPAWN_INTERVAL_MS) {
+        this.spawn(now);
+      }
+    }
+  }
+
+  spawn(now) {
+    const demo = IMPACT_DEMOS[this.kind] ?? IMPACT_DEMOS.component;
+    this.seed += 1;
+    this.activeEffect = {
+      origin: { ...demo.origin },
+      endpoints: demo.endpoints.map((endpoint) => ({ ...endpoint })),
+      startedAt: now,
+      durationMs: DURATION_MS,
+      seed: this.seed,
+    };
+    this.lastSpawnAt = now;
+  }
+
+  draw(ctx, now) {
+    if (!this.activeEffect) return;
+    const progress = clampProgress(
+      (now - this.activeEffect.startedAt) / this.activeEffect.durationMs,
+    );
+    const travelProgress = easeCubicOut(
+      clampProgress(progress / TRAVEL_COMPLETE_PROGRESS),
+    );
+    const fadeAlpha = calculateLightningFadeAlpha(progress);
+    const scale = 1;
+
+    ctx.save();
+    try {
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.globalCompositeOperation = "lighter";
+      drawLightningPulse(
+        ctx,
+        this.activeEffect.origin,
+        ORIGIN_PULSE_RADIUS * scale,
+        fadeAlpha * 0.72,
+        IMPACT_LIGHTNING_STYLE,
+      );
+
+      this.activeEffect.endpoints.forEach((endpoint, endpointIndex) => {
+        this.drawBranch(ctx, endpoint, endpointIndex, travelProgress, fadeAlpha, scale);
+        if (progress >= ENDPOINT_START_PROGRESS) {
+          drawLightningPulse(
+            ctx,
+            endpoint,
+            ENDPOINT_PULSE_RADIUS * scale,
+            fadeAlpha * 0.64,
+            IMPACT_LIGHTNING_STYLE,
+          );
+        }
+      });
+    } finally {
+      ctx.restore();
+    }
+  }
+
+  drawBranch(ctx, endpoint, endpointIndex, travelProgress, fadeAlpha, scale) {
+    const effect = this.activeEffect;
+    ctx.shadowColor = ELECTRIC_LIGHTNING_SHADOW_COLOR;
+    ctx.shadowBlur = HALO_LINE_WIDTH * scale * 1.7;
+    ctx.globalAlpha = fadeAlpha;
+    ctx.strokeStyle = ELECTRIC_LIGHTNING_HALO_COLOR;
+    ctx.lineWidth = HALO_LINE_WIDTH * scale;
+    strokeLightningPath(
+      ctx,
+      effect.origin,
+      endpoint,
+      travelProgress,
+      BRANCH_SEGMENTS,
+      effect.seed,
+      endpointIndex,
+      ZIGZAG_AMPLITUDE,
+      scale,
+    );
+
+    ctx.shadowBlur = CORE_LINE_WIDTH * scale * 2.2;
+    ctx.globalAlpha = fadeAlpha * 0.95;
+    ctx.strokeStyle = ELECTRIC_LIGHTNING_CORE_COLOR;
+    ctx.lineWidth = CORE_LINE_WIDTH * scale;
+    strokeLightningPath(
+      ctx,
+      effect.origin,
+      endpoint,
+      travelProgress,
+      BRANCH_SEGMENTS,
+      effect.seed,
+      endpointIndex,
+      ZIGZAG_AMPLITUDE,
+      scale,
+    );
+
+    drawLightningSideBranches(
+      ctx,
+      effect.origin,
+      endpoint,
+      travelProgress,
+      fadeAlpha,
+      effect.seed,
+      endpointIndex,
+      SIDE_BRANCH_COUNT,
+      scale,
+    );
+  }
+}
+
+
+const YELLOW_ELECTRIC_EDGE_STYLE = {
+  coreColor: "rgba(255, 248, 216, 0.92)",
+  haloColor: "rgba(255, 213, 79, 0.42)",
+  shadowColor: "rgba(255, 193, 7, 0.88)",
+};
+
+const PURPLE_ELECTRIC_EDGE_STYLE = {
+  coreColor: "rgba(244, 228, 255, 0.92)",
+  haloColor: "rgba(184, 115, 255, 0.42)",
+  shadowColor: "rgba(156, 64, 255, 0.88)",
+};
+
+const EDGE_THEMES = {
+  yellow: YELLOW_ELECTRIC_EDGE_STYLE,
+  purple: PURPLE_ELECTRIC_EDGE_STYLE,
+};
+
+const EDGE_CYCLE_MS = 2400;
+const EDGE_PERIMETER_CYCLE_MS = 3200;
+const EDGE_SEGMENTS = 5;
+const EDGE_ZIGZAG_AMPLITUDE = 1.5;
+const EDGE_SCALE = 1;
+const EDGE_HALO_LINE_WIDTH = 4.2;
+const EDGE_CORE_LINE_WIDTH = 2;
+
+function resolveStyle(themeName) {
+  return EDGE_THEMES[themeName] ?? YELLOW_ELECTRIC_EDGE_STYLE;
+}
+
+function getOscillatingTravelProgress(now, seed) {
+  const phase = (now / EDGE_CYCLE_MS + lightningUnitValue(seed, 0) * 0.35) % 1;
+  return 0.55 + 0.45 * (0.5 + 0.5 * Math.sin(phase * Math.PI * 2));
+}
+
+function getFlowingEdgeTravelProgress(now, edgeIndex, edgeCount) {
+  const globalPhase = (now / EDGE_PERIMETER_CYCLE_MS) % 1;
+  return (globalPhase + edgeIndex / edgeCount) % 1;
+}
+
+function drawDualStrokeElectric(
+  ctx,
+  origin,
+  endpoint,
+  travelProgress,
+  seed,
+  endpointIndex,
+  style,
+  lineWidthScale = 1,
+) {
+  ctx.save();
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+
+  ctx.strokeStyle = style.haloColor;
+  ctx.lineWidth = EDGE_HALO_LINE_WIDTH * lineWidthScale;
+  ctx.shadowColor = style.shadowColor;
+  ctx.shadowBlur = 6 * lineWidthScale;
+  ctx.globalAlpha = 0.75;
+  strokeLightningPath(
+    ctx,
+    origin,
+    endpoint,
+    travelProgress,
+    EDGE_SEGMENTS,
+    seed,
+    endpointIndex,
+    EDGE_ZIGZAG_AMPLITUDE,
+    EDGE_SCALE,
+  );
+
+  ctx.strokeStyle = style.coreColor;
+  ctx.lineWidth = EDGE_CORE_LINE_WIDTH * lineWidthScale;
+  ctx.shadowBlur = 3 * lineWidthScale;
+  ctx.globalAlpha = 0.92;
+  strokeLightningPath(
+    ctx,
+    origin,
+    endpoint,
+    travelProgress,
+    EDGE_SEGMENTS,
+    seed,
+    endpointIndex + 1000,
+    EDGE_ZIGZAG_AMPLITUDE * 0.7,
+    EDGE_SCALE,
+  );
+
+  ctx.restore();
+}
+
+function drawAnimatedElectricSegment(
+  ctx,
+  segment,
+  now,
+  seed,
+  styleOrTheme = "yellow",
+  options = {},
+) {
+  const style = typeof styleOrTheme === "string" ? resolveStyle(styleOrTheme) : styleOrTheme;
+  const origin = { x: segment.x1, y: segment.y1 };
+  const endpoint = { x: segment.x2, y: segment.y2 };
+  const travelProgress =
+    options.travelProgress ?? getOscillatingTravelProgress(now, seed);
+  const widthScale = segment.width ? segment.width / 2.2 : 1;
+  drawDualStrokeElectric(ctx, origin, endpoint, travelProgress, seed, seed, style, widthScale);
+}
+
+function drawAnimatedElectricPolyline(ctx, points, now, seed, styleOrTheme = "yellow") {
+  if (!points || points.length < 2) return;
+  for (let index = 0; index < points.length - 1; index += 1) {
+    const [x1, y1] = points[index];
+    const [x2, y2] = points[index + 1];
+    drawAnimatedElectricSegment(
+      ctx,
+      { x1, y1, x2, y2, width: 2.5 },
+      now,
+      seed + index * 13,
+      styleOrTheme,
+    );
+  }
+}
+
+function drawAnimatedElectricPolygon(ctx, points, now, seed, styleOrTheme = "yellow") {
+  if (!points || points.length < 2) return;
+  for (let index = 0; index < points.length; index += 1) {
+    const [x1, y1] = points[index];
+    const [x2, y2] = points[(index + 1) % points.length];
+    drawAnimatedElectricSegment(
+      ctx,
+      { x1, y1, x2, y2, width: 2.2 },
+      now,
+      seed + index * 17,
+      styleOrTheme,
+    );
+  }
+}
+
+function drawFlowingElectricPolygon(ctx, points, now, seed, styleOrTheme = "yellow") {
+  if (!points || points.length < 2) return;
+  const style = typeof styleOrTheme === "string" ? resolveStyle(styleOrTheme) : styleOrTheme;
+  for (let index = 0; index < points.length; index += 1) {
+    const [x1, y1] = points[index];
+    const [x2, y2] = points[(index + 1) % points.length];
+    const travelProgress = getFlowingEdgeTravelProgress(now, index, points.length);
+    const origin = { x: x1, y: y1 };
+    const endpoint = { x: x2, y: y2 };
+    drawDualStrokeElectric(
+      ctx,
+      origin,
+      endpoint,
+      travelProgress,
+      seed + index * 17,
+      seed + index * 17,
+      style,
+      1,
+    );
+  }
+}
+
+function drawElectricEdgesPreset(ctx, preset, now) {
+  const theme = preset.electricTheme ?? "yellow";
+  const baseSeed = 42;
+
+  const interiorFills =
+    preset.interiorFills ?? (preset.interiorFill ? [preset.interiorFill] : []);
+  for (const fillDef of interiorFills) {
+    ctx.save();
+    ctx.fillStyle = fillDef.fill;
+    ctx.beginPath();
+    if (fillDef.type === "polygon") {
+      const [first, ...rest] = fillDef.points;
+      ctx.moveTo(first[0], first[1]);
+      for (const [x, y] of rest) ctx.lineTo(x, y);
+      ctx.closePath();
+    }
+    ctx.fill();
+    ctx.restore();
+  }
+
+  for (let pathIndex = 0; pathIndex < (preset.perimeterPaths ?? []).length; pathIndex += 1) {
+    const pathDef = preset.perimeterPaths[pathIndex];
+    if (pathDef.type === "polygon") {
+      drawFlowingElectricPolygon(ctx, pathDef.points, now, baseSeed + pathIndex * 100, theme);
+    }
+  }
+
+  for (let stubIndex = 0; stubIndex < (preset.terminalStubs ?? []).length; stubIndex += 1) {
+    const stub = preset.terminalStubs[stubIndex];
+    drawAnimatedElectricSegment(
+      ctx,
+      {
+        x1: stub.x1,
+        y1: stub.y1,
+        x2: stub.x2,
+        y2: stub.y2,
+        width: preset.terminalWidth ?? 3,
+      },
+      now,
+      baseSeed + 500 + stubIndex * 23,
+      theme,
+    );
+  }
+
+  for (let detailIndex = 0; detailIndex < (preset.detailPaths ?? []).length; detailIndex += 1) {
+    const pathDef = preset.detailPaths[detailIndex];
+    if (pathDef.type === "line") {
+      drawAnimatedElectricSegment(ctx, pathDef, now, baseSeed + 700 + detailIndex * 31, theme);
+    } else if (pathDef.type === "polyline") {
+      drawAnimatedElectricPolyline(ctx, pathDef.points, now, baseSeed + 700 + detailIndex * 31, theme);
+    }
+  }
+}
+
+
+const SHIELD_PERIMETER_POINTS = [
+  [34, 8],
+  [62, 8],
+  [69, 15],
+  [69, 33],
+  [62, 40],
+  [34, 40],
+  [27, 33],
+  [27, 15],
+];
+
+const CAPACITOR_LEFT_PLATE = [
+  [36, 8],
+  [41, 10.5],
+  [41, 34.5],
+  [36, 40],
+  [31, 37.5],
+  [31, 13.5],
+];
+
+const CAPACITOR_RIGHT_PLATE = [
+  [60, 8],
+  [65, 10.5],
+  [65, 34.5],
+  [60, 40],
+  [55, 37.5],
+  [55, 13.5],
+];
+
+const COMPONENT_ENERGY_PRESETS = {
+  "spr-component-basic-yellow-normal": {
+    colorTheme: "red",
+    shape: "led-diode",
+    ballOnTop: true,
+    center: { x: 48, y: 24 },
+    radius: 11,
+    outlineStroke: "#d8f7ff",
+    terminalColor: "#d8f7ff",
+    terminalWidth: 2.2,
+    clipPaths: [],
+    fillPaths: [{ type: "rect", x: 62, y: 12, w: 4, h: 24, fill: "#ff8a9a" }],
+    outlinePaths: [
+      { type: "polygon", points: [[35, 12], [58, 24], [35, 36]] },
+      { type: "rect", x: 62, y: 12, w: 4, h: 24 },
+    ],
+    terminalStubs: [
+      { x1: 24, y1: 24, x2: 34, y2: 24 },
+      { x1: 62, y1: 24, x2: 72, y2: 24 },
+    ],
+    detailPaths: [
+      { type: "line", x1: 55, y1: 10, x2: 66, y2: 3, color: "#d8f7ff", opacity: 0.65, width: 2.2 },
+      { type: "line", x1: 60, y1: 15, x2: 73, y2: 11, color: "#d8f7ff", opacity: 0.65, width: 2.2 },
+      { type: "line", x1: 64, y1: 3, x2: 66, y2: 3, color: "#d8f7ff", opacity: 0.65, width: 2.2 },
+      { type: "line", x1: 65, y1: 6, x2: 64, y2: 3, color: "#d8f7ff", opacity: 0.65, width: 2.2 },
+      { type: "line", x1: 71, y1: 10, x2: 73, y2: 11, color: "#d8f7ff", opacity: 0.65, width: 2.2 },
+      { type: "line", x1: 73, y1: 11, x2: 71, y2: 13, color: "#d8f7ff", opacity: 0.65, width: 2.2 },
+    ],
+  },
+  "spr-component-metal-steel-dented-one": {
+    renderMode: "electric-edges",
+    electricTheme: "yellow",
+    shape: "shield-module",
+    terminalWidth: 3,
+    interiorFill: {
+      type: "polygon",
+      points: SHIELD_PERIMETER_POINTS,
+      fill: "rgba(5, 40, 54, 0.55)",
+    },
+    perimeterPaths: [{ type: "polygon", points: SHIELD_PERIMETER_POINTS }],
+    terminalStubs: [
+      { x1: 25, y1: 17, x2: 30, y2: 17 },
+      { x1: 25, y1: 24, x2: 30, y2: 24 },
+      { x1: 25, y1: 31, x2: 30, y2: 31 },
+      { x1: 66, y1: 17, x2: 71, y2: 17 },
+      { x1: 66, y1: 24, x2: 71, y2: 24 },
+      { x1: 66, y1: 31, x2: 71, y2: 31 },
+    ],
+    detailPaths: [
+      { type: "line", x1: 37, y1: 16, x2: 59, y2: 16 },
+      { type: "line", x1: 34, y1: 24, x2: 62, y2: 24 },
+      { type: "line", x1: 37, y1: 32, x2: 55, y2: 32 },
+      { type: "polyline", points: [[42, 13], [47, 20], [44, 25], [51, 34]] },
+    ],
+  },
+  "spr-component-basic-purple-normal": {
+    renderMode: "electric-edges",
+    electricTheme: "purple",
+    shape: "capacitor",
+    terminalWidth: 2.2,
+    interiorFills: [
+      { type: "polygon", points: CAPACITOR_LEFT_PLATE, fill: "rgba(20, 8, 40, 0.55)" },
+      { type: "polygon", points: CAPACITOR_RIGHT_PLATE, fill: "rgba(20, 8, 40, 0.55)" },
+    ],
+    perimeterPaths: [
+      { type: "polygon", points: CAPACITOR_LEFT_PLATE },
+      { type: "polygon", points: CAPACITOR_RIGHT_PLATE },
+    ],
+    terminalStubs: [
+      { x1: 24, y1: 24, x2: 31, y2: 24 },
+      { x1: 65, y1: 24, x2: 72, y2: 24 },
+    ],
+    detailPaths: [
+      { type: "line", x1: 46, y1: 10, x2: 46, y2: 38 },
+      { type: "line", x1: 50, y1: 10, x2: 50, y2: 38 },
+    ],
+  },
+  "spr-component-metal-steel-dented-two": {
+    colorTheme: "green",
+    shape: "shield-module",
+    center: { x: 48, y: 24 },
+    radius: 10,
+    outlineStroke: "#d8f7ff",
+    terminalColor: "#64f5d6",
+    terminalWidth: 3,
+    clipPaths: [
+      {
+        type: "polygon",
+        points: SHIELD_PERIMETER_POINTS,
+      },
+    ],
+    terminalStubs: [
+      { x1: 25, y1: 17, x2: 30, y2: 17 },
+      { x1: 25, y1: 24, x2: 30, y2: 24 },
+      { x1: 25, y1: 31, x2: 30, y2: 31 },
+      { x1: 66, y1: 17, x2: 71, y2: 17 },
+      { x1: 66, y1: 24, x2: 71, y2: 24 },
+      { x1: 66, y1: 31, x2: 71, y2: 31 },
+    ],
+    detailPaths: [
+      { type: "line", x1: 37, y1: 16, x2: 59, y2: 16 },
+      { type: "line", x1: 34, y1: 24, x2: 62, y2: 24 },
+      { type: "line", x1: 37, y1: 32, x2: 55, y2: 32 },
+      { type: "line", x1: 42, y1: 13, x2: 47, y2: 20 },
+      { type: "line", x1: 47, y1: 20, x2: 44, y2: 25 },
+      { type: "line", x1: 44, y1: 25, x2: 51, y2: 34 },
+      { type: "line", x1: 57, y1: 12, x2: 53, y2: 19 },
+      { type: "line", x1: 53, y1: 19, x2: 58, y2: 25 },
+      { type: "line", x1: 58, y1: 25, x2: 52, y2: 36 },
+    ],
+  },
+};
+
+function traceClipPath(ctx, pathDef) {
+  if (pathDef.type === "polygon") {
+    const [first, ...rest] = pathDef.points;
+    ctx.moveTo(first[0], first[1]);
+    for (const [x, y] of rest) ctx.lineTo(x, y);
+    ctx.closePath();
+    return;
+  }
+  if (pathDef.type === "rect") {
+    ctx.rect(pathDef.x, pathDef.y, pathDef.w, pathDef.h);
+  }
+}
+
+function drawDetailPath(ctx, pathDef, defaultColor, defaultWidth, defaultOpacity = 0.52) {
+  if (pathDef.type !== "line") return;
+  ctx.strokeStyle = pathDef.color ?? defaultColor;
+  ctx.lineWidth = pathDef.width ?? defaultWidth;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.globalAlpha = pathDef.opacity ?? defaultOpacity;
+  ctx.beginPath();
+  ctx.moveTo(pathDef.x1, pathDef.y1);
+  ctx.lineTo(pathDef.x2, pathDef.y2);
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+}
+
+function drawTerminals(ctx, preset) {
+  ctx.save();
+  ctx.strokeStyle = preset.terminalColor;
+  ctx.lineWidth = preset.terminalWidth;
+  ctx.lineCap = "round";
+  for (const stub of preset.terminalStubs) {
+    ctx.beginPath();
+    ctx.moveTo(stub.x1, stub.y1);
+    ctx.lineTo(stub.x2, stub.y2);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawStaticLayers(ctx, preset) {
+  ctx.save();
+  for (const pathDef of preset.fillPaths ?? []) {
+    ctx.fillStyle = pathDef.fill ?? preset.outlineStroke;
+    ctx.beginPath();
+    traceClipPath(ctx, pathDef);
+    ctx.fill();
+  }
+
+  ctx.strokeStyle = preset.outlineStroke;
+  ctx.lineWidth = preset.shape === "led-diode" ? 2.4 : 2.2;
+  ctx.lineJoin = "round";
+  const outlinePaths = preset.outlinePaths ?? preset.clipPaths;
+  for (const pathDef of outlinePaths) {
+    ctx.beginPath();
+    traceClipPath(ctx, pathDef);
+    ctx.stroke();
+  }
+  for (const pathDef of preset.detailPaths ?? []) {
+    drawDetailPath(ctx, pathDef, "#052836", 2, 0.52);
+  }
+  ctx.restore();
+}
+
+function drawEnergyBall(ctx, preset, now) {
+  ctx.save();
+  if (preset.clipPaths.length > 0) {
+    ctx.beginPath();
+    for (const pathDef of preset.clipPaths) {
+      traceClipPath(ctx, pathDef);
+    }
+    ctx.clip();
+  }
+  this.energyBall.draw(ctx, now);
+  ctx.restore();
+}
+
+class ElectricComponentEnergyPreview {
+  constructor(componentId) {
+    this.preset = COMPONENT_ENERGY_PRESETS[componentId];
+    if (!this.preset) {
+      throw new Error(`Unknown component energy preset: ${componentId}`);
+    }
+    if (this.preset.renderMode !== "electric-edges") {
+      this.energyBall = new ElectricEnergyBallPreview(
+        this.preset.center.x,
+        this.preset.center.y,
+        this.preset.radius,
+        this.preset.colorTheme,
+      );
+    }
+  }
+
+  draw(ctx, now = Date.now()) {
+    const preset = this.preset;
+    ctx.fillStyle = "#080816";
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+    if (preset.renderMode === "electric-edges") {
+      drawElectricEdgesPreset(ctx, preset, now);
+      return;
+    }
+
+    drawTerminals(ctx, preset);
+
+    if (preset.ballOnTop) {
+      drawStaticLayers(ctx, preset);
+      drawEnergyBall.call(this, ctx, preset, now);
+      return;
+    }
+
+    drawEnergyBall.call(this, ctx, preset, now);
+    drawStaticLayers(ctx, preset);
+  }
+}
+
+function isAnimatedCircuitComponent(componentId) {
+  return Object.prototype.hasOwnProperty.call(COMPONENT_ENERGY_PRESETS, componentId);
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.self !== window.top) {
+    document.getElementById("iframeWarning").hidden = false;
+  }
+
+  const manifest = JSON.parse(document.getElementById("palette-manifest-data").textContent);
+  let activeTab = "circuits";
+
+  document.querySelectorAll(".tab").forEach((button) => {
+    button.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach((b) => b.classList.remove("active"));
+      document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+      button.classList.add("active");
+      activeTab = button.dataset.tab;
+      document.getElementById(activeTab).classList.add("active");
+    });
+  });
+
+  const circuitSamples = [
+    "spr-component-basic-red-normal",
+    "spr-component-basic-blue-normal",
+    "spr-component-basic-green-normal",
+    "spr-component-basic-yellow-normal",
+    "spr-component-basic-purple-normal",
+    "spr-component-metal-steel-normal",
+    "spr-component-metal-steel-dented-one",
+    "spr-component-metal-steel-dented-two",
+  ];
+
+  function resolveLocalAssetPath(entryPath) {
+    const fileName = entryPath.split("/").pop();
+    if (entryPath.includes("/components/")) return "./assets/components/" + fileName;
+    if (entryPath.includes("/sprites/")) return "./assets/sprites/" + fileName;
+    if (entryPath.includes("/vfx/")) return "./assets/vfx/" + fileName;
+    return "./authoring/codex-" + fileName.replace(/\.svg$/, "") + ".svg";
+  }
+
+  const circuitGrid = document.getElementById("circuitGrid");
+  const circuitEnergyPreviews = [];
+  for (const id of circuitSamples) {
+    const entry = manifest.families.circuitComponents.find((item) => item.id === id);
+    if (!entry) continue;
+    const card = document.createElement("article");
+    card.className = "card";
+    if (isAnimatedCircuitComponent(id)) {
+      const canvas = document.createElement("canvas");
+      canvas.width = 96;
+      canvas.height = 48;
+      canvas.setAttribute("aria-label", id);
+      card.appendChild(canvas);
+      const code = document.createElement("code");
+      code.textContent = id;
+      card.appendChild(code);
+      circuitEnergyPreviews.push({
+        canvas,
+        ctx: canvas.getContext("2d"),
+        preview: new ElectricComponentEnergyPreview(id),
+      });
+    } else {
+      card.innerHTML = '<img src="' + resolveLocalAssetPath(entry.path) + '" alt="' + id + '" loading="lazy" /><code>' + id + '</code>';
+    }
+    circuitGrid.appendChild(card);
+  }
+
+  const vfxItems = [
+    ...manifest.families.sprites,
+    ...manifest.families.vfxExisting,
+    ...manifest.families.vfxNew,
+  ];
+  const vfxGrid = document.getElementById("vfxGrid");
+  for (const entry of vfxItems) {
+    const card = document.createElement("article");
+    card.className = "card";
+    const src = entry.path && entry.path.startsWith("/assets/visual/")
+      ? resolveLocalAssetPath(entry.path)
+      : "./authoring/codex-" + entry.id + ".svg";
+    card.innerHTML = '<img src="' + src + '" alt="' + entry.id + '" loading="lazy" /><code>' + entry.id + '</code>';
+    vfxGrid.appendChild(card);
+  }
+
+  const sparkAnimGrid = document.getElementById("sparkAnimGrid");
+  const sparkItems = manifest.families.vfxExisting.filter((entry) => entry.id.startsWith("vfx-countdown-spark"));
+  for (const entry of sparkItems) {
+    const card = document.createElement("article");
+    card.className = "card";
+    const src = resolveLocalAssetPath(entry.path);
+    card.innerHTML =
+      '<div class="anim-spark-wrap"><img class="anim-spark" src="' + src + '" alt="' + entry.id + '" /></div><code>' + entry.id + '</code>';
+    sparkAnimGrid.appendChild(card);
+  }
+
+  const tokenGrid = document.getElementById("tokenGrid");
+  for (const token of manifest.families.colorTokens) {
+    const swatch = document.createElement("article");
+    swatch.className = "swatch";
+    swatch.innerHTML =
+      '<div class="swatch-chip"><div class="swatch-chip-fill" style="background:' + token.value + '"></div></div>' +
+      '<div class="swatch-meta"><strong>' + token.id + '</strong><br>' + token.value + '<br><small>' + token.usage + '</small></div>';
+    tokenGrid.appendChild(swatch);
+  }
+
+  const ambientCanvas = document.getElementById("ambientCanvas");
+  const ambientCtx = ambientCanvas.getContext("2d");
+  const ambientGeometry = { centerX: 210, centerY: 210, radius: 180 };
+  let ambientBackground = new AmbientElectricBackground("arcade");
+
+  const animationsAmbientCanvas = document.getElementById("animationsAmbientCanvas");
+  const animationsAmbientCtx = animationsAmbientCanvas.getContext("2d");
+  const animationsAmbientGeometry = { centerX: 210, centerY: 210, radius: 180 };
+  let animationsAmbientBackground = new AmbientElectricBackground("arcade");
+
+  const energyBallCanvas = document.getElementById("energyBallCanvas");
+  const energyBallCtx = energyBallCanvas.getContext("2d");
+  const energyBallPreview = new ElectricEnergyBallPreview(60, 60, 18);
+
+  const impactCanvas = document.getElementById("impactCanvas");
+  const impactCtx = impactCanvas.getContext("2d");
+  let impactPreview = new ElectricImpactPreview("component");
+
+  function drawAmbientBackdrop(ctx, geometry) {
+    ctx.fillStyle = "#080816";
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.strokeStyle = "#244c7a";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(geometry.centerX, geometry.centerY, geometry.radius, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  function drawImpactBackdrop(ctx) {
+    ctx.fillStyle = "#080816";
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.strokeStyle = "#244c7a";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(8, 8, ctx.canvas.width - 16, ctx.canvas.height - 16);
+  }
+
+  function frame(now) {
+    if (activeTab === "circuits") {
+      for (const item of circuitEnergyPreviews) {
+        item.preview.draw(item.ctx, now);
+      }
+    }
+
+    if (activeTab === "ambient") {
+      ambientBackground.tick(now, ambientGeometry, false);
+      drawAmbientBackdrop(ambientCtx, ambientGeometry);
+      ambientBackground.draw(ambientCtx, ambientGeometry, false);
+    }
+
+    if (activeTab === "animations") {
+      energyBallCtx.fillStyle = "#080816";
+      energyBallCtx.fillRect(0, 0, energyBallCanvas.width, energyBallCanvas.height);
+      energyBallPreview.draw(energyBallCtx, now);
+
+      impactPreview.tick(now);
+      drawImpactBackdrop(impactCtx);
+      impactPreview.draw(impactCtx, now);
+
+      animationsAmbientBackground.tick(now, animationsAmbientGeometry, false);
+      drawAmbientBackdrop(animationsAmbientCtx, animationsAmbientGeometry);
+      animationsAmbientBackground.draw(animationsAmbientCtx, animationsAmbientGeometry, false);
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  document.getElementById("variantSelect").addEventListener("change", (event) => {
+    ambientBackground.setVariant(event.target.value);
+  });
+  document.getElementById("forceBolt").addEventListener("click", () => ambientBackground.forceBolt(ambientGeometry, false));
+  document.getElementById("resetAmbient").addEventListener("click", () => ambientBackground.reset());
+
+  document.getElementById("animationsVariantSelect").addEventListener("change", (event) => {
+    animationsAmbientBackground.setVariant(event.target.value);
+  });
+  document.getElementById("animationsForceBolt").addEventListener("click", () => animationsAmbientBackground.forceBolt(animationsAmbientGeometry, false));
+  document.getElementById("animationsResetAmbient").addEventListener("click", () => animationsAmbientBackground.reset());
+
+  document.getElementById("impactKindSelect").addEventListener("change", (event) => {
+    impactPreview.setKind(event.target.value);
+  });
+
+  requestAnimationFrame(frame);
+});
+  </script>
+</body>
+</html>

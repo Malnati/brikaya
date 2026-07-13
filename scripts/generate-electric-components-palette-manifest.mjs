@@ -7,7 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "..");
 const outputPath = path.join(
   repoRoot,
-  "docs/assets/issues/electric-components-palette/proposals/palette-manifest.json",
+  "docs/paletas/componentes/palette-manifest.json",
 );
 
 function inferElectricShape(filename) {

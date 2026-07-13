@@ -64,7 +64,7 @@ function buildSvg(spec) {
 
 const authoringDir = path.join(
   repoRoot,
-  "docs/assets/issues/electric-components-palette/proposals/authoring",
+  "docs/paletas/componentes/authoring",
 );
 const publicVfxDir = path.join(repoRoot, "public/assets/visual/vfx");
 
