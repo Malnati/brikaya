@@ -1,7 +1,14 @@
 import {
+  PLAYFIELD_BACKDROP_BOTTOM,
+  PLAYFIELD_BACKDROP_MID,
+  PLAYFIELD_BACKDROP_MID_STOP,
+  PLAYFIELD_BACKDROP_TOP,
+} from "../../constants/playfieldBackdrop";
+import {
   AmbientElectricBackground,
   AMBIENT_ELECTRIC_PRESETS,
   DEFAULT_AMBIENT_ELECTRIC_VARIANT,
+  drawFullScreenElectricBackdrop,
   resolveAmbientElectricVariant,
 } from "./ambientElectricBackground";
 import {
@@ -142,5 +149,28 @@ describe("ambientElectricBackground", () => {
     background.setVariant("storm");
     expect(background.getVariant()).toBe("storm");
     expect(background.getActiveBoltCount()).toBe(0);
+  });
+
+  it("desenha backdrop fullscreen com gradiente do playfield", () => {
+    const addColorStop = jest.fn();
+    const gradient = { addColorStop };
+    const ctx = {
+      createLinearGradient: jest.fn(() => gradient),
+      fillStyle: "",
+      fillRect: jest.fn(),
+    } as unknown as CanvasRenderingContext2D;
+
+    drawFullScreenElectricBackdrop(ctx, viewport);
+
+    expect(ctx.createLinearGradient).toHaveBeenCalledWith(0, 0, 0, viewport.height);
+    expect(addColorStop).toHaveBeenNthCalledWith(1, 0, PLAYFIELD_BACKDROP_TOP);
+    expect(addColorStop).toHaveBeenNthCalledWith(
+      2,
+      PLAYFIELD_BACKDROP_MID_STOP,
+      PLAYFIELD_BACKDROP_MID,
+    );
+    expect(addColorStop).toHaveBeenNthCalledWith(3, 1, PLAYFIELD_BACKDROP_BOTTOM);
+    expect(ctx.fillStyle).toBe(gradient);
+    expect(ctx.fillRect).toHaveBeenCalledWith(0, 0, viewport.width, viewport.height);
   });
 });

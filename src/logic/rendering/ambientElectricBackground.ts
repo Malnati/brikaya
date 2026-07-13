@@ -1,3 +1,4 @@
+import { buildPlayfieldBackdropGradient } from "../../constants/playfieldBackdrop";
 import {
   buildNaturalBoltGeometry,
   calculateLightningFadeAlpha,
@@ -241,11 +242,7 @@ export function drawFullScreenElectricBackdrop(
   ctx: CanvasRenderingContext2D,
   viewport: ViewportGeometry,
 ): void {
-  const gradient = ctx.createLinearGradient(0, 0, 0, viewport.height);
-  gradient.addColorStop(0, "#04070f");
-  gradient.addColorStop(0.45, "#070d18");
-  gradient.addColorStop(1, "#0a1220");
-  ctx.fillStyle = gradient;
+  ctx.fillStyle = buildPlayfieldBackdropGradient(ctx, viewport.height);
   ctx.fillRect(0, 0, viewport.width, viewport.height);
 }
 

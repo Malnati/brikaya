@@ -63,6 +63,15 @@
   --shadow-panel: var(--bb-shadow-panel);
   --bb-visual-viewport-width: 100vw;
   --bb-visual-viewport-height: 100dvh;
+  --bb-playfield-backdrop-top: #04070f;
+  --bb-playfield-backdrop-mid: #070d18;
+  --bb-playfield-backdrop-bottom: #0a1220;
+  --bb-playfield-backdrop: linear-gradient(
+    180deg,
+    var(--bb-playfield-backdrop-top) 0%,
+    var(--bb-playfield-backdrop-mid) 45%,
+    var(--bb-playfield-backdrop-bottom) 100%
+  );
 }
 
 :root[data-theme="neon-arcade"] {
@@ -711,6 +720,25 @@ select {
 
 .game-surface--ball-turret {
   --bb-ball-turret-playfield-max-width: 100%;
+  background: var(--bb-playfield-backdrop);
+}
+
+.game-surface--ball-turret .game-board-input-layout,
+.game-surface--ball-turret .game-board-frame,
+.game-surface--ball-turret .game-board-playfield,
+.game-surface--ball-turret .game-turret-control-panel {
+  background: transparent;
+}
+
+.game-surface--ball-turret .game-board-playfield {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.game-dashboard--ball-turret {
+  background: var(--bb-playfield-backdrop);
+  border-color: transparent;
+  box-shadow: none;
 }
 
 .game-board-playfield {
@@ -2495,6 +2523,10 @@ canvas {
     border-radius: 0;
     background: transparent;
     box-shadow: none;
+  }
+
+  .game-dashboard--ball-turret {
+    background: var(--bb-playfield-backdrop);
   }
 
   .dashboard-header {
