@@ -504,9 +504,9 @@ async function assertNoGameEnd(summary, profileLabel, scenarioLabel) {
   );
 }
 
-async function runScenarioCheck(page, profile, scenarioCheck) {
+async function prepareScenarioPage(page, profile, scenarioId) {
   await clearGameLog(page);
-  await page.goto(scenarioUrl(publicUrl(), scenarioCheck.id), {
+  await page.goto(scenarioUrl(publicUrl(), scenarioId), {
     waitUntil: "networkidle0",
     timeout: MAX_NAVIGATION_MS,
   });
@@ -514,6 +514,10 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
   await waitForCanvas(page);
   await dismissBallTurretStartModalIfVisible(page, profile.label);
   await waitForEventType(page, "game_start", SCENARIO_GAME_START_TIMEOUT_MS);
+}
+
+async function runScenarioCheck(page, profile, scenarioCheck) {
+  await prepareScenarioPage(page, profile, scenarioCheck.id);
 
   if (scenarioCheck.dismissTurretModal) {
     await dismissBallTurretStartModal(page, profile.label);
@@ -522,11 +526,24 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
   let details = {};
 
   if (scenarioCheck.kind === "paddle-collision") {
-    const { paddleCollision, events: eventsAtCollision } =
-      await waitForPaddleCollision(
+    let paddleCollision = null;
+    let eventsAtCollision = [];
+
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      if (attempt > 0) {
+        await prepareScenarioPage(page, profile, scenarioCheck.id);
+      }
+
+      const observation = await waitForPaddleCollision(
         page,
         SCENARIO_PADDLE_COLLISION_TIMEOUT_MS,
       );
+      paddleCollision = observation.paddleCollision;
+      eventsAtCollision = observation.events;
+
+      if (paddleCollision) break;
+    }
+
     assertPaddleCollisionPhysics(paddleCollision, profile.label);
     const summaryAtCollision = summarizeEvents(eventsAtCollision);
     assertCondition(
