@@ -704,23 +704,41 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
       powerUpMetadata: activation?.metadata ?? null,
     };
   } else if (scenarioCheck.kind === "phase-transition") {
+    // Toast some em ~1.2s; o wait de IDB por level_complete pode atrasar demais.
+    // Captura o estado do toast em paralelo, no momento em que o texto aparece.
+    const toastStatePromise = page
+      .waitForFunction(
+        (expectedLevel) => {
+          const toast = document.querySelector('[data-testid="level-toast"]');
+          const text = toast?.textContent?.trim() ?? "";
+          if (
+            !text.includes(`Fase ${expectedLevel}`) &&
+            !text.includes(`Level ${expectedLevel}`)
+          ) {
+            return null;
+          }
+
+          const canvas = document.querySelector("canvas");
+          const toastRect = toast?.getBoundingClientRect();
+          const canvasRect = canvas?.getBoundingClientRect();
+
+          return {
+            text,
+            toast: toastRect
+              ? { width: toastRect.width, height: toastRect.height }
+              : null,
+            canvas: canvasRect
+              ? { width: canvasRect.width, height: canvasRect.height }
+              : null,
+          };
+        },
+        { timeout: PHASE_TRANSITION_TIMEOUT_MS },
+        2,
+      )
+      .then((handle) => handle.jsonValue());
+
     await waitForEventType(page, "level_complete", PHASE_TRANSITION_TIMEOUT_MS);
-    await page.waitForSelector('[data-testid="level-toast"]', {
-      timeout: PHASE_TRANSITION_TIMEOUT_MS,
-    });
-    await page.waitForFunction(
-      (expectedLevel) => {
-        const text =
-          document.querySelector('[data-testid="level-toast"]')?.textContent ?? "";
-        return (
-          text.includes(`Fase ${expectedLevel}`) ||
-          text.includes(`Level ${expectedLevel}`)
-        );
-      },
-      { timeout: PHASE_TRANSITION_TIMEOUT_MS },
-      2,
-    );
-    const toastState = await collectLevelToastState(page);
+    const toastState = await toastStatePromise;
     await waitForEventType(page, "level_start", PHASE_TRANSITION_TIMEOUT_MS);
     const events = await readGameEvents(page);
     const phaseDetails = await assertPhaseTransition(page, events, profile.label, {
