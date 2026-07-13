@@ -576,12 +576,13 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
       "activate",
     );
     const events = await readGameEvents(page);
-    const summary = summarizeEventsThroughPowerUpActivation(
+    const fullSummary = summarizeEvents(events);
+    const activationSummary = summarizeEventsThroughPowerUpActivation(
       events,
       scenarioCheck.powerUpType,
     );
     assertCondition(
-      (summary.game_start || 0) >= 1,
+      (fullSummary.game_start || 0) >= 1,
       `${profile.label} [${scenarioCheck.label}]: game_start ausente.`,
     );
     assertCondition(
@@ -591,14 +592,14 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
 
     if (scenarioCheck.sideEffect === "component_destroyed") {
       assertCondition(
-        (summary.component_destroyed || 0) >= 1,
+        (fullSummary.component_destroyed || 0) >= 1,
         `${profile.label} [${scenarioCheck.label}]: component_destroyed ausente.`,
       );
     }
 
     if (scenarioCheck.sideEffect === "ball_added") {
       assertCondition(
-        (summary.ball_added || 0) >= 1,
+        (fullSummary.ball_added || 0) >= 1,
         `${profile.label} [${scenarioCheck.label}]: ball_added ausente.`,
       );
     }
@@ -610,9 +611,10 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
       );
     }
 
-    await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
+    await assertNoGameEnd(activationSummary, profile.label, scenarioCheck.label);
     details = {
-      eventSummary: summary,
+      eventSummary: fullSummary,
+      activationEventSummary: activationSummary,
       powerUpMetadata: activation?.metadata ?? null,
     };
   } else if (scenarioCheck.kind === "phase-transition") {
