@@ -342,6 +342,33 @@ async function runTorretaStart(page, profile) {
   return { eventSummary: summary, startModalCopy };
 }
 
+async function waitForRipCinematicVisible(page, timeoutMs) {
+  return page
+    .waitForFunction(
+      () => {
+        const overlay = document.querySelector(
+          '[data-testid="game-cinematic-overlay"][data-cinematic-type="rip"]',
+        );
+        const ripComposition = document.querySelector(
+          '[data-testid="game-cinematic-rip-composition"]',
+        );
+        const overlayRect = overlay?.getBoundingClientRect();
+        const ripRect = ripComposition?.getBoundingClientRect();
+        return Boolean(
+          overlayRect &&
+            ripRect &&
+            overlayRect.width > 0 &&
+            overlayRect.height > 0 &&
+            ripRect.width > 0 &&
+            ripRect.height > 0,
+        );
+      },
+      { timeout: timeoutMs },
+    )
+    .then(() => true)
+    .catch(() => false);
+}
+
 async function runTorretaLose(page, profile) {
   await page.goto(scenarioUrl(publicUrl(), "ball-turret-lose"), {
     waitUntil: "domcontentloaded",
@@ -351,26 +378,9 @@ async function runTorretaLose(page, profile) {
   await waitForCanvas(page);
   await dismissBallTurretStartModal(page, profile.label);
 
+  const ripVisiblePromise = waitForRipCinematicVisible(page, 25000);
   await waitForEventType(page, "game_end", 20000);
-
-  const ripVisible = await page.evaluate(() => {
-    const overlay = document.querySelector(
-      '[data-testid="game-cinematic-overlay"][data-cinematic-type="rip"]',
-    );
-    const ripComposition = document.querySelector(
-      '[data-testid="game-cinematic-rip-composition"]',
-    );
-    const overlayRect = overlay?.getBoundingClientRect();
-    const ripRect = ripComposition?.getBoundingClientRect();
-    return Boolean(
-      overlayRect &&
-        ripRect &&
-        overlayRect.width > 0 &&
-        overlayRect.height > 0 &&
-        ripRect.width > 0 &&
-        ripRect.height > 0,
-    );
-  });
+  const ripVisible = await ripVisiblePromise;
 
   const gameOverVisible = await page.evaluate((patternSource) => {
     const pattern = new RegExp(patternSource, "i");
