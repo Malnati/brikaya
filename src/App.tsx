@@ -3,6 +3,7 @@ import {
   useState,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   type ChangeEvent,
@@ -782,11 +783,25 @@ function GameApp() {
   }, [runLanguageDetection]);
 
   useEffect(() => {
-    if (!shouldStartWithLanguageDetection) return;
+    if (!shouldStartWithLanguageDetection || qaScenario) return;
     if (languageDetectionStartedRef.current) return;
 
     void runLanguageDetection(true);
-  }, [runLanguageDetection, shouldStartWithLanguageDetection]);
+  }, [qaScenario, runLanguageDetection, shouldStartWithLanguageDetection]);
+
+  useLayoutEffect(() => {
+    if (!qaScenario) return;
+
+    languageDetectionRunIdRef.current += 1;
+    if (languageDetectionTimerRef.current) {
+      clearTimeout(languageDetectionTimerRef.current);
+      languageDetectionTimerRef.current = null;
+    }
+
+    setIsLanguageDetectionVisible(false);
+    setIsInitialCountdownActive(false);
+    setCinematicOverlay(null);
+  }, [qaScenario]);
 
   const handleAcceptPrivacyConsent = useCallback(
     (allowLanguageLocation: boolean) => {

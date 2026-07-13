@@ -521,7 +521,6 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
   let details = {};
 
   if (scenarioCheck.kind === "paddle-collision") {
-    await waitForEventType(page, "game_start", OBSERVATION_TIMEOUT_MS);
     const { paddleCollision } = await waitForPaddleCollision(
       page,
       PADDLE_COLLISION_TIMEOUT_MS,
@@ -602,7 +601,6 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
     await assertNoGameEnd(summary, profile.label, scenarioCheck.label);
     details = { eventSummary: summary };
   } else if (scenarioCheck.kind === "power-up") {
-    await waitForEventType(page, "game_start", OBSERVATION_TIMEOUT_MS);
     const activation = await waitForPowerUpAction(
       page,
       scenarioCheck.powerUpType,
