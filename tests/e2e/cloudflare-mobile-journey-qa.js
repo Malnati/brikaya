@@ -57,6 +57,7 @@ const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-mobile-journey-qa.json";
 const MAX_NAVIGATION_MS = 45000;
 const OBSERVATION_TIMEOUT_MS = 12000;
 const SCENARIO_GAME_START_TIMEOUT_MS = 45000;
+const SCENARIO_PADDLE_COLLISION_TIMEOUT_MS = 30000;
 const START_MODAL_TEST_ID = "ball-turret-start-modal";
 const LEFT_SWITCH_TEST_ID = "ball-turret-switch-left";
 const TURRET_START_TITLES = ["Pronto para jogar", "Ready to play"];
@@ -522,7 +523,10 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
 
   if (scenarioCheck.kind === "paddle-collision") {
     const { paddleCollision, events: eventsAtCollision } =
-      await waitForPaddleCollision(page, PADDLE_COLLISION_TIMEOUT_MS);
+      await waitForPaddleCollision(
+        page,
+        SCENARIO_PADDLE_COLLISION_TIMEOUT_MS,
+      );
     assertPaddleCollisionPhysics(paddleCollision, profile.label);
     const summaryAtCollision = summarizeEvents(eventsAtCollision);
     assertCondition(
