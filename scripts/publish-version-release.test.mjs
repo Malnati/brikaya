@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { publishVersionRelease } from "./publish-version-release.mjs";
+import { publishVersionRelease, ensureGitIdentity } from "./publish-version-release.mjs";
 
 function createFixtureRepo() {
   const fixtureRoot = mkdtempSync(join(tmpdir(), "brikaya-publish-version-"));
@@ -43,6 +43,45 @@ prerelease: true
 
   return fixtureRoot;
 }
+
+function testEnsureGitIdentity() {
+  const calls = [];
+  const runner = {
+    cwd: process.cwd(),
+    spawn: (command, args) => {
+      calls.push({ command, args: [...args] });
+
+      if (command === "git" && args[0] === "config" && args[1] === "--get") {
+        return { status: 1, stdout: "", stderr: "" };
+      }
+
+      return { status: 0, stdout: "", stderr: "" };
+    },
+  };
+
+  ensureGitIdentity(runner, "git");
+
+  assert.ok(
+    calls.some(
+      (call) =>
+        call.command === "git" &&
+        call.args[0] === "config" &&
+        call.args[1] === "user.name" &&
+        call.args[2] === "github-actions[bot]",
+    ),
+  );
+  assert.ok(
+    calls.some(
+      (call) =>
+        call.command === "git" &&
+        call.args[0] === "config" &&
+        call.args[1] === "user.email" &&
+        call.args[2].includes("github-actions"),
+    ),
+  );
+}
+
+testEnsureGitIdentity();
 
 const fixtureRoot = createFixtureRepo();
 const calls = [];
