@@ -51,6 +51,7 @@ jobs:
           sudo apt-get install -y \
             ca-certificates \
             fonts-liberation \
+            gnupg \
             libasound2t64 \
             libatk-bridge2.0-0 \
             libatk1.0-0 \
@@ -67,10 +68,12 @@ jobs:
             libxfixes3 \
             libxkbcommon0 \
             libxrandr2 \
+            wget \
             xdg-utils
-
-      - name: Install Puppeteer Chrome
-        run: npx puppeteer browsers install chrome
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/google-chrome.gpg
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
 
       - name: Start local preview for e2e
         run: |
@@ -81,4 +84,5 @@ jobs:
         run: npm run test:cloudflare-e2e
         env:
           BRIKAYA_PUBLIC_URL: http://127.0.0.1:7979/
+          BRIKAYA_CHROME_EXECUTABLE: /usr/bin/google-chrome-stable
           BRIKAYA_E2E_ONLY: tests/e2e/cloudflare-theme-qa.js
