@@ -708,6 +708,18 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
     await page.waitForSelector('[data-testid="level-toast"]', {
       timeout: PHASE_TRANSITION_TIMEOUT_MS,
     });
+    await page.waitForFunction(
+      (expectedLevel) => {
+        const text =
+          document.querySelector('[data-testid="level-toast"]')?.textContent ?? "";
+        return (
+          text.includes(`Fase ${expectedLevel}`) ||
+          text.includes(`Level ${expectedLevel}`)
+        );
+      },
+      { timeout: PHASE_TRANSITION_TIMEOUT_MS },
+      2,
+    );
     const toastState = await collectLevelToastState(page);
     await waitForEventType(page, "level_start", PHASE_TRANSITION_TIMEOUT_MS);
     const events = await readGameEvents(page);
