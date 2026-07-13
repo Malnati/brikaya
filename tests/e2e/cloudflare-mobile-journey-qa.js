@@ -479,8 +479,7 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
   });
   await acceptPrivacyConsentIfPresent(page);
   await waitForCanvas(page);
-  await waitForGameLogReady(page);
-  await waitForInitialCountdownToFinish(page);
+  await waitForGameLogReady(page, 12000);
 
   if (scenarioCheck.dismissTurretModal) {
     await dismissBallTurretStartModal(page, profile.label);
