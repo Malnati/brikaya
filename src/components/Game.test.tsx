@@ -246,7 +246,7 @@ describe("Game", () => {
     expect(
       screen.getByTestId(BALL_TURRET_DUAL_SWITCHES_TEST_ID),
     ).not.toHaveAttribute("hidden");
-    expect(toggle).toHaveTextContent("Joystick");
+    expect(toggle).toHaveTextContent("↔");
     expect(useGameLoop).toHaveBeenLastCalledWith(
       expect.anything(),
       expect.any(Function),
