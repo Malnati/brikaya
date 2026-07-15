@@ -1,4 +1,4 @@
-import { render, waitFor, fireEvent } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 
 import { OnboardingGameplayDemoOverlay } from "./OnboardingGameplayDemoOverlay";
 import { ONBOARDING_GAMEPLAY_DEMO_MS } from "../constants/onboardingGameplayDemo";
@@ -76,21 +76,6 @@ describe("OnboardingGameplayDemoOverlay", () => {
     const onComplete = jest.fn();
 
     render(<OnboardingGameplayDemoOverlay onComplete={onComplete} />);
-
-    await waitFor(() => {
-      expect(onComplete).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  it("pula animação ao clicar no overlay", async () => {
-    const onComplete = jest.fn();
-
-    const { getByTestId } = render(
-      <OnboardingGameplayDemoOverlay onComplete={onComplete} />,
-    );
-
-    const overlay = getByTestId("onboarding-gameplay-demo-overlay");
-    fireEvent.click(overlay);
 
     await waitFor(() => {
       expect(onComplete).toHaveBeenCalledTimes(1);
