@@ -7,7 +7,6 @@ const GLYPH_ROWS = 10;
 const GLYPH_COLUMNS = 22;
 const GLYPH_SOURCE = "BRIKAYA0123456789<>/{}[]#$%&*+=?@";
 const GLYPH_SOURCE_LENGTH = GLYPH_SOURCE.length;
-const KEYBOARD_KEYS = ["B", "R", "I", "K", "A", "Y", "A", "•", "•", "•"];
 const PROGRESS_NOW = 100;
 const PROGRESS_MIN = 0;
 const PROGRESS_MAX = 100;
@@ -43,14 +42,6 @@ export function LanguageDetectionOverlay() {
         <p className="language-detection-overlay__eyebrow">Brikaya</p>
         <h2>{t("language.detectingTitle")}</h2>
         <p>{t("language.detectingBody")}</p>
-        <div
-          className="language-detection-overlay__keyboard"
-          aria-hidden="true"
-        >
-          {KEYBOARD_KEYS.map((keyLabel, index) => (
-            <span key={`${keyLabel}-${index}`}>{keyLabel}</span>
-          ))}
-        </div>
         <div
           className="language-detection-overlay__track"
           role="progressbar"
