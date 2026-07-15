@@ -1626,25 +1626,6 @@ canvas {
   text-transform: uppercase;
 }
 
-.language-detection-overlay__keyboard {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(36px, 1fr));
-  gap: var(--space-2);
-}
-
-.language-detection-overlay__keyboard span {
-  display: grid;
-  place-items: center;
-  min-height: 36px;
-  border: 1px solid color-mix(in srgb, var(--bb-color-primary) 30%, transparent);
-  border-radius: var(--radius-sm);
-  color: var(--bb-color-primary-strong);
-  background: color-mix(in srgb, var(--bb-color-background) 72%, transparent);
-  font-family: var(--bb-font-mono);
-  font-weight: 900;
-  animation: language-key-pulse 520ms ease-in-out infinite alternate;
-}
-
 .language-detection-overlay__track {
   position: relative;
   height: 12px;
@@ -1932,22 +1913,6 @@ canvas {
   to {
     opacity: 0.3;
     transform: translateY(10%);
-  }
-}
-
-@keyframes language-key-pulse {
-  from {
-    border-color: color-mix(in srgb, var(--bb-color-primary) 20%, transparent);
-    transform: translateY(0);
-  }
-
-  to {
-    border-color: color-mix(
-      in srgb,
-      var(--bb-color-secondary) 52%,
-      transparent
-    );
-    transform: translateY(-2px);
   }
 }
 
@@ -3016,7 +2981,6 @@ canvas {
   .game-cinematic-overlay__media,
   .game-cinematic-overlay__count,
   .language-detection-overlay__rain,
-  .language-detection-overlay__keyboard span,
   .language-detection-overlay__bar,
   .post-ad-resume,
   .post-ad-resume__halo,
