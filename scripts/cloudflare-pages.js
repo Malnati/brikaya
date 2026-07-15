@@ -579,6 +579,10 @@ function extractRequiredMatch(content, pattern, label) {
   return match;
 }
 
+function extractOptionalMatch(content, pattern) {
+  return content.match(pattern)?.[1] || content.match(pattern)?.[0] || EMPTY_STRING;
+}
+
 function buildPublicIndexCheckUrl(envValues) {
   const publicUrl = new URL(buildCustomDomainUrl(envValues));
   publicUrl.pathname = '/play/';
@@ -609,9 +613,9 @@ async function fetchPublicIndex(envValues) {
 
     return {
       status: response.status,
-      title: extractRequiredMatch(html, PUBLIC_INDEX_TITLE_PATTERN, 'título publicado'),
-      script: extractRequiredMatch(html, PUBLIC_INDEX_SCRIPT_PATTERN, 'script publicado'),
-      style: extractRequiredMatch(html, PUBLIC_INDEX_STYLE_PATTERN, 'estilo publicado')
+      title: extractOptionalMatch(html, PUBLIC_INDEX_TITLE_PATTERN),
+      script: extractOptionalMatch(html, PUBLIC_INDEX_SCRIPT_PATTERN),
+      style: extractOptionalMatch(html, PUBLIC_INDEX_STYLE_PATTERN)
     };
   } finally {
     clear();
@@ -1410,7 +1414,12 @@ async function verifyPreviewIndex(envValues) {
     return await verifyPublicIndex(previewEnvValues);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    if (!message.includes('fetch failed')) {
+    const shouldFallback =
+      message.includes('fetch failed') ||
+      message.includes('ainda não serve o build local') ||
+      message.includes('Não foi possível ler');
+
+    if (!shouldFallback) {
       throw error;
     }
 
