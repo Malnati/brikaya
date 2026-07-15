@@ -38,8 +38,8 @@ describe("DownloadsPage", () => {
       expect.stringMatching(/^\/|^https:\/\/brikaya\.com\//),
     );
     expect(
-      screen.getByRole("link", { name: /https:\/\/brikaya\.com\//i }),
-    ).toHaveAttribute("href", "https://brikaya.com/");
+      screen.getByRole("link", { name: /https:\/\/brikaya\.com\/play\//i }),
+    ).toHaveAttribute("href", "https://brikaya.com/play/");
     expect(screen.queryByText(/Chrome Web Store/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Google Play/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/Apple App Store/i)).not.toBeInTheDocument();
