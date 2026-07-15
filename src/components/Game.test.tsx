@@ -180,7 +180,7 @@ describe("Game", () => {
     expect(joystick).toHaveClass("game-turret-joystick--hidden");
     expect(joystick).toHaveAttribute("aria-hidden", "true");
     expect(toggle).toBeInTheDocument();
-    expect(toggle).toHaveTextContent("Joystick");
+    expect(toggle).toHaveTextContent("↔");
     expect(dualSwitches).not.toHaveAttribute("hidden");
     expect(screen.getByTestId(BALL_TURRET_LEFT_SWITCH_TEST_ID)).toHaveAttribute(
       "aria-label",
@@ -213,7 +213,7 @@ describe("Game", () => {
     expect(
       screen.getByTestId(BALL_TURRET_DUAL_SWITCHES_TEST_ID),
     ).toHaveAttribute("hidden");
-    expect(toggle).toHaveTextContent("Interruptores");
+    expect(toggle).toHaveTextContent("↔");
     expect(useGameLoop).toHaveBeenLastCalledWith(
       expect.anything(),
       expect.any(Function),
