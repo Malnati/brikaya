@@ -1,4 +1,4 @@
-import { render, waitFor } from "@testing-library/react";
+import { render, waitFor, fireEvent } from "@testing-library/react";
 
 import { OnboardingGameplayDemoOverlay } from "./OnboardingGameplayDemoOverlay";
 import { ONBOARDING_GAMEPLAY_DEMO_MS } from "../constants/onboardingGameplayDemo";
@@ -76,6 +76,39 @@ describe("OnboardingGameplayDemoOverlay", () => {
     const onComplete = jest.fn();
 
     render(<OnboardingGameplayDemoOverlay onComplete={onComplete} />);
+
+    await waitFor(() => {
+      expect(onComplete).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it("exibe textos progressivamente com efeito typing", async () => {
+    let currentTimestamp = 0;
+    jest.spyOn(window, "requestAnimationFrame").mockImplementation((callback) => {
+      callback(currentTimestamp);
+      currentTimestamp += 100;
+      return animationFrameCount++;
+    });
+
+    const { getByText, queryByText } = render(
+      <OnboardingGameplayDemoOverlay onComplete={jest.fn()} />,
+    );
+
+    await waitFor(() => {
+      const eyebrow = getByText((content) => content.length > 0 && "Brikaya".startsWith(content));
+      expect(eyebrow).toBeInTheDocument();
+    });
+  });
+
+  it("pula animação ao clicar no overlay", async () => {
+    const onComplete = jest.fn();
+
+    const { getByTestId } = render(
+      <OnboardingGameplayDemoOverlay onComplete={onComplete} />,
+    );
+
+    const overlay = getByTestId("onboarding-gameplay-demo-overlay");
+    fireEvent.click(overlay);
 
     await waitFor(() => {
       expect(onComplete).toHaveBeenCalledTimes(1);

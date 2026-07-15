@@ -1688,6 +1688,7 @@ canvas {
     ),
     var(--bb-color-background);
   isolation: isolate;
+  cursor: pointer;
 }
 
 .onboarding-gameplay-demo-overlay__stage {

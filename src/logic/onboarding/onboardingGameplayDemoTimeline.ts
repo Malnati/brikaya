@@ -201,7 +201,9 @@ export function buildOnboardingDemoFrame(
     ballRadius: dimensions.ballRadius,
     showImpact:
       elapsedMs >= ONBOARDING_DEMO_PHASE_BOUNCE_MS &&
-      elapsedMs < ONBOARDING_DEMO_PHASE_FADE_START_MS + 200,
+      elapsedMs <
+        ONBOARDING_DEMO_PHASE_BOUNCE_MS +
+          ONBOARDING_DEMO_ELECTRIC_IMPACT_VISIBLE_MS,
     impactOriginX: impactPosition.x,
     impactOriginY: impactPosition.y,
     isComplete: elapsedMs >= ONBOARDING_GAMEPLAY_DEMO_MS,
