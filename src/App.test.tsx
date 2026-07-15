@@ -546,18 +546,25 @@ describe("App theme selector", () => {
   it("mantém versão visível apenas dentro do menu", async () => {
     mockSystemTheme(true);
     const user = userEvent.setup();
+    const { BUILD_VERSION_LABEL } = await import("./constants/buildVersion");
 
     await renderApp();
 
-    expect(screen.queryByText(/^Versão v\d+$/)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(`Versão ${BUILD_VERSION_LABEL}`),
+    ).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Menu" }));
 
     const drawer = screen.getByRole("complementary", { name: "Menu do jogo" });
-    const version = within(drawer).getByText(/^Versão v\d+$/);
+    const version = within(drawer).getByText(`Versão ${BUILD_VERSION_LABEL}`);
     expect(version).toHaveClass("settings-drawer__version");
-    expect(version).toHaveAccessibleName("Versão do jogo v0");
-    expect(screen.queryByText(/^v\d+$/)).not.toBeInTheDocument();
+    expect(version).toHaveAccessibleName(
+      `Versão do jogo ${BUILD_VERSION_LABEL}`,
+    );
+    expect(
+      screen.queryByText(new RegExp(`^${BUILD_VERSION_LABEL}$`)),
+    ).not.toBeInTheDocument();
   });
 
   it("mostra progresso visual durante atualização do jogo", async () => {

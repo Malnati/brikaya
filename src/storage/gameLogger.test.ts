@@ -614,6 +614,30 @@ describe('GameLogger', () => {
     });
   });
 
+  describe('exportGameData', () => {
+    it('inclui buildVersion na exportação sem alterar exportVersion de schema', async () => {
+      jest.spyOn(gameLogger, 'getAllEvents').mockResolvedValue([]);
+      jest.spyOn(gameLogger, 'getGameStats').mockResolvedValue({
+        totalEvents: 0,
+        byType: {},
+        averageScore: 0,
+        gamesPlayed: 0,
+        averageBallsPerGame: 0,
+        latestSpeedState: null,
+        totalSpeedReductions: 0,
+        averageReductionApplied: 0,
+        minSpeedReachedCount: 0,
+        averageLevelDurationMs: 0,
+      } as any);
+
+      const { BUILD_VERSION_LABEL } = await import('../constants/buildVersion');
+      const exported = JSON.parse(await gameLogger.exportGameData());
+
+      expect(exported.buildVersion).toBe(BUILD_VERSION_LABEL);
+      expect(exported.exportVersion).toBe('2.1');
+    });
+  });
+
   describe('getCurrentGameId', () => {
     it('deve retornar null quando não há jogo ativo', () => {
       const gameId = gameLogger.getCurrentGameId();

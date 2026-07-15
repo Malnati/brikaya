@@ -64,6 +64,9 @@ export function validateMinimum(options = {}) {
   run("npm", ["run", "test:semantic-file-names"]);
   run("npm", ["run", "test:svg-assets"]);
   run("npm", ["run", "test:visual-asset-policy"]);
+  run("npm", ["run", "sync:package-version"]);
+  run("npm", ["run", "verify:package-version"]);
+  run("npm", ["run", "verify:build-version"]);
   run("npm", ["run", "brikaya:scaffold-version-docs"]);
   run("npm", ["run", "verify:version-docs"]);
 }

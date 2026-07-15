@@ -10,6 +10,8 @@ import {
 } from 'node:fs';
 import { dirname, extname, join, relative, resolve } from 'node:path';
 
+import { buildVersionFromGit } from './build-version.mjs';
+
 const PUBLIC_ROOT_ENV_KEY = 'BRIKAYA_ASSET_MANIFEST_PUBLIC_ROOT';
 const OUTPUT_ENV_KEY = 'BRIKAYA_ASSET_MANIFEST_OUTPUT';
 const DEFAULT_PUBLIC_ROOT = 'public';
@@ -100,7 +102,7 @@ function manifestVersion(assets) {
   return `${SHA_PREFIX}${createHash('sha256').update(versionSource).digest('hex')}`;
 }
 
-function buildManifest(publicRoot) {
+function buildManifest(publicRoot, buildVersion = buildVersionFromGit()) {
   const assets = collectAssets(publicRoot);
   const assetsByPath = Object.fromEntries(
     assets.map((asset) => [asset.path, asset]),
@@ -108,6 +110,7 @@ function buildManifest(publicRoot) {
   return {
     schemaVersion: SCHEMA_VERSION,
     version: manifestVersion(assets),
+    buildVersion,
     assets,
     assetsByPath,
   };
@@ -121,9 +124,20 @@ function writeManifest(outputPath, manifest) {
 function run() {
   const publicRoot = resolvePublicRoot(process.env);
   const outputPath = resolveOutputPath(process.env);
-  const manifest = buildManifest(publicRoot);
+  const configuredBuildVersion = process.env.BRIKAYA_BUILD_VERSION?.trim();
+  const buildVersion =
+    configuredBuildVersion && /^v\d+$/.test(configuredBuildVersion)
+      ? configuredBuildVersion
+      : buildVersionFromGit();
+  const manifest = buildManifest(publicRoot, buildVersion);
   writeManifest(outputPath, manifest);
-  console.log(`${MANIFEST_OK_LABEL}: assets=${manifest.assets.length} output=${outputPath}`);
+  console.log(
+    `${MANIFEST_OK_LABEL}: assets=${manifest.assets.length} buildVersion=${manifest.buildVersion} output=${outputPath}`,
+  );
 }
 
-run();
+export { buildManifest, manifestVersion };
+
+if (process.argv[1] && process.argv[1].endsWith('generate-runtime-asset-manifest.mjs')) {
+  run();
+}

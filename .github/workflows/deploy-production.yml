@@ -60,6 +60,9 @@ jobs:
       - name: Verify build version label
         run: npm run verify:build-version
 
+      - name: Verify package.json version
+        run: npm run verify:package-version
+
       - name: Ensure production Pages project
         run: node scripts/cloudflare-pages.js ensure-project
 

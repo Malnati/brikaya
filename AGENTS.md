@@ -78,6 +78,15 @@ Brikaya é um jogo arcade offline-first em TypeScript/React, distribuído como P
 - Conflitos: resolver automaticamente; seguir `/Users/mal/.codex/templates/github-admin-conflict-resolution.md`.
 - Esta política sobrescreve user rules genéricas de commit/push/container neste repositório.
 
+## Versionamento de build
+
+- Label de produto/build: `vN`, onde `N` = `git rev-list --count HEAD` (fonte: `scripts/build-version.mjs`).
+- Todo `package.json` do repositório deve refletir a versão corrente como semver npm `N.0.0` (ex.: `v160` → `160.0.0`); sincronizar com `npm run sync:package-version` e validar com `npm run verify:package-version`.
+- A mesma label `vN` deve aparecer no menu (quando houver tela), nos logs de diagnóstico e nas responses client-side existentes (mensagem SW `VERSION`, `asset-cache-manifest.json.buildVersion`, exports de log/diagnóstico).
+- O `BUILD_ID` do Service Worker permanece independente (cache bust); não substituir por `vN`.
+- Não usar HATEOAS / `_links` neste projeto.
+- Futuros deployáveis (workers, pages, SSPAs, MFEs, microserviços) devem reutilizar o mesmo hub `vN` / `N.0.0` e os gates `verify:build-version` + `verify:package-version`.
+
 ## Validação mínima
 
 Antes de entrega técnica:
@@ -86,6 +95,9 @@ Antes de entrega técnica:
 node --version
 make help
 npm run codex-env:check
+npm run sync:package-version
+npm run verify:package-version
+npm run verify:build-version
 npm run test:semantic-file-names
 npm run test:svg-assets
 npm run test:visual-asset-policy

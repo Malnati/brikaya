@@ -75,4 +75,12 @@ describe('service worker lazy asset cache', () => {
       /^[\s\S]*caches\.match\(request\)[\s\S]*await fetch\(request\)/,
     );
   });
+
+  it('expõe buildVersion na resposta VERSION do service worker', () => {
+    const source = readServiceWorker();
+
+    expect(source).toContain('BUILD_VERSION');
+    expect(source).toContain('__BRIKAYA_BUILD_VERSION__');
+    expect(source).toContain('buildVersion: BUILD_VERSION');
+  });
 });
