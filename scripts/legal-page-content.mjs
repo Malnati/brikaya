@@ -2,6 +2,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { EDITORIAL_PATHS } from './editorial-page-content.mjs';
 
 const MODULE_DIR = dirname(fileURLToPath(import.meta.url));
 const TRANSLATIONS_PATH = join(MODULE_DIR, 'legal-page-translations.json');
@@ -28,6 +29,9 @@ export const LEGAL_TEXT = {
   'nav.terms': 'Terms',
   'nav.dataDeletion': 'Data deletion',
   'nav.support': 'Support',
+  'nav.howToPlay': 'How to play',
+  'nav.faq': 'FAQ',
+  'nav.updates': 'Updates',
   'nav.backToGame': 'Back to the game',
   'common.updated': 'Last updated',
   'common.contactHeading': 'Official contact',
@@ -51,7 +55,12 @@ export const LEGAL_TEXT = {
   'link.support.body': 'Contact for help, privacy, and safety.',
   'link.about.title': 'About',
   'link.about.body': 'Game summary and commitment to free access.',
-
+  'link.howToPlay.title': 'How to play',
+  'link.howToPlay.body': 'Controls, scoring, and offline play guide.',
+  'link.faq.title': 'FAQ',
+  'link.faq.body': 'Free play, privacy, install, and support answers.',
+  'link.updates.title': 'Updates',
+  'link.updates.body': 'Design notes and product update log.',
   'about.title': 'About Brikaya',
   'about.description': 'About Brikaya, a free offline-first arcade game published at brikaya.com.',
   'about.h1': 'About Brikaya',
@@ -64,6 +73,8 @@ export const LEGAL_TEXT = {
   'about.s2.body2': 'Any future store, payment, or account feature must be described before it is used.',
   'about.s3.heading': 'Publisher',
   'about.s3.body1': 'Brikaya is published by Ricardo Malnati. The official site is https://brikaya.com/.',
+  'about.s4.heading': 'Player guides',
+  'about.s4.body1': 'Read How to play for controls and scoring, the FAQ for free play and privacy answers, and Updates for design notes. Those guides are available in English and Brazilian Portuguese.',
 
   'legal.title': 'Legal — Brikaya',
   'legal.description': 'Brikaya legal center with privacy, terms, user agreement, license, support, cookies, and data deletion.',
@@ -183,6 +194,7 @@ export const LEGAL_PAGE_DEFINITIONS = {
       ['about.s1.heading', ['about.s1.body1', 'about.s1.body2']],
       ['about.s2.heading', ['about.s2.body1', 'about.s2.body2']],
       ['about.s3.heading', ['about.s3.body1']],
+      ['about.s4.heading', ['about.s4.body1']],
     ],
   },
   '/legal/': {
@@ -289,6 +301,9 @@ export const LEGAL_PAGE_DEFINITIONS = {
 };
 
 const LINK_GRID_ITEMS = [
+  ['/how-to-play/', 'link.howToPlay.title', 'link.howToPlay.body'],
+  ['/faq/', 'link.faq.title', 'link.faq.body'],
+  ['/updates/', 'link.updates.title', 'link.updates.body'],
   ['/privacy/', 'link.privacy.title', 'link.privacy.body'],
   ['/terms/', 'link.terms.title', 'link.terms.body'],
   ['/user-agreement/', 'link.userAgreement.title', 'link.userAgreement.body'],
@@ -301,6 +316,8 @@ const LINK_GRID_ITEMS = [
 
 const LEGAL_NAV_ITEMS = [
   ['/', 'nav.play'],
+  ['/how-to-play/', 'nav.howToPlay'],
+  ['/faq/', 'nav.faq'],
   ['/about/', 'nav.about'],
   ['/legal/', 'nav.legal'],
   ['/privacy/', 'nav.privacy'],
@@ -358,12 +375,12 @@ export function renderLegalPage({ locale, path, canonicalUrl, alternateLinks, di
   const backLabel = legalText(locale, 'nav.backToGame');
 
   const navHtml = LEGAL_NAV_ITEMS.map(([itemPath, labelId]) => {
-    const href = itemPath === '/' ? '/' : localizedPath(locale, itemPath);
+    const href = itemPath === '/' ? '/' : resolvePublicNavHref(locale, itemPath, localizedPath);
     return `          <a href="${escapeHtml(href)}">${escapeHtml(legalText(locale, labelId))}</a>`;
   }).join('\n');
 
   const linkGridHtml = page.showLinkGrid
-    ? `      <div class="link-grid">\n${LINK_GRID_ITEMS.map(([itemPath, titleId, bodyId]) => `        <a class="link-card" href="${escapeHtml(localizedPath(locale, itemPath))}">\n          <strong>${escapeHtml(legalText(locale, titleId))}</strong>\n          <span>${escapeHtml(legalText(locale, bodyId))}</span>\n        </a>`).join('\n')}\n      </div>\n`
+    ? `      <div class="link-grid">\n${LINK_GRID_ITEMS.map(([itemPath, titleId, bodyId]) => `        <a class="link-card" href="${escapeHtml(resolvePublicNavHref(locale, itemPath, localizedPath))}">\n          <strong>${escapeHtml(legalText(locale, titleId))}</strong>\n          <span>${escapeHtml(legalText(locale, bodyId))}</span>\n        </a>`).join('\n')}\n      </div>\n`
     : '';
 
   const sectionsHtml = page.sections.map(([headingId, paragraphIds], index) => {
@@ -401,6 +418,15 @@ function linkifyContact(html) {
     'contato@brikaya.com',
     '<a href="mailto:contato@brikaya.com">contato@brikaya.com</a>',
   );
+}
+
+function resolvePublicNavHref(locale, itemPath, localizedPath) {
+  if (itemPath === '/') return '/';
+  if (EDITORIAL_PATHS.includes(itemPath)) {
+    const editorialLocale = String(locale).toLowerCase().startsWith('pt') ? 'pt-BR' : 'en-US';
+    return editorialLocale === 'en-US' ? itemPath : `/${editorialLocale}${itemPath}`;
+  }
+  return localizedPath(locale, itemPath);
 }
 
 const LEGAL_PAGE_CSS = `

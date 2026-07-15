@@ -756,6 +756,22 @@ async function validateSitemapAndRobots(baseUrl) {
       `sitemap sem ${path}`,
     );
   }
+  for (const path of ["/how-to-play/", "/faq/", "/updates/"]) {
+    assert(
+      sitemap.body.includes(`<loc>${new URL(path, baseUrl).href}</loc>`),
+      `sitemap sem editorial ${path}`,
+    );
+    assert(
+      sitemap.body.includes(
+        `<loc>${new URL(`/pt-BR${path}`, baseUrl).href}</loc>`,
+      ),
+      `sitemap sem editorial pt-BR ${path}`,
+    );
+    assert(
+      !sitemap.body.includes(`<loc>${new URL(`/fr${path}`, baseUrl).href}</loc>`),
+      `sitemap contém editorial thin fr${path}`,
+    );
+  }
   for (const item of TESTED_LEGAL_PAGES) {
     assert(
       sitemap.body.includes(`<loc>${new URL(item.path, baseUrl).href}</loc>`),

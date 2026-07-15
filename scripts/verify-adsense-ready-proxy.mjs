@@ -1,0 +1,167 @@
+// scripts/verify-adsense-ready-proxy.mjs
+/**
+ * Proxy hygiene checks for AdSense site readiness.
+ * Does NOT prove Google approval or "valuable content" quality.
+ */
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import {
+  EDITORIAL_DEFAULT_LOCALE,
+  EDITORIAL_LASTMOD,
+  EDITORIAL_LOCALES,
+  EDITORIAL_PATHS,
+  MIN_EDITORIAL_MAIN_WORDS,
+  countEditorialMainWords,
+  editorialLocalePath,
+} from './editorial-page-content.mjs';
+
+const CANONICAL_ORIGIN = 'https://brikaya.com';
+const EXPECTED_PUBLISHER_ID = 'pub-9571619183194136';
+const MAX_EDITORIAL_LOCALE_FANOUT = EDITORIAL_LOCALES.length;
+const HOME_THIN_WORD_INFO_THRESHOLD = 40;
+
+function fail(message) {
+  throw new Error(`adsense-ready-proxy: ${message}`);
+}
+
+function stripHtmlToWords(html) {
+  const cleaned = html
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, ' ');
+  const mainMatch = cleaned.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i);
+  const body = mainMatch ? mainMatch[1] : cleaned;
+  const text = body.replace(/<[^>]+>/g, ' ').replace(/&\w+;/g, ' ');
+  return text.split(/\s+/).filter(Boolean);
+}
+
+function readOptional(path) {
+  if (!existsSync(path)) return null;
+  return readFileSync(path, 'utf8');
+}
+
+function verifyAdsTxt() {
+  const publicAds = readOptional(resolve('public/ads.txt'));
+  if (!publicAds) fail('missing public/ads.txt');
+  const line = publicAds.trim().split(/\r?\n/)[0] ?? '';
+  if (!line.includes(`google.com, ${EXPECTED_PUBLISHER_ID}, DIRECT`)) {
+    fail(`public/ads.txt publisher mismatch (expected ${EXPECTED_PUBLISHER_ID})`);
+  }
+}
+
+function verifyAdSenseSnippet() {
+  const indexHtml = readOptional(resolve('index.html'));
+  if (!indexHtml) fail('missing index.html');
+  if (!indexHtml.includes(`client=ca-${EXPECTED_PUBLISHER_ID}`)) {
+    fail(`index.html missing AdSense client ca-${EXPECTED_PUBLISHER_ID}`);
+  }
+}
+
+function verifyEditorialSourceDepth() {
+  for (const path of EDITORIAL_PATHS) {
+    for (const locale of EDITORIAL_LOCALES) {
+      const words = countEditorialMainWords(locale, path);
+      if (words < MIN_EDITORIAL_MAIN_WORDS) {
+        fail(
+          `${locale}${path} source has ${words} words (proxy minimum ${MIN_EDITORIAL_MAIN_WORDS})`,
+        );
+      }
+    }
+  }
+}
+
+function verifyGeneratedEditorialPages() {
+  const roots = ['public', 'dist'].filter((dir) => existsSync(dir));
+  if (!roots.includes('public')) fail('missing public/');
+
+  for (const path of EDITORIAL_PATHS) {
+    for (const locale of EDITORIAL_LOCALES) {
+      const relative = editorialLocalePath(locale, path).replace(/^\//, '');
+      const publicFile = resolve('public', relative, 'index.html');
+      if (!existsSync(publicFile)) {
+        fail(`missing generated editorial page ${publicFile}`);
+      }
+      const html = readFileSync(publicFile, 'utf8');
+      const words = stripHtmlToWords(html);
+      if (words.length < MIN_EDITORIAL_MAIN_WORDS) {
+        fail(
+          `${publicFile} main/body has ${words.length} words (proxy minimum ${MIN_EDITORIAL_MAIN_WORDS})`,
+        );
+      }
+      if (!html.includes(EDITORIAL_LASTMOD)) {
+        fail(`${publicFile} missing editorial lastmod ${EDITORIAL_LASTMOD}`);
+      }
+      const canonical = `${CANONICAL_ORIGIN}${editorialLocalePath(locale, path)}`;
+      if (!html.includes(`rel="canonical" href="${canonical}"`)) {
+        fail(`${publicFile} missing canonical ${canonical}`);
+      }
+    }
+  }
+
+  if (roots.includes('dist')) {
+    for (const path of EDITORIAL_PATHS) {
+      for (const locale of EDITORIAL_LOCALES) {
+        const relative = editorialLocalePath(locale, path).replace(/^\//, '');
+        const distFile = resolve('dist', relative, 'index.html');
+        if (!existsSync(distFile)) {
+          fail(`missing dist editorial page ${distFile}`);
+        }
+      }
+    }
+  }
+}
+
+function verifySitemapEditorialFanout() {
+  const sitemapPath = existsSync(resolve('public/sitemap.xml'))
+    ? resolve('public/sitemap.xml')
+    : resolve('dist/sitemap.xml');
+  if (!existsSync(sitemapPath)) fail('missing sitemap.xml in public/ or dist/');
+  const sitemap = readFileSync(sitemapPath, 'utf8');
+
+  for (const path of EDITORIAL_PATHS) {
+    const expected = EDITORIAL_LOCALES.map(
+      (locale) => `<loc>${CANONICAL_ORIGIN}${editorialLocalePath(locale, path)}</loc>`,
+    );
+    for (const entry of expected) {
+      if (!sitemap.includes(entry)) fail(`sitemap missing ${entry}`);
+    }
+
+    const matches = [...sitemap.matchAll(
+      new RegExp(`<loc>${CANONICAL_ORIGIN.replace(/\./g, '\\.')}(/[a-zA-Z0-9-]+)?${path.replace(/\//g, '\\/')}</loc>`, 'g'),
+    )];
+    if (matches.length !== MAX_EDITORIAL_LOCALE_FANOUT) {
+      fail(
+        `sitemap editorial fan-out for ${path}: found ${matches.length}, expected ${MAX_EDITORIAL_LOCALE_FANOUT} (EN/PT only)`,
+      );
+    }
+  }
+}
+
+function reportHomeThinness() {
+  const home = readOptional(resolve('index.html'));
+  if (!home) return;
+  const words = stripHtmlToWords(home);
+  if (words.length < HOME_THIN_WORD_INFO_THRESHOLD) {
+    console.log(
+      `adsense-ready-proxy note: home shell has ${words.length} crawlable words (SPA). Editorial pages are the content proxy; this is not a Google approval.`,
+    );
+  }
+}
+
+function run() {
+  verifyAdsTxt();
+  verifyAdSenseSnippet();
+  verifyEditorialSourceDepth();
+  verifyGeneratedEditorialPages();
+  verifySitemapEditorialFanout();
+  reportHomeThinness();
+  console.log(
+    `adsense-ready-proxy ok: publisher=${EXPECTED_PUBLISHER_ID} editorialPages=${EDITORIAL_PATHS.length} locales=${EDITORIAL_LOCALES.join(',')} default=${EDITORIAL_DEFAULT_LOCALE} (proxy only; not AdSense approval)`,
+  );
+}
+
+try {
+  run();
+} catch (error) {
+  console.error(error.message || String(error));
+  process.exit(1);
+}

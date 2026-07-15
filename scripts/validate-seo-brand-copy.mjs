@@ -7,6 +7,7 @@ const SCANNED_PATHS = [
   'index.html',
   'public/about',
   'scripts/legal-page-content.mjs',
+  'scripts/editorial-page-content.mjs',
   'scripts/legal-page-translations.json',
   'scripts/generated/i18n-home-seo.json',
   'src/i18n/messages.ts',

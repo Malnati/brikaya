@@ -9,6 +9,14 @@ import {
   legalTranslationMissingIds,
   renderLegalPage,
 } from './legal-page-content.mjs';
+import {
+  EDITORIAL_DEFAULT_LOCALE,
+  EDITORIAL_LASTMOD,
+  EDITORIAL_LOCALES,
+  EDITORIAL_PATHS,
+  editorialLocalePath,
+  renderEditorialPage,
+} from './editorial-page-content.mjs';
 
 const DIST_DIR = 'dist';
 const PUBLIC_DIR = 'public';
@@ -17,7 +25,7 @@ const SITEMAP_FILE = 'sitemap.xml';
 const ROBOTS_FILE = 'robots.txt';
 const CANONICAL_ORIGIN = 'https://brikaya.com';
 const DEFAULT_LOCALE = 'pt-BR';
-const LASTMOD = '2026-07-07';
+const LASTMOD = '2026-07-15';
 const XML_HEADER = '<?xml version="1.0" encoding="UTF-8"?>';
 const HOME_ROUTE_PATH = '/';
 const DOWNLOADS_ROUTE_PATH = '/downloads/';
@@ -419,6 +427,19 @@ function legalHreflangLinks(routePath) {
   ].join('\n');
 }
 
+function editorialCanonicalUrl(locale, routePath) {
+  return `${CANONICAL_ORIGIN}${editorialLocalePath(locale, routePath)}`;
+}
+
+function editorialHreflangLinks(routePath) {
+  return [
+    ...EDITORIAL_LOCALES.map((locale) =>
+      `    <link rel="alternate" hreflang="${locale}" href="${editorialCanonicalUrl(locale, routePath)}" />`,
+    ),
+    `    <link rel="alternate" hreflang="x-default" href="${editorialCanonicalUrl(EDITORIAL_DEFAULT_LOCALE, routePath)}" />`,
+  ].join('\n');
+}
+
 function ensureLegalTranslations() {
   const requiredIds = legalPageIds();
   const failures = LEGAL_LOCALIZED_LOCALES
@@ -468,7 +489,15 @@ function buildSitemap() {
   const legalUrls = STATIC_PUBLIC_PATHS.flatMap((path) =>
     LEGAL_LOCALES.map((locale) => sitemapUrlEntry(legalCanonicalUrl(locale, path))),
   ).join('\n');
-  const urls = `${localizedUrls}\n${legalUrls}`;
+  const editorialUrls = EDITORIAL_PATHS.flatMap((path) =>
+    EDITORIAL_LOCALES.map((locale) =>
+      sitemapUrlEntry(editorialCanonicalUrl(locale, path)).replace(
+        `<lastmod>${LASTMOD}</lastmod>`,
+        `<lastmod>${EDITORIAL_LASTMOD}</lastmod>`,
+      ),
+    ),
+  ).join('\n');
+  const urls = `${localizedUrls}\n${legalUrls}\n${editorialUrls}`;
   return `${XML_HEADER}\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
 }
 
@@ -515,13 +544,30 @@ function run() {
     }
   }
 
+  for (const routePath of EDITORIAL_PATHS) {
+    for (const locale of EDITORIAL_LOCALES) {
+      const editorialHtml = renderEditorialPage({
+        locale,
+        path: routePath,
+        canonicalUrl: editorialCanonicalUrl(locale, routePath),
+        alternateLinks: editorialHreflangLinks(routePath),
+        dir: directionFor(locale),
+      });
+      const relativePath = editorialLocalePath(locale, routePath).replace(/^\//, '');
+      writeFile(join(distRoot, relativePath, INDEX_FILE), editorialHtml);
+      writeFile(join(publicRoot, relativePath, INDEX_FILE), editorialHtml);
+    }
+  }
+
   const sitemap = buildSitemap();
   const robots = buildRobots();
   writeFile(join(distRoot, SITEMAP_FILE), sitemap);
   writeFile(join(distRoot, ROBOTS_FILE), robots);
   writeFile(join(publicRoot, SITEMAP_FILE), sitemap);
   writeFile(join(publicRoot, ROBOTS_FILE), robots);
-  console.log(`localized-seo ok: locales=${LOCALES.length}, routes=${LOCALIZED_ROUTES.length}, legalLocales=${LEGAL_LOCALES.length}, legalPages=${STATIC_PUBLIC_PATHS.length}`);
+  console.log(
+    `localized-seo ok: locales=${LOCALES.length}, routes=${LOCALIZED_ROUTES.length}, legalLocales=${LEGAL_LOCALES.length}, legalPages=${STATIC_PUBLIC_PATHS.length}, editorialLocales=${EDITORIAL_LOCALES.length}, editorialPages=${EDITORIAL_PATHS.length}`,
+  );
 }
 
 run();
