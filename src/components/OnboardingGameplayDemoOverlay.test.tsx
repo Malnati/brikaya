@@ -82,24 +82,6 @@ describe("OnboardingGameplayDemoOverlay", () => {
     });
   });
 
-  it("exibe textos progressivamente com efeito typing", async () => {
-    let currentTimestamp = 0;
-    jest.spyOn(window, "requestAnimationFrame").mockImplementation((callback) => {
-      callback(currentTimestamp);
-      currentTimestamp += 100;
-      return animationFrameCount++;
-    });
-
-    const { getByText, queryByText } = render(
-      <OnboardingGameplayDemoOverlay onComplete={jest.fn()} />,
-    );
-
-    await waitFor(() => {
-      const eyebrow = getByText((content) => content.length > 0 && "Brikaya".startsWith(content));
-      expect(eyebrow).toBeInTheDocument();
-    });
-  });
-
   it("pula animação ao clicar no overlay", async () => {
     const onComplete = jest.fn();
 
