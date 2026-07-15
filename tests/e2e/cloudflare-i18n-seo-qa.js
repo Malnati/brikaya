@@ -7,6 +7,8 @@ import puppeteer from "puppeteer";
 
 import { buildChromeLaunchArgs } from "./chromeLaunchArgs.js";
 
+import { gameQaUrl, publicQaUrl } from "./publicQaEnv.js";
+
 const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
 const DEFAULT_REPORT_PATH =
   "docs/assets/issues/i18n-seo-localization/evidence/evi-brikaya-i18n-seo-public-validation.json";
@@ -20,6 +22,7 @@ const PAGE_TIMEOUT_MS = 20000;
 const OPTIONAL_CONSENT_TIMEOUT_MS = 5000;
 const HTTP_OK = 200;
 const ROOT_LOCALE = "pt-BR";
+const PLAY_ROUTE_PATH = "/play/";
 function seoHomeTitle(locale) {
   return seoSnapshot[locale]?.home?.title ?? seoSnapshot.en.home.title;
 }
@@ -517,12 +520,12 @@ const RTL_LOCALES = new Set(["ar", "ur", "fa", "he", "ps", "sd", "ks", "dv", "ck
 const BROWSER_AUTO_LANGUAGE = "es-MX";
 const BROWSER_AUTO_LANGUAGES = ["es-MX", "en-US"];
 const BROWSER_AUTO_EXPECTED_LOCALE = "es-MX";
-const BROWSER_AUTO_EXPECTED_PATH = "/es-MX/";
+const BROWSER_AUTO_EXPECTED_PATH = "/es-MX/play/";
 const TIME_ZONE_AUTO_LANGUAGE = "eo-EO";
 const TIME_ZONE_AUTO_LANGUAGES = ["eo-EO"];
 const TIME_ZONE_AUTO_VALUE = "Europe/Berlin";
 const TIME_ZONE_AUTO_EXPECTED_LOCALE = "de";
-const TIME_ZONE_AUTO_EXPECTED_PATH = "/de/";
+const TIME_ZONE_AUTO_EXPECTED_PATH = "/de/play/";
 const LOCALE_STORAGE_KEY = "brikaya-locale";
 const LOCALE_SOURCE_STORAGE_KEY = "brikaya-locale-source";
 const MANUAL_LOCALE_SOURCE = "manual";
@@ -607,6 +610,15 @@ function env(name, fallback) {
 
 function publicUrl() {
   return env("BRIKAYA_PUBLIC_URL", DEFAULT_PUBLIC_URL);
+}
+
+function siteOriginUrl() {
+  const parsed = new URL(publicQaUrl());
+  return `${parsed.protocol}//${parsed.host}/`;
+}
+
+function playAppUrl() {
+  return gameQaUrl();
 }
 
 function reportPath() {
@@ -741,6 +753,12 @@ async function validateSitemapAndRobots(baseUrl) {
       sitemap.body.includes(`<loc>${new URL(path, baseUrl).href}</loc>`),
       `sitemap sem ${locale}`,
     );
+    const playPath =
+      locale === ROOT_LOCALE ? PLAY_ROUTE_PATH : `/${locale}${PLAY_ROUTE_PATH}`;
+    assert(
+      sitemap.body.includes(`<loc>${new URL(playPath, baseUrl).href}</loc>`),
+      `sitemap sem play ${locale}`,
+    );
     const downloadsPath =
       locale === ROOT_LOCALE ? "/downloads/" : `/${locale}/downloads/`;
     assert(
@@ -754,6 +772,22 @@ async function validateSitemapAndRobots(baseUrl) {
     assert(
       sitemap.body.includes(`<loc>${new URL(path, baseUrl).href}</loc>`),
       `sitemap sem ${path}`,
+    );
+  }
+  for (const path of ["/how-to-play/", "/faq/", "/updates/"]) {
+    assert(
+      sitemap.body.includes(`<loc>${new URL(path, baseUrl).href}</loc>`),
+      `sitemap sem editorial ${path}`,
+    );
+    assert(
+      sitemap.body.includes(
+        `<loc>${new URL(`/pt-BR${path}`, baseUrl).href}</loc>`,
+      ),
+      `sitemap sem editorial pt-BR ${path}`,
+    );
+    assert(
+      !sitemap.body.includes(`<loc>${new URL(`/fr${path}`, baseUrl).href}</loc>`),
+      `sitemap contém editorial thin fr${path}`,
     );
   }
   for (const item of TESTED_LEGAL_PAGES) {
@@ -1087,7 +1121,8 @@ async function validateRuntimeTimeZoneLocale(baseUrl) {
 }
 
 async function run() {
-  const baseUrl = publicUrl();
+  const baseUrl = siteOriginUrl();
+  const playUrl = playAppUrl();
   const htmlResults = [];
   for (const item of [...TESTED_LOCALES, ...TESTED_DOWNLOADS_LOCALES]) {
     htmlResults.push(await validateHtml(baseUrl, item));
@@ -1098,14 +1133,15 @@ async function run() {
   }
   const sitemapRobots = await validateSitemapAndRobots(baseUrl);
   const runtime = await validateRuntimeLanguageSwitch(
-    baseUrl,
+    playUrl,
     screenshotPath(),
   );
-  const browserLocaleRuntime = await validateRuntimeBrowserLocale(baseUrl);
-  const timeZoneLocaleRuntime = await validateRuntimeTimeZoneLocale(baseUrl);
+  const browserLocaleRuntime = await validateRuntimeBrowserLocale(playUrl);
+  const timeZoneLocaleRuntime = await validateRuntimeTimeZoneLocale(playUrl);
   const report = {
     checkedAt: new Date().toISOString(),
     baseUrl,
+    playUrl,
     localesChecked: TESTED_LOCALES.map((item) => item.locale),
     downloadsLocalesChecked: TESTED_DOWNLOADS_LOCALES.map((item) => item.locale),
     legalLocalesChecked: TESTED_LEGAL_PAGES.map((item) => item.locale),

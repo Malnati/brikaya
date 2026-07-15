@@ -9,7 +9,7 @@ import {
   waitForInitialCountdownToFinish,
 } from "./consentHelpers.js";
 
-const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
+const DEFAULT_PUBLIC_URL = "https://brikaya.com/play/";
 const DEFAULT_SCREENSHOT_PATH = "tmp/screenshots/cloudflare-mobile-qa.png";
 const DEFAULT_MENU_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-mobile-menu.png";
@@ -20,7 +20,7 @@ const RESPONSIVE_VIEWPORT_MATRIX_PATH = new URL(
   "./responsiveViewportMatrix.json",
   import.meta.url,
 );
-const SOURCE_INDEX_FILE_NAME = "index.html";
+const SOURCE_INDEX_FILE_NAME = "play/index.html";
 const SOURCE_INDEX_PATH = resolve(process.cwd(), SOURCE_INDEX_FILE_NAME);
 const PUBLIC_TITLE_PATTERN = /<title>(.*?)<\/title>/i;
 const CHROME_LOW_RESOURCE_ARGS = [

@@ -2,11 +2,15 @@ import {
   ABOUT_ROUTE_PATH,
   DATA_DELETION_ROUTE_PATH,
   DOWNLOADS_ROUTE_PATH,
+  FAQ_ROUTE_PATH,
   HOME_ROUTE_PATH,
+  HOW_TO_PLAY_ROUTE_PATH,
   LEGAL_ROUTE_PATH,
+  PLAY_ROUTE_PATH,
   PRIVACY_ROUTE_PATH,
   getLocalizedPublicPath,
   getLocalizedLegalPath,
+  getLocalizedEditorialPath,
   getPublicRoutePath,
   isDownloadsRoute,
   stripLocalePrefix,
@@ -52,6 +56,12 @@ describe("public routes", () => {
     expect(getLocalizedPublicPath("en", DEFAULT_LOCALE, HOME_ROUTE_PATH)).toBe(
       "/en/",
     );
+    expect(getLocalizedPublicPath("en", DEFAULT_LOCALE, PLAY_ROUTE_PATH)).toBe(
+      "/en/play/",
+    );
+    expect(getLocalizedPublicPath(DEFAULT_LOCALE, DEFAULT_LOCALE, PLAY_ROUTE_PATH)).toBe(
+      "/play/",
+    );
   });
 
   it("gera caminhos legais por idioma principal sem duplicar variantes", () => {
@@ -72,6 +82,22 @@ describe("public routes", () => {
     );
     expect(getLocalizedLegalPath("ar-SA", DATA_DELETION_ROUTE_PATH)).toBe(
       "/ar/data-deletion/",
+    );
+  });
+
+  it("gera caminhos editoriais só em en-US e pt-BR", () => {
+    expect(getLocalizedEditorialPath("en", HOW_TO_PLAY_ROUTE_PATH)).toBe(
+      "/how-to-play/",
+    );
+    expect(getLocalizedEditorialPath("en-AU", FAQ_ROUTE_PATH)).toBe("/faq/");
+    expect(getLocalizedEditorialPath("fr", HOW_TO_PLAY_ROUTE_PATH)).toBe(
+      "/how-to-play/",
+    );
+    expect(getLocalizedEditorialPath("pt-BR", HOW_TO_PLAY_ROUTE_PATH)).toBe(
+      "/pt-BR/how-to-play/",
+    );
+    expect(getLocalizedEditorialPath("pt-PT", FAQ_ROUTE_PATH)).toBe(
+      "/pt-BR/faq/",
     );
   });
 });

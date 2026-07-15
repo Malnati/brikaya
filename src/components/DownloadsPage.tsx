@@ -1,9 +1,12 @@
 import {
   ABOUT_ROUTE_PATH,
   DOWNLOADS_ROUTE_PATH,
+  FAQ_ROUTE_PATH,
+  HOW_TO_PLAY_ROUTE_PATH,
   LEGAL_ROUTE_PATH,
   PRIVACY_ROUTE_PATH,
   TERMS_ROUTE_PATH,
+  getLocalizedEditorialPath,
   getLocalizedLegalPath,
   type PublicRoutePath,
 } from "../routes";
@@ -14,7 +17,7 @@ import {
   type TranslationKey,
 } from "../i18n";
 
-const BRIKAYA_PUBLIC_URL = "https://brikaya.com/";
+const BRIKAYA_PUBLIC_URL = "https://brikaya.com/play/";
 const DOWNLOADS_QR_IMAGE = "/assets/visual/ui/ui-downloads-qr-code.svg";
 const DOWNLOADS_HERO_IMAGE = "/assets/visual/ui/ui-downloads-arcade-preview.svg";
 
@@ -126,6 +129,8 @@ export function DownloadsPage() {
   const termsPath = getLocalizedLegalPath(locale, TERMS_ROUTE_PATH);
   const aboutPath = getLocalizedLegalPath(locale, ABOUT_ROUTE_PATH);
   const legalPath = getLocalizedLegalPath(locale, LEGAL_ROUTE_PATH);
+  const howToPlayPath = getLocalizedEditorialPath(locale, HOW_TO_PLAY_ROUTE_PATH);
+  const faqPath = getLocalizedEditorialPath(locale, FAQ_ROUTE_PATH);
 
   return (
     <main className="downloads-page" aria-labelledby="downloads-title">
@@ -141,6 +146,8 @@ export function DownloadsPage() {
           </a>
           <a href={privacyPath}>{t("downloads.nav.privacy")}</a>
           <a href={termsPath}>{t("downloads.nav.terms")}</a>
+          <a href={howToPlayPath}>{t("downloads.nav.howToPlay")}</a>
+          <a href={faqPath}>{t("downloads.nav.faq")}</a>
           <a href={aboutPath}>{t("downloads.nav.about")}</a>
           <a href={legalPath}>{t("downloads.nav.legal")}</a>
         </nav>

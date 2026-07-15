@@ -8,6 +8,8 @@ const ASSET_MANIFEST_URL = "/asset-cache-manifest.json";
 const CORE_PRECACHE_URLS = [
   "/",
   "/index.html",
+  "/play/",
+  "/play/index.html",
   "/downloads/",
   "/manifest.webmanifest",
   "/favicon.svg",
@@ -16,7 +18,7 @@ const CORE_PRECACHE_URLS = [
 const PRECACHE_URLS = [...CORE_PRECACHE_URLS];
 const GET_METHOD = "GET";
 const DOCUMENT_DESTINATION = "document";
-const INDEX_URL = "/index.html";
+const INDEX_URL = "/play/index.html";
 const SERVICE_WORKER_URL = "/sw.js";
 const WINDOW_CLIENT_TYPE = "window";
 const SKIP_WAITING_MESSAGE = "SKIP_WAITING";

@@ -14,7 +14,7 @@ import {
 import { EN_MESSAGES, I18N_MESSAGES, type TranslationKey } from "./messages";
 import { DOWNLOADS_ROUTE_PATH } from "../routes";
 
-const TEST_ROUTE = "/";
+const TEST_ROUTE = "/play/";
 const TEST_CAMPAIGN_SEARCH =
   "?utm_source=google&utm_medium=paid-search&utm_campaign=brikaya-p0-latam-test";
 const TEST_TITLE_KEY = "seo.title";
@@ -30,8 +30,8 @@ const UNSUPPORTED_BROWSER_LANGUAGE = "eo-EO";
 const GERMAN_BROWSER_LANGUAGE = "de-DE";
 const FRENCH_BROWSER_LANGUAGE = "fr-FR";
 const FRENCH_LOCALE: AppLocale = "fr";
-const CANONICAL_ROOT = "https://brikaya.com/";
-const SPANISH_CANONICAL = "https://brikaya.com/es-419/";
+const CANONICAL_ROOT = "https://brikaya.com/play/";
+const SPANISH_CANONICAL = "https://brikaya.com/es-419/play/";
 const CHINESE_TITLE = "Brikaya — circuit component arcade";
 const MENU_LABEL = "Menú";
 const LIME_GRAPHITE_LABEL = "Lima grafite";
@@ -1266,7 +1266,9 @@ describe("i18n offline do Brikaya", () => {
       expect(metadata.title).toContain("Brikaya");
       expect(metadata.description.length).toBeGreaterThan(24);
       expect(metadata.canonicalUrl).toBe(getCanonicalUrl(locale));
-      expect(getLocalePath(locale).startsWith(TEST_ROUTE)).toBe(true);
+      expect(getLocalePath(locale).endsWith("/play/") || getLocalePath(locale) === "/play/").toBe(
+        true,
+      );
     }
   });
 

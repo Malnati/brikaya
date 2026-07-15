@@ -2,12 +2,14 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-const INDEX_HTML_PATH = 'index.html';
+const INDEX_HTML_PATH = 'public/index.html';
+const PLAY_HTML_PATH = 'play/index.html';
 const PRIVACY_HTML_PATH = 'public/privacy/index.html';
 const TERMS_HTML_PATH = 'public/terms/index.html';
 const ROBOTS_TXT_PATH = 'public/robots.txt';
 const SITEMAP_XML_PATH = 'public/sitemap.xml';
 const CANONICAL_URL = 'https://brikaya.com/';
+const PLAY_CANONICAL_URL = 'https://brikaya.com/play/';
 const SITEMAP_URL = 'https://brikaya.com/sitemap.xml';
 const SOCIAL_IMAGE_URL = 'https://brikaya.com/assets/visual/ui/ui-pwa-app-icon.svg';
 const ROOT_FAVICON_LINK = '<link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />';
@@ -18,6 +20,7 @@ const OG_IMAGE_PROPERTY = 'property="og:image"';
 const TWITTER_IMAGE_NAME = 'name="twitter:image"';
 const SITEMAP_DIRECTIVE = `Sitemap: ${SITEMAP_URL}`;
 const LOC_TAG = `<loc>${CANONICAL_URL}</loc>`;
+const PLAY_LOC_TAG = `<loc>${PLAY_CANONICAL_URL}</loc>`;
 const PRIVACY_LOC_TAG = '<loc>https://brikaya.com/privacy/</loc>';
 const TERMS_LOC_TAG = '<loc>https://brikaya.com/terms/</loc>';
 const PORTUGUESE_PRIVACY_LOC_TAG = '<loc>https://brikaya.com/pt-BR/privacy/</loc>';
@@ -29,7 +32,7 @@ const ENGLISH_VARIANT_PRIVACY_LOC_TAG =
   '<loc>https://brikaya.com/en-AU/privacy/</loc>';
 const FRENCH_VARIANT_PRIVACY_LOC_TAG =
   '<loc>https://brikaya.com/fr-CA/privacy/</loc>';
-const EXPECTED_SITEMAP_LOC_COUNT = 2854;
+const EXPECTED_SITEMAP_LOC_COUNT = 3144;
 const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8"?>';
 const LOCALIZED_LOCALES = [
   'pt-BR',
@@ -323,10 +326,10 @@ function readProjectFile(filePath: string): string {
 }
 
 describe('metadados públicos de descoberta do Brikaya', () => {
-  it('declara idioma, descrição e URL canônica no HTML principal', () => {
+  it('declara idioma, descrição e URL canônica na landing pública', () => {
     const html = readProjectFile(INDEX_HTML_PATH);
 
-    expect(html).toContain(`<html lang="${PORTUGUESE_LOCALE}">`);
+    expect(html).toMatch(new RegExp(`<html lang="${PORTUGUESE_LOCALE}"(?: dir="ltr")?>`));
     expect(html).toContain(DESCRIPTION_META_NAME);
     expect(html).toContain(CANONICAL_REL);
     expect(html).toContain(CANONICAL_URL);
@@ -334,10 +337,19 @@ describe('metadados públicos de descoberta do Brikaya', () => {
     expect(html).toContain(OG_IMAGE_PROPERTY);
     expect(html).toContain(TWITTER_IMAGE_NAME);
     expect(html).toContain(SOCIAL_IMAGE_URL);
+    expect(html).toContain('href="/play/"');
     for (const locale of LOCALIZED_LOCALES) {
       expect(html).toContain(`hreflang="${locale}"`);
     }
     expect(html).toContain('hreflang="x-default"');
+  });
+
+  it('mantém o shell do jogo em /play/ com canônica própria', () => {
+    const html = readProjectFile(PLAY_HTML_PATH);
+
+    expect(html).toMatch(new RegExp(`<html lang="${PORTUGUESE_LOCALE}"(?: dir="ltr")?>`));
+    expect(html).toContain(PLAY_CANONICAL_URL);
+    expect(html).toContain('ca-pub-9571619183194136');
   });
 
   it('publica robots.txt apontando para sitemap canônico', () => {
@@ -356,12 +368,18 @@ describe('metadados públicos de descoberta do Brikaya', () => {
     expect(sitemap).toContain('http://www.sitemaps.org/schemas/sitemap/0.9');
     expect(locCount).toBe(EXPECTED_SITEMAP_LOC_COUNT);
     expect(sitemap).toContain(LOC_TAG);
+    expect(sitemap).toContain(PLAY_LOC_TAG);
     for (const locale of LOCALIZED_LOCALES) {
       const localizedUrl =
         locale === PORTUGUESE_LOCALE
           ? CANONICAL_URL
           : `https://brikaya.com/${locale}/`;
       expect(sitemap).toContain(`<loc>${localizedUrl}</loc>`);
+      const localizedPlayUrl =
+        locale === PORTUGUESE_LOCALE
+          ? PLAY_CANONICAL_URL
+          : `https://brikaya.com/${locale}/play/`;
+      expect(sitemap).toContain(`<loc>${localizedPlayUrl}</loc>`);
     }
     expect(sitemap).toContain(PRIVACY_LOC_TAG);
     expect(sitemap).toContain(TERMS_LOC_TAG);

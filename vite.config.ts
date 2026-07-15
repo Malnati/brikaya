@@ -1,8 +1,11 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { buildVersionFromGit } from './scripts/build-version.mjs'
 
-const BASE_URL = './';
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const BASE_URL = '/'
 const BUILD_VERSION = buildVersionFromGit(process.cwd());
 
 // https://vitejs.dev/config/
@@ -24,6 +27,9 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     rollupOptions: {
+      input: {
+        index: resolve(__dirname, 'play/index.html'),
+      },
       output: {
         manualChunks: undefined,
       },

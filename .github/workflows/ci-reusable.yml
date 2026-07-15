@@ -86,6 +86,6 @@ jobs:
       - name: Run cloudflare e2e suite
         run: npm run test:cloudflare-e2e
         env:
-          BRIKAYA_PUBLIC_URL: http://127.0.0.1:7979/
+          BRIKAYA_PUBLIC_URL: http://127.0.0.1:7979/play/
           BRIKAYA_CHROME_EXECUTABLE: /usr/bin/google-chrome-stable
           BRIKAYA_E2E_ONLY: tests/e2e/cloudflare-theme-qa.js

@@ -55,7 +55,7 @@ import {
   waitForPowerUpAction,
 } from "./journeyAssertionHelpers.js";
 
-const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
+const DEFAULT_PUBLIC_URL = "https://brikaya.com/play/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-mobile-journey-qa.json";
 const MAX_NAVIGATION_MS = 45000;
 const OBSERVATION_TIMEOUT_MS = 12000;

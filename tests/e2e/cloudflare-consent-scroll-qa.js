@@ -10,7 +10,7 @@ import {
 } from "./scrollHelpers.js";
 import { clearRuntimeState } from "./gameLogHelpers.js";
 
-const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
+const DEFAULT_PUBLIC_URL = "https://brikaya.com/play/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-consent-scroll-qa.json";
 const MAX_NAVIGATION_MS = 45000;
 const CONSENT_DIALOG_NAME = "Antes de jogar";

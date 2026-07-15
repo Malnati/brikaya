@@ -76,9 +76,12 @@ import {
 } from "./i18n";
 import {
   ABOUT_ROUTE_PATH,
+  FAQ_ROUTE_PATH,
+  HOW_TO_PLAY_ROUTE_PATH,
   LEGAL_ROUTE_PATH,
   PRIVACY_ROUTE_PATH,
   TERMS_ROUTE_PATH,
+  getLocalizedEditorialPath,
   getLocalizedLegalPath,
   isDownloadsRoute,
 } from "./routes";
@@ -222,6 +225,8 @@ function GameApp() {
   const termsPath = getLocalizedLegalPath(locale, TERMS_ROUTE_PATH);
   const aboutPath = getLocalizedLegalPath(locale, ABOUT_ROUTE_PATH);
   const legalPath = getLocalizedLegalPath(locale, LEGAL_ROUTE_PATH);
+  const howToPlayPath = getLocalizedEditorialPath(locale, HOW_TO_PLAY_ROUTE_PATH);
+  const faqPath = getLocalizedEditorialPath(locale, FAQ_ROUTE_PATH);
   const mobileOrientationLock = useMobileOrientationLock();
   const [score, setScore] = useState(0);
   const scoreRef = useRef(0);
@@ -1176,6 +1181,12 @@ function GameApp() {
                     ? t("language.disableRegion")
                     : t("language.reviewRegion")}
                 </button>
+                <a className="settings-drawer__link" href={howToPlayPath}>
+                  {t("menu.howToPlay")}
+                </a>
+                <a className="settings-drawer__link" href={faqPath}>
+                  {t("menu.faq")}
+                </a>
                 <a className="settings-drawer__link" href={privacyPath}>
                   {t("menu.privacyPolicy")}
                 </a>

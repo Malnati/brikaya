@@ -10,6 +10,7 @@ import {
 import {
   DOWNLOADS_ROUTE_PATH,
   HOME_ROUTE_PATH,
+  PLAY_ROUTE_PATH,
   getLocalizedPublicPath,
   getPublicRoutePath,
   type PublicRoutePath,
@@ -46,7 +47,7 @@ export function getLocalizedRoutePath(
 }
 
 export function getLocalePath(locale: AppLocale): string {
-  return getLocalizedRoutePath(locale, HOME_ROUTE_PATH);
+  return getLocalizedRoutePath(locale, PLAY_ROUTE_PATH);
 }
 
 export function getCanonicalUrl(

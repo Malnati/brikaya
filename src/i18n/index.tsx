@@ -46,6 +46,24 @@ const PATH_SEGMENT_SEPARATOR = "/";
 const EMPTY_STRING = "";
 const TEMPLATE_PATTERN = /\{\{(\w+)\}\}/g;
 const RTL_LOCALE_PREFIXES = ["ar", "fa", "he", "ur", "ps", "sd", "ks", "dv", "ckb", "ug", "yi", "bal"] as const;
+/** Path segments that are routes, not locale codes (`play` must not match `pl`). */
+const RESERVED_PUBLIC_PATH_SEGMENTS = new Set([
+  "play",
+  "downloads",
+  "about",
+  "legal",
+  "privacy",
+  "terms",
+  "user-agreement",
+  "license",
+  "data-deletion",
+  "cookies",
+  "support",
+  "how-to-play",
+  "faq",
+  "updates",
+  "assets",
+]);
 
 function isRtlLocale(locale: string): boolean {
   return RTL_LOCALE_PREFIXES.some((prefix) => locale.toLowerCase().startsWith(prefix));
@@ -420,6 +438,10 @@ function readLocaleFromPath(): AppLocale | null {
   const firstSegment = window.location.pathname
     .split(PATH_SEGMENT_SEPARATOR)
     .filter(Boolean)[0];
+
+  if (!firstSegment || RESERVED_PUBLIC_PATH_SEGMENTS.has(firstSegment)) {
+    return null;
+  }
 
   return normalizeLocale(firstSegment);
 }

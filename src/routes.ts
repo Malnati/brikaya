@@ -1,6 +1,7 @@
 import type { AppLocale } from "./i18n/messages";
 
 export const HOME_ROUTE_PATH = "/";
+export const PLAY_ROUTE_PATH = "/play/";
 export const DOWNLOADS_ROUTE_PATH = "/downloads/";
 export const ABOUT_ROUTE_PATH = "/about/";
 export const LEGAL_ROUTE_PATH = "/legal/";
@@ -11,6 +12,9 @@ export const LICENSE_ROUTE_PATH = "/license/";
 export const DATA_DELETION_ROUTE_PATH = "/data-deletion/";
 export const COOKIES_ROUTE_PATH = "/cookies/";
 export const SUPPORT_ROUTE_PATH = "/support/";
+export const HOW_TO_PLAY_ROUTE_PATH = "/how-to-play/";
+export const FAQ_ROUTE_PATH = "/faq/";
+export const UPDATES_ROUTE_PATH = "/updates/";
 
 export const LEGAL_ROUTE_PATHS = [
   ABOUT_ROUTE_PATH,
@@ -24,8 +28,18 @@ export const LEGAL_ROUTE_PATHS = [
   SUPPORT_ROUTE_PATH,
 ] as const;
 
-export type PublicRoutePath = typeof HOME_ROUTE_PATH | typeof DOWNLOADS_ROUTE_PATH;
+export const EDITORIAL_ROUTE_PATHS = [
+  HOW_TO_PLAY_ROUTE_PATH,
+  FAQ_ROUTE_PATH,
+  UPDATES_ROUTE_PATH,
+] as const;
+
+export type PublicRoutePath =
+  | typeof HOME_ROUTE_PATH
+  | typeof PLAY_ROUTE_PATH
+  | typeof DOWNLOADS_ROUTE_PATH;
 export type LegalRoutePath = (typeof LEGAL_ROUTE_PATHS)[number];
+export type EditorialRoutePath = (typeof EDITORIAL_ROUTE_PATHS)[number];
 
 const PATH_SEPARATOR = "/";
 const EMPTY_PATH = "";
@@ -74,6 +88,7 @@ export function getPublicRoutePath(
 ): PublicRoutePath {
   const routePath = stripLocalePrefix(pathname, supportedLocales);
   if (routePath === DOWNLOADS_ROUTE_PATH) return DOWNLOADS_ROUTE_PATH;
+  if (routePath === PLAY_ROUTE_PATH) return PLAY_ROUTE_PATH;
 
   return HOME_ROUTE_PATH;
 }
@@ -83,6 +98,13 @@ export function isDownloadsRoute(
   supportedLocales: readonly AppLocale[],
 ): boolean {
   return getPublicRoutePath(pathname, supportedLocales) === DOWNLOADS_ROUTE_PATH;
+}
+
+export function isPlayRoute(
+  pathname: string,
+  supportedLocales: readonly AppLocale[],
+): boolean {
+  return getPublicRoutePath(pathname, supportedLocales) === PLAY_ROUTE_PATH;
 }
 
 export function getLocalizedPublicPath(
@@ -136,4 +158,23 @@ export function getLocalizedLegalPath(
   if (legalLocale === "en-US") return normalizedRoutePath;
 
   return `${PATH_SEPARATOR}${legalLocale}${normalizedRoutePath}`;
+}
+
+export function getPrimaryEditorialLocale(locale: AppLocale): "en-US" | "pt-BR" {
+  const key = getLegalLocaleKey(locale);
+  if (key === "pt") return "pt-BR";
+  return "en-US";
+}
+
+export function getLocalizedEditorialPath(
+  locale: AppLocale,
+  editorialRoutePath: EditorialRoutePath,
+): string {
+  const normalizedRoutePath = normalizePublicPath(
+    editorialRoutePath,
+  ) as EditorialRoutePath;
+  const editorialLocale = getPrimaryEditorialLocale(locale);
+  if (editorialLocale === "en-US") return normalizedRoutePath;
+
+  return `${PATH_SEPARATOR}${editorialLocale}${normalizedRoutePath}`;
 }

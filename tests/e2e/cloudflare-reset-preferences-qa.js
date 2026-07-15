@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
 import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
-const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
+const DEFAULT_PUBLIC_URL = "https://brikaya.com/play/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-reset-preferences-qa.json";
 const DEFAULT_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-reset-preferences-qa.png";

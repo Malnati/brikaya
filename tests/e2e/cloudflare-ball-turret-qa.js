@@ -5,7 +5,7 @@ import puppeteer from "puppeteer";
 import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
-const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
+const DEFAULT_PUBLIC_URL = "https://brikaya.com/play/";
 const DEFAULT_REPORT_PATH =
   "docs/assets/issues/ball-turret-mode/evidence/evi-ball-turret-public-qa.json";
 const DEFAULT_DESKTOP_SCREENSHOT_PATH =
