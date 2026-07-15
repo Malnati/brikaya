@@ -240,6 +240,18 @@ function copyForLocale(locale) {
   return COPY.en;
 }
 
+function legalLocalePrefix(locale) {
+  const normalized = String(locale);
+  const lower = normalized.toLowerCase();
+  if (lower.startsWith('pt')) return '/pt-BR';
+  if (lower === 'en' || lower.startsWith('en-')) return '';
+  if (lower.startsWith('es')) return '/es-419';
+  if (lower.startsWith('hi')) return '/hi-IN';
+  if (normalized === 'zh-CN' || normalized === 'zh-TW') return `/${normalized}`;
+  if (normalized === 'zh-HK') return '/zh-TW';
+  return `/${normalized.split('-')[0]}`;
+}
+
 function localizedNavHref(locale, path) {
   if (path === PLAY_ROUTE_PATH || path === '/downloads/') {
     if (locale === 'pt-BR') return path;
@@ -250,13 +262,7 @@ function localizedNavHref(locale, path) {
     return path;
   }
   if (path === '/about/' || path === '/support/') {
-    if (locale === 'pt-BR') return `/pt-BR${path}`;
-    if (String(locale).toLowerCase().startsWith('en')) return path;
-    const primary = locale.split('-')[0];
-    if (locale === 'es-419' || locale === 'es-ES') return `/es-419${path}`;
-    if (locale === 'zh-CN' || locale === 'zh-TW') return `/${locale}${path}`;
-    if (locale === 'hi-IN') return `/hi-IN${path}`;
-    return `/${primary === 'en' ? '' : locale}${path}`.replace('//', '/');
+    return `${legalLocalePrefix(locale)}${path}`;
   }
   return path;
 }
