@@ -14,7 +14,8 @@ alwaysApply: true
 - AVIF nunca é formato padrão para sprites, UI, power-ups, componentes, VFX ou atlases a 60 FPS; AVIF só pode ser fundo/cena/cinemática em `public/assets/visual/cinematics/` com justificativa e evidência.
 - Não exponha detalhes internos na UI final.
 - Não aceite cobrança, plano pago, overage, cartão ou campanha ativa sem aprovação explícita.
-- Validação local mínima: `node --version`, `make help`, `npm run test:semantic-file-names`, `npm run test:svg-assets`, `npm run test:visual-asset-policy`, `npm run build`.
+- Validação local mínima: `node --version`, `make help`, `npm run sync:package-version`, `npm run verify:package-version`, `npm run verify:build-version`, `npm run test:semantic-file-names`, `npm run test:svg-assets`, `npm run test:visual-asset-policy`, `npm run build`.
+- Versão de build: `vN` (= commits HEAD); todo `package.json` em semver `N.0.0`; label nos logs, menu e responses client-side; sem HATEOAS.
 - Validação publicada deve usar `https://brikaya.com/` ou `BRIKAYA_PUBLIC_URL` quando apontar para preview autorizado (`https://dev.brikaya.com/`).
 - CI/CD: `main` → brikaya.com; demais branches → dev.brikaya.com após `ci` verde.
 - Ao concluir tarefa: `npm run brikaya:ship` sem pedir permissão.

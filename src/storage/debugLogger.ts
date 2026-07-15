@@ -1,5 +1,6 @@
 // src/storage/debugLogger.ts
 import { isRuntimeDiagnosticsEnabled } from '../utils/runtimeDiagnostics';
+import { BUILD_VERSION_LABEL } from '../constants/buildVersion';
 
 const FUNCTION_PLACEHOLDER = '[Function]';
 const SYMBOL_PLACEHOLDER = '[Symbol]';
@@ -129,7 +130,8 @@ class DebugLogger {
       stack: new Error().stack,
       metadata: {
         url: window.location.href,
-        userAgent: navigator.userAgent
+        userAgent: navigator.userAgent,
+        buildVersion: BUILD_VERSION_LABEL,
       }
     };
 
@@ -281,6 +283,7 @@ class DebugLogger {
     const exportData = {
       exportTimestamp: Date.now(),
       exportVersion: EXPORT_VERSION,
+      buildVersion: BUILD_VERSION_LABEL,
       stats,
       logs: allLogs
     };

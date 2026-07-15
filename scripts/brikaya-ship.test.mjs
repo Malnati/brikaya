@@ -25,6 +25,36 @@ assert.ok(
     (call) =>
       call.command === "npm" &&
       call.args[0] === "run" &&
+      call.args[1] === "sync:package-version",
+  ),
+  "validateMinimum deve executar sync:package-version",
+);
+
+assert.ok(
+  calls.some(
+    (call) =>
+      call.command === "npm" &&
+      call.args[0] === "run" &&
+      call.args[1] === "verify:package-version",
+  ),
+  "validateMinimum deve executar verify:package-version",
+);
+
+assert.ok(
+  calls.some(
+    (call) =>
+      call.command === "npm" &&
+      call.args[0] === "run" &&
+      call.args[1] === "verify:build-version",
+  ),
+  "validateMinimum deve executar verify:build-version",
+);
+
+assert.ok(
+  calls.some(
+    (call) =>
+      call.command === "npm" &&
+      call.args[0] === "run" &&
       call.args[1] === "brikaya:scaffold-version-docs",
   ),
   "validateMinimum deve executar brikaya:scaffold-version-docs",

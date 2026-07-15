@@ -1,5 +1,6 @@
 // public/sw.js
 const BUILD_ID = "__BRIKAYA_BUILD_ID__";
+const BUILD_VERSION = "__BRIKAYA_BUILD_VERSION__";
 const CACHE_PREFIX = "brikaya-cache";
 const CACHE_NAME = `${CACHE_PREFIX}-${BUILD_ID}`;
 const ASSET_CACHE_NAME = "brikaya-asset-cache-v1";
@@ -353,6 +354,7 @@ self.addEventListener("message", (event) => {
     event.source.postMessage({
       type: VERSION_MESSAGE,
       buildId: BUILD_ID,
+      buildVersion: BUILD_VERSION,
       cacheName: CACHE_NAME,
       assetCacheName: ASSET_CACHE_NAME,
     });

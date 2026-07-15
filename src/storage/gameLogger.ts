@@ -7,6 +7,7 @@ import {
 
 import { LOG, ERROR, WARN } from '../utils/logger';
 import { isGameplayTelemetryEnabled } from '../utils/runtimeDiagnostics';
+import { BUILD_VERSION_LABEL } from '../constants/buildVersion';
 
 LOG('📦 GameLogger.ts carregado');
 
@@ -934,6 +935,7 @@ class GameLogger {
     const exportData = {
       exportTimestamp: Date.now(),
       exportVersion: '2.1',
+      buildVersion: BUILD_VERSION_LABEL,
       stats,
       events: allEvents
     };

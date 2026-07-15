@@ -121,19 +121,29 @@ describe('DebugLogger', () => {
     );
   });
 
-  it('inicializa antes de limpar logs quando o banco ainda não está pronto', async () => {
+  it('inclui buildVersion no metadata e no export', async () => {
     const indexedDbMock = createDebugIndexedDbMock();
     const { debugLogger } = await import('./debugLogger');
-    (debugLogger as any).db = null;
-    const initializeSpy = jest
-      .spyOn(debugLogger as any, 'initialize')
-      .mockImplementation(async () => {
-        (debugLogger as any).db = indexedDbMock.mockDb;
-      });
+    const { BUILD_VERSION_LABEL } = await import('../constants/buildVersion');
+    (debugLogger as any).db = indexedDbMock.mockDb;
 
-    await debugLogger.clearAllLogs();
+    await debugLogger.log('com versão');
 
-    expect(initializeSpy).toHaveBeenCalledTimes(1);
-    expect(indexedDbMock.mockStore.clear).toHaveBeenCalledTimes(1);
+    expect(indexedDbMock.storedEntries[0].metadata.buildVersion).toBe(
+      BUILD_VERSION_LABEL,
+    );
+
+    jest.spyOn(debugLogger, 'getAllLogs').mockResolvedValue(indexedDbMock.storedEntries);
+    jest.spyOn(debugLogger, 'getLogStats').mockResolvedValue({
+      totalLogs: 1,
+      byLevel: { log: 1 },
+      byHour: { 0: 1 },
+      errorRate: 0,
+      averageLogsPerMinute: 0,
+    });
+
+    const exported = JSON.parse(await debugLogger.exportLogData());
+    expect(exported.buildVersion).toBe(BUILD_VERSION_LABEL);
+    expect(exported.exportVersion).toBe('1.0');
   });
 });
