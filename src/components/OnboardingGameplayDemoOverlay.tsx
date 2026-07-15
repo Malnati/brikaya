@@ -1,7 +1,15 @@
 // src/components/OnboardingGameplayDemoOverlay.tsx
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { ONBOARDING_GAMEPLAY_DEMO_MS } from "../constants/onboardingGameplayDemo";
+import {
+  ONBOARDING_GAMEPLAY_DEMO_MS,
+  ONBOARDING_DEMO_TYPING_TITLE_START_MS,
+  ONBOARDING_DEMO_TYPING_TITLE_DURATION_MS,
+  ONBOARDING_DEMO_TYPING_SUBTITLE_START_MS,
+  ONBOARDING_DEMO_TYPING_SUBTITLE_DURATION_MS,
+  ONBOARDING_DEMO_TYPING_DESCRIPTION_START_MS,
+  ONBOARDING_DEMO_TYPING_DESCRIPTION_DURATION_MS,
+} from "../constants/onboardingGameplayDemo";
 import {
   buildOnboardingDemoFrame,
   renderOnboardingGameplayDemoFrame,
@@ -9,6 +17,7 @@ import {
 } from "../logic/onboarding/onboardingGameplayDemoTimeline";
 import { useI18n } from "../i18n";
 import { shouldUseReducedCanvasEffects } from "../utils/performanceMode";
+import { useTypingEffect } from "../hooks/useTypingEffect";
 
 interface OnboardingGameplayDemoOverlayProps {
   onComplete: () => void;
@@ -57,6 +66,38 @@ export function OnboardingGameplayDemoOverlay({
   const completedRef = useRef(false);
   const switchDirectionRef = useRef<"neutral" | "up" | "down">("neutral");
   const rightSwitchRef = useRef<HTMLDivElement | null>(null);
+  const [isSkipped, setIsSkipped] = useState(false);
+  const [elapsedMs, setElapsedMs] = useState(0);
+
+  const titleText = useTypingEffect(
+    "Brikaya",
+    ONBOARDING_DEMO_TYPING_TITLE_START_MS,
+    ONBOARDING_DEMO_TYPING_TITLE_DURATION_MS,
+    elapsedMs,
+    isSkipped,
+  );
+
+  const subtitleText = useTypingEffect(
+    t("onboarding.demoTitle"),
+    ONBOARDING_DEMO_TYPING_SUBTITLE_START_MS,
+    ONBOARDING_DEMO_TYPING_SUBTITLE_DURATION_MS,
+    elapsedMs,
+    isSkipped,
+  );
+
+  const descriptionText = useTypingEffect(
+    t("onboarding.demoDescription"),
+    ONBOARDING_DEMO_TYPING_DESCRIPTION_START_MS,
+    ONBOARDING_DEMO_TYPING_DESCRIPTION_DURATION_MS,
+    elapsedMs,
+    isSkipped,
+  );
+
+  const handleSkip = () => {
+    if (!isSkipped) {
+      setIsSkipped(true);
+    }
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -68,9 +109,19 @@ export function OnboardingGameplayDemoOverlay({
     const renderFrame = (timestamp: number) => {
       if (startedAtRef.current === null) startedAtRef.current = timestamp;
 
-      const elapsedMs = timestamp - startedAtRef.current;
+      const currentElapsedMs = timestamp - startedAtRef.current;
+      setElapsedMs(currentElapsedMs);
+
+      if (isSkipped) {
+        if (!completedRef.current) {
+          completedRef.current = true;
+          onComplete();
+        }
+        return;
+      }
+
       const canvasSize = readCanvasSize(canvas);
-      const frame = buildOnboardingDemoFrame(elapsedMs, canvasSize);
+      const frame = buildOnboardingDemoFrame(currentElapsedMs, canvasSize);
       const context = canvas.getContext("2d");
 
       if (context) {
@@ -116,7 +167,7 @@ export function OnboardingGameplayDemoOverlay({
         window.cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [onComplete]);
+  }, [onComplete, isSkipped]);
 
   return (
     <div
@@ -125,14 +176,17 @@ export function OnboardingGameplayDemoOverlay({
       aria-live="polite"
       aria-label={t("onboarding.demoTitle")}
       data-testid={TEST_ID}
+      onClick={handleSkip}
     >
       <div className={STAGE_CLASS_NAME}>
-        <p className="onboarding-gameplay-demo-overlay__eyebrow">Brikaya</p>
-        <h2 className="onboarding-gameplay-demo-overlay__title">
-          {t("onboarding.demoTitle")}
+        <p className="onboarding-gameplay-demo-overlay__eyebrow" aria-live="polite">
+          {titleText}
+        </p>
+        <h2 className="onboarding-gameplay-demo-overlay__title" aria-live="polite">
+          {subtitleText}
         </h2>
-        <p className="onboarding-gameplay-demo-overlay__description">
-          {t("onboarding.demoDescription")}
+        <p className="onboarding-gameplay-demo-overlay__description" aria-live="polite">
+          {descriptionText}
         </p>
         <div className="onboarding-gameplay-demo-overlay__playfield">
           <div

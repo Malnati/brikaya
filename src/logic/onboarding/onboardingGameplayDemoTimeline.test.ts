@@ -65,9 +65,17 @@ describe("onboardingGameplayDemoTimeline", () => {
   });
 
   it("marca a timeline como completa no fim da duração", () => {
-    const frame = buildOnboardingDemoFrame(3500, canvasSize);
+    const frame = buildOnboardingDemoFrame(5000, canvasSize);
 
     expect(frame.isComplete).toBe(true);
     expect(frame.opacity).toBeLessThan(0.2);
+  });
+
+  it("fade começa em 4500ms", () => {
+    const beforeFadeFrame = buildOnboardingDemoFrame(4400, canvasSize);
+    const afterFadeStartFrame = buildOnboardingDemoFrame(4600, canvasSize);
+
+    expect(beforeFadeFrame.opacity).toBeCloseTo(1, 1);
+    expect(afterFadeStartFrame.opacity).toBeLessThan(1);
   });
 });
