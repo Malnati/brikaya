@@ -6,7 +6,7 @@ import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
-const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
+const DEFAULT_PUBLIC_URL = "https://brikaya.com/play/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-orientation-lock-qa.json";
 const DEFAULT_SCREENSHOT_DIR = "tmp/screenshots/orientation-lock";
 const RESPONSIVE_VIEWPORT_MATRIX_PATH = new URL(

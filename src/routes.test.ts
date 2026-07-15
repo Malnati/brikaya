@@ -6,6 +6,7 @@ import {
   HOME_ROUTE_PATH,
   HOW_TO_PLAY_ROUTE_PATH,
   LEGAL_ROUTE_PATH,
+  PLAY_ROUTE_PATH,
   PRIVACY_ROUTE_PATH,
   getLocalizedPublicPath,
   getLocalizedLegalPath,
@@ -54,6 +55,12 @@ describe("public routes", () => {
     );
     expect(getLocalizedPublicPath("en", DEFAULT_LOCALE, HOME_ROUTE_PATH)).toBe(
       "/en/",
+    );
+    expect(getLocalizedPublicPath("en", DEFAULT_LOCALE, PLAY_ROUTE_PATH)).toBe(
+      "/en/play/",
+    );
+    expect(getLocalizedPublicPath(DEFAULT_LOCALE, DEFAULT_LOCALE, PLAY_ROUTE_PATH)).toBe(
+      "/play/",
     );
   });
 

@@ -10,7 +10,7 @@ Preparar `https://brikaya.com/` para monetização por Google AdSense/H5 Games A
 - Conta/publisher: `ca-pub-9571619183194136`.
 - Site no AdSense: `brikaya.com` **não pronto** — rejeição por **Conteúdo de baixo valor** (e-mail/painel Sites).
 - Propriedade: snippet AdSense no `<head>` + `ads.txt` públicos presentes; checkmark exato do painel não revalidado aqui.
-- Remediação editorial em curso no repo: páginas crawláveis `/how-to-play/`, `/faq/`, `/updates/` (en-US + pt-BR apenas). Ver [`docs/adsense-site-readiness.md`](adsense-site-readiness.md).
+- Remediação editorial em curso no repo: landing crawlável em `/`, jogo em `/play/`, páginas `/how-to-play/`, `/faq/`, `/updates/` (en-US + pt-BR apenas). Ver [`docs/adsense-site-readiness.md`](adsense-site-readiness.md).
 - **Não** confirmar “corrigi os problemas” no AdSense até o conteúdo editorial estar publicado e a revisão humana for solicitada de propósito.
 - CMP: mensagem Google configurada para regulamentações europeias com três opções (`Consentir`, `Não consentir`, `Gerenciar opções`).
 - `ads.txt`: `google.com, pub-9571619183194136, DIRECT, f08c47fec0942fa0`.
@@ -21,7 +21,8 @@ Preparar `https://brikaya.com/` para monetização por Google AdSense/H5 Games A
 
 ## Decisão técnica
 
-- O snippet AdSense fica no `<head>` para verificação do site.
+- O snippet AdSense fica no `<head>` de `/play/` (shell do jogo) para verificação H5 e property.
+- Landing `/` é HTML estático crawlável; não carrega o runtime do jogo.
 - A chamada de anúncio fica atrás de flag runtime desligada por padrão: `window.__BRIKAYA_GOOGLE_ADS_ENABLED__ = false`.
 - O jogo chama `adBreak({ type: "next" })` somente depois das fases 3, 6, 9...; outras transições seguem sem pedido de anúncio.
 - Quando um anúncio real é exibido, a transição só termina depois da pausa mínima, do retorno do anúncio e do clique do jogador na mensagem de volta ao jogo.

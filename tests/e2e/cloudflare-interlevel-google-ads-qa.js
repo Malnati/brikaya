@@ -7,7 +7,7 @@ import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 import { assertAllowedQaHostname } from "./publicQaEnv.js";
 
-const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
+const DEFAULT_PUBLIC_URL = "https://brikaya.com/play/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-interlevel-google-ads.json";
 const DEFAULT_SCREENSHOT_PATH =
   "tmp/screenshots/cloudflare-interlevel-google-ads.png";

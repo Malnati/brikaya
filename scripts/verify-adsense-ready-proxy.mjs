@@ -14,11 +14,16 @@ import {
   countEditorialMainWords,
   editorialLocalePath,
 } from './editorial-page-content.mjs';
+import {
+  MIN_LANDING_MAIN_WORDS,
+  countLandingMainWords,
+} from './landing-page-content.mjs';
 
 const CANONICAL_ORIGIN = 'https://brikaya.com';
 const EXPECTED_PUBLISHER_ID = 'pub-9571619183194136';
 const MAX_EDITORIAL_LOCALE_FANOUT = EDITORIAL_LOCALES.length;
-const HOME_THIN_WORD_INFO_THRESHOLD = 40;
+const PLAY_INDEX_PATH = 'play/index.html';
+const PUBLIC_HOME_INDEX_PATH = 'public/index.html';
 
 function fail(message) {
   throw new Error(`adsense-ready-proxy: ${message}`);
@@ -49,10 +54,41 @@ function verifyAdsTxt() {
 }
 
 function verifyAdSenseSnippet() {
-  const indexHtml = readOptional(resolve('index.html'));
-  if (!indexHtml) fail('missing index.html');
-  if (!indexHtml.includes(`client=ca-${EXPECTED_PUBLISHER_ID}`)) {
-    fail(`index.html missing AdSense client ca-${EXPECTED_PUBLISHER_ID}`);
+  const playHtml = readOptional(resolve(PLAY_INDEX_PATH));
+  if (!playHtml) fail(`missing ${PLAY_INDEX_PATH}`);
+  if (!playHtml.includes(`client=ca-${EXPECTED_PUBLISHER_ID}`)) {
+    fail(`${PLAY_INDEX_PATH} missing AdSense client ca-${EXPECTED_PUBLISHER_ID}`);
+  }
+}
+
+function verifyLandingSourceDepth() {
+  for (const locale of ['pt-BR', 'en']) {
+    const words = countLandingMainWords(locale);
+    if (words < MIN_LANDING_MAIN_WORDS) {
+      fail(
+        `landing ${locale} source has ${words} words (proxy minimum ${MIN_LANDING_MAIN_WORDS})`,
+      );
+    }
+  }
+}
+
+function verifyGeneratedLandingHome() {
+  const publicHome = resolve(PUBLIC_HOME_INDEX_PATH);
+  if (!existsSync(publicHome)) {
+    fail(`missing generated landing ${publicHome}`);
+  }
+  const html = readFileSync(publicHome, 'utf8');
+  const words = stripHtmlToWords(html);
+  if (words.length < MIN_LANDING_MAIN_WORDS) {
+    fail(
+      `${PUBLIC_HOME_INDEX_PATH} main/body has ${words.length} words (proxy minimum ${MIN_LANDING_MAIN_WORDS})`,
+    );
+  }
+  if (!html.includes(`rel="canonical" href="${CANONICAL_ORIGIN}/"`)) {
+    fail(`${PUBLIC_HOME_INDEX_PATH} missing canonical ${CANONICAL_ORIGIN}/`);
+  }
+  if (!html.includes('href="/play/"')) {
+    fail(`${PUBLIC_HOME_INDEX_PATH} missing CTA link to /play/`);
   }
 }
 
@@ -136,26 +172,16 @@ function verifySitemapEditorialFanout() {
   }
 }
 
-function reportHomeThinness() {
-  const home = readOptional(resolve('index.html'));
-  if (!home) return;
-  const words = stripHtmlToWords(home);
-  if (words.length < HOME_THIN_WORD_INFO_THRESHOLD) {
-    console.log(
-      `adsense-ready-proxy note: home shell has ${words.length} crawlable words (SPA). Editorial pages are the content proxy; this is not a Google approval.`,
-    );
-  }
-}
-
 function run() {
   verifyAdsTxt();
   verifyAdSenseSnippet();
+  verifyLandingSourceDepth();
+  verifyGeneratedLandingHome();
   verifyEditorialSourceDepth();
   verifyGeneratedEditorialPages();
   verifySitemapEditorialFanout();
-  reportHomeThinness();
   console.log(
-    `adsense-ready-proxy ok: publisher=${EXPECTED_PUBLISHER_ID} editorialPages=${EDITORIAL_PATHS.length} locales=${EDITORIAL_LOCALES.join(',')} default=${EDITORIAL_DEFAULT_LOCALE} (proxy only; not AdSense approval)`,
+    `adsense-ready-proxy ok: publisher=${EXPECTED_PUBLISHER_ID} landing=/ play=/${PLAY_INDEX_PATH} editorialPages=${EDITORIAL_PATHS.length} locales=${EDITORIAL_LOCALES.join(',')} default=${EDITORIAL_DEFAULT_LOCALE} (proxy only; not AdSense approval)`,
   );
 }
 

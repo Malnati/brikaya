@@ -17,7 +17,7 @@ import {
   type TranslationKey,
 } from "../i18n";
 
-const BRIKAYA_PUBLIC_URL = "https://brikaya.com/";
+const BRIKAYA_PUBLIC_URL = "https://brikaya.com/play/";
 const DOWNLOADS_QR_IMAGE = "/assets/visual/ui/ui-downloads-qr-code.svg";
 const DOWNLOADS_HERO_IMAGE = "/assets/visual/ui/ui-downloads-arcade-preview.svg";
 

@@ -7,7 +7,7 @@ import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 import { seedPrivacyConsent } from "./consentHelpers.js";
 import { assertAllowedQaHostname } from "./publicQaEnv.js";
 
-const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
+const DEFAULT_PUBLIC_URL = "https://brikaya.com/play/";
 const DEFAULT_REPORT_PATH =
   "docs/assets/issues/cinematic-public-domain-media/evidence/evi-cinematic-public-domain-media-cloudflare-cinematic-effects.json";
 const DEFAULT_COUNTDOWN_SCREENSHOT_PATH =

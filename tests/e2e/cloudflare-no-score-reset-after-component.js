@@ -6,7 +6,7 @@ import puppeteer from "puppeteer";
 import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
-const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
+const DEFAULT_PUBLIC_URL = "https://brikaya.com/play/";
 const DEFAULT_REPORT_PATH =
   "tmp/reports/cloudflare-no-score-reset-after-component.json";
 const DEFAULT_SCREENSHOT_PATH =

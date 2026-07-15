@@ -1,6 +1,7 @@
 import type { AppLocale } from "./i18n/messages";
 
 export const HOME_ROUTE_PATH = "/";
+export const PLAY_ROUTE_PATH = "/play/";
 export const DOWNLOADS_ROUTE_PATH = "/downloads/";
 export const ABOUT_ROUTE_PATH = "/about/";
 export const LEGAL_ROUTE_PATH = "/legal/";
@@ -33,7 +34,10 @@ export const EDITORIAL_ROUTE_PATHS = [
   UPDATES_ROUTE_PATH,
 ] as const;
 
-export type PublicRoutePath = typeof HOME_ROUTE_PATH | typeof DOWNLOADS_ROUTE_PATH;
+export type PublicRoutePath =
+  | typeof HOME_ROUTE_PATH
+  | typeof PLAY_ROUTE_PATH
+  | typeof DOWNLOADS_ROUTE_PATH;
 export type LegalRoutePath = (typeof LEGAL_ROUTE_PATHS)[number];
 export type EditorialRoutePath = (typeof EDITORIAL_ROUTE_PATHS)[number];
 
@@ -84,6 +88,7 @@ export function getPublicRoutePath(
 ): PublicRoutePath {
   const routePath = stripLocalePrefix(pathname, supportedLocales);
   if (routePath === DOWNLOADS_ROUTE_PATH) return DOWNLOADS_ROUTE_PATH;
+  if (routePath === PLAY_ROUTE_PATH) return PLAY_ROUTE_PATH;
 
   return HOME_ROUTE_PATH;
 }
@@ -93,6 +98,13 @@ export function isDownloadsRoute(
   supportedLocales: readonly AppLocale[],
 ): boolean {
   return getPublicRoutePath(pathname, supportedLocales) === DOWNLOADS_ROUTE_PATH;
+}
+
+export function isPlayRoute(
+  pathname: string,
+  supportedLocales: readonly AppLocale[],
+): boolean {
+  return getPublicRoutePath(pathname, supportedLocales) === PLAY_ROUTE_PATH;
 }
 
 export function getLocalizedPublicPath(

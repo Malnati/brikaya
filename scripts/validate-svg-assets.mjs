@@ -22,9 +22,10 @@ const FAVICON_RUNTIME_PATH = '/favicon.svg';
 const PWA_ICON_RUNTIME_PATH = '/assets/visual/ui/ui-pwa-app-icon.svg';
 const RUNTIME_SVG_PATTERN = /['"`]((?:\/assets\/visual\/)[^'"`]+\.svg)['"`]/g;
 const ALLOWED_VISUAL_EXTENSION = '.svg';
-const SOURCE_SCAN_ENTRIES = ['src', 'public/sw.js', 'public/manifest.webmanifest', 'index.html'];
+const SOURCE_SCAN_ENTRIES = ['src', 'public/sw.js', 'public/manifest.webmanifest', 'index.html', 'play/index.html'];
 const EXPECTED_REFERENCES = {
   'index.html': [FAVICON_RUNTIME_PATH],
+  'play/index.html': [FAVICON_RUNTIME_PATH],
   [VISUAL_ASSET_SOURCE_PATH]: [],
   'public/manifest.webmanifest': [PWA_ICON_RUNTIME_PATH],
 };

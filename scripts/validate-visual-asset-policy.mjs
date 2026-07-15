@@ -15,7 +15,7 @@ export const REPORT_PATH = process.env.BRIKAYA_VISUAL_ASSET_POLICY_REPORT || 'tm
 export const VISUAL_RUNTIME_ROOT = 'public/assets/visual';
 export const ATLAS_RUNTIME_PREFIX = '/assets/visual/atlases/';
 export const CINEMATIC_RUNTIME_PREFIX = '/assets/visual/cinematics/';
-export const SOURCE_SCAN_ENTRIES = ['src', 'public/sw.js', 'public/manifest.webmanifest', 'index.html'];
+export const SOURCE_SCAN_ENTRIES = ['src', 'public/sw.js', 'public/manifest.webmanifest', 'index.html', 'play/index.html'];
 export const POLICY_TEXT_FILES = ['AGENTS.md', '.cursor/rules/all.mdc'];
 export const ALLOWED_REASONS = new Set([
   'heavy-animation',

@@ -37,7 +37,7 @@ function runCloudflarePagesExpression<T>(
 }
 
 function writeIndexHtml(rootPath: string, body: string) {
-  const distPath = join(rootPath, TEST_OUTPUT_DIR);
+  const distPath = join(rootPath, TEST_OUTPUT_DIR, 'play');
   mkdirSync(distPath, { recursive: true });
   writeFileSync(join(distPath, 'index.html'), body);
 }
@@ -56,7 +56,7 @@ describe('cloudflare-pages public index verification', () => {
   });
 
   it('mantém o título público inicial alinhado ao título runtime pt-BR', () => {
-    const indexHtml = readFileSync(resolve(process.cwd(), 'index.html'), 'utf8');
+    const indexHtml = readFileSync(resolve(process.cwd(), 'play/index.html'), 'utf8');
 
     expect(indexHtml).toContain(`<title>${TEST_TITLE}</title>`);
     expect(indexHtml).toContain(`property="og:title" content="${TEST_TITLE}"`);
@@ -141,6 +141,7 @@ describe('cloudflare-pages public index verification', () => {
     );
 
     expect(checkUrl.origin).toBe(`https://${TEST_CUSTOM_DOMAIN}`);
+    expect(checkUrl.pathname).toBe('/play/');
     expect(checkUrl.searchParams.has(PUBLIC_INDEX_CHECK_PARAM)).toBe(true);
     expect(mismatchMessage).toContain(
       `script=${publicIndex.script} expected=${expectedIndex.script}`,

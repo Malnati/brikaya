@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path";
 
 import { assertAllowedQaHostname } from "./publicQaEnv.js";
 
-const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
+const DEFAULT_PUBLIC_URL = "https://brikaya.com/play/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-bundle-mime-qa.json";
 const PUBLIC_URL_ENV_KEY = "BRIKAYA_PUBLIC_URL";
 const REPORT_ENV_KEY = "BRIKAYA_BUNDLE_MIME_QA_REPORT";

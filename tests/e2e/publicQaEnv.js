@@ -19,6 +19,10 @@ export function canonicalOrigin() {
   return `${url.protocol}//${url.host}/`;
 }
 
+export function gameQaUrl() {
+  return new URL("play/", canonicalOrigin()).href;
+}
+
 export function isAllowedQaHostname(hostname) {
   return (
     ALLOWED_QA_HOSTNAMES.has(hostname) ||

@@ -7,7 +7,7 @@ import { buildPuppeteerLaunchOptions } from "./browserLauncher.js";
 import { classifyExternalRequests } from "./allowed-external-requests.js";
 import { acceptPrivacyConsentIfPresent } from "./consentHelpers.js";
 
-const DEFAULT_PUBLIC_URL = "https://brikaya.com/";
+const DEFAULT_PUBLIC_URL = "https://brikaya.com/play/";
 const DEFAULT_REPORT_PATH = "tmp/reports/cloudflare-offline-pwa-qa.json";
 const DEFAULT_SCREENSHOT_PATH = "tmp/screenshots/cloudflare-offline-pwa-qa.png";
 const VIEWPORT = {
@@ -26,8 +26,8 @@ const CANVAS_SELECTOR = "canvas";
 const FORBIDDEN_USER_COPY_PATTERN =
   /service worker|cache|runtime|dataset|localStorage|IndexedDB|PWA/i;
 const OFFLINE_FETCH_PATHS = [
-  "/",
-  "/index.html",
+  "/play/",
+  "/play/index.html",
   "/manifest.webmanifest",
   "/assets/visual/sprites/spr-ball-player-default.svg",
   "/assets/visual/sprites/spr-paddle-player-default.svg",

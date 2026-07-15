@@ -554,7 +554,12 @@ function sleep(milliseconds) {
 }
 
 function readLocalPublicIndexExpectation(envValues) {
-  const indexPath = resolve(process.cwd(), envValues[OUTPUT_DIR_KEY], INDEX_HTML_FILE_NAME);
+  const indexPath = resolve(
+    process.cwd(),
+    envValues[OUTPUT_DIR_KEY],
+    'play',
+    INDEX_HTML_FILE_NAME,
+  );
   const indexHtml = readFileSync(indexPath, 'utf8');
 
   return {
@@ -576,6 +581,7 @@ function extractRequiredMatch(content, pattern, label) {
 
 function buildPublicIndexCheckUrl(envValues) {
   const publicUrl = new URL(buildCustomDomainUrl(envValues));
+  publicUrl.pathname = '/play/';
   publicUrl.searchParams.set(PUBLIC_INDEX_CHECK_PARAM, String(Date.now()));
 
   return publicUrl;
