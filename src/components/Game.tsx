@@ -609,27 +609,6 @@ export default function Game({
               .filter(Boolean)
               .join(" ")}
           >
-            <button
-              type="button"
-              className={BALL_TURRET_CONTROL_TOGGLE_CLASS_NAME}
-              data-testid={BALL_TURRET_CONTROL_TOGGLE_TEST_ID}
-              aria-label={BALL_TURRET_CONTROL_TOGGLE_LABEL}
-              title={BALL_TURRET_CONTROL_TOGGLE_LABEL}
-              onClick={() =>
-                setTurretControlMode((currentMode) =>
-                  currentMode === TURRET_CONTROL_MODE_JOYSTICK
-                    ? TURRET_CONTROL_MODE_DUAL_SWITCH
-                    : TURRET_CONTROL_MODE_JOYSTICK,
-                )
-              }
-            >
-              <span aria-hidden="true">↔</span>
-              <span className="game-turret-control-toggle__text">
-                {turretControlMode === TURRET_CONTROL_MODE_JOYSTICK
-                  ? "Interruptores"
-                  : "Joystick"}
-              </span>
-            </button>
             <div
               ref={ballTurretJoystickRef}
               className={[
@@ -660,6 +639,22 @@ export default function Game({
                   readJoystickDiagnosticPoint,
                 )}
             </div>
+            <button
+              type="button"
+              className={BALL_TURRET_CONTROL_TOGGLE_CLASS_NAME}
+              data-testid={BALL_TURRET_CONTROL_TOGGLE_TEST_ID}
+              aria-label={BALL_TURRET_CONTROL_TOGGLE_LABEL}
+              title={BALL_TURRET_CONTROL_TOGGLE_LABEL}
+              onClick={() =>
+                setTurretControlMode((currentMode) =>
+                  currentMode === TURRET_CONTROL_MODE_JOYSTICK
+                    ? TURRET_CONTROL_MODE_DUAL_SWITCH
+                    : TURRET_CONTROL_MODE_JOYSTICK,
+                )
+              }
+            >
+              <span aria-hidden="true">↔</span>
+            </button>
             <div
               className={BALL_TURRET_DUAL_SWITCHES_CLASS_NAME}
               data-testid={BALL_TURRET_DUAL_SWITCHES_TEST_ID}
