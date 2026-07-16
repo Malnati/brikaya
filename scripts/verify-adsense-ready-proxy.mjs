@@ -18,12 +18,20 @@ import {
   MIN_LANDING_MAIN_WORDS,
   countLandingMainWords,
 } from './landing-page-content.mjs';
+import {
+  LEGAL_DEFAULT_LOCALE,
+  LEGAL_LASTMOD,
+  LEGAL_PATHS,
+  MIN_LEGAL_MAIN_WORDS,
+  countLegalMainWords,
+} from './legal-page-content.mjs';
 
 const CANONICAL_ORIGIN = 'https://brikaya.com';
 const EXPECTED_PUBLISHER_ID = 'pub-9571619183194136';
 const MAX_EDITORIAL_LOCALE_FANOUT = EDITORIAL_LOCALES.length;
 const PLAY_INDEX_PATH = 'play/index.html';
 const PUBLIC_HOME_INDEX_PATH = 'public/index.html';
+const LEGAL_DEPTH_PATHS = ['/about/', '/privacy/', '/terms/', '/support/', '/cookies/'];
 
 function fail(message) {
   throw new Error(`adsense-ready-proxy: ${message}`);
@@ -146,6 +154,40 @@ function verifyGeneratedEditorialPages() {
   }
 }
 
+function verifyLegalSourceDepth() {
+  for (const path of LEGAL_DEPTH_PATHS) {
+    if (!LEGAL_PATHS.includes(path)) {
+      fail(`legal depth path ${path} is not in LEGAL_PATHS`);
+    }
+    const words = countLegalMainWords(LEGAL_DEFAULT_LOCALE, path);
+    if (words < MIN_LEGAL_MAIN_WORDS) {
+      fail(
+        `legal ${LEGAL_DEFAULT_LOCALE}${path} source has ${words} words (proxy minimum ${MIN_LEGAL_MAIN_WORDS})`,
+      );
+    }
+  }
+}
+
+function verifyGeneratedLegalDefaultPages() {
+  for (const path of LEGAL_DEPTH_PATHS) {
+    const relative = path.replace(/^\//, '');
+    const publicFile = resolve('public', relative, 'index.html');
+    if (!existsSync(publicFile)) {
+      fail(`missing generated legal page ${publicFile}`);
+    }
+    const html = readFileSync(publicFile, 'utf8');
+    const words = stripHtmlToWords(html);
+    if (words.length < MIN_LEGAL_MAIN_WORDS) {
+      fail(
+        `${publicFile} main/body has ${words.length} words (proxy minimum ${MIN_LEGAL_MAIN_WORDS})`,
+      );
+    }
+    if (!html.includes(LEGAL_LASTMOD)) {
+      fail(`${publicFile} missing legal lastmod ${LEGAL_LASTMOD}`);
+    }
+  }
+}
+
 function verifySitemapEditorialFanout() {
   const sitemapPath = existsSync(resolve('public/sitemap.xml'))
     ? resolve('public/sitemap.xml')
@@ -179,9 +221,11 @@ function run() {
   verifyGeneratedLandingHome();
   verifyEditorialSourceDepth();
   verifyGeneratedEditorialPages();
+  verifyLegalSourceDepth();
+  verifyGeneratedLegalDefaultPages();
   verifySitemapEditorialFanout();
   console.log(
-    `adsense-ready-proxy ok: publisher=${EXPECTED_PUBLISHER_ID} landing=/ play=/${PLAY_INDEX_PATH} editorialPages=${EDITORIAL_PATHS.length} locales=${EDITORIAL_LOCALES.join(',')} default=${EDITORIAL_DEFAULT_LOCALE} (proxy only; not AdSense approval)`,
+    `adsense-ready-proxy ok: publisher=${EXPECTED_PUBLISHER_ID} landing=/ play=/${PLAY_INDEX_PATH} editorialPages=${EDITORIAL_PATHS.length} legalDepthPages=${LEGAL_DEPTH_PATHS.length} locales=${EDITORIAL_LOCALES.join(',')} default=${EDITORIAL_DEFAULT_LOCALE} (proxy only; not AdSense approval)`,
   );
 }
 

@@ -20,7 +20,7 @@
     <link rel="alternate" hreflang="x-default" href="https://brikaya.com/updates/" />
     <title>Brikaya updates and design notes</title>
     <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","name":"Brikaya updates and design notes","description":"Product updates and design notes for Brikaya: offline-first arcade play, public trust pages, and editorial guides for players.","url":"https://brikaya.com/updates/","inLanguage":"en-US","isPartOf":{"@type":"WebSite","name":"Brikaya","url":"https://brikaya.com/"},"publisher":{"@type":"Person","name":"Ricardo Malnati"},"dateModified":"2026-07-15"}
+{"@context":"https://schema.org","@type":"WebPage","name":"Brikaya updates and design notes","description":"Product updates and design notes for Brikaya: offline-first arcade play, public trust pages, and editorial guides for players.","url":"https://brikaya.com/updates/","inLanguage":"en-US","isPartOf":{"@type":"WebSite","name":"Brikaya","url":"https://brikaya.com/"},"publisher":{"@type":"Person","name":"Ricardo Malnati"},"dateModified":"2026-07-16"}
     </script>
     <style>
       :root {
@@ -101,7 +101,7 @@
       <header>
         <h1>Updates and design notes</h1>
         <p class="lead">A plain-language log of what Brikaya is building for players: free browser play, local progress, and clearer public information.</p>
-        <p class="updated">Last updated: 2026-07-15</p>
+        <p class="updated">Last updated: 2026-07-16</p>
         <nav aria-label="Brikaya">
           <a href="/play/">Play</a>
           <a href="/how-to-play/">How to play</a>
@@ -112,9 +112,15 @@
         </nav>
       </header>
       <section class="note">
+        <h2>2026-07-16 — Landing, /play/, and stale-cache recovery</h2>
+        <p>The public home at https://brikaya.com/ is a crawlable landing with product prose, links to how-to-play, FAQ, updates, downloads, and trust pages. The interactive arcade runs at https://brikaya.com/play/ on the same origin so offline caching, ads.txt, and consent stay on one host.</p>
+        <p>A service-worker update now prefers network responses for HTML documents and clears old shell caches on activate. The landing also asks existing workers to update and, for installed standalone PWAs that still open the apex, redirects to /play/. That recovers blank screens caused by cached game shells pointing at removed hashed bundles.</p>
+      </section>
+
+      <section>
         <h2>2026-07 — Player guides and site readiness</h2>
         <p>We published crawlable how-to-play, FAQ, and updates pages in English and Brazilian Portuguese. These pages explain gameplay, privacy expectations, and install options without requiring a login. They exist so visitors and reviewers can understand the product from stable URLs, not only from the interactive shell.</p>
-        <p>Legal and trust pages (about, privacy, terms, support, and related notices) remain available as short public references. Editorial pages stay limited to en-US and pt-BR on purpose, so the sitemap does not multiply thin translated clones of the same guide.</p>
+        <p>Legal and trust pages (about, privacy, terms, support, and related notices) remain available as public references and were expanded in English with clearer detail about /play/, local storage, and contact paths. Editorial pages stay limited to en-US and pt-BR on purpose, so the sitemap does not multiply thin translated clones of the same guide.</p>
       </section>
 
       <section>
@@ -125,14 +131,14 @@
 
       <section>
         <h2>What we optimize for</h2>
-        <p>Clarity over spectacle: players should learn the loop in seconds. Privacy over profile: local storage beats mandatory signup for this version. Stable public pages over marketing noise: about, legal, support, and the new guides should answer real questions without internal jargon.</p>
+        <p>Clarity over spectacle: players should learn the loop in seconds. Privacy over profile: local storage beats mandatory signup for this version. Stable public pages over marketing noise: about, legal, support, and the guides should answer real questions without internal jargon.</p>
         <p>We will keep expanding player-facing notes here when features change. If you need help between updates, use <a href="mailto:contato@brikaya.com">contato@brikaya.com</a> and include the browser and device you used.</p>
       </section>
 
       <section>
         <h2>Earlier foundation</h2>
         <p>Before these guides, Brikaya shipped as a free PWA-style arcade at brikaya.com with localized home and downloads shells, legal pages for platform reviews, and local high scores. The game menu already exposed privacy, terms, about, and legal links so players could leave the canvas and read policies.</p>
-        <p>Downloads explained browser install and offline continuation. That foundation still stands; the editorial pages add depth that a single interactive screen cannot give search engines or first-time visitors who want to read before they play.</p>
+        <p>Downloads explained browser install and offline continuation. That foundation still stands; the editorial pages and landing add depth that a single interactive screen cannot give search engines or first-time visitors who want to read before they play.</p>
       </section>
     </main>
   </body>
