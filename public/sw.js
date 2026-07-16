@@ -3,8 +3,10 @@ const BUILD_ID = "__BRIKAYA_BUILD_ID__";
 const BUILD_VERSION = "__BRIKAYA_BUILD_VERSION__";
 const CACHE_PREFIX = "brikaya-cache";
 const CACHE_NAME = `${CACHE_PREFIX}-${BUILD_ID}`;
-const ASSET_CACHE_NAME = "brikaya-asset-cache-v1";
+const ASSET_CACHE_PREFIX = "brikaya-asset-cache";
+const ASSET_CACHE_NAME = `${ASSET_CACHE_PREFIX}-v1`;
 const ASSET_MANIFEST_URL = "/asset-cache-manifest.json";
+const NAVIGATE_MODE = "navigate";
 const CORE_PRECACHE_URLS = [
   "/",
   "/index.html",
@@ -74,6 +76,13 @@ function isViteBundleRequest(request) {
 function isHtmlContentType(response) {
   const contentType = response.headers.get("content-type") || "";
   return contentType.includes(HTML_CONTENT_TYPE);
+}
+
+function isDocumentNavigationRequest(request) {
+  return (
+    request.mode === NAVIGATE_MODE ||
+    request.destination === DOCUMENT_DESTINATION
+  );
 }
 
 function shouldCacheShellResponse(request, response) {
@@ -166,6 +175,20 @@ async function oldShellCacheNames() {
   });
 }
 
+async function staleCacheNames() {
+  const cacheNames = await caches.keys();
+  return cacheNames.filter((cacheName) => {
+    if (cacheName === CACHE_NAME || cacheName === ASSET_CACHE_NAME) {
+      return false;
+    }
+
+    return (
+      cacheName.startsWith(CACHE_PREFIX) ||
+      cacheName.startsWith(ASSET_CACHE_PREFIX)
+    );
+  });
+}
+
 async function migrateLegacyAssets() {
   const manifest = await getAssetManifest();
   const assets = Array.isArray(manifest.assets)
@@ -204,9 +227,31 @@ async function migrateLegacyAssets() {
 }
 
 async function deleteOldCaches() {
-  const oldCacheNames = await oldShellCacheNames();
+  const oldCacheNames = await staleCacheNames();
   await Promise.all(oldCacheNames.map((cacheName) => caches.delete(cacheName)));
   return oldCacheNames.length > 0;
+}
+
+async function handleDocumentRequest(request) {
+  try {
+    const networkResponse = await fetch(request);
+
+    if (shouldCacheShellResponse(request, networkResponse)) {
+      const responseClone = networkResponse.clone();
+      caches
+        .open(CACHE_NAME)
+        .then((cache) => cache.put(request, responseClone));
+    }
+
+    return networkResponse;
+  } catch {
+    const cachedResponse = await caches.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+
+    return caches.match(INDEX_URL);
+  }
 }
 
 async function reloadSameOriginClients() {
@@ -383,6 +428,11 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  if (isDocumentNavigationRequest(event.request)) {
+    event.respondWith(handleDocumentRequest(event.request));
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
@@ -400,11 +450,7 @@ self.addEventListener("fetch", (event) => {
 
           return networkResponse;
         })
-        .catch(() => {
-          if (event.request.destination === DOCUMENT_DESTINATION) {
-            return caches.match(INDEX_URL);
-          }
-        });
+        .catch(() => undefined);
     }),
   );
 });

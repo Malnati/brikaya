@@ -76,6 +76,40 @@ describe('service worker lazy asset cache', () => {
     );
   });
 
+  it('usa network-first para navegações de documento HTML', () => {
+    const source = readServiceWorker();
+    const documentHandlerMatch = source.match(
+      /async function handleDocumentRequest\(request\) \{([\s\S]*?)\n\}/,
+    );
+    const fetchListenerMatch = source.match(
+      /self\.addEventListener\("fetch", \(event\) => \{([\s\S]*?)\n\}\);/,
+    );
+
+    expect(source).toContain('isDocumentNavigationRequest');
+    expect(source).toContain('handleDocumentRequest');
+    expect(documentHandlerMatch).toBeTruthy();
+    expect(documentHandlerMatch?.[1]).toContain('await fetch(request)');
+    expect(documentHandlerMatch?.[1]).toContain('caches.match(request)');
+    expect(documentHandlerMatch?.[1]).not.toMatch(
+      /^[\s\S]*caches\.match\(request\)[\s\S]*await fetch\(request\)/,
+    );
+    expect(fetchListenerMatch?.[1]).toContain(
+      'isDocumentNavigationRequest(event.request)',
+    );
+    expect(fetchListenerMatch?.[1]).toContain(
+      'handleDocumentRequest(event.request)',
+    );
+  });
+
+  it('remove caches de shell e de asset de builds anteriores no activate', () => {
+    const source = readServiceWorker();
+
+    expect(source).toContain('ASSET_CACHE_PREFIX');
+    expect(source).toContain('staleCacheNames');
+    expect(source).toContain('cacheName.startsWith(ASSET_CACHE_PREFIX)');
+    expect(source).toContain('await deleteOldCaches()');
+  });
+
   it('expõe buildVersion na resposta VERSION do service worker', () => {
     const source = readServiceWorker();
 
