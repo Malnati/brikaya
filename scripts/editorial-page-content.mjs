@@ -3,7 +3,7 @@
 
 export const EDITORIAL_DEFAULT_LOCALE = 'en-US';
 export const EDITORIAL_LOCALES = ['en-US', 'pt-BR'];
-export const EDITORIAL_LASTMOD = '2026-07-15';
+export const EDITORIAL_LASTMOD = '2026-07-16';
 export const EDITORIAL_PATHS = ['/how-to-play/', '/faq/', '/updates/'];
 
 export const MIN_EDITORIAL_MAIN_WORDS = 350;
@@ -202,6 +202,12 @@ const PAGES = {
         'Short answers about how Brikaya works, what stays on your device, and how to get help without creating a player account.',
       sections: [
         {
+          heading: 'Where do I play the game?',
+          paragraphs: [
+            'Open https://brikaya.com/play/ for the interactive arcade. The home page at https://brikaya.com/ is a readable landing with guides and trust links so you can learn about the product before you start. Both stay on the same domain.',
+          ],
+        },
+        {
           heading: 'Is Brikaya free?',
           paragraphs: [
             'Yes. This version is free to open and play in the browser. There is no required purchase to clear levels or keep local progress. If optional ads appear later, they are meant to stay between levels and must not remove access to play.',
@@ -259,6 +265,12 @@ const PAGES = {
       lead:
         'Respostas curtas sobre como o Brikaya funciona, o que fica no seu aparelho e como pedir ajuda sem criar conta de jogador.',
       sections: [
+        {
+          heading: 'Onde eu jogo?',
+          paragraphs: [
+            'Abra https://brikaya.com/play/ para o arcade interativo. A home em https://brikaya.com/ é uma landing legível com guias e links de confiança para você conhecer o produto antes de começar. As duas ficam no mesmo domínio.',
+          ],
+        },
         {
           heading: 'O Brikaya é gratuito?',
           paragraphs: [
@@ -320,10 +332,17 @@ const PAGES = {
         'A plain-language log of what Brikaya is building for players: free browser play, local progress, and clearer public information.',
       sections: [
         {
+          heading: '2026-07-16 — Landing, /play/, and stale-cache recovery',
+          paragraphs: [
+            'The public home at https://brikaya.com/ is a crawlable landing with product prose, links to how-to-play, FAQ, updates, downloads, and trust pages. The interactive arcade runs at https://brikaya.com/play/ on the same origin so offline caching, ads.txt, and consent stay on one host.',
+            'A service-worker update now prefers network responses for HTML documents and clears old shell caches on activate. The landing also asks existing workers to update and, for installed standalone PWAs that still open the apex, redirects to /play/. That recovers blank screens caused by cached game shells pointing at removed hashed bundles.',
+          ],
+        },
+        {
           heading: '2026-07 — Player guides and site readiness',
           paragraphs: [
             'We published crawlable how-to-play, FAQ, and updates pages in English and Brazilian Portuguese. These pages explain gameplay, privacy expectations, and install options without requiring a login. They exist so visitors and reviewers can understand the product from stable URLs, not only from the interactive shell.',
-            'Legal and trust pages (about, privacy, terms, support, and related notices) remain available as short public references. Editorial pages stay limited to en-US and pt-BR on purpose, so the sitemap does not multiply thin translated clones of the same guide.',
+            'Legal and trust pages (about, privacy, terms, support, and related notices) remain available as public references and were expanded in English with clearer detail about /play/, local storage, and contact paths. Editorial pages stay limited to en-US and pt-BR on purpose, so the sitemap does not multiply thin translated clones of the same guide.',
           ],
         },
         {
@@ -336,7 +355,7 @@ const PAGES = {
         {
           heading: 'What we optimize for',
           paragraphs: [
-            'Clarity over spectacle: players should learn the loop in seconds. Privacy over profile: local storage beats mandatory signup for this version. Stable public pages over marketing noise: about, legal, support, and the new guides should answer real questions without internal jargon.',
+            'Clarity over spectacle: players should learn the loop in seconds. Privacy over profile: local storage beats mandatory signup for this version. Stable public pages over marketing noise: about, legal, support, and the guides should answer real questions without internal jargon.',
             'We will keep expanding player-facing notes here when features change. If you need help between updates, use contato@brikaya.com and include the browser and device you used.',
           ],
         },
@@ -344,7 +363,7 @@ const PAGES = {
           heading: 'Earlier foundation',
           paragraphs: [
             'Before these guides, Brikaya shipped as a free PWA-style arcade at brikaya.com with localized home and downloads shells, legal pages for platform reviews, and local high scores. The game menu already exposed privacy, terms, about, and legal links so players could leave the canvas and read policies.',
-            'Downloads explained browser install and offline continuation. That foundation still stands; the editorial pages add depth that a single interactive screen cannot give search engines or first-time visitors who want to read before they play.',
+            'Downloads explained browser install and offline continuation. That foundation still stands; the editorial pages and landing add depth that a single interactive screen cannot give search engines or first-time visitors who want to read before they play.',
           ],
         },
       ],
@@ -358,10 +377,17 @@ const PAGES = {
         'Um registro em linguagem simples do que o Brikaya constrói para jogadores: jogo gratuito no navegador, progresso local e informação pública mais clara.',
       sections: [
         {
+          heading: '2026-07-16 — Landing, /play/ e recuperação de cache antigo',
+          paragraphs: [
+            'A home pública em https://brikaya.com/ é uma landing crawlável com prosa do produto, links para como jogar, FAQ, atualizações, downloads e páginas de confiança. O arcade interativo fica em https://brikaya.com/play/ no mesmo origin para cache offline, ads.txt e consentimento permanecerem em um só host.',
+            'A atualização do service worker passa a preferir a rede para documentos HTML e limpa caches de shell antigos na ativação. A landing também pede update dos workers existentes e, em PWA standalone que ainda abre o apex, redireciona para /play/. Isso recupera telas em branco causadas por shells de jogo em cache apontando para bundles hashed removidos.',
+          ],
+        },
+        {
           heading: '2026-07 — Guias do jogador e prontidão do site',
           paragraphs: [
             'Publicamos páginas crawláveis de como jogar, FAQ e atualizações em inglês e português do Brasil. Elas explicam jogabilidade, expectativas de privacidade e opções de instalação sem exigir login. Existem para que visitantes e revisores entendam o produto por URLs estáveis, não só pela casca interativa.',
-            'As páginas legais e de confiança (sobre, privacidade, termos, suporte e avisos relacionados) continuam como referências públicas curtas. As páginas editoriais ficam limitadas a en-US e pt-BR de propósito, para o sitemap não multiplicar clones traduzidos rasos do mesmo guia.',
+            'As páginas legais e de confiança (sobre, privacidade, termos, suporte e avisos relacionados) continuam como referências públicas e foram reforçadas em inglês com mais detalhe sobre /play/, armazenamento local e contato. As páginas editoriais ficam limitadas a en-US e pt-BR de propósito, para o sitemap não multiplicar clones traduzidos rasos do mesmo guia.',
           ],
         },
         {
@@ -374,7 +400,7 @@ const PAGES = {
         {
           heading: 'O que priorizamos',
           paragraphs: [
-            'Clareza em vez de espetáculo: o jogador deve aprender o loop em segundos. Privacidade em vez de perfil: armazenamento local supera cadastro obrigatório nesta versão. Páginas públicas estáveis em vez de ruído de marketing: sobre, legal, suporte e os novos guias devem responder perguntas reais sem jargão interno.',
+            'Clareza em vez de espetáculo: o jogador deve aprender o loop em segundos. Privacidade em vez de perfil: armazenamento local supera cadastro obrigatório nesta versão. Páginas públicas estáveis em vez de ruído de marketing: sobre, legal, suporte e os guias devem responder perguntas reais sem jargão interno.',
             'Vamos continuar expandindo notas para jogadores aqui quando os recursos mudarem. Se precisar de ajuda entre atualizações, use contato@brikaya.com e inclua o navegador e o aparelho usados.',
           ],
         },
@@ -382,7 +408,7 @@ const PAGES = {
           heading: 'Base anterior',
           paragraphs: [
             'Antes destes guias, o Brikaya já existia como arcade gratuito estilo PWA em brikaya.com, com shells localizados de home e downloads, páginas legais para revisões de plataforma e recordes locais. O menu do jogo já expunha links de privacidade, termos, sobre e legal para o jogador sair da tela e ler políticas.',
-            'Downloads explicava instalação pelo navegador e continuidade offline. Essa base permanece; as páginas editoriais acrescentam profundidade que uma única tela interativa não dá a buscadores nem a visitantes que querem ler antes de jogar.',
+            'Downloads explicava instalação pelo navegador e continuidade offline. Essa base permanece; as páginas editoriais e a landing acrescentam profundidade que uma única tela interativa não dá a buscadores nem a visitantes que querem ler antes de jogar.',
           ],
         },
       ],

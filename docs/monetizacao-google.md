@@ -5,13 +5,13 @@
 
 Preparar `https://brikaya.com/` para monetização por Google AdSense/H5 Games Ads com anúncios intersticiais apenas a cada 3 fases concluídas, sem investimento em campanhas, sem banners fixos, sem anúncios durante a jogada e sem bloquear o jogo quando não houver anúncio.
 
-## Estado em 2026-07-15
+## Estado em 2026-07-16
 
 - Conta/publisher: `ca-pub-9571619183194136`.
-- Site no AdSense: `brikaya.com` **não pronto** — rejeição por **Conteúdo de baixo valor** (e-mail/painel Sites).
-- Propriedade: snippet AdSense no `<head>` + `ads.txt` públicos presentes; checkmark exato do painel não revalidado aqui.
-- Remediação editorial em curso no repo: landing crawlável em `/`, jogo em `/play/`, páginas `/how-to-play/`, `/faq/`, `/updates/` (en-US + pt-BR apenas). Ver [`docs/adsense-site-readiness.md`](adsense-site-readiness.md).
-- **Não** confirmar “corrigi os problemas” no AdSense até o conteúdo editorial estar publicado e a revisão humana for solicitada de propósito.
+- Site no AdSense: `brikaya.com` **ainda marcado** com rejeição histórica por **Conteúdo de baixo valor** até nova revisão humana.
+- Propriedade: snippet AdSense no `<head>` de `/play/` + `ads.txt` públicos presentes; checkmark exato do painel não revalidado aqui.
+- Remediação publicada no repo/produção: landing crawlável em `/`, jogo em `/play/`, páginas `/how-to-play/`, `/faq/`, `/updates/` (en-US + pt-BR), legais EN densas, SW network-first para HTML. Ver [`docs/adsense-site-readiness.md`](adsense-site-readiness.md).
+- **Não** confirmar “corrigi os problemas” no AdSense automaticamente; o clique no painel Sites continua decisão humana após rechecagem do inventário público.
 - CMP: mensagem Google configurada para regulamentações europeias com três opções (`Consentir`, `Não consentir`, `Gerenciar opções`).
 - `ads.txt`: `google.com, pub-9571619183194136, DIRECT, f08c47fec0942fa0`.
 - H5 Games Ads / Ad Placement API ainda depende de liberação/aprovação do Google; aprovação não é garantida.
@@ -51,8 +51,8 @@ Preparar `https://brikaya.com/` para monetização por Google AdSense/H5 Games A
 | P8 | CMP certificado Google | feito: CMP Google de 3 opções |
 | P9 | H5 Games Ads liberado | pendente de aprovação Google |
 | P10 | Verificação AdSense após deploy | feito (snippet/`ads.txt`) |
-| P11 | Pedir revisão no AdSense | **bloquear até editorial publicado** |
-| P12 | Policy Center / Sites | **violação ativa: conteúdo de baixo valor** |
+| P11 | Pedir revisão no AdSense | **humano no painel** após inventário público; não automatizar |
+| P12 | Policy Center / Sites | **violação histórica ativa até nova revisão** |
 | P13 | Teste E2E de anúncio/no-fill | feito com anúncio simulado na fase 3→4, sem clique real |
 | P14 | Teste offline/sem consentimento/no-fill | feito com fallback sem bloqueio de fase e sem pedido de anúncio antes do consentimento |
 | P15 | Prova mobile pública | feito em `tmp/screenshots/cloudflare-interlevel-google-ads.png` |
@@ -61,8 +61,10 @@ Preparar `https://brikaya.com/` para monetização por Google AdSense/H5 Games A
 | P18 | Não criar campanha paga | guardrail ativo |
 | P19 | Não instalar Clarity/pixel extra | guardrail ativo |
 | P20 | Evidência final sanitizada | feito em `tmp/reports/cloudflare-interlevel-google-ads.json` |
-| P21 | Conteúdo editorial crawlável EN/PT | feito no código (`/how-to-play/`, `/faq/`, `/updates/`) |
+| P21 | Conteúdo editorial crawlável EN/PT | feito (`/how-to-play/`, `/faq/`, `/updates/`) |
 | P22 | Gate `verify:adsense-ready-proxy` | feito (proxy, não aprovação) |
+| P23 | Landing `/` + jogo `/play/` + SW HTML network-first | feito |
+| P24 | Legais EN densas (about/privacy/terms/support/cookies) | feito (proxy de palavras no default locale) |
 
 ## Fontes oficiais
 

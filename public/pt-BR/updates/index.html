@@ -20,7 +20,7 @@
     <link rel="alternate" hreflang="x-default" href="https://brikaya.com/updates/" />
     <title>Atualizações e notas de design do Brikaya</title>
     <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","name":"Atualizações e notas de design do Brikaya","description":"Atualizações e notas de design do Brikaya: arcade offline-first, páginas públicas de confiança e guias editoriais para jogadores.","url":"https://brikaya.com/pt-BR/updates/","inLanguage":"pt-BR","isPartOf":{"@type":"WebSite","name":"Brikaya","url":"https://brikaya.com/"},"publisher":{"@type":"Person","name":"Ricardo Malnati"},"dateModified":"2026-07-15"}
+{"@context":"https://schema.org","@type":"WebPage","name":"Atualizações e notas de design do Brikaya","description":"Atualizações e notas de design do Brikaya: arcade offline-first, páginas públicas de confiança e guias editoriais para jogadores.","url":"https://brikaya.com/pt-BR/updates/","inLanguage":"pt-BR","isPartOf":{"@type":"WebSite","name":"Brikaya","url":"https://brikaya.com/"},"publisher":{"@type":"Person","name":"Ricardo Malnati"},"dateModified":"2026-07-16"}
     </script>
     <style>
       :root {
@@ -101,7 +101,7 @@
       <header>
         <h1>Atualizações e notas de design</h1>
         <p class="lead">Um registro em linguagem simples do que o Brikaya constrói para jogadores: jogo gratuito no navegador, progresso local e informação pública mais clara.</p>
-        <p class="updated">Última atualização: 2026-07-15</p>
+        <p class="updated">Última atualização: 2026-07-16</p>
         <nav aria-label="Brikaya">
           <a href="/play/">Jogar</a>
           <a href="/pt-BR/how-to-play/">Como jogar</a>
@@ -112,9 +112,15 @@
         </nav>
       </header>
       <section class="note">
+        <h2>2026-07-16 — Landing, /play/ e recuperação de cache antigo</h2>
+        <p>A home pública em https://brikaya.com/ é uma landing crawlável com prosa do produto, links para como jogar, FAQ, atualizações, downloads e páginas de confiança. O arcade interativo fica em https://brikaya.com/play/ no mesmo origin para cache offline, ads.txt e consentimento permanecerem em um só host.</p>
+        <p>A atualização do service worker passa a preferir a rede para documentos HTML e limpa caches de shell antigos na ativação. A landing também pede update dos workers existentes e, em PWA standalone que ainda abre o apex, redireciona para /play/. Isso recupera telas em branco causadas por shells de jogo em cache apontando para bundles hashed removidos.</p>
+      </section>
+
+      <section>
         <h2>2026-07 — Guias do jogador e prontidão do site</h2>
         <p>Publicamos páginas crawláveis de como jogar, FAQ e atualizações em inglês e português do Brasil. Elas explicam jogabilidade, expectativas de privacidade e opções de instalação sem exigir login. Existem para que visitantes e revisores entendam o produto por URLs estáveis, não só pela casca interativa.</p>
-        <p>As páginas legais e de confiança (sobre, privacidade, termos, suporte e avisos relacionados) continuam como referências públicas curtas. As páginas editoriais ficam limitadas a en-US e pt-BR de propósito, para o sitemap não multiplicar clones traduzidos rasos do mesmo guia.</p>
+        <p>As páginas legais e de confiança (sobre, privacidade, termos, suporte e avisos relacionados) continuam como referências públicas e foram reforçadas em inglês com mais detalhe sobre /play/, armazenamento local e contato. As páginas editoriais ficam limitadas a en-US e pt-BR de propósito, para o sitemap não multiplicar clones traduzidos rasos do mesmo guia.</p>
       </section>
 
       <section>
@@ -125,14 +131,14 @@
 
       <section>
         <h2>O que priorizamos</h2>
-        <p>Clareza em vez de espetáculo: o jogador deve aprender o loop em segundos. Privacidade em vez de perfil: armazenamento local supera cadastro obrigatório nesta versão. Páginas públicas estáveis em vez de ruído de marketing: sobre, legal, suporte e os novos guias devem responder perguntas reais sem jargão interno.</p>
+        <p>Clareza em vez de espetáculo: o jogador deve aprender o loop em segundos. Privacidade em vez de perfil: armazenamento local supera cadastro obrigatório nesta versão. Páginas públicas estáveis em vez de ruído de marketing: sobre, legal, suporte e os guias devem responder perguntas reais sem jargão interno.</p>
         <p>Vamos continuar expandindo notas para jogadores aqui quando os recursos mudarem. Se precisar de ajuda entre atualizações, use <a href="mailto:contato@brikaya.com">contato@brikaya.com</a> e inclua o navegador e o aparelho usados.</p>
       </section>
 
       <section>
         <h2>Base anterior</h2>
         <p>Antes destes guias, o Brikaya já existia como arcade gratuito estilo PWA em brikaya.com, com shells localizados de home e downloads, páginas legais para revisões de plataforma e recordes locais. O menu do jogo já expunha links de privacidade, termos, sobre e legal para o jogador sair da tela e ler políticas.</p>
-        <p>Downloads explicava instalação pelo navegador e continuidade offline. Essa base permanece; as páginas editoriais acrescentam profundidade que uma única tela interativa não dá a buscadores nem a visitantes que querem ler antes de jogar.</p>
+        <p>Downloads explicava instalação pelo navegador e continuidade offline. Essa base permanece; as páginas editoriais e a landing acrescentam profundidade que uma única tela interativa não dá a buscadores nem a visitantes que querem ler antes de jogar.</p>
       </section>
     </main>
   </body>

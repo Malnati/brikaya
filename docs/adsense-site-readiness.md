@@ -1,17 +1,17 @@
 <!-- docs/adsense-site-readiness.md -->
 # Brikaya — prontidão AdSense (conteúdo de baixo valor)
 
-Última atualização: 2026-07-15.
+Última atualização: 2026-07-16.
 
 ## Fonte verificada
 
 - Painel/e-mail AdSense (2026-07): violação **Conteúdo de baixo valor** em `brikaya.com`; botão “Confirmo que corrigi os problemas”.
 - Políticas: [10502938](https://support.google.com/adsense/answer/10502938), [10015918](https://support.google.com/adsense/answer/10015918), [9044175](https://support.google.com/webmasters/answer/9044175), [11035931](https://support.google.com/publisherpolicies/answer/11035931).
-- Live + código: landing crawlável em `/`, jogo em `/play/`, páginas legais curtas, editoriais EN/PT (`/how-to-play/`, `/faq/`, `/updates/`); `ads.txt` com `pub-9571619183194136`.
+- Live + código: landing crawlável em `/`, jogo em `/play/`, páginas legais reforçadas (EN), editoriais EN/PT (`/how-to-play/`, `/faq/`, `/updates/`); SW network-first para HTML; `ads.txt` com `pub-9571619183194136`.
 
-**Veredito operacional:** a rejeição citada é editorial/qualitativa. Checklist técnico sozinho não aprova o site. Só peça revisão no AdSense **depois** de publicar conteúdo editorial substantivo e crawlável (landing + guias) em produção.
+**Veredito operacional:** a rejeição citada é editorial/qualitativa. A remediação estrutural (landing + `/play/` + guias + legais EN densas + recovery de SW) está publicada. Checklist técnico sozinho não aprova o site. Só peça revisão no AdSense **depois** de validar o inventário público e de forma intencional no painel Sites.
 
-Não clique em “Confirmo que corrigi” com o apex ainda só em shell de jogo + legais curtas.
+Não clique em “Confirmo que corrigi” com o apex ainda só em shell de jogo + legais curtas (histórico). O estado atual já não é esse shell; ainda assim a confirmação no painel continua humana e fora do CI.
 
 ---
 
@@ -19,10 +19,10 @@ Não clique em “Confirmo que corrigi” com o apex ainda só em shell de jogo 
 
 | Exigência | Status | Evidência |
 |---|---|---|
-| Conteúdo suficiente / não “baixo valor” | **NÃO CONFORME (citado)** até revisão nova após remediação | Painel AdSense |
-| Conteúdo exclusivo que explique o assunto | **Em remediação** | Landing `/` + `/how-to-play/`, `/faq/`, `/updates/` (EN + PT-BR) |
-| Motivo para visitar e voltar (além do app) | **Em remediação** | Landing + FAQ + updates; sem blog recorrente ainda |
-| Evitar páginas com pouco/nenhum conteúdo | **RISCO residual** | Landing `/` + editoriais; `/play/` e `/downloads/` continuam SPA |
+| Conteúdo suficiente / não “baixo valor” | **EM REMEDIAÇÃO PUBLICADA** — aguarda revisão humana | Landing + `/play/` + guias + legais EN densas |
+| Conteúdo exclusivo que explique o assunto | **Remediação publicada** | Landing `/` + `/how-to-play/`, `/faq/`, `/updates/` (EN + PT-BR) + about |
+| Motivo para visitar e voltar (além do app) | **Remediação publicada (risco residual)** | Updates com log datado; sem blog massivo multilocalizado |
+| Evitar páginas com pouco/nenhum conteúdo | **RISCO residual** | Legais EN reforçadas; demais locales legais ainda podem ser mais curtos via tradução legada |
 
 O AdSense **só citou** conteúdo de baixo valor nesta rejeição. Outros motivos não foram inventados.
 
@@ -36,8 +36,8 @@ Legenda: **OK** · **FALHA** · **RISCO** · **NV** (não verificável sem conta
 
 | Exigência | Status | Nota |
 |---|---|---|
-| Bastante conteúdo exclusivo | **FALHA histórica / remediação em curso** | Legais ~100–160 palavras; editoriais EN/PT adicionadas |
-| Atualizar conteúdo regularmente | **RISCO** | `/updates/` existe; não há calendário editorial automatizado |
+| Bastante conteúdo exclusivo | **Remediação publicada / RISCO residual** | Landing + editoriais EN/PT; legais EN ≥ proxy; locales legais traduzidos podem ficar atrás |
+| Atualizar conteúdo regularmente | **RISCO** | `/updates/` com entradas datadas; sem calendário editorial automatizado |
 | Sem conteúdo duplicado / scraped | **OK parcial / RISCO** | Texto original; sitemap ainda multiplica locales legais |
 | Navegação clara | **OK parcial** | Landing `/` com CTA `/play/` + nav para guias/legais |
 | Sem links quebrados / promessas falsas | **NV + amostragem** | Rotas canônicas amostradas; 2.800+ URLs não auditadas uma a uma |
@@ -58,7 +58,7 @@ Legenda: **OK** · **FALHA** · **RISCO** · **NV** (não verificável sem conta
 
 | Exigência | Status | Nota |
 |---|---|---|
-| Evitar thin content | **FALHA alinhada / remediação** | Landing + editoriais EN/PT; legales ainda curtas |
+| Evitar thin content | **Remediação publicada / RISCO residual** | Landing + editoriais EN/PT + legais EN; fan-out legal multilocalizado permanece |
 | Evitar doorway / cookie-cutter | **RISCO** | Muitos locales × templates legais |
 | Cloaking / scraped / UGC spam | **OK aparente / N/A** | Sem UGC |
 | Manual actions no Search Console | **NV** | Sem acesso GSC nesta documentação |
@@ -69,7 +69,7 @@ Legenda: **OK** · **FALHA** · **RISCO** · **NV** (não verificável sem conta
 |---|---|---|
 | Propriedade | **NV no painel** | Snippet em `/play/` + `ads.txt` no apex |
 | Site pronto para anúncios | **NÃO** (até nova aprovação) | E-mail + painel |
-| Pedir revisão | Só após remediação real | Não confirmar correção prematuramente |
+| Pedir revisão | Humano no painel Sites após inventário público ok | Não confirmar correção via CI; não automatizar o clique |
 
 ---
 
@@ -122,7 +122,9 @@ flowchart LR
 
 1. Landing crawlável em `/` + jogo em `/play/` (mesmo domínio).
 2. Páginas editoriais crawláveis: `/how-to-play/`, `/faq/`, `/updates/` em **en-US** e **pt-BR** apenas.
-3. Gate `verify:adsense-ready-proxy` no `build` / CI.
-4. Estado operacional em [`docs/monetizacao-google.md`](monetizacao-google.md).
+3. Legais EN densas (about/privacy/terms/support/cookies) com gate proxy de palavras no default locale.
+4. Service Worker network-first para documentos HTML + recovery na landing (PWA standalone → `/play/`).
+5. Gate `verify:adsense-ready-proxy` no `build` / CI.
+6. Estado operacional em [`docs/monetizacao-google.md`](monetizacao-google.md).
 
 Aprovação AdSense/H5 **nunca é garantida**.
