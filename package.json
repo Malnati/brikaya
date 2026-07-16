@@ -95,7 +95,7 @@
     "jsdom": "^27.2.0",
     "puppeteer": "^21.0.0",
     "ts-jest": "^29.4.5",
-    "typescript": "^5.2.2",
+    "typescript": "^7.0.2",
     "vite": "^7.2.4",
     "vitest": "^4.0.13",
     "wrangler": "^4.105.0"
