@@ -107,3 +107,36 @@ npm run build
 Antes do merge em `main`, garantir documentação de versão para o commit alvo (`vN` = `git rev-list --count HEAD` após o merge): `npm run brikaya:scaffold-version-docs`, preencher `.tags/vN.md` e `.releases/vN.md`, e `npm run verify:version-docs`. O `npm run brikaya:ship` já executa scaffold + verificação antes do commit.
 
 Ao referenciar variáveis `BRIKAYA_*` / `CLOUDFLARE_*` em artefatos versionados (workflows, scripts, `.env.example`), registrar também em `config/codex-env.registry.json`.
+
+## Cursor Cloud specific instructions
+
+Contexto durável para agentes cloud. O script de atualização (startup) já roda `npm ci` + o workaround do rollup abaixo; estas notas cobrem armadilhas não óbvias.
+
+### Node
+
+- O repositório mira Node 23 (`.nvmrc`, `engines`, CI). O `node` padrão do shell da VM pode resolver para um binário v22.x fornecido pela plataforma (`/exec-daemon/node`), enquanto o `npm` vem do nvm — então `npm run …` executa nesse v22.x por padrão. Isso funciona para `dev`, `test` e `build`.
+- Para paridade exata com o CI, rode `nvm use 23` (o default do nvm já é 23). O script de atualização instala/ativa o Node 23 via nvm durante o install.
+
+### Bug de dependência opcional do rollup
+
+- Após `npm ci`/`npm install`, o `vite build`/`npm run build` falha com `Cannot find module @rollup/rollup-linux-x64-gnu` (bug npm/cli#4828: a opcional por plataforma não é instalada). O CI e o script de atualização contornam com `npm install --no-save @rollup/rollup-linux-x64-gnu`. Se reinstalar dependências manualmente, rode esse comando de novo (não altera `package.json`/lockfile).
+
+### Puppeteer (e2e opcional)
+
+- O download do navegador do Puppeteer é PULADO no install (`PUPPETEER_SKIP_DOWNLOAD=true`) porque o postinstall pode travar a VM por muitos minutos. O navegador só é necessário para os testes e2e Cloudflare opcionais (`npm run test:cloudflare-e2e`), que rodam contra uma URL servida (`BRIKAYA_PUBLIC_URL`; padrão remoto).
+- Para rodar e2e localmente: instale o Chromium com `npx puppeteer browsers install chrome` (pode ser lento) e sirva o build com `npm run preview -- --host 127.0.0.1 --port 7979` antes de apontar `BRIKAYA_PUBLIC_URL=http://127.0.0.1:7979/`.
+
+### Build precisa de `.env` local (gate codex-env)
+
+- `npm run build` começa por `npm run codex-env:check`, que exige um `.env` local (modo `0600`) com as chaves obrigatórias de `.env.example` preenchidas. `.env` é gitignorado e nunca deve ser versionado.
+- O build estático não contata a Cloudflare (deploy é separado: `make cloudflare-deploy`), então valores placeholder para `CLOUDFLARE_*` são suficientes para build local; credenciais reais só são necessárias para deploy. `npm run dev` NÃO precisa de `.env`.
+
+### Servir e jogar
+
+- `npm run dev` sobe o Vite na porta 7979 (`strictPort`). Landing em `/`; o SPA do jogo fica em `/play/`.
+- A rota `/play/` é mobile-first e bloqueia viewport desktop/landscape com aviso de "espaço para o joystick"; use viewport mobile/retrato (ou emulação de dispositivo) para jogar.
+- O movimento da bola usa `requestAnimationFrame`, que pausa quando a aba perde foco — relevante ao testar via automação (mantenha a aba focada por alguns segundos para ver a bola se mover).
+
+### Lint/test/build
+
+- Não há script de ESLint dedicado; a checagem de tipos ocorre via `tsc` dentro de `npm run build`. Testes unitários: `npm test` (Jest). Comandos padrão e validação mínima já estão documentados acima e em `docs/qa.md`.
