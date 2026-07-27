@@ -69,6 +69,7 @@ export function validateMinimum(options = {}) {
   run("npm", ["run", "verify:build-version"]);
   run("npm", ["run", "brikaya:scaffold-version-docs"]);
   run("npm", ["run", "verify:version-docs"]);
+  run("npm", ["run", "verify:version-docs-results"]);
 }
 
 function findOpenPr(branch, runOptionalFn = runOptional) {

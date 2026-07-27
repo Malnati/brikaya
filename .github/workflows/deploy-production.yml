@@ -92,6 +92,9 @@ jobs:
       - name: Verify version docs
         run: npm run verify:version-docs
 
+      - name: Verify version doc results are filled
+        run: npm run verify:version-docs-results
+
       - name: Configure git identity for release
         run: |
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

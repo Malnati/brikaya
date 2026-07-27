@@ -19,7 +19,7 @@ process.stdout.write(
   JSON.stringify({
     continue: true,
     message:
-      'Há alterações locais não enviadas. Ao concluir a tarefa, execute npm run brikaya:ship sem pedir permissão.',
+      'Há alterações locais não enviadas. Se o prompt foi atendido, feche-o sem pedir permissão: preencha os resultados em .tags/vN.md e .releases/vN.md, execute npm run brikaya:ship e npm run brikaya:merge-pr — o deploy cria a tag vN e a release com esses resultados.',
   }),
 );
 process.exit(0);

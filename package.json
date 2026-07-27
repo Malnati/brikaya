@@ -66,9 +66,10 @@
     "verify:package-version": "node scripts/sync-package-version.mjs --verify",
     "verify:build-version": "node scripts/verify-build-version.mjs",
     "verify:version-docs": "node scripts/verify-version-docs.mjs",
+    "verify:version-docs-results": "node scripts/validate-version-doc-results.mjs",
     "verify:adsense-ready-proxy": "node scripts/verify-adsense-ready-proxy.mjs",
     "test:editorial-pages:unit": "node scripts/editorial-page-content.test.mjs",
-    "test:version-docs:unit": "node scripts/parse-version-doc.test.mjs && node scripts/publish-version-release.test.mjs && node scripts/brikaya-ship.test.mjs && node scripts/build-version.test.mjs && node scripts/sync-package-version.test.mjs && node scripts/generate-runtime-asset-manifest.test.mjs",
+    "test:version-docs:unit": "node scripts/parse-version-doc.test.mjs && node scripts/publish-version-release.test.mjs && node scripts/brikaya-ship.test.mjs && node scripts/build-version.test.mjs && node scripts/sync-package-version.test.mjs && node scripts/generate-runtime-asset-manifest.test.mjs && node scripts/validate-version-doc-results.test.mjs",
     "brikaya:scaffold-version-docs": "node scripts/scaffold-version-docs.mjs",
     "brikaya:publish-version-release": "node scripts/publish-version-release.mjs"
   },

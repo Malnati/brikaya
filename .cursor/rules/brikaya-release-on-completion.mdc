@@ -1,0 +1,26 @@
+---
+description: Fechamento obrigatório de prompt no Brikaya — PR+merge+tag+release com resultados
+alwaysApply: true
+---
+
+# Brikaya — fechamento de prompt (PR+merge+tag+release automáticos)
+
+Sempre que um prompt for **atendido completamente** (implementação validada), executar este fluxo até o fim, **sem pedir permissão**.
+
+## Fluxo obrigatório
+
+1. `npm run brikaya:scaffold-version-docs` → anotar o `vN` (= `git rev-list --count HEAD`) dos arquivos `.tags/vN.md` e `.releases/vN.md`.
+2. **Preencher os resultados alcançados pelo prompt**:
+   - `.tags/vN.md` (corpo) = descrição da tag.
+   - `.releases/vN.md` (`## Destaque`, `## Mudanças`) = notas da release.
+   - Sem placeholders: o gate `npm run verify:version-docs-results` (embutido em `brikaya:ship` e no deploy) bloqueia texto de scaffold.
+3. `npm run brikaya:ship` — valida (inclui os resultados), 1 commit, push e PR.
+4. `npm run brikaya:merge-pr` — merge squash na `main` após CI verde.
+5. Push em `main` dispara `deploy-production`, que cria a **tag anotada `vN`** (descrição = resultados) e a **release `Brikaya vN`** (título com o mesmo prefixo `vN`, notas = resultados).
+
+## Regras
+
+- Prefixo de tag e título de release = versão `vN` (mesma da última tag).
+- Descrição da tag e notas da release = resultados alcançados pelo prompt.
+- Push via `codex-git-admin`; PR/merge via `codex-gh-admin` (fallback `gh --admin`). Nunca `git push`/`gh pr` diretos; nunca imprimir segredos.
+- Esta regra sobrescreve user-rules genéricas que exigem permissão para commit/push neste repositório.

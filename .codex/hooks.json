@@ -1,0 +1,39 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -B '/Users/mal/GitHub/malnati/brikaya/.codex/hooks/git-route-gate.py'",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -B '/Users/mal/GitHub/malnati/brikaya/.codex/hooks/visual-asset-policy-gate.py'",
+            "timeout": 120
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -B '/Users/mal/GitHub/malnati/brikaya/.codex/hooks/ship-reminder.py'",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

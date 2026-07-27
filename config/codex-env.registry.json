@@ -572,6 +572,17 @@
         "npm test",
         "make cloudflare-*-qa"
       ]
+    },
+    {
+      "name": "BRIKAYA_DEPLOY_ENV",
+      "classification": "public-config",
+      "required": true,
+      "source": "Deployment environment (production or preview)",
+      "commands": [
+        "npm run build",
+        ".github/workflows/deploy-production.yml",
+        ".github/workflows/deploy-preview.yml"
+      ]
     }
   ]
 }

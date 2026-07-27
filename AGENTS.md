@@ -71,10 +71,17 @@ Brikaya é um jogo arcade offline-first em TypeScript/React, distribuído como P
 - Workflows: `.github/workflows/ci.yml`, `ci-reusable.yml`, `deploy-production.yml`, `deploy-preview.yml`
 - Secrets no GitHub Actions: `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN` (sincronizar com `npm run brikaya:sync-gh-secrets`)
 
-## Git ship e merge autônomos
+## Fechamento de prompt: PR+merge+tag+release automáticos (obrigatório)
 
-- Ao concluir implementação: `npm run brikaya:ship` sem pedir permissão (commit, push, PR).
-- Ao pedir merge ou com PR do agente e CI verde: `npm run brikaya:merge-pr` sem pedir permissão.
+Sempre que um prompt for **atendido completamente** (implementação validada), executar até o fim, sem pedir permissão:
+
+1. `npm run brikaya:scaffold-version-docs` → anotar o `vN` (= `git rev-list --count HEAD`) de `.tags/vN.md` e `.releases/vN.md`.
+2. **Preencher os resultados alcançados pelo prompt**: descrição da tag em `.tags/vN.md` (corpo) e notas da release em `.releases/vN.md` (`## Destaque`, `## Mudanças`). Sem placeholders — o gate `npm run verify:version-docs-results` (embutido no ship e no deploy) bloqueia texto de scaffold.
+3. `npm run brikaya:ship` (valida incl. resultados, 1 commit, push, PR).
+4. `npm run brikaya:merge-pr` (merge squash na `main` após CI verde).
+5. O push em `main` dispara `deploy-production`, que cria a **tag anotada `vN`** (descrição = resultados) e a **release `Brikaya vN`** (título com o mesmo prefixo `vN`, notas = resultados).
+
+- Prefixo da tag e título da release = versão `vN`; descrição da tag e notas da release = resultados do prompt.
 - Conflitos: resolver automaticamente; seguir `/Users/mal/.codex/templates/github-admin-conflict-resolution.md`.
 - Esta política sobrescreve user rules genéricas de commit/push/container neste repositório.
 
@@ -101,9 +108,29 @@ npm run verify:build-version
 npm run test:semantic-file-names
 npm run test:svg-assets
 npm run test:visual-asset-policy
+npm run verify:version-docs-results
 npm run build
 ```
 
-Antes do merge em `main`, garantir documentação de versão para o commit alvo (`vN` = `git rev-list --count HEAD` após o merge): `npm run brikaya:scaffold-version-docs`, preencher `.tags/vN.md` e `.releases/vN.md`, e `npm run verify:version-docs`. O `npm run brikaya:ship` já executa scaffold + verificação antes do commit.
+Antes do merge em `main`, garantir documentação de versão para o commit alvo (`vN` = `git rev-list --count HEAD` após o merge): `npm run brikaya:scaffold-version-docs`, **preencher `.tags/vN.md` e `.releases/vN.md` com os resultados alcançados pelo prompt**, e `npm run verify:version-docs` + `npm run verify:version-docs-results`. O `npm run brikaya:ship` já executa scaffold + ambas as verificações antes do commit e falha se os resultados não estiverem preenchidos (evita tag/release com placeholder).
 
 Ao referenciar variáveis `BRIKAYA_*` / `CLOUDFLARE_*` em artefatos versionados (workflows, scripts, `.env.example`), registrar também em `config/codex-env.registry.json`.
+
+## Paridade tri-engine de artefatos de IA (obrigatória e bidirecional)
+
+Os três engines (Claude, Cursor, Codex) devem convergir para o mesmo comportamento. Toda vez que um artefato de IA de um engine for **criado, alterado ou removido**, os artefatos equivalentes dos outros dois **devem** receber a mesma mudança na mesma entrega — mesmas exigências, preferências, automações, scripts, rules/regras, hooks, agents/subagents, skills, specs e demais artefatos. Vale no projeto e no global. Nenhuma entrega que toque artefato de IA está completa sem os três lados sincronizados; a validação mínima e `npm run brikaya:ship` só rodam depois disso.
+
+Mapa de equivalência (projeto = este repo; global = `~/`):
+
+| Tipo | Claude | Cursor | Codex |
+|---|---|---|---|
+| Política/memória projeto | `CLAUDE.md` (importa `AGENTS.md`) | `.cursor/rules/*.mdc` | `AGENTS.md` |
+| Política/memória global | `~/.claude/CLAUDE.md` | `~/.cursor/rules/*.mdc` | `~/.codex/AGENTS.md` |
+| Hooks projeto | `.claude/settings.json` + `.claude/hooks/*` | `.cursor/hooks.json` + `.cursor/hooks/*.mjs` | gates via bridge; docs aqui |
+| Hooks global | `~/.claude/settings.json` + `~/.claude/hooks/*` | `~/.cursor/hooks.json` + `~/.cursor/hooks/*` | `~/.codex/hooks.json` + `~/.codex/hooks/*.py` |
+| Skills projeto | `.claude/skills/<n>/SKILL.md` | `.cursor/skills/<n>/SKILL.md` | skill global compartilhada |
+| Skills global | skills nativas/plugins | `~/.cursor/skills/`, `~/.cursor/skills-cursor/` | `~/.codex/skills/` |
+| Comandos/automação | `.claude/commands/*`, `.claude/automations/*` | `.cursor/automations/*` | npm scripts + `~/.codex/templates/` |
+| Specs/agents | `.claude/agents/*` (se houver) | `~/.cursor/specs/`, `~/.cursor/agents/` | `~/.codex/` (config.toml/rules) |
+
+Ao editar qualquer artefato do mapa, atualize os equivalentes dos outros dois engines no mesmo commit/PR.

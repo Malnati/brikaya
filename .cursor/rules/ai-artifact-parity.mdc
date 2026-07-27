@@ -1,0 +1,31 @@
+---
+description: Paridade obrigatória e bidirecional dos artefatos de IA entre Claude, Cursor e Codex
+alwaysApply: true
+---
+
+# Paridade tri-engine de artefatos de IA
+
+Os três engines (Claude, Cursor, Codex) devem convergir para o mesmo comportamento neste repositório.
+
+## Regra
+
+Toda vez que um artefato de IA de um engine for **criado, alterado ou removido**, os artefatos equivalentes dos outros dois **devem** receber a mesma mudança na mesma entrega — mesmas exigências, preferências, automações, scripts, rules/regras, hooks, agents/subagents, skills, specs e demais artefatos. Vale no projeto e no global.
+
+Nenhuma entrega que toque artefato de IA está completa sem os três lados sincronizados. A validação mínima e `npm run brikaya:ship` só rodam depois dessa sincronização.
+
+## Mapa de equivalência
+
+Projeto = este repositório; global = `~/`.
+
+| Tipo | Claude | Cursor | Codex |
+|---|---|---|---|
+| Política/memória projeto | `CLAUDE.md` (importa `AGENTS.md`) | `.cursor/rules/*.mdc` | `AGENTS.md` |
+| Política/memória global | `~/.claude/CLAUDE.md` | `~/.cursor/rules/*.mdc` | `~/.codex/AGENTS.md` |
+| Hooks projeto | `.claude/settings.json` + `.claude/hooks/*` | `.cursor/hooks.json` + `.cursor/hooks/*.mjs` | gates via bridge; docs em `AGENTS.md` |
+| Hooks global | `~/.claude/settings.json` + `~/.claude/hooks/*` | `~/.cursor/hooks.json` + `~/.cursor/hooks/*` | `~/.codex/hooks.json` + `~/.codex/hooks/*.py` |
+| Skills projeto | `.claude/skills/<n>/SKILL.md` | `.cursor/skills/<n>/SKILL.md` | skill global compartilhada |
+| Skills global | skills nativas/plugins | `~/.cursor/skills/`, `~/.cursor/skills-cursor/` | `~/.codex/skills/` |
+| Comandos/automação | `.claude/commands/*`, `.claude/automations/*` | `.cursor/automations/*` | npm scripts + `~/.codex/templates/` |
+| Specs/agents | `.claude/agents/*` (se houver) | `~/.cursor/specs/`, `~/.cursor/agents/` | `~/.codex/` (config.toml/rules) |
+
+Ao editar qualquer artefato do mapa, atualize os equivalentes dos outros dois engines no mesmo commit/PR.
