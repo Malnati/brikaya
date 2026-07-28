@@ -1,11 +1,11 @@
 {
   "name": "brikaya",
   "private": true,
-  "version": "170.0.0",
+  "version": "173.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run sync:package-version && npm run verify:package-version && npm run codex-env:check && npm run test:semantic-file-names && npm run test:svg-assets && npm run test:visual-asset-policy:unit && npm run test:visual-asset-policy && npm run test:trace-guard:unit && npm run test:trace-guard && node scripts/export-i18n-seo-metadata.mjs && npm run test:seo-brand-copy && tsc -p tsconfig.app.json && vite build && node scripts/export-i18n-seo-metadata.mjs && node scripts/generate-localized-seo.mjs && npm run verify:adsense-ready-proxy && npm run codex-env:materialize && node scripts/generate-runtime-asset-manifest.mjs && node scripts/stamp-service-worker-version.mjs && npm run test:trace-guard -- --include-dist && npm run test:seo-brand-copy",
+    "build": "npm run sync:package-version && npm run verify:package-version && npm run codex-env:check && npm run test:semantic-file-names && npm run test:svg-assets && npm run test:visual-asset-policy:unit && npm run test:visual-asset-policy && npm run test:trace-guard:unit && npm run test:trace-guard && node scripts/export-i18n-seo-metadata.mjs && npm run test:seo-brand-copy && tsc -p tsconfig.app.json && vite build && node scripts/export-i18n-seo-metadata.mjs && node scripts/generate-localized-seo.mjs && npm run verify:spanish-editorial-edition && npm run verify:adsense-ready-proxy && npm run codex-env:materialize && node scripts/generate-runtime-asset-manifest.mjs && node scripts/stamp-service-worker-version.mjs && npm run test:trace-guard -- --include-dist && npm run test:seo-brand-copy",
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -37,7 +37,6 @@
     "test:cloudflare-gameplay-basic": "node tests/e2e/cloudflare-gameplay-basic-qa.js",
     "test:cloudflare-ball-turret": "node tests/e2e/cloudflare-ball-turret-qa.js",
     "test:cloudflare-level-progression": "node tests/e2e/cloudflare-phase-transition-qa.js",
-    "test:cloudflare-interlevel-google-ads": "node tests/e2e/cloudflare-interlevel-google-ads-qa.js",
     "test:cloudflare-evasive-components": "node tests/e2e/cloudflare-evasive-components-qa.js",
     "test:cloudflare-reset-preferences": "node tests/e2e/cloudflare-reset-preferences-qa.js",
     "test:semantic-file-names": "node scripts/normalize-semantic-file-names.mjs --check",
@@ -68,10 +67,14 @@
     "verify:version-docs": "node scripts/verify-version-docs.mjs",
     "verify:version-docs-results": "node scripts/validate-version-doc-results.mjs",
     "verify:adsense-ready-proxy": "node scripts/verify-adsense-ready-proxy.mjs",
+    "test:verify-adsense-ready-proxy:unit": "node scripts/verify-adsense-ready-proxy.test.mjs",
     "test:editorial-pages:unit": "node scripts/editorial-page-content.test.mjs",
     "test:version-docs:unit": "node scripts/parse-version-doc.test.mjs && node scripts/publish-version-release.test.mjs && node scripts/brikaya-ship.test.mjs && node scripts/build-version.test.mjs && node scripts/sync-package-version.test.mjs && node scripts/generate-runtime-asset-manifest.test.mjs && node scripts/validate-version-doc-results.test.mjs",
     "brikaya:scaffold-version-docs": "node scripts/scaffold-version-docs.mjs",
-    "brikaya:publish-version-release": "node scripts/publish-version-release.mjs"
+    "brikaya:publish-version-release": "node scripts/publish-version-release.mjs",
+    "verify:spanish-editorial-edition": "node scripts/verify-spanish-editorial-edition.mjs",
+    "test:spanish-search-edition:unit": "node scripts/spanish-search-edition.test.mjs",
+    "test:verify-spanish-landing-metadata:unit": "node scripts/verify-spanish-landing-metadata.test.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.4.1",

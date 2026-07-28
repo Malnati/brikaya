@@ -15,6 +15,10 @@ import {
   getPublicRoutePath,
   type PublicRoutePath,
 } from "../routes";
+import {
+  INDEXABLE_SEARCH_EDITION_LOCALES,
+  isIndexablePublicRoute,
+} from "./localeEligibility";
 
 const CANONICAL_ORIGIN = "https://brikaya.com";
 const HREFLANG_DEFAULT = "x-default";
@@ -26,6 +30,7 @@ const OG_TITLE_META_SELECTOR = 'meta[property="og:title"]';
 const OG_DESCRIPTION_META_SELECTOR = 'meta[property="og:description"]';
 const TWITTER_TITLE_META_SELECTOR = 'meta[name="twitter:title"]';
 const TWITTER_DESCRIPTION_META_SELECTOR = 'meta[name="twitter:description"]';
+const ROBOTS_META_SELECTOR = 'meta[name="robots"]';
 const CONTENT_ATTRIBUTE = "content";
 const HREF_ATTRIBUTE = "href";
 const HREFLANG_ATTRIBUTE = "hreflang";
@@ -85,6 +90,16 @@ function ensureLink(selector: string): HTMLLinkElement {
   return nextElement;
 }
 
+function ensureMeta(selector: string, name: string): HTMLMetaElement {
+  const currentElement = document.head.querySelector<HTMLMetaElement>(selector);
+  if (currentElement) return currentElement;
+
+  const nextElement = document.createElement("meta");
+  nextElement.setAttribute("name", name);
+  document.head.appendChild(nextElement);
+  return nextElement;
+}
+
 function setMetaContent(selector: string, content: string) {
   const element = document.head.querySelector<HTMLMetaElement>(selector);
   element?.setAttribute(CONTENT_ATTRIBUTE, content);
@@ -108,6 +123,8 @@ export function applySeoMetadata(locale: AppLocale) {
   const routePath = getPublicRoutePath(window.location.pathname, SUPPORTED_LOCALES);
   const metadata = getSeoMetadata(locale, routePath);
   const canonicalLink = ensureLink(CANONICAL_LINK_SELECTOR);
+  const robotsMeta = ensureMeta(ROBOTS_META_SELECTOR, "robots");
+  const indexable = isIndexablePublicRoute(locale, routePath);
 
   document.documentElement.lang = locale;
   document.title = metadata.title;
@@ -119,9 +136,18 @@ export function applySeoMetadata(locale: AppLocale) {
   setMetaContent(OG_DESCRIPTION_META_SELECTOR, metadata.ogDescription);
   setMetaContent(TWITTER_TITLE_META_SELECTOR, metadata.title);
   setMetaContent(TWITTER_DESCRIPTION_META_SELECTOR, metadata.ogDescription);
+  robotsMeta.setAttribute(
+    CONTENT_ATTRIBUTE,
+    indexable ? "index,follow" : "noindex,follow",
+  );
   removeExistingHreflangLinks();
-  for (const supportedLocale of SUPPORTED_LOCALES) {
-    appendHreflangLink(supportedLocale, getCanonicalUrl(supportedLocale, routePath));
+  if (!indexable) return;
+
+  for (const searchEditionLocale of INDEXABLE_SEARCH_EDITION_LOCALES) {
+    appendHreflangLink(
+      searchEditionLocale,
+      getCanonicalUrl(searchEditionLocale, routePath),
+    );
   }
   appendHreflangLink(HREFLANG_DEFAULT, getCanonicalUrl(DEFAULT_LOCALE, routePath));
 }

@@ -1,4 +1,5 @@
 // tests/unit/seoMetadata.test.ts
+import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
@@ -20,20 +21,19 @@ const OG_IMAGE_PROPERTY = 'property="og:image"';
 const TWITTER_IMAGE_NAME = 'name="twitter:image"';
 const SITEMAP_DIRECTIVE = `Sitemap: ${SITEMAP_URL}`;
 const LOC_TAG = `<loc>${CANONICAL_URL}</loc>`;
-const PLAY_LOC_TAG = `<loc>${PLAY_CANONICAL_URL}</loc>`;
 const PRIVACY_LOC_TAG = '<loc>https://brikaya.com/privacy/</loc>';
 const TERMS_LOC_TAG = '<loc>https://brikaya.com/terms/</loc>';
 const PORTUGUESE_PRIVACY_LOC_TAG = '<loc>https://brikaya.com/pt-BR/privacy/</loc>';
-const LATAM_TERMS_LOC_TAG = '<loc>https://brikaya.com/es-419/terms/</loc>';
-const FRENCH_LEGAL_LOC_TAG = '<loc>https://brikaya.com/fr/legal/</loc>';
-const SIMPLIFIED_CHINESE_DATA_DELETION_LOC_TAG =
-  '<loc>https://brikaya.com/zh-CN/data-deletion/</loc>';
-const ENGLISH_VARIANT_PRIVACY_LOC_TAG =
-  '<loc>https://brikaya.com/en-AU/privacy/</loc>';
-const FRENCH_VARIANT_PRIVACY_LOC_TAG =
-  '<loc>https://brikaya.com/fr-CA/privacy/</loc>';
-const EXPECTED_SITEMAP_LOC_COUNT = 3144;
+const SEARCH_EDITION_LOCALES = ['en', 'pt-BR', 'es-419'] as const;
+const INDEXABLE_EDITION_LOCALES = ['en', 'pt-BR', 'es-419'] as const;
+const CURRENT_INDEXABLE_EDITORIAL_URL_COUNT = 9;
+const INDEXABLE_TRUST_PATH_COUNT = 7;
+const EXPECTED_SITEMAP_LOC_COUNT =
+  INDEXABLE_EDITION_LOCALES.length +
+  CURRENT_INDEXABLE_EDITORIAL_URL_COUNT +
+  INDEXABLE_EDITION_LOCALES.length * INDEXABLE_TRUST_PATH_COUNT;
 const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8"?>';
+const CURRENT_LEGAL_LASTMOD = '2026-07-27';
 const LOCALIZED_LOCALES = [
   'pt-BR',
   'en',
@@ -325,6 +325,43 @@ function readProjectFile(filePath: string): string {
   return readFileSync(resolve(process.cwd(), filePath), 'utf8');
 }
 
+function renderSpanishLegalPage(): string {
+  const script = `
+    import { renderLegalPage } from './scripts/legal-page-content.mjs';
+
+    const localizedPath = (locale, path) =>
+      locale === 'en-US' ? path : \`/\${locale}\${path}\`;
+
+    process.stdout.write(renderLegalPage({
+      locale: 'es-419',
+      path: '/legal/',
+      canonicalUrl: 'https://brikaya.com/es-419/legal/',
+      alternateLinks: '',
+      dir: 'ltr',
+      localizedPath,
+    }));
+  `;
+
+  return execFileSync(
+    process.execPath,
+    ['--input-type=module', '--eval', script],
+    {
+      cwd: process.cwd(),
+      encoding: 'utf8',
+    },
+  );
+}
+
+type SeoEligibilitySnapshot = {
+  searchEdition: boolean;
+  contentComplete: boolean;
+  indexable: boolean;
+};
+
+const SEO_METADATA = JSON.parse(
+  readProjectFile('scripts/generated/i18n-home-seo.json'),
+) as Record<string, SeoEligibilitySnapshot>;
+
 describe('metadados públicos de descoberta do Brikaya', () => {
   it('declara idioma, descrição e URL canônica na landing pública', () => {
     const html = readProjectFile(INDEX_HTML_PATH);
@@ -338,18 +375,23 @@ describe('metadados públicos de descoberta do Brikaya', () => {
     expect(html).toContain(TWITTER_IMAGE_NAME);
     expect(html).toContain(SOCIAL_IMAGE_URL);
     expect(html).toContain('href="/play/"');
-    for (const locale of LOCALIZED_LOCALES) {
+    for (const locale of INDEXABLE_EDITION_LOCALES) {
       expect(html).toContain(`hreflang="${locale}"`);
     }
+    expect(html).not.toContain('hreflang="ja"');
     expect(html).toContain('hreflang="x-default"');
+    expect((html.match(/hreflang=/g) ?? [])).toHaveLength(4);
   });
 
-  it('mantém o shell do jogo em /play/ com canônica própria', () => {
+  it('mantém o shell do jogo acessível, canônico e fora da busca', () => {
     const html = readProjectFile(PLAY_HTML_PATH);
 
     expect(html).toMatch(new RegExp(`<html lang="${PORTUGUESE_LOCALE}"(?: dir="ltr")?>`));
     expect(html).toContain(PLAY_CANONICAL_URL);
-    expect(html).toContain('ca-pub-9571619183194136');
+    expect(html).not.toContain('ca-pub-9571619183194136');
+    expect(html).not.toMatch(/pagead2\.googlesyndication\.com|\badsbygoogle\b|\badBreak\b|\badConfig\b|__BRIKAYA_GOOGLE_ADS_ENABLED__/i);
+    expect(html).toContain('<meta name="robots" content="noindex,follow" />');
+    expect(html).not.toContain('hreflang=');
   });
 
   it('publica robots.txt apontando para sitemap canônico', () => {
@@ -360,7 +402,7 @@ describe('metadados públicos de descoberta do Brikaya', () => {
     expect(robots).toContain(SITEMAP_DIRECTIVE);
   });
 
-  it('publica sitemap XML com rotas públicas e páginas legais principais', () => {
+  it('publica exatamente as 33 URLs completas das edições EN/PT/ES-419', () => {
     const sitemap = readProjectFile(SITEMAP_XML_PATH);
     const locCount = (sitemap.match(/<loc>/g) ?? []).length;
 
@@ -368,31 +410,29 @@ describe('metadados públicos de descoberta do Brikaya', () => {
     expect(sitemap).toContain('http://www.sitemaps.org/schemas/sitemap/0.9');
     expect(locCount).toBe(EXPECTED_SITEMAP_LOC_COUNT);
     expect(sitemap).toContain(LOC_TAG);
-    expect(sitemap).toContain(PLAY_LOC_TAG);
-    for (const locale of LOCALIZED_LOCALES) {
+    for (const locale of INDEXABLE_EDITION_LOCALES) {
       const localizedUrl =
         locale === PORTUGUESE_LOCALE
           ? CANONICAL_URL
           : `https://brikaya.com/${locale}/`;
       expect(sitemap).toContain(`<loc>${localizedUrl}</loc>`);
-      const localizedPlayUrl =
-        locale === PORTUGUESE_LOCALE
-          ? PLAY_CANONICAL_URL
-          : `https://brikaya.com/${locale}/play/`;
-      expect(sitemap).toContain(`<loc>${localizedPlayUrl}</loc>`);
     }
+    expect(sitemap).toContain('<loc>https://brikaya.com/es-419/</loc>');
+    expect(sitemap).not.toContain('/play/</loc>');
+    expect(sitemap).not.toContain('/downloads/</loc>');
+    expect(sitemap).not.toContain('/user-agreement/</loc>');
+    expect(sitemap).not.toContain('/license/</loc>');
+    expect(sitemap).not.toContain('<loc>https://brikaya.com/ja/</loc>');
     expect(sitemap).toContain(PRIVACY_LOC_TAG);
     expect(sitemap).toContain(TERMS_LOC_TAG);
     expect(sitemap).toContain(PORTUGUESE_PRIVACY_LOC_TAG);
-    expect(sitemap).toContain(LATAM_TERMS_LOC_TAG);
-    expect(sitemap).toContain(FRENCH_LEGAL_LOC_TAG);
-    expect(sitemap).toContain(SIMPLIFIED_CHINESE_DATA_DELETION_LOC_TAG);
-    expect(sitemap).not.toContain(ENGLISH_VARIANT_PRIVACY_LOC_TAG);
-    expect(sitemap).not.toContain(FRENCH_VARIANT_PRIVACY_LOC_TAG);
+    expect(sitemap).toContain('<loc>https://brikaya.com/es-419/terms/</loc>');
+    expect(sitemap).not.toContain('<loc>https://brikaya.com/fr/privacy/</loc>');
+    expect(sitemap).not.toContain('<loc>https://brikaya.com/zh-CN/data-deletion/</loc>');
     expect(sitemap).not.toContain('.pages.dev');
   });
 
-  it('declara metadados raiz em en-US nas páginas legais públicas', () => {
+  it('mantém hreflang recíproco entre as edições EN/PT/ES-419 completas', () => {
     const privacy = readProjectFile(PRIVACY_HTML_PATH);
     const terms = readProjectFile(TERMS_HTML_PATH);
 
@@ -401,11 +441,44 @@ describe('metadados públicos de descoberta do Brikaya', () => {
     expect(privacy).toContain('<link rel="canonical" href="https://brikaya.com/privacy/" />');
     expect(privacy).toContain('hreflang="pt-BR"');
     expect(privacy).toContain('href="https://brikaya.com/pt-BR/privacy/"');
-    expect(privacy).not.toContain('hreflang="en-AU"');
-    expect(privacy).not.toContain('href="https://brikaya.com/en-AU/privacy/"');
+    expect(privacy).toContain('hreflang="en"');
+    expect(privacy).toContain('hreflang="es-419"');
+    expect((privacy.match(/hreflang=/g) ?? [])).toHaveLength(4);
     expect(terms).toContain('<html lang="en-US" dir="ltr">');
     expect(terms).toContain('<title>Terms of use — Brikaya</title>');
     expect(privacy).toContain(ROOT_FAVICON_LINK);
     expect(terms).toContain(ROOT_FAVICON_LINK);
+  });
+
+  it('preserva 284 locais jogáveis e restringe a busca às três edições', () => {
+    expect(LOCALIZED_LOCALES).toHaveLength(284);
+    expect(
+      LOCALIZED_LOCALES.filter((locale) => SEO_METADATA[locale]?.searchEdition),
+    ).toEqual(['pt-BR', 'en', 'es-419']);
+    expect(SEO_METADATA.en.contentComplete).toBe(true);
+    expect(SEO_METADATA['pt-BR'].contentComplete).toBe(true);
+    expect(SEO_METADATA['es-419'].contentComplete).toBe(true);
+    expect(SEO_METADATA['es-419'].indexable).toBe(true);
+  });
+
+  it('mantém user-agreement e license acessíveis sem indexação nem hreflang', () => {
+    for (const path of ['public/user-agreement/index.html', 'public/license/index.html']) {
+      const html = readProjectFile(path);
+      expect(html).toContain('<meta name="robots" content="noindex,follow" />');
+      expect(html).not.toContain('hreflang=');
+    }
+  });
+
+  it('data o material legal espanhol atualizado na página e no sitemap', () => {
+    const html = renderSpanishLegalPage();
+    const sitemap = readProjectFile(SITEMAP_XML_PATH);
+
+    expect(html).toContain(`"dateModified":"${CURRENT_LEGAL_LASTMOD}"`);
+    expect(html).toContain(`Última actualización: ${CURRENT_LEGAL_LASTMOD}`);
+    expect(sitemap).toMatch(
+      new RegExp(
+        `<loc>https://brikaya\\.com/es-419/legal/</loc>\\s*<lastmod>${CURRENT_LEGAL_LASTMOD}</lastmod>`,
+      ),
+    );
   });
 });

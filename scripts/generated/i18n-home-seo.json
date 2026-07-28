@@ -1,5 +1,11 @@
 {
   "pt-BR": {
+    "playable": true,
+    "searchEdition": true,
+    "adsenseSupported": true,
+    "contentComplete": true,
+    "fallback": false,
+    "indexable": true,
     "home": {
       "title": "Brikaya — arcade de circuitos eletrônicos",
       "description": "Jogue Brikaya, um arcade gratuito de circuitos eletrônicos no navegador, com progresso salvo no seu aparelho e partida disponível mesmo sem conexão depois do primeiro acesso.",
@@ -12,6 +18,12 @@
     }
   },
   "en": {
+    "playable": true,
+    "searchEdition": true,
+    "adsenseSupported": true,
+    "contentComplete": true,
+    "fallback": false,
+    "indexable": true,
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -24,6 +36,12 @@
     }
   },
   "es-419": {
+    "playable": true,
+    "searchEdition": true,
+    "adsenseSupported": true,
+    "contentComplete": true,
+    "fallback": false,
+    "indexable": true,
     "home": {
       "title": "Brikaya — arcade de componentes electrónicos",
       "description": "Juega Brikaya, un arcade gratuito de componentes electrónicos en el navegador, con progreso guardado en tu dispositivo y juego sin conexión después del primer acceso.",
@@ -36,6 +54,13 @@
     }
   },
   "en-IN": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade for India",
       "description": "Play Brikaya in your browser, a free circuit component arcade with device-saved progress and offline play after the first visit.",
@@ -48,6 +73,13 @@
     }
   },
   "hi-IN": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -60,6 +92,13 @@
     }
   },
   "de": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -72,6 +111,13 @@
     }
   },
   "fr": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de composants électroniques",
       "description": "Jouez à Brikaya, un arcade gratuit de composants électroniques dans le navigateur, avec progression enregistrée sur votre appareil et jeu hors connexion après la première visite.",
@@ -84,6 +130,13 @@
     }
   },
   "it": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -96,6 +149,13 @@
     }
   },
   "ja": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -108,6 +168,13 @@
     }
   },
   "ko": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -120,6 +187,13 @@
     }
   },
   "id": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -132,6 +206,13 @@
     }
   },
   "vi": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade linh kiện mạch",
       "description": "Chơi Brikaya, trò arcade linh kiện mạch miễn phí trên trình duyệt, lưu tiến trình trên thiết bị và chơi ngoại tuyến sau lần truy cập đầu tiên.",
@@ -144,6 +225,13 @@
     }
   },
   "fil": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Maglaro ng Brikaya, libreng circuit component arcade sa browser, may progreso na naka-save sa device at puwedeng laruin offline pagkatapos ng unang bisita.",
@@ -156,6 +244,13 @@
     }
   },
   "th": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — อาร์เคดชิ้นส่วนวงจร",
       "description": "เล่น Brikaya เกมอาร์เคดชิ้นส่วนวงจรฟรีบนเบราว์เซอร์ บันทึกความคืบหน้าในอุปกรณ์และเล่นออฟไลน์ได้หลังเข้าใช้งานครั้งแรก",
@@ -168,6 +263,13 @@
     }
   },
   "zh-CN": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -180,6 +282,13 @@
     }
   },
   "ar": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — أركيد كسر الكتل",
       "description": "العب Brikaya، لعبة أركيد مجانية لكسر الكتل في المتصفح، مع حفظ التقدم على جهازك واللعب دون اتصال بعد أول زيارة.",
@@ -192,6 +301,13 @@
     }
   },
   "ru": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -204,6 +320,13 @@
     }
   },
   "tr": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -216,6 +339,13 @@
     }
   },
   "nl": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -228,6 +358,13 @@
     }
   },
   "pl": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -240,6 +377,13 @@
     }
   },
   "uk": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -252,6 +396,13 @@
     }
   },
   "ms": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -264,6 +415,13 @@
     }
   },
   "zh-TW": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — 打磚塊街機",
       "description": "在瀏覽器中遊玩免費的打磚塊街機 Brikaya，進度保存在你的裝置上，首次造訪後可離線遊玩。",
@@ -276,6 +434,13 @@
     }
   },
   "pt-PT": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de circuitos eletrônicos",
       "description": "Jogue Brikaya, um arcade gratuito de circuitos eletrônicos no navegador, com progresso guardado no seu aparelho e jogo offline após o primeiro acesso.",
@@ -288,6 +453,13 @@
     }
   },
   "es-ES": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de componentes electrónicos",
       "description": "Juega Brikaya, un arcade gratuito de componentes electrónicos en el navegador, con progreso guardado en tu dispositivo y juego sin conexión después del primer acceso.",
@@ -300,6 +472,13 @@
     }
   },
   "en-GB": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -312,6 +491,13 @@
     }
   },
   "fr-CA": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de composants électroniques",
       "description": "Jouez à Brikaya, un arcade gratuit de composants électroniques dans le navigateur, avec progression enregistrée sur votre appareil et jeu hors connexion après la première visite.",
@@ -324,6 +510,13 @@
     }
   },
   "bn": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ব্লক ব্রেকার আর্কেড",
       "description": "ব্রাউজারে Brikaya খেলুন, একটি বিনামূল্যের ব্লক ব্রেকার আর্কেড; অগ্রগতি আপনার ডিভাইসে থাকে এবং প্রথম ভিজিটের পরে অফলাইনে খেলা যায়।",
@@ -336,6 +529,13 @@
     }
   },
   "ur": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — بلاک بریکر آرکیڈ",
       "description": "براؤزر میں Brikaya کھیلیں، ایک مفت بلاک بریکر آرکیڈ؛ پیش رفت آپ کے آلے پر محفوظ رہتی ہے اور پہلی بار کے بعد آف لائن کھیل ممکن ہے۔",
@@ -348,6 +548,13 @@
     }
   },
   "fa": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -360,6 +567,13 @@
     }
   },
   "he": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -372,6 +586,13 @@
     }
   },
   "ta": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — கட்டங்களை உடைக்கும் அர்கேட்",
       "description": "உங்கள் உலாவியில் இலவச கட்டம் உடைக்கும் அர்கேட் Brikaya விளையாடுங்கள்; முன்னேற்றம் சாதனத்தில் சேமிக்கப்படும், முதல் வருகைக்குப் பிறகு ஆஃப்லைனிலும் விளையாடலாம்.",
@@ -384,6 +605,13 @@
     }
   },
   "te": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — బ్లాక్ బ్రేకర్ ఆర్కేడ్",
       "description": "బ్రౌజర్‌లో Brikaya అనే ఉచిత బ్లాక్ బ్రేకర్ ఆర్కేడ్ ఆడండి; పురోగతి మీ పరికరంలోనే ఉంటుంది, మొదటి సందర్శన తర్వాత ఆఫ్‌లైన్‌లో ఆడవచ్చు.",
@@ -396,6 +624,13 @@
     }
   },
   "mr": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -408,6 +643,13 @@
     }
   },
   "gu": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — બ્લોક બ્રેકર આર્કેડ",
       "description": "બ્રાઉઝરમાં Brikaya રમો: મફત બ્લોક બ્રેકર આર્કેડ, પ્રગતિ તમારા ઉપકરણમાં સાચવાય છે અને પ્રથમ મુલાકાત પછી ઑફલાઇન રમાય છે.",
@@ -420,6 +662,13 @@
     }
   },
   "kn": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ಬ್ಲಾಕ್ ಬ್ರೇಕರ್ ಆರ್ಕೇಡ್",
       "description": "ಬ್ರೌಸರ್‌ನಲ್ಲಿ Brikaya ಆಡಿ: ಉಚಿತ ಬ್ಲಾಕ್ ಬ್ರೇಕರ್ ಆರ್ಕೇಡ್, ಪ್ರಗತಿ ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಉಳಿಯುತ್ತದೆ ಮತ್ತು ಮೊದಲ ಭೇಟಿ ನಂತರ ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿ ಆಡಬಹುದು.",
@@ -432,6 +681,13 @@
     }
   },
   "ml": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ബ്ലോക്ക് ബ്രേക്കർ ആർക്കേഡ്",
       "description": "ബ്രൗസറിൽ Brikaya കളിക്കൂ: സൗജന്യ ബ്ലോക്ക് ബ്രേക്കർ ആർക്കേഡ്, പുരോഗതി നിങ്ങളുടെ ഉപകരണത്തിൽ സൂക്ഷിക്കും; ആദ്യ സന്ദർശനത്തിന് ശേഷം ഓഫ്‌ലൈൻ കളിക്കാം.",
@@ -444,6 +700,13 @@
     }
   },
   "pa": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ਬਲਾਕ ਬ੍ਰੇਕਰ ਆਰਕੇਡ",
       "description": "ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ Brikaya ਖੇਡੋ: ਮੁਫ਼ਤ ਬਲਾਕ ਬ੍ਰੇਕਰ ਆਰਕੇਡ, ਤਰੱਕੀ ਤੁਹਾਡੇ ਡਿਵਾਈਸ ਵਿੱਚ ਰਹਿੰਦੀ ਹੈ ਅਤੇ ਪਹਿਲੀ ਵਾਰ ਖੋਲ੍ਹਣ ਤੋਂ ਬਾਅਦ ਆਫਲਾਈਨ ਖੇਡ ਸਕਦੇ ਹੋ।",
@@ -456,6 +719,13 @@
     }
   },
   "el": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade σπασίματος μπλοκ",
       "description": "Παίξτε Brikaya στο πρόγραμμα περιήγησης: δωρεάν arcade σπασίματος μπλοκ, με πρόοδο αποθηκευμένη στη συσκευή και παιχνίδι εκτός σύνδεσης μετά την πρώτη επίσκεψη.",
@@ -468,6 +738,13 @@
     }
   },
   "sv": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -480,6 +757,13 @@
     }
   },
   "da": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -492,6 +776,13 @@
     }
   },
   "no": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Play Brikaya, a free circuit component arcade in your browser, with progress saved on your device and offline play after the first visit.",
@@ -504,6 +795,13 @@
     }
   },
   "fi": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — palikanmurtaja-arcade",
       "description": "Pelaa Brikayaa selaimessa: ilmainen palikanmurtaja-arcade, jossa edistyminen tallentuu laitteellesi ja peli toimii offline-tilassa ensimmäisen käynnin jälkeen.",
@@ -516,6 +814,13 @@
     }
   },
   "cs": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Nainstalujte nebo hrajte Brikaya zdarma, bez účtu a bez platby; postup zůstává v zařízení a po první návštěvě lze hrát offline.",
@@ -528,6 +833,13 @@
     }
   },
   "ro": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instalează sau joacă Brikaya gratuit, fără cont și fără plată; progresul rămâne pe dispozitiv și poți juca offline după prima vizită.",
@@ -540,6 +852,13 @@
     }
   },
   "hu": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Telepítsd vagy játszd a Brikaya játékot ingyen, fiók és fizetés nélkül; a haladás az eszközön marad, és az első látogatás után offline is játszható.",
@@ -552,6 +871,13 @@
     }
   },
   "bg": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Инсталирайте или играйте Brikaya безплатно, без акаунт и без плащане; напредъкът остава на устройството и след първото посещение играта работи офлайн.",
@@ -564,6 +890,13 @@
     }
   },
   "sk": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Nainštalujte alebo hrajte Brikaya zadarmo, bez účtu a bez platby; postup zostáva v zariadení a po prvej návšteve možno hrať offline.",
@@ -576,6 +909,13 @@
     }
   },
   "sl": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Namestite ali igrajte Brikaya brezplačno, brez računa in brez plačila; napredek ostane v napravi, po prvem obisku pa je igra na voljo brez povezave.",
@@ -588,6 +928,13 @@
     }
   },
   "hr": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instaliraj ili igraj Brikaya besplatno, bez računa i bez plaćanja; napredak ostaje na uređaju, a nakon prvog posjeta možeš igrati offline.",
@@ -600,6 +947,13 @@
     }
   },
   "sr": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Инсталирајте или играјте Brikaya бесплатно, без налога и без плаћања; напредак остаје на уређају и после прве посете можете играти офлајн.",
@@ -612,6 +966,13 @@
     }
   },
   "lt": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Įdiekite arba žaiskite Brikaya nemokamai, be paskyros ir be mokėjimo; pažanga lieka įrenginyje, o po pirmo apsilankymo galima žaisti neprisijungus.",
@@ -624,6 +985,13 @@
     }
   },
   "lv": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instalējiet vai spēlējiet Brikaya bez maksas, bez konta un bez maksājuma; progress paliek ierīcē, un pēc pirmā apmeklējuma var spēlēt bezsaistē.",
@@ -636,6 +1004,13 @@
     }
   },
   "et": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — plokimurdmise arkaad",
       "description": "Paigalda või mängi Brikayat tasuta, ilma kontota ja makseta; edenemine jääb seadmesse ning pärast esimest külastust saab mängida võrguühenduseta.",
@@ -648,6 +1023,13 @@
     }
   },
   "sw": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arkedi ya kuvunja vizuizi",
       "description": "Sakinisha au cheza Brikaya bila malipo, bila akaunti na bila malipo yoyote; maendeleo hubaki kwenye kifaa na unaweza kucheza nje ya mtandao baada ya ziara ya kwanza.",
@@ -660,6 +1042,13 @@
     }
   },
   "af": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installeer of speel Brikaya gratis, sonder rekening en sonder betaling; vordering bly op die toestel en ná die eerste besoek kan jy vanlyn speel.",
@@ -672,6 +1061,13 @@
     }
   },
   "am": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ብሎክ ሰባሪ አርኬድ",
       "description": "Brikayaን በነፃ ይጫኑ ወይም ይጫወቱ፣ ያለ መለያ እና ያለ ክፍያ፤ ሂደት በመሣሪያው ላይ ይቀመጣል እና ከመጀመሪያ ጉብኝት በኋላ ከመስመር ውጭ መጫወት ይቻላል።",
@@ -684,6 +1080,13 @@
     }
   },
   "ka": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ბლოკების დამტვრევის არკადა",
       "description": "დააყენეთ ან ითამაშეთ Brikaya უფასოდ, ანგარიშისა და გადახდის გარეშე; პროგრესი რჩება მოწყობილობაზე და პირველი ვიზიტის შემდეგ თამაში შესაძლებელია ოფლაინ.",
@@ -696,6 +1099,13 @@
     }
   },
   "hy": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — բլոկներ կոտրելու արկադ",
       "description": "Տեղադրեք կամ խաղացեք Brikaya անվճար, առանց հաշվի և առանց վճարման․ առաջընթացը մնում է սարքում, իսկ առաջին այցելությունից հետո հնարավոր է խաղալ անցանց։",
@@ -708,6 +1118,13 @@
     }
   },
   "az": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-nı pulsuz quraşdırın və ya oynayın, hesab və ödəniş olmadan; irəliləyiş cihazda qalır və ilk ziyarətdən sonra oflayn oynamaq mümkündür.",
@@ -720,6 +1137,13 @@
     }
   },
   "kk": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya ойынын тегін орнатыңыз немесе ойнаңыз, есептік жазбасыз және төлемсіз; прогресс құрылғыда қалады және бірінші кіргеннен кейін офлайн ойнауға болады.",
@@ -732,6 +1156,13 @@
     }
   },
   "uz": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-ni bepul o‘rnating yoki o‘ynang, hisob va to‘lovsiz; jarayon qurilmada qoladi va birinchi tashrifdan keyin oflayn o‘ynash mumkin.",
@@ -744,6 +1175,13 @@
     }
   },
   "ne": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ब्लक ब्रेकर आर्केड",
       "description": "Brikaya निःशुल्क स्थापना गर्नुहोस् वा खेल्नुहोस्, खाता बिना र भुक्तानी बिना; प्रगति उपकरणमै रहन्छ र पहिलो भ्रमणपछि अफलाइन खेल्न सकिन्छ।",
@@ -756,6 +1194,13 @@
     }
   },
   "si": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — බ්ලොක් බ්‍රේකර් ආකේඩ්",
       "description": "Brikaya නොමිලේ ස්ථාපනය කරන්න හෝ ක්‍රීඩා කරන්න, ගිණුමක් නැතිව සහ ගෙවීමකින් තොරව; ප්‍රගතිය උපාංගයේම රැඳේ සහ පළමු පිවිසුමෙන් පසු නොබැඳිව ක්‍රීඩා කළ හැක.",
@@ -768,6 +1213,13 @@
     }
   },
   "km": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — អាកាដបំបែកប្លុក",
       "description": "ដំឡើង ឬលេង Brikaya ដោយឥតគិតថ្លៃ គ្មានគណនី និងគ្មានការបង់ប្រាក់; វឌ្ឍនភាពនៅលើឧបករណ៍ ហើយអាចលេងក្រៅបណ្ដាញបន្ទាប់ពីចូលមើលដំបូង។",
@@ -780,6 +1232,13 @@
     }
   },
   "lo": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ອາເຄດແຕກບລັອກ",
       "description": "ຕິດຕັ້ງ ຫຼື ຫຼິ້ນ Brikaya ຟຣີ, ບໍ່ຕ້ອງມີບັນຊີ ແລະ ບໍ່ມີການຈ່າຍເງິນ; ຄວາມຄືບໜ້າຢູ່ໃນອຸປະກອນ ແລະ ຫຼິ້ນອອຟລາຍໄດ້ຫຼັງການເຂົ້າຄັ້ງທໍາອິດ.",
@@ -792,6 +1251,13 @@
     }
   },
   "my": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ဘလောက်ဖျက် arcade",
       "description": "Brikaya ကို အခမဲ့ တပ်ဆင်ပါ သို့မဟုတ် ကစားပါ၊ အကောင့်မလို၊ ငွေပေးချေမှုမလို; တိုးတက်မှုသည် စက်ပေါ်တွင် ಉಳಿದು ပထမဆုံးဝင်ရောက်ပြီးနောက် အော့ဖ်လိုင်းကစားနိုင်သည်။",
@@ -804,6 +1270,13 @@
     }
   },
   "is": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — kubbabrjótsleikur",
       "description": "Settu upp eða spilaðu Brikaya ókeypis, án reiknings og án greiðslu; framvinda helst á tækinu og hægt er að spila án nettengingar eftir fyrstu heimsókn.",
@@ -816,6 +1289,13 @@
     }
   },
   "ga": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — stuara briste bloic",
       "description": "Suiteáil nó imir Brikaya saor in aisce, gan chuntas agus gan íocaíocht; fanann dul chun cinn ar an ngléas agus is féidir imirt as líne tar éis na chéad chuairte.",
@@ -828,6 +1308,13 @@
     }
   },
   "cy": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Gosodwch neu chwaraewch Brikaya am ddim, heb gyfrif a heb daliad; mae cynnydd yn aros ar y ddyfais a gellir chwarae all-lein ar ôl yr ymweliad cyntaf.",
@@ -840,6 +1327,13 @@
     }
   },
   "mt": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installa jew ilgħab Brikaya b'xejn, mingħajr kont u mingħajr ħlas; il-progress jibqa' fuq l-apparat u tista' tilgħab offline wara l-ewwel żjara.",
@@ -852,6 +1346,13 @@
     }
   },
   "sq": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arkadë thyerje blloqesh",
       "description": "Instalo ose luaj Brikaya falas, pa llogari dhe pa pagesë; përparimi mbetet në pajisje dhe mund të luash jashtë linje pas vizitës së parë.",
@@ -864,6 +1365,13 @@
     }
   },
   "mk": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Инсталирајте или играјте Brikaya бесплатно, без сметка и без плаќање; напредокот останува на уредот и по првата посета може да се игра офлајн.",
@@ -876,6 +1384,13 @@
     }
   },
   "bs": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instaliraj ili igraj Brikaya besplatno, bez računa i bez plaćanja; napredak ostaje na uređaju i nakon prve posjete možeš igrati offline.",
@@ -888,6 +1403,13 @@
     }
   },
   "mn": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-г үнэгүй суулгаж эсвэл тоглоорой, бүртгэлгүй, төлбөргүй; ахиц төхөөрөмж дээр хадгалагдаж, эхний зочилсны дараа офлайн тоглож болно.",
@@ -900,6 +1422,13 @@
     }
   },
   "tg": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-ро ройгон насб кунед ё бозӣ кунед, бе ҳисоб ва бе пардохт; пешрафт дар дастгоҳ мемонад ва баъд аз боздиди аввал офлайн бозӣ кардан мумкин аст.",
@@ -912,6 +1441,13 @@
     }
   },
   "ky": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya оюнун акысыз орнотуңуз же ойноңуз, эсепсиз жана төлөмсүз; жетишкендик түзмөктө сакталат жана биринчи киргенден кийин офлайн ойноого болот.",
@@ -924,6 +1460,13 @@
     }
   },
   "tk": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-ny mugt gurnaň ýa-da oýnaň, hasapsyz we tölegsiz; ösüş enjamda galýar we ilkinji sapardan soň oflayn oýnap bolýar.",
@@ -936,6 +1479,13 @@
     }
   },
   "be": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Усталюйце або гуляйце ў Brikaya бясплатна, без уліковага запісу і без аплаты; прагрэс застаецца на прыладзе, а пасля першага наведвання можна гуляць афлайн.",
@@ -948,6 +1498,13 @@
     }
   },
   "lb": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installéiert oder spillt Brikaya gratis, ouni Kont an ouni Bezuelung; de Fortschrëtt bleift um Apparat an no der éischter Visitt kann een offline spillen.",
@@ -960,6 +1517,13 @@
     }
   },
   "eu": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instalatu edo jokatu Brikaya doan, konturik gabe eta ordainketarik gabe; aurrerapena gailuan geratzen da eta lehen bisitaren ondoren lineaz kanpo joka daiteke.",
@@ -972,6 +1536,13 @@
     }
   },
   "ca": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instal·la o juga a Brikaya gratis, sense compte i sense pagament; el progrés queda al dispositiu i després de la primera visita es pot jugar sense connexió.",
@@ -984,6 +1555,13 @@
     }
   },
   "gl": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de componentes electrónicos",
       "description": "Instala ou xoga a Brikaya gratis, sen conta e sen pagamento; o progreso queda no dispositivo e despois da primeira visita pódese xogar sen conexión.",
@@ -996,6 +1574,13 @@
     }
   },
   "oc": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcada de trencar blòts",
       "description": "Installatz o jogatz Brikaya gratuitament, sens compte e sens pagament; la progression demòra sus l'aparelh e aprèp la primièra visita se pòt jogar fòra linha.",
@@ -1008,6 +1593,13 @@
     }
   },
   "br": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Staliit pe c'hoariit Brikaya digoust, hep kont ha hep paeañ; an araokadur a chom war an ardivink hag e c'haller c'hoari ezlinenn goude ar weladenn gentañ.",
@@ -1020,6 +1612,13 @@
     }
   },
   "mi": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — kēmu wāwāhi poraka",
       "description": "Tāutahia, tākaro rānei i a Brikaya mō te kore utu, kāore he pūkete, kāore he utu; ka noho te ahunga ki tō pūrere, ā, ka taea te tākaro tuimotu i muri i te toronga tuatahi.",
@@ -1032,6 +1631,13 @@
     }
   },
   "sm": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ta'aloga talepe poloka",
       "description": "Fa'apipi'i pe ta'alo Brikaya fua, leai se teugatupe ma leai se totogi; e tumau le alualu i luma i le masini ma e mafai ona ta'alo offline pe a uma le asiasiga muamua.",
@@ -1044,6 +1650,13 @@
     }
   },
   "to": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — vaʻinga maumau poloka",
       "description": "Fokotuʻu pe vaʻinga Brikaya taʻetotongi, ʻikai ha ʻakauni pea ʻikai ha totongi; ʻoku nofo ʻa e laka ki muʻa ʻi he meʻangāue pea ʻe lava ke vaʻinga offline hili ʻa e ʻaʻahi ʻuluaki.",
@@ -1056,6 +1669,13 @@
     }
   },
   "fj": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — qito voroka buloko",
       "description": "Vakacuruma se qitotaka Brikaya walega, sega ni akaude se saumi; na toso e tiko ga ena nomu misini ka rawa ni qito offline ni oti na imatai ni veisiko.",
@@ -1068,6 +1688,13 @@
     }
   },
   "mg": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade mamaky sakana",
       "description": "Ampidiro na milalaova Brikaya maimaim-poana, tsy mila kaonty ary tsy misy fandoavana; mijanona ao amin'ny fitaovana ny fandrosoana ary azo lalaovina ivelan'ny aterineto aorian'ny fitsidihana voalohany.",
@@ -1080,6 +1707,13 @@
     }
   },
   "so": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade jabinta baloogyada",
       "description": "Ku rakib ama ciyaar Brikaya bilaash, xisaab la'aan iyo lacag la'aan; horumarku wuxuu ku harayaa qalabka, waxaana la ciyaari karaa offline ka dib booqashada koowaad.",
@@ -1092,6 +1726,13 @@
     }
   },
   "yo": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ere fifọ bulọọki",
       "description": "Fi Brikaya sori ẹrọ tabi ṣere ni ọfẹ, laisi akọọlẹ ati laisi isanwo; ilọsiwaju wa lori ẹrọ rẹ ati pe o le ṣere lai si ayelujara lẹhin ibẹwo akọkọ.",
@@ -1104,6 +1745,13 @@
     }
   },
   "ig": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — egwuregwu igbaji blọọkụ",
       "description": "Wụnye ma ọ bụ kpọọ Brikaya n'efu, enweghị akaụntụ na enweghị ịkwụ ụgwọ; ọganihu na-anọ na ngwaọrụ gị ma enwere ike igwu offline mgbe nleta mbụ gasịrị.",
@@ -1116,6 +1764,13 @@
     }
   },
   "ha": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — wasan fasa tubali",
       "description": "Shigar ko buga Brikaya kyauta, ba tare da asusu ba kuma ba tare da biya ba; ci gaba yana zama a kan na'urarka kuma ana iya bugawa ba tare da intanet ba bayan ziyarar farko.",
@@ -1128,6 +1783,13 @@
     }
   },
   "zu": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — i-arcade yokuphula amabhulokhi",
       "description": "Faka noma udlale i-Brikaya mahhala, ngaphandle kwe-akhawunti futhi ngaphandle kwenkokhelo; inqubekela phambili ihlala kudivayisi futhi ungadlala ungaxhunyiwe ngemva kokuvakasha kokuqala.",
@@ -1140,6 +1802,13 @@
     }
   },
   "xh": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — i-arcade yokuqhekeza iibhloko",
       "description": "Faka okanye udlale i-Brikaya simahla, ngaphandle kweakhawunti kwaye ngaphandle kwentlawulo; inkqubela ihlala kwisixhobo kwaye ungadlala ngaphandle kwe-intanethi emva kotyelelo lokuqala.",
@@ -1152,6 +1821,13 @@
     }
   },
   "st": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — papali ea ho pshatla diboloko",
       "description": "Kenya kapa bapala Brikaya mahala, ntle le akhaonto ebile ntle le tefo; tsoelo-pele e lula sesebedisweng mme o ka bapala ntle le inthanete kamora ketelo ya pele.",
@@ -1164,6 +1840,13 @@
     }
   },
   "tn": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — motshameko wa go thuba diboloko",
       "description": "Tsenya kgotsa tshameka Brikaya mahala, ntle le akhaonto le ntle le tuelo; kgatelopele e sala mo sedirisiweng mme o ka tshameka offline morago ga ketelo ya ntlha.",
@@ -1176,6 +1859,13 @@
     }
   },
   "ts": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ntlangu wo tshova tibuloko",
       "description": "Nghenisa kumbe tlanga Brikaya mahala, handle ka akhawunti naswona handle ka ku hakela; nhluvuko wu sala eka xitirhisiwa naswona u nga tlanga offline endzhaku ka ku endza ko sungula.",
@@ -1188,6 +1878,13 @@
     }
   },
   "ss": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — umdlalo wekwephula emabhulokhi",
       "description": "Faka noma udlale Brikaya mahhala, ngaphandle kwe-akhawunti nangaphandle kwenkokhelo; inqubekela phambili ihlala kudivayisi futhi ungadlala ngaphandle kwe-inthanethi ngemva kokuvakasha kokuqala.",
@@ -1200,6 +1897,13 @@
     }
   },
   "ve": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — mutambo wa u pwasha zwibuloko",
       "description": "Longelani kana tambani Brikaya mahala, hu si na akhaunthu na hu si na mbadelo; mvelaphanda i sala kha tshishumiswa nahone ni nga tamba offline nga murahu ha u dalela lwa u thoma.",
@@ -1212,6 +1916,13 @@
     }
   },
   "nso": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — papadi ya go pšhatla diboloko",
       "description": "Tsenya goba bapala Brikaya mahala, ntle le akhaonto le ntle le tefo; tšwelopele e dula sedirišweng gomme o ka bapala offline ka morago ga ketelo ya mathomo.",
@@ -1224,6 +1935,13 @@
     }
   },
   "rw": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — umukino wo kumena ibice",
       "description": "Shyira Brikaya cyangwa uyikine ku buntu, nta konti kandi nta kwishyura; iterambere riguma ku gikoresho kandi ushobora gukina udafite interineti nyuma y'uruzinduko rwa mbere.",
@@ -1236,6 +1954,13 @@
     }
   },
   "rn": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — umukino wo kumena amabuye",
       "description": "Shiramwo canke ukine Brikaya ku buntu, ata konti kandi ata kuriha; iterambere riguma ku gikoresho kandi ushobora gukina utari kuri interineti inyuma y'ugusura kwa mbere.",
@@ -1248,6 +1973,13 @@
     }
   },
   "ln": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Tyá to sambá Brikaya ofele, konto te mpe mbongo te; bokoli etikala na aparɛyi mpe okoki kosakana offline nsima ya botali ya liboso.",
@@ -1260,6 +1992,13 @@
     }
   },
   "lg": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — omuzannyo gw'okumenya bulooka",
       "description": "Teekamu oba zannya Brikaya ku bwereere, awatali akawunti era awatali kusasula; enkulaakulana esigala ku kyuma era osobola okuzannya nga toli ku yintaneeti oluvannyuma lw'okukyalira okusooka.",
@@ -1272,6 +2011,13 @@
     }
   },
   "ak": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — blɔk bubuw agodie",
       "description": "Fa Brikaya gu wo mfiri so anaa di agoru kwa, konto biara nni ho na sika biara nni ho; nkɔsoɔ no tena wo mfiri so na wubetumi adi agoru offline wɔ nsrahwɛ a edi kan akyi.",
@@ -1284,6 +2030,13 @@
     }
   },
   "ee": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — blɔk gbã ƒe asixɔxɔ",
       "description": "De Brikaya ɖe mɔ̃ dzi alo nɔ asixɔxɔ me dzodzro, akɔntabubu manɔmee eye fe manɔmee; ŋgɔyiyi nɔa wò mɔ̃ dzi eye àte ŋu adi asixɔxɔ offline le gbãtsɔtsɔ megbe.",
@@ -1296,6 +2049,13 @@
     }
   },
   "tw": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — blɔk bubuw agodie",
       "description": "Fa Brikaya gu wo mfiri so anaa di agoru kwa, konto biara nni ho na sika biara nni ho; nkɔsoɔ no tena wo mfiri so na wubetumi adi agoru offline wɔ nsrahwɛ a edi kan akyi.",
@@ -1308,6 +2068,13 @@
     }
   },
   "sn": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — mutambo wekupwanya mabhuroko",
       "description": "Isa kana tamba Brikaya mahara, pasina account uye pasina kubhadhara; kufambira mberi kunoramba kuri pamudziyo uye unogona kutamba offline mushure mekushanya kwekutanga.",
@@ -1320,6 +2087,13 @@
     }
   },
   "ny": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — masewera ophwanya mabuloko",
       "description": "Ikani kapena sewerani Brikaya kwaulere, popanda akaunti komanso popanda kulipira; kupita patsogolo kumakhala pa chipangizo ndipo mungasewere offline mutayendera koyamba.",
@@ -1332,6 +2106,13 @@
     }
   },
   "wo": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Samp walla fo Brikaya ci lu amul fay, amul kont te amul fay; jëm kanam dina des ci sa jumtukaay te mën nga fo offline ginnaaw seetaan bu njëkk.",
@@ -1344,6 +2125,13 @@
     }
   },
   "ff": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — fijirde mbusude bolok",
       "description": "Aaf walla fij Brikaya e ɗuum yoɓetaake, alaa konte e alaa yoɓde; jokkondiral maa hokka e masiŋol maa tee aɗa waawi fijde offline caggal yillagol adan.",
@@ -1356,6 +2144,13 @@
     }
   },
   "om": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — tapha bilookii caccabsuu",
       "description": "Brikaya bilisaan fe'i ykn taphadhu, herrega malee fi kaffaltii malee; tarkaanfiin meeshaa kee irratti hafa, daawwannaa jalqabaa booda offline taphachuu dandeessa.",
@@ -1368,6 +2163,13 @@
     }
   },
   "ti": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ጸወታ ምስባር ብሎክ",
       "description": "Brikaya ብናጻ ጫን ወይ ተጻወት፣ ብዘይ ሒሳብን ብዘይ ክፍሊትን፤ ምዕባለ ኣብ መሳርሒኻ ይቕመጥ እና ድሕሪ ቀዳማይ ምብጻሕ offline ክትጻወት ትኽእል።",
@@ -1380,6 +2182,13 @@
     }
   },
   "qu": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuitokunata pakichiy pukllay",
       "description": "Brikaya-ta mana qullqiyuq churay utaq pukllay, mana yupayniyuq, mana pagaspa; ñawpaqman puriyqa dispositivoykipi qhipakun, ñawpaq watukusqa qhipaman internet mana kaptinpas pukllawaq.",
@@ -1392,6 +2201,13 @@
     }
   },
   "ay": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — componentes p'akjaña anata",
       "description": "Brikaya inaki utt'ayaña jan ukax anataña, jan cuenta ukampi jan payllawi; nayrar sartañax dispositivoman qhiparaki ukat nayrïr mantawi qhipat offline anatasma.",
@@ -1404,6 +2220,13 @@
     }
   },
   "gn": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade ojokóva componente",
       "description": "Emohenda térã eñembosarái Brikaya rehe reigua, cuenta'ỹre ha jehepyme'ẽ'ỹre; ne ñemotenonde opyta ne mba'e'okápe ha ikatu eñembosarái conexión'ỹre oike rire peteĩha jey.",
@@ -1416,6 +2239,13 @@
     }
   },
   "nah": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — juego de componentes electrónicos",
       "description": "Xikmana noso xijuega Brikaya gratis, amo cuenta ihuan amo tlaxtlahuili; moyektilis mokahua ipan moaparato ihuan huelis tijuega offline satepan achto nemilistli.",
@@ -1428,6 +2258,13 @@
     }
   },
   "ht": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — jwèt kraze blòk",
       "description": "Enstale oswa jwe Brikaya gratis, san kont epi san peman; pwogrè a rete sou aparèy ou epi ou ka jwe san entènèt apre premye vizit la.",
@@ -1440,6 +2277,13 @@
     }
   },
   "pap": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instalá òf hunga Brikaya grátis, sin cuenta i sin pago; progreso ta keda riba bo aparato i bo por hunga offline despues di e promé bishita.",
@@ -1452,6 +2296,13 @@
     }
   },
   "jv": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Pasang utawa main Brikaya gratis, tanpa akun lan tanpa mbayar; kemajuan tetep ana ing piranti lan bisa dimainake offline sawisé kunjungan kapisan.",
@@ -1464,6 +2315,13 @@
     }
   },
   "su": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Pasang atawa ulin Brikaya gratis, tanpa akun jeung tanpa mayar; kamajuan tetep dina alat anjeun sarta bisa dimaénkeun offline sanggeus kunjungan kahiji.",
@@ -1476,6 +2334,13 @@
     }
   },
   "ceb": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "I-install o duwaa ang Brikaya nga libre, walay account ug walay bayad; ang progreso magpabilin sa imong device ug makaduwa offline human sa unang pagbisita.",
@@ -1488,6 +2353,13 @@
     }
   },
   "ilo": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "I-install wenno ay-ayamem ti Brikaya a libre, awan account ken awan bayad; agtalinaed ti progreso iti device mo ken mabalin a maay-ayam offline kalpasan ti umuna a bisita.",
@@ -1500,6 +2372,13 @@
     }
   },
   "war": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "I-install o uyaga an Brikaya nga libre, waray account ngan waray bayad; an progreso nagpapabilin ha imo device ngan puydi ma-uyag offline katapos han siyahan nga bisita.",
@@ -1512,6 +2391,13 @@
     }
   },
   "haw": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — pāʻani wāwahi pōhaku",
       "description": "E hoʻouka a pāʻani iā Brikaya me ka manuahi, ʻaʻohe moʻokāki a ʻaʻohe uku; noho ka holomua ma kāu hāmeʻa a hiki ke pāʻani offline ma hope o ke kipa mua.",
@@ -1524,6 +2410,13 @@
     }
   },
   "co": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installa o ghjoca Brikaya gratis, senza contu è senza pagamentu; u prugressu ferma nant'à u dispusitivu è si pò ghjucà offline dopu a prima visita.",
@@ -1536,6 +2429,13 @@
     }
   },
   "sc": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de frànghere componenti",
       "description": "Installa o gioga Brikaya gratis, chentza contu e chentza pagamentu; su progressu abarrat in su dispositivu tuo e podes giogare offline a pustis de sa prima visita.",
@@ -1548,6 +2448,13 @@
     }
   },
   "fur": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instale o zuie Brikaya gratis, cence account e cence paiament; il progrès al reste sul dispositîf e si pues zuia offline dopo la prime visite.",
@@ -1560,6 +2467,13 @@
     }
   },
   "rm": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installai u giugai Brikaya gratuitamain, senza conto e senza pajament; il progress resta sin tes apparat e ti pos giugar offline suenter l'emprima visita.",
@@ -1572,6 +2486,13 @@
     }
   },
   "lad": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instala o djuga Brikaya gratis, sin kuenta i sin pagar; el progresso keda en tu aparato i se puede djugar offline despues de la primera vizita.",
@@ -1584,6 +2505,13 @@
     }
   },
   "ast": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de componentes electrónicos",
       "description": "Instala o xuega Brikaya gratis, ensin cuenta y ensin pagu; el progresu queda nel to preséu y puedes xugar ensin conexón dempués de la primer visita.",
@@ -1596,6 +2524,13 @@
     }
   },
   "vec": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade spaca-blòchi",
       "description": "Instala o zoga Brikaya gratis, senza account e senza pagamento; el progresso resta sul dispositivo e se pol zogar offline dopo la prima visita.",
@@ -1608,6 +2543,13 @@
     }
   },
   "lmo": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installa o giöga Brikaya gratis, senza account e senza pagament; el progress resta sul dispositiv e se pö giügà offline dopo la prima visita.",
@@ -1620,6 +2562,13 @@
     }
   },
   "pms": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instala o gieuga Brikaya gratis, sensa account e sensa paghé; ël progress a resta an sël tò aparej e as peul gieughe offline dòp la prima vìsita.",
@@ -1632,6 +2581,13 @@
     }
   },
   "nap": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installa o juoca Brikaya gratis, senza cunto e senza pavà; 'o prugresso resta ncopp'ô dispusitivo e se po' jucà offline doppo 'a primma visita.",
@@ -1644,6 +2600,13 @@
     }
   },
   "scn": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installa o joca Brikaya gratis, senza cuntu e senza pagamentu; u prugressu resta ntô dispositivu e si po' jucari offline doppu a prima visita.",
@@ -1656,6 +2619,13 @@
     }
   },
   "sco": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Install or play Brikaya for free, nae accoont and nae payment; progress bides on yer device and ye can play offline efter the first visit.",
@@ -1668,6 +2638,13 @@
     }
   },
   "ps": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — د بلاک ماتولو ارکېډ",
       "description": "Brikaya وړیا نصب یا ولوبوئ، بې حسابه او بې پیسو؛ پرمختګ ستاسو په وسیله کې پاتې کېږي او له لومړۍ لیدنې وروسته آفلاین لوبېدای شي.",
@@ -1680,6 +2657,13 @@
     }
   },
   "sd": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — بلاڪ ٽوڙڻ واري آرڪيڊ",
       "description": "Brikaya مفت ۾ انسٽال ڪريو يا کيڏو، اڪائونٽ ۽ ادائيگي کانسواءِ؛ اڳڀرائي توهان جي ڊوائيس تي رهندي ۽ پهرين وزٽ کان پوءِ آف لائن کيڏي سگهجي ٿي.",
@@ -1692,6 +2676,13 @@
     }
   },
   "ks": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — بلاک ٹوٚڑُن آرکیڈ",
       "description": "Brikaya مفت انسٹال کٔرِو یا کھیلو، اکاؤنٹ بغیر تہ ادائیگی بغیر؛ پیشرفت تُہندس آلہ منز رہان چھ تہ گوڈنک وزٹ پتہ آف لائن کھیلِتھ ہیکیو.",
@@ -1704,6 +2695,13 @@
     }
   },
   "dv": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ބްލޮކް ފައްތާލާ އާކޭޑް",
       "description": "Brikaya ހިލޭ އިންސްޓޯލް ކުރޭ ނުވަތަ ކުޅޭ، އެކައުންޓް ނެތި އަދި ފައިސާ ނެތި؛ ކުރިއެރުން ތިބާގެ ޑިވައިސްގައި ބާކީ ވެސް، ފުރަތަމަ ވިސިޓް ފަހުން އޮފްލައިން ކުޅެވޭ.",
@@ -1716,6 +2714,13 @@
     }
   },
   "ckb": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — یاریی شکاندنی بلۆک",
       "description": "Brikaya بەخۆڕایی دابمەزرێنە یان بیگێڕە، بێ هەژمار و بێ پارەدان؛ پێشکەوتن لەسەر ئامێرەکەت دەمێنێتەوە و دوای سەردانی یەکەم دەتوانیت ئۆفلاین بیگێڕیت.",
@@ -1728,6 +2733,13 @@
     }
   },
   "ug": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — توساق چېقىش ئويۇنى",
       "description": "Brikaya نى ھەقسىز ئورنىتىڭ ياكى ئويناڭ، ھېساباتسىز ۋە پۇل تۆلىمەي؛ ئىلگىرىلەش ئۈسكۈنىڭىزدە ساقلىنىدۇ، تۇنجى زىيارەتتىن كېيىن تورسىز ئوينىلىدۇ.",
@@ -1740,6 +2752,13 @@
     }
   },
   "yi": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — בלאָק־ברעכער אַרקייד",
       "description": "אינסטאַלירן אָדער שפּילן Brikaya בחינם, אָן חשבון און אָן צאָלונג; דער פֿאָרשריט בלײַבט אויף דיין מיטל און מע קען שפּילן אָפֿליין נאָך דער ערשטער באַזוך.",
@@ -1752,6 +2771,13 @@
     }
   },
   "bo": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — བཀག་རྡོ་གཏོར་བའི་རྩེད་མོ",
       "description": "Brikaya རིན་མེད་དུ་སྒྲིག་འཇུག་ཡང་ན་རྩེད། ཐོ་ཁོངས་མེད་དང་སྤྲོད་དགོས་མེད། ཡར་རྒྱས་ཁྱེད་ཀྱི་འཕྲུལ་ཆས་ནང་ཉར་ཚགས་བྱས་ཏེ་ཐེངས་དང་པོའི་ལྟ་སྤྱོད་རྗེས་དྲ་མེད་དུ་རྩེད་ཐུབ།",
@@ -1764,6 +2790,13 @@
     }
   },
   "dz": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — བཀག་རྡོ་གཏོར་རྩེད",
       "description": "Brikaya རིན་མེད་དུ་སྒྲིག་འཇུག་ཡང་ན་རྩེད། རྩིས་ཁྲ་མེད་དང་སྤྲོད་དགོས་མེད། ཡར་རྒྱས་འཕྲུལ་ཆས་ནང་ཉར་ཚགས་འབད་དེ་ཐེངས་དང་པོའི་ཤུལ་ལས་དྲ་མེད་དུ་རྩེད་ཚུགས།",
@@ -1776,6 +2809,13 @@
     }
   },
   "ku": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya belaş saz bike an bilîze, bê hesab û bê pere; pêşketin li ser amûra te dimîne û piştî serdana yekem dikarî offline bilîzî.",
@@ -1788,6 +2828,13 @@
     }
   },
   "or": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ବ୍ଲକ୍ ଭାଙ୍ଗିବା ଆର୍କେଡ୍",
       "description": "Brikaya କୁ ମାଗଣାରେ ସ୍ଥାପନ କରନ୍ତୁ କିମ୍ବା ଖେଳନ୍ତୁ, ଖାତା ଓ ଦେୟ ବିନା; ପ୍ରଗତି ଆପଣଙ୍କ ଡିଭାଇସରେ ରହେ ଏବଂ ପ୍ରଥମ ଭ୍ରମଣ ପରେ ଅଫଲାଇନ୍ ଖେଳିପାରିବେ।",
@@ -1800,6 +2847,13 @@
     }
   },
   "as": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ব্লক ভঙা আর্কেড",
       "description": "Brikaya বিনামূলীয়াকৈ ইনষ্টল কৰক বা খেলক, একাউন্ট আৰু পেমেন্ট নোহোৱাকৈ; অগ্ৰগতি আপোনাৰ ডিভাইচত থাকে আৰু প্ৰথম ভ্ৰমণৰ পিছত অফলাইন খেলিব পাৰে।",
@@ -1812,6 +2866,13 @@
     }
   },
   "sa": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — खण्डभञ्जन-क्रीडा",
       "description": "Brikaya निःशुल्कं स्थापयतु वा क्रीडतु, लेखां विना भुगतानं विना च; प्रगतिः भवतः उपकरणे तिष्ठति, प्रथमदर्शनानन्तरं च ऑफलाइन क्रीडितुं शक्यते।",
@@ -1824,6 +2885,13 @@
     }
   },
   "mai": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya मुफ्त मे इंस्टॉल करू वा खेलू, खाता आ भुगतान बिना; प्रगति अहाँक डिवाइस पर रहैत अछि आ पहिल बेर देखलाक बाद ऑफलाइन खेलल जा सकैत अछि।",
@@ -1836,6 +2904,13 @@
     }
   },
   "bho": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya मुफ्त में इंस्टॉल करीं भा खेलीं, खाता आ भुगतान बिना; प्रगति रउरा डिवाइस पर रहेला आ पहिला भेंट के बाद ऑफलाइन खेलल जा सकेला।",
@@ -1848,6 +2923,13 @@
     }
   },
   "doi": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya मुफ्त इंस्टॉल करो या खेलो, खाते ते भुगतान बिना; तरक्की तुंदे डिवाइस च रहंदी ऐ ते पहली भेंट बाद ऑफलाइन खेड़ी सकदे ओ।",
@@ -1860,6 +2942,13 @@
     }
   },
   "mni": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ব্লক ভাঙার আর্কেড",
       "description": "Brikaya ফ্রি ইনস্টল তৌবিয়ু নত্রগা শানবিয়ু, একাউন্ট অমসুং পেমেন্ট নত্তনা; প্রোগ্রেস অসি নাহাক্কী ডিভাইসতা লৈগনি অমসুং অহানবা ভিজিট মতুংদা অফলাইন শানবা ইয়াগনি।",
@@ -1872,6 +2961,13 @@
     }
   },
   "kok": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya मोफत इंस्टॉल करात वा खेळात, खाते आनी पेमेंट शिवाय; प्रगती तुमच्या डिव्हाइसांत उरता आनी पयल्या भेटी उपरांत ऑफलाइन खेळूंक शकता।",
@@ -1884,6 +2980,13 @@
     }
   },
   "sat": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ᱵᱞᱚᱠ ᱨᱟᱯᱩᱫ ᱟᱨᱠᱮᱰ",
       "description": "Brikaya ᱯᱷᱨᱤ ᱤᱱᱥᱴᱚᱞ ᱵᱟᱝᱠᱷᱟᱱ ᱠᱷᱮᱞ ᱢᱮ, ᱟᱠᱟᱣᱱᱴ ᱵᱟᱝ ᱟᱨ ᱯᱮᱢᱮᱱᱴ ᱵᱟᱝ; ᱯᱨᱚᱜᱨᱮᱥ ᱟᱢᱟᱜ ᱰᱤᱵᱷᱟᱭᱥ ᱨᱮ ᱛᱟᱦᱮᱱᱟ ᱟᱨ ᱯᱟᱦᱤᱞ ᱵᱷᱤᱡᱤᱴ ᱛᱟᱭᱚᱢ ᱚᱯᱷᱞᱟᱭᱱ ᱠᱷᱮᱞ ᱢᱮ।",
@@ -1896,6 +2999,13 @@
     }
   },
   "lus": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya chu free-in install emaw khel rawh, account leh payment tel lovin; hmasawnna chu i device-ah a awm reng a, visit hmasa ber hnuah offline-in i khel thei.",
@@ -1908,6 +3018,13 @@
     }
   },
   "brx": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ब्लक खारनाय आर्केड",
       "description": "Brikaya मुफ्ताव इंस्टल खालाम एबा खेल, एकाउन्ट आरो पेमेंट गैयाबालानो; प्रगति नोंथांनि डिभाइसाव थायो आरो गिबि भेटनि उनाव ऑफलाइन खेलनो हायो।",
@@ -1920,6 +3037,13 @@
     }
   },
   "raj": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya मुफ्त में इंस्टॉल करो या खेलो, खातो अर भुगतान बिना; प्रगति थारे डिवाइस पर रहसी अर पहली मुलाकात पाछे ऑफलाइन खेल सकसी।",
@@ -1932,6 +3056,13 @@
     }
   },
   "hne": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya मुफ्त म इंस्टॉल करव या खेलव, खाता अउ भुगतान बिना; प्रगति तोर डिवाइस म रहिथे अउ पहिली भेंट के बाद ऑफलाइन खेले जा सकथे।",
@@ -1944,6 +3075,13 @@
     }
   },
   "awa": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya मुफ्त मा इंस्टॉल करा या खेला, खाता अउर भुगतान बिना; प्रगति तोहरे डिवाइस पर रहत हय अउ पहिले देखे के बाद ऑफलाइन खेला जा सकत हय।",
@@ -1956,6 +3094,13 @@
     }
   },
   "ace": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Pasang atawa main Brikaya gratis, tanpa akun dan tanpa bayaran; kemajuan tetap di perangkat droeneuh dan bisa dimainkan offline setelah kunjungan pertama.",
@@ -1968,6 +3113,13 @@
     }
   },
   "bal": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — بلاک شکستن آرکید",
       "description": "Brikaya اے مفت نصب کن یا بازی کن، بے حساب و بے پرداخت؛ پیشرفت تئی دستگاه ءَ رہیت و اوّلیں دیدگ ءَ بعد آفلاین بازی بوتگ.",
@@ -1980,6 +3132,13 @@
     }
   },
   "chr": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ᎠᏍᏆᏂᎪᏗ ᏗᎪᏍᏓᏱ ᎠᏁᏍᎩ",
       "description": "Brikaya ᎾᎿᎢ ᎭᏫᎾᏗᏍᎬ ᎠᎴ ᎯᏁᏍᎬ, ᎠᎪᏩᏛᏗ Ꮭ ᎠᎴ ᎠᎫᏴᎡᏗ Ꮭ; ᏣᏓᎴᏂᏙᎲ ᎦᎸᎳᏗ ᏗᏟᎶᏍᏗ ᎭᏫᏂ ᎤᏩᏌ ᏗᎬᏩᎶᏒ ᎠᎴ ᎠᏓᏅᏖᏗ Ꮭ ᎯᏁᏍᎬᎢ.",
@@ -1992,6 +3151,13 @@
     }
   },
   "crh": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya bedava qur ya da oyna, hesapsız ve ödemesiz; ilerileme cihazında qalır ve ilk ziyaret sonrası oflayn oynalır.",
@@ -2004,6 +3170,13 @@
     }
   },
   "tt": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-ны бушлай урнаштыр яки уйна, аккаунтсыз һәм түләүсез; алга китеш җайланмада саклана һәм беренче керүдән соң офлайн уйнап була.",
@@ -2016,6 +3189,13 @@
     }
   },
   "ba": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-ны бушлай урынлаштыр йәки уйна, иҫәпһеҙ һәм түләүһеҙ; алға барыш ҡоролмаңда ҡала һәм тәүге инеүҙән һуң офлайн уйнарға мөмкин.",
@@ -2028,6 +3208,13 @@
     }
   },
   "cv": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-не пулсӑр ларт е вӑйӑ, аккаунтсӑр та түлевсӗр; малалла пыру санӑн устройство ҫинче упранать, пӗрремӗш хутран хыҫҫӑн офлайн вӑйӑ пулать.",
@@ -2040,6 +3227,13 @@
     }
   },
   "sah": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya босхо туруор уонна оонньоо, аккаунт суох уонна төлөбүр суох; ситиһии эн устройством иһигэр хаалар, бастаан киирии кэннэ офлайн оонньуохха сөп.",
@@ -2052,6 +3246,13 @@
     }
   },
   "os": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-æй бесплатон æрлæууын кæн æмæ хъаз, аккаунт æмæ төлæгæй фæстæ; фæразонæй дæ девайсы бæстыл бадзурæн æмæ фыццаг бахъомыл æхсæв офлайн хъазæн.",
@@ -2064,6 +3265,13 @@
     }
   },
   "ab": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya х ake аҭыгара ма хәыцра, аккаунтда насгьы аԥарада; аҿиара уара уdevice аҟны ишьҭоуп, раԥхьатәи аҭаара анаҩсан офлайн хәыцра ҟалоит.",
@@ -2076,6 +3284,13 @@
     }
   },
   "ady": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya псэущхьэу къутыгъэн е ойын, аккаунтэнчъ, пщалъэхъуэнчъ; пщэдзэу уикъуэншхъэ деж къэнэ, япэу къэкIуэн нэужь офлайну ойын фае.",
@@ -2088,6 +3303,13 @@
     }
   },
   "kab": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — urar n uṛẓu n iḥedran",
       "description": "Sbeddi neɣ urar Brikaya baṭel, war amiḍan u war lexlaṣ; asfari ad yeqqim deg yibenk-ik, u tzemreḍ ad turareḍ s war internet mbaɛd tizri tamezwarut.",
@@ -2100,6 +3322,13 @@
     }
   },
   "tet": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instala ka joga Brikaya grátis, laiha konta no laiha pagamentu; progresu hela iha ita-nia dispositivu no bele joga offline depois visita dahuluk.",
@@ -2112,6 +3341,13 @@
     }
   },
   "bug": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ᨕᨑᨀᨉᨙ ᨆᨙᨈᨙᨄᨘ ᨅᨒᨚ",
       "description": "Pasang iyarega main Brikaya gratis, tanpa akun na tanpa bayaran; kemajuan tettong ri perangkatta na bisa main offline sesudah kunjungan pertama.",
@@ -2124,6 +3360,13 @@
     }
   },
   "min": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Pasang atau mainkan Brikaya gratis, tanpa akun dan tanpa bayaran; kamajuan tatap di parangkek awak dan bisa dimainkan offline sasudah kunjungan partamo.",
@@ -2136,6 +3379,13 @@
     }
   },
   "ban": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Pasang utawi main Brikaya gratis, tanpa akun lan tanpa mayah; kemajuan tetep ring piranti sameton lan prasida kamainang offline sasampun kunjungan kapertama.",
@@ -2148,6 +3398,13 @@
     }
   },
   "mad": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Pasang otabâ maèn Brikaya gratis, tanpa akun ben tanpa bayar; kamajuân tetep e perangkat sampean ben bisa maèn offline sawise kunjungan pertama.",
@@ -2160,6 +3417,13 @@
     }
   },
   "bjn": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Pasang atawa main Brikaya gratis, tanpa akun lawan tanpa bayar; kemajuan tatap di perangkat pian lawan kawa dimainkan offline sasudah kunjungan pertama.",
@@ -2172,6 +3436,13 @@
     }
   },
   "hil": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "I-install ukon hampangon ang Brikaya nga libre, wala account kag wala bayad; ang progreso nagapabilin sa imo device kag mahampang offline pagkatapos sang una nga bisita.",
@@ -2184,6 +3455,13 @@
     }
   },
   "pam": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "I-install o laruan ing Brikaya a libre, alang account ampo alang bayad; ing progreso mananatili king device mu at malyari yang laruan offline kaybat ning mumunang bisita.",
@@ -2196,6 +3474,13 @@
     }
   },
   "bcl": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "I-install o magkarawat kan Brikaya na libre, mayong account asin mayong bayad; an progreso nasa device mo asin puwedeng magkarawat offline pagkatos kan inot na bisita.",
@@ -2208,6 +3493,13 @@
     }
   },
   "gor": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Pasang atawa main Brikaya gratis, tanpa akun dan tanpa bayaran; kemajuan tetap di perangkat lo ito dan bisa dimainkan offline setelah kunjungan pertama.",
@@ -2220,6 +3512,13 @@
     }
   },
   "mak": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Pasang iareka main Brikaya gratis, tanpa akun na tanpa bayaran; kemajuan ammantang ri perangkatta na bisa main offline salama kunjungan pertama.",
@@ -2232,6 +3531,13 @@
     }
   },
   "sas": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Pasang atau main Brikaya gratis, tanpa akun lan tanpa bayar; kemajuan tetep leq perangkat side lan bau dimainkan offline sawise kunjungan pertama.",
@@ -2244,6 +3550,13 @@
     }
   },
   "fy": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Ynstallearje of spylje Brikaya fergees, sûnder akkount en sûnder betelling; foarútgong bliuwt op dyn apparaat en kinst offline spylje nei it earste besyk.",
@@ -2256,6 +3569,13 @@
     }
   },
   "fo": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Legg inn ella spæl Brikaya ókeypis, uttan konto og uttan gjald; framgongdin verður verandi á tínari eind, og tú kanst spæla offline eftir fyrstu vitjan.",
@@ -2268,6 +3588,13 @@
     }
   },
   "gd": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — geama briseadh bhlocaichean",
       "description": "Stàlaich no cluich Brikaya an-asgaidh, gun chunntas agus gun phàigheadh; fuirichidh adhartas air an inneal agad agus faodar cluich far loidhne às dèidh a’ chiad turais.",
@@ -2280,6 +3607,13 @@
     }
   },
   "gv": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Stallee ny cloie Brikaya gyn cosney, gyn coontey as gyn geeck; ta’n aase tannaghtyn er dty yannoo as foddee oo cloie gyn eddyr-voggyl lurg y chied çheet.",
@@ -2292,6 +3626,13 @@
     }
   },
   "kw": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Settya po gwari Brikaya yn didal, heb akont ha heb tylli; yth esa an avonsyans war dha devis ha gallets gwari heb linen wosa an kynsa visit.",
@@ -2304,6 +3645,13 @@
     }
   },
   "se": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — blohkaid rihkkon-speallu",
       "description": "Sajáiduhte dahje speala Brikaya nuvttá, konttu haga ja mávssu haga; ovdáneapmi báhcá du rusttegiidda ja sáhtát speallat offline vuosttaš galledeami maŋŋá.",
@@ -2316,6 +3664,13 @@
     }
   },
   "kl": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya akeqanngitsumik ikkuguk imaluunniit pinnguaat, kontoqarani akiliutitaqaranilu; siuariarneq atortumiiginnarpoq siullermeerlunilu pulaarnerup kingorna internet-eqanngitsumik pinnguaqqissinnaavutit.",
@@ -2328,6 +3683,13 @@
     }
   },
   "iu": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ᐅᔭᕋᓛᓂᒃ ᓯᖁᒥᑦᓯᓂᖅ",
       "description": "Brikaya ᐊᑭᖃᙱᑦᑐᒥᒃ ᐃᓕᓯᒍᒃ ᐅᕝᕙᓘᓐᓃᑦ ᐱᙳᐊᕆᒍᒃ, ᐊᑎᓕᐅᖅᓯᒪᔪᖃᙱᑦᑐᖅ ᐊᑭᓕᐅᑎᖃᙱᑦᑐᖅ; ᓯᕗᒧᐊᕐᓂᖅ ᐊᑐᕈᑎᕕᑦ ᐃᓗᐊᓃᑦᑐᖅ ᐊᒻᒪ ᐱᙳᐊᕈᓐᓇᖅᑐᑎᑦ ᐃᑭᐊᖅᑭᕕᖃᙱᑦᑐᒥᒃ ᓯᕗᓪᓕᖅᐹᖅ ᐳᓚᕋᓂᐅᑉ ᑭᖑᓂᐊᓂ.",
@@ -2340,6 +3702,13 @@
     }
   },
   "cr": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — pīci-blohka paskisikan",
       "description": "Brikaya pīcih ahpō pimipahtā māmawi, namōya account ēkwa namōya tipahikēwin; pimohtēwin kī-masinahikanisihk ka-aya, ēkwa kā-kī-nitawēyimiht offline mīna.",
@@ -2352,6 +3721,13 @@
     }
   },
   "oj": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — mazinaakizonan bashkiziganan",
       "description": "Aabaji’ Brikaya bezhig miinawaa gaawiin account miinawaa gaawiin diba’igan; ezhiwebak gdaa-bimaadiziwin gdaa-aabajitoon omaa zhiishiibikaaning miinawaa gdaa-odamin offline ishkwaa niizhwaaswi.",
@@ -2364,6 +3740,13 @@
     }
   },
   "lkt": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya waŋžíla yúŋkȟaŋ kiŋ lé iyáya, akáuŋt šni na mázaška šni; owášte kiŋ léčhiya thíŋpi kiŋ él tókȟaŋ yaŋké na waŋžíla offline iyáye.",
@@ -2376,6 +3759,13 @@
     }
   },
   "nv": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — tsé bee dah naaznilí",
       "description": "Brikaya doo béeso da yíníłta’ dóó nááhai, account doo le’ dóó díí béeso da; aná’álwo’ígíí ne’ííł’į́į́hígíí bikáa’gi haasdzáá dóó t’áá shǫǫdí offline nááhai.",
@@ -2388,6 +3778,13 @@
     }
   },
   "ik": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya aitchuqługu pinġuaq, account piqangitchuq suli akiitchuq; sivumut atuqtat aġviġmiittuġuq suli sivulliq paġitillugu offline pinġuarunnarutin.",
@@ -2400,6 +3797,13 @@
     }
   },
   "ch": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Inståla pat hugå Brikaya libre, sin cuenta yan sin apas; i progreso gaige gi iyo-mu na aparato ya siña un hugå offline despues di i finenina na bisita.",
@@ -2412,6 +3816,13 @@
     }
   },
   "mh": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Koba ak ikkure Brikaya ejjelok wonen, ejjelok account im ejjelok wonen; jerbal eo ej bed ilo kein jerbal eo am im kwomaron ikkure offline elikin lotok eo kein kajuon.",
@@ -2424,6 +3835,13 @@
     }
   },
   "ty": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — hautiara e vāvāhi poro",
       "description": "Faauta aore ra taʻaro Brikaya ma te moni ore, aita pūkete e aita aufauraa; e vai te haere i mua i niʻa i tā oe matini e e nehenehe e taʻaro offline i muri aʻe i te taeraʻa mātāmua.",
@@ -2436,6 +3854,13 @@
     }
   },
   "bi": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instolem o plei Brikaya fri, no nidim akaon mo no peman; progres i stap long divaes blong yu mo yu save plei offline afta fas visit.",
@@ -2448,6 +3873,13 @@
     }
   },
   "na": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Install eao play Brikaya eko cost, account eko ma payment eko; progress eitsi in device amwa ma omo play offline in after first visit.",
@@ -2460,6 +3892,13 @@
     }
   },
   "gil": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Kabwaka ke takakaro Brikaya n aki kabooaki, akea account ao akea boon te mwane; te rikirake e mena i aon am device ao ko kona n takakaro offline imwiin te moan roko.",
@@ -2472,6 +3911,13 @@
     }
   },
   "niu": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — pelē moumou poloka",
       "description": "Fakaeke po ke pelē Brikaya nakai totogi, nakai fai account mo e nakai fai totogi; tumau e holoaga he haau a device ti maeke ke pelē offline ka mole e ahiahi fakamua.",
@@ -2484,6 +3930,13 @@
     }
   },
   "rar": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — kēmu wāwāhi poraka",
       "description": "Tāuru me kore rā tākaro Brikaya kore utu, kāre e pūkete e kāre e tutaki; ka noo te anga whakamua ki runga i tāʻau masini e ka rauka te tākaro offline i muri ake i te toroanga mua.",
@@ -2496,6 +3949,13 @@
     }
   },
   "pau": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Medechel me a mlo er a Brikaya el diak el ngeseu, diak account me diak el ocheraol; a cheldecheduch a mla er a device er kau me a kmal diak el internet el blechoel el ngar er a omekedong.",
@@ -2508,6 +3968,13 @@
     }
   },
   "tpi": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instolim o pilaim Brikaya fri, nogat akaun na nogat pe; progres i stap long divais bilong yu na yu inap pilai offline bihain long namba wan visit.",
@@ -2520,6 +3987,13 @@
     }
   },
   "ho": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instalem o pleim Brikaya moni lasi, account lasi na pei lasi; progress e noho ena device bona oi dibaia offline lasi hegeregerena first visit murina.",
@@ -2532,6 +4006,13 @@
     }
   },
   "aa": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya mayso mali oobbi hinnay ciyaari, akaawunt malee kee mayso malee; gexsitak roocih xoqoysima teet digirih addal daffeyta, naharsi gexsitih lakal offline ciyaari takkem.",
@@ -2544,6 +4025,13 @@
     }
   },
   "av": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya кӀудиябго лъугьун я хӀалтӀизе, аккаунт гьечӀо ва тӀаса къимат гьечӀо; хӀалтӀи цӀунила дурго төхөөрөмжалда ва цебе вход кьолеб мехалда офлайн хӀалтӀизе мумкин.",
@@ -2556,6 +4044,13 @@
     }
   },
   "ce": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya ахча доцуш чуяха я ловза, аккаунт доцуш а түлов доцуш; хьалхалла хьайн гӀирсахь лелаш хуьлу, хьалха вахардан тӀаьхьа офлайн ловза мегар ду.",
@@ -2568,6 +4063,13 @@
     }
   },
   "kv": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya дон вылӧ ог тыр босьт либӧ ворс, аккаунттӧг да мынтӧмтӧг; водзӧ мунӧм тэнад устройствоын кольӧ, медводдза петкӧдчӧм бӧрын офлайн ворсны позьӧ.",
@@ -2580,6 +4082,13 @@
     }
   },
   "udm": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya донсыз басьтэ но шудэ, аккаунттэк но төлонъёстэк; азьлань шудонъёс тонлэн устройствамын кисьматэ, первой пырем берысь офлайн шудыны луэ.",
@@ -2592,6 +4101,13 @@
     }
   },
   "myv": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya таргамс эли налксемс апак максо, аккаунттэме ды максомадо; васенце совамодо мейле поладксось тонь устройствонь потмостонзо ашти, офлайн налксемс ули.",
@@ -2604,6 +4120,13 @@
     }
   },
   "mdf": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya таргамс али налхксемс аф максома, аккаунтфтома ды максомафтома; васенда сувафтома меле прогрессот тень устройствамс ашти, офлайн налхксемс ули.",
@@ -2616,6 +4139,13 @@
     }
   },
   "mhr": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya аксыз налаш але модаш, аккаунт деч посна да тӧлымаш деч посна; ончылкылык тыйын устройствам кодеш, икымше пурымаш деч вара офлайн модаш лиеш.",
@@ -2628,6 +4158,13 @@
     }
   },
   "mrj": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya аксыз налаш але модаш, аккаунт деч посна да тӧлымаш деч посна; прогресс тыйын устройствам кодеш, икымше пурымаш деч вара офлайн модаш лиеш.",
@@ -2640,6 +4177,13 @@
     }
   },
   "tyv": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-ны акшыг эвес чүктеп ал дээш ойну, аккаунт чок база төлбүр чок; илередиишкин сениң төхөөрөмжүңде артар, бирги кирген соң офлайн ойнаар арга бар.",
@@ -2652,6 +4196,13 @@
     }
   },
   "alt": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-ны акча јок јӱкте не ойно, аккаунт јок ло тӧлӧӧ јок; озолыш сенин құрылғыңда артар, биринчи киргеннен кийин офлайн ойноорго болот.",
@@ -2664,6 +4215,13 @@
     }
   },
   "krc": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-ны акысыз жюкле неда ойна, аккаунтсуз эм тӧлеусюз; алгъа барыу сенин төхөөрөмжюнгде сакъланады, биринчи киргенден сора офлайн ойнаугъа боллукъду.",
@@ -2676,6 +4234,13 @@
     }
   },
   "kum": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-ны акысыз юкле я ойна, аккаунтсуз ва тӧлемсиз; алга барыш сенин җайыңда сакъланар, биринчи киргенден сон офлайн ойнамагъа болар.",
@@ -2688,6 +4253,13 @@
     }
   },
   "lez": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya пулсуз къачу я къугъва, аккаунт галачир ва къимет галачир; илери фенавайди вунан төхөөрөмждал къалур, сад лагьай кьулухъ офлайн къугъваз жеда.",
@@ -2700,6 +4272,13 @@
     }
   },
   "inh": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya ахча доацаш чуяха е ловза, аккаунт доацаш а түлов доацаш; хьалхалла хьо устройстве йола, хьалхарча вахардан тӀехьара офлайн ловза мегаргда.",
@@ -2712,6 +4291,13 @@
     }
   },
   "kbd": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya псэущхьэу къутыгъэн еу ойын, аккаунтэнчърэ пщалъэхъуэнчърэ; пщэдзэу уикъуэншхъэ деж къэнэ, япэу къэкӀуэн нэужь офлайну ойын фае.",
@@ -2724,6 +4310,13 @@
     }
   },
   "xal": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-г үн төлбөргүй татх эсвэл тоглх, аккаунт уга ба төлбөр уга; ахиц чинь төхөөрөмжд үлдх, анхны оролтын дараа офлайн тоглх боломжта.",
@@ -2736,6 +4329,13 @@
     }
   },
   "nog": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-ны акшасыз юкте не ойна, аккаунтсыз эм тӧлемсиз; илгерилеў сенин җайыңда сакланады, биринчи киргеннен сон офлайн ойнамагъа болады.",
@@ -2748,6 +4348,13 @@
     }
   },
   "kaa": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-nı tegin júkle ya oyına, akkauntsız hám tólemsiz; ilgerilew qurılmańda saqlanadı, birinshi kiriwden keyin oflayn oynaw múmkin.",
@@ -2760,6 +4367,13 @@
     }
   },
   "kjh": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-ны тӧлӧӧс чоқ тӱзір не ойна, аккаунт чоқ па тӧлӧӧ чоқ; алға парыс паза құрылғыңда сақталча, пірінчі кірген соона офлайн ойнауға чарар.",
@@ -2772,6 +4386,13 @@
     }
   },
   "gag": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya-nı bedava indir ya da oyna, hesapsız hem ödemesiz; ilerleme cihazında kalır, ilk girişten sora offline oynayabilirsin.",
@@ -2784,6 +4405,13 @@
     }
   },
   "rom": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Le tele vaj khele Brikaya bizo lovengo, bi kontosko thaj bi pokinimasqo; anglal-javipe ačhol pe tiri aparatura, thaj šaj khele offline pala o angluno dikhipe.",
@@ -2796,6 +4424,13 @@
     }
   },
   "sma": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya nuvhtie bïejh jallh speelieh, konto namhtah jïh maaksomh namhtah; åvtelen barkoe dov daeverisnie båata, jïh aalkoe-gæjhtoe mænngan offline speelieh.",
@@ -2808,6 +4443,13 @@
     }
   },
   "smj": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — blohkaid muorraldit speallu",
       "description": "Brikaya nuvttá sajáduhte jali speala, konttu haga ja mávsso haga; ovddáneapmi báhcá du rusttega nanna ja vuostasj galledime maŋŋel sáhtá offline speallat.",
@@ -2820,6 +4462,13 @@
     }
   },
   "la": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcadia frangendi lateres",
       "description": "Installa aut lude Brikaya gratis, sine ratione et sine mercede; progressus in tuo instrumento manet et post primum accessum sine conexione ludere potes.",
@@ -2832,6 +4481,13 @@
     }
   },
   "eo": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instalu aŭ ludu Brikaya senpage, sen konto kaj sen pago; progreso restas en via aparato kaj eblas ludi senrete post la unua vizito.",
@@ -2844,6 +4500,13 @@
     }
   },
   "ia": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de rumper componentes",
       "description": "Installa o joca Brikaya gratis, sin conto e sin pagamento; le progresso resta in tu apparato e pote esser jocate offline post le prime visita.",
@@ -2856,6 +4519,13 @@
     }
   },
   "ie": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade por rupter componentes",
       "description": "Installa o lude Brikaya gratuitmen, sin conto e sin payament; li progress resta in tui aparate e tu posse luder offline pos li unesim visita.",
@@ -2868,6 +4538,13 @@
     }
   },
   "io": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instalez o ludiez Brikaya gratuite, sen konto e sen pago; progreso restas en vua aparato e on povas ludar offline pos la unesma vizito.",
@@ -2880,6 +4557,13 @@
     }
   },
   "vo": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — blöka-breiköp pled",
       "description": "Stadükön u pledön Brikaya fridiko, nen kont e nen pel; proges stanon pö dïnäd olik e kanol pledön nen vebi pos visit balid.",
@@ -2892,6 +4576,13 @@
     }
   },
   "an": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de componentes electrónicos",
       "description": "Instala u chuega Brikaya gratis, sin cuenta y sin pago; o progreso queda en o tuyo dispositivo y se puede chugar sin connexión dimpués d’a primera visita.",
@@ -2904,6 +4595,13 @@
     }
   },
   "mwl": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de circuitos eletrônicos",
       "description": "Anstale ou jogue Brikaya grátis, sein conta i sein pagamiento; l progreso fica ne l seu aparelho i pode jogar offline apuis la primeira visita.",
@@ -2916,6 +4614,13 @@
     }
   },
   "ext": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de rompé bloquis",
       "description": "Instala u juegu Brikaya gratis, sin cuenta ni pagu; el progresu quea nel tu dispositivu y pués jugar sin conexión dispués la primera visita.",
@@ -2928,6 +4633,13 @@
     }
   },
   "bar": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installier oder spui Brikaya gratis, ohne Konto und ohne Zoiung; da Fortschritt bleibt auf deim Gerät und nachm easchtn Besuch kannst offline spuin.",
@@ -2940,6 +4652,13 @@
     }
   },
   "hsb": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instaluj abo hraj Brikaya darmo, bjez konta a bjez płaćenja; postup wostanje na twojim nastroju a po prěnim wopyće móžeš offline hrać.",
@@ -2952,6 +4671,13 @@
     }
   },
   "dsb": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instalěruj abo graj Brikaya dermo, bźez konta a bźez płaśenja; postup wóstawa na twójom rěźe a pó prědnem woglěźenju móžoš offline graś.",
@@ -2964,6 +4690,13 @@
     }
   },
   "nds": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installeer oder speel Brikaya gratis, ahn Konto un ahn Betalen; de Fortschritt blifft op dien Gerät un na den eersten Besöök kannst du offline spelen.",
@@ -2976,6 +4709,13 @@
     }
   },
   "frr": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installiir of spil Brikaya frij, süün konto än süün betualing; din fortgüng bliuwt aw din tuuch än efter det eerste besäik koost offline spile.",
@@ -2988,6 +4728,13 @@
     }
   },
   "stq": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installierje of spielje Brikaya fräi, sunner Konto un sunner Betalen; die Foargong blift ap dien Gerät un ätter dän eerste Besöik koast offline spielje.",
@@ -3000,6 +4747,13 @@
     }
   },
   "ksh": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installier oder spill Brikaya ömesöns, ohne Konto un ohne Bezahle; dä Fortschrëtt bliev op dingem Gerät un no dem eetste Besök kanns de offline spille.",
@@ -3012,6 +4766,13 @@
     }
   },
   "pcd": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installez ou juwez Brikaya gratis, sins compte et sins paymint; l’avanchmint reste su vo appareil et ch’est possib d’juwer hors-ligne après l’première visite.",
@@ -3024,6 +4785,13 @@
     }
   },
   "wa": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instalez ou djouez Brikaya gratis, sins conte eyet sins paymint; l’avançmint dimane so vosse éndjin eyet vos savoz djouwer foû-rantoele après l’prumî vizite.",
@@ -3036,6 +4804,13 @@
     }
   },
   "li": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installeer of speel Brikaya gratis, zónger account en zónger betaling; veurgang blief op dien apparaat en nao het ierste bezeuk kins te offline spele.",
@@ -3048,6 +4823,13 @@
     }
   },
   "vls": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installeer of speel Brikaya gratis, zonder account en zonder betaling; je vooruitgang blijft op je toestel en na je eerste bezoek kun je offline spelen.",
@@ -3060,6 +4842,13 @@
     }
   },
   "zea": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installeer of speel Brikaya gratis, zonder account en zonder betaling; je voortgang bluuf op je apparaat en na je eerste bezoek kun je offline spele.",
@@ -3072,6 +4861,13 @@
     }
   },
   "frp": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Instalâd ou zhoyéd Brikaya gratuïtament, sen compto et sen payement; lo progrès reste sur voutron aparèly et vos povéd zhoyér hors-ligne aprés la premiére visita.",
@@ -3084,6 +4880,13 @@
     }
   },
   "arp": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component game",
       "description": "Install or play Brikaya for free, with no account and no payment; progress stays on your device and offline play works after the first visit.",
@@ -3096,6 +4899,13 @@
     }
   },
   "en-AU": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade for Australia",
       "description": "Install or play Brikaya free for players in Australia, with no account and no payment; progress stays on your device and offline play works after the first visit.",
@@ -3108,6 +4918,13 @@
     }
   },
   "en-CA": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade for Canada",
       "description": "Install or play Brikaya free for players in Canada, with no account and no payment; progress stays on your device and offline play works after the first visit.",
@@ -3120,6 +4937,13 @@
     }
   },
   "en-NZ": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade for New Zealand",
       "description": "Install or play Brikaya free for players in New Zealand, with no account and no payment; progress stays on your device and offline play works after the first visit.",
@@ -3132,6 +4956,13 @@
     }
   },
   "en-ZA": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade for South Africa",
       "description": "Install or play Brikaya free for players in South Africa, with no account and no payment; progress stays on your device and offline play works after the first visit.",
@@ -3144,6 +4975,13 @@
     }
   },
   "es-MX": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de componentes electrónicos para México",
       "description": "Instala o juega Brikaya gratis para México, sin cuenta y sin pago; el progreso queda guardado en tu dispositivo y puedes jugar sin conexión después de la primera visita.",
@@ -3156,6 +4994,13 @@
     }
   },
   "es-AR": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de componentes electrónicos para Argentina",
       "description": "Instalá o jugá Brikaya gratis para Argentina, sin cuenta y sin pago; el progreso queda guardado en tu dispositivo y podés jugar sin conexión después de la primera visita.",
@@ -3168,6 +5013,13 @@
     }
   },
   "es-CO": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de componentes electrónicos para Colombia",
       "description": "Instala o juega Brikaya gratis para Colombia, sin cuenta y sin pago; el progreso queda guardado en tu dispositivo y puedes jugar sin conexión después de la primera visita.",
@@ -3180,6 +5032,13 @@
     }
   },
   "es-CL": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de componentes electrónicos para Chile",
       "description": "Instala o juega Brikaya gratis para Chile, sin cuenta y sin pago; el progreso queda guardado en tu dispositivo y puedes jugar sin conexión después de la primera visita.",
@@ -3192,6 +5051,13 @@
     }
   },
   "es-PE": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de componentes electrónicos para Perú",
       "description": "Instala o juega Brikaya gratis para Perú, sin cuenta y sin pago; el progreso queda guardado en tu dispositivo y puedes jugar sin conexión después de la primera visita.",
@@ -3204,6 +5070,13 @@
     }
   },
   "pt-AO": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de circuitos eletrônicos para Angola",
       "description": "Instale ou jogue Brikaya grátis em Angola, sem conta e sem pagamento; o progresso fica guardado no seu aparelho e pode jogar offline após o primeiro acesso.",
@@ -3216,6 +5089,13 @@
     }
   },
   "pt-MZ": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de circuitos eletrônicos para Moçambique",
       "description": "Instale ou jogue Brikaya grátis em Moçambique, sem conta e sem pagamento; o progresso fica guardado no seu aparelho e pode jogar offline após o primeiro acesso.",
@@ -3228,6 +5108,13 @@
     }
   },
   "fr-BE": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de composants électroniques",
       "description": "Installez ou jouez à Brikaya gratuitement en Belgique, sans compte et sans paiement; la progression reste sur votre appareil et le jeu hors ligne fonctionne après la première visite.",
@@ -3240,6 +5127,13 @@
     }
   },
   "fr-CH": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — arcade de composants électroniques",
       "description": "Installez ou jouez à Brikaya gratuitement en Suisse, sans compte et sans paiement; la progression reste sur votre appareil et le jeu hors ligne fonctionne après la première visite.",
@@ -3252,6 +5146,13 @@
     }
   },
   "de-AT": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installiere oder spiele Brikaya kostenlos in Österreich, ohne Konto und ohne Zahlung; der Fortschritt bleibt auf deinem Gerät und Offline-Spiel funktioniert nach dem ersten Besuch.",
@@ -3264,6 +5165,13 @@
     }
   },
   "de-CH": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installiere oder spiele Brikaya kostenlos in der Schweiz, ohne Konto und ohne Zahlung; der Fortschritt bleibt auf deinem Gerät und Offline-Spiel funktioniert nach dem ersten Besuch.",
@@ -3276,6 +5184,13 @@
     }
   },
   "it-CH": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Installa o gioca a Brikaya gratis in Svizzera, senza account e senza pagamento; i progressi restano sul dispositivo e il gioco offline funziona dopo la prima visita.",
@@ -3288,6 +5203,13 @@
     }
   },
   "zh-HK": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — 香港打磚塊街機",
       "description": "在香港免費安裝或遊玩 Brikaya，無需帳戶，無需付款；進度保存在你的裝置上，首次造訪後可離線遊玩。",
@@ -3300,6 +5222,13 @@
     }
   },
   "ar-SA": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — أركيد كسر الكتل للسعودية",
       "description": "ثبّت Brikaya أو العبها مجاناً في السعودية، بدون حساب وبدون دفع؛ يبقى التقدم على جهازك ويعمل اللعب دون اتصال بعد الزيارة الأولى.",
@@ -3312,6 +5241,13 @@
     }
   },
   "ar-EG": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — أركيد كسر الكتل لمصر",
       "description": "ثبّت Brikaya أو العبها مجاناً في مصر، بدون حساب وبدون دفع؛ يبقى التقدم على جهازك ويعمل اللعب دون اتصال بعد الزيارة الأولى.",
@@ -3324,6 +5260,13 @@
     }
   },
   "fa-AF": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component arcade",
       "description": "Brikaya را در افغانستان رایگان نصب کنید یا بازی کنید، بدون حساب و بدون پرداخت؛ پیشرفت روی دستگاه شما می‌ماند و پس از نخستین بازدید بازی آفلاین کار می‌کند.",
@@ -3336,6 +5279,13 @@
     }
   },
   "ps-AF": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — د افغانستان لپاره د بلاک ماتولو ارکېډ",
       "description": "Brikaya په افغانستان کې وړیا نصب یا ولوبوئ، له حساب او پیسو پرته؛ پرمختګ ستاسو په وسیله پاتې کېږي او له لومړۍ لیدنې وروسته افلاین لوبه کار کوي.",
@@ -3348,6 +5298,13 @@
     }
   },
   "sd-IN": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ڀارت لاءِ بلاڪ ٽوڙڻ واري آرڪيڊ",
       "description": "ڀارت ۾ Brikaya مفت انسٽال ڪريو يا کيڏو، بغير اڪائونٽ ۽ بغير ادائيگي؛ ترقي توهان جي ڊوائيس تي رهي ٿي ۽ پهرين وزٽ کان پوءِ آف لائن راند هلي ٿي.",
@@ -3360,6 +5317,13 @@
     }
   },
   "ks-IN": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — ہندوستان خٲطرٕ بلاک توڑنہٕچ آرکیڈ",
       "description": "ہندوستانس منز Brikaya مفت انسٹال کرِو یا کھیلو، اکاؤنٹ تہٕ ادائیگی بغیر؛ پیشرفت تُہندِس آلہس پٲٹھ رہان چھ تہٕ گڈنی وزٹ پتہٕ آف لائن گیم چلان چھ.",
@@ -3372,6 +5336,13 @@
     }
   },
   "ug-CN": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — جۇڭگو ئۈچۈن بۆلەك چېقىش ئاركىدى",
       "description": "جۇڭگودا Brikaya نى ھەقسىز قاچىلاڭ ياكى ئويناڭ، ھېسابات ۋە ھەق تۆلەش يوق؛ ئىلگىرىلەش ئۈسكۈنىڭىزدە ساقلىنىدۇ، تۇنجى زىيارەتتىن كېيىن تورسىز ئويناش ئىشلەيدۇ.",
@@ -3384,6 +5355,13 @@
     }
   },
   "yi-001": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — בלאָק־ברעכער אַרקייד",
       "description": "ינסטאַלירט אָדער שפּילט Brikaya בחינם, אָן חשבון און אָן צאָלונג; דער פּראָגרעס בלײַבט אויפֿן מיטל און אָפֿליין שפּיל אַרבעט נאָך דער ערשטער באַזוך.",
@@ -3396,6 +5374,13 @@
     }
   },
   "mus": {
+    "playable": true,
+    "searchEdition": false,
+    "adsenseSupported": false,
+    "contentComplete": false,
+    "fallback": true,
+    "indexable": false,
+    "reason": "Locale is playable but has no complete search edition.",
     "home": {
       "title": "Brikaya — circuit component game",
       "description": "Install or play Brikaya for free, with no account and no payment; progress stays on your device and offline play works after the first visit.",

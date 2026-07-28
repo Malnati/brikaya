@@ -1,10 +1,11 @@
 // scripts/verify-adsense-ready-proxy.mjs
 /**
- * Proxy hygiene checks for AdSense site readiness.
- * Does NOT prove Google approval or "valuable content" quality.
+ * Release gate for the narrow AdSense property-verification footprint.
+ * It verifies deployable artifacts; it never represents an approval decision.
  */
-import { existsSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { resolve, relative } from 'node:path';
 import {
   EDITORIAL_DEFAULT_LOCALE,
   EDITORIAL_LASTMOD,
@@ -14,10 +15,7 @@ import {
   countEditorialMainWords,
   editorialLocalePath,
 } from './editorial-page-content.mjs';
-import {
-  MIN_LANDING_MAIN_WORDS,
-  countLandingMainWords,
-} from './landing-page-content.mjs';
+import { MIN_LANDING_MAIN_WORDS, countLandingMainWords } from './landing-page-content.mjs';
 import {
   LEGAL_DEFAULT_LOCALE,
   LEGAL_LASTMOD,
@@ -28,13 +26,29 @@ import {
 
 const CANONICAL_ORIGIN = 'https://brikaya.com';
 const EXPECTED_PUBLISHER_ID = 'pub-9571619183194136';
-const MAX_EDITORIAL_LOCALE_FANOUT = EDITORIAL_LOCALES.length;
+const OWNERSHIP_PATTERN = new RegExp(`https://pagead2\\.googlesyndication\\.com/pagead/js/adsbygoogle\\.js\\?client=ca-${EXPECTED_PUBLISHER_ID}`, 'g');
+const AD_RUNTIME_PATTERN = /pagead2\.googlesyndication\.com|\badsbygoogle\b|\badBreak\b|\badConfig\b|__BRIKAYA_GOOGLE_ADS_ENABLED__|google_ad_/i;
 const PLAY_INDEX_PATH = 'play/index.html';
 const PUBLIC_HOME_INDEX_PATH = 'public/index.html';
 const LEGAL_DEPTH_PATHS = ['/about/', '/privacy/', '/terms/', '/support/', '/cookies/'];
+const ELIGIBILITY = JSON.parse(readFileSync(resolve('config/locale-eligibility.json'), 'utf8'));
+const EXPECTED_SEARCH_LOCALES = ['en', 'pt-BR', 'es-419'];
+const EXPECTED_SITEMAP_URLS = new Set([
+  ...EXPECTED_SEARCH_LOCALES.map((locale) => `${CANONICAL_ORIGIN}${locale === 'pt-BR' ? '/' : `/${locale}/`}`),
+  ...ELIGIBILITY.indexableTrustPaths.flatMap((path) =>
+    EXPECTED_SEARCH_LOCALES.map((locale) => `${CANONICAL_ORIGIN}${locale === 'en' ? path : `/${locale}${path}`}`),
+  ),
+  ...EDITORIAL_PATHS.flatMap((path) =>
+    EDITORIAL_LOCALES.map((locale) => `${CANONICAL_ORIGIN}${editorialLocalePath(locale, path)}`),
+  ),
+]);
 
 function fail(message) {
   throw new Error(`adsense-ready-proxy: ${message}`);
+}
+
+function assert(condition, message) {
+  if (!condition) fail(message);
 }
 
 function stripHtmlToWords(html) {
@@ -43,190 +57,183 @@ function stripHtmlToWords(html) {
     .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, ' ');
   const mainMatch = cleaned.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i);
   const body = mainMatch ? mainMatch[1] : cleaned;
-  const text = body.replace(/<[^>]+>/g, ' ').replace(/&\w+;/g, ' ');
-  return text.split(/\s+/).filter(Boolean);
+  return body.replace(/<[^>]+>/g, ' ').replace(/&\w+;/g, ' ').split(/\s+/).filter(Boolean);
 }
 
 function readOptional(path) {
-  if (!existsSync(path)) return null;
-  return readFileSync(path, 'utf8');
+  return existsSync(path) ? readFileSync(path, 'utf8') : null;
+}
+
+function walkFiles(root, predicate) {
+  if (!existsSync(root)) return [];
+  const files = [];
+  for (const entry of readdirSync(root, { withFileTypes: true })) {
+    const path = resolve(root, entry.name);
+    if (entry.isDirectory()) files.push(...walkFiles(path, predicate));
+    else if (predicate(path)) files.push(path);
+  }
+  return files;
+}
+
+function countOwnershipSnippets(html) {
+  return [...html.matchAll(OWNERSHIP_PATTERN)].length;
+}
+
+function assertAdsTxt(path, label) {
+  const ads = readOptional(resolve(path));
+  assert(ads, `missing ${label} ${path}`);
+  assert(
+    ads.trim().split(/\r?\n/).some(
+      (line) =>
+        line ===
+        `google.com, ${EXPECTED_PUBLISHER_ID}, DIRECT, f08c47fec0942fa0`,
+    ),
+    `${label} ${path} publisher mismatch`,
+  );
+  return ads;
 }
 
 function verifyAdsTxt() {
+  const deployedAds = assertAdsTxt('dist/ads.txt', 'deployed');
   const publicAds = readOptional(resolve('public/ads.txt'));
-  if (!publicAds) fail('missing public/ads.txt');
-  const line = publicAds.trim().split(/\r?\n/)[0] ?? '';
-  if (!line.includes(`google.com, ${EXPECTED_PUBLISHER_ID}, DIRECT`)) {
-    fail(`public/ads.txt publisher mismatch (expected ${EXPECTED_PUBLISHER_ID})`);
+  if (publicAds) {
+    assertAdsTxt('public/ads.txt', 'public source');
+    assert(
+      publicAds === deployedAds,
+      'public/ads.txt must match deployed dist/ads.txt',
+    );
   }
 }
 
-function verifyAdSenseSnippet() {
-  const playHtml = readOptional(resolve(PLAY_INDEX_PATH));
-  if (!playHtml) fail(`missing ${PLAY_INDEX_PATH}`);
-  if (!playHtml.includes(`client=ca-${EXPECTED_PUBLISHER_ID}`)) {
-    fail(`${PLAY_INDEX_PATH} missing AdSense client ca-${EXPECTED_PUBLISHER_ID}`);
+function verifyOwnershipPlacement() {
+  const roots = ['public', 'dist'].filter(existsSync);
+  assert(roots.length > 0, 'missing generated public artifacts');
+  for (const root of roots) {
+    const home = resolve(root, 'index.html');
+    assert(existsSync(home), `missing canonical landing ${home}`);
+    const homeHtml = readFileSync(home, 'utf8');
+    const head = homeHtml.match(/<head\b[^>]*>([\s\S]*?)<\/head>/i)?.[1] ?? '';
+    assert(countOwnershipSnippets(head) === 1, `${root}/index.html must contain exactly one ownership snippet in <head>`);
+    assert(countOwnershipSnippets(homeHtml) === 1, `${root}/index.html must contain ownership snippet exactly once`);
+
+    for (const file of walkFiles(root, (path) => path.endsWith('.html'))) {
+      if (file === home) continue;
+      const html = readFileSync(file, 'utf8');
+      assert(countOwnershipSnippets(html) === 0, `ownership snippet is forbidden outside canonical /: ${relative(root, file)}`);
+      assert(!AD_RUNTIME_PATTERN.test(html), `advertising runtime is forbidden outside canonical /: ${relative(root, file)}`);
+    }
+    const homeWithoutOwnership = homeHtml.replace(OWNERSHIP_PATTERN, '');
+    assert(!AD_RUNTIME_PATTERN.test(homeWithoutOwnership), `${root}/index.html contains runtime advertising bootstrap beyond ownership verification`);
+  }
+
+  for (const file of [resolve(PLAY_INDEX_PATH), ...walkFiles('src', (path) => /\.(?:ts|tsx)$/.test(path) && !/\.test\.(?:ts|tsx)$/.test(path))]) {
+    const source = readOptional(file);
+    if (source) assert(!AD_RUNTIME_PATTERN.test(source), `game runtime must not contain advertising bootstrap: ${file}`);
   }
 }
 
 function verifyLandingSourceDepth() {
   for (const locale of ['pt-BR', 'en']) {
-    const words = countLandingMainWords(locale);
-    if (words < MIN_LANDING_MAIN_WORDS) {
-      fail(
-        `landing ${locale} source has ${words} words (proxy minimum ${MIN_LANDING_MAIN_WORDS})`,
-      );
-    }
+    assert(countLandingMainWords(locale) >= MIN_LANDING_MAIN_WORDS, `landing ${locale} source is below ${MIN_LANDING_MAIN_WORDS} words`);
   }
 }
 
 function verifyGeneratedLandingHome() {
-  const publicHome = resolve(PUBLIC_HOME_INDEX_PATH);
-  if (!existsSync(publicHome)) {
-    fail(`missing generated landing ${publicHome}`);
-  }
-  const html = readFileSync(publicHome, 'utf8');
-  const words = stripHtmlToWords(html);
-  if (words.length < MIN_LANDING_MAIN_WORDS) {
-    fail(
-      `${PUBLIC_HOME_INDEX_PATH} main/body has ${words.length} words (proxy minimum ${MIN_LANDING_MAIN_WORDS})`,
-    );
-  }
-  if (!html.includes(`rel="canonical" href="${CANONICAL_ORIGIN}/"`)) {
-    fail(`${PUBLIC_HOME_INDEX_PATH} missing canonical ${CANONICAL_ORIGIN}/`);
-  }
-  if (!html.includes('href="/play/"')) {
-    fail(`${PUBLIC_HOME_INDEX_PATH} missing CTA link to /play/`);
-  }
+  const html = readOptional(resolve(PUBLIC_HOME_INDEX_PATH));
+  assert(html, `missing generated landing ${PUBLIC_HOME_INDEX_PATH}`);
+  assert(stripHtmlToWords(html).length >= MIN_LANDING_MAIN_WORDS, `${PUBLIC_HOME_INDEX_PATH} is below ${MIN_LANDING_MAIN_WORDS} words`);
+  assert(html.includes(`rel="canonical" href="${CANONICAL_ORIGIN}/"`), `${PUBLIC_HOME_INDEX_PATH} missing canonical ${CANONICAL_ORIGIN}/`);
+  assert(html.includes('href="/play/"'), `${PUBLIC_HOME_INDEX_PATH} missing CTA link to /play/`);
 }
 
-function verifyEditorialSourceDepth() {
+function verifyEditorialContent() {
   for (const path of EDITORIAL_PATHS) {
     for (const locale of EDITORIAL_LOCALES) {
-      const words = countEditorialMainWords(locale, path);
-      if (words < MIN_EDITORIAL_MAIN_WORDS) {
-        fail(
-          `${locale}${path} source has ${words} words (proxy minimum ${MIN_EDITORIAL_MAIN_WORDS})`,
-        );
+      assert(countEditorialMainWords(locale, path) >= MIN_EDITORIAL_MAIN_WORDS, `${locale}${path} source is below ${MIN_EDITORIAL_MAIN_WORDS} words`);
+      for (const root of ['public', 'dist'].filter(existsSync)) {
+        const file = resolve(root, editorialLocalePath(locale, path).replace(/^\//, ''), 'index.html');
+        assert(existsSync(file), `missing generated editorial page ${file}`);
+        const html = readFileSync(file, 'utf8');
+        assert(stripHtmlToWords(html).length >= MIN_EDITORIAL_MAIN_WORDS, `${file} is below ${MIN_EDITORIAL_MAIN_WORDS} words`);
+        assert(html.includes(EDITORIAL_LASTMOD), `${file} missing editorial lastmod ${EDITORIAL_LASTMOD}`);
       }
     }
   }
 }
 
-function verifyGeneratedEditorialPages() {
-  const roots = ['public', 'dist'].filter((dir) => existsSync(dir));
-  if (!roots.includes('public')) fail('missing public/');
-
-  for (const path of EDITORIAL_PATHS) {
-    for (const locale of EDITORIAL_LOCALES) {
-      const relative = editorialLocalePath(locale, path).replace(/^\//, '');
-      const publicFile = resolve('public', relative, 'index.html');
-      if (!existsSync(publicFile)) {
-        fail(`missing generated editorial page ${publicFile}`);
-      }
-      const html = readFileSync(publicFile, 'utf8');
-      const words = stripHtmlToWords(html);
-      if (words.length < MIN_EDITORIAL_MAIN_WORDS) {
-        fail(
-          `${publicFile} main/body has ${words.length} words (proxy minimum ${MIN_EDITORIAL_MAIN_WORDS})`,
-        );
-      }
-      if (!html.includes(EDITORIAL_LASTMOD)) {
-        fail(`${publicFile} missing editorial lastmod ${EDITORIAL_LASTMOD}`);
-      }
-      const canonical = `${CANONICAL_ORIGIN}${editorialLocalePath(locale, path)}`;
-      if (!html.includes(`rel="canonical" href="${canonical}"`)) {
-        fail(`${publicFile} missing canonical ${canonical}`);
-      }
-    }
-  }
-
-  if (roots.includes('dist')) {
-    for (const path of EDITORIAL_PATHS) {
-      for (const locale of EDITORIAL_LOCALES) {
-        const relative = editorialLocalePath(locale, path).replace(/^\//, '');
-        const distFile = resolve('dist', relative, 'index.html');
-        if (!existsSync(distFile)) {
-          fail(`missing dist editorial page ${distFile}`);
-        }
-      }
-    }
-  }
-}
-
-function verifyLegalSourceDepth() {
+function verifyLegalContent() {
   for (const path of LEGAL_DEPTH_PATHS) {
-    if (!LEGAL_PATHS.includes(path)) {
-      fail(`legal depth path ${path} is not in LEGAL_PATHS`);
-    }
-    const words = countLegalMainWords(LEGAL_DEFAULT_LOCALE, path);
-    if (words < MIN_LEGAL_MAIN_WORDS) {
-      fail(
-        `legal ${LEGAL_DEFAULT_LOCALE}${path} source has ${words} words (proxy minimum ${MIN_LEGAL_MAIN_WORDS})`,
-      );
-    }
+    assert(LEGAL_PATHS.includes(path), `legal depth path ${path} is not configured`);
+    assert(countLegalMainWords(LEGAL_DEFAULT_LOCALE, path) >= MIN_LEGAL_MAIN_WORDS, `legal ${path} source is below ${MIN_LEGAL_MAIN_WORDS} words`);
+    const file = resolve('public', path.replace(/^\//, ''), 'index.html');
+    assert(existsSync(file), `missing generated legal page ${file}`);
+    const html = readFileSync(file, 'utf8');
+    assert(stripHtmlToWords(html).length >= MIN_LEGAL_MAIN_WORDS, `${file} is below ${MIN_LEGAL_MAIN_WORDS} words`);
+    assert(html.includes(LEGAL_LASTMOD), `${file} missing legal lastmod ${LEGAL_LASTMOD}`);
   }
 }
 
-function verifyGeneratedLegalDefaultPages() {
-  for (const path of LEGAL_DEPTH_PATHS) {
-    const relative = path.replace(/^\//, '');
-    const publicFile = resolve('public', relative, 'index.html');
-    if (!existsSync(publicFile)) {
-      fail(`missing generated legal page ${publicFile}`);
-    }
-    const html = readFileSync(publicFile, 'utf8');
-    const words = stripHtmlToWords(html);
-    if (words.length < MIN_LEGAL_MAIN_WORDS) {
-      fail(
-        `${publicFile} main/body has ${words.length} words (proxy minimum ${MIN_LEGAL_MAIN_WORDS})`,
-      );
-    }
-    if (!html.includes(LEGAL_LASTMOD)) {
-      fail(`${publicFile} missing legal lastmod ${LEGAL_LASTMOD}`);
-    }
-  }
-}
+function verifyIndexability() {
+  const editions = ELIGIBILITY.searchEditions;
+  assert(JSON.stringify(editions.map((edition) => edition.locale)) === JSON.stringify(EXPECTED_SEARCH_LOCALES), 'search editions must be exactly EN/PT-BR/ES-419');
+  for (const edition of editions) assert(edition.adsenseSupported && edition.contentComplete && !edition.fallback, `${edition.locale} must be complete and non-fallback`);
 
-function verifySitemapEditorialFanout() {
-  const sitemapPath = existsSync(resolve('public/sitemap.xml'))
-    ? resolve('public/sitemap.xml')
-    : resolve('dist/sitemap.xml');
-  if (!existsSync(sitemapPath)) fail('missing sitemap.xml in public/ or dist/');
-  const sitemap = readFileSync(sitemapPath, 'utf8');
+  const deployedSitemapPath = resolve('dist/sitemap.xml');
+  assert(existsSync(deployedSitemapPath), 'missing deployed dist/sitemap.xml');
+  const deployedSitemap = readFileSync(deployedSitemapPath, 'utf8');
+  const locations = [...deployedSitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, url]) => url);
+  assert(locations.length === 33, `sitemap must contain exactly 33 URLs, found ${locations.length}`);
+  assert(new Set(locations).size === locations.length, 'sitemap contains duplicate URLs');
+  assert(locations.every((url) => EXPECTED_SITEMAP_URLS.has(url)) && EXPECTED_SITEMAP_URLS.size === locations.length, 'sitemap contains a non-allowed or missing URL');
 
-  for (const path of EDITORIAL_PATHS) {
-    const expected = EDITORIAL_LOCALES.map(
-      (locale) => `<loc>${CANONICAL_ORIGIN}${editorialLocalePath(locale, path)}</loc>`,
+  const publicSitemap = readOptional(resolve('public/sitemap.xml'));
+  if (publicSitemap) {
+    const publicLocations = [...publicSitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, url]) => url);
+    assert(
+      JSON.stringify(publicLocations) === JSON.stringify(locations),
+      'public/sitemap.xml must match deployed dist/sitemap.xml',
     );
-    for (const entry of expected) {
-      if (!sitemap.includes(entry)) fail(`sitemap missing ${entry}`);
-    }
+  }
 
-    const matches = [...sitemap.matchAll(
-      new RegExp(`<loc>${CANONICAL_ORIGIN.replace(/\./g, '\\.')}(/[a-zA-Z0-9-]+)?${path.replace(/\//g, '\\/')}</loc>`, 'g'),
-    )];
-    if (matches.length !== MAX_EDITORIAL_LOCALE_FANOUT) {
-      fail(
-        `sitemap editorial fan-out for ${path}: found ${matches.length}, expected ${MAX_EDITORIAL_LOCALE_FANOUT} (EN/PT only)`,
+  for (const file of walkFiles('dist', (path) => path.endsWith('index.html'))) {
+    const html = readFileSync(file, 'utf8');
+    const canonical = html.match(/<link rel="canonical" href="([^"]+)"/i)?.[1];
+    const relativePath = relative('dist', file);
+    assert(canonical, `missing canonical: ${relativePath}`);
+    if (!EXPECTED_SITEMAP_URLS.has(canonical)) {
+      const robotsMatches = [
+        ...html.matchAll(
+          /<meta name="robots" content="([^"]+)" \/>/gi,
+        ),
+      ];
+      assert(
+        robotsMatches.length === 1 &&
+          robotsMatches[0][1] === 'noindex,follow',
+        `fallback canonical ${canonical} must have exact noindex,follow: ${relativePath}`,
+      );
+      assert(
+        !/\bhreflang\s*=/i.test(html),
+        `fallback canonical ${canonical} must have zero hreflang: ${relativePath}`,
       );
     }
   }
+}
+
+function verifySpanishAtomicQa() {
+  const result = spawnSync(process.execPath, ['scripts/verify-spanish-editorial-edition.mjs'], { encoding: 'utf8' });
+  assert(result.status === 0, `Spanish atomic QA failed: ${result.stdout}\n${result.stderr}`);
 }
 
 function run() {
   verifyAdsTxt();
-  verifyAdSenseSnippet();
+  verifyOwnershipPlacement();
   verifyLandingSourceDepth();
   verifyGeneratedLandingHome();
-  verifyEditorialSourceDepth();
-  verifyGeneratedEditorialPages();
-  verifyLegalSourceDepth();
-  verifyGeneratedLegalDefaultPages();
-  verifySitemapEditorialFanout();
-  console.log(
-    `adsense-ready-proxy ok: publisher=${EXPECTED_PUBLISHER_ID} landing=/ play=/${PLAY_INDEX_PATH} editorialPages=${EDITORIAL_PATHS.length} legalDepthPages=${LEGAL_DEPTH_PATHS.length} locales=${EDITORIAL_LOCALES.join(',')} default=${EDITORIAL_DEFAULT_LOCALE} (proxy only; not AdSense approval)`,
-  );
+  verifyEditorialContent();
+  verifyLegalContent();
+  verifyIndexability();
+  verifySpanishAtomicQa();
+  console.log(`adsense-ready-proxy ok: ownership=canonical-/ only publisher=${EXPECTED_PUBLISHER_ID} sitemap=33 editions=${EXPECTED_SEARCH_LOCALES.join(',')} game-runtime=offline-ad-free (proxy only; not AdSense approval)`);
 }
 
 try {

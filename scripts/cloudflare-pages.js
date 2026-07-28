@@ -58,6 +58,7 @@ const PAGES_DEV_DOMAIN = 'pages.dev';
 const DNS_STATUS_FALLBACK = 'desconhecido';
 const API_RESULT_FALLBACK = [];
 const DOMAIN_STATUS_FALLBACK = 'desconhecido';
+const DOMAIN_STATUS_ACTIVE = 'active';
 const DNS_RECORD_TYPE_A = 'A';
 const DNS_RECORD_TYPE_AAAA = 'AAAA';
 const DNS_RECORD_TYPE_CNAME = 'CNAME';
@@ -147,6 +148,7 @@ const COMMANDS = new Set([
   'ensure-preview-domain',
   'redirect-state',
   'ensure-pages-dev-redirect',
+  'ensure-preview-pages-dev-redirect',
   'purge-public-cache',
   'verify-public-index',
   'verify-preview-index',
@@ -214,6 +216,22 @@ function buildPreviewEnvValues(envValues) {
     [CUSTOM_DOMAIN_KEY]: envValues[PREVIEW_DOMAIN_KEY],
     [BRANCH_KEY]: envValues[PREVIEW_BRANCH_KEY]
   };
+}
+
+function buildPreviewFallbackEnvValues(envValues) {
+  const previewEnvValues = buildPreviewEnvValues(envValues);
+
+  return {
+    ...previewEnvValues,
+    [CUSTOM_DOMAIN_KEY]: buildPagesDevHost(previewEnvValues)
+  };
+}
+
+function buildPreviewVerificationEnvValues(envValues) {
+  return [
+    buildPreviewEnvValues(envValues),
+    buildPreviewFallbackEnvValues(envValues)
+  ];
 }
 
 function buildSensitiveValues(envValues) {
@@ -461,6 +479,22 @@ function buildRedirectListItem(envValues) {
   };
 }
 
+function buildRedirectEnvPairs(envValues, includePreviewRedirect) {
+  if (!includePreviewRedirect) {
+    return [envValues];
+  }
+
+  return [envValues, buildPreviewEnvValues(envValues)];
+}
+
+function isPreviewRedirectEligible(readiness) {
+  return (
+    readiness.domainActive === true &&
+    readiness.dnsResolves === true &&
+    readiness.httpsResponds === true
+  );
+}
+
 function getPagesDomainName(domain) {
   return domain?.name || EMPTY_STRING;
 }
@@ -591,6 +625,10 @@ function buildPublicIndexCheckUrl(envValues) {
   return publicUrl;
 }
 
+function buildPreviewIndexCheckUrls(envValues) {
+  return buildPreviewVerificationEnvValues(envValues).map(buildPublicIndexCheckUrl);
+}
+
 function createFetchTimeoutSignal() {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), PUBLIC_INDEX_FETCH_TIMEOUT_MS);
@@ -641,13 +679,38 @@ function buildPublicIndexMismatchMessage(expectedIndex, publicIndex) {
   );
 }
 
+function isTransientPublicIndexFetchError(error) {
+  const message = error instanceof Error ? error.message : String(error);
+
+  return (
+    error?.name === 'AbortError' ||
+    (error instanceof TypeError && message.includes('fetch failed'))
+  );
+}
+
 async function verifyPublicIndex(envValues) {
   validateEnvironment(envValues);
   const expectedIndex = readLocalPublicIndexExpectation(envValues);
   let lastPublicIndex = null;
+  let lastFetchError = null;
 
   for (let attempt = 1; attempt <= PUBLIC_INDEX_MAX_POLLS; attempt += 1) {
-    lastPublicIndex = await fetchPublicIndex(envValues);
+    try {
+      lastPublicIndex = await fetchPublicIndex(envValues);
+      lastFetchError = null;
+    } catch (error) {
+      if (!isTransientPublicIndexFetchError(error)) {
+        throw error;
+      }
+
+      lastFetchError = error;
+      console.log(
+        `WARN domínio público indisponível tentativa=${attempt}/${PUBLIC_INDEX_MAX_POLLS}: ` +
+          (error instanceof Error ? error.message : String(error))
+      );
+      await sleep(PUBLIC_INDEX_POLL_DELAY_MS);
+      continue;
+    }
 
     if (isPublicIndexCurrent(expectedIndex, lastPublicIndex)) {
       console.log(`OK domínio público atualizado: ${buildCustomDomainUrl(envValues)}`);
@@ -659,6 +722,10 @@ async function verifyPublicIndex(envValues) {
         buildPublicIndexMismatchMessage(expectedIndex, lastPublicIndex)
     );
     await sleep(PUBLIC_INDEX_POLL_DELAY_MS);
+  }
+
+  if (lastFetchError) {
+    throw lastFetchError;
   }
 
   throw new Error(buildPublicIndexMismatchMessage(expectedIndex, lastPublicIndex));
@@ -1136,12 +1203,13 @@ async function waitForBulkOperation(envValues, operationId) {
   throw new Error('Operação redirect não concluiu no tempo esperado.');
 }
 
-async function updateRedirectList(envValues, redirectList) {
+async function updateRedirectList(envValues, redirectList, includePreviewRedirect) {
+  const redirectPairs = buildRedirectEnvPairs(envValues, includePreviewRedirect);
   const payload = await requestCloudflareApi(
     buildRulesListItemsPath(envValues, getListId(redirectList)),
     {
       method: HTTP_PUT,
-      body: JSON.stringify([buildRedirectListItem(envValues)])
+      body: JSON.stringify(redirectPairs.map(buildRedirectListItem))
     },
     envValues
   );
@@ -1151,7 +1219,7 @@ async function updateRedirectList(envValues, redirectList) {
     await waitForBulkOperation(envValues, operationId);
   }
 
-  console.log(`Redirect Pages configurado: ${buildPagesDevSourceUrl(envValues)} -> ${buildCustomDomainUrl(envValues)}`);
+  console.log(`Redirect Pages configurados: ${redirectPairs.map((pair) => `${buildPagesDevSourceUrl(pair)} -> ${buildCustomDomainUrl(pair)}`).join(', ')}`);
 }
 
 async function readRedirectEntrypointRuleset(envValues) {
@@ -1222,11 +1290,62 @@ async function ensureRedirectRule(envValues) {
   console.log(`Ruleset redirect atualizado: ${DEFAULT_REDIRECT_RULESET_NAME}`);
 }
 
+async function hasResponsivePreviewHttps(envValues) {
+  const { signal, clear } = createFetchTimeoutSignal();
+
+  try {
+    const response = await fetch(buildPublicIndexCheckUrl(envValues), {
+      cache: FETCH_CACHE_NO_STORE,
+      redirect: 'manual',
+      signal
+    });
+
+    return response.ok;
+  } catch {
+    return false;
+  } finally {
+    clear();
+  }
+}
+
+async function readPreviewRedirectReadiness(envValues) {
+  const previewEnvValues = buildPreviewEnvValues(envValues);
+
+  try {
+    const domains = await listDomains(previewEnvValues);
+    const domainActive = domains.some(
+      domain =>
+        getPagesDomainName(domain) === previewEnvValues[CUSTOM_DOMAIN_KEY] &&
+        getPagesDomainStatus(domain) === DOMAIN_STATUS_ACTIVE
+    );
+    const dnsResolves = domainActive && await hasPublicARecords(previewEnvValues);
+    const httpsResponds = dnsResolves && await hasResponsivePreviewHttps(previewEnvValues);
+
+    return { domainActive, dnsResolves, httpsResponds };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.log(`WARN disponibilidade do domínio preview não pôde ser confirmada: ${message}`);
+    return {
+      domainActive: false,
+      dnsResolves: false,
+      httpsResponds: false
+    };
+  }
+}
+
 async function ensurePagesDevRedirect(envValues) {
   validateEnvironment(envValues);
+  const previewReadiness = await readPreviewRedirectReadiness(envValues);
+  const includePreviewRedirect = isPreviewRedirectEligible(previewReadiness);
   const redirectList = await ensureRedirectList(envValues);
-  await updateRedirectList(envValues, redirectList);
+  await updateRedirectList(envValues, redirectList, includePreviewRedirect);
   await ensureRedirectRule(envValues);
+  console.log(
+    `Redirect preview ${includePreviewRedirect ? 'ativo' : 'removido'}: ` +
+      `domainActive=${previewReadiness.domainActive}; ` +
+      `dnsResolves=${previewReadiness.dnsResolves}; ` +
+      `httpsResponds=${previewReadiness.httpsResponds}`
+  );
 }
 
 function printEnvCheck(envValues) {
@@ -1408,7 +1527,7 @@ async function ensurePreviewDns(envValues) {
 
 async function verifyPreviewIndex(envValues) {
   validatePreviewEnvironment(envValues);
-  const previewEnvValues = buildPreviewEnvValues(envValues);
+  const [previewEnvValues, fallbackEnvValues] = buildPreviewVerificationEnvValues(envValues);
 
   try {
     return await verifyPublicIndex(previewEnvValues);
@@ -1422,11 +1541,6 @@ async function verifyPreviewIndex(envValues) {
     if (!shouldFallback) {
       throw error;
     }
-
-    const fallbackEnvValues = {
-      ...previewEnvValues,
-      [CUSTOM_DOMAIN_KEY]: buildPagesDevHost(previewEnvValues),
-    };
 
     console.log(
       `WARN preview index via ${previewEnvValues[CUSTOM_DOMAIN_KEY]} indisponível; ` +
@@ -1543,6 +1657,11 @@ async function run() {
     return;
   }
 
+  if (command === 'ensure-preview-pages-dev-redirect') {
+    await ensurePagesDevRedirect(envValues);
+    return;
+  }
+
   if (command === 'purge-public-cache') {
     await purgePublicCache(envValues);
     return;
@@ -1586,6 +1705,7 @@ function isDirectInvocation() {
 export const __testables = {
   readLocalPublicIndexExpectation,
   buildPublicIndexCheckUrl,
+  verifyPublicIndex,
   isPublicIndexCurrent,
   buildPublicIndexMismatchMessage,
   buildNotFoundHandlingDeploymentConfigs,
@@ -1594,7 +1714,10 @@ export const __testables = {
   isStaleBundleProbeValid,
   buildStaleBundleProbeMismatchMessage,
   isExpectedBundleContentType,
-  extractBundlePathsFromIndexHtml
+  extractBundlePathsFromIndexHtml,
+  buildRedirectEnvPairs,
+  isPreviewRedirectEligible,
+  buildPreviewIndexCheckUrls
 };
 
 if (isDirectInvocation()) {

@@ -38,12 +38,9 @@ import {
   withGameplayTelemetry,
 } from "./gameLogHelpers.js";
 import {
-  AD_HOLD_ASSERTION_DELAY_MS,
   assertCondition,
   assertPaddleCollisionPhysics,
   assertPhaseTransition,
-  completeHeldAd,
-  installHeldAdStub,
   installLevelTransitionRecorder,
   LEVEL_TRANSITION_EVENT_NAME,
   observeEvents,
@@ -173,6 +170,43 @@ async function waitForCanvas(page) {
     },
     { timeout: 10000 },
   );
+}
+
+async function installLevelToastRecorderOnNextDocument(page) {
+  await page.evaluateOnNewDocument(() => {
+    window.__BRIKAYA_LEVEL_TOAST_STATES__ = [];
+
+    const capture = () => {
+      window.requestAnimationFrame(() => {
+        const toast = document.querySelector('[data-testid="level-toast"]');
+        const canvas = document.querySelector("canvas");
+        const text = toast?.textContent?.trim() ?? "";
+        const toastRect = toast?.getBoundingClientRect();
+        const canvasRect = canvas?.getBoundingClientRect();
+
+        if (!text || !toastRect || !canvasRect) return;
+
+        window.__BRIKAYA_LEVEL_TOAST_STATES__.push({
+          text,
+          toast: { width: toastRect.width, height: toastRect.height },
+          canvas: { width: canvasRect.width, height: canvasRect.height },
+        });
+      });
+    };
+
+    const start = () => {
+      new MutationObserver(capture).observe(document.documentElement, {
+        attributes: true,
+        characterData: true,
+        childList: true,
+        subtree: true,
+      });
+      capture();
+    };
+
+    if (document.documentElement) start();
+    else document.addEventListener("DOMContentLoaded", start, { once: true });
+  });
 }
 
 async function dismissBallTurretStartModalIfVisible(page, profileLabel) {
@@ -424,76 +458,28 @@ async function runTorretaLose(page, profile) {
   return { eventSummary: summary, ripVisible, gameOverVisible };
 }
 
-async function runFirstAd(page, profile) {
+async function runThirdPhaseTransition(page, profile) {
   await page.goto(scenarioUrl(publicUrl(), "single-component-phase3-clear"), {
     waitUntil: "domcontentloaded",
     timeout: MAX_NAVIGATION_MS,
   });
   await installLevelTransitionRecorder(page);
-  await installHeldAdStub(page);
   await acceptPrivacyConsentIfPresent(page);
   await waitForCanvas(page);
 
   await page.waitForFunction(
-    () => window.__BRIKAYA_TEST_AD_STATE__?.active === true,
-    { timeout: 30000 },
-  );
-  await new Promise((resolveDelay) =>
-    setTimeout(resolveDelay, AD_HOLD_ASSERTION_DELAY_MS),
-  );
-
-  const transitionsBeforeFinish = await page.evaluate(
-    () => window.__BRIKAYA_LEVEL_TRANSITIONS__ || [],
-  );
-  const adStateBeforeFinish = await page.evaluate(
-    () => window.__BRIKAYA_TEST_AD_STATE__ || null,
-  );
-  const eventsBeforeFinish = await readGameEvents(page);
-  const summaryBeforeFinish = summarizeEvents(eventsBeforeFinish);
-
-  assertCondition(
-    transitionsBeforeFinish.some(
-      (event) => event.phase === "start" && event.currentLevel === 3,
+    (eventName) => (window.__BRIKAYA_LEVEL_TRANSITIONS__ || []).some(
+      (event) => event.phase === "finish" && event.currentLevel === 3 && event.nextLevel === 4,
     ),
-    `${profile.label}: transição 3→4 não iniciou.`,
+    { timeout: PHASE_TRANSITION_TIMEOUT_MS },
+    LEVEL_TRANSITION_EVENT_NAME,
   );
-  assertCondition(
-    !transitionsBeforeFinish.some((event) => event.phase === "finish"),
-    `${profile.label}: fase seguinte iniciou antes do fim do anúncio.`,
-  );
-  assertCondition(
-    (adStateBeforeFinish?.requests?.length || 0) >= 1,
-    `${profile.label}: primeiro anúncio entre fases não foi solicitado.`,
-  );
-  assertCondition(
-    adStateBeforeFinish?.requests?.[0]?.name === "brikaya_level_3_to_4",
-    `${profile.label}: placement do anúncio inesperado.`,
-  );
-  assertCondition(
-    (summaryBeforeFinish.level_complete || 0) >= 1,
-    `${profile.label}: fase 3 não concluiu antes do anúncio.`,
-  );
-
-  const completion = await completeHeldAd(page, profile.label);
   const events = await readGameEvents(page);
-  const summary = summarizeEvents(events);
+  const transitions = await page.evaluate(() => window.__BRIKAYA_LEVEL_TRANSITIONS__ || []);
   const levelStart = events.filter((event) => event.type === "level_start").at(-1);
+  assertCondition(levelStart?.metadata?.level === 4, profile.label + ": fase 4 não iniciou após a fase 3.");
 
-  assertCondition(
-    levelStart?.metadata?.level === 4,
-    `${profile.label}: fase 4 não iniciou após anúncio.`,
-  );
-  assertCondition(
-    completion.adState?.doneCalls === 1,
-    `${profile.label}: adBreakDone não foi chamado uma vez.`,
-  );
-
-  return {
-    eventSummary: summary,
-    transitions: completion.transitions,
-    adRequests: completion.adState?.requests || [],
-    promptText: completion.promptText,
-  };
+  return { eventSummary: summarizeEvents(events), transitions };
 }
 
 async function assertNoGameEnd(summary, profileLabel, scenarioLabel) {
@@ -508,6 +494,10 @@ async function prepareScenarioPage(page, profile, scenarioCheck) {
     typeof scenarioCheck === "string" ? scenarioCheck : scenarioCheck.id;
   const scenarioLabel =
     typeof scenarioCheck === "string" ? scenarioId : scenarioCheck.label;
+
+  if (scenarioCheck.kind === "phase-transition") {
+    await installLevelToastRecorderOnNextDocument(page);
+  }
 
   await clearGameLogEvents(page);
   await page
@@ -703,41 +693,26 @@ async function runScenarioCheck(page, profile, scenarioCheck) {
       powerUpMetadata: activation?.metadata ?? null,
     };
   } else if (scenarioCheck.kind === "phase-transition") {
-    // Toast some em ~1.2s; o wait de IDB por level_complete pode atrasar demais.
-    // Captura o estado do toast em paralelo, no momento em que o texto aparece.
-    const toastStatePromise = page
-      .waitForFunction(
-        (expectedLevel) => {
-          const toast = document.querySelector('[data-testid="level-toast"]');
-          const text = toast?.textContent?.trim() ?? "";
-          if (
-            !text.includes(`Fase ${expectedLevel}`) &&
-            !text.includes(`Level ${expectedLevel}`)
-          ) {
-            return null;
-          }
-
-          const canvas = document.querySelector("canvas");
-          const toastRect = toast?.getBoundingClientRect();
-          const canvasRect = canvas?.getBoundingClientRect();
-
-          return {
-            text,
-            toast: toastRect
-              ? { width: toastRect.width, height: toastRect.height }
-              : null,
-            canvas: canvasRect
-              ? { width: canvasRect.width, height: canvasRect.height }
-              : null,
-          };
-        },
-        { timeout: PHASE_TRANSITION_TIMEOUT_MS },
-        2,
-      )
-      .then((handle) => handle.jsonValue());
-
     await waitForEventType(page, "level_complete", PHASE_TRANSITION_TIMEOUT_MS);
-    const toastState = await toastStatePromise;
+    await page.waitForFunction(
+      (expectedLevel) =>
+        (window.__BRIKAYA_LEVEL_TOAST_STATES__ || []).some(
+          ({ text }) =>
+            text.includes(`Fase ${expectedLevel}`) ||
+            text.includes(`Level ${expectedLevel}`),
+        ),
+      { timeout: PHASE_TRANSITION_TIMEOUT_MS },
+      2,
+    );
+    const toastState = await page.evaluate(
+      (expectedLevel) =>
+        (window.__BRIKAYA_LEVEL_TOAST_STATES__ || []).findLast(
+          ({ text }) =>
+            text.includes(`Fase ${expectedLevel}`) ||
+            text.includes(`Level ${expectedLevel}`),
+        ) ?? null,
+      2,
+    );
     await waitForEventType(page, "level_start", PHASE_TRANSITION_TIMEOUT_MS);
     const events = await readGameEvents(page);
     const phaseDetails = await assertPhaseTransition(page, events, profile.label, {
@@ -770,7 +745,7 @@ async function runProfile(browser, profile, targetUrl, consoleProblems) {
     const coldLoad = await runColdLoadAndConsent(page, profile, targetUrl);
     const torretaStart = await runTorretaStart(page, profile);
     const torretaLose = await runTorretaLose(page, profile);
-    const firstAd = await runFirstAd(page, profile);
+    const thirdPhaseTransition = await runThirdPhaseTransition(page, profile);
 
     const scenarioResults = [];
     for (const scenarioCheck of SCENARIO_MATRIX) {
@@ -785,7 +760,7 @@ async function runProfile(browser, profile, targetUrl, consoleProblems) {
       coldLoad,
       torretaStart,
       torretaLose,
-      firstAd,
+      thirdPhaseTransition,
       scenarioResults,
     };
   } finally {

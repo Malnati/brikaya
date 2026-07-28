@@ -53,6 +53,7 @@ jobs:
           BRIKAYA_CLOUDFLARE_PAGES_PROJECT_NAME: brikaya-live
           BRIKAYA_CLOUDFLARE_PAGES_BRANCH: main
           BRIKAYA_CLOUDFLARE_PAGES_CUSTOM_DOMAIN: brikaya.com
+          BRIKAYA_DEPLOY_ENV: production
 
       - name: Build static output
         run: npm run build

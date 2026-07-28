@@ -407,6 +407,17 @@ const ALL_HREFLANG_LOCALES = [
   "yi-001",
   "mus",
 ];
+const INDEXABLE_HREFLANG_LOCALES = ALL_HREFLANG_LOCALES.filter(
+  (locale) => seoSnapshot[locale]?.indexable === true,
+);
+
+function eligibilityFor(locale) {
+  return seoSnapshot[locale] ?? (locale === "en-US" ? seoSnapshot.en : undefined);
+}
+
+function isIndexableLocale(locale) {
+  return eligibilityFor(locale)?.indexable === true;
+}
 const TESTED_DOWNLOADS_LOCALE_IDS = [
     "pt-BR",
     "en",
@@ -531,26 +542,6 @@ const LOCALE_SOURCE_STORAGE_KEY = "brikaya-locale-source";
 const MANUAL_LOCALE_SOURCE = "manual";
 const SITEMAP_PATH = "/sitemap.xml";
 const ROBOTS_PATH = "/robots.txt";
-const STATIC_PUBLIC_PATHS = [
-  "/about/",
-  "/legal/",
-  "/privacy/",
-  "/terms/",
-  "/user-agreement/",
-  "/license/",
-  "/data-deletion/",
-  "/cookies/",
-  "/support/",
-];
-const LEGAL_HREFLANG_SAMPLE_LOCALES = [
-  "en-US",
-  "pt-BR",
-  "es-419",
-  "fr",
-  "zh-CN",
-  "zh-TW",
-  "ar",
-];
 const TESTED_LEGAL_PAGES = [
   {
     locale: "en-US",
@@ -686,7 +677,16 @@ async function validateHtml(baseUrl, item) {
   assert(!body.includes(".pages.dev"), `${url} contém pages.dev`);
   assert(!body.includes('href="./assets/'), `${url} tem href asset relativo`);
   assert(!body.includes('src="./assets/'), `${url} tem src asset relativo`);
-  for (const locale of ALL_HREFLANG_LOCALES) {
+  const indexable = isIndexableLocale(item.locale);
+  assert(
+    body.includes(`content="${indexable ? "index,follow" : "noindex,follow"}"`),
+    `${url} robots não corresponde à indexabilidade`,
+  );
+  if (!indexable) {
+    assert(!body.includes('hreflang='), `${url} contém hreflang em página noindex`);
+    return { url, status, canonical, locale: item.locale };
+  }
+  for (const locale of INDEXABLE_HREFLANG_LOCALES) {
     assert(
       body.includes(`hreflang="${locale}"`),
       `${url} sem hreflang ${locale}`,
@@ -720,21 +720,28 @@ async function validateLegalHtml(baseUrl, item) {
   assert(!body.includes('href="./assets/'), `${url} tem href asset relativo`);
   assert(!body.includes('src="./assets/'), `${url} tem src asset relativo`);
 
-  for (const locale of LEGAL_HREFLANG_SAMPLE_LOCALES) {
+  const indexable = isIndexableLocale(item.locale);
+  assert(
+    body.includes(`content="${indexable ? "index,follow" : "noindex,follow"}"`),
+    `${url} robots legal não corresponde à indexabilidade`,
+  );
+  if (!indexable) {
+    assert(!body.includes('hreflang='), `${url} contém hreflang legal em página noindex`);
+    return { url, status, canonical, locale: item.locale };
+  }
+  for (const locale of INDEXABLE_HREFLANG_LOCALES) {
     assert(
       body.includes(`hreflang="${locale}"`),
       `${url} sem hreflang legal ${locale}`,
     );
     assert(
       body.includes(
-        `href="${new URL(legalPathFor(locale, item.routePath), baseUrl).href}"`,
+        `href="${new URL(legalPathFor(locale === "en" ? "en-US" : locale, item.routePath), baseUrl).href}"`,
       ),
       `${url} sem href legal ${locale}`,
     );
   }
   assert(body.includes('hreflang="x-default"'), `${url} sem x-default legal`);
-  assert(!body.includes('hreflang="en-AU"'), `${url} contém variante en-AU legal`);
-  assert(!body.includes('hreflang="fr-CA"'), `${url} contém variante fr-CA legal`);
 
   return { url, status, canonical, locale: item.locale };
 }
@@ -747,7 +754,7 @@ async function validateSitemapAndRobots(baseUrl) {
 
   assert(sitemap.status === HTTP_OK, `sitemap status=${sitemap.status}`);
   assert(robots.status === HTTP_OK, `robots status=${robots.status}`);
-  for (const locale of ALL_HREFLANG_LOCALES) {
+  for (const locale of INDEXABLE_HREFLANG_LOCALES) {
     const path = locale === ROOT_LOCALE ? "/" : `/${locale}/`;
     assert(
       sitemap.body.includes(`<loc>${new URL(path, baseUrl).href}</loc>`),
@@ -756,22 +763,41 @@ async function validateSitemapAndRobots(baseUrl) {
     const playPath =
       locale === ROOT_LOCALE ? PLAY_ROUTE_PATH : `/${locale}${PLAY_ROUTE_PATH}`;
     assert(
-      sitemap.body.includes(`<loc>${new URL(playPath, baseUrl).href}</loc>`),
-      `sitemap sem play ${locale}`,
+      !sitemap.body.includes(`<loc>${new URL(playPath, baseUrl).href}</loc>`),
+      `sitemap contém play ${locale}`,
     );
     const downloadsPath =
       locale === ROOT_LOCALE ? "/downloads/" : `/${locale}/downloads/`;
     assert(
-      sitemap.body.includes(
+      !sitemap.body.includes(
         `<loc>${new URL(downloadsPath, baseUrl).href}</loc>`,
       ),
-      `sitemap sem downloads ${locale}`,
+      `sitemap contém downloads ${locale}`,
     );
   }
-  for (const path of STATIC_PUBLIC_PATHS) {
+  assert(
+    !sitemap.body.includes(`<loc>${new URL("/ja/", baseUrl).href}</loc>`),
+    "sitemap contém locale SEO fallback ja",
+  );
+  const INDEXABLE_TRUST_PATHS = [
+    "/about/",
+    "/legal/",
+    "/privacy/",
+    "/terms/",
+    "/data-deletion/",
+    "/cookies/",
+    "/support/",
+  ];
+  for (const path of INDEXABLE_TRUST_PATHS) {
     assert(
       sitemap.body.includes(`<loc>${new URL(path, baseUrl).href}</loc>`),
       `sitemap sem ${path}`,
+    );
+  }
+  for (const path of ["/user-agreement/", "/license/"]) {
+    assert(
+      !sitemap.body.includes(`<loc>${new URL(path, baseUrl).href}</loc>`),
+      `sitemap contém ${path}`,
     );
   }
   for (const path of ["/how-to-play/", "/faq/", "/updates/"]) {
@@ -786,16 +812,27 @@ async function validateSitemapAndRobots(baseUrl) {
       `sitemap sem editorial pt-BR ${path}`,
     );
     assert(
+      sitemap.body.includes(
+        `<loc>${new URL(`/es-419${path}`, baseUrl).href}</loc>`,
+      ),
+      `sitemap sem editorial es-419 ${path}`,
+    );
+    assert(
       !sitemap.body.includes(`<loc>${new URL(`/fr${path}`, baseUrl).href}</loc>`),
       `sitemap contém editorial thin fr${path}`,
     );
   }
   for (const item of TESTED_LEGAL_PAGES) {
+    const inSitemap = sitemap.body.includes(`<loc>${new URL(item.path, baseUrl).href}</loc>`);
     assert(
-      sitemap.body.includes(`<loc>${new URL(item.path, baseUrl).href}</loc>`),
-      `sitemap sem legal ${item.path}`,
+      inSitemap === isIndexableLocale(item.locale),
+      `sitemap indexabilidade legal incorreta para ${item.path}`,
     );
   }
+  assert(
+    sitemap.body.includes(`<loc>${new URL("/es-419/", baseUrl).href}</loc>`),
+    "sitemap sem edição espanhola completa",
+  );
   assert(
     !sitemap.body.includes(`<loc>${new URL("/en-AU/privacy/", baseUrl).href}</loc>`),
     "sitemap contém variante legal en-AU",
@@ -1145,7 +1182,7 @@ async function run() {
     localesChecked: TESTED_LOCALES.map((item) => item.locale),
     downloadsLocalesChecked: TESTED_DOWNLOADS_LOCALES.map((item) => item.locale),
     legalLocalesChecked: TESTED_LEGAL_PAGES.map((item) => item.locale),
-    hreflangLocales: ALL_HREFLANG_LOCALES,
+    hreflangLocales: INDEXABLE_HREFLANG_LOCALES,
     htmlResults,
     legalResults,
     sitemapRobots,

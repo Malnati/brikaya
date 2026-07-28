@@ -15,7 +15,6 @@ import { LanguageDetectionOverlay } from "./components/LanguageDetectionOverlay"
 import { OnboardingGameplayDemoOverlay } from "./components/OnboardingGameplayDemoOverlay";
 import { MobileOrientationBlocker } from "./components/MobileOrientationBlocker";
 import { DownloadsPage } from "./components/DownloadsPage";
-import { PostAdResumePrompt } from "./components/PostAdResumePrompt";
 import GameLogViewer from "./components/GameLogViewer";
 import {
   GameCinematicOverlay,
@@ -94,11 +93,6 @@ import {
   type JoystickDiagnosticSample,
 } from "./utils/joystickDiagnostics";
 import { prefersReducedMotion } from "./utils/performanceMode";
-import {
-  configureGoogleAdSound,
-  requestInterlevelGoogleAd,
-  shouldRequestInterlevelGoogleAd,
-} from "./monetization/googleAds";
 
 LOG("🚦 App.tsx carregado");
 
@@ -147,11 +141,6 @@ const INITIAL_COUNTDOWN_OVERLAY: GameCinematicOverlayState = {
   type: "countdown",
   value: CINEMATIC_COUNTDOWN_STEPS[COUNTDOWN_FIRST_STEP_INDEX],
 };
-
-interface PostAdResumePromptState {
-  nextLevel: number;
-  speedLabel: string;
-}
 
 type LevelTransitionEventPhase = "start" | "finish";
 
@@ -251,9 +240,6 @@ function GameApp() {
     hasPrivacyConsent && !shouldStartWithLanguageDetection && !qaScenario;
   const [cinematicOverlay, setCinematicOverlay] =
     useState<GameCinematicOverlayState>(null);
-  const [isInterlevelAdActive, setIsInterlevelAdActive] = useState(false);
-  const [postAdResumePrompt, setPostAdResumePrompt] =
-    useState<PostAdResumePromptState | null>(null);
   const [boardRect, setBoardRect] = useState<GameBoardRect | null>(null);
   const [isInitialCountdownActive, setIsInitialCountdownActive] = useState(
     shouldStartWithInitialCountdown,
@@ -282,7 +268,6 @@ function GameApp() {
   const cinematicTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const countdownTimerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
   const ripTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const postAdResumeResolverRef = useRef<(() => void) | null>(null);
   const offlineReadyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
@@ -504,8 +489,6 @@ function GameApp() {
         clearTimeout(updateInstalledTimerRef.current);
       if (languageDetectionTimerRef.current)
         clearTimeout(languageDetectionTimerRef.current);
-      postAdResumeResolverRef.current?.();
-      postAdResumeResolverRef.current = null;
     },
     [],
   );
@@ -883,55 +866,16 @@ function GameApp() {
     }
   }, [audioSink, isAudioMuted, toggleMusic]);
 
-  useEffect(() => {
-    configureGoogleAdSound(!isAudioMuted);
-  }, [isAudioMuted]);
-
-  const showPostAdResumePrompt = useCallback(
-    (payload: LevelTransitionPayload) =>
-      new Promise<void>((resolve) => {
-        postAdResumeResolverRef.current?.();
-        postAdResumeResolverRef.current = resolve;
-        setPostAdResumePrompt({
-          nextLevel: payload.nextLevel,
-          speedLabel: `${payload.nextSpeedMultiplier.toFixed(
-            SPEED_LABEL_FRACTION_DIGITS,
-          )}${SPEED_LABEL_SUFFIX}`,
-        });
-      }),
-    [],
-  );
-
-  const handlePostAdResume = useCallback(() => {
-    audioSink.playAudio(GAME_AUDIO_IDS.BUTTON_PRESS);
-    setPostAdResumePrompt(null);
-    const resolve = postAdResumeResolverRef.current;
-    postAdResumeResolverRef.current = null;
-    resolve?.();
-    if (!isAudioMuted && !isMusicMuted) {
-      audioSink.startGameplayMusic();
-    }
-  }, [audioSink, isAudioMuted, isMusicMuted]);
-
   const handleLevelTransition = useCallback(
     (payload: LevelTransitionPayload) =>
       new Promise<void>((resolve) => {
         let pauseFinished = false;
-        let adBreakFinished = false;
-        let resumePromptFinished = false;
         let resolved = false;
 
         const finishTransition = () => {
-          if (
-            resolved ||
-            !pauseFinished ||
-            !adBreakFinished ||
-            !resumePromptFinished
-          )
-            return;
+          if (resolved || !pauseFinished) return;
 
           resolved = true;
-          setIsInterlevelAdActive(false);
           dispatchLevelTransitionEvent("finish", payload);
           setLevel(payload.nextLevel);
           resolve();
@@ -957,39 +901,8 @@ function GameApp() {
           pauseFinished = true;
           finishTransition();
         }, payload.pauseMs);
-
-        if (!shouldRequestInterlevelGoogleAd(payload.currentLevel)) {
-          adBreakFinished = true;
-          resumePromptFinished = true;
-          finishTransition();
-          return;
-        }
-
-        void requestInterlevelGoogleAd({
-          currentLevel: payload.currentLevel,
-          nextLevel: payload.nextLevel,
-          soundOn: !isAudioMuted,
-          beforeAd: () => {
-            setIsInterlevelAdActive(true);
-            audioManager.stopMusic();
-          },
-          afterAd: () => {
-            setIsInterlevelAdActive(false);
-          },
-        }).then(async (result) => {
-          adBreakFinished = true;
-          if (result.shown) {
-            await showPostAdResumePrompt(payload);
-          } else {
-            resumePromptFinished = true;
-          }
-          if (result.shown) {
-            resumePromptFinished = true;
-          }
-          finishTransition();
-        });
       }),
-    [audioSink, isAudioMuted, showPostAdResumePrompt],
+    [audioSink],
   );
 
   const handleLevelChange = useCallback((nextLevel: number) => {
@@ -1356,8 +1269,6 @@ function GameApp() {
                 paused={
                   mobileOrientationLock.isBlocked ||
                   isMenuOpen ||
-                  isInterlevelAdActive ||
-                  postAdResumePrompt !== null ||
                   !hasPrivacyConsent ||
                   isOnboardingDemoVisible ||
                   isLanguageDetectionVisible
@@ -1438,13 +1349,6 @@ function GameApp() {
         <OnboardingGameplayDemoOverlay onComplete={handleOnboardingDemoComplete} />
       )}
       {isLanguageDetectionVisible && <LanguageDetectionOverlay />}
-      {postAdResumePrompt && (
-        <PostAdResumePrompt
-          nextLevel={postAdResumePrompt.nextLevel}
-          speedLabel={postAdResumePrompt.speedLabel}
-          onResume={handlePostAdResume}
-        />
-      )}
       {!hasPrivacyConsent && (
         <ConsentScreen onAccept={handleAcceptPrivacyConsent} />
       )}
