@@ -19,9 +19,11 @@ import { MIN_LANDING_MAIN_WORDS, countLandingMainWords } from './landing-page-co
 import {
   LEGAL_DEFAULT_LOCALE,
   LEGAL_LASTMOD,
+  LEGAL_PAGE_DEFINITIONS,
   LEGAL_PATHS,
   MIN_LEGAL_MAIN_WORDS,
   countLegalMainWords,
+  legalText,
 } from './legal-page-content.mjs';
 
 const CANONICAL_ORIGIN = 'https://brikaya.com';
@@ -33,6 +35,25 @@ const PUBLIC_HOME_INDEX_PATH = 'public/index.html';
 const LEGAL_DEPTH_PATHS = ['/about/', '/privacy/', '/terms/', '/support/', '/cookies/'];
 const ELIGIBILITY = JSON.parse(readFileSync(resolve('config/locale-eligibility.json'), 'utf8'));
 const EXPECTED_SEARCH_LOCALES = ['en', 'pt-BR', 'es-419'];
+const NON_ENGLISH_SEARCH_LOCALES = ['pt-BR', 'es-419'];
+const ENGLISH_METADATA_WORDS = new Set([
+  'a',
+  'about',
+  'and',
+  'at',
+  'free',
+  'game',
+  'guides',
+  'in',
+  'offline',
+  'pages',
+  'play',
+  'published',
+  'the',
+  'trust',
+  'with',
+]);
+const MAX_ENGLISH_METADATA_WORD_RATIO = 0.4;
 const EXPECTED_SITEMAP_URLS = new Set([
   ...EXPECTED_SEARCH_LOCALES.map((locale) => `${CANONICAL_ORIGIN}${locale === 'pt-BR' ? '/' : `/${locale}/`}`),
   ...ELIGIBILITY.indexableTrustPaths.flatMap((path) =>
@@ -173,6 +194,27 @@ function verifyLegalContent() {
   }
 }
 
+function verifyIndexableLegalMetadataLanguages() {
+  for (const path of ELIGIBILITY.indexableTrustPaths) {
+    const page = LEGAL_PAGE_DEFINITIONS[path];
+    assert(page, `missing legal page definition for ${path}`);
+    for (const locale of NON_ENGLISH_SEARCH_LOCALES) {
+      const description = legalText(locale, page.descriptionId);
+      const words = description.toLowerCase().match(/[a-z]+/g) ?? [];
+      const englishWordCount = words.filter((word) =>
+        ENGLISH_METADATA_WORDS.has(word),
+      ).length;
+      const englishWordRatio = words.length
+        ? englishWordCount / words.length
+        : 1;
+      assert(
+        englishWordRatio < MAX_ENGLISH_METADATA_WORD_RATIO,
+        `${locale}${path} metadata appears to contain an English fallback`,
+      );
+    }
+  }
+}
+
 function verifyIndexability() {
   const editions = ELIGIBILITY.searchEditions;
   assert(JSON.stringify(editions.map((edition) => edition.locale)) === JSON.stringify(EXPECTED_SEARCH_LOCALES), 'search editions must be exactly EN/PT-BR/ES-419');
@@ -231,6 +273,7 @@ function run() {
   verifyGeneratedLandingHome();
   verifyEditorialContent();
   verifyLegalContent();
+  verifyIndexableLegalMetadataLanguages();
   verifyIndexability();
   verifySpanishAtomicQa();
   console.log(`adsense-ready-proxy ok: ownership=canonical-/ only publisher=${EXPECTED_PUBLISHER_ID} sitemap=33 editions=${EXPECTED_SEARCH_LOCALES.join(',')} game-runtime=offline-ad-free (proxy only; not AdSense approval)`);

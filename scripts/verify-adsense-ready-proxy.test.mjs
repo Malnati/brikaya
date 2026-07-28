@@ -88,7 +88,26 @@ try {
   writeFileSync(DIST_SITEMAP_PATH, originals.get(DIST_SITEMAP_PATH));
 
   const translations = JSON.parse(originals.get(LEGAL_TRANSLATIONS_PATH));
-  const spanishLegal = translations.translations['es-419'];
+  const portugueseLegal = translations.translations['pt-BR'];
+  portugueseLegal['about.description'] =
+    'About Brikaya, a free offline-first arcade game published at brikaya.com.';
+  writeFileSync(
+    LEGAL_TRANSLATIONS_PATH,
+    `${JSON.stringify(translations, null, 2)}\n`,
+  );
+  expectGateFailure(
+    'English metadata fallback in Portuguese trust page',
+    /pt-BR\/about\/ metadata appears to contain an English fallback/i,
+  );
+  writeFileSync(
+    LEGAL_TRANSLATIONS_PATH,
+    originals.get(LEGAL_TRANSLATIONS_PATH),
+  );
+
+  const restoredTranslations = JSON.parse(
+    originals.get(LEGAL_TRANSLATIONS_PATH),
+  );
+  const spanishLegal = restoredTranslations.translations['es-419'];
   const longLegalBody1 = spanishLegal['legal.s1.body1'];
   const longLegalBody2 = spanishLegal['legal.s1.body2'];
   const shortLegalBody1 =
@@ -99,7 +118,7 @@ try {
   spanishLegal['legal.s1.body2'] = shortLegalBody2;
   writeFileSync(
     LEGAL_TRANSLATIONS_PATH,
-    `${JSON.stringify(translations, null, 2)}\n`,
+    `${JSON.stringify(restoredTranslations, null, 2)}\n`,
   );
   writeFileSync(
     DIST_SPANISH_LEGAL_PATH,
@@ -133,4 +152,4 @@ try {
   for (const [path, content] of originals) writeFileSync(path, content);
 }
 
-console.log('verify-adsense-ready-proxy tests ok: ownership, runtime, fallback indexability, Spanish depth, and deployed artifact mutations are rejected');
+console.log('verify-adsense-ready-proxy tests ok: ownership, runtime, fallback indexability, localized metadata, Spanish depth, and deployed artifact mutations are rejected');
