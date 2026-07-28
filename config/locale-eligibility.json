@@ -1,0 +1,37 @@
+{
+  "searchEditions": [
+    {
+      "locale": "en",
+      "adsenseSupported": true,
+      "contentComplete": true,
+      "fallback": false
+    },
+    {
+      "locale": "pt-BR",
+      "adsenseSupported": true,
+      "contentComplete": true,
+      "fallback": false
+    },
+    {
+      "locale": "es-419",
+      "adsenseSupported": true,
+      "contentComplete": true,
+      "fallback": false
+    }
+  ],
+  "indexableTrustPaths": [
+    "/about/",
+    "/legal/",
+    "/privacy/",
+    "/terms/",
+    "/data-deletion/",
+    "/cookies/",
+    "/support/"
+  ],
+  "alwaysNoindexPaths": [
+    "/play/",
+    "/downloads/",
+    "/user-agreement/",
+    "/license/"
+  ]
+}

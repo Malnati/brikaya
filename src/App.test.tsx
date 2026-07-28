@@ -70,12 +70,6 @@ const TEST_LEVEL_TRANSITION_PAYLOAD: LevelTransitionPayload = {
   nextReductionPerComponent: 0.336,
   nextInitialComponentCount: 15,
 };
-const TEST_AD_LEVEL_TRANSITION_PAYLOAD: LevelTransitionPayload = {
-  ...TEST_LEVEL_TRANSITION_PAYLOAD,
-  currentLevel: 3,
-  nextLevel: 4,
-  nextSpeedMultiplier: 1.36,
-};
 const SETTINGS_ACTION_LOGS_TEST_ID = "settings-action-logs";
 const SETTINGS_ACTION_RESET_SCORE_TEST_ID = "settings-action-reset-score";
 const SETTINGS_ACTION_RESET_PREFERENCES_TEST_ID =
@@ -276,9 +270,6 @@ describe("App theme selector", () => {
   });
 
   afterEach(() => {
-    delete window.__BRIKAYA_GOOGLE_ADS_ENABLED__;
-    delete window.adBreak;
-    delete window.adConfig;
     jest.restoreAllMocks();
     jest.useRealTimers();
   });
@@ -1335,162 +1326,6 @@ describe("App theme selector", () => {
       jest.advanceTimersByTime(LEVEL_UP_OVERLAY_VISIBLE_MS);
     });
     expect(screen.queryByTestId("level-toast")).not.toBeInTheDocument();
-  });
-
-  it("pausa o jogo enquanto anúncio entre fases está ativo", async () => {
-    jest.useFakeTimers();
-    mockSystemTheme(true);
-    const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
-    window.__BRIKAYA_GOOGLE_ADS_ENABLED__ = true;
-    let capturedPlacement:
-      | {
-          beforeAd?: () => void;
-          afterAd?: () => void;
-          adBreakDone?: () => void;
-        }
-      | null = null;
-    window.adConfig = jest.fn();
-    window.adBreak = jest.fn((placement) => {
-      capturedPlacement = placement;
-      placement.beforeAd?.();
-    });
-
-    await renderApp();
-    publishTestBoardRect();
-
-    act(() => {
-      jest.advanceTimersByTime(COUNTDOWN_TOTAL_MS);
-    });
-
-    let transitionPromise: Promise<void> | void;
-    act(() => {
-      transitionPromise = mockLastGameProps?.onLevelTransition?.(
-        TEST_AD_LEVEL_TRANSITION_PAYLOAD,
-      );
-    });
-
-    expect(window.adBreak).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: "brikaya_level_3_to_4",
-      }),
-    );
-    expect(screen.getByTestId("mock-game")).toHaveAttribute(
-      DATA_PAUSED_ATTRIBUTE,
-      PAUSED_TRUE_ATTRIBUTE_VALUE,
-    );
-
-    act(() => {
-      jest.advanceTimersByTime(TEST_AD_LEVEL_TRANSITION_PAYLOAD.pauseMs);
-    });
-
-    expect(screen.getByTestId("mock-game")).toHaveAttribute(
-      DATA_PAUSED_ATTRIBUTE,
-      PAUSED_TRUE_ATTRIBUTE_VALUE,
-    );
-
-    act(() => {
-      capturedPlacement?.afterAd?.();
-      capturedPlacement?.adBreakDone?.();
-    });
-
-    expect(
-      await screen.findByRole("dialog", { name: "Volta ao jogo" }),
-    ).toBeInTheDocument();
-    expect(screen.getByText("Bora voltar?")).toBeInTheDocument();
-    expect(
-      screen.getByText("Fase 4 vem ligeira. Olho na bolinha."),
-    ).toBeInTheDocument();
-    expect(screen.getByTestId("mock-game")).toHaveAttribute(
-      DATA_PAUSED_ATTRIBUTE,
-      PAUSED_TRUE_ATTRIBUTE_VALUE,
-    );
-
-    await user.click(
-      screen.getByRole("button", { name: "Voltar pro jogo" }),
-    );
-    await act(async () => {
-      await transitionPromise;
-    });
-
-    expect(screen.queryByText("Bora voltar?")).not.toBeInTheDocument();
-    expect(screen.getByTestId("mock-game")).toHaveAttribute(
-      DATA_PAUSED_ATTRIBUTE,
-      PAUSED_FALSE_ATTRIBUTE_VALUE,
-    );
-  });
-
-  it("não solicita publicidade antes da terceira fase concluída", async () => {
-    jest.useFakeTimers();
-    mockSystemTheme(true);
-    window.__BRIKAYA_GOOGLE_ADS_ENABLED__ = true;
-    window.adConfig = jest.fn();
-    window.adBreak = jest.fn();
-
-    await renderApp();
-    publishTestBoardRect();
-
-    act(() => {
-      jest.advanceTimersByTime(COUNTDOWN_TOTAL_MS);
-    });
-
-    let transitionPromise: Promise<void> | void;
-    act(() => {
-      transitionPromise = mockLastGameProps?.onLevelTransition?.(
-        TEST_LEVEL_TRANSITION_PAYLOAD,
-      );
-    });
-
-    act(() => {
-      jest.advanceTimersByTime(TEST_LEVEL_TRANSITION_PAYLOAD.pauseMs);
-    });
-    await act(async () => {
-      await transitionPromise;
-    });
-
-    expect(window.adBreak).not.toHaveBeenCalled();
-    expect(screen.queryByText("Bora voltar?")).not.toBeInTheDocument();
-    expect(screen.getByTestId("mock-game")).toHaveAttribute(
-      DATA_PAUSED_ATTRIBUTE,
-      PAUSED_FALSE_ATTRIBUTE_VALUE,
-    );
-  });
-
-  it("não mostra mensagem de retorno quando a publicidade não preenche", async () => {
-    jest.useFakeTimers();
-    mockSystemTheme(true);
-    window.__BRIKAYA_GOOGLE_ADS_ENABLED__ = true;
-    window.adConfig = jest.fn();
-    window.adBreak = jest.fn((placement) => {
-      placement.adBreakDone?.({ breakStatus: "notReady" });
-    });
-
-    await renderApp();
-    publishTestBoardRect();
-
-    act(() => {
-      jest.advanceTimersByTime(COUNTDOWN_TOTAL_MS);
-    });
-
-    let transitionPromise: Promise<void> | void;
-    act(() => {
-      transitionPromise = mockLastGameProps?.onLevelTransition?.(
-        TEST_AD_LEVEL_TRANSITION_PAYLOAD,
-      );
-    });
-
-    act(() => {
-      jest.advanceTimersByTime(TEST_AD_LEVEL_TRANSITION_PAYLOAD.pauseMs);
-    });
-    await act(async () => {
-      await transitionPromise;
-    });
-
-    expect(window.adBreak).toHaveBeenCalledTimes(1);
-    expect(screen.queryByText("Bora voltar?")).not.toBeInTheDocument();
-    expect(screen.getByTestId("mock-game")).toHaveAttribute(
-      DATA_PAUSED_ATTRIBUTE,
-      PAUSED_FALSE_ATTRIBUTE_VALUE,
-    );
   });
 
   it("mantém tema padrão durante subida de fase", async () => {

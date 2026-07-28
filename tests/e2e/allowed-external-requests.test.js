@@ -6,30 +6,23 @@ import { classifyExternalRequests } from "./allowed-external-requests.js";
 
 const PUBLIC_URL = "https://brikaya.com/";
 
-test("classifies approved ad requests separately from unexpected external requests", () => {
+test("rejects advertising requests while allowing only the required external verification frame", () => {
   const result = classifyExternalRequests(
     [
       "https://brikaya.com/assets/visual/components/spr-component-basic-red-normal.svg",
       "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-safe",
       "https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-safe",
-      "https://ep1.adtrafficquality.google/getconfig/sodar?sv=200",
-      "https://ep2.adtrafficquality.google/sodar/sodar2.js",
       "https://www.google.com/recaptcha/api2/aframe",
-      "https://www.google.com/search?q=brikaya",
-      "https://cdn.example.com/asset.png",
     ],
     PUBLIC_URL,
   );
 
   assert.deepEqual(result.allowedExternalRequests, [
-    "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-safe",
-    "https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-safe",
-    "https://ep1.adtrafficquality.google/getconfig/sodar?sv=200",
-    "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+    "https://brikaya.com/assets/visual/components/spr-component-basic-red-normal.svg",
     "https://www.google.com/recaptcha/api2/aframe",
   ]);
   assert.deepEqual(result.unexpectedExternalRequests, [
-    "https://www.google.com/search?q=brikaya",
-    "https://cdn.example.com/asset.png",
+    "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-safe",
+    "https://googleads.g.doubleclick.net/pagead/ads?client=ca-pub-safe",
   ]);
 });

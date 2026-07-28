@@ -216,6 +216,58 @@ const COPY = {
       },
     ],
   },
+  'es-419': {
+    brand: 'Brikaya',
+    headline: 'Arcade gratuito de circuitos en tu navegador',
+    lead:
+      'Elimina componentes de circuito, avanza niveles y juega en el navegador con el progreso guardado en tu dispositivo. Después de la primera visita, el juego principal puede seguir funcionando sin conexión.',
+    playCta: 'Jugar ahora',
+    howToCta: 'Cómo jugar',
+    faqCta: 'Preguntas frecuentes',
+    downloadsCta: 'Instalar / descargar',
+    updated: `Actualizado el ${LANDING_LASTMOD}`,
+    nav: [
+      [PLAY_ROUTE_PATH, 'Jugar'],
+      ['/how-to-play/', 'Cómo jugar'],
+      ['/faq/', 'Preguntas frecuentes'],
+      ['/updates/', 'Actualizaciones'],
+      ['/downloads/', 'Descargas'],
+      ['/about/', 'Acerca de'],
+      ['/support/', 'Soporte'],
+    ],
+    sections: [
+      {
+        heading: 'Qué es Brikaya',
+        paragraphs: [
+          'Brikaya es un arcade de componentes de circuito pensado para sesiones cortas. Mueves una cama elástica, haces rebotar la pelota y despejas el tablero nivel por nivel sin crear una cuenta de jugador.',
+          'Las puntuaciones, el idioma y las preferencias permanecen en el dispositivo en esta versión. No hay una tienda de pago ni un formulario de datos personales para empezar a jugar.',
+          'El objetivo es simple: eliminar componentes, superar patrones más densos y avanzar de nivel sin perder el ritmo. Cada partida cabe en unos pocos minutos y funciona bien en teléfono o computadora.',
+        ],
+      },
+      {
+        heading: 'Por qué jugar aquí',
+        paragraphs: [
+          'Ábrelo en el navegador, sigue la breve guía inicial y continúa cuando estés listo. Si tu dispositivo ofrece instalación desde el navegador, puedes conservar un acceso directo en la pantalla de inicio.',
+          'Las guías públicas explican los controles, la privacidad, los anuncios opcionales y el soporte. Consulta Cómo jugar, Preguntas frecuentes y Actualizaciones antes o después de una partida.',
+          'Después de la primera carga, el juego principal puede seguir funcionando sin conexión. Así hay menos interrupciones y la atención se mantiene en jugar, no en cuentas ni descargas de tienda.',
+        ],
+      },
+      {
+        heading: 'Cómo empezar',
+        paragraphs: [
+          'Toca Jugar ahora para abrir la partida en /play/. Acepta las pantallas de consentimiento cuando aparezcan, elige un idioma en el menú y sigue la guía inicial.',
+          'Si prefieres leer primero, abre Cómo jugar para conocer los controles y el flujo de niveles, o las Preguntas frecuentes para resolver dudas sobre progreso, instalación y anuncios opcionales.',
+        ],
+      },
+      {
+        heading: 'Privacidad y contacto',
+        paragraphs: [
+          'Los anuncios, cuando estén disponibles y permitidos, son opcionales para la experiencia y no deben bloquear el progreso del juego. Revisa el consentimiento en el menú del juego y lee las páginas de privacidad y cookies.',
+          'Preguntas: contato@brikaya.com. Publicado por Ricardo Malnati. Sitio oficial: https://brikaya.com/.',
+        ],
+      },
+    ],
+  },
 };
 
 function escapeHtml(value) {
@@ -240,6 +292,7 @@ function linkifyContact(html) {
 
 function copyForLocale(locale) {
   if (String(locale).toLowerCase().startsWith('pt')) return COPY['pt-BR'];
+  if (String(locale).toLowerCase().startsWith('es')) return COPY['es-419'];
   return COPY.en;
 }
 
@@ -262,6 +315,7 @@ function localizedNavHref(locale, path) {
   }
   if (path === '/how-to-play/' || path === '/faq/' || path === '/updates/') {
     if (String(locale).toLowerCase().startsWith('pt')) return `/pt-BR${path}`;
+    if (String(locale).toLowerCase().startsWith('es')) return `/es-419${path}`;
     return path;
   }
   if (path === '/about/' || path === '/support/') {
@@ -279,6 +333,10 @@ export function countLandingMainWords(locale) {
     ...copy.sections.flatMap((section) => [section.heading, ...section.paragraphs]),
   ];
   return parts.join(' ').split(/\s+/).filter(Boolean).length;
+}
+
+export function landingCopyForLocale(locale) {
+  return copyForLocale(locale);
 }
 
 export function renderLandingPage({

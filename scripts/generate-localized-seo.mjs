@@ -4,9 +4,8 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   LEGAL_DEFAULT_LOCALE,
+  LEGAL_LASTMOD,
   LEGAL_PATHS,
-  legalPageIds,
-  legalTranslationMissingIds,
   renderLegalPage,
 } from './legal-page-content.mjs';
 import {
@@ -24,15 +23,25 @@ const PUBLIC_DIR = 'public';
 const INDEX_FILE = 'index.html';
 const SITEMAP_FILE = 'sitemap.xml';
 const ROBOTS_FILE = 'robots.txt';
+const HEADERS_FILE = '_headers';
 const CANONICAL_ORIGIN = 'https://brikaya.com';
 const DEFAULT_LOCALE = 'pt-BR';
+const ADSENSE_OWNERSHIP_SNIPPET = '    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9571619183194136" crossorigin="anonymous"></script>';
 const LASTMOD = '2026-07-15';
 const XML_HEADER = '<?xml version="1.0" encoding="UTF-8"?>';
 const HOME_ROUTE_PATH = '/';
 const DOWNLOADS_ROUTE_PATH = '/downloads/';
 const SPA_LOCALIZED_ROUTES = [PLAY_ROUTE_PATH, DOWNLOADS_ROUTE_PATH];
-const LOCALIZED_ROUTES = [HOME_ROUTE_PATH, PLAY_ROUTE_PATH, DOWNLOADS_ROUTE_PATH];
 const STATIC_PUBLIC_PATHS = LEGAL_PATHS;
+const ELIGIBILITY_CONFIG_PATH = resolve(
+  process.cwd(),
+  'config/locale-eligibility.json',
+);
+const ELIGIBILITY_CONFIG = JSON.parse(
+  readFileSync(ELIGIBILITY_CONFIG_PATH, 'utf8'),
+);
+const SEARCH_EDITIONS = ELIGIBILITY_CONFIG.searchEditions;
+const INDEXABLE_TRUST_PATHS = ELIGIBILITY_CONFIG.indexableTrustPaths;
 const RTL_LOCALES = new Set(['ar', 'ur', 'fa', 'he', 'ps', 'sd', 'ks', 'dv', 'ckb', 'ug', 'yi', 'bal', 'ar-SA', 'ar-EG', 'fa-AF', 'ps-AF', 'sd-IN', 'ks-IN', 'ug-CN', 'yi-001']);
 
 const LOCALES = [
@@ -363,6 +372,27 @@ function seoEntryFor(locale) {
   return I18N_HOME_SEO[locale] ?? I18N_HOME_SEO.en;
 }
 
+function searchEditionFor(locale) {
+  const searchLocale = locale === LEGAL_DEFAULT_LOCALE || locale === EDITORIAL_DEFAULT_LOCALE
+    ? 'en'
+    : locale;
+  return SEARCH_EDITIONS.find((edition) => edition.locale === searchLocale);
+}
+
+function isIndexableEdition(locale) {
+  const edition = searchEditionFor(locale);
+  return Boolean(
+    edition &&
+    edition.adsenseSupported === true &&
+    edition.contentComplete === true &&
+    edition.fallback !== true,
+  );
+}
+
+const INDEXABLE_LANDING_LOCALES = LOCALES.filter(isIndexableEdition);
+const INDEXABLE_LEGAL_LOCALES = LEGAL_LOCALES.filter(isIndexableEdition);
+const INDEXABLE_EDITORIAL_LOCALES = EDITORIAL_LOCALES.filter(isIndexableEdition);
+
 function metadataFor(locale, routePath) {
   const entry = seoEntryFor(locale);
   if (routePath === DOWNLOADS_ROUTE_PATH) {
@@ -415,7 +445,7 @@ function directionFor(locale) {
 
 function hreflangLinks(routePath = HOME_ROUTE_PATH) {
   return [
-    ...LOCALES.map((locale) =>
+    ...INDEXABLE_LANDING_LOCALES.map((locale) =>
       `    <link rel="alternate" hreflang="${locale}" href="${canonicalUrl(locale, routePath)}" />`,
     ),
     `    <link rel="alternate" hreflang="x-default" href="${canonicalUrl(DEFAULT_LOCALE, routePath)}" />`,
@@ -424,8 +454,8 @@ function hreflangLinks(routePath = HOME_ROUTE_PATH) {
 
 function legalHreflangLinks(routePath) {
   return [
-    ...LEGAL_LOCALES.map((locale) =>
-      `    <link rel="alternate" hreflang="${locale}" href="${legalCanonicalUrl(locale, routePath)}" />`,
+    ...INDEXABLE_LEGAL_LOCALES.map((locale) =>
+      `    <link rel="alternate" hreflang="${locale === LEGAL_DEFAULT_LOCALE ? 'en' : locale}" href="${legalCanonicalUrl(locale, routePath)}" />`,
     ),
     `    <link rel="alternate" hreflang="x-default" href="${legalCanonicalUrl(LEGAL_DEFAULT_LOCALE, routePath)}" />`,
   ].join('\n');
@@ -437,23 +467,11 @@ function editorialCanonicalUrl(locale, routePath) {
 
 function editorialHreflangLinks(routePath) {
   return [
-    ...EDITORIAL_LOCALES.map((locale) =>
-      `    <link rel="alternate" hreflang="${locale}" href="${editorialCanonicalUrl(locale, routePath)}" />`,
+    ...INDEXABLE_EDITORIAL_LOCALES.map((locale) =>
+      `    <link rel="alternate" hreflang="${locale === EDITORIAL_DEFAULT_LOCALE ? 'en' : locale}" href="${editorialCanonicalUrl(locale, routePath)}" />`,
     ),
     `    <link rel="alternate" hreflang="x-default" href="${editorialCanonicalUrl(EDITORIAL_DEFAULT_LOCALE, routePath)}" />`,
   ].join('\n');
-}
-
-function ensureLegalTranslations() {
-  const requiredIds = legalPageIds();
-  const failures = LEGAL_LOCALIZED_LOCALES
-    .map((locale) => [locale, legalTranslationMissingIds(locale, requiredIds)])
-    .filter(([, missing]) => missing.length > 0);
-  if (failures.length === 0) return;
-  const details = failures
-    .map(([locale, missing]) => `${locale}: ${missing.slice(0, 8).join(', ')}${missing.length > 8 ? ', ...' : ''}`)
-    .join('\n');
-  throw new Error(`missing legal translations\n${details}`);
 }
 
 function replaceOrInsertHead(html, locale, routePath = HOME_ROUTE_PATH) {
@@ -473,8 +491,12 @@ function replaceOrInsertHead(html, locale, routePath = HOME_ROUTE_PATH) {
     .replace(/<meta name="twitter:title" content="[^"]*" \/>/, `<meta name="twitter:title" content="${escapeXml(metadata.title)}" />`)
     .replace(/<meta name="twitter:description" content="[^"]*" \/>/, `<meta name="twitter:description" content="${escapeXml(metadata.ogDescription)}" />`)
     .replace(/<title>.*<\/title>/, `<title>${escapeXml(metadata.title)}</title>`)
+    .replace(/\n    <meta name="robots" content="[^"]*" \/>/, '')
     .replace(/(?:\n    <link rel="alternate" hreflang="[^"]+" href="[^"]+" \/>)+/, '')
-    .replace('    <meta name="theme-color"', `${hreflangLinks(routePath)}\n    <meta name="theme-color"`);
+    .replace(
+      '    <meta name="theme-color"',
+      `    <meta name="robots" content="noindex,follow" />\n    <meta name="theme-color"`,
+    );
 }
 
 function sitemapUrlEntry(url) {
@@ -487,14 +509,19 @@ function sitemapUrlEntry(url) {
 }
 
 function buildSitemap() {
-  const localizedUrls = LOCALIZED_ROUTES.flatMap((routePath) =>
-    LOCALES.map((locale) => sitemapUrlEntry(canonicalUrl(locale, routePath))),
+  const localizedUrls = INDEXABLE_LANDING_LOCALES.map((locale) =>
+    sitemapUrlEntry(canonicalUrl(locale, HOME_ROUTE_PATH)),
   ).join('\n');
-  const legalUrls = STATIC_PUBLIC_PATHS.flatMap((path) =>
-    LEGAL_LOCALES.map((locale) => sitemapUrlEntry(legalCanonicalUrl(locale, path))),
+  const legalUrls = INDEXABLE_TRUST_PATHS.flatMap((path) =>
+    INDEXABLE_LEGAL_LOCALES.map((locale) =>
+      sitemapUrlEntry(legalCanonicalUrl(locale, path)).replace(
+        `<lastmod>${LASTMOD}</lastmod>`,
+        `<lastmod>${LEGAL_LASTMOD}</lastmod>`,
+      ),
+    ),
   ).join('\n');
   const editorialUrls = EDITORIAL_PATHS.flatMap((path) =>
-    EDITORIAL_LOCALES.map((locale) =>
+    INDEXABLE_EDITORIAL_LOCALES.map((locale) =>
       sitemapUrlEntry(editorialCanonicalUrl(locale, path)).replace(
         `<lastmod>${LASTMOD}</lastmod>`,
         `<lastmod>${EDITORIAL_LASTMOD}</lastmod>`,
@@ -506,7 +533,16 @@ function buildSitemap() {
 }
 
 function buildRobots() {
+  if (process.env.BRIKAYA_DEPLOY_ENV === 'preview') {
+    return 'User-agent: *\nDisallow: /\n';
+  }
   return `User-agent: *\nAllow: /\n\nSitemap: ${CANONICAL_ORIGIN}/sitemap.xml\n`;
+}
+
+function buildHeaders() {
+  const baseHeaders = readFileSync(resolve(process.cwd(), PUBLIC_DIR, HEADERS_FILE), 'utf8').trimEnd();
+  if (process.env.BRIKAYA_DEPLOY_ENV !== 'preview') return `${baseHeaders}\n`;
+  return `${baseHeaders}\n\n/*\n  X-Robots-Tag: noindex\n`;
 }
 
 function writeFile(path, content) {
@@ -515,7 +551,6 @@ function writeFile(path, content) {
 }
 
 function run() {
-  ensureLegalTranslations();
   const distRoot = resolve(process.cwd(), DIST_DIR);
   const publicRoot = resolve(process.cwd(), PUBLIC_DIR);
   const playIndexPath = join(distRoot, 'play', INDEX_FILE);
@@ -523,14 +558,21 @@ function run() {
 
   for (const locale of LOCALES) {
     const metadata = metadataFor(locale, HOME_ROUTE_PATH);
-    const landingHtml = renderLandingPage({
+    const indexable = isIndexableEdition(locale);
+    let landingHtml = renderLandingPage({
       locale,
       canonicalUrl: canonicalUrl(locale, HOME_ROUTE_PATH),
-      alternateLinks: hreflangLinks(HOME_ROUTE_PATH),
+      alternateLinks: indexable ? hreflangLinks(HOME_ROUTE_PATH) : '',
       dir: directionFor(locale),
       title: metadata.title,
       description: metadata.description,
-    });
+    }).replace(
+      '<meta name="robots" content="index,follow" />',
+      `<meta name="robots" content="${indexable ? 'index,follow' : 'noindex,follow'}" />`,
+    );
+    if (locale === DEFAULT_LOCALE) {
+      landingHtml = landingHtml.replace('</head>', `${ADSENSE_OWNERSHIP_SNIPPET}\n  </head>`);
+    }
     const outputPath =
       locale === DEFAULT_LOCALE
         ? join(distRoot, INDEX_FILE)
@@ -553,14 +595,20 @@ function run() {
 
   for (const routePath of STATIC_PUBLIC_PATHS) {
     for (const locale of LEGAL_LOCALES) {
+      const indexable =
+        INDEXABLE_TRUST_PATHS.includes(routePath) &&
+        isIndexableEdition(locale);
       const legalHtml = renderLegalPage({
         locale,
         path: routePath,
         canonicalUrl: legalCanonicalUrl(locale, routePath),
-        alternateLinks: legalHreflangLinks(routePath),
+        alternateLinks: indexable ? legalHreflangLinks(routePath) : '',
         dir: directionFor(locale),
         localizedPath: legalLocalePath,
-      });
+      }).replace(
+        '<meta name="robots" content="index,follow" />',
+        `<meta name="robots" content="${indexable ? 'index,follow' : 'noindex,follow'}" />`,
+      );
       writeFile(join(distRoot, legalLocalePath(locale, routePath).replace(/^\//, ''), INDEX_FILE), legalHtml);
       if (locale === LEGAL_DEFAULT_LOCALE) {
         writeFile(join(publicRoot, routePath.replace(/^\//, ''), INDEX_FILE), legalHtml);
@@ -570,13 +618,17 @@ function run() {
 
   for (const routePath of EDITORIAL_PATHS) {
     for (const locale of EDITORIAL_LOCALES) {
+      const indexable = isIndexableEdition(locale);
       const editorialHtml = renderEditorialPage({
         locale,
         path: routePath,
         canonicalUrl: editorialCanonicalUrl(locale, routePath),
-        alternateLinks: editorialHreflangLinks(routePath),
+        alternateLinks: indexable ? editorialHreflangLinks(routePath) : '',
         dir: directionFor(locale),
-      });
+      }).replace(
+        '<meta name="robots" content="index,follow" />',
+        `<meta name="robots" content="${indexable ? 'index,follow' : 'noindex,follow'}" />`,
+      );
       const relativePath = editorialLocalePath(locale, routePath).replace(/^\//, '');
       writeFile(join(distRoot, relativePath, INDEX_FILE), editorialHtml);
       writeFile(join(publicRoot, relativePath, INDEX_FILE), editorialHtml);
@@ -585,12 +637,16 @@ function run() {
 
   const sitemap = buildSitemap();
   const robots = buildRobots();
+  const headers = buildHeaders();
   writeFile(join(distRoot, SITEMAP_FILE), sitemap);
   writeFile(join(distRoot, ROBOTS_FILE), robots);
-  writeFile(join(publicRoot, SITEMAP_FILE), sitemap);
-  writeFile(join(publicRoot, ROBOTS_FILE), robots);
+  if (process.env.BRIKAYA_DEPLOY_ENV !== 'preview') {
+    writeFile(join(publicRoot, SITEMAP_FILE), sitemap);
+    writeFile(join(publicRoot, ROBOTS_FILE), robots);
+  }
+  writeFile(join(distRoot, HEADERS_FILE), headers);
   console.log(
-    `localized-seo ok: locales=${LOCALES.length}, landing=1, spaRoutes=${SPA_LOCALIZED_ROUTES.length}, legalLocales=${LEGAL_LOCALES.length}, legalPages=${STATIC_PUBLIC_PATHS.length}, editorialLocales=${EDITORIAL_LOCALES.length}, editorialPages=${EDITORIAL_PATHS.length}`,
+    `localized-seo ok: locales=${LOCALES.length}, searchEditions=${SEARCH_EDITIONS.length}, indexableLandings=${INDEXABLE_LANDING_LOCALES.length}, spaRoutes=${SPA_LOCALIZED_ROUTES.length}, legalLocales=${LEGAL_LOCALES.length}, indexableTrustLocales=${INDEXABLE_LEGAL_LOCALES.length}, indexableTrustPages=${INDEXABLE_TRUST_PATHS.length}, editorialLocales=${EDITORIAL_LOCALES.length}, indexableEditorialLocales=${INDEXABLE_EDITORIAL_LOCALES.length}, editorialPages=${EDITORIAL_PATHS.length}`,
   );
 }
 

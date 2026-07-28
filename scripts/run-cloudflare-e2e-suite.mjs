@@ -14,7 +14,6 @@ const E2E_SUITE = [
   "tests/e2e/cloudflare-gameplay-basic-qa.js",
   "tests/e2e/cloudflare-high-scores-qa.js",
   "tests/e2e/cloudflare-i18n-seo-qa.js",
-  "tests/e2e/cloudflare-interlevel-google-ads-qa.js",
   "tests/e2e/cloudflare-laser-powerup-qa.js",
   "tests/e2e/cloudflare-location-language-qa.js",
   "tests/e2e/cloudflare-metal-components-qa.js",
@@ -37,7 +36,6 @@ const LOCAL_PREVIEW_SKIP = [
   "tests/e2e/cloudflare-cinematic-effects-qa.js",
   "tests/e2e/cloudflare-dashboard-layout-qa.js",
   "tests/e2e/cloudflare-i18n-seo-qa.js",
-  "tests/e2e/cloudflare-interlevel-google-ads-qa.js",
   "tests/e2e/cloudflare-mobile-journey-qa.js",
   "tests/e2e/cloudflare-runtime-update-qa.js",
 ];

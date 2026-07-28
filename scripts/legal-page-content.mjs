@@ -8,7 +8,7 @@ const MODULE_DIR = dirname(fileURLToPath(import.meta.url));
 const TRANSLATIONS_PATH = join(MODULE_DIR, 'legal-page-translations.json');
 
 export const LEGAL_DEFAULT_LOCALE = 'en-US';
-export const LEGAL_LASTMOD = '2026-07-16';
+export const LEGAL_LASTMOD = '2026-07-27';
 export const MIN_LEGAL_MAIN_WORDS = 280;
 export const LEGAL_PATHS = [
   '/about/',
@@ -319,6 +319,7 @@ const LEGAL_NAV_ITEMS = [
   ['/play/', 'nav.play'],
   ['/how-to-play/', 'nav.howToPlay'],
   ['/faq/', 'nav.faq'],
+  ['/updates/', 'nav.updates'],
   ['/about/', 'nav.about'],
   ['/legal/', 'nav.legal'],
   ['/privacy/', 'nav.privacy'],
@@ -453,7 +454,12 @@ function resolvePublicNavHref(locale, itemPath, localizedPath) {
     return `/${locale}/play/`;
   }
   if (EDITORIAL_PATHS.includes(itemPath)) {
-    const editorialLocale = String(locale).toLowerCase().startsWith('pt') ? 'pt-BR' : 'en-US';
+    const normalizedLocale = String(locale).toLowerCase();
+    const editorialLocale = normalizedLocale.startsWith('pt')
+      ? 'pt-BR'
+      : normalizedLocale.startsWith('es')
+        ? 'es-419'
+        : 'en-US';
     return editorialLocale === 'en-US' ? itemPath : `/${editorialLocale}${itemPath}`;
   }
   return localizedPath(locale, itemPath);

@@ -1,8 +1,8 @@
 // scripts/editorial-page-content.mjs
-/** Crawlable editorial pages for AdSense readiness — EN + PT only (no thin locale fan-out). */
+/** Crawlable editorial pages for the complete EN, PT-BR, and ES-419 search editions. */
 
 export const EDITORIAL_DEFAULT_LOCALE = 'en-US';
-export const EDITORIAL_LOCALES = ['en-US', 'pt-BR'];
+export const EDITORIAL_LOCALES = ['en-US', 'pt-BR', 'es-419'];
 export const EDITORIAL_LASTMOD = '2026-07-16';
 export const EDITORIAL_PATHS = ['/how-to-play/', '/faq/', '/updates/'];
 
@@ -97,6 +97,14 @@ const NAV = {
     ['/about/', 'Sobre'],
     ['/support/', 'Suporte'],
   ],
+  'es-419': [
+    ['/play/', 'Jugar'],
+    ['/how-to-play/', 'Cómo jugar'],
+    ['/faq/', 'Preguntas frecuentes'],
+    ['/updates/', 'Actualizaciones'],
+    ['/about/', 'Acerca de'],
+    ['/support/', 'Soporte'],
+  ],
 };
 
 const PAGES = {
@@ -187,6 +195,51 @@ const PAGES = {
           paragraphs: [
             'Depois do primeiro carregamento bem-sucedido, Brikaya pode manter o jogo principal disponível offline naquele navegador e aparelho. Instale pelo navegador quando a opção existir se quiser um atalho na tela inicial. Limpar dados do site remove pontuações locais e arquivos em cache, então anote ou exporte o que importar antes de um reset.',
             'Para passos de instalação por plataforma, abra a página de downloads. Para privacidade, termos e suporte, use as páginas legais na navegação. Se algo falhar, escreva para contato@brikaya.com com aparelho, navegador e o que você estava fazendo.',
+          ],
+        },
+      ],
+    },
+    'es-419': {
+      title: 'Cómo jugar Brikaya',
+      description:
+        'Aprende a jugar Brikaya: mueve la cama elástica, rebota la pelota, elimina componentes de circuito y completa niveles en el navegador, incluso sin conexión después de la primera visita.',
+      h1: 'Cómo jugar Brikaya',
+      lead:
+        'Brikaya es un arcade gratuito de componentes de circuito para jugar en el navegador. Esta guía explica el objetivo, los controles, la puntuación y cómo seguir jugando después de la primera visita.',
+      sections: [
+        {
+          heading: 'Qué debes hacer',
+          paragraphs: [
+            'Cada nivel coloca componentes de circuito sobre una cama elástica. Tu tarea es mantener la pelota en juego, golpear cada componente que se puede eliminar y despejar el tablero sin dejar que la pelota se caiga. Cuando el tablero queda despejado, el nivel termina y el siguiente empieza con un ritmo un poco más exigente.',
+            'Brikaya está pensado para sesiones cortas. Puedes pausar desde el menú, salir de la pestaña y volver después. En esta versión, la puntuación, las preferencias y el progreso permanecen en tu dispositivo, por lo que no necesitas una cuenta de jugador para continuar.',
+          ],
+        },
+        {
+          heading: 'Controles en computadora y celular',
+          paragraphs: [
+            'En computadora, mueve la cama elástica con el puntero o con los controles de teclado que muestra el consejo inicial. Mantén la cama debajo de la pelota para que el rebote la envíe otra vez al campo de componentes. El tiempo importa más que la velocidad: un rebote centrado suele ser más seguro que un desplazamiento tardío.',
+            'En teléfonos y tabletas, arrastra sobre el área de juego para desplazar la cama. Usa la orientación horizontal cuando tu dispositivo la solicite y procura no cubrir el tablero con la mano. Si la primera carga terminó mientras estabas conectado, las sesiones posteriores pueden continuar incluso sin conexión.',
+          ],
+        },
+        {
+          heading: 'Componentes, pelota y cama elástica',
+          paragraphs: [
+            'Los componentes son los objetivos. Elimínalos haciendo rebotar la pelota contra ellos. Algunos diseños dejan espacios o grupos más densos; observa el tablero un momento antes del primer golpe para planear una ruta en vez de reaccionar solo después de fallar.',
+            'La cama elástica es tu herramienta de recuperación. Recibe la pelota y la devuelve hacia arriba. Si la pelota pasa la cama, el intento termina para esa vida o ronda según las reglas que se muestran en pantalla. Reinicia desde el menú cuando quieras un tablero limpio.',
+          ],
+        },
+        {
+          heading: 'Puntuación y niveles',
+          paragraphs: [
+            'Golpear componentes suma puntos al nivel. Completar un nivel se agrega al total y puede actualizar la lista local de mejores puntuaciones en ese dispositivo. Los niveles más difíciles incorporan movimiento más rápido y diseños más densos, así que la precisión temprana suele valer más que los movimientos imprudentes.',
+            'No hay una barrera de pago en esta versión. Los anuncios opcionales, cuando estén disponibles y permitidos, aparecen solo entre algunos niveles terminados y no deben impedirte seguir jugando. Puedes revisar las opciones de consentimiento y privacidad desde el menú del juego.',
+          ],
+        },
+        {
+          heading: 'Juego sin conexión después de la primera visita',
+          paragraphs: [
+            'Después de la primera carga correcta, Brikaya puede mantener el juego principal disponible sin conexión en ese navegador y dispositivo. Instálalo desde el navegador cuando tu dispositivo ofrezca la opción si quieres un acceso directo en la pantalla de inicio. Borrar los datos del sitio elimina las puntuaciones locales y los archivos guardados, así que anota o exporta los registros antes de restablecerlos si te importan.',
+            'Para conocer los pasos de instalación por plataforma, abre la página de descargas. Para privacidad, términos y contactos de soporte, usa las páginas legales enlazadas en la navegación. Si algo falla, escribe a contato@brikaya.com con el dispositivo, el navegador y lo que estabas haciendo.',
           ],
         },
       ],
@@ -321,6 +374,70 @@ const PAGES = {
         },
       ],
     },
+    'es-419': {
+      title: 'Preguntas frecuentes de Brikaya',
+      description:
+        'Preguntas frecuentes sobre Brikaya: juego gratis, modo sin conexión, privacidad, puntuaciones, anuncios, instalación y soporte.',
+      h1: 'Preguntas frecuentes',
+      lead:
+        'Respuestas breves sobre cómo funciona Brikaya, qué permanece en tu dispositivo y cómo pedir ayuda sin crear una cuenta de jugador.',
+      sections: [
+        {
+          heading: '¿Dónde juego?',
+          paragraphs: [
+            'Abre https://brikaya.com/play/ para acceder al arcade interactivo. La página principal en https://brikaya.com/ es una presentación fácil de leer con guías y enlaces de confianza para que conozcas el producto antes de empezar. Ambas están en el mismo dominio.',
+          ],
+        },
+        {
+          heading: '¿Brikaya es gratis?',
+          paragraphs: [
+            'Sí. Esta versión es gratis para abrir y jugar en el navegador. No hay una compra obligatoria para despejar niveles o conservar el progreso local. Si aparecen anuncios opcionales más adelante, deben quedarse entre niveles y no quitar el acceso al juego.',
+          ],
+        },
+        {
+          heading: '¿Necesito una cuenta?',
+          paragraphs: [
+            'No. Brikaya no solicita inicio de sesión de jugador en esta versión. La puntuación, el idioma, las elecciones de consentimiento y las preferencias se almacenan localmente en el dispositivo que usas. Si en el futuro se agregan funciones de cuenta, las páginas públicas de privacidad y eliminación de datos se actualizarán antes de publicar ese cambio.',
+          ],
+        },
+        {
+          heading: '¿Funciona sin conexión?',
+          paragraphs: [
+            'Después de que la primera carga termina mientras estás conectado, el juego principal puede seguir funcionando sin conexión en ese navegador. El juego sin conexión depende de lo que el navegador haya conservado. Borrar los datos del sitio o cambiar de navegador inicia un perfil local nuevo.',
+          ],
+        },
+        {
+          heading: '¿Dónde se guardan mis puntuaciones?',
+          paragraphs: [
+            'En el mismo dispositivo y navegador donde jugaste. No se cargan a una cuenta de jugador de Brikaya porque esa cuenta no existe aquí. Usa la opción de restaurar valores predeterminados en el menú o borra los datos del sitio en el navegador si quieres eliminar los registros locales.',
+          ],
+        },
+        {
+          heading: '¿Cómo funcionan los anuncios y las elecciones de privacidad?',
+          paragraphs: [
+            'Los anuncios son opcionales para la experiencia del producto y permanecen desactivados hasta que estén disponibles. En regiones que requieren elecciones de consentimiento, revisa los avisos y la página de cookies antes de que se puedan mostrar anuncios personalizados. Puedes volver a revisar el consentimiento desde el menú del juego. Consulta la política de privacidad para saber qué permanece local y cómo contactarnos.',
+          ],
+        },
+        {
+          heading: '¿Puedo instalar Brikaya en mi teléfono o computadora?',
+          paragraphs: [
+            'A menudo sí, mediante el flujo de instalación del navegador o la opción de agregar a la pantalla de inicio cuando tu dispositivo la ofrezca. La página de descargas explica las opciones para computadora, Android e iOS con lenguaje sencillo. La instalación no crea una compra en una tienda ni una cuenta de Brikaya.',
+          ],
+        },
+        {
+          heading: 'La pelota se siente demasiado rápida o fallo mucho. ¿Qué ayuda?',
+          paragraphs: [
+            'Centra la cama antes, observa el ángulo del primer rebote y elimina los componentes de los bordes cuando te den una ruta de regreso más segura. Reiniciar un nivel desde el menú es normal. Si un control parece fallar en un navegador específico, incluye ese detalle cuando escribas al soporte.',
+          ],
+        },
+        {
+          heading: '¿Cómo obtengo soporte?',
+          paragraphs: [
+            'Escribe a contato@brikaya.com con un asunto breve, la página o el dispositivo que usaste y los pasos que llevaron al problema. No envíes contraseñas ni documentos personales innecesarios. La página de soporte muestra el mismo contacto para ayuda con privacidad y eliminación de datos.',
+          ],
+        },
+      ],
+    },
   },
   '/updates/': {
     'en-US': {
@@ -413,6 +530,51 @@ const PAGES = {
         },
       ],
     },
+    'es-419': {
+      title: 'Actualizaciones y notas de diseño de Brikaya',
+      description:
+        'Actualizaciones y notas de diseño de Brikaya: arcade sin conexión después de la primera carga, páginas públicas de confianza y guías editoriales para jugadores.',
+      h1: 'Actualizaciones y notas de diseño',
+      lead:
+        'Un registro en lenguaje sencillo de lo que Brikaya desarrolla para los jugadores: juego gratuito en el navegador, progreso local e información pública más clara.',
+      sections: [
+        {
+          heading: '2026-07-16 — Presentación, /play/ y recuperación después de una actualización',
+          paragraphs: [
+            'La página principal pública en https://brikaya.com/ explica el producto e incluye enlaces a cómo jugar, preguntas frecuentes, actualizaciones, descargas y páginas de confianza. El arcade interactivo funciona en https://brikaya.com/play/ dentro del mismo sitio para que el acceso sin conexión y las elecciones de privacidad permanezcan en un solo lugar.',
+            'Una actualización mejora la forma en que se recupera el juego después de cambiar de versión. La presentación también pide que las versiones instaladas se actualicen y, si todavía abren la dirección principal, las dirige a /play/. Esto ayuda a recuperar pantallas en blanco que podían aparecer al abrir una versión guardada anteriormente.',
+          ],
+        },
+        {
+          heading: '2026-07 — Guías para jugadores e información pública',
+          paragraphs: [
+            'Publicamos páginas de cómo jugar, preguntas frecuentes y actualizaciones en inglés, portugués brasileño y español latinoamericano. Estas páginas explican la jugabilidad, las expectativas de privacidad y las opciones de instalación sin exigir inicio de sesión. Existen para que visitantes y revisores entiendan el producto desde direcciones estables, no solo desde la pantalla interactiva.',
+            'Las páginas legales y de confianza, como acerca de, privacidad, términos, soporte y avisos relacionados, siguen disponibles como referencias públicas y se ampliaron en inglés con detalles más claros sobre /play/, los datos guardados en el dispositivo y las formas de contacto. Las páginas editoriales se limitan a estas tres ediciones completas para que las personas encuentren una guía completa y útil en su idioma.',
+          ],
+        },
+        {
+          heading: 'Intención de diseño del arcade',
+          paragraphs: [
+            'Brikaya trata los componentes de circuito como el lenguaje visual de un arcade clásico de despejar el tablero. La cama elástica reemplaza la metáfora de una paleta rígida para que el movimiento se sienta elástico y fácil de leer en sesiones cortas. Los niveles deben entenderse de un vistazo: qué golpear, hacia dónde va la pelota y cómo recuperarse después de un mal rebote.',
+            'El producto sigue priorizando el juego sin conexión después de la primera carga. Esa decisión mantiene el juego disponible en redes inestables y evita obligar a crear una cuenta para el progreso básico. La publicidad opcional, si alguna vez se activa, queda limitada a momentos entre niveles para no competir con el control principal.',
+          ],
+        },
+        {
+          heading: 'Lo que priorizamos',
+          paragraphs: [
+            'Claridad antes que espectáculo: los jugadores deben aprender el ciclo en segundos. Privacidad antes que perfil: el almacenamiento local es mejor que un registro obligatorio en esta versión. Páginas públicas estables antes que ruido de marketing: acerca de, legal, soporte y las guías deben responder preguntas reales sin jerga interna.',
+            'Seguiremos ampliando estas notas para jugadores cuando cambien las funciones. Si necesitas ayuda entre actualizaciones, usa contato@brikaya.com e incluye el navegador y el dispositivo que usaste.',
+          ],
+        },
+        {
+          heading: 'Base anterior',
+          paragraphs: [
+            'Antes de estas guías, Brikaya ya existía como un arcade gratuito con acceso desde el navegador en brikaya.com, con presentaciones localizadas de inicio y descargas, páginas legales para revisiones de plataforma y mejores puntuaciones locales. El menú del juego ya mostraba enlaces de privacidad, términos, acerca de y legal para que los jugadores pudieran salir de la pantalla de juego y leer las políticas.',
+            'La página de descargas explicaba la instalación desde el navegador y la continuidad sin conexión. Esa base se mantiene; las páginas editoriales y la presentación agregan una profundidad que una sola pantalla interactiva no puede dar a los buscadores ni a los visitantes que quieren leer antes de jugar.',
+          ],
+        },
+      ],
+    },
   },
 };
 
@@ -459,14 +621,25 @@ export function countEditorialMainWords(locale, path) {
   return parts.join(' ').split(/\s+/).filter(Boolean).length;
 }
 
+export function editorialPageFor(locale, path) {
+  return PAGES[path]?.[locale] ?? null;
+}
+
 export function renderEditorialPage({ locale, path, canonicalUrl, alternateLinks, dir }) {
   const page = PAGES[path]?.[locale];
   if (!page) throw new Error(`unknown editorial page: ${locale} ${path}`);
 
   const navItems = NAV[locale] ?? NAV['en-US'];
-  const updatedLabel =
-    locale === 'pt-BR' ? `Última atualização: ${EDITORIAL_LASTMOD}` : `Last updated: ${EDITORIAL_LASTMOD}`;
-  const backLabel = locale === 'pt-BR' ? 'Voltar ao jogo' : 'Back to the game';
+  const updatedLabel = locale === 'pt-BR'
+    ? `Última atualização: ${EDITORIAL_LASTMOD}`
+    : locale === 'es-419'
+      ? `Última actualización: ${EDITORIAL_LASTMOD}`
+      : `Last updated: ${EDITORIAL_LASTMOD}`;
+  const backLabel = locale === 'pt-BR'
+    ? 'Voltar ao jogo'
+    : locale === 'es-419'
+      ? 'Volver al juego'
+      : 'Back to the game';
 
   const navHtml = navItems
     .map(([itemPath, label]) => {

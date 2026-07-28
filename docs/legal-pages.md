@@ -21,7 +21,8 @@ Este pacote prepara Brikaya para cadastros gratuitos e revisões de plataformas 
   - português: `/pt-BR/` como representante principal.
   - espanhol: `/es-419/` como representante principal.
   - chinês: `/zh-CN/` e `/zh-TW/` mantidos por script.
-- Total gerado após build: 284 locales de home/downloads, 254 idiomas legais por página, 9 páginas legais, 3 páginas editoriais × 2 locales (en-US, pt-BR), `public/sitemap.xml` com ~2.860 URLs.
+- O build continua gerando HTML para todos os locales de landing/jogo/downloads e páginas legais. Sitemap e `hreflang` incluem somente locales com metadados SEO ou tradução legal completos; fallbacks em inglês permanecem acessíveis com `noindex,follow`.
+- O sitemap também inclui 3 páginas editoriais × 2 locales (en-US, pt-BR).
 - Páginas editoriais (`/how-to-play/`, `/faq/`, `/updates/`) **não** entram no fan-out legal de 254 idiomas; ver [`docs/adsense-site-readiness.md`](adsense-site-readiness.md).
 - O cache versionado `scripts/legal-page-translations.json` é local e determinístico. Strings que acionam o guard de rastros públicos ou têm placeholder corrompido voltam para a base inglesa para preservar marca, domínio e segurança.
 

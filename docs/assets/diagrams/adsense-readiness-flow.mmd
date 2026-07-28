@@ -1,0 +1,11 @@
+flowchart LR
+  deploy["Build e deploy"]
+  proxy["Gate técnico local"]
+  api["Issues já detectadas"]
+  human["Revisão humana do site"]
+  deploy --> proxy
+  proxy --> passFail["Resultado técnico"]
+  api --> known["Issues conhecidas"]
+  human --> verdict["Decisão externa"]
+  passFail -.-> human
+  known -.-> human

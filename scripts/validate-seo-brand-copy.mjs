@@ -85,7 +85,23 @@ function scanFile(filePath) {
   return findings;
 }
 
+function validateSeoIndexability() {
+  const metadata = JSON.parse(readFileSync('scripts/generated/i18n-home-seo.json', 'utf8'));
+  const english = metadata.en;
+  const sameTuple = (value, baseline) => value.title === baseline.title
+    && value.description === baseline.description
+    && value.ogDescription === baseline.ogDescription;
+  const failures = Object.entries(metadata)
+    .filter(([locale, entry]) => locale !== 'en' && entry.indexable === true)
+    .filter(([, entry]) => sameTuple(entry.home, english.home) || sameTuple(entry.downloads, english.downloads))
+    .map(([locale]) => locale);
+  if (english.indexable !== true || failures.length > 0) {
+    throw new Error(`SEO indexability guard failed: ${failures.join(', ') || 'en'}`);
+  }
+}
+
 function run() {
+  validateSeoIndexability();
   const findings = collectFiles().flatMap(scanFile);
   if (findings.length === 0) {
     console.log('validate-seo-brand-copy ok');
