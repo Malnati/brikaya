@@ -27695,7 +27695,7 @@
       "about.s4.body1": "Read How to play for controls and scoring, the FAQ for free play and privacy answers, and Updates for design notes. Those guides are available in English and Brazilian Portuguese."
     },
     "pt-BR": {
-      "about.description": "About Brikaya, a free offline-first arcade game published at brikaya.com.",
+      "about.description": "Sobre o Brikaya, um arcade gratuito com funcionamento offline após a primeira visita, guias, páginas de confiança e acesso ao jogo em /play/.",
       "about.h1": "Sobre Brikaya",
       "about.lead": "Brikaya é um jogo de arcade gratuito feito para jogo rápido, acesso offline e opções simples de privacidade.",
       "about.s1.body1": "Brikaya is a free circuit component arcade game in your browser. It runs as a web app and can work offline after the first load.",
