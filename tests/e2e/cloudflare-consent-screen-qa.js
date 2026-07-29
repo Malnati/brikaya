@@ -131,7 +131,12 @@ async function clickButtonByText(page, label) {
 
 async function collectConsentState(page) {
   return page.evaluate(
-    ({ storageKey, forbiddenCopySource, acceptButtonLabel }) => {
+    ({
+      storageKey,
+      forbiddenCopySource,
+      acceptButtonLabel,
+      consentDialogName,
+    }) => {
       const forbiddenCopyPattern = new RegExp(forbiddenCopySource, "i");
       const storedValue = window.localStorage.getItem(storageKey);
       let storedRecord = null;
@@ -153,6 +158,9 @@ async function collectConsentState(page) {
 
       return {
         hasDialog: Boolean(dialog),
+        hasConsentDialog: Boolean(
+          dialog?.textContent?.includes(consentDialogName),
+        ),
         dialogText: dialog?.textContent || "",
         hasAcceptButton: Boolean(acceptButton),
         acceptButtonText: acceptButton?.textContent?.trim() || "",
@@ -166,6 +174,7 @@ async function collectConsentState(page) {
       storageKey: PRIVACY_CONSENT_STORAGE_KEY,
       forbiddenCopySource: FORBIDDEN_USER_COPY_PATTERN.source,
       acceptButtonLabel: ACCEPT_BUTTON_LABEL,
+      consentDialogName: CONSENT_DIALOG_NAME,
     },
   );
 }
@@ -211,7 +220,10 @@ async function run() {
     ensureParentDirectory(screenshotPath());
     await page.screenshot({ path: screenshotPath(), fullPage: true });
 
-    assert(firstVisitState.hasDialog, "Tela de consentimento não apareceu.");
+    assert(
+      firstVisitState.hasConsentDialog,
+      "Tela de consentimento não apareceu.",
+    );
     assert(
       firstVisitState.dialogText.includes(CONSENT_DIALOG_NAME),
       "Título da tela de consentimento ausente.",
@@ -238,7 +250,7 @@ async function run() {
     const acceptedState = await collectConsentState(page);
 
     assert(
-      !acceptedState.hasDialog,
+      !acceptedState.hasConsentDialog && !acceptedState.hasAcceptButton,
       "Tela de consentimento persistiu após aceite.",
     );
     assert(acceptedState.storedRecord, "Aceite não foi gravado no aparelho.");

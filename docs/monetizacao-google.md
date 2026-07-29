@@ -5,16 +5,17 @@
 
 Manter `https://brikaya.com/` verificável para propriedade do site, sem publicar unidades, placements, integração H5, interstitials ou interface de publicidade. O jogo continua offline-capable após o primeiro carregamento e não depende de scripts externos para iniciar, avançar fases, salvar progresso ou tocar áudio.
 
-## Estado em 2026-07-27
+## Estado em 2026-07-29
 
 - Conta/publisher: `ca-pub-9571619183194136`.
-- Site no AdSense: `brikaya.com` permanece com rejeição histórica por conteúdo de baixo valor até decisão humana posterior.
+- Site no AdSense: `brikaya.com` ainda exibe a rejeição por conteúdo de baixo valor, cujo diagnóstico foi atualizado em 2026-07-15, antes da remediação atual.
 - Saída local: um único snippet de verificação no `<head>` de `/`; nenhum em `/{locale}/`, páginas editoriais, confiança/legal, `/play/`, downloads, acordo do usuário ou licença.
 - Fonte local de `ads.txt`: `google.com, pub-9571619183194136, DIRECT, f08c47fec0942fa0`.
 - Nenhuma unidade real, slot, banner, interstitial, loader, `adsbygoogle`, H5 Ad Placement API, `adBreak` ou `adConfig` integra a saída desta etapa.
-- O gate `npm run verify:adsense-ready-proxy` valida a colocação única, `dist/ads.txt`, `dist/sitemap.xml` com 33 URLs permitidas, edição EN/PT-BR/ES-419, QA espanhol e todas as canônicas de fallback com `noindex,follow` e zero `hreflang`. É um gate técnico, não aprovação AdSense.
-- Estado público desta revisão: pendente de merge, deploy de produção e prova no domínio canônico.
-- Não solicitar revisão automaticamente nem clicar em confirmação no painel Sites. Essa decisão segue humana, somente após novo inventário público e elegibilidade da conta/site.
+- O gate `npm run verify:adsense-ready-proxy` valida a colocação única, `dist/ads.txt`, sitemap com 33 URLs permitidas, os nove conteúdos editoriais com pelo menos 500 palavras, as 21 páginas de confiança com pelo menos 280 palavras, QA EN/PT-BR/ES-419 e canônicas de fallback com `noindex,follow` e zero `hreflang`.
+- O gate `npm run verify:adsense-public-ready` é executado depois do deploy e repete no domínio canônico as verificações de inventário, conteúdo, links, canônicas, `hreflang`, `noindex`, snippet e `ads.txt`.
+- A produção v174 já apresentou as 33 URLs, `ads.txt` público e rotas de jogo separadas. Esta entrega reforça conteúdo e bloqueia o workflow caso a prova pública pós-deploy falhe.
+- Solicitar revisão somente depois que CI, deploy e auditoria pública desta entrega estiverem verdes. A autorização e a ação autenticada pertencem ao painel Sites, não ao CI.
 
 ## Condição para qualquer monetização futura
 
@@ -33,6 +34,7 @@ Se um experimento futuro for aprovado, ele deve ser planejado e revisado separad
 
 - Prontidão: [`docs/adsense-site-readiness.md`](adsense-site-readiness.md)
 - Gate: `npm run verify:adsense-ready-proxy`
+- Prova pública: `npm run verify:adsense-public-ready`
 - Fonte de `ads.txt`: `public/ads.txt`
 
 ## Fontes oficiais

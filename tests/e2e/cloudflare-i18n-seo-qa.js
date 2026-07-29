@@ -515,6 +515,7 @@ const TESTED_DOWNLOADS_LOCALES = TESTED_DOWNLOADS_LOCALE_IDS.map((locale) => ({
   locale,
   path: downloadsPathForLocale(locale),
   title: seoDownloadsTitle(locale),
+  indexable: false,
 }));
 const LANGUAGE_SELECT_SELECTOR = "#game-language-select";
 const MENU_BUTTON_SELECTOR = ".dashboard-menu-button";
@@ -677,7 +678,7 @@ async function validateHtml(baseUrl, item) {
   assert(!body.includes(".pages.dev"), `${url} contém pages.dev`);
   assert(!body.includes('href="./assets/'), `${url} tem href asset relativo`);
   assert(!body.includes('src="./assets/'), `${url} tem src asset relativo`);
-  const indexable = isIndexableLocale(item.locale);
+  const indexable = item.indexable ?? isIndexableLocale(item.locale);
   assert(
     body.includes(`content="${indexable ? "index,follow" : "noindex,follow"}"`),
     `${url} robots não corresponde à indexabilidade`,

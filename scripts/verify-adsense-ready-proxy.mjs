@@ -23,6 +23,7 @@ import {
   LEGAL_PATHS,
   MIN_LEGAL_MAIN_WORDS,
   countLegalMainWords,
+  legalTranslationMissingIds,
   legalText,
 } from './legal-page-content.mjs';
 
@@ -32,7 +33,7 @@ const OWNERSHIP_PATTERN = new RegExp(`https://pagead2\\.googlesyndication\\.com/
 const AD_RUNTIME_PATTERN = /pagead2\.googlesyndication\.com|\badsbygoogle\b|\badBreak\b|\badConfig\b|__BRIKAYA_GOOGLE_ADS_ENABLED__|google_ad_/i;
 const PLAY_INDEX_PATH = 'play/index.html';
 const PUBLIC_HOME_INDEX_PATH = 'public/index.html';
-const LEGAL_DEPTH_PATHS = ['/about/', '/privacy/', '/terms/', '/support/', '/cookies/'];
+const INDEXABLE_LEGAL_LOCALES = ['en-US', 'pt-BR', 'es-419'];
 const ELIGIBILITY = JSON.parse(readFileSync(resolve('config/locale-eligibility.json'), 'utf8'));
 const EXPECTED_SEARCH_LOCALES = ['en', 'pt-BR', 'es-419'];
 const NON_ENGLISH_SEARCH_LOCALES = ['pt-BR', 'es-419'];
@@ -54,6 +55,33 @@ const ENGLISH_METADATA_WORDS = new Set([
   'with',
 ]);
 const MAX_ENGLISH_METADATA_WORD_RATIO = 0.4;
+const ENGLISH_BODY_WORDS = new Set([
+  'after',
+  'and',
+  'are',
+  'before',
+  'browser',
+  'can',
+  'content',
+  'free',
+  'game',
+  'helps',
+  'is',
+  'load',
+  'offline',
+  'pages',
+  'play',
+  'player',
+  'published',
+  'should',
+  'site',
+  'the',
+  'this',
+  'with',
+  'work',
+  'your',
+]);
+const MAX_ENGLISH_BODY_WORD_RATIO = 0.4;
 const EXPECTED_SITEMAP_URLS = new Set([
   ...EXPECTED_SEARCH_LOCALES.map((locale) => `${CANONICAL_ORIGIN}${locale === 'pt-BR' ? '/' : `/${locale}/`}`),
   ...ELIGIBILITY.indexableTrustPaths.flatMap((path) =>
@@ -183,15 +211,53 @@ function verifyEditorialContent() {
 }
 
 function verifyLegalContent() {
-  for (const path of LEGAL_DEPTH_PATHS) {
+  for (const path of ELIGIBILITY.indexableTrustPaths) {
     assert(LEGAL_PATHS.includes(path), `legal depth path ${path} is not configured`);
-    assert(countLegalMainWords(LEGAL_DEFAULT_LOCALE, path) >= MIN_LEGAL_MAIN_WORDS, `legal ${path} source is below ${MIN_LEGAL_MAIN_WORDS} words`);
-    const file = resolve('public', path.replace(/^\//, ''), 'index.html');
-    assert(existsSync(file), `missing generated legal page ${file}`);
-    const html = readFileSync(file, 'utf8');
-    assert(stripHtmlToWords(html).length >= MIN_LEGAL_MAIN_WORDS, `${file} is below ${MIN_LEGAL_MAIN_WORDS} words`);
-    assert(html.includes(LEGAL_LASTMOD), `${file} missing legal lastmod ${LEGAL_LASTMOD}`);
+    for (const locale of INDEXABLE_LEGAL_LOCALES) {
+      assert(
+        countLegalMainWords(locale, path) >= MIN_LEGAL_MAIN_WORDS,
+        `${locale} trust page ${path} source must meet the ${MIN_LEGAL_MAIN_WORDS}-word minimum`,
+      );
+      const localizedPath =
+        locale === LEGAL_DEFAULT_LOCALE ? path : `/${locale}${path}`;
+      for (const root of ['dist']) {
+        const file = resolve(
+          root,
+          localizedPath.replace(/^\//, ''),
+          'index.html',
+        );
+        assert(existsSync(file), `missing generated legal page ${file}`);
+        const html = readFileSync(file, 'utf8');
+        assert(
+          stripHtmlToWords(html).length >= MIN_LEGAL_MAIN_WORDS,
+          `${file} is below ${MIN_LEGAL_MAIN_WORDS} words`,
+        );
+        assert(
+          html.includes(LEGAL_LASTMOD),
+          `${file} missing legal lastmod ${LEGAL_LASTMOD}`,
+        );
+      }
+    }
   }
+}
+
+function legalPageTextIds(page) {
+  return [
+    page.titleId,
+    page.descriptionId,
+    page.h1Id,
+    page.leadId,
+    ...page.sections.flatMap(([headingId, paragraphIds]) => [
+      headingId,
+      ...paragraphIds,
+    ]),
+  ];
+}
+
+function englishWordRatio(text, dictionary) {
+  const words = text.toLowerCase().match(/[a-z]+/g) ?? [];
+  if (!words.length) return 0;
+  return words.filter((word) => dictionary.has(word)).length / words.length;
 }
 
 function verifyIndexableLegalMetadataLanguages() {
@@ -199,18 +265,25 @@ function verifyIndexableLegalMetadataLanguages() {
     const page = LEGAL_PAGE_DEFINITIONS[path];
     assert(page, `missing legal page definition for ${path}`);
     for (const locale of NON_ENGLISH_SEARCH_LOCALES) {
-      const description = legalText(locale, page.descriptionId);
-      const words = description.toLowerCase().match(/[a-z]+/g) ?? [];
-      const englishWordCount = words.filter((word) =>
-        ENGLISH_METADATA_WORDS.has(word),
-      ).length;
-      const englishWordRatio = words.length
-        ? englishWordCount / words.length
-        : 1;
+      const pageIds = legalPageTextIds(page);
+      const missingIds = legalTranslationMissingIds(locale, pageIds);
       assert(
-        englishWordRatio < MAX_ENGLISH_METADATA_WORD_RATIO,
+        missingIds.length === 0,
+        `${locale}${path} contains English fallback IDs: ${missingIds.join(', ')}`,
+      );
+      const description = legalText(locale, page.descriptionId);
+      assert(
+        englishWordRatio(description, ENGLISH_METADATA_WORDS) <
+          MAX_ENGLISH_METADATA_WORD_RATIO,
         `${locale}${path} metadata appears to contain an English fallback`,
       );
+      for (const id of pageIds) {
+        assert(
+          englishWordRatio(legalText(locale, id), ENGLISH_BODY_WORDS) <
+            MAX_ENGLISH_BODY_WORD_RATIO,
+          `${locale}${path} ${id} appears to contain an English fallback`,
+        );
+      }
     }
   }
 }
