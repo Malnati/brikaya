@@ -8,7 +8,7 @@ const MODULE_DIR = dirname(fileURLToPath(import.meta.url));
 const TRANSLATIONS_PATH = join(MODULE_DIR, 'legal-page-translations.json');
 
 export const LEGAL_DEFAULT_LOCALE = 'en-US';
-export const LEGAL_LASTMOD = '2026-07-27';
+export const LEGAL_LASTMOD = '2026-07-29';
 export const MIN_LEGAL_MAIN_WORDS = 280;
 export const LEGAL_PATHS = [
   '/about/',
@@ -37,8 +37,8 @@ export const LEGAL_TEXT = {
   'common.updated': 'Last updated',
   'common.contactHeading': 'Official contact',
   'common.contactBody': 'Use contato@brikaya.com for privacy, support, rights, data deletion, and use questions.',
-  'common.platformReadyHeading': 'Platform readiness',
-  'common.platformReadyBody': 'These pages give players, search engines, and review teams stable public links for Brikaya.',
+  'common.platformReadyHeading': 'Easy access',
+  'common.platformReadyBody': 'These pages give players stable public links for Brikaya rules, privacy choices, support, and product information.',
   'common.legalReviewBody': 'They are operational product pages and do not replace advice from a qualified legal professional.',
   'link.privacy.title': 'Privacy',
   'link.privacy.body': 'Game data, consent, ads, and controls.',
@@ -67,23 +67,23 @@ export const LEGAL_TEXT = {
   'about.h1': 'About Brikaya',
   'about.lead': 'Brikaya is a free arcade game made for quick play, offline access after the first load, and simple privacy choices. The public site explains the product in plain language before you open the board.',
   'about.s1.heading': 'What the game is',
-  'about.s1.body1': 'Brikaya is a free circuit component arcade game in your browser. You clear electronic parts from the board with a bouncing ball and an elastic bed, then move through short levels that stay readable at a glance. The interactive game lives at https://brikaya.com/play/ while the home page stays a crawlable landing with guides and trust links.',
+  'about.s1.body1': 'Brikaya is a free circuit component arcade game in your browser. You clear electronic parts from the board with a bouncing ball and an elastic bed, then move through short levels that stay readable at a glance. The interactive game lives at https://brikaya.com/play/ while the home page provides a clear introduction, player guides, and direct links to support and privacy information.',
   'about.s1.body2': 'The game does not require a player account. Scores, preferences, language, consent choices, and progress stay on the device unless a future version clearly says otherwise before that change ships. After the first successful load, the main session can continue offline on that same browser.',
   'about.s2.heading': 'Free access',
   'about.s2.body1': 'Brikaya is offered for free. There is no required purchase to clear levels or keep local progress in this version. Optional ads may appear only when they are available, allowed by consent rules, and constrained so they do not block gameplay progress or replace the board during an active level.',
   'about.s2.body2': 'Any future store, payment, or account feature must be described on the public privacy, terms, and support pages before it is used. Until then, the product stays a free browser arcade with local records and public documentation.',
   'about.s3.heading': 'Publisher',
-  'about.s3.body1': 'Brikaya is published by Ricardo Malnati. The official site is https://brikaya.com/. Contact for product, privacy, support, and rights questions is contato@brikaya.com. This about page is an operational product summary for players, search engines, and review teams.',
+  'about.s3.body1': 'Brikaya is published by Ricardo Malnati. The official site is https://brikaya.com/. Contact for product, privacy, support, and rights questions is contato@brikaya.com. Include only the page, device, browser, and steps needed to explain the question; do not send passwords or unrelated personal documents.',
   'about.s4.heading': 'Player guides',
-  'about.s4.body1': 'Read How to play for controls and scoring, the FAQ for free play and privacy answers, and Updates for design notes and site changes. Those guides are available in English and Brazilian Portuguese on purpose, so the sitemap does not multiply thin translated clones. Legal pages such as privacy, terms, cookies, and data deletion remain linked from the landing, the game menu, and this about page.',
+  'about.s4.body1': 'Read How to play for controls and scoring, the FAQ for free play and privacy answers, and Updates for product notes and player-visible changes. Complete reading editions are available in English, Brazilian Portuguese, and Latin American Spanish. Other languages remain available inside the game and can receive public guides when their full content set is ready. Privacy, terms, cookies, and data deletion remain linked from the home page, game menu, and this page.',
 
   'legal.title': 'Legal — Brikaya',
   'legal.description': 'Brikaya legal center with privacy, terms, user agreement, license, support, cookies, and data deletion.',
   'legal.h1': 'Legal and trust',
-  'legal.lead': 'Official links for rules, privacy, support, and rights for Brikaya.',
+  'legal.lead': 'Official links for rules, privacy, support, and rights for Brikaya. Use this page as a directory when you are unsure which notice applies today. The game remains available without an account, and every listed document can be read before opening the interactive board.',
   'legal.s1.heading': 'Use of these pages',
-  'legal.s1.body1': 'These pages were prepared so players, search engines, and platforms can find public information about Brikaya at stable addresses.',
-  'legal.s1.body2': 'When a material game feature changes, these pages should be reviewed and updated.',
+  'legal.s1.body1': 'This legal center groups the public information a player may need before, during, or after using Brikaya. The privacy policy explains local game data and choices. The terms describe fair use and availability. Data deletion gives self-service steps, while cookies and support explain browser storage, contact, and practical help. Each subject has a stable address that can be opened without an account.',
+  'legal.s1.body2': 'Read the page that matches your question rather than treating every notice as the same document. Material changes to accounts, payments, advertising, personal data, or access rules must be reflected in the relevant page before the feature is offered. The update date on each notice helps players identify the current version. Older or overlapping notices may remain accessible for reference but are not presented as separate promises.',
 
   'privacy.title': 'Privacy policy — Brikaya',
   'privacy.description': 'Brikaya privacy policy: game data stays on the device, approximate region is optional, and ads may depend on consent.',
@@ -97,7 +97,7 @@ export const LEGAL_TEXT = {
   'privacy.s2.body2': 'You can change the language and review region or advertising consent in the game menu. Localized legal pages and editorial guides exist so you can read the same topics outside the canvas.',
   'privacy.s3.heading': 'Ads and consent',
   'privacy.s3.body1': 'If ads are available, they may use consent choices and browser signals required by advertising rules in your region. Personalized ads in EEA, UK, or Switzerland follow the consent message configured for those regulations.',
-  'privacy.s3.body2': 'Ads must remain optional for the product experience and must not remove access to play. When advertising is disabled in the runtime, the game continues without waiting for an ad fill. See the cookies page for how browser storage and ad choices interact.',
+  'privacy.s3.body2': 'Ads must remain optional for the product experience and must not remove access to play. When advertising is unavailable or disabled, the game continues without waiting for an ad. See the cookies page for how saved browser choices and advertising preferences interact.',
   'privacy.s4.heading': 'Contact and rights',
   'privacy.s4.body1': 'For privacy questions, data deletion help, or rights requests, contact contato@brikaya.com. Include the page, device, and browser context needed to understand the request. Do not send passwords or unnecessary personal documents. The data-deletion page explains how to wipe local records yourself.',
 
@@ -149,27 +149,27 @@ export const LEGAL_TEXT = {
   'dataDeletion.h1': 'Data deletion',
   'dataDeletion.lead': 'Brikaya does not use player accounts in this version. Most game data is stored locally on your device.',
   'dataDeletion.s1.heading': 'Delete local game data',
-  'dataDeletion.s1.body1': 'Open the game menu and use the restore defaults option to clear local scores, records, history, and preferences on that device.',
-  'dataDeletion.s1.body2': 'You can also clear site data for brikaya.com in your browser settings.',
+  'dataDeletion.s1.body1': 'Open the game menu and use Restore defaults to remove scores, records, progress, language, consent choices, and preferences saved by Brikaya in that browser profile. This affects only the device and browser where you perform the action. If you use Brikaya on another device or in another browser profile, repeat the same steps there because this version has no player account that synchronizes those copies.',
+  'dataDeletion.s1.body2': 'You can also open the site controls in your browser settings and clear stored data for brikaya.com. That broader action removes local records and files kept for offline play. The next visit may require an internet connection so the game can download the current files again. Removing an installed home-screen shortcut alone may not clear browser data, so use the browser site-data controls when you want a complete local reset.',
   'dataDeletion.s2.heading': 'Request help',
-  'dataDeletion.s2.body1': 'If you need help with a privacy or deletion request, contact contato@brikaya.com.',
-  'dataDeletion.s2.body2': 'Because the game does not create an online account, include only the information needed to understand the request.',
+  'dataDeletion.s2.body1': 'If you cannot find the reset control or need help understanding a privacy or deletion request, contact contato@brikaya.com. State which page, device, browser, and operating system you used, and describe the result you expected. Do not send passwords, payment information, identity documents, or unrelated personal records.',
+  'dataDeletion.s2.body2': 'Because the current game does not create an online player account, the publisher normally cannot erase local browser data remotely. Support can explain the correct device steps and review whether a separate message or support record needs attention. Only information necessary to locate and answer that request should be included.',
   'dataDeletion.s3.heading': 'Future account features',
-  'dataDeletion.s3.body1': 'If Brikaya adds account features in the future, this page will be updated with the account deletion path before that feature is used.',
+  'dataDeletion.s3.body1': 'If Brikaya adds account, cloud-save, purchase, or community features in the future, this page and the privacy policy will be updated before launch with a clear deletion path, the data involved, expected handling time, and any records that must be retained for legal or security reasons. Until such a change is published, local browser controls remain the complete deletion path for game progress and preferences.',
 
   'cookies.title': 'Cookies and ads — Brikaya',
   'cookies.description': 'Brikaya cookies and ads notice explaining local storage, consent choices, and optional advertising.',
   'cookies.h1': 'Cookies and ads',
-  'cookies.lead': 'This page explains how the browser may save Brikaya choices on https://brikaya.com/ and /play/, and how optional ads may work when they are enabled by the runtime and by regional consent rules.',
+  'cookies.lead': 'This page explains how the browser may save Brikaya choices on https://brikaya.com/ and /play/, and how optional ads may work when they are available and allowed by regional consent rules.',
   'cookies.s1.heading': 'Local storage',
-  'cookies.s1.body1': 'Brikaya may use browser storage and caches to remember scores, settings, language, consent choices, service-worker files, and offline game assets. That storage belongs to your device and browser profile for the brikaya.com origin.',
+  'cookies.s1.body1': 'Brikaya may use browser storage to remember scores, settings, language, consent choices, and files needed for offline play. Those saved items belong to your device and browser profile for brikaya.com.',
   'cookies.s1.body2': 'This helps the game load faster and work offline after the first load. It is not a substitute for a cloud account, and clearing site data removes the local copy on that browser, including cached shells that must then be downloaded again.',
   'cookies.s2.heading': 'Cookies',
   'cookies.s2.body1': 'The core game does not require a player account cookie. Browser, consent, or advertising platform features may still use cookies or similar storage needed for security, consent records, or ads when those features are active in your region. Review the privacy policy for what stays local versus what an advertising partner may process after consent.',
   'cookies.s3.heading': 'Advertising',
-  'cookies.s3.body1': 'If ads are active, they may rely on consent and browser choices. You can review privacy choices in the game menu, the privacy policy, or browser settings. Ads should not run during an active level and must not be required to keep playing this free version. When advertising is disabled in the runtime, no ad request is required to continue.',
+  'cookies.s3.body1': 'If ads are active, they may rely on consent and browser choices. You can review privacy choices in the game menu, the privacy policy, or browser settings. Ads should not run during an active level and must not be required to keep playing this free version. When advertising is unavailable or disabled, you can continue without waiting for an ad.',
   'cookies.s4.heading': 'Clear choices',
-  'cookies.s4.body1': 'Use restore defaults in the game or clear site data for brikaya.com in your browser settings to reset local choices, caches, and stored scores on that device. After clearing, open the site online once so the app and service worker can load again. Installed PWAs that still open the apex should move to /play/ after the recovery update.',
+  'cookies.s4.body1': 'Use restore defaults in the game or clear site data for brikaya.com in your browser settings to reset local choices, saved files, and scores on that device. After clearing, open the site online once so the current game files can load again. If an installed shortcut opens the home page, use Play now or open /play/ to return to the game.',
 
   'support.title': 'Support — Brikaya',
   'support.description': 'Official Brikaya support contact for help, privacy, safety, data deletion, and rights questions.',
@@ -181,7 +181,7 @@ export const LEGAL_TEXT = {
   'support.s2.heading': 'What to include',
   'support.s2.body1': 'Include the page URL, device type, operating system, browser name and version, language setting, and the steps that led to the issue when that helps explain the request. Screenshots without sensitive data are useful for layout, blank-screen, or control problems. If the screen stayed white after an update, note whether you had installed the app and which URL opened. If offline play failed, say whether the first online load had finished before you lost connectivity.',
   'support.s3.heading': 'Safety and rights',
-  'support.s3.body1': 'Use the same contact for privacy questions, data deletion help, rights questions, or safety concerns. For self-serve local deletion, open the data-deletion page and use restore defaults or clear site data. Player guides, the FAQ, and Updates answer common free-play, offline, and site-structure questions before you write, including where the game lives at /play/ and how the landing differs from the arcade shell. We aim to reply with practical next steps rather than account workflows that this free version does not use.',
+  'support.s3.body1': 'Use the same contact for privacy questions, data deletion help, rights questions, or safety concerns. For self-serve local deletion, open the data-deletion page and use restore defaults or clear site data. Player guides, the FAQ, and Updates answer common questions about free play, offline access, and where to find each part of Brikaya. We aim to reply with practical next steps rather than account procedures that this free version does not use. If a guide solves the issue, no email or personal information is needed.',
 };
 
 export const LEGAL_PAGE_DEFINITIONS = {

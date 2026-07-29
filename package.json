@@ -1,7 +1,7 @@
 {
   "name": "brikaya",
   "private": true,
-  "version": "174.0.0",
+  "version": "175.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -67,7 +67,10 @@
     "verify:version-docs": "node scripts/verify-version-docs.mjs",
     "verify:version-docs-results": "node scripts/validate-version-doc-results.mjs",
     "verify:adsense-ready-proxy": "node scripts/verify-adsense-ready-proxy.mjs",
+    "verify:adsense-public-ready": "node scripts/verify-adsense-public-ready.mjs",
+    "verify:prod-dependencies": "npm audit --omit=dev --audit-level=high",
     "test:verify-adsense-ready-proxy:unit": "node scripts/verify-adsense-ready-proxy.test.mjs",
+    "test:verify-adsense-public-ready:unit": "node scripts/verify-adsense-public-ready.test.mjs",
     "test:editorial-pages:unit": "node scripts/editorial-page-content.test.mjs",
     "test:version-docs:unit": "node scripts/parse-version-doc.test.mjs && node scripts/publish-version-release.test.mjs && node scripts/brikaya-ship.test.mjs && node scripts/build-version.test.mjs && node scripts/sync-package-version.test.mjs && node scripts/generate-runtime-asset-manifest.test.mjs && node scripts/validate-version-doc-results.test.mjs",
     "brikaya:scaffold-version-docs": "node scripts/scaffold-version-docs.mjs",
@@ -97,7 +100,7 @@
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "jsdom": "^27.2.0",
-    "puppeteer": "^21.0.0",
+    "puppeteer": "^24.43.1",
     "ts-jest": "^29.4.5",
     "typescript": "^5.2.2",
     "vite": "^7.2.4",

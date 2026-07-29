@@ -100,7 +100,7 @@ async function main() {
   const targetUrl = publicUrl();
   assertAllowedQaHostname(targetUrl);
 
-  const indexUrl = withCacheBust("/");
+  const indexUrl = withCacheBust("/play/");
   const indexResponse = await fetch(indexUrl, { cache: "no-store" });
   const indexHtml = await indexResponse.text();
 

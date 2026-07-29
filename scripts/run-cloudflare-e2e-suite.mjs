@@ -10,7 +10,7 @@ const E2E_SUITE = [
   "tests/e2e/cloudflare-consent-screen-qa.js",
   "tests/e2e/cloudflare-consent-scroll-qa.js",
   "tests/e2e/cloudflare-dashboard-layout-qa.js",
-  "tests/e2e/cloudflare-evasive-components-qa.js",
+  "tests/e2e/cloudflare-evasive-blocks-qa.js",
   "tests/e2e/cloudflare-gameplay-basic-qa.js",
   "tests/e2e/cloudflare-high-scores-qa.js",
   "tests/e2e/cloudflare-i18n-seo-qa.js",

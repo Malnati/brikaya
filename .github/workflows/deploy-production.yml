@@ -87,6 +87,9 @@ jobs:
       - name: Purge public cache
         run: node scripts/cloudflare-pages.js purge-public-cache
 
+      - name: Verify public AdSense readiness
+        run: npm run verify:adsense-public-ready
+
       - name: Trace guard public check
         run: npm run test:trace-guard:public
 

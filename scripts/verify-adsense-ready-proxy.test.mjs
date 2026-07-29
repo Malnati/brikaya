@@ -12,6 +12,7 @@ const PLAY_PATH = 'dist/play/index.html';
 const DIST_ADS_PATH = 'dist/ads.txt';
 const DIST_SITEMAP_PATH = 'dist/sitemap.xml';
 const DIST_SPANISH_LEGAL_PATH = 'dist/es-419/legal/index.html';
+const DIST_PORTUGUESE_SUPPORT_PATH = 'dist/pt-BR/support/index.html';
 const LEGAL_TRANSLATIONS_PATH = 'scripts/legal-page-translations.json';
 const originals = new Map(
   [
@@ -23,6 +24,7 @@ const originals = new Map(
     DIST_ADS_PATH,
     DIST_SITEMAP_PATH,
     DIST_SPANISH_LEGAL_PATH,
+    DIST_PORTUGUESE_SUPPORT_PATH,
     LEGAL_TRANSLATIONS_PATH,
   ].map((path) => [path, readFileSync(path, 'utf8')]),
 );
@@ -104,6 +106,24 @@ try {
     originals.get(LEGAL_TRANSLATIONS_PATH),
   );
 
+  const bodyFallbackTranslations = JSON.parse(
+    originals.get(LEGAL_TRANSLATIONS_PATH),
+  );
+  bodyFallbackTranslations.translations['pt-BR']['about.s1.body1'] =
+    'This game is free and works in your browser after the first load.';
+  writeFileSync(
+    LEGAL_TRANSLATIONS_PATH,
+    `${JSON.stringify(bodyFallbackTranslations, null, 2)}\n`,
+  );
+  expectGateFailure(
+    'English body fallback in Portuguese trust page',
+    /pt-BR\/about\/ about\.s1\.body1 appears to contain an English fallback/i,
+  );
+  writeFileSync(
+    LEGAL_TRANSLATIONS_PATH,
+    originals.get(LEGAL_TRANSLATIONS_PATH),
+  );
+
   const restoredTranslations = JSON.parse(
     originals.get(LEGAL_TRANSLATIONS_PATH),
   );
@@ -129,7 +149,7 @@ try {
   );
   expectGateFailure(
     'thin Spanish trust page',
-    /Spanish atomic QA failed[\s\S]*Spanish trust page \/legal\/ must meet the 280-word minimum/i,
+    /es-419 trust page \/legal\/ source must meet the 280-word minimum/i,
   );
   writeFileSync(
     LEGAL_TRANSLATIONS_PATH,
@@ -138,6 +158,33 @@ try {
   writeFileSync(
     DIST_SPANISH_LEGAL_PATH,
     originals.get(DIST_SPANISH_LEGAL_PATH),
+  );
+
+  const portugueseDepthTranslations = JSON.parse(
+    originals.get(LEGAL_TRANSLATIONS_PATH),
+  );
+  const portugueseSupport =
+    portugueseDepthTranslations.translations['pt-BR'];
+  portugueseSupport['support.lead'] = 'Suporte do Brikaya.';
+  portugueseSupport['support.s1.body1'] = 'Envie uma mensagem.';
+  portugueseSupport['support.s1.body2'] = 'Não envie senhas.';
+  portugueseSupport['support.s2.body1'] = 'Descreva o problema.';
+  portugueseSupport['support.s3.body1'] = 'Use o contato oficial.';
+  writeFileSync(
+    LEGAL_TRANSLATIONS_PATH,
+    `${JSON.stringify(portugueseDepthTranslations, null, 2)}\n`,
+  );
+  expectGateFailure(
+    'thin Portuguese trust page',
+    /pt-BR trust page \/support\/.*280-word minimum/i,
+  );
+  writeFileSync(
+    LEGAL_TRANSLATIONS_PATH,
+    originals.get(LEGAL_TRANSLATIONS_PATH),
+  );
+  writeFileSync(
+    DIST_PORTUGUESE_SUPPORT_PATH,
+    originals.get(DIST_PORTUGUESE_SUPPORT_PATH),
   );
 
   writeFileSync(
@@ -152,4 +199,4 @@ try {
   for (const [path, content] of originals) writeFileSync(path, content);
 }
 
-console.log('verify-adsense-ready-proxy tests ok: ownership, runtime, fallback indexability, localized metadata, Spanish depth, and deployed artifact mutations are rejected');
+console.log('verify-adsense-ready-proxy tests ok: ownership, runtime, fallback indexability, localized metadata/body fallback, all-edition trust depth, and deployed artifact mutations are rejected');

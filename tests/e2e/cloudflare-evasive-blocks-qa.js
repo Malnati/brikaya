@@ -1,4 +1,4 @@
-// tests/e2e/cloudflare-evasive-components-qa.js
+// tests/e2e/cloudflare-evasive-blocks-qa.js
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import puppeteer from "puppeteer";
