@@ -28,6 +28,7 @@ const GET_VERSION_MESSAGE = "GET_VERSION";
 const VERSION_MESSAGE = "VERSION";
 const RELOAD_CLIENT_MESSAGE = "RELOAD_CLIENT";
 const RUNTIME_ASSET_PREFIXES = ["/assets/visual/", "/assets/audio/"];
+const DASHBOARD_PATH_PREFIX = "/dashboard/";
 const VITE_BUNDLE_PATH_PATTERN = /^\/assets\/index-[^/]+\.(js|css)$/;
 const SCRIPT_DESTINATION = "script";
 const STYLE_DESTINATION = "style";
@@ -83,6 +84,14 @@ function isDocumentNavigationRequest(request) {
     request.mode === NAVIGATE_MODE ||
     request.destination === DOCUMENT_DESTINATION
   );
+}
+
+function isDashboardDocumentRequest(request) {
+  if (!isSameOriginRequest(request) || !isDocumentNavigationRequest(request)) {
+    return false;
+  }
+
+  return new URL(request.url).pathname.startsWith(DASHBOARD_PATH_PREFIX);
 }
 
 function shouldCacheShellResponse(request, response) {
@@ -154,7 +163,9 @@ async function readAssetManifest() {
   const cachedManifest = await shellCache.match(ASSET_MANIFEST_URL);
   if (cachedManifest) return cachedManifest.json();
 
-  const networkManifest = await fetch(ASSET_MANIFEST_URL, { cache: "no-store" });
+  const networkManifest = await fetch(ASSET_MANIFEST_URL, {
+    cache: "no-store",
+  });
   if (!networkManifest.ok) return EMPTY_MANIFEST;
 
   await shellCache.put(ASSET_MANIFEST_URL, networkManifest.clone());
@@ -410,6 +421,10 @@ self.addEventListener("message", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== GET_METHOD) {
+    return;
+  }
+
+  if (isDashboardDocumentRequest(event.request)) {
     return;
   }
 

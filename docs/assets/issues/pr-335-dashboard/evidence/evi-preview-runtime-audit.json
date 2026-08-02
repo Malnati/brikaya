@@ -1,0 +1,78 @@
+{
+  "capturedAt": "2026-08-02T19:19:15.825Z",
+  "base": "https://brikaya-dev.pages.dev",
+  "offlineProof": {
+    "directFreshContext": "blocked: net::ERR_INTERNET_DISCONNECTED",
+    "afterGameServiceWorkerInstalled": "blocked: net::ERR_INTERNET_DISCONNECTED",
+    "gameServiceWorkerWasActive": true,
+    "cacheDisabled": true
+  },
+  "results": [
+    {
+      "name": "2d-desktop",
+      "url": "https://brikaya-dev.pages.dev/dashboard/2d/",
+      "httpStatus": 200,
+      "state": {
+        "locationPath": "/dashboard/2d/",
+        "title": "Dashboard Brikaya — elementos 2D",
+        "heading": "Dashboard de elementos 2D",
+        "cards": 15,
+        "version": "Versão v176",
+        "manifest": false,
+        "robots": "noindex,follow",
+        "canonical": "https://brikaya.com/dashboard/2d/",
+        "hreflangCount": 0,
+        "serviceWorkerControlled": false,
+        "serviceWorkerRegistrations": [],
+        "canvasOpaquePixels": 57600
+      },
+      "errors": [],
+      "offlineNavigation": "blocked-as-online-only",
+      "screenshot": "evi-dashboard-2d-desktop.png"
+    },
+    {
+      "name": "2d-mobile",
+      "url": "https://brikaya-dev.pages.dev/dashboard/2d/",
+      "httpStatus": 200,
+      "state": {
+        "locationPath": "/dashboard/2d/",
+        "title": "Dashboard Brikaya — elementos 2D",
+        "heading": "Dashboard de elementos 2D",
+        "cards": 15,
+        "version": "Versão v176",
+        "manifest": false,
+        "robots": "noindex,follow",
+        "canonical": "https://brikaya.com/dashboard/2d/",
+        "hreflangCount": 0,
+        "serviceWorkerControlled": false,
+        "serviceWorkerRegistrations": [],
+        "canvasOpaquePixels": 57600
+      },
+      "errors": [],
+      "offlineReload": "not-tested",
+      "screenshot": "evi-dashboard-2d-mobile.png"
+    },
+    {
+      "name": "3d-desktop",
+      "url": "https://brikaya-dev.pages.dev/dashboard/3d/",
+      "httpStatus": 200,
+      "state": {
+        "locationPath": "/dashboard/3d/",
+        "title": "Dashboard Brikaya — elementos 3D",
+        "heading": "Dashboard de elementos 3D",
+        "cards": 0,
+        "version": "Versão v176",
+        "manifest": false,
+        "robots": "noindex,follow",
+        "canonical": "https://brikaya.com/dashboard/3d/",
+        "hreflangCount": 0,
+        "serviceWorkerControlled": false,
+        "serviceWorkerRegistrations": [],
+        "canvasOpaquePixels": null
+      },
+      "errors": [],
+      "offlineReload": "not-tested",
+      "screenshot": "evi-dashboard-3d-desktop.png"
+    }
+  ]
+}

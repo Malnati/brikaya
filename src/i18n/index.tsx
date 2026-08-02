@@ -15,7 +15,7 @@ import {
   type AppLocale,
   type TranslationKey,
 } from "./messages";
-import { getPublicRoutePath } from "../routes";
+import { getDashboardDimension, getPublicRoutePath } from "../routes";
 import {
   applySeoMetadata,
   getLocalizedRoutePath,
@@ -45,7 +45,20 @@ const LOCATION_LOCALE_SOURCE = "location";
 const PATH_SEGMENT_SEPARATOR = "/";
 const EMPTY_STRING = "";
 const TEMPLATE_PATTERN = /\{\{(\w+)\}\}/g;
-const RTL_LOCALE_PREFIXES = ["ar", "fa", "he", "ur", "ps", "sd", "ks", "dv", "ckb", "ug", "yi", "bal"] as const;
+const RTL_LOCALE_PREFIXES = [
+  "ar",
+  "fa",
+  "he",
+  "ur",
+  "ps",
+  "sd",
+  "ks",
+  "dv",
+  "ckb",
+  "ug",
+  "yi",
+  "bal",
+] as const;
 /** Path segments that are routes, not locale codes (`play` must not match `pl`). */
 const RESERVED_PUBLIC_PATH_SEGMENTS = new Set([
   "play",
@@ -66,7 +79,9 @@ const RESERVED_PUBLIC_PATH_SEGMENTS = new Set([
 ]);
 
 function isRtlLocale(locale: string): boolean {
-  return RTL_LOCALE_PREFIXES.some((prefix) => locale.toLowerCase().startsWith(prefix));
+  return RTL_LOCALE_PREFIXES.some((prefix) =>
+    locale.toLowerCase().startsWith(prefix),
+  );
 }
 
 const TIME_ZONE_LOCALE_MAP: readonly (readonly [string, AppLocale])[] = [
@@ -261,7 +276,8 @@ function normalizeLocale(value: string | null | undefined): AppLocale | null {
   if (normalizedValue === "en-gb") return "en-GB";
   if (normalizedValue.startsWith("en")) return "en";
   if (normalizedValue.startsWith("hi")) return "hi-IN";
-  if (normalizedValue === "zh-tw" || normalizedValue === "zh-hant") return "zh-TW";
+  if (normalizedValue === "zh-tw" || normalizedValue === "zh-hant")
+    return "zh-TW";
   if (normalizedValue.startsWith("zh")) return "zh-CN";
   if (normalizedValue.startsWith("ar")) return "ar";
   if (normalizedValue.startsWith("ru")) return "ru";
@@ -544,7 +560,12 @@ function persistDetectedLocale(
 }
 
 function updateLocalizedPath(locale: AppLocale) {
-  const routePath = getPublicRoutePath(window.location.pathname, SUPPORTED_LOCALES);
+  if (getDashboardDimension(window.location.pathname)) return;
+
+  const routePath = getPublicRoutePath(
+    window.location.pathname,
+    SUPPORTED_LOCALES,
+  );
   const nextPath = getLocalizedRoutePath(locale, routePath);
   const nextUrl = `${nextPath}${window.location.search}${window.location.hash}`;
   const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;

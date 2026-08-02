@@ -1,11 +1,11 @@
 {
   "name": "brikaya",
   "private": true,
-  "version": "175.0.0",
+  "version": "176.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run sync:package-version && npm run verify:package-version && npm run codex-env:check && npm run test:semantic-file-names && npm run test:svg-assets && npm run test:visual-asset-policy:unit && npm run test:visual-asset-policy && npm run test:trace-guard:unit && npm run test:trace-guard && node scripts/export-i18n-seo-metadata.mjs && npm run test:seo-brand-copy && tsc -p tsconfig.app.json && vite build && node scripts/export-i18n-seo-metadata.mjs && node scripts/generate-localized-seo.mjs && npm run verify:spanish-editorial-edition && npm run verify:adsense-ready-proxy && npm run codex-env:materialize && node scripts/generate-runtime-asset-manifest.mjs && node scripts/stamp-service-worker-version.mjs && npm run test:trace-guard -- --include-dist && npm run test:seo-brand-copy",
+    "build": "npm run sync:package-version && npm run verify:package-version && npm run codex-env:check && npm run test:semantic-file-names && npm run test:svg-assets && npm run test:visual-asset-policy:unit && npm run test:visual-asset-policy && npm run test:trace-guard:unit && npm run test:trace-guard && npm run test:dashboard-shells:unit && node scripts/export-i18n-seo-metadata.mjs && npm run test:seo-brand-copy && tsc -p tsconfig.app.json && vite build && node scripts/generate-dashboard-shells.mjs && node scripts/export-i18n-seo-metadata.mjs && node scripts/generate-localized-seo.mjs && npm run verify:spanish-editorial-edition && npm run verify:adsense-ready-proxy && npm run codex-env:materialize && node scripts/generate-runtime-asset-manifest.mjs && node scripts/stamp-service-worker-version.mjs && npm run test:trace-guard -- --include-dist && npm run test:seo-brand-copy",
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -51,6 +51,7 @@
     "test:trace-guard": "node scripts/validate-public-trace-guard.mjs",
     "test:trace-guard:public": "node scripts/validate-public-trace-guard.mjs --public-url https://brikaya.com/",
     "test:trace-guard:unit": "node scripts/validate-public-trace-guard.test.mjs",
+    "test:dashboard-shells:unit": "node scripts/generate-dashboard-shells.test.mjs",
     "test:seo-brand-copy": "node scripts/validate-seo-brand-copy.mjs",
     "indexnow:yandex": "node scripts/submit-yandex-indexnow.mjs",
     "codex-env:check": "node scripts/validate-codex-env.mjs",

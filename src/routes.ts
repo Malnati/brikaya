@@ -15,6 +15,8 @@ export const SUPPORT_ROUTE_PATH = "/support/";
 export const HOW_TO_PLAY_ROUTE_PATH = "/how-to-play/";
 export const FAQ_ROUTE_PATH = "/faq/";
 export const UPDATES_ROUTE_PATH = "/updates/";
+export const DASHBOARD_2D_ROUTE_PATH = "/dashboard/2d/";
+export const DASHBOARD_3D_ROUTE_PATH = "/dashboard/3d/";
 
 export const LEGAL_ROUTE_PATHS = [
   ABOUT_ROUTE_PATH,
@@ -34,12 +36,17 @@ export const EDITORIAL_ROUTE_PATHS = [
   UPDATES_ROUTE_PATH,
 ] as const;
 
+export const DASHBOARD_ROUTE_PATHS = [
+  DASHBOARD_2D_ROUTE_PATH,
+  DASHBOARD_3D_ROUTE_PATH,
+] as const;
+
 export type PublicRoutePath =
-  | typeof HOME_ROUTE_PATH
-  | typeof PLAY_ROUTE_PATH
-  | typeof DOWNLOADS_ROUTE_PATH;
+  typeof HOME_ROUTE_PATH | typeof PLAY_ROUTE_PATH | typeof DOWNLOADS_ROUTE_PATH;
 export type LegalRoutePath = (typeof LEGAL_ROUTE_PATHS)[number];
 export type EditorialRoutePath = (typeof EDITORIAL_ROUTE_PATHS)[number];
+export type DashboardRoutePath = (typeof DASHBOARD_ROUTE_PATHS)[number];
+export type DashboardDimension = "2d" | "3d";
 
 const PATH_SEPARATOR = "/";
 const EMPTY_PATH = "";
@@ -55,7 +62,9 @@ function ensureLeadingSlash(pathname: string): string {
 
 function ensureTrailingSlash(pathname: string): string {
   if (pathname === HOME_ROUTE_PATH) return pathname;
-  return pathname.endsWith(PATH_SEPARATOR) ? pathname : `${pathname}${PATH_SEPARATOR}`;
+  return pathname.endsWith(PATH_SEPARATOR)
+    ? pathname
+    : `${pathname}${PATH_SEPARATOR}`;
 }
 
 export function normalizePublicPath(pathname: string): string {
@@ -79,7 +88,9 @@ export function stripLocalePrefix(
   const routeSegments = segments.slice(1);
   if (routeSegments.length === 0) return HOME_ROUTE_PATH;
 
-  return ensureTrailingSlash(`${PATH_SEPARATOR}${routeSegments.join(PATH_SEPARATOR)}`);
+  return ensureTrailingSlash(
+    `${PATH_SEPARATOR}${routeSegments.join(PATH_SEPARATOR)}`,
+  );
 }
 
 export function getPublicRoutePath(
@@ -97,7 +108,9 @@ export function isDownloadsRoute(
   pathname: string,
   supportedLocales: readonly AppLocale[],
 ): boolean {
-  return getPublicRoutePath(pathname, supportedLocales) === DOWNLOADS_ROUTE_PATH;
+  return (
+    getPublicRoutePath(pathname, supportedLocales) === DOWNLOADS_ROUTE_PATH
+  );
 }
 
 export function isPlayRoute(
@@ -105,6 +118,15 @@ export function isPlayRoute(
   supportedLocales: readonly AppLocale[],
 ): boolean {
   return getPublicRoutePath(pathname, supportedLocales) === PLAY_ROUTE_PATH;
+}
+
+export function getDashboardDimension(
+  pathname: string,
+): DashboardDimension | null {
+  const normalizedPath = normalizePublicPath(pathname);
+  if (normalizedPath === DASHBOARD_2D_ROUTE_PATH) return "2d";
+  if (normalizedPath === DASHBOARD_3D_ROUTE_PATH) return "3d";
+  return null;
 }
 
 export function getLocalizedPublicPath(
@@ -129,7 +151,6 @@ export function getLocalizedPublicPath(
   return `${PATH_SEPARATOR}${locale}${PATH_SEPARATOR}${routeSuffix}${PATH_SEPARATOR}`;
 }
 
-
 function getLegalLocaleKey(locale: AppLocale): string {
   if (locale === "zh-CN") return "zh-Hans";
   if (locale === "zh-TW" || locale === "zh-HK") return "zh-Hant";
@@ -153,14 +174,18 @@ export function getLocalizedLegalPath(
   locale: AppLocale,
   legalRoutePath: LegalRoutePath,
 ): string {
-  const normalizedRoutePath = normalizePublicPath(legalRoutePath) as LegalRoutePath;
+  const normalizedRoutePath = normalizePublicPath(
+    legalRoutePath,
+  ) as LegalRoutePath;
   const legalLocale = getPrimaryLegalLocale(locale);
   if (legalLocale === "en-US") return normalizedRoutePath;
 
   return `${PATH_SEPARATOR}${legalLocale}${normalizedRoutePath}`;
 }
 
-export function getPrimaryEditorialLocale(locale: AppLocale): "en-US" | "pt-BR" {
+export function getPrimaryEditorialLocale(
+  locale: AppLocale,
+): "en-US" | "pt-BR" {
   const key = getLegalLocaleKey(locale);
   if (key === "pt") return "pt-BR";
   return "en-US";

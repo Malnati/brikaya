@@ -7,6 +7,7 @@ import { registerServiceWorker } from "./registerServiceWorker";
 import "./styles/index.css";
 import { ROOT_ELEMENT_ID } from "./constants/game";
 import { I18nProvider } from "./i18n";
+import { getDashboardDimension } from "./routes";
 
 declare global {
   interface Window {
@@ -14,7 +15,10 @@ declare global {
   }
 }
 window.mainTsxLoaded = true;
-registerServiceWorker();
+
+if (!getDashboardDimension(window.location.pathname)) {
+  registerServiceWorker();
+}
 
 ReactDOM.createRoot(document.getElementById(ROOT_ELEMENT_ID)!).render(
   <React.StrictMode>

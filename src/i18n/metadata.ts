@@ -11,6 +11,7 @@ import {
   DOWNLOADS_ROUTE_PATH,
   HOME_ROUTE_PATH,
   PLAY_ROUTE_PATH,
+  getDashboardDimension,
   getLocalizedPublicPath,
   getPublicRoutePath,
   type PublicRoutePath,
@@ -72,7 +73,9 @@ export function getSeoMetadata(
   return {
     title: messages[isDownloadsPage ? "seo.downloadsTitle" : "seo.title"],
     description:
-      messages[isDownloadsPage ? "seo.downloadsDescription" : "seo.description"],
+      messages[
+        isDownloadsPage ? "seo.downloadsDescription" : "seo.description"
+      ],
     ogDescription:
       messages[
         isDownloadsPage ? "seo.downloadsOgDescription" : "seo.ogDescription"
@@ -111,7 +114,10 @@ function removeExistingHreflangLinks() {
     .forEach((element) => element.remove());
 }
 
-function appendHreflangLink(locale: AppLocale | typeof HREFLANG_DEFAULT, url: string) {
+function appendHreflangLink(
+  locale: AppLocale | typeof HREFLANG_DEFAULT,
+  url: string,
+) {
   const link = document.createElement("link");
   link.setAttribute(REL_ATTRIBUTE, ALTERNATE_REL);
   link.setAttribute(HREFLANG_ATTRIBUTE, locale);
@@ -120,7 +126,12 @@ function appendHreflangLink(locale: AppLocale | typeof HREFLANG_DEFAULT, url: st
 }
 
 export function applySeoMetadata(locale: AppLocale) {
-  const routePath = getPublicRoutePath(window.location.pathname, SUPPORTED_LOCALES);
+  if (getDashboardDimension(window.location.pathname)) return;
+
+  const routePath = getPublicRoutePath(
+    window.location.pathname,
+    SUPPORTED_LOCALES,
+  );
   const metadata = getSeoMetadata(locale, routePath);
   const canonicalLink = ensureLink(CANONICAL_LINK_SELECTOR);
   const robotsMeta = ensureMeta(ROBOTS_META_SELECTOR, "robots");
@@ -149,7 +160,10 @@ export function applySeoMetadata(locale: AppLocale) {
       getCanonicalUrl(searchEditionLocale, routePath),
     );
   }
-  appendHreflangLink(HREFLANG_DEFAULT, getCanonicalUrl(DEFAULT_LOCALE, routePath));
+  appendHreflangLink(
+    HREFLANG_DEFAULT,
+    getCanonicalUrl(DEFAULT_LOCALE, routePath),
+  );
 }
 
 export function getMessage(locale: AppLocale, key: TranslationKey): string {

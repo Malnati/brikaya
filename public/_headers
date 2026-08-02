@@ -29,6 +29,14 @@
 /downloads/
   Cache-Control: public, max-age=0, must-revalidate, no-transform
 
+/dashboard/2d/
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, follow
+
+/dashboard/3d/
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, follow
+
 /privacy/
   Cache-Control: public, max-age=0, must-revalidate, no-transform
 
