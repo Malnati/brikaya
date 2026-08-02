@@ -3278,3 +3278,123 @@ canvas {
     transform: none;
   }
 }
+
+.dashboard-review-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.dashboard-review-title h1 {
+  margin: 0;
+  font-family: var(--bb-font-display);
+  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  letter-spacing: 0.02em;
+}
+
+.dashboard-review-title .settings-drawer__version {
+  margin: 0;
+}
+
+.dashboard-element-grid {
+  display: grid;
+  max-width: 1184px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 0 auto;
+}
+
+.dashboard-element-card {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  padding: 22px;
+  border: 1px solid rgba(124, 244, 255, 0.2);
+  border-radius: 28px;
+  background: rgba(18, 18, 42, 0.74);
+  box-shadow: var(--bb-shadow-panel), inset 0 1px 0 rgba(248, 247, 255, 0.08);
+  backdrop-filter: blur(18px);
+}
+
+.dashboard-element-card__category {
+  justify-self: start;
+  padding: 6px 10px;
+  border: 1px solid rgba(0, 229, 255, 0.44);
+  border-radius: 999px;
+  color: var(--bb-color-primary-strong);
+  background: rgba(0, 229, 255, 0.1);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dashboard-element-card h3 {
+  margin: 0;
+  color: var(--bb-color-text);
+  font-family: var(--bb-font-display);
+  font-size: 1.05rem;
+}
+
+.dashboard-element-card p {
+  margin: 0;
+  color: var(--bb-color-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.dashboard-element-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  padding: 16px;
+  border-radius: 20px;
+  background: var(--bb-playfield-backdrop);
+}
+
+.dashboard-element-stage img {
+  max-width: 100%;
+  max-height: 128px;
+  image-rendering: pixelated;
+}
+
+.dashboard-element-stage__canvas {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  border-radius: 20px;
+}
+
+.dashboard-review-empty {
+  max-width: 720px;
+  padding: clamp(28px, 5vw, 48px);
+  border: 1px solid rgba(124, 244, 255, 0.2);
+  border-radius: 36px;
+  background: rgba(18, 18, 42, 0.74);
+  box-shadow: var(--bb-shadow-panel), inset 0 1px 0 rgba(248, 247, 255, 0.08);
+  text-align: center;
+}
+
+.dashboard-review-empty h2 {
+  margin: 0 0 var(--space-3);
+  font-family: var(--bb-font-display);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+.dashboard-review-empty p {
+  margin: 0;
+  color: var(--bb-color-muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 760px) {
+  .dashboard-review-title {
+    text-align: left;
+    justify-content: flex-start;
+  }
+}

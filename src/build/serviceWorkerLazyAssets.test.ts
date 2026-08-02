@@ -6,6 +6,7 @@ const SERVICE_WORKER_PATH = 'public/sw.js';
 const ASSET_MANIFEST_PATH = '/asset-cache-manifest.json';
 const VISUAL_ASSET_PREFIX = '/assets/visual/';
 const AUDIO_ASSET_PREFIX = '/assets/audio/';
+const DASHBOARD_PATH_PREFIX = '/dashboard/';
 const PRECACHE_ARRAY_PATTERN = /const\s+PRECACHE_URLS\s*=\s*\[([\s\S]*?)\];/;
 
 function readServiceWorker() {
@@ -99,6 +100,27 @@ describe('service worker lazy asset cache', () => {
     expect(fetchListenerMatch?.[1]).toContain(
       'handleDocumentRequest(event.request)',
     );
+  });
+
+  it('mantém documentos do dashboard fora do precache e do fallback offline', () => {
+    const source = readServiceWorker();
+    const precacheSource = readPrecacheSource();
+    const fetchListenerMatch = source.match(
+      /self\.addEventListener\("fetch", \(event\) => \{([\s\S]*?)\n\}\);/,
+    );
+    const fetchListener = fetchListenerMatch?.[1] ?? '';
+    const dashboardGuardIndex = fetchListener.indexOf(
+      'isDashboardDocumentRequest(event.request)',
+    );
+    const documentFallbackIndex = fetchListener.indexOf(
+      'isDocumentNavigationRequest(event.request)',
+    );
+
+    expect(precacheSource).not.toContain(DASHBOARD_PATH_PREFIX);
+    expect(source).toContain(`const DASHBOARD_PATH_PREFIX = "${DASHBOARD_PATH_PREFIX}"`);
+    expect(dashboardGuardIndex).toBeGreaterThan(-1);
+    expect(documentFallbackIndex).toBeGreaterThan(-1);
+    expect(dashboardGuardIndex).toBeLessThan(documentFallbackIndex);
   });
 
   it('remove caches de shell e de asset de builds anteriores no activate', () => {

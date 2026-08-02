@@ -1,5 +1,7 @@
 import {
   ABOUT_ROUTE_PATH,
+  DASHBOARD_2D_ROUTE_PATH,
+  DASHBOARD_3D_ROUTE_PATH,
   DATA_DELETION_ROUTE_PATH,
   DOWNLOADS_ROUTE_PATH,
   FAQ_ROUTE_PATH,
@@ -8,6 +10,7 @@ import {
   LEGAL_ROUTE_PATH,
   PLAY_ROUTE_PATH,
   PRIVACY_ROUTE_PATH,
+  getDashboardDimension,
   getLocalizedPublicPath,
   getLocalizedLegalPath,
   getLocalizedEditorialPath,
@@ -48,25 +51,31 @@ describe("public routes", () => {
 
   it("gera caminhos localizados sem perder a página atual", () => {
     expect(
-      getLocalizedPublicPath(DEFAULT_LOCALE, DEFAULT_LOCALE, DOWNLOADS_ROUTE_PATH),
+      getLocalizedPublicPath(
+        DEFAULT_LOCALE,
+        DEFAULT_LOCALE,
+        DOWNLOADS_ROUTE_PATH,
+      ),
     ).toBe(DOWNLOADS_ROUTE_PATH);
-    expect(getLocalizedPublicPath("en", DEFAULT_LOCALE, DOWNLOADS_ROUTE_PATH)).toBe(
-      "/en/downloads/",
-    );
+    expect(
+      getLocalizedPublicPath("en", DEFAULT_LOCALE, DOWNLOADS_ROUTE_PATH),
+    ).toBe("/en/downloads/");
     expect(getLocalizedPublicPath("en", DEFAULT_LOCALE, HOME_ROUTE_PATH)).toBe(
       "/en/",
     );
     expect(getLocalizedPublicPath("en", DEFAULT_LOCALE, PLAY_ROUTE_PATH)).toBe(
       "/en/play/",
     );
-    expect(getLocalizedPublicPath(DEFAULT_LOCALE, DEFAULT_LOCALE, PLAY_ROUTE_PATH)).toBe(
-      "/play/",
-    );
+    expect(
+      getLocalizedPublicPath(DEFAULT_LOCALE, DEFAULT_LOCALE, PLAY_ROUTE_PATH),
+    ).toBe("/play/");
   });
 
   it("gera caminhos legais por idioma principal sem duplicar variantes", () => {
     expect(getLocalizedLegalPath("en", PRIVACY_ROUTE_PATH)).toBe("/privacy/");
-    expect(getLocalizedLegalPath("en-AU", PRIVACY_ROUTE_PATH)).toBe("/privacy/");
+    expect(getLocalizedLegalPath("en-AU", PRIVACY_ROUTE_PATH)).toBe(
+      "/privacy/",
+    );
     expect(getLocalizedLegalPath("pt-BR", PRIVACY_ROUTE_PATH)).toBe(
       "/pt-BR/privacy/",
     );
@@ -83,6 +92,15 @@ describe("public routes", () => {
     expect(getLocalizedLegalPath("ar-SA", DATA_DELETION_ROUTE_PATH)).toBe(
       "/ar/data-deletion/",
     );
+  });
+
+  it("detecta as rotas de dashboard 2D e 3D sem localização", () => {
+    expect(getDashboardDimension(DASHBOARD_2D_ROUTE_PATH)).toBe("2d");
+    expect(getDashboardDimension("/dashboard/2d")).toBe("2d");
+    expect(getDashboardDimension(DASHBOARD_3D_ROUTE_PATH)).toBe("3d");
+    expect(getDashboardDimension("/en/dashboard/2d/")).toBeNull();
+    expect(getDashboardDimension(HOME_ROUTE_PATH)).toBeNull();
+    expect(getDashboardDimension("/dashboard/")).toBeNull();
   });
 
   it("gera caminhos editoriais só em en-US e pt-BR", () => {

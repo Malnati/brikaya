@@ -15,6 +15,7 @@ import { LanguageDetectionOverlay } from "./components/LanguageDetectionOverlay"
 import { OnboardingGameplayDemoOverlay } from "./components/OnboardingGameplayDemoOverlay";
 import { MobileOrientationBlocker } from "./components/MobileOrientationBlocker";
 import { DownloadsPage } from "./components/DownloadsPage";
+import { DashboardPage } from "./components/dashboard/DashboardPage";
 import GameLogViewer from "./components/GameLogViewer";
 import {
   GameCinematicOverlay,
@@ -51,10 +52,7 @@ import {
   type BrikayaUpdateProgressDetail,
 } from "./registerServiceWorker";
 import { BUILD_VERSION_LABEL } from "./constants/buildVersion";
-import {
-  GAME_MODE_BALL_TURRET,
-  GAME_MODE_CLASSIC,
-} from "./constants/gameMode";
+import { GAME_MODE_BALL_TURRET, GAME_MODE_CLASSIC } from "./constants/gameMode";
 import { LOG } from "./utils/logger";
 import { audioManager } from "./utils/audioManager";
 import {
@@ -80,6 +78,7 @@ import {
   LEGAL_ROUTE_PATH,
   PRIVACY_ROUTE_PATH,
   TERMS_ROUTE_PATH,
+  getDashboardDimension,
   getLocalizedEditorialPath,
   getLocalizedLegalPath,
   isDownloadsRoute,
@@ -173,7 +172,9 @@ function hasValidBoardRect(boardRect: GameBoardRect | null): boolean {
 }
 
 function readQaScenarioFromLocation(): GameQaScenario | null {
-  const scenario = new URLSearchParams(window.location.search).get("qaScenario");
+  const scenario = new URLSearchParams(window.location.search).get(
+    "qaScenario",
+  );
   if (scenario === "single-component-phase-clear")
     return "single-component-phase-clear";
   if (scenario === SINGLE_COMPONENT_PHASE_3_QA_SCENARIO)
@@ -188,7 +189,8 @@ function readQaScenarioFromLocation(): GameQaScenario | null {
   if (scenario === WIDE_PADDLE_QA_SCENARIO) return WIDE_PADDLE_QA_SCENARIO;
   if (scenario === SLOW_BALL_QA_SCENARIO) return SLOW_BALL_QA_SCENARIO;
   if (scenario === METAL_BLOCK_QA_SCENARIO) return METAL_BLOCK_QA_SCENARIO;
-  if (scenario === EVASIVE_BLOCKS_QA_SCENARIO) return EVASIVE_BLOCKS_QA_SCENARIO;
+  if (scenario === EVASIVE_BLOCKS_QA_SCENARIO)
+    return EVASIVE_BLOCKS_QA_SCENARIO;
   if (scenario === BALL_TURRET_QA_SCENARIO) return BALL_TURRET_QA_SCENARIO;
   if (scenario === BALL_TURRET_LOSE_QA_SCENARIO)
     return BALL_TURRET_LOSE_QA_SCENARIO;
@@ -201,6 +203,11 @@ interface UpdateProgressState {
 }
 
 export default function App() {
+  const dashboardDimension = getDashboardDimension(window.location.pathname);
+  if (dashboardDimension) {
+    return <DashboardPage dimension={dashboardDimension} />;
+  }
+
   if (isDownloadsRoute(window.location.pathname, SUPPORTED_LOCALES)) {
     return <DownloadsPage />;
   }
@@ -214,7 +221,10 @@ function GameApp() {
   const termsPath = getLocalizedLegalPath(locale, TERMS_ROUTE_PATH);
   const aboutPath = getLocalizedLegalPath(locale, ABOUT_ROUTE_PATH);
   const legalPath = getLocalizedLegalPath(locale, LEGAL_ROUTE_PATH);
-  const howToPlayPath = getLocalizedEditorialPath(locale, HOW_TO_PLAY_ROUTE_PATH);
+  const howToPlayPath = getLocalizedEditorialPath(
+    locale,
+    HOW_TO_PLAY_ROUTE_PATH,
+  );
   const faqPath = getLocalizedEditorialPath(locale, FAQ_ROUTE_PATH);
   const mobileOrientationLock = useMobileOrientationLock();
   const [score, setScore] = useState(0);
@@ -1346,7 +1356,9 @@ function GameApp() {
       />
       {mobileOrientationLock.isBlocked && <MobileOrientationBlocker />}
       {isOnboardingDemoVisible && (
-        <OnboardingGameplayDemoOverlay onComplete={handleOnboardingDemoComplete} />
+        <OnboardingGameplayDemoOverlay
+          onComplete={handleOnboardingDemoComplete}
+        />
       )}
       {isLanguageDetectionVisible && <LanguageDetectionOverlay />}
       {!hasPrivacyConsent && (
