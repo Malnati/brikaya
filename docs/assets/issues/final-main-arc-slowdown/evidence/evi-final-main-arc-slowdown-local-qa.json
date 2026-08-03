@@ -1,0 +1,2460 @@
+{
+  "checkedAt": "2026-08-03T02:15:31.946Z",
+  "publicUrl": "http://127.0.0.1:7979/play/?qaScenario=ball-turret",
+  "qaScenario": "ball-turret",
+  "results": [
+    {
+      "name": "desktop",
+      "joystickPlacement": "hidden",
+      "joystickExercise": {
+        "exercised": false,
+        "skippedReason": "joystick secundário não exigido neste viewport"
+      },
+      "dualSwitchExercise": {
+        "exercised": true,
+        "controlsVisible": true,
+        "joystickHidden": true,
+        "twoTrampolinesVisible": true,
+        "leftSwitchCenterExercise": {
+          "exercised": true,
+          "hitTarget": {
+            "hitsSwitch": true,
+            "tagName": "SPAN",
+            "className": "game-turret-switch__thumb",
+            "testId": ""
+          }
+        },
+        "leftSwitchExercise": {
+          "exercised": true,
+          "hitTarget": {
+            "hitsSwitch": true,
+            "tagName": "DIV",
+            "className": "game-turret-switch game-turret-switch--left",
+            "testId": "ball-turret-switch-left"
+          }
+        },
+        "rightSwitchExercise": {
+          "exercised": true,
+          "hitTarget": {
+            "hitsSwitch": true,
+            "tagName": "DIV",
+            "className": "game-turret-switch game-turret-switch--right",
+            "testId": "ball-turret-switch-right"
+          }
+        },
+        "leftSwitchCenterBarelyMoved": true,
+        "leftSwitchMovedOnlyLeft": true,
+        "rightSwitchMovedOnlyRight": true,
+        "angles": {
+          "initialLeftAngle": -3.141592653589793,
+          "initialRightAngle": 0,
+          "afterLeftCenterLeftAngle": -3.141592653589793,
+          "afterLeftCenterRightAngle": 0,
+          "afterLeftLeftAngle": -2.3917270535897917,
+          "afterLeftRightAngle": 0,
+          "afterRightLeftAngle": -2.3917270535897917,
+          "afterRightRightAngle": 0.7498655999999997
+        }
+      },
+      "diagnosticToggleState": null,
+      "diagnosticOverlayState": null,
+      "joystickDiagnosticDownload": null,
+      "menuState": {
+        "title": "Brikaya — arcade de circuitos eletrônicos",
+        "headings": [
+          "Brikaya",
+          "Menu",
+          "Idioma",
+          "Recordes",
+          "Privacidade",
+          "Dados do jogo"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "◎Usar região para idioma",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "✓Revisar consentimento",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↻Reiniciar",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↺Restaurar padrão",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↔",
+            "ariaLabel": "Trocar controle",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 1056,
+          "height": 704,
+          "x": 70,
+          "y": 129
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "centerY": 0,
+          "hasTrackballClass": true,
+          "trackballSize": "132px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "controlToggle": {
+          "exists": true,
+          "visible": true,
+          "width": 44,
+          "height": 44,
+          "x": 1230,
+          "y": 455,
+          "bottom": 499,
+          "text": "↔",
+          "ariaLabel": "Trocar controle",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "dualSwitches": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "text": "▲▼▲▼",
+          "ariaLabel": "",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "leftSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 1134,
+          "y": 353,
+          "bottom": 601,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor esquerdo",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "rightSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 1282,
+          "y": 353,
+          "bottom": 601,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor direito",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "startModal": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "hasTitle": false,
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "scoreHudText": "Fase 1|Score 110|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "componentDrawCount": 1255,
+          "componentQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 264,
+          "activeTrampolineArcCount": 198,
+          "activeTrampolineCenterAngle": 0.7498655999999997,
+          "leftActiveTrampolineCenterAngle": -2.3917270535897917,
+          "rightActiveTrampolineCenterAngle": 0.7498655999999997,
+          "hasLeftActiveTrampoline": true,
+          "hasRightActiveTrampoline": true,
+          "boundarySegmentCount": 8,
+          "reboundBoundarySegmentCount": 6,
+          "lossBoundarySegmentCount": 2
+        }
+      },
+      "gameplayState": {
+        "title": "Brikaya — arcade de circuitos eletrônicos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↔",
+            "ariaLabel": "Trocar controle",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 1056,
+          "height": 704,
+          "x": 70,
+          "y": 129
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "centerY": 0,
+          "hasTrackballClass": true,
+          "trackballSize": "132px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "controlToggle": {
+          "exists": true,
+          "visible": true,
+          "width": 44,
+          "height": 44,
+          "x": 1230,
+          "y": 455,
+          "bottom": 499,
+          "text": "↔",
+          "ariaLabel": "Trocar controle",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "dualSwitches": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "text": "▲▼▲▼",
+          "ariaLabel": "",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "leftSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 1134,
+          "y": 353,
+          "bottom": 601,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor esquerdo",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "rightSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 1282,
+          "y": 353,
+          "bottom": 601,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor direito",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "startModal": {
+          "exists": true,
+          "visible": true,
+          "role": "dialog",
+          "ariaLabel": "Pronto para jogar",
+          "text": "Pronto para jogarUse os interruptores para mover as camas elásticas.",
+          "hasTitle": true,
+          "x": 458,
+          "y": 431.0078125,
+          "width": 280,
+          "height": 99.984375
+        },
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "componentDrawCount": 1218,
+          "componentQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 256,
+          "activeTrampolineArcCount": 192,
+          "activeTrampolineCenterAngle": 0,
+          "leftActiveTrampolineCenterAngle": -3.141592653589793,
+          "rightActiveTrampolineCenterAngle": 0,
+          "hasLeftActiveTrampoline": true,
+          "hasRightActiveTrampoline": true,
+          "boundarySegmentCount": 8,
+          "reboundBoundarySegmentCount": 6,
+          "lossBoundarySegmentCount": 2
+        }
+      },
+      "postExerciseState": {
+        "title": "Brikaya — arcade de circuitos eletrônicos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↔",
+            "ariaLabel": "Trocar controle",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 1056,
+          "height": 704,
+          "x": 70,
+          "y": 129
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "centerY": 0,
+          "hasTrackballClass": true,
+          "trackballSize": "132px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "controlToggle": {
+          "exists": true,
+          "visible": true,
+          "width": 44,
+          "height": 44,
+          "x": 1230,
+          "y": 455,
+          "bottom": 499,
+          "text": "↔",
+          "ariaLabel": "Trocar controle",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "dualSwitches": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "text": "▲▼▲▼",
+          "ariaLabel": "",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "leftSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 1134,
+          "y": 353,
+          "bottom": 601,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor esquerdo",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "rightSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 1282,
+          "y": 353,
+          "bottom": 601,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor direito",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "startModal": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "hasTitle": false,
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "scoreHudText": "Fase 1|Score 110|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "componentDrawCount": 1221,
+          "componentQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 256,
+          "activeTrampolineArcCount": 192,
+          "activeTrampolineCenterAngle": 0.7498655999999997,
+          "leftActiveTrampolineCenterAngle": -2.3917270535897917,
+          "rightActiveTrampolineCenterAngle": 0.7498655999999997,
+          "hasLeftActiveTrampoline": true,
+          "hasRightActiveTrampoline": true,
+          "boundarySegmentCount": 8,
+          "reboundBoundarySegmentCount": 6,
+          "lossBoundarySegmentCount": 2
+        }
+      }
+    },
+    {
+      "name": "mobile-portrait",
+      "joystickPlacement": "hidden",
+      "joystickExercise": {
+        "exercised": true,
+        "hitTarget": {
+          "hitsJoystick": true,
+          "tagName": "DIV",
+          "className": "game-turret-joystick game-turret-trackball",
+          "testId": "ball-turret-joystick"
+        },
+        "pathWithinControl": true,
+        "angleChecks": {
+          "right": {
+            "actualAngle": 0,
+            "expectedAngle": 0,
+            "angleMatches": true,
+            "visual": {
+              "x": 1,
+              "y": 0
+            }
+          },
+          "topRight": {
+            "actualAngle": -0.785398328535841,
+            "expectedAngle": -0.7853981633974492,
+            "angleMatches": true,
+            "visual": {
+              "x": 0.6999999537612454,
+              "y": -0.7000001849550189
+            }
+          },
+          "bottomLeft": {
+            "actualAngle": 2.356194325053952,
+            "expectedAngle": 2.356194490192344,
+            "angleMatches": true,
+            "visual": {
+              "x": -0.6999999537612452,
+              "y": 0.700000184955019
+            }
+          },
+          "left": {
+            "actualAngle": -3.141592653589793,
+            "expectedAngle": -3.141592653589793,
+            "angleMatches": true,
+            "visual": {
+              "x": -1,
+              "y": 0
+            }
+          },
+          "top": {
+            "actualAngle": -1.5707963267948966,
+            "expectedAngle": -1.5707963267948966,
+            "angleMatches": true,
+            "visual": {
+              "x": 0,
+              "y": -1
+            }
+          },
+          "topLeft": {
+            "actualAngle": -2.356194325053952,
+            "expectedAngle": -2.356194490192345,
+            "angleMatches": true,
+            "visual": {
+              "x": -0.6999999537612452,
+              "y": -0.7000001849550189
+            }
+          },
+          "bottom": {
+            "actualAngle": 1.5707963267948966,
+            "expectedAngle": 1.5707963267948966,
+            "angleMatches": true,
+            "visual": {
+              "x": 0,
+              "y": 1
+            }
+          },
+          "lowerLeftArc": {
+            "actualAngle": 2.214297620543217,
+            "expectedAngle": 2.214297435588181,
+            "angleMatches": true,
+            "visual": {
+              "x": -0.6000000924775095,
+              "y": 0.799999815044981
+            }
+          },
+          "bottomRight": {
+            "actualAngle": 0.785398328535841,
+            "expectedAngle": 0.7853981633974492,
+            "angleMatches": true,
+            "visual": {
+              "x": 0.6999999537612454,
+              "y": 0.700000184955019
+            }
+          }
+        },
+        "holdStableAngleDelta": 0,
+        "outsideIgnoredCheck": {
+          "angleUnchanged": true,
+          "visualUnchanged": true,
+          "outsideAngleRejected": true,
+          "beforeVisual": {
+            "x": 0.6999999537612454,
+            "y": 0.700000184955019
+          },
+          "afterVisual": {
+            "x": 0.6999999537612454,
+            "y": 0.700000184955019
+          },
+          "expectedIgnoredAngle": -0.7853981633974492,
+          "actualAngleAfterIgnoredMove": 0.785398328535841
+        },
+        "outsideCircleInsideBoxIgnoredCheck": {
+          "angleUnchanged": true,
+          "visualUnchanged": true,
+          "outsideAngleRejected": false,
+          "beforeVisual": {
+            "x": -0.6000000924775095,
+            "y": 0.799999815044981
+          },
+          "afterVisual": {
+            "x": -0.6000000924775095,
+            "y": 0.799999815044981
+          },
+          "expectedIgnoredAngle": 2.356194490192344,
+          "actualAngleAfterIgnoredMove": 2.214297620543217
+        },
+        "rightVisualX": 1,
+        "topVisualY": -1,
+        "bottomVisualY": 1,
+        "leftVisualX": -1,
+        "topRightVisual": {
+          "x": 0.6999999537612454,
+          "y": -0.7000001849550189
+        },
+        "topLeftVisual": {
+          "x": -0.6999999537612452,
+          "y": -0.7000001849550189
+        },
+        "bottomLeftVisual": {
+          "x": -0.6999999537612452,
+          "y": 0.700000184955019
+        },
+        "bottomRightVisual": {
+          "x": 0.6999999537612454,
+          "y": 0.700000184955019
+        },
+        "releaseVisual": {
+          "x": 0,
+          "y": 0,
+          "active": 0
+        },
+        "path": [
+          {
+            "x": 195,
+            "y": 641,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0.5,
+            "expectedAngle": null
+          },
+          {
+            "x": 261,
+            "y": 641,
+            "horizontalRatio": 1,
+            "verticalRatio": 0.5,
+            "expectedAngle": 0
+          },
+          {
+            "x": 241.2,
+            "y": 594.8,
+            "horizontalRatio": 0.85,
+            "verticalRatio": 0.15,
+            "expectedAngle": -0.7853981633974492
+          },
+          {
+            "x": 195,
+            "y": 575,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0,
+            "expectedAngle": -1.5707963267948966
+          },
+          {
+            "x": 148.8,
+            "y": 594.8,
+            "horizontalRatio": 0.15,
+            "verticalRatio": 0.15,
+            "expectedAngle": -2.356194490192345
+          },
+          {
+            "x": 129,
+            "y": 641,
+            "horizontalRatio": 0,
+            "verticalRatio": 0.5,
+            "expectedAngle": -3.141592653589793
+          },
+          {
+            "x": 148.8,
+            "y": 687.2,
+            "horizontalRatio": 0.15,
+            "verticalRatio": 0.85,
+            "expectedAngle": 2.356194490192344
+          },
+          {
+            "x": 195,
+            "y": 707,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 1,
+            "expectedAngle": 1.5707963267948966
+          },
+          {
+            "x": 155.4,
+            "y": 693.8,
+            "horizontalRatio": 0.2,
+            "verticalRatio": 0.9,
+            "expectedAngle": 2.214297435588181
+          },
+          {
+            "x": 241.2,
+            "y": 687.2,
+            "horizontalRatio": 0.85,
+            "verticalRatio": 0.85,
+            "expectedAngle": 0.7853981633974492
+          },
+          {
+            "x": 195,
+            "y": 641,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0.5,
+            "expectedAngle": null
+          }
+        ]
+      },
+      "dualSwitchExercise": {
+        "exercised": true,
+        "controlsVisible": true,
+        "joystickHidden": true,
+        "twoTrampolinesVisible": true,
+        "leftSwitchCenterExercise": {
+          "exercised": true,
+          "hitTarget": {
+            "hitsSwitch": true,
+            "tagName": "SPAN",
+            "className": "game-turret-switch__thumb",
+            "testId": ""
+          }
+        },
+        "leftSwitchExercise": {
+          "exercised": true,
+          "hitTarget": {
+            "hitsSwitch": true,
+            "tagName": "DIV",
+            "className": "game-turret-switch game-turret-switch--left",
+            "testId": "ball-turret-switch-left"
+          }
+        },
+        "rightSwitchExercise": {
+          "exercised": true,
+          "hitTarget": {
+            "hitsSwitch": true,
+            "tagName": "DIV",
+            "className": "game-turret-switch game-turret-switch--right",
+            "testId": "ball-turret-switch-right"
+          }
+        },
+        "leftSwitchCenterBarelyMoved": true,
+        "leftSwitchMovedOnlyLeft": true,
+        "rightSwitchMovedOnlyRight": true,
+        "angles": {
+          "initialLeftAngle": -3.141592653589793,
+          "initialRightAngle": 0,
+          "afterLeftCenterLeftAngle": -3.141592653589793,
+          "afterLeftCenterRightAngle": 0,
+          "afterLeftLeftAngle": -2.418597237589797,
+          "afterLeftRightAngle": 0,
+          "afterRightLeftAngle": -2.418597237589797,
+          "afterRightRightAngle": 0.6830025840000005
+        }
+      },
+      "diagnosticToggleState": {
+        "defaultEnabled": false,
+        "controlsHidden": true,
+        "enabledForExercise": false
+      },
+      "diagnosticOverlayState": {
+        "joystickLayer": {
+          "exists": false,
+          "visible": false,
+          "pointCount": 0,
+          "lineCount": 0
+        },
+        "playfieldLayer": {
+          "exists": false,
+          "visible": false,
+          "pointCount": 0,
+          "lineCount": 0
+        },
+        "toggleExists": false,
+        "downloadExists": false,
+        "clearExists": false,
+        "downloadButtonDisabled": null
+      },
+      "joystickDiagnosticDownload": null,
+      "menuState": {
+        "title": "Brikaya — arcade de circuitos eletrônicos",
+        "headings": [
+          "Brikaya",
+          "Menu",
+          "Idioma",
+          "Recordes",
+          "Privacidade",
+          "Dados do jogo"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "◎Usar região para idioma",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "✓Revisar consentimento",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↻Reiniciar",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↺Restaurar padrão",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↔",
+            "ariaLabel": "Trocar controle",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 390,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "centerY": 0,
+          "hasTrackballClass": true,
+          "trackballSize": "132px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "controlToggle": {
+          "exists": true,
+          "visible": true,
+          "width": 44,
+          "height": 44,
+          "x": 173,
+          "y": 540,
+          "bottom": 584,
+          "text": "↔",
+          "ariaLabel": "Trocar controle",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "dualSwitches": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "text": "▲▼▲▼",
+          "ariaLabel": "",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "leftSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 44.5,
+          "y": 438,
+          "bottom": 686,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor esquerdo",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "rightSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 257.5,
+          "y": 438,
+          "bottom": 686,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor direito",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "startModal": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "hasTitle": false,
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "scoreHudText": "Fase 1|Score 230|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "componentDrawCount": 6129,
+          "componentQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 954,
+          "activeTrampolineArcCount": 501,
+          "activeTrampolineCenterAngle": 0.6830025840000005,
+          "leftActiveTrampolineCenterAngle": -2.418597237589797,
+          "rightActiveTrampolineCenterAngle": 0.6830025840000005,
+          "hasLeftActiveTrampoline": true,
+          "hasRightActiveTrampoline": true,
+          "boundarySegmentCount": 8,
+          "reboundBoundarySegmentCount": 6,
+          "lossBoundarySegmentCount": 2
+        }
+      },
+      "gameplayState": {
+        "title": "Brikaya — arcade de circuitos eletrônicos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↔",
+            "ariaLabel": "Trocar controle",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 390,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "centerY": 0,
+          "hasTrackballClass": true,
+          "trackballSize": "132px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "controlToggle": {
+          "exists": true,
+          "visible": true,
+          "width": 44,
+          "height": 44,
+          "x": 173,
+          "y": 540,
+          "bottom": 584,
+          "text": "↔",
+          "ariaLabel": "Trocar controle",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "dualSwitches": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "text": "▲▼▲▼",
+          "ariaLabel": "",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "leftSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 44.5,
+          "y": 438,
+          "bottom": 686,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor esquerdo",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "rightSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 257.5,
+          "y": 438,
+          "bottom": 686,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor direito",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "startModal": {
+          "exists": true,
+          "visible": true,
+          "role": "dialog",
+          "ariaLabel": "Pronto para jogar",
+          "text": "Pronto para jogarUse os interruptores para mover as camas elásticas.",
+          "hasTitle": true,
+          "x": 55,
+          "y": 150.2109375,
+          "width": 280,
+          "height": 89.578125
+        },
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "componentDrawCount": 38117,
+          "componentQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 4884,
+          "activeTrampolineArcCount": 4884,
+          "activeTrampolineCenterAngle": 0,
+          "leftActiveTrampolineCenterAngle": -3.141592653589793,
+          "rightActiveTrampolineCenterAngle": 0,
+          "hasLeftActiveTrampoline": true,
+          "hasRightActiveTrampoline": true,
+          "boundarySegmentCount": 8,
+          "reboundBoundarySegmentCount": 6,
+          "lossBoundarySegmentCount": 2
+        }
+      },
+      "postExerciseState": {
+        "title": "Brikaya — arcade de circuitos eletrônicos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↔",
+            "ariaLabel": "Trocar controle",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 390,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "centerY": 0,
+          "hasTrackballClass": true,
+          "trackballSize": "132px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "controlToggle": {
+          "exists": true,
+          "visible": true,
+          "width": 44,
+          "height": 44,
+          "x": 173,
+          "y": 540,
+          "bottom": 584,
+          "text": "↔",
+          "ariaLabel": "Trocar controle",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "dualSwitches": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "text": "▲▼▲▼",
+          "ariaLabel": "",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "leftSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 44.5,
+          "y": 438,
+          "bottom": 686,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor esquerdo",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "rightSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 257.5,
+          "y": 438,
+          "bottom": 686,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor direito",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "startModal": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "hasTitle": false,
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "scoreHudText": "Fase 1|Score 230|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "componentDrawCount": 6129,
+          "componentQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 954,
+          "activeTrampolineArcCount": 501,
+          "activeTrampolineCenterAngle": 0.6830025840000005,
+          "leftActiveTrampolineCenterAngle": -2.418597237589797,
+          "rightActiveTrampolineCenterAngle": 0.6830025840000005,
+          "hasLeftActiveTrampoline": true,
+          "hasRightActiveTrampoline": true,
+          "boundarySegmentCount": 8,
+          "reboundBoundarySegmentCount": 6,
+          "lossBoundarySegmentCount": 2
+        }
+      }
+    },
+    {
+      "name": "mobile-portrait-compact",
+      "joystickPlacement": "hidden",
+      "joystickExercise": {
+        "exercised": true,
+        "hitTarget": {
+          "hitsJoystick": true,
+          "tagName": "DIV",
+          "className": "game-turret-joystick game-turret-trackball",
+          "testId": "ball-turret-joystick"
+        },
+        "pathWithinControl": true,
+        "angleChecks": {
+          "right": {
+            "actualAngle": 0,
+            "expectedAngle": 0,
+            "angleMatches": true,
+            "visual": {
+              "x": 1,
+              "y": 0
+            }
+          },
+          "topRight": {
+            "actualAngle": -0.7853984661511451,
+            "expectedAngle": -0.7853981633974492,
+            "angleMatches": true,
+            "visual": {
+              "x": 0.6999999152289496,
+              "y": -0.7000003390842013
+            }
+          },
+          "bottomLeft": {
+            "actualAngle": 2.3561942631270902,
+            "expectedAngle": 2.356194490192344,
+            "angleMatches": true,
+            "visual": {
+              "x": -0.7000000211927626,
+              "y": 0.7000003390842013
+            }
+          },
+          "left": {
+            "actualAngle": -3.141592653589793,
+            "expectedAngle": -3.141592653589793,
+            "angleMatches": true,
+            "visual": {
+              "x": -1,
+              "y": 0
+            }
+          },
+          "top": {
+            "actualAngle": -1.5707963267948966,
+            "expectedAngle": -1.5707963267948966,
+            "angleMatches": true,
+            "visual": {
+              "x": 0,
+              "y": -1
+            }
+          },
+          "topLeft": {
+            "actualAngle": -2.3561942631270902,
+            "expectedAngle": -2.356194490192345,
+            "angleMatches": true,
+            "visual": {
+              "x": -0.7000000211927626,
+              "y": -0.7000003390842013
+            }
+          },
+          "bottom": {
+            "actualAngle": 1.5707963267948966,
+            "expectedAngle": 1.5707963267948966,
+            "angleMatches": true,
+            "visual": {
+              "x": 0,
+              "y": 1
+            }
+          },
+          "lowerLeftArc": {
+            "actualAngle": 2.2142976475158633,
+            "expectedAngle": 2.214297435588181,
+            "angleMatches": true,
+            "visual": {
+              "x": -0.6000000105963813,
+              "y": 0.7999996609157987
+            }
+          },
+          "bottomRight": {
+            "actualAngle": 0.7853984661511451,
+            "expectedAngle": 0.7853981633974492,
+            "angleMatches": true,
+            "visual": {
+              "x": 0.6999999152289496,
+              "y": 0.7000003390842013
+            }
+          }
+        },
+        "holdStableAngleDelta": 0,
+        "outsideIgnoredCheck": {
+          "angleUnchanged": true,
+          "visualUnchanged": true,
+          "outsideAngleRejected": true,
+          "beforeVisual": {
+            "x": 0.6999999152289496,
+            "y": 0.7000003390842013
+          },
+          "afterVisual": {
+            "x": 0.6999999152289496,
+            "y": 0.7000003390842013
+          },
+          "expectedIgnoredAngle": -0.7853981633974492,
+          "actualAngleAfterIgnoredMove": 0.7853984661511451
+        },
+        "outsideCircleInsideBoxIgnoredCheck": {
+          "angleUnchanged": true,
+          "visualUnchanged": true,
+          "outsideAngleRejected": false,
+          "beforeVisual": {
+            "x": -0.6000000105963813,
+            "y": 0.7999996609157987
+          },
+          "afterVisual": {
+            "x": -0.6000000105963813,
+            "y": 0.7999996609157987
+          },
+          "expectedIgnoredAngle": 2.356194490192344,
+          "actualAngleAfterIgnoredMove": 2.2142976475158633
+        },
+        "rightVisualX": 1,
+        "topVisualY": -1,
+        "bottomVisualY": 1,
+        "leftVisualX": -1,
+        "topRightVisual": {
+          "x": 0.6999999152289496,
+          "y": -0.7000003390842013
+        },
+        "topLeftVisual": {
+          "x": -0.7000000211927626,
+          "y": -0.7000003390842013
+        },
+        "bottomLeftVisual": {
+          "x": -0.7000000211927626,
+          "y": 0.7000003390842013
+        },
+        "bottomRightVisual": {
+          "x": 0.6999999152289496,
+          "y": 0.7000003390842013
+        },
+        "releaseVisual": {
+          "x": 0,
+          "y": 0,
+          "active": 0
+        },
+        "path": [
+          {
+            "x": 48,
+            "y": 520,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0.5,
+            "expectedAngle": null
+          },
+          {
+            "x": 84,
+            "y": 520,
+            "horizontalRatio": 1,
+            "verticalRatio": 0.5,
+            "expectedAngle": 0
+          },
+          {
+            "x": 73.19999999999999,
+            "y": 494.8,
+            "horizontalRatio": 0.85,
+            "verticalRatio": 0.15,
+            "expectedAngle": -0.7853981633974492
+          },
+          {
+            "x": 48,
+            "y": 484,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0,
+            "expectedAngle": -1.5707963267948966
+          },
+          {
+            "x": 22.799999999999997,
+            "y": 494.8,
+            "horizontalRatio": 0.15,
+            "verticalRatio": 0.15,
+            "expectedAngle": -2.356194490192345
+          },
+          {
+            "x": 12,
+            "y": 520,
+            "horizontalRatio": 0,
+            "verticalRatio": 0.5,
+            "expectedAngle": -3.141592653589793
+          },
+          {
+            "x": 22.799999999999997,
+            "y": 545.2,
+            "horizontalRatio": 0.15,
+            "verticalRatio": 0.85,
+            "expectedAngle": 2.356194490192344
+          },
+          {
+            "x": 48,
+            "y": 556,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 1,
+            "expectedAngle": 1.5707963267948966
+          },
+          {
+            "x": 26.4,
+            "y": 548.8,
+            "horizontalRatio": 0.2,
+            "verticalRatio": 0.9,
+            "expectedAngle": 2.214297435588181
+          },
+          {
+            "x": 73.19999999999999,
+            "y": 545.2,
+            "horizontalRatio": 0.85,
+            "verticalRatio": 0.85,
+            "expectedAngle": 0.7853981633974492
+          },
+          {
+            "x": 48,
+            "y": 520,
+            "horizontalRatio": 0.5,
+            "verticalRatio": 0.5,
+            "expectedAngle": null
+          }
+        ]
+      },
+      "dualSwitchExercise": {
+        "exercised": true,
+        "controlsVisible": true,
+        "joystickHidden": true,
+        "twoTrampolinesVisible": true,
+        "leftSwitchCenterExercise": {
+          "exercised": true,
+          "hitTarget": {
+            "hitsSwitch": false,
+            "tagName": "",
+            "className": "",
+            "testId": ""
+          }
+        },
+        "leftSwitchExercise": {
+          "exercised": true,
+          "hitTarget": {
+            "hitsSwitch": true,
+            "tagName": "DIV",
+            "className": "game-turret-switch game-turret-switch--left",
+            "testId": "ball-turret-switch-left"
+          }
+        },
+        "rightSwitchExercise": {
+          "exercised": true,
+          "hitTarget": {
+            "hitsSwitch": false,
+            "tagName": "",
+            "className": "",
+            "testId": ""
+          }
+        },
+        "leftSwitchCenterBarelyMoved": true,
+        "leftSwitchMovedOnlyLeft": true,
+        "rightSwitchMovedOnlyRight": true,
+        "angles": {
+          "initialLeftAngle": -3.141592653589793,
+          "initialRightAngle": 0,
+          "afterLeftCenterLeftAngle": -3.141592653589793,
+          "afterLeftCenterRightAngle": 0,
+          "afterLeftLeftAngle": -2.4585900695897926,
+          "afterLeftRightAngle": 0,
+          "afterRightLeftAngle": -2.4585900695897926,
+          "afterRightRightAngle": 0.7292442959999974
+        }
+      },
+      "diagnosticToggleState": null,
+      "diagnosticOverlayState": null,
+      "joystickDiagnosticDownload": null,
+      "menuState": {
+        "title": "Brikaya — arcade de circuitos eletrônicos",
+        "headings": [
+          "Brikaya",
+          "Menu",
+          "Idioma",
+          "Recordes",
+          "Privacidade",
+          "Dados do jogo"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "×",
+            "ariaLabel": "Fechar menu",
+            "ariaPressed": null
+          },
+          {
+            "text": "◎Usar região para idioma",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "✓Revisar consentimento",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↻Reiniciar",
+            "ariaLabel": "Reiniciar",
+            "ariaPressed": null
+          },
+          {
+            "text": "0Zerar pontuação",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↺Restaurar padrão",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↔",
+            "ariaLabel": "Trocar controle",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 480,
+          "height": 640
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 480,
+          "height": 480,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "centerY": 0,
+          "hasTrackballClass": true,
+          "trackballSize": "64px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "controlToggle": {
+          "exists": true,
+          "visible": true,
+          "width": 44,
+          "height": 44,
+          "x": 218,
+          "y": 630,
+          "bottom": 674,
+          "text": "↔",
+          "ariaLabel": "Trocar controle",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "dualSwitches": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "text": "▲▼▲▼",
+          "ariaLabel": "",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "leftSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 67,
+          "y": 528,
+          "bottom": 776,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor esquerdo",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "rightSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 325,
+          "y": 528,
+          "bottom": 776,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor direito",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "startModal": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "hasTitle": false,
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "scoreHudText": "Fase 1|Score 100|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "componentDrawCount": 7143,
+          "componentQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 960,
+          "activeTrampolineArcCount": 507,
+          "activeTrampolineCenterAngle": 0.7292442959999974,
+          "leftActiveTrampolineCenterAngle": -2.4585900695897926,
+          "rightActiveTrampolineCenterAngle": 0.7292442959999974,
+          "hasLeftActiveTrampoline": true,
+          "hasRightActiveTrampoline": true,
+          "boundarySegmentCount": 8,
+          "reboundBoundarySegmentCount": 6,
+          "lossBoundarySegmentCount": 2
+        }
+      },
+      "gameplayState": {
+        "title": "Brikaya — arcade de circuitos eletrônicos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↔",
+            "ariaLabel": "Trocar controle",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 480,
+          "height": 640
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 480,
+          "height": 480,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "centerY": 0,
+          "hasTrackballClass": true,
+          "trackballSize": "64px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "controlToggle": {
+          "exists": true,
+          "visible": true,
+          "width": 44,
+          "height": 44,
+          "x": 218,
+          "y": 630,
+          "bottom": 674,
+          "text": "↔",
+          "ariaLabel": "Trocar controle",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "dualSwitches": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "text": "▲▼▲▼",
+          "ariaLabel": "",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "leftSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 67,
+          "y": 528,
+          "bottom": 776,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor esquerdo",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "rightSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 325,
+          "y": 528,
+          "bottom": 776,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor direito",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "startModal": {
+          "exists": true,
+          "visible": true,
+          "role": "dialog",
+          "ariaLabel": "Pronto para jogar",
+          "text": "Pronto para jogarUse os interruptores para mover as camas elásticas.",
+          "hasTitle": true,
+          "x": 100,
+          "y": 195.2109375,
+          "width": 280,
+          "height": 89.578125
+        },
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "componentDrawCount": 38117,
+          "componentQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 4884,
+          "activeTrampolineArcCount": 4884,
+          "activeTrampolineCenterAngle": 0,
+          "leftActiveTrampolineCenterAngle": -3.141592653589793,
+          "rightActiveTrampolineCenterAngle": 0,
+          "hasLeftActiveTrampoline": true,
+          "hasRightActiveTrampoline": true,
+          "boundarySegmentCount": 8,
+          "reboundBoundarySegmentCount": 6,
+          "lossBoundarySegmentCount": 2
+        }
+      },
+      "postExerciseState": {
+        "title": "Brikaya — arcade de circuitos eletrônicos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↔",
+            "ariaLabel": "Trocar controle",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 480,
+          "height": 640
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 480,
+          "height": 480,
+          "x": 0,
+          "y": 0
+        },
+        "orientationBlocker": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "centerY": 0,
+          "hasTrackballClass": true,
+          "trackballSize": "64px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "controlToggle": {
+          "exists": true,
+          "visible": true,
+          "width": 44,
+          "height": 44,
+          "x": 218,
+          "y": 630,
+          "bottom": 674,
+          "text": "↔",
+          "ariaLabel": "Trocar controle",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "dualSwitches": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "text": "▲▼▲▼",
+          "ariaLabel": "",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "leftSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 67,
+          "y": 528,
+          "bottom": 776,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor esquerdo",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "rightSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 88,
+          "height": 248,
+          "x": 325,
+          "y": 528,
+          "bottom": 776,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor direito",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "startModal": {
+          "exists": false,
+          "visible": false,
+          "role": "",
+          "ariaLabel": "",
+          "text": "",
+          "hasTitle": false,
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "scoreHudText": "Fase 1|Score 100|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "componentDrawCount": 7099,
+          "componentQuadrants": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fullRingArcCount": 954,
+          "activeTrampolineArcCount": 501,
+          "activeTrampolineCenterAngle": 0.7292442959999974,
+          "leftActiveTrampolineCenterAngle": -2.4585900695897926,
+          "rightActiveTrampolineCenterAngle": 0.7292442959999974,
+          "hasLeftActiveTrampoline": true,
+          "hasRightActiveTrampoline": true,
+          "boundarySegmentCount": 8,
+          "reboundBoundarySegmentCount": 6,
+          "lossBoundarySegmentCount": 2
+        }
+      }
+    },
+    {
+      "name": "mobile-landscape",
+      "joystickPlacement": "blocked",
+      "orientationBlocked": true,
+      "joystickExercise": {
+        "exercised": false,
+        "skippedReason": "mobile landscape bloqueado por portrait obrigatório"
+      },
+      "dualSwitchExercise": {
+        "exercised": false,
+        "skippedReason": "mobile landscape bloqueado por portrait obrigatório"
+      },
+      "menuState": null,
+      "gameplayState": {
+        "title": "Brikaya — arcade de circuitos eletrônicos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↔",
+            "ariaLabel": "Trocar controle",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 360,
+          "height": 240,
+          "x": 141,
+          "y": 75
+        },
+        "orientationBlocker": {
+          "exists": true,
+          "visible": true,
+          "role": "alertdialog",
+          "ariaLabel": "Você precisa de espaço para o joystick",
+          "text": "Você precisa de espaço para o joystick",
+          "width": 844,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "centerY": 0,
+          "hasTrackballClass": true,
+          "trackballSize": "112px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "controlToggle": {
+          "exists": true,
+          "visible": true,
+          "width": 38,
+          "height": 38,
+          "x": 585,
+          "y": 174,
+          "bottom": 212,
+          "text": "↔",
+          "ariaLabel": "Trocar controle",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "dualSwitches": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "text": "▲▼▲▼",
+          "ariaLabel": "",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "leftSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 76,
+          "height": 184,
+          "x": 505,
+          "y": 101,
+          "bottom": 285,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor esquerdo",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "rightSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 76,
+          "height": 184,
+          "x": 627,
+          "y": 101,
+          "bottom": 285,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor direito",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "startModal": {
+          "exists": true,
+          "visible": true,
+          "role": "dialog",
+          "ariaLabel": "Pronto para jogar",
+          "text": "Pronto para jogarUse os interruptores para mover as camas elásticas.",
+          "hasTitle": true,
+          "x": 181,
+          "y": 145.0078125,
+          "width": 280,
+          "height": 99.984375
+        },
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "componentDrawCount": 0,
+          "componentQuadrants": {
+            "left": false,
+            "right": false,
+            "top": false,
+            "bottom": false
+          },
+          "fullRingArcCount": 0,
+          "activeTrampolineArcCount": 0,
+          "activeTrampolineCenterAngle": null,
+          "leftActiveTrampolineCenterAngle": null,
+          "rightActiveTrampolineCenterAngle": null,
+          "hasLeftActiveTrampoline": false,
+          "hasRightActiveTrampoline": false,
+          "boundarySegmentCount": 0,
+          "reboundBoundarySegmentCount": 0,
+          "lossBoundarySegmentCount": 0
+        }
+      },
+      "postExerciseState": {
+        "title": "Brikaya — arcade de circuitos eletrônicos",
+        "headings": [
+          "Brikaya"
+        ],
+        "hasGameModeHeading": false,
+        "buttons": [
+          {
+            "text": "×",
+            "ariaLabel": "Sem som",
+            "ariaPressed": "false"
+          },
+          {
+            "text": "♫",
+            "ariaLabel": "Música",
+            "ariaPressed": "true"
+          },
+          {
+            "text": "Menu",
+            "ariaLabel": "",
+            "ariaPressed": null
+          },
+          {
+            "text": "↔",
+            "ariaLabel": "Trocar controle",
+            "ariaPressed": null
+          }
+        ],
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "hasCanvas": true,
+        "canvas": {
+          "width": 360,
+          "height": 240,
+          "x": 141,
+          "y": 75
+        },
+        "orientationBlocker": {
+          "exists": true,
+          "visible": true,
+          "role": "alertdialog",
+          "ariaLabel": "Você precisa de espaço para o joystick",
+          "text": "Você precisa de espaço para o joystick",
+          "width": 844,
+          "height": 390,
+          "x": 0,
+          "y": 0
+        },
+        "joystick": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "centerY": 0,
+          "hasTrackballClass": true,
+          "trackballSize": "112px",
+          "trackballX": "0",
+          "trackballY": "0",
+          "trackballActive": "0"
+        },
+        "controlToggle": {
+          "exists": true,
+          "visible": true,
+          "width": 38,
+          "height": 38,
+          "x": 585,
+          "y": 174,
+          "bottom": 212,
+          "text": "↔",
+          "ariaLabel": "Trocar controle",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "dualSwitches": {
+          "exists": true,
+          "visible": false,
+          "width": 0,
+          "height": 0,
+          "x": 0,
+          "y": 0,
+          "bottom": 0,
+          "text": "▲▼▲▼",
+          "ariaLabel": "",
+          "hidden": false,
+          "switchDirection": ""
+        },
+        "leftSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 76,
+          "height": 184,
+          "x": 505,
+          "y": 101,
+          "bottom": 285,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor esquerdo",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "rightSwitch": {
+          "exists": true,
+          "visible": true,
+          "width": 76,
+          "height": 184,
+          "x": 627,
+          "y": 101,
+          "bottom": 285,
+          "text": "▲▼",
+          "ariaLabel": "Interruptor direito",
+          "hidden": false,
+          "switchDirection": "neutral"
+        },
+        "startModal": {
+          "exists": true,
+          "visible": true,
+          "role": "dialog",
+          "ariaLabel": "Pronto para jogar",
+          "text": "Pronto para jogarUse os interruptores para mover as camas elásticas.",
+          "hasTitle": true,
+          "x": 181,
+          "y": 145.0078125,
+          "width": 280,
+          "height": 99.984375
+        },
+        "scoreHudText": "Fase 1|Score 0|Total 0|Recorde 0",
+        "bodyHasInternalCopy": false,
+        "bodyHasOldAimCopy": false,
+        "probe": {
+          "componentDrawCount": 0,
+          "componentQuadrants": {
+            "left": false,
+            "right": false,
+            "top": false,
+            "bottom": false
+          },
+          "fullRingArcCount": 0,
+          "activeTrampolineArcCount": 0,
+          "activeTrampolineCenterAngle": null,
+          "leftActiveTrampolineCenterAngle": null,
+          "rightActiveTrampolineCenterAngle": null,
+          "hasLeftActiveTrampoline": false,
+          "hasRightActiveTrampoline": false,
+          "boundarySegmentCount": 0,
+          "reboundBoundarySegmentCount": 0,
+          "lossBoundarySegmentCount": 0
+        }
+      }
+    }
+  ],
+  "screenshots": {
+    "menu": "docs/assets/issues/final-main-arc-slowdown/evidence/evi-final-main-arc-slowdown-menu.png",
+    "desktop": "docs/assets/issues/final-main-arc-slowdown/evidence/evi-final-main-arc-slowdown-desktop.png",
+    "mobile": "docs/assets/issues/final-main-arc-slowdown/evidence/evi-final-main-arc-slowdown-mobile.png",
+    "mobileLandscape": "docs/assets/issues/final-main-arc-slowdown/evidence/evi-final-main-arc-slowdown-mobile-landscape.png",
+    "joystickDiagnostic": null
+  }
+}

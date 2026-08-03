@@ -32,6 +32,9 @@ Tornar **Torreta** o padrão permanente do Brikaya em todas as fases. A fantasia
 - O segmento ativo da cama elástica rebate a bolinha; o restante do anel é indicação visual.
 - Power-ups da Torreta saem do centro para a borda e são coletados ao tocar a borda.
 - Bolinhas da Torreta nascem em sequência por pontos diferentes da borda e seguem para dentro.
+- O **Arco Final** é o anel mais externo que contém componentes eletrônicos.
+- O **Arco Principal** é a barreira segmentada externa; atravessar uma de suas saídas causa a perda da bolinha.
+- Entre o Arco Final e o Arco Principal, cada bolinha se move a 25% da velocidade-base atual e recupera o deslocamento integral ao retornar para dentro do Arco Final.
 - Evidência visual desktop, mobile e menu em `docs/assets/issues/ball-turret-mode/evidence/` e nos diretórios específicos dos ajustes posteriores.
 
 ## Fora de escopo

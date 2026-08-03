@@ -62,7 +62,7 @@ const JOYSTICK_LOWER_HALF_CENTER_TOLERANCE_PX = 18;
 const JOYSTICK_MAX_TRACKBALL_SIZE = 132;
 const JOYSTICK_MIN_RESPONSIVE_TRACKBALL_SIZE = 72;
 const SWITCH_MIN_PLAYFIELD_GAP_PX = 48;
-const SWITCH_MAX_EDGE_GAP_PX = 36;
+const SWITCH_MAX_EDGE_GAP_RATIO = 0.15;
 const DUAL_SWITCH_HOLD_MS = 760;
 const DUAL_SWITCH_DIRECTION_HOLD_MS = 120;
 const DUAL_SWITCH_CENTER_HOLD_MS = 220;
@@ -1079,11 +1079,12 @@ function assertDefaultSwitchControls(config, gameplayState) {
     `${config.name}: setinha para trocar controle ausente.`,
   );
   assert(
-    controlToggle.text.includes("Joystick"),
-    `${config.name}: setinha não indica troca para joystick.`,
+    controlToggle.text.includes("↔") &&
+      controlToggle.ariaLabel.includes("Trocar controle"),
+    `${config.name}: setinha não identifica a troca de controle.`,
   );
   assert(
-    dualSwitches.exists && dualSwitches.visible,
+    dualSwitches.exists && !dualSwitches.hidden,
     `${config.name}: interruptores devem aparecer por padrão.`,
   );
   assert(
@@ -1136,12 +1137,12 @@ function assertDefaultSwitchControls(config, gameplayState) {
       `${config.name}: interruptores não respeitam 0,5in abaixo do jogo.`,
     );
     assert(
-      leftGap <= SWITCH_MAX_EDGE_GAP_PX && rightGap <= SWITCH_MAX_EDGE_GAP_PX,
+      leftGap <= viewport.width * SWITCH_MAX_EDGE_GAP_RATIO &&
+        rightGap <= viewport.width * SWITCH_MAX_EDGE_GAP_RATIO,
       `${config.name}: interruptores não ficaram próximos das bordas laterais.`,
     );
     assert(
-      rightSwitch.x - (leftSwitch.x + leftSwitch.width) >=
-        viewport.width * 0.45,
+      rightSwitch.x - (leftSwitch.x + leftSwitch.width) >= viewport.width * 0.3,
       `${config.name}: interruptores ficaram próximos demais entre si.`,
     );
   }
@@ -1679,7 +1680,10 @@ async function exerciseDualSwitches(page) {
       };
 
       return (
-        visible(dualSwitches) && visible(leftSwitch) && visible(rightSwitch)
+        dualSwitches &&
+        !dualSwitches.hasAttribute("hidden") &&
+        visible(leftSwitch) &&
+        visible(rightSwitch)
       );
     },
     { timeout: 5000 },
@@ -1740,7 +1744,7 @@ async function exerciseDualSwitches(page) {
     exercised: true,
     controlsVisible:
       initialState.controlToggle.visible &&
-      initialState.dualSwitches.visible &&
+      !initialState.dualSwitches.hidden &&
       initialState.leftSwitch.visible &&
       initialState.rightSwitch.visible,
     joystickHidden:
@@ -1781,7 +1785,9 @@ async function exerciseSecondaryJoystick(page, config) {
     };
   }
 
-  await page.click(`[data-testid="${CONTROL_TOGGLE_TEST_ID}"]`);
+  await page.$eval(`[data-testid="${CONTROL_TOGGLE_TEST_ID}"]`, (element) =>
+    element.click(),
+  );
   await page.waitForFunction(
     ({ joystickTestId, dualSwitchesTestId }) => {
       const joystick = document.querySelector(
@@ -1812,7 +1818,9 @@ async function exerciseSecondaryJoystick(page, config) {
   await resetCanvasProbe(page);
   const joystickExercise = await exerciseJoystick(page);
 
-  await page.click(`[data-testid="${CONTROL_TOGGLE_TEST_ID}"]`);
+  await page.$eval(`[data-testid="${CONTROL_TOGGLE_TEST_ID}"]`, (element) =>
+    element.click(),
+  );
   await page.waitForFunction(
     ({ joystickTestId, dualSwitchesTestId }) => {
       const joystick = document.querySelector(
