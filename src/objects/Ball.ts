@@ -1,5 +1,6 @@
 // src/objects/Ball.ts
 import {
+  BALL_TURRET_FINAL_TO_MAIN_ARC_SPEED_MULTIPLIER,
   calculateClampedSpeed,
   calculateInitialBallSpeed,
   DynamicGameDimensions,
@@ -202,8 +203,9 @@ export class Ball {
         : fallbackPaddlePosition;
 
     for (let step = 0; step < motionSteps; step += 1) {
-      this.x += (this.dx * safeFrameScale) / motionSteps;
-      this.y += (this.dy * safeFrameScale) / motionSteps;
+      const movementMultiplier = this.getRadialMovementMultiplier();
+      this.x += (this.dx * safeFrameScale * movementMultiplier) / motionSteps;
+      this.y += (this.dy * safeFrameScale * movementMultiplier) / motionSteps;
 
       if (!componentCollisionHandled) {
         componentCollisionHandled = components.collide(this, gameState);
@@ -233,6 +235,19 @@ export class Ball {
     const maxStepDistance = Math.max(MIN_MOTION_STEPS, this.radius * MOTION_STEP_RADIUS_RATIO);
     const frameDistance = this.getCurrentSpeedMagnitude() * Math.max(0, frameScale);
     return Math.max(MIN_MOTION_STEPS, Math.ceil(frameDistance / maxStepDistance));
+  }
+
+  private getRadialMovementMultiplier(): number {
+    if (!this.geometry.trampolineIsFullRing) return 1;
+
+    const radialDistance = toPolar(this.position, this.geometry).radius;
+    const isBetweenFinalAndMainArcs =
+      radialDistance >= this.geometry.componentRingEndRadius &&
+      radialDistance < this.geometry.radius;
+
+    return isBetweenFinalAndMainArcs
+      ? BALL_TURRET_FINAL_TO_MAIN_ARC_SPEED_MULTIPLIER
+      : 1;
   }
 
   private resolveRectangularWallCollision(

@@ -148,13 +148,66 @@ function placeBallAtTurretBoundary(
   geometry: ReturnType<typeof calculateBallTurretPlayfieldGeometry>,
   angle: number,
 ) {
-  const boundaryRadius = geometry.radius - DIMENSIONS.ballRadius - 1;
+  const boundaryRadius = geometry.radius - DIMENSIONS.ballRadius - 0.1;
 
   ball.setPosition(
     geometry.centerX + Math.cos(angle) * boundaryRadius,
     geometry.centerY + Math.sin(angle) * boundaryRadius,
   );
   ball.setDirection(angle + CARTESIAN_TO_BALL_DIRECTION_OFFSET);
+}
+
+function createTurretMotionTestSetup(level = PHASE_ONE) {
+  const geometry = calculateBallTurretPlayfieldGeometry(
+    CANVAS_WIDTH,
+    CANVAS_HEIGHT,
+    DIMENSIONS,
+  );
+
+  return {
+    geometry,
+    config: buildPhaseSpeedConfig(level),
+    components: { collide: jest.fn(() => false) },
+    paddle: {
+      position: calculateRadialPaddleBounds(
+        geometry,
+        DIMENSIONS,
+        Math.PI / 2,
+        1,
+      ),
+    },
+    createBall: () =>
+      new Ball(CANVAS_WIDTH, CANVAS_HEIGHT, DIMENSIONS, 1, undefined, geometry),
+  };
+}
+
+function placeBallTangentially(
+  ball: Ball,
+  geometry: ReturnType<typeof calculateBallTurretPlayfieldGeometry>,
+  radius: number,
+) {
+  ball.setPosition(geometry.centerX, geometry.centerY - radius);
+  ball.setDirection(Math.PI / 2);
+}
+
+function moveBallOneFrame(
+  ball: Ball,
+  setup: Pick<
+    ReturnType<typeof createTurretMotionTestSetup>,
+    'paddle' | 'components' | 'config'
+  >,
+  frameScale = 1,
+) {
+  const startX = ball.position.x;
+  ball.update(
+    setup.paddle,
+    setup.components,
+    CANVAS_HEIGHT,
+    createGameState(ball, setup.config.level),
+    undefined,
+    frameScale,
+  );
+  return ball.position.x - startX;
 }
 
 describe('Ball', () => {
@@ -463,6 +516,158 @@ describe('Ball', () => {
     );
 
     expect(twoFrames120Hz.position.y).toBeCloseTo(oneFrame60Hz.position.y, 5);
+  });
+
+  it.each([PHASE_ONE, 10])(
+    'move quatro vezes mais devagar entre o Arco Final e o Arco Principal na fase %s',
+    (level) => {
+      const setup = createTurretMotionTestSetup(level);
+      const insideBall = setup.createBall();
+      const outsideBall = setup.createBall();
+      const insideRadius = setup.geometry.componentRingEndRadius - 20;
+      const outsideRadius =
+        (setup.geometry.componentRingEndRadius + setup.geometry.paddleRadius) /
+        CENTER_DIVISOR;
+
+      [insideBall, outsideBall].forEach((ball) =>
+        ball.applyPhaseSpeedConfig(setup.config),
+      );
+      placeBallTangentially(insideBall, setup.geometry, insideRadius);
+      placeBallTangentially(outsideBall, setup.geometry, outsideRadius);
+
+      const insideDisplacement = moveBallOneFrame(insideBall, setup);
+      const outsideDisplacement = moveBallOneFrame(outsideBall, setup);
+      expect(outsideDisplacement).toBeCloseTo(insideDisplacement * 0.25, 5);
+      expect(outsideBall.getCurrentSpeedMagnitude()).toBeCloseTo(
+        insideBall.getCurrentSpeedMagnitude(),
+        5,
+      );
+    },
+  );
+
+  it('restaura o deslocamento integral quando a bolinha retorna para dentro do Arco Final', () => {
+    const setup = createTurretMotionTestSetup();
+    const ball = setup.createBall();
+    const outsideRadius =
+      (setup.geometry.componentRingEndRadius + setup.geometry.paddleRadius) /
+      CENTER_DIVISOR;
+
+    ball.applyPhaseSpeedConfig(setup.config);
+    placeBallTangentially(ball, setup.geometry, outsideRadius);
+    const outsideDisplacement = moveBallOneFrame(ball, setup);
+    placeBallTangentially(
+      ball,
+      setup.geometry,
+      setup.geometry.componentRingEndRadius - 20,
+    );
+    const insideDisplacement = moveBallOneFrame(ball, setup);
+
+    expect(insideDisplacement).toBeCloseTo(outsideDisplacement * 4, 5);
+    expect(ball.getCurrentSpeedMagnitude()).toBeCloseTo(
+      setup.config.maxSpeed,
+      5,
+    );
+  });
+
+  it('compõe a zona lenta com o power-up Bola lenta sem alterar a velocidade-base', () => {
+    const setup = createTurretMotionTestSetup();
+    const ball = setup.createBall();
+    const outsideRadius =
+      (setup.geometry.componentRingEndRadius + setup.geometry.paddleRadius) /
+      CENTER_DIVISOR;
+
+    ball.applyPhaseSpeedConfig(setup.config);
+    ball.multiplyVelocity(0.75);
+    const slowBallBaseSpeed = ball.getCurrentSpeedMagnitude();
+    placeBallTangentially(ball, setup.geometry, outsideRadius);
+
+    expect(moveBallOneFrame(ball, setup)).toBeCloseTo(
+      slowBallBaseSpeed * 0.25,
+      5,
+    );
+    expect(ball.getCurrentSpeedMagnitude()).toBeCloseTo(slowBallBaseSpeed, 5);
+  });
+
+  it('aplica a zona lenta individualmente a cada bolinha do multiball', () => {
+    const setup = createTurretMotionTestSetup();
+    const insideBall = setup.createBall();
+    const outsideBall = insideBall.createClone(0);
+    const outsideRadius =
+      (setup.geometry.componentRingEndRadius + setup.geometry.paddleRadius) /
+      CENTER_DIVISOR;
+
+    [insideBall, outsideBall].forEach((ball) =>
+      ball.applyPhaseSpeedConfig(setup.config),
+    );
+    placeBallTangentially(
+      insideBall,
+      setup.geometry,
+      setup.geometry.componentRingEndRadius - 20,
+    );
+    placeBallTangentially(outsideBall, setup.geometry, outsideRadius);
+
+    expect(moveBallOneFrame(outsideBall, setup)).toBeCloseTo(
+      moveBallOneFrame(insideBall, setup) * 0.25,
+      5,
+    );
+  });
+
+  it('mantém deslocamento equivalente entre 60Hz e 120Hz dentro da zona lenta', () => {
+    const setup = createTurretMotionTestSetup();
+    const oneFrame60Hz = setup.createBall();
+    const twoFrames120Hz = setup.createBall();
+    const outsideRadius =
+      (setup.geometry.componentRingEndRadius + setup.geometry.paddleRadius) /
+      CENTER_DIVISOR;
+
+    [oneFrame60Hz, twoFrames120Hz].forEach((ball) => {
+      ball.applyPhaseSpeedConfig(setup.config);
+      placeBallTangentially(ball, setup.geometry, outsideRadius);
+    });
+    const displacement60Hz = moveBallOneFrame(oneFrame60Hz, setup);
+    const firstHalfFrame = moveBallOneFrame(twoFrames120Hz, setup, 0.5);
+    const secondHalfFrame = moveBallOneFrame(twoFrames120Hz, setup, 0.5);
+
+    expect(firstHalfFrame + secondHalfFrame).toBeCloseTo(displacement60Hz, 5);
+    expect(displacement60Hz).toBeCloseTo(setup.config.maxSpeed * 0.25, 5);
+  });
+
+  it('mantém velocidade integral fora do modo Torreta', () => {
+    const geometry = calculateRadialPlayfieldGeometry(
+      CANVAS_WIDTH,
+      CANVAS_HEIGHT,
+      DIMENSIONS,
+    );
+    const ball = new Ball(
+      CANVAS_WIDTH,
+      CANVAS_HEIGHT,
+      DIMENSIONS,
+      1,
+      undefined,
+      geometry,
+    );
+    const config = buildPhaseSpeedConfig(PHASE_ONE);
+    const setup = {
+      geometry,
+      config,
+      components: { collide: jest.fn(() => false) },
+      paddle: {
+        position: calculateRadialPaddleBounds(
+          geometry,
+          DIMENSIONS,
+          Math.PI / 2,
+          1,
+        ),
+      },
+    };
+    const outsideRadius =
+      (geometry.componentRingEndRadius + geometry.paddleRadius) /
+      CENTER_DIVISOR;
+
+    ball.applyPhaseSpeedConfig(config);
+    placeBallTangentially(ball, geometry, outsideRadius);
+
+    expect(moveBallOneFrame(ball, setup)).toBeCloseTo(config.maxSpeed, 5);
   });
 
   it('não move a bola quando frameScale é zero', () => {
