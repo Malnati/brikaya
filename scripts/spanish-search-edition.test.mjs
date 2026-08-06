@@ -48,7 +48,7 @@ function assertSpanishSurface(html, label) {
 
 const landing = readPage('es-419/index.html');
 assertSpanishSurface(landing, 'landing');
-if (!landing.includes('>Jugar ahora<') || landing.includes('>Play now<')) {
+if (!landing.includes('>Jugar<') || landing.includes('>Play now<')) {
   fail('landing must render complete Spanish calls to action');
 }
 

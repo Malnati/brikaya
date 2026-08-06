@@ -11,103 +11,164 @@ export const LANDING_SW_RECOVERY_SCRIPT = `(function(){if(!("serviceWorker"in na
 const LANDING_CSS = `
       :root {
         color-scheme: dark;
-        --bg: #080816;
+        --bg: #070913;
         --text: #f8f7ff;
-        --muted: #c8c8dc;
+        --muted: #b0b4cf;
         --accent: #7cf4ff;
+        --accent-glow: rgba(124, 244, 255, 0.4);
         --accent-strong: #ffe66d;
         --border: rgba(124, 244, 255, 0.22);
-        --panel: rgba(17, 20, 42, 0.72);
+        --panel: rgba(14, 17, 36, 0.78);
+        --panel-secondary: rgba(18, 22, 46, 0.65);
       }
       * { box-sizing: border-box; }
+      html {
+        scroll-behavior: smooth;
+      }
       body {
         margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         color: var(--text);
         background:
-          radial-gradient(circle at top left, rgba(124, 244, 255, 0.16), transparent 34rem),
-          radial-gradient(circle at bottom right, rgba(255, 230, 109, 0.12), transparent 28rem),
+          radial-gradient(ellipse at 20% 0%, rgba(124, 244, 255, 0.18), transparent 45rem),
+          radial-gradient(ellipse at 80% 100%, rgba(255, 230, 109, 0.12), transparent 40rem),
           var(--bg);
+        min-height: 100vh;
       }
       main {
         width: min(920px, calc(100% - 32px));
         margin: 0 auto;
         padding: 48px 0 72px;
       }
-      a { color: var(--accent); }
+      a { color: var(--accent); transition: all 0.2s ease; }
       .hero {
-        padding: 40px 32px;
+        padding: 48px 36px;
         border: 1px solid var(--border);
-        border-radius: 28px;
+        border-radius: 32px;
         background: var(--panel);
-        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+        backdrop-filter: blur(20px);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 0 40px rgba(124, 244, 255, 0.05);
+        position: relative;
+        overflow: hidden;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--accent), transparent);
       }
       .brand {
         margin: 0;
-        font-size: clamp(2.6rem, 8vw, 5rem);
+        font-size: clamp(3rem, 9vw, 5.5rem);
+        font-weight: 800;
         letter-spacing: -0.06em;
         line-height: 0.95;
+        background: linear-gradient(135deg, #ffffff 30%, var(--accent) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
       .headline {
-        margin: 18px 0 0;
-        font-size: clamp(1.35rem, 3.2vw, 2rem);
-        line-height: 1.2;
+        margin: 20px 0 0;
+        font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+        line-height: 1.25;
+        font-weight: 700;
+        letter-spacing: -0.02em;
       }
       .lead {
-        margin: 16px 0 0;
+        margin: 18px 0 0;
         color: var(--muted);
-        font-size: 1.08rem;
-        line-height: 1.65;
-        max-width: 42rem;
+        font-size: 1.12rem;
+        line-height: 1.7;
+        max-width: 44rem;
       }
       .cta-row {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 28px;
+        gap: 16px;
+        margin-top: 36px;
       }
       .cta {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-height: 48px;
-        padding: 0 22px;
+        min-height: 52px;
+        padding: 0 32px;
         border-radius: 999px;
         text-decoration: none;
-        font-weight: 650;
+        font-weight: 700;
+        font-size: 1.05rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
       }
       .cta-primary {
-        background: var(--accent);
-        color: #061018;
+        background: linear-gradient(135deg, #7cf4ff 0%, #30b8ff 100%);
+        color: #040914;
+        box-shadow: 0 4px 20px var(--accent-glow);
+      }
+      .cta-primary:hover, .cta-primary:focus {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(124, 244, 255, 0.6);
       }
       .cta-secondary {
-        border: 1px solid var(--border);
+        border: 1px solid rgba(124, 244, 255, 0.4);
         color: var(--text);
-        background: rgba(8, 8, 22, 0.35);
+        background: rgba(124, 244, 255, 0.06);
+        backdrop-filter: blur(8px);
+      }
+      .cta-secondary:hover, .cta-secondary:focus {
+        transform: translateY(-2px);
+        background: rgba(124, 244, 255, 0.14);
+        border-color: var(--accent);
+      }
+      .updated {
+        margin: 16px 0 0;
+        color: var(--accent-strong);
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+      .reading-section {
+        margin-top: 40px;
+      }
+      section {
+        margin-top: 24px;
+        padding: 32px;
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        background: var(--panel-secondary);
+        backdrop-filter: blur(16px);
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
+      }
+      h2 {
+        margin: 0 0 14px;
+        font-size: clamp(1.4rem, 3.2vw, 1.9rem);
+        letter-spacing: -0.03em;
+        color: var(--text);
+      }
+      p, li { color: var(--muted); line-height: 1.75; font-size: 1.05rem; }
+      ul { padding-left: 1.2rem; }
+      footer.site-footer {
+        margin-top: 48px;
+        padding: 24px 32px;
+        border: 1px solid rgba(124, 244, 255, 0.15);
+        border-radius: 24px;
+        background: rgba(10, 13, 28, 0.5);
       }
       nav.site-nav {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px 18px;
-        margin-top: 28px;
+        gap: 12px 24px;
+        justify-content: center;
       }
-      section {
-        margin-top: 24px;
-        padding: 28px;
-        border: 1px solid var(--border);
-        border-radius: 24px;
-        background: rgba(17, 20, 42, 0.62);
+      nav.site-nav a {
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        color: var(--muted);
       }
-      h2 {
-        margin: 0 0 12px;
-        font-size: clamp(1.35rem, 3vw, 1.85rem);
-      }
-      p, li { color: var(--muted); line-height: 1.7; }
-      ul { padding-left: 1.2rem; }
-      .updated {
-        margin: 14px 0 0;
-        color: var(--accent-strong);
-        font-size: 0.92rem;
+      nav.site-nav a:hover, nav.site-nav a:focus {
+        color: var(--accent);
       }
 `;
 
@@ -117,10 +178,8 @@ const COPY = {
     headline: 'Arcade gratuito de circuitos no navegador',
     lead:
       'Remova componentes, avance fases e jogue no navegador com progresso salvo no seu aparelho. Depois do primeiro acesso, a partida principal pode continuar mesmo offline.',
-    playCta: 'Jogar agora',
-    howToCta: 'Como jogar',
-    faqCta: 'FAQ',
-    downloadsCta: 'Instalar / baixar',
+    playCta: 'Jogar',
+    learnMoreCta: 'Saiba mais',
     updated: `Atualizado em ${LANDING_LASTMOD}`,
     nav: [
       [PLAY_ROUTE_PATH, 'Jogar'],
@@ -151,7 +210,7 @@ const COPY = {
       {
         heading: 'Como começar',
         paragraphs: [
-          'Toque em Jogar agora para abrir a partida em /play/. Aceite as telas de consentimento quando aparecerem, escolha o idioma no menu e siga a dica inicial.',
+          'Toque em Jogar para abrir a partida em /play/. Aceite as telas de consentimento quando aparecerem, escolha o idioma no menu e siga a dica inicial.',
           'Se preferir ler antes, abra Como jogar para controles e fluxo de fases, ou o FAQ para perguntas sobre progresso, instalação e anúncios opcionais.',
         ],
       },
@@ -169,10 +228,8 @@ const COPY = {
     headline: 'Free circuit arcade in your browser',
     lead:
       'Clear circuit components, advance levels, and play in the browser with progress saved on your device. After the first visit, the main game can keep working offline.',
-    playCta: 'Play now',
-    howToCta: 'How to play',
-    faqCta: 'FAQ',
-    downloadsCta: 'Install / download',
+    playCta: 'Play',
+    learnMoreCta: 'Learn more',
     updated: `Updated ${LANDING_LASTMOD}`,
     nav: [
       [PLAY_ROUTE_PATH, 'Play'],
@@ -203,7 +260,7 @@ const COPY = {
       {
         heading: 'How to start',
         paragraphs: [
-          'Tap Play now to open the game at /play/. Accept consent screens when they appear, pick a language in the menu, and follow the opening tip.',
+          'Tap Play to open the game at /play/. Accept consent screens when they appear, pick a language in the menu, and follow the opening tip.',
           'If you want to read first, open How to play for controls and level flow, or the FAQ for questions about progress, install, and optional ads.',
         ],
       },
@@ -221,10 +278,8 @@ const COPY = {
     headline: 'Arcade gratuito de circuitos en tu navegador',
     lead:
       'Elimina componentes de circuito, avanza niveles y juega en el navegador con el progreso guardado en tu dispositivo. Después de la primera visita, el juego principal puede seguir funcionando sin conexión.',
-    playCta: 'Jugar ahora',
-    howToCta: 'Cómo jugar',
-    faqCta: 'Preguntas frecuentes',
-    downloadsCta: 'Instalar / descargar',
+    playCta: 'Jugar',
+    learnMoreCta: 'Saber más',
     updated: `Actualizado el ${LANDING_LASTMOD}`,
     nav: [
       [PLAY_ROUTE_PATH, 'Jugar'],
@@ -255,7 +310,7 @@ const COPY = {
       {
         heading: 'Cómo empezar',
         paragraphs: [
-          'Toca Jugar ahora para abrir la partida en /play/. Acepta las pantallas de consentimiento cuando aparezcan, elige un idioma en el menú y sigue la guía inicial.',
+          'Toca Jugar para abrir la partida en /play/. Acepta las pantallas de consentimiento cuando aparezcan, elige un idioma en el menú y sigue la guía inicial.',
           'Si prefieres leer primero, abre Cómo jugar para conocer los controles y el flujo de niveles, o las Preguntas frecuentes para resolver dudas sobre progreso, instalación y anuncios opcionales.',
         ],
       },
@@ -349,8 +404,6 @@ export function renderLandingPage({
 }) {
   const copy = copyForLocale(locale);
   const playHref = locale === 'pt-BR' ? PLAY_ROUTE_PATH : `/${locale}${PLAY_ROUTE_PATH}`;
-  const howToHref = localizedNavHref(locale, '/how-to-play/');
-  const faqHref = localizedNavHref(locale, '/faq/');
   const downloadsHref = locale === 'pt-BR' ? '/downloads/' : `/${locale}/downloads/`;
 
   const navHtml = copy.nav
@@ -393,5 +446,57 @@ export function renderLandingPage({
     dateModified: LANDING_LASTMOD,
   };
 
-  return `<!-- generated landing by scripts/generate-localized-seo.mjs -->\n<!doctype html>\n<html lang="${escapeHtml(locale)}" dir="${escapeHtml(dir)}">\n  <head>\n    <meta charset="UTF-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n    <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />\n    <link rel="manifest" href="/manifest.webmanifest" />\n    <link rel="canonical" href="${escapeHtml(canonicalUrl)}" />\n    <meta name="description" content="${escapeHtml(description)}" />\n    <meta property="og:type" content="website" />\n    <meta property="og:url" content="${escapeHtml(canonicalUrl)}" />\n    <meta property="og:title" content="${escapeHtml(title)}" />\n    <meta property="og:description" content="${escapeHtml(description)}" />\n    <meta property="og:image" content="https://brikaya.com/assets/visual/ui/ui-pwa-app-icon.svg" />\n    <meta name="twitter:card" content="summary" />\n    <meta name="twitter:title" content="${escapeHtml(title)}" />\n    <meta name="twitter:description" content="${escapeHtml(description)}" />\n    <meta name="twitter:image" content="https://brikaya.com/assets/visual/ui/ui-pwa-app-icon.svg" />\n    <meta name="robots" content="index,follow" />\n${alternateLinks}\n    <title>${escapeHtml(title)}</title>\n    <script type="application/ld+json">\n${escapeJsonForHtml(jsonLd)}\n    </script>\n    <style>${LANDING_CSS}\n    </style>\n  </head>\n  <body>\n    <main>\n      <header class="hero">\n        <p class="brand">${escapeHtml(copy.brand)}</p>\n        <h1 class="headline">${escapeHtml(copy.headline)}</h1>\n        <p class="lead">${escapeHtml(copy.lead)}</p>\n        <p class="updated">${escapeHtml(copy.updated)}</p>\n        <div class="cta-row">\n          <a class="cta cta-primary" href="${escapeHtml(playHref)}">${escapeHtml(copy.playCta)}</a>\n          <a class="cta cta-secondary" href="${escapeHtml(howToHref)}">${escapeHtml(copy.howToCta)}</a>\n          <a class="cta cta-secondary" href="${escapeHtml(faqHref)}">${escapeHtml(copy.faqCta)}</a>\n          <a class="cta cta-secondary" href="${escapeHtml(downloadsHref)}">${escapeHtml(copy.downloadsCta)}</a>\n        </div>\n        <nav class="site-nav" aria-label="Brikaya">\n${navHtml}\n        </nav>\n      </header>\n${sectionsHtml}\n    </main>\n    <script>${LANDING_SW_RECOVERY_SCRIPT}</script>\n  </body>\n</html>\n`;
+  return `<!-- generated landing by scripts/generate-localized-seo.mjs -->
+<!doctype html>
+<html lang="${escapeHtml(locale)}" dir="${escapeHtml(dir)}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="canonical" href="${escapeHtml(canonicalUrl)}" />
+    <meta name="description" content="${escapeHtml(description)}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="${escapeHtml(canonicalUrl)}" />
+    <meta property="og:title" content="${escapeHtml(title)}" />
+    <meta property="og:description" content="${escapeHtml(description)}" />
+    <meta property="og:image" content="https://brikaya.com/assets/visual/ui/ui-pwa-app-icon.svg" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="${escapeHtml(title)}" />
+    <meta name="twitter:description" content="${escapeHtml(description)}" />
+    <meta name="twitter:image" content="https://brikaya.com/assets/visual/ui/ui-pwa-app-icon.svg" />
+    <meta name="robots" content="index,follow" />
+${alternateLinks}
+    <title>${escapeHtml(title)}</title>
+    <script type="application/ld+json">
+${escapeJsonForHtml(jsonLd)}
+    </script>
+    <style>${LANDING_CSS}
+    </style>
+  </head>
+  <body>
+    <main>
+      <header class="hero">
+        <p class="brand">${escapeHtml(copy.brand)}</p>
+        <h1 class="headline">${escapeHtml(copy.headline)}</h1>
+        <p class="lead">${escapeHtml(copy.lead)}</p>
+        <p class="updated">${escapeHtml(copy.updated)}</p>
+        <div class="cta-row">
+          <a class="cta cta-primary" href="${escapeHtml(playHref)}">${escapeHtml(copy.playCta)}</a>
+          <a class="cta cta-secondary" href="#saiba-mais">${escapeHtml(copy.learnMoreCta)}</a>
+        </div>
+      </header>
+      <div id="saiba-mais" class="reading-section">
+${sectionsHtml}
+      </div>
+      <footer class="site-footer">
+        <nav class="site-nav" aria-label="Brikaya">
+${navHtml}
+        </nav>
+      </footer>
+    </main>
+    <script>${LANDING_SW_RECOVERY_SCRIPT}</script>
+  </body>
+</html>
+`;
 }

@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(BRIKAYA_BUILD_VERSION=v161 node scripts/validate-version-doc-results.mjs)",
+      "Bash(npm run *)",
+      "Bash(/Users/mal/.codex/bin/codex-git-admin fetch *)",
+      "Bash(git rebase *)",
+      "Bash(npm install *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git checkout *)",
+      "Bash(/Users/mal/.codex/bin/codex-git-admin push *)"
+    ]
+  }
+}

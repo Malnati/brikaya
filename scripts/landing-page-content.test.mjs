@@ -34,3 +34,20 @@ test('bootstrap redireciona só apex standalone para /play/', () => {
   assert.ok(LANDING_SW_RECOVERY_SCRIPT.includes(`var play=${JSON.stringify(PLAY_ROUTE_PATH)}`));
   assert.ok(LANDING_SW_RECOVERY_SCRIPT.includes('location.replace(play)'));
 });
+
+test('landing renderiza apenas os 2 botões principais no hero (Jogar e Saiba mais)', () => {
+  const html = renderLandingPage({
+    locale: 'pt-BR',
+    canonicalUrl: 'https://brikaya.com/',
+    alternateLinks: '',
+    dir: 'ltr',
+    title: 'Brikaya',
+    description: 'Arcade offline-first',
+  });
+
+  assert.ok(html.includes('>Jogar<'));
+  assert.ok(html.includes('>Saiba mais<'));
+  assert.ok(html.includes('href="#saiba-mais"'));
+  assert.ok(html.includes('id="saiba-mais"'));
+});
+

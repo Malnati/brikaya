@@ -25,64 +25,119 @@
       name="twitter:description"
       content="Landing do Brikaya com guias públicos e link para jogar no navegador."
     />
-    <meta name="twitter:image" content="https://brikaya.com/assets/visual/ui/ui-pwa-app-icon.svg" />
+    <meta property="twitter:image" content="https://brikaya.com/assets/visual/ui/ui-pwa-app-icon.svg" />
     <title>Brikaya — arcade de circuitos eletrônicos</title>
     <style>
       :root {
         color-scheme: dark;
-        --bg: #080816;
+        --bg: #070913;
         --text: #f8f7ff;
-        --muted: #c8c8dc;
+        --muted: #b0b4cf;
         --accent: #7cf4ff;
+        --accent-glow: rgba(124, 244, 255, 0.4);
+        --border: rgba(124, 244, 255, 0.22);
+        --panel: rgba(14, 17, 36, 0.78);
       }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
       body {
         margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         color: var(--text);
-        background: var(--bg);
+        background:
+          radial-gradient(ellipse at 20% 0%, rgba(124, 244, 255, 0.18), transparent 45rem),
+          radial-gradient(ellipse at 80% 100%, rgba(255, 230, 109, 0.12), transparent 40rem),
+          var(--bg);
+        min-height: 100vh;
       }
       main {
-        width: min(840px, calc(100% - 32px));
+        width: min(920px, calc(100% - 32px));
         margin: 0 auto;
-        padding: 48px 0;
+        padding: 48px 0 72px;
       }
-      a {
-        color: var(--accent);
+      a { color: var(--accent); transition: all 0.2s ease; }
+      .hero {
+        padding: 48px 36px;
+        border: 1px solid var(--border);
+        border-radius: 32px;
+        background: var(--panel);
+        backdrop-filter: blur(20px);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(3rem, 9vw, 5.5rem);
+        font-weight: 800;
+        letter-spacing: -0.06em;
+        line-height: 0.95;
+        background: linear-gradient(135deg, #ffffff 30%, var(--accent) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
       .lead {
+        margin: 18px 0 0;
         color: var(--muted);
-        line-height: 1.65;
+        font-size: 1.12rem;
+        line-height: 1.7;
+        max-width: 44rem;
+      }
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-top: 36px;
       }
       .cta {
-        display: inline-block;
-        margin-top: 20px;
-        margin-right: 12px;
-        padding: 12px 20px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 52px;
+        padding: 0 32px;
         border-radius: 999px;
-        background: var(--accent);
-        color: #061018;
         text-decoration: none;
-        font-weight: 650;
+        font-weight: 700;
+        font-size: 1.05rem;
+      }
+      .cta-primary {
+        background: linear-gradient(135deg, #7cf4ff 0%, #30b8ff 100%);
+        color: #040914;
+        box-shadow: 0 4px 20px var(--accent-glow);
+      }
+      .cta-secondary {
+        border: 1px solid rgba(124, 244, 255, 0.4);
+        color: var(--text);
+        background: rgba(124, 244, 255, 0.06);
+      }
+      .reading-section {
+        margin-top: 40px;
+        padding: 32px;
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        background: rgba(18, 22, 46, 0.65);
       }
     </style>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9571619183194136" crossorigin="anonymous"></script>
   </head>
   <body>
     <main>
-      <h1>Brikaya</h1>
-      <p class="lead">
-        Arcade gratuito de circuitos no navegador. Remova componentes, avance fases e mantenha o
-        progresso no seu aparelho. Depois do primeiro acesso, a partida principal pode continuar
-        offline. Anúncios, quando existirem, são opcionais e não devem bloquear o jogo.
-      </p>
-      <p class="lead">
-        Leia <a href="/how-to-play/">como jogar</a>, o <a href="/faq/">FAQ</a> e as
-        <a href="/updates/">atualizações</a>. Privacidade e suporte ficam nas páginas legais.
-      </p>
-      <p>
-        <a class="cta" href="/play/">Jogar agora</a>
-        <a class="cta" href="/downloads/" style="background: transparent; color: var(--accent); border: 1px solid rgba(124, 244, 255, 0.35)">Downloads</a>
-      </p>
+      <header class="hero">
+        <h1>Brikaya</h1>
+        <p class="lead">
+          Arcade gratuito de circuitos no navegador. Remova componentes, avance fases e mantenha o
+          progresso no seu aparelho. Depois do primeiro acesso, a partida principal pode continuar
+          offline. Anúncios, quando existirem, são opcionais e não devem bloquear o jogo.
+        </p>
+        <div class="cta-row">
+          <a class="cta cta-primary" href="/play/">Jogar</a>
+          <a class="cta cta-secondary" href="#saiba-mais">Saiba mais</a>
+        </div>
+      </header>
+      <div id="saiba-mais" class="reading-section">
+        <p class="lead">
+          Leia <a href="/how-to-play/">como jogar</a>, o <a href="/faq/">FAQ</a> e as
+          <a href="/updates/">atualizações</a>. Privacidade e suporte ficam nas páginas legais.
+        </p>
+      </div>
     </main>
   </body>
 </html>
